@@ -383,6 +383,9 @@
   </div>
 
   <div *ngIf="!isVisible" class="row button-row">
+    <div *ngIf="editFlag" class="col-md-6">
+      <button class="button-s" mat-button (click)="backToEdit()">Cancel</button>
+    </div>
     <div class="col-md-6 button-col">
       <button class="button-p" mat-button (click)="addDelivery()">
         Next - Support Delivery

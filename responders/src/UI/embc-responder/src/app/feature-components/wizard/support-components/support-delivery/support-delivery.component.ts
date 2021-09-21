@@ -33,6 +33,7 @@ export class SupportDeliveryComponent implements OnInit {
   showSupplierFlag = false;
   showLoader = false;
   color = '#169BD5';
+  editFlag = false;
 
   constructor(
     public stepSupportsService: StepSupportsService,
@@ -41,7 +42,16 @@ export class SupportDeliveryComponent implements OnInit {
     private customValidation: CustomValidationService,
     private alertService: AlertService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state;
+        if (state?.action === 'edit') {
+          this.editFlag = true;
+        }
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.createSupportDeliveryForm();
@@ -89,9 +99,12 @@ export class SupportDeliveryComponent implements OnInit {
    */
   createSupportDeliveryForm(): void {
     this.supportDeliveryForm = this.formBuilder.group({
-      issuedTo: ['', [Validators.required]],
+      issuedTo: [
+        this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
+        [Validators.required]
+      ],
       name: [
-        '',
+        this.stepSupportsService?.supportDelivery?.name ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -104,7 +117,7 @@ export class SupportDeliveryComponent implements OnInit {
         ]
       ],
       supplier: [
-        '',
+        this.stepSupportsService?.supportDelivery?.supplier ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -118,7 +131,10 @@ export class SupportDeliveryComponent implements OnInit {
             .bind(this.customValidation)
         ]
       ],
-      supplierNote: ['', [this.customValidation.whitespaceValidator()]],
+      supplierNote: [
+        this.stepSupportsService?.supportDelivery?.supplierNote ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       details: this.createSupplierDetailsForm()
     });
   }
@@ -146,7 +162,14 @@ export class SupportDeliveryComponent implements OnInit {
    * Navigates to details page
    */
   backToDetails() {
-    this.router.navigate(['/ess-wizard/add-supports/details']);
+    if (!this.editFlag) {
+      this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      this.router.navigate(['/ess-wizard/add-supports/details']);
+    } else {
+      this.router.navigate(['/ess-wizard/add-supports/details'], {
+        state: { action: 'edit' }
+      });
+    }
   }
 
   /**
@@ -159,6 +182,19 @@ export class SupportDeliveryComponent implements OnInit {
       this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
       this.stepSupportsService.saveAsDraft();
       const stateIndicator = { action: 'save' };
+      this.router.navigate(['/ess-wizard/add-supports/view'], {
+        state: stateIndicator
+      });
+    }
+  }
+
+  saveEdits() {
+    if (!this.supportDeliveryForm.valid) {
+      this.supportDeliveryForm.markAllAsTouched();
+    } else {
+      this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      this.stepSupportsService.editDraft();
+      const stateIndicator = { action: 'edit' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
         state: stateIndicator
       });
@@ -230,11 +266,19 @@ export class SupportDeliveryComponent implements OnInit {
 
   private billetingSupplierForm(): FormGroup {
     return this.formBuilder.group({
-      hostName: ['', [this.customValidation.whitespaceValidator()]],
-      hostAddress: [''],
-      hostCity: ['', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''
+      ],
+      hostCity: [
+        this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
-        '',
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [
           this.customValidation
             .maskedNumberLengthValidator()
@@ -253,7 +297,7 @@ export class SupportDeliveryComponent implements OnInit {
         ]
       ],
       emailAddress: [
-        '',
+        this.stepSupportsService?.supportDelivery?.details?.emailAddress ?? '',
         [
           Validators.email,
           this.customValidation
@@ -274,11 +318,19 @@ export class SupportDeliveryComponent implements OnInit {
 
   private groupLodgingSupplierForm(): FormGroup {
     return this.formBuilder.group({
-      hostName: ['', [this.customValidation.whitespaceValidator()]],
-      hostAddress: [''],
-      hostCity: ['', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''
+      ],
+      hostCity: [
+        this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
-        '',
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [
           this.customValidation
             .maskedNumberLengthValidator()

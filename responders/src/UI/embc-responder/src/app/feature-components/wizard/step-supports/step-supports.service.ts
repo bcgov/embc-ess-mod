@@ -205,6 +205,11 @@ export class StepSupportsService {
     });
   }
 
+  public editDraft() {
+    this.referralService.updateDraftSupports(this.selectedSupportDetail);
+    this.saveAsDraft();
+  }
+
   public saveAsDraft() {
     const members: Array<string> = this.supportDetails.members.map((value) => {
       return value.id;
@@ -222,7 +227,9 @@ export class StepSupportsService {
     const referral: Referral = {
       ...support,
       issuedToPersonName: this.supportDelivery.issuedTo
-        ? this.supportDelivery.issuedTo
+        ? this.supportDelivery.issuedTo.lastName +
+          ',' +
+          this.supportDelivery.issuedTo.firstName
         : this.supportDelivery.name,
       method: SupportMethod.Referral,
       supplierAddress: this.supportDelivery.supplier.address,
@@ -252,14 +259,16 @@ export class StepSupportsService {
     ) {
       this.referralService.createBilletingReferral(
         referral,
-        this.supportDetails
+        this.supportDetails,
+        this.supportDelivery
       );
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group
     ) {
       this.referralService.createGroupLodgingReferral(
         referral,
-        this.supportDetails
+        this.supportDetails,
+        this.supportDelivery
       );
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel

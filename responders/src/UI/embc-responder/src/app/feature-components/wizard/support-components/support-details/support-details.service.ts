@@ -1,13 +1,26 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SupportCategory, SupportSubCategory } from 'src/app/core/api/models';
+import {
+  Billeting,
+  Clothing,
+  Groceries,
+  GroupLodging,
+  HotelMotel,
+  Incidentals,
+  OtherTransport,
+  RestaurantMeal,
+  Taxi
+} from 'src/app/core/models/support-details.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { StepSupportsService } from '../../step-supports/step-supports.service';
 
 @Injectable({ providedIn: 'root' })
 export class SupportDetailsService {
   constructor(
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    public stepSupportsService: StepSupportsService
   ) {}
 
   generateDynamicForm(supportType: string): FormGroup {
@@ -35,66 +48,139 @@ export class SupportDetailsService {
 
   mealForm(): FormGroup {
     return this.formBuilder.group({
-      noOfBreakfast: ['', [Validators.required]],
-      noOfLunches: ['', [Validators.required]],
-      noOfDinners: ['', [Validators.required]],
-      totalAmount: ['']
+      noOfBreakfast: [
+        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+          ?.noOfBreakfast ?? '',
+        [Validators.required]
+      ],
+      noOfLunches: [
+        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+          ?.noOfLunches ?? '',
+        [Validators.required]
+      ],
+      noOfDinners: [
+        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+          ?.noOfDinners ?? '',
+        [Validators.required]
+      ],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+          ?.totalAmount ?? ''
+      ]
     });
   }
 
   groceriesForm(): FormGroup {
     return this.formBuilder.group({
-      noOfMeals: ['', [Validators.required]],
-      totalAmount: [''],
-      userTotalAmount: ['']
+      noOfMeals: [
+        (this.stepSupportsService?.supportDetails?.referral as Groceries)
+          ?.noOfMeals ?? '',
+        [Validators.required]
+      ],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Groceries)
+          ?.totalAmount ?? ''
+      ],
+      userTotalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Groceries)
+          ?.userTotalAmount ?? ''
+      ]
     });
   }
 
   taxiForm(): FormGroup {
     return this.formBuilder.group({
-      fromAddress: ['', [this.customValidation.whitespaceValidator()]],
-      toAddress: ['', [this.customValidation.whitespaceValidator()]]
+      fromAddress: [
+        (this.stepSupportsService?.supportDetails?.referral as Taxi)
+          ?.fromAddress ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      toAddress: [
+        (this.stepSupportsService?.supportDetails?.referral as Taxi)
+          ?.toAddress ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ]
     });
   }
 
   otherTransportForm(): FormGroup {
     return this.formBuilder.group({
-      transportMode: ['', [this.customValidation.whitespaceValidator()]],
-      totalAmount: ['', [Validators.required]]
+      transportMode: [
+        (this.stepSupportsService?.supportDetails?.referral as OtherTransport)
+          ?.transportMode ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as OtherTransport)
+          ?.totalAmount ?? '',
+        [Validators.required]
+      ]
     });
   }
 
   hotelMotelForm(): FormGroup {
     return this.formBuilder.group({
-      noOfNights: ['', [Validators.required]],
-      noOfRooms: ['', [Validators.required]]
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as HotelMotel)
+          ?.noOfNights ?? '',
+        [Validators.required]
+      ],
+      noOfRooms: [
+        (this.stepSupportsService?.supportDetails?.referral as HotelMotel)
+          ?.noOfRooms ?? '',
+        [Validators.required]
+      ]
     });
   }
 
   billetingForm(): FormGroup {
     return this.formBuilder.group({
-      noOfNights: ['', [Validators.required]]
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as Billeting)
+          ?.noOfNights ?? '',
+        [Validators.required]
+      ]
     });
   }
 
   groupLodgingForm(): FormGroup {
     return this.formBuilder.group({
-      noOfNights: ['', [Validators.required]]
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as GroupLodging)
+          ?.noOfNights ?? '',
+        [Validators.required]
+      ]
     });
   }
 
   incidentalsForm(): FormGroup {
     return this.formBuilder.group({
-      approvedItems: ['', [this.customValidation.whitespaceValidator()]],
-      totalAmount: ['', [Validators.required]],
+      approvedItems: [
+        (this.stepSupportsService?.supportDetails?.referral as Incidentals)
+          ?.approvedItems ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Incidentals)
+          ?.totalAmount ?? '',
+        [Validators.required]
+      ],
       userTotalAmount: ['']
     });
   }
 
   clothingForm(): FormGroup {
     return this.formBuilder.group({
-      extremeWinterConditions: [null, [Validators.required]],
-      totalAmount: ['', [Validators.required]],
+      extremeWinterConditions: [
+        (this.stepSupportsService?.supportDetails?.referral as Clothing)
+          ?.extremeWinterConditions ?? null,
+        [Validators.required]
+      ],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Clothing)
+          ?.totalAmount ?? '',
+        [Validators.required]
+      ],
       userTotalAmount: ['']
     });
   }
