@@ -467,3 +467,5 @@ export const supplierRefresherror =
   'Unable to refresh supplier list at this time. Please try again later';
 export const supportListerror =
   'Unable to retrieve support list at this time. Please try again later';
+export const supportNeedsAssessmentError =
+  'Unable to retrieve needs assessment at this time. Please try again later';

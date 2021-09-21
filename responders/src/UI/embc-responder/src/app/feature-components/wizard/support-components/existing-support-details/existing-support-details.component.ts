@@ -26,6 +26,7 @@ import { ReprintReferralDialogComponent } from 'src/app/shared/components/dialog
 import { ExistingSupportDetailsService } from './existing-support-details.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -35,13 +36,16 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 export class ExistingSupportDetailsComponent implements OnInit {
   selectedSupport: Support;
   needsAssessmentForSupport: EvacuationFileModel;
+  isLoading = false;
+  color = '#169BD5';
 
   constructor(
     private router: Router,
     public stepSupportsService: StepSupportsService,
     private dialog: MatDialog,
     private existingSupportService: ExistingSupportDetailsService,
-    private referralCreationService: ReferralCreationService
+    private referralCreationService: ReferralCreationService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -55,12 +59,23 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   getNeedsAssessment() {
+    this.isLoading = !this.isLoading;
     this.stepSupportsService
       .getEvacFile(this.selectedSupport?.needsAssessmentId)
-      .subscribe((value) => {
-        this.needsAssessmentForSupport = value;
-        console.log(value);
-      });
+      .subscribe(
+        (value) => {
+          this.isLoading = !this.isLoading;
+          this.needsAssessmentForSupport = value;
+          console.log(value);
+        },
+        (error) => {
+          this.isLoading = !this.isLoading;
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportNeedsAssessmentError
+          );
+        }
+      );
   }
 
   checkGroceryMaxRate(): boolean {

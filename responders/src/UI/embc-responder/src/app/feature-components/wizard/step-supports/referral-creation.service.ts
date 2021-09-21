@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import {
   ClothingReferral,
   FoodGroceriesReferral,
@@ -21,6 +22,7 @@ import {
   Incidentals,
   OtherTransport,
   RestaurantMeal,
+  SupportDeliveryModel,
   SupportDetailsModel,
   Taxi
 } from 'src/app/core/models/support-details.model';
@@ -42,7 +44,9 @@ export class ReferralCreationService {
   constructor(private cacheService: CacheService) {}
 
   setDraftSupport(draftSupportVal: Support) {
-    this.draftSupportVal.push(draftSupportVal);
+    if (draftSupportVal !== null) {
+      this.draftSupportVal.push(draftSupportVal);
+    }
   }
 
   getDraftSupport(): Support[] {
@@ -225,26 +229,37 @@ export class ReferralCreationService {
 
   createBilletingReferral(
     referral: Referral,
-    supportDetails: SupportDetailsModel
+    supportDetails: SupportDetailsModel,
+    supportDelivery: SupportDeliveryModel
   ) {
     const billetingReferral: LodgingBilletingReferral = {
       ...referral,
       category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
-      subCategory: SupportSubCategory.Lodging_Billeting
+      subCategory: SupportSubCategory.Lodging_Billeting,
+      hostAddress: supportDelivery.details.hostAddress,
+      hostCity: supportDelivery.details.hostCity,
+      hostEmail: supportDelivery.details.emailAddress,
+      hostName: supportDelivery.details.hostName,
+      hostPhone: supportDelivery.details.hostPhone
     };
     this.billetingReferral = billetingReferral;
   }
 
   createGroupLodgingReferral(
     referral: Referral,
-    supportDetails: SupportDetailsModel
+    supportDetails: SupportDetailsModel,
+    supportDelivery: SupportDeliveryModel
   ) {
     const groupReferral: LodgingGroupReferral = {
       ...referral,
       category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
-      subCategory: SupportSubCategory.Lodging_Group
+      subCategory: SupportSubCategory.Lodging_Group,
+      facilityAddress: supportDelivery.details.hostAddress,
+      facilityCity: supportDelivery.details.hostCity,
+      facilityContactPhone: supportDelivery.details.hostPhone,
+      facilityName: supportDelivery.details.hostName
     };
     this.groupReferral = groupReferral;
   }
@@ -276,5 +291,47 @@ export class ReferralCreationService {
       subCategory: null
     };
     this.incidentalsReferral = incidentalsReferral;
+  }
+
+  clearDraftSupports(supportType: string, support: Support): Observable<void> {
+    this.updateDraftSupports(support);
+    // if (supportType === SupportSubCategory.Food_Restaurant) {
+    //   //this.cacheService.remove('mealReferral');
+    //   this.updateDraftSupports(support);
+    //   //this.mealReferral = null;
+    // } else if (supportType === SupportSubCategory.Food_Groceries) {
+    //   this.cacheService.remove('groceriesReferral');
+    //   this.groceriesReferral = null;
+    // } else if (supportType === SupportSubCategory.Transportation_Taxi) {
+    //   this.cacheService.remove('taxiReferral');
+    //   this.taxiReferral = null;
+    // } else if (supportType === SupportSubCategory.Transportation_Other) {
+    //   this.cacheService.remove('otherReferral');
+    //   this.otherReferral = null;
+    // } else if (supportType === SupportSubCategory.Lodging_Billeting) {
+    //   this.cacheService.remove('billetingReferral');
+    //   this.billetingReferral = null;
+    // } else if (supportType === SupportSubCategory.Lodging_Hotel) {
+    //   this.cacheService.remove('hotelMotelReferral');
+    //   this.hotelReferral = null;
+    // } else if (supportType === SupportCategory.Incidentals) {
+    //   this.cacheService.remove('incidentalsReferral');
+    //   this.incidentalsReferral = null;
+    // } else if (supportType === SupportCategory.Clothing) {
+    //   this.cacheService.remove('clothingReferralVal');
+    //   this.clothingReferral = null;
+    // } else if (supportType === SupportSubCategory.Lodging_Group) {
+    //   this.cacheService.remove('groupReferral');
+    //   this.groupReferral = null;
+    // }
+    return of(void 0);
+  }
+
+  updateDraftSupports(support: Support) {
+    let index = this.draftSupportVal.indexOf(support);
+    console.log(index);
+    if (index > -1) {
+      this.draftSupportVal.splice(index, 1);
+    }
   }
 }
