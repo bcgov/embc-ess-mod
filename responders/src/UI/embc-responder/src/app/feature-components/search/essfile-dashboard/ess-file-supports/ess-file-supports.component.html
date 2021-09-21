@@ -1,0 +1,231 @@
+<mat-card class="overview-card">
+  <div class="row card-heading-outer">
+    <div class="col-md-12">
+      <p class="margins card-heading">Supports</p>
+    </div>
+  </div>
+
+  <div class="row section-padding">
+    <div class="col-md-12">
+      <p>
+        <span class="bold">{{ supportList?.length }} support(s)</span> have been
+        added for this ESS File.
+      </p>
+      <div class="row-padding" *ngFor="let support of supports$ | async">
+        <mat-card class="support-card">
+          <div class="row support-header">
+            <div class="col-md-2">
+              <p class="bold">
+                {{ support?.id }}
+              </p>
+            </div>
+            <div class="col-md-1">
+              <p
+                [ngClass]="{
+                  'support-active': support?.status === 'Active',
+                  'support-void': support?.status === 'Void',
+                  'support-expired': support?.status === 'Expired'
+                }"
+              >
+                {{ support?.status }}
+              </p>
+            </div>
+            <div class="col">
+              <p class="bold supplier-align">
+                {{ getReferral(support)?.supplierName }}
+              </p>
+            </div>
+          </div>
+          <div class="row subsection">
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-6">
+                  <p>Support Type:</p>
+                </div>
+                <div class="col-md-6">
+                  <p class="bold">
+                    {{
+                      support?.subCategory
+                        ? support?.subCategory
+                        : support?.category
+                    }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <p>Support Period:</p>
+                </div>
+                <div class="col-md-6">
+                  <p class="bold">
+                    {{ support?.to | date: 'dd-MMM-yyyy' }} -
+                    {{ support?.from | date: 'dd-MMM-yyyy' }}
+                  </p>
+                </div>
+              </div>
+
+              <!--Groceries-->
+              <div *ngIf="support?.subCategory == 'Food_Groceries'">
+                <div class="row row-padding">
+                  <div class="col-md-6"># of Days for Meals:</div>
+                  <div class="col-md-6 bold">
+                    {{ getGroceryReferral(support)?.numberOfDays }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">Up to a Total of:</div>
+                  <div class="col-md-6 bold">
+                    ${{ getGroceryReferral(support)?.totalAmount }}
+                  </div>
+                </div>
+              </div>
+              <!--Restaurant Meals-->
+              <div *ngIf="support?.subCategory === 'Food_Restaurant'">
+                <div class="row row-padding">
+                  <div class="col-md-6"># Breakfasts:</div>
+                  <div class="col-md-6 bold">
+                    {{ getMealReferral(support)?.numberOfBreakfastsPerPerson }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">#Lunches:</div>
+                  <div class="col-md-6 bold">
+                    {{ getMealReferral(support)?.numberOfLunchesPerPerson }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">#Dinners:</div>
+                  <div class="col-md-6 bold">
+                    {{ getMealReferral(support)?.numberOfDinnersPerPerson }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">Up to a Total of:</div>
+                  <div class="col-md-6 bold">
+                    ${{ getMealReferral(support)?.totalAmount }}
+                  </div>
+                </div>
+              </div>
+              <!--Lodging-->
+              <div *ngIf="support?.subCategory === 'Lodging_Hotel'">
+                <div class="row row-padding">
+                  <div class="col-md-6"># Nights:</div>
+                  <div class="col-md-6 bold">
+                    {{ getHotelReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6"># Rooms:</div>
+                  <div class="col-md-6 bold">
+                    {{ getHotelReferral(support)?.numberOfRooms }}
+                  </div>
+                </div>
+              </div>
+              <!--Billeting-->
+              <div *ngIf="support?.subCategory === 'Lodging_Billeting'">
+                <div class="row row-padding">
+                  <div class="col-md-6"># Nights</div>
+                  <div class="col-md-6 bold">
+                    {{ getBilletingReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+              </div>
+              <!--Group Lodging-->
+              <div *ngIf="support?.subCategory === 'Lodging_Group'">
+                <div class="row row-padding">
+                  <div class="col-md-6"># Nights</div>
+                  <div class="col-md-6 bold">
+                    {{ getGroupReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+              </div>
+              <!--Taxi-->
+              <div *ngIf="support?.subCategory === 'Transportation_Taxi'">
+                <div class="row row-padding">
+                  <div class="col-md-6">From (address):</div>
+                  <div class="col-md-6 bold">
+                    {{ getTaxiReferral(support)?.fromAddress }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">To (address):</div>
+                  <div class="col-md-6 bold">
+                    {{ getTaxiReferral(support)?.toAddress }}
+                  </div>
+                </div>
+              </div>
+              <!--Other-->
+              <div *ngIf="support?.subCategory === 'Transportation_Other'">
+                <div class="row row-padding">
+                  <div class="col-md-6">Mode of Transport:</div>
+                  <div class="col-md-6 bold">
+                    {{ getOtherReferral(support)?.transportMode }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">Up to a total of:</div>
+                  <div class="col-md-6 bold">
+                    ${{ getOtherReferral(support)?.totalAmount }}
+                  </div>
+                </div>
+              </div>
+
+              <!--Incidentals-->
+              <div *ngIf="support?.category === 'Incidentals'">
+                <div class="row row-padding">
+                  <div class="col-md-6">Approved Items:</div>
+                  <div class="col-md-6 bold">
+                    {{ getIncidentalReferral(support)?.approvedItems }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">Up to a total of:</div>
+                  <div class="col-md-6 bold">
+                    ${{ getIncidentalReferral(support)?.totalAmount }}
+                  </div>
+                </div>
+              </div>
+
+              <!--Clothing-->
+              <div *ngIf="support?.category === 'Clothing'">
+                <div class="row row-padding">
+                  <div class="col-md-6">Winter Conditions:</div>
+                  <div class="col-md-6 bold">
+                    {{ getClothingReferral(support)?.extremeWinterConditions }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-6">Up to a total of:</div>
+                  <div class="col-md-6 bold">
+                    ${{ getClothingReferral(support)?.totalAmount }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 evacuee-section">
+              <p>Evacuees</p>
+              <span *ngFor="let id of support?.includedHouseholdMembers">
+                <p>{{ mapMemberName(id) | uppercase }}</p>
+              </span>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <mat-paginator
+        class="custom-paginator custom-paginator-align"
+        [pageSizeOptions]="[10]"
+      ></mat-paginator>
+    </div>
+  </div>
+</mat-card>
