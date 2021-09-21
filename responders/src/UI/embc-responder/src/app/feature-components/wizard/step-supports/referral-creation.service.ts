@@ -328,7 +328,7 @@ export class ReferralCreationService {
   }
 
   updateDraftSupports(support: Support) {
-    let index = this.draftSupportVal.indexOf(support);
+    const index = this.draftSupportVal.indexOf(support);
     console.log(index);
     if (index > -1) {
       this.draftSupportVal.splice(index, 1);

@@ -218,7 +218,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   mapMemberName(memberId: string): string {
-    let memberObject = this.needsAssessmentForSupport?.householdMembers.find(
+    const memberObject = this.needsAssessmentForSupport?.householdMembers.find(
       (value) => {
         if (value?.id === memberId) {
           return value;
@@ -240,12 +240,12 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .afterClosed()
       .subscribe((value) => {
         if (value === 'confirm') {
-          let supportType = this.selectedSupport.subCategory
+          const supportType = this.selectedSupport.subCategory
             ? this.selectedSupport.subCategory
             : this.selectedSupport.category;
           this.referralCreationService
             .clearDraftSupports(supportType, this.selectedSupport)
-            .subscribe((value) => {
+            .subscribe((incomingValue) => {
               const stateIndicator = { action: 'delete' };
               this.router.navigate(['/ess-wizard/add-supports/view'], {
                 state: stateIndicator
