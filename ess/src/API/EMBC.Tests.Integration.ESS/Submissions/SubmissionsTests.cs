@@ -647,6 +647,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 new TransportationTaxiReferral(),
             };
 
+            foreach (var s in supports)
+            {
+                s.To = DateTime.Now;
+                s.From = DateTime.Now;
+                s.IssuedOn = DateTime.Now;
+            }
+
             await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports });
 
             var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
@@ -689,6 +696,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 new TransportationOtherReferral(),
                 new TransportationTaxiReferral(),
             };
+
+            foreach (var s in supports)
+            {
+                s.To = DateTime.Now;
+                s.From = DateTime.Now;
+                s.IssuedOn = DateTime.Now;
+            }
 
             await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports });
 

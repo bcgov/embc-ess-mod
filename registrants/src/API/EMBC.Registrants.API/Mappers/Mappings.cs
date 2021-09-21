@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using AutoMapper;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
@@ -23,7 +24,7 @@ namespace EMBC.Registrants.API.Mappers
     {
         public Mappings()
         {
-            CreateMap<Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+            CreateMap<Controllers.Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
@@ -128,6 +129,74 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.SecurityPhrase))
                 .ForMember(d => d.SecretPhraseEdited, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.Support, Support>()
+                .IncludeAllDerived()
+                .ForMember(d => d.NeedsAssessmentId, opts => opts.MapFrom(s => s.OriginatingNeedsAssessmentId))
+                .ForMember(d => d.IssuingMemberName, opts => opts.MapFrom(s => s.IssuedBy.DisplayName))
+                .ForMember(d => d.IssuingMemberTeamName, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
+                .ReverseMap()
+                .IncludeAllDerived()
+                .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.IssuedBy, opts => opts.Ignore())
+                .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.Referral, Referral>()
+                .IncludeAllDerived()
+                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
+                .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
+                .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
+                .ReverseMap()
+                .IncludeAllDerived()
+                .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.SupplierDetails, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.SupplierId) ? null : new ESS.Shared.Contracts.Submissions.SupplierDetails { Id = s.SupplierId }))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.IncidentalsReferral, IncidentalsReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.FoodGroceriesReferral, FoodGroceriesReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.FoodRestaurantReferral, FoodRestaurantReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingBilletingReferral, LodgingBilletingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingGroupReferral, LodgingGroupReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingHotelReferral, LodgingHotelReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.TransportationOtherReferral, TransportationOtherReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.TransportationTaxiReferral, TransportationTaxiReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
                 ;
         }
     }
