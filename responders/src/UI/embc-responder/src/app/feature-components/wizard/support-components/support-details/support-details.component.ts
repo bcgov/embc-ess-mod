@@ -33,6 +33,7 @@ export class SupportDetailsComponent implements OnInit {
   supportDetailsForm: FormGroup;
   noOfDaysList = globalConst.supportNoOfDays;
   selectedStartDate: string;
+  editFlag = false;
 
   constructor(
     private router: Router,
@@ -43,6 +44,14 @@ export class SupportDetailsComponent implements OnInit {
     private supportDetailsService: SupportDetailsService,
     private dialog: MatDialog
   ) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state;
+        if (state?.action === 'edit') {
+          this.editFlag = true;
+        }
+      }
+    }
     this.currentDate = this.datePipe.transform(Date.now(), 'dd-MMM-yyyy');
     this.currentTime = this.datePipe.transform(Date.now(), 'HH:mm');
   }
@@ -106,7 +115,6 @@ export class SupportDetailsComponent implements OnInit {
    * Support details form
    */
   createSupportDetailsForm(): void {
-    console.log(this.stepSupportsService.supportTypeToAdd);
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
         this.stepSupportsService?.supportDetails?.fromDate
@@ -251,7 +259,13 @@ export class SupportDetailsComponent implements OnInit {
     } else {
       this.stepSupportsService.supportDetails = this.supportDetailsForm.getRawValue();
       console.log(this.stepSupportsService.supportDetails);
-      this.router.navigate(['/ess-wizard/add-supports/delivery']);
+      if (!this.editFlag) {
+        this.router.navigate(['/ess-wizard/add-supports/delivery']);
+      } else {
+        this.router.navigate(['/ess-wizard/add-supports/delivery'], {
+          state: { action: 'edit' }
+        });
+      }
     }
   }
 
@@ -266,5 +280,9 @@ export class SupportDetailsComponent implements OnInit {
       },
       width: '720px'
     });
+  }
+
+  backToEdit() {
+    this.router.navigate(['/ess-wizard/add-supports/view-detail']);
   }
 }

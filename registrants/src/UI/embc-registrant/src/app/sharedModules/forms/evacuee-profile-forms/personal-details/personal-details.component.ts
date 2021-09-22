@@ -38,6 +38,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
     /\d/
   ];
   editVerifiedPersonalDetails = '/verified-registration/edit/personal-details';
+  createVerifiedProfile = '/verified-registration/create-profile';
   disableFields = false;
 
   constructor(
@@ -55,7 +56,10 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
         this.personalDetailsForm = personalDetails;
       });
 
-    if (window.location.pathname === this.editVerifiedPersonalDetails) {
+    if (
+      window.location.pathname === this.editVerifiedPersonalDetails ||
+      window.location.pathname === this.createVerifiedProfile
+    ) {
       this.disableFields = true;
     }
   }

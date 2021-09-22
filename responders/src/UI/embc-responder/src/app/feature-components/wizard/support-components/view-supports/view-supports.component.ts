@@ -32,7 +32,7 @@ export class ViewSupportsComponent implements OnInit {
     private viewSupportsService: ViewSupportsService,
     private alertService: AlertService,
     private dialog: MatDialog,
-    private referralService: ReferralCreationService
+    public referralService: ReferralCreationService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -82,16 +82,6 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   addDraftSupports() {
-    // const index = this.supportList.map(
-    //   (item) => {
-    //     if(item.status === SupportStatus.Draft) {
-
-    //     }
-    //   }
-    // );
-    // if (this.stepSupportsService.mealReferral && index === -1) {
-    //   this.supportList.push(this.stepSupportsService.mealReferral);
-    // }
     if (this.referralService.getDraftSupport().length !== 0) {
       this.supportList = [
         ...this.supportList,
@@ -114,6 +104,11 @@ export class ViewSupportsComponent implements OnInit {
       }, 500);
     } else if (state?.action === 'save') {
       displayText = globalConst.saveMessage;
+      setTimeout(() => {
+        this.openConfirmation(displayText);
+      }, 500);
+    } else if (state?.action === 'delete') {
+      displayText = globalConst.supportDeleteMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
       }, 500);

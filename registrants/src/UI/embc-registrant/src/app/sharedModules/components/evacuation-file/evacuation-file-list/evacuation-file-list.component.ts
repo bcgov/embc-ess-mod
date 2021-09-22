@@ -76,7 +76,7 @@ export class EvacuationFileListComponent implements OnInit {
           content: globalConst.addEssFile,
           initDialog: true
         },
-        height: '270px',
+        height: '320px',
         width: '700px'
       })
       .afterClosed()

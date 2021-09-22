@@ -299,7 +299,13 @@
             <div class="col-md-9 menu-title">ESS File Details</div>
           </div>
         </a>
-        <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
+        <a
+          mat-button
+          class="a-mat-button"
+          routerLinkActive="active-side-item"
+          [routerLink]="'/responder-access/search/essfile-dashboard/supports'"
+          [state]="{ file: essFile }"
+        >
           <div class="row">
             <div class="col-md-3 img-align-col">
               <img

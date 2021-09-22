@@ -22,6 +22,13 @@ const routes: Routes = [
           )
       },
       {
+        path: 'supports',
+        loadChildren: () =>
+          import('./ess-file-supports/ess-file-supports.module').then(
+            (m) => m.EssFileSupportsModule
+          )
+      },
+      {
         path: 'notes',
         loadChildren: () =>
           import('./ess-file-notes/ess-file-notes.module').then(

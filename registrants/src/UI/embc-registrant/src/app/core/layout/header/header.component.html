@@ -23,7 +23,15 @@
         ><span class="heading-text2">(ERA)</span>
       </div>
 
-      <div *ngIf="showLoginMatMenu">
+      <div
+        *ngIf="
+          showLoginMatMenu &&
+          (formCreationService.personalDetailsForm$ | async)?.value
+            ?.lastName !== undefined &&
+          (formCreationService.personalDetailsForm$ | async)?.value
+            ?.firstName !== null
+        "
+      >
         <button mat-button [matMenuTriggerFor]="menu" class="menuButton">
           <div>
             <span style="color: white"

@@ -248,9 +248,15 @@
         Back - Support Details
       </button>
     </div>
-    <div class="col-md-6">
+    <div *ngIf="!editFlag" class="col-md-6">
       <button class="button-p next" mat-button (click)="next()">
         Next - Save Support
+      </button>
+    </div>
+
+    <div *ngIf="editFlag" class="col-md-6">
+      <button class="button-p next" mat-button (click)="saveEdits()">
+        Save Changes
       </button>
     </div>
   </div>
