@@ -69,7 +69,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_suppliercontactid))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
-                .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_homephone))
+                .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_contactnumber))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.emailaddress))
                 ;
 
@@ -77,7 +77,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.era_suppliercontactid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
-                .ForMember(d => d.era_homephone, opts => opts.MapFrom(s => s.Phone))
+                .ForMember(d => d.era_contactnumber, opts => opts.MapFrom(s => s.Phone))
                 .ForMember(d => d.emailaddress, opts => opts.MapFrom(s => s.Email))
                 ;
 

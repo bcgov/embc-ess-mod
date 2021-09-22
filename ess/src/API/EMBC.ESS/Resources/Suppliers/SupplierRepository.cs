@@ -74,6 +74,8 @@ namespace EMBC.ESS.Resources.Suppliers
                 RemoveTeamSuppliers(existingSupplier, supplier);
                 essContext.Detach(existingSupplier);
                 supplier.era_supplierid = existingSupplier.era_supplierid;
+
+                supplier._era_primarycontact_value = existingSupplier._era_primarycontact_value;
                 essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
                 essContext.UpdateObject(supplier);
             }
@@ -199,6 +201,7 @@ namespace EMBC.ESS.Resources.Suppliers
             }
 
             essContext.SetLink(supplier, nameof(era_supplier.era_PrimaryContact), contact);
+            essContext.SetLink(contact, nameof(era_suppliercontact.era_RelatedSupplier), supplier);
         }
 
         private void AddTeamSuppliers(era_supplier existingSupplier, era_supplier updatedSupplier)
