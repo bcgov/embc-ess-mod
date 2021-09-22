@@ -268,9 +268,7 @@ namespace EMBC.Registrants.API.Controllers
     {
         public string Id { get; set; }
         public DateTime IssuedOn { get; set; }
-        public string IssuingMemberName { get; set; }
         public string IssuingMemberTeamName { get; set; }
-        public string NeedsAssessmentId { get; set; }
 
         public DateTime From { get; set; }
         public DateTime To { get; set; }
@@ -304,7 +302,6 @@ namespace EMBC.Registrants.API.Controllers
 
         public string SupplierName { get; set; }
         public Address SupplierAddress { get; set; }
-        public string SupplierNotes { get; set; }
 
         public string IssuedToPersonName { get; set; }
     }
