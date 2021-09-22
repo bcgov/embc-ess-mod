@@ -95,6 +95,11 @@ export class LocationService {
       addressCountry = countries.find((ct) => ct.code === 'CAN');
     }
 
+    // ERASE LATER: Local dummy data to work only
+    // if (addressCommunity === undefined) {
+    //   addressCommunity = communities.find((comm) => comm.name === 'Vancouver');
+    // }
+
     return {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
