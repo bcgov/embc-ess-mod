@@ -133,8 +133,6 @@ namespace EMBC.Registrants.API.Mappers
 
             CreateMap<ESS.Shared.Contracts.Submissions.Support, Support>()
                 .IncludeAllDerived()
-                //.ForMember(d => d.NeedsAssessmentId, opts => opts.MapFrom(s => s.OriginatingNeedsAssessmentId))
-                //.ForMember(d => d.IssuingMemberName, opts => opts.MapFrom(s => s.IssuedBy.DisplayName))
                 .ForMember(d => d.IssuingMemberTeamName, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
                 ;
 
