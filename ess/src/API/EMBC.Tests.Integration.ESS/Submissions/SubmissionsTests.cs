@@ -649,8 +649,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             foreach (var s in supports)
             {
-                s.To = DateTime.Now;
                 s.From = DateTime.Now;
+                s.To = DateTime.Now.AddDays(3);
                 s.IssuedOn = DateTime.Now;
             }
 
@@ -699,8 +699,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             foreach (var s in supports)
             {
-                s.To = DateTime.Now;
                 s.From = DateTime.Now;
+                s.To = DateTime.Now.AddDays(3);
                 s.IssuedOn = DateTime.Now;
             }
 
