@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EssFileSupportsComponent } from './ess-file-supports.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('EssFileSupportsComponent', () => {
   let component: EssFileSupportsComponent;
@@ -9,7 +10,7 @@ describe('EssFileSupportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [EssFileSupportsComponent]
     }).compileComponents();
   });

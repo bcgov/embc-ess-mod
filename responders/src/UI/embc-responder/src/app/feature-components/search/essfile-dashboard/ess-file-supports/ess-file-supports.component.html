@@ -11,6 +11,29 @@
         <span class="bold">{{ supportList?.length }} support(s)</span> have been
         added for this ESS File.
       </p>
+      <div class="row">
+        <div
+          *ngFor="let filter of filtersToLoad?.loadDropdownFilters"
+          class="col-md-4"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>{{ filter?.label.description }}</mat-label>
+            <mat-select
+              #matRef
+              id="custom-select"
+              (selectionChange)="selected($event, filter?.type)"
+            >
+              <mat-option value="">{{ filter?.label.description }}</mat-option>
+              <mat-option *ngFor="let val of filter?.values" [value]="val">
+                <div *ngIf="val?.description !== undefined; else value">
+                  {{ val?.description }}
+                </div>
+                <ng-template #value>{{ val }}</ng-template>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
       <div class="row-padding" *ngFor="let support of supports$ | async">
         <mat-card class="support-card">
           <div class="row support-header">
@@ -33,6 +56,36 @@
             <div class="col">
               <p class="bold supplier-align">
                 {{ getReferral(support)?.supplierName }}
+              </p>
+            </div>
+            <div class="col">
+              <p class="bold supplier-align">
+                {{ getReferral(support)?.supplierName }}
+              </p>
+            </div>
+            <div class="col">
+              <p
+                *ngIf="
+                  support?.subCategory !== 'Lodging_Billeting' &&
+                  support?.subCategory !== 'Lodging_Group'
+                "
+                class="bold supplier-align"
+              >
+                {{ getReferral(support)?.supplierName }}
+              </p>
+
+              <p
+                *ngIf="support?.subCategory === 'Lodging_Billeting'"
+                class="bold supplier-align"
+              >
+                {{ getBilletingReferral(support)?.hostName }}
+              </p>
+
+              <p
+                *ngIf="support?.subCategory === 'Lodging_Group'"
+                class="bold supplier-align"
+              >
+                {{ getGroupReferral(support)?.facilityName }}
               </p>
             </div>
           </div>
