@@ -6,6 +6,7 @@ import { ConfigService } from './core/services/config.service';
 import { LocationsService } from './core/services/locations.service';
 import { UserService } from './core/services/user.service';
 import { AlertService } from './shared/components/alert/alert.service';
+import * as globalConst from './core/services/global-constants';
 
 @Component({
   selector: 'app-root',
@@ -36,10 +37,7 @@ export class AppComponent implements OnInit {
       (result) => result,
       (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          'The service is temporarily unavailable. Please try again later'
-        );
+        this.alertService.setAlert('danger', globalConst.systemError);
       }
     );
   }
@@ -58,10 +56,11 @@ export class AppComponent implements OnInit {
       await this.router.navigate([nextRoute]);
     } catch (error) {
       this.alertService.clearAlert();
-      this.alertService.setAlert(
-        'danger',
-        'The service is temporarily unavailable. Please try again later'
-      );
+      if (error.status === 403) {
+        this.alertService.setAlert('danger', globalConst.accessError);
+      } else {
+        this.alertService.setAlert('danger', globalConst.systemError);
+      }
     } finally {
       this.isLoading = false;
     }
