@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using AutoMapper;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
@@ -23,7 +24,7 @@ namespace EMBC.Registrants.API.Mappers
     {
         public Mappings()
         {
-            CreateMap<Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+            CreateMap<Controllers.Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
@@ -128,6 +129,45 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.SecurityPhrase))
                 .ForMember(d => d.SecretPhraseEdited, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.Support, Support>()
+                .IncludeAllDerived()
+                .ForMember(d => d.IssuingMemberTeamName, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.Referral, Referral>()
+                .IncludeAllDerived()
+                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
+                .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
+                .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.IncidentalsReferral, IncidentalsReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.FoodGroceriesReferral, FoodGroceriesReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.FoodRestaurantReferral, FoodRestaurantReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingBilletingReferral, LodgingBilletingReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingGroupReferral, LodgingGroupReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingHotelReferral, LodgingHotelReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.TransportationOtherReferral, TransportationOtherReferral>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.TransportationTaxiReferral, TransportationTaxiReferral>()
                 ;
         }
     }

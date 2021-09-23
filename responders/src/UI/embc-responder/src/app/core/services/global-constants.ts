@@ -161,8 +161,20 @@ export const voidMessage: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const deleteDraftMessage: DialogContent = {
+  title: 'Delete Support',
+  text: '<p>Are you sure you want to delete this support?</p>',
+  confirmButton: 'Yes, Delete Support',
+  cancelButton: 'No, Cancel'
+};
+
 export const saveMessage: DialogContent = {
   text: '<p>Support successfully saved.</p>',
+  cancelButton: 'Close'
+};
+
+export const supportDeleteMessage: DialogContent = {
+  text: '<p>Support successfully deleted.</p>',
   cancelButton: 'Close'
 };
 
@@ -455,3 +467,5 @@ export const supplierRefresherror =
   'Unable to refresh supplier list at this time. Please try again later';
 export const supportListerror =
   'Unable to retrieve support list at this time. Please try again later';
+export const supportNeedsAssessmentError =
+  'Unable to retrieve needs assessment at this time. Please try again later';

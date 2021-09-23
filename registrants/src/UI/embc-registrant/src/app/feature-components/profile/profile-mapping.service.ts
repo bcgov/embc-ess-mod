@@ -66,12 +66,15 @@ export class ProfileMappingService {
       .getAddressForm()
       .pipe(first())
       .subscribe((address) => {
+        const primaryAddress = this.locationService.getAddressRegFromAddress(
+          profile.primaryAddress
+        );
         address.setValue({
-          address: profile.primaryAddress,
-          isBcAddress: this.isBCAddress(profile.primaryAddress.stateProvince),
+          address: primaryAddress,
+          isBcAddress: this.isBCAddress(profile?.primaryAddress?.stateProvince),
           isNewMailingAddress: null,
           isBcMailingAddress: null,
-          mailingAddress: profile.primaryAddress
+          mailingAddress: primaryAddress
         });
       });
   }
@@ -160,14 +163,12 @@ export class ProfileMappingService {
   }
 
   private setSecurityQuestions(profile: Profile): void {
-    console.log(profile.securityQuestions);
     let formGroup: FormGroup;
 
     this.formCreationService
       .getSecurityQuestionsForm()
       .pipe(first())
       .subscribe((securityQuestions) => {
-        console.log(securityQuestions);
         securityQuestions.setValue({
           questions: {
             question1: profile.securityQuestions[0].question,

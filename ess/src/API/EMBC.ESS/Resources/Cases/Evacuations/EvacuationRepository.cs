@@ -444,7 +444,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_EvacuationFileId), file);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_NeedsAssessmentID), file.era_CurrentNeedsAssessmentid);
 
-            var teamMember = essContext.era_essteamusers.ByKey(newSupport._era_issuedbyid_value).GetValue();
+            var teamMember = essContext.era_essteamusers.Where(tu => tu.era_essteamuserid == newSupport._era_issuedbyid_value).SingleOrDefault();
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_IssuedById), teamMember);
 
             AssignSupplierToSupport(newSupport);

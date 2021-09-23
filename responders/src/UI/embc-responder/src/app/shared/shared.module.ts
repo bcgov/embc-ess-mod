@@ -30,6 +30,7 @@ import { ViewAssessmentDialogComponent } from './components/dialog-components/vi
 import { CustomPipeModule } from './pipes/customPipe.module';
 import { VoidReferralDialogComponent } from './components/dialog-components/void-referral-dialog/void-referral-dialog.component';
 import { ReprintReferralDialogComponent } from './components/dialog-components/reprint-referral-dialog/reprint-referral-dialog.component';
+import { ProcessSupportsDialogComponent } from './components/dialog-components/process-supports-dialog/process-supports-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ReprintReferralDialogComponent } from './components/dialog-components/r
     CustomGstFieldComponent,
     ViewAssessmentDialogComponent,
     VoidReferralDialogComponent,
-    ReprintReferralDialogComponent
+    ReprintReferralDialogComponent,
+    ProcessSupportsDialogComponent
   ],
   imports: [
     CommonModule,

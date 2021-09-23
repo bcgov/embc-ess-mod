@@ -21,10 +21,19 @@ export class SupportDetailsModel {
 }
 
 export class SupportDeliveryModel {
-  issuedTo: string;
+  issuedTo: EvacuationFileHouseholdMember;
   name: string;
   supplier: SupplierListItemModel;
   supplierNote: string;
+  details?: SupplierDetailsModel;
+}
+
+export class SupplierDetailsModel {
+  hostName?: string;
+  hostAddress?: string;
+  hostCity?: string;
+  hostPhone?: string;
+  emailAddress?: string;
 }
 
 export class RestaurantMeal {

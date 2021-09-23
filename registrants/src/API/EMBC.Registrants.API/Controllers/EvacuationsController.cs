@@ -16,9 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -84,7 +86,7 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var files = await evacuationSearchService.GetFiles(userId,
-                new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending });
+                new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired });
 
             return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
@@ -100,7 +102,7 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var files = await evacuationSearchService.GetFiles(userId,
-               new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed });
+               new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Archived, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed });
 
             return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
@@ -150,6 +152,7 @@ namespace EMBC.Registrants.API.Controllers
         public string SecretPhrase { get; set; }
         public bool SecretPhraseEdited { get; set; }
         public DateTime LastModified { get; set; }
+        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
     }
 
     /// <summary>
@@ -258,5 +261,271 @@ namespace EMBC.Registrants.API.Controllers
     {
         Preliminary,
         Assessed
+    }
+
+    [KnownType(typeof(Referral))]
+    public abstract class Support
+    {
+        public string Id { get; set; }
+        public DateTime IssuedOn { get; set; }
+        public string IssuingMemberTeamName { get; set; }
+
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+
+        public SupportStatus Status { get; set; }
+
+        public abstract SupportMethod Method { get; }
+
+        public abstract SupportCategory Category { get; }
+
+        public abstract SupportSubCategory SubCategory { get; }
+
+        public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    }
+
+    [KnownType(typeof(ClothingReferral))]
+    [KnownType(typeof(IncidentalsReferral))]
+    [KnownType(typeof(FoodGroceriesReferral))]
+    [KnownType(typeof(FoodRestaurantReferral))]
+    [KnownType(typeof(FoodRestaurantReferral))]
+    [KnownType(typeof(LodgingBilletingReferral))]
+    [KnownType(typeof(LodgingGroupReferral))]
+    [KnownType(typeof(LodgingHotelReferral))]
+    [KnownType(typeof(TransportationOtherReferral))]
+    [KnownType(typeof(TransportationTaxiReferral))]
+    public abstract class Referral : Support
+    {
+        public override SupportMethod Method => SupportMethod.Referral;
+
+        public string SupplierId { get; set; }
+
+        public string SupplierName { get; set; }
+        public Address SupplierAddress { get; set; }
+
+        public string IssuedToPersonName { get; set; }
+    }
+
+    public class ClothingReferral : Referral
+    {
+        public bool ExtremeWinterConditions { get; set; }
+
+        public override SupportCategory Category => SupportCategory.Clothing;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.None;
+
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+    }
+
+    public class IncidentalsReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Incidentals;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.None;
+
+        public string ApprovedItems { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+    }
+
+    public class FoodGroceriesReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Food;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Food_Groceries;
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfDays { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+    }
+
+    public class FoodRestaurantReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Food;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Food_Restaurant;
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfBreakfastsPerPerson { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfLunchesPerPerson { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfDinnersPerPerson { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+    }
+
+    public class LodgingHotelReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Hotel;
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfRooms { get; set; }
+    }
+
+    public class LodgingBilletingReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Billeting;
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+
+        public string HostName { get; set; }
+        public string HostAddress { get; set; }
+        public string HostCity { get; set; }
+        public string HostEmail { get; set; }
+        public string HostPhone { get; set; }
+    }
+
+    public class LodgingGroupReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Group;
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+
+        public string FacilityName { get; set; }
+        public string FacilityAddress { get; set; }
+        public string FacilityCity { get; set; }
+        public string FacilityCommunityCode { get; set; }
+        public string FacilityContactPhone { get; set; }
+    }
+
+    public class TransportationTaxiReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Transportation;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Taxi;
+
+        public string FromAddress { get; set; }
+
+        public string ToAddress { get; set; }
+    }
+
+    public class TransportationOtherReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Transportation;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Other;
+
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+
+        public string TransportMode { get; set; }
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportStatus
+    {
+        [Description("Draft")]
+        Draft,
+
+        [Description("Active")]
+        Active,
+
+        [Description("Expired")]
+        Expired,
+
+        [Description("Void")]
+        Void
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportMethod
+    {
+        Unknown,
+
+        [Description("Referral")]
+        Referral
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportCategory
+    {
+        Unknown,
+
+        [Description("Clothing")]
+        Clothing,
+
+        [Description("Food")]
+        Food,
+
+        [Description("Incidentals")]
+        Incidentals,
+
+        [Description("Lodging")]
+        Lodging,
+
+        [Description("Transportation")]
+        Transportation
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportSubCategory
+    {
+        None,
+
+        [Description("Hotel/Motel")]
+        Lodging_Hotel,
+
+        [Description("Billeting")]
+        Lodging_Billeting,
+
+        [Description("Group Lodging")]
+        Lodging_Group,
+
+        [Description("Groceries")]
+        Food_Groceries,
+
+        [Description("Restaurant Meals")]
+        Food_Restaurant,
+
+        [Description("Taxi")]
+        Transportation_Taxi,
+
+        [Description("Other")]
+        Transportation_Other
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportVoidReason
+    {
+        [Description("Error On Printed Referral")]
+        ErrorOnPrintedReferral,
+
+        [Description("New Supplier Required")]
+        NewSupplierRequired,
+
+        [Description("Supplier Could Not Meet Need")]
+        SupplierCouldNotMeetNeed
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportReprintReason
+    {
+        [Description("Error On Printed Referral")]
+        ErrorOnPrintedReferral,
+
+        [Description("Printed Error")]
+        PrintedError,
+
+        [Description("Evacuee Lost Referral")]
+        EvacueeLostReferral
     }
 }
