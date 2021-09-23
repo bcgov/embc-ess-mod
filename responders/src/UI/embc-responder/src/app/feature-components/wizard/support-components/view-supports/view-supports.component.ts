@@ -13,6 +13,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-view-supports',
@@ -32,7 +33,8 @@ export class ViewSupportsComponent implements OnInit {
     private viewSupportsService: ViewSupportsService,
     private alertService: AlertService,
     private dialog: MatDialog,
-    public referralService: ReferralCreationService
+    public referralService: ReferralCreationService,
+    private wizardService: WizardService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -56,6 +58,7 @@ export class ViewSupportsComponent implements OnInit {
         this.alertService.setAlert('danger', globalConst.supportListerror);
       }
     );
+    this.setStepStatus();
     this.filtersToLoad = this.viewSupportsService.load();
   }
 
@@ -87,6 +90,19 @@ export class ViewSupportsComponent implements OnInit {
         ...this.supportList,
         ...this.referralService.getDraftSupport()
       ];
+    }
+  }
+
+  setStepStatus() {
+    let index = this.supportList.findIndex(
+      (support) => support.status === SupportStatus.Draft
+    );
+    if (index > -1) {
+      this.wizardService.setStepStatus('/ess-wizard/ess-file', true);
+      this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', true);
+    } else {
+      this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+      this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', false);
     }
   }
 
