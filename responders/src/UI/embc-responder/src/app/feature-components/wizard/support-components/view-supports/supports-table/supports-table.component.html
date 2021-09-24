@@ -2,14 +2,14 @@
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Support#</th>
-      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      <td mat-cell class="bold" *matCellDef="let element">{{ element.id }}</td>
     </ng-container>
 
     <ng-container matColumnDef="category">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Support Type</th>
       <td mat-cell *matCellDef="let element">
         {{
-          element.subCategory === null ? element.category : element.subCategory
+          element.subCategory === 'None' ? element.category : element.subCategory
         }}
       </td>
     </ng-container>

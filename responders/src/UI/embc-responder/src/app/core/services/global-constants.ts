@@ -334,6 +334,20 @@ export const essFileStepIncompleteMessage: DialogContent = {
     '<p>Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.</p>',
   cancelButton: 'Close'
 };
+
+export const supportIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please process the <strong>DRAFT</strong> Supports prior to accessing this step.</p>',
+  cancelButton: 'Close'
+};
+
+export const supportInProgressMessage: DialogContent = {
+  text:
+    '<p><span class="bold field-error">WARNING: </span>You have a Support that has not been completed. This record will be lost if you continue. Do you wish to continue?</p>',
+  confirmButton: 'Yes',
+  cancelButton: 'No, Cancel'
+};
+
 export const stepIncompleteMessage: DialogContent = {
   text:
     '<p>Please <strong>complete the current step</strong> prior to proceeding to the next steps.</p>',

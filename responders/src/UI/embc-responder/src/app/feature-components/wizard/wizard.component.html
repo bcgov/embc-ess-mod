@@ -22,7 +22,7 @@
         [routerLink]="menu?.route"
         [state]="{ step: menu?.step, title: menu?.title }"
       >
-        <div (click)="goToStep(menu?.isLocked, $event)" class="row outer-div">
+        <div (click)="goToStep(menu?.isLocked, $event, menu?.route)" class="row outer-div">
           <div class="col-md-3 img-align-col">
             <img
               class="img-align"

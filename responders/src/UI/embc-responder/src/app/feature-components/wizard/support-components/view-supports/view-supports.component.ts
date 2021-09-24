@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Support, SupportStatus } from 'src/app/core/api/models';
@@ -34,7 +34,8 @@ export class ViewSupportsComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     public referralService: ReferralCreationService,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    private cd: ChangeDetectorRef
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -58,7 +59,6 @@ export class ViewSupportsComponent implements OnInit {
         this.alertService.setAlert('danger', globalConst.supportListerror);
       }
     );
-    this.setStepStatus();
     this.filtersToLoad = this.viewSupportsService.load();
   }
 
@@ -79,7 +79,6 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   openSupportDetails($event: Support): void {
-    console.log($event);
     this.stepSupportsService.selectedSupportDetail = $event;
     this.router.navigate(['/ess-wizard/add-supports/view-detail']);
   }
@@ -94,15 +93,17 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   setStepStatus() {
-    let index = this.supportList.findIndex(
+    let index = this.supportList?.findIndex(
       (support) => support.status === SupportStatus.Draft
     );
     if (index > -1) {
       this.wizardService.setStepStatus('/ess-wizard/ess-file', true);
       this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', true);
+      this.cd.detectChanges();
     } else {
       this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
       this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', false);
+      this.cd.detectChanges();
     }
   }
 
@@ -122,11 +123,13 @@ export class ViewSupportsComponent implements OnInit {
       displayText = globalConst.saveMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
+        this.setStepStatus();
       }, 500);
     } else if (state?.action === 'delete') {
       displayText = globalConst.supportDeleteMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
+        this.setStepStatus();
       }, 500);
     }
   }

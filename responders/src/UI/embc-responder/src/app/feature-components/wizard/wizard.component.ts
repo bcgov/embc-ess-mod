@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
@@ -24,7 +24,8 @@ export class WizardComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private cacheService: CacheService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef
   ) {
     const params = this.route.snapshot.queryParams;
     if (params && params.type) {
@@ -35,6 +36,7 @@ export class WizardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadDefaultStep();
+    this.cd.detectChanges();
 
     // Scroll to top when navigating. "scrollPositionRestoration" option doesn't work for Mat-Sidenav-Content.
     this.scrollSubscription = this.router.events.subscribe((ev: any) => {
@@ -68,18 +70,30 @@ export class WizardComponent implements OnInit, OnDestroy {
    * @param lockedIndicator
    * @param $event
    */
-  goToStep(lockedIndicator: boolean, $event: MouseEvent): void {
+  goToStep(
+    lockedIndicator: boolean,
+    $event: MouseEvent,
+    targetRoute: string
+  ): void {
+    const curStep = this.wizardService.getCurrentStep(this.router.url);
     if (lockedIndicator) {
       $event.stopPropagation();
       $event.preventDefault();
-
-      const curStep = this.wizardService.getCurrentStep(this.router.url);
 
       const lockedMsg =
         this.wizardService.menuItems[curStep]?.incompleteMsg ||
         globalConst.stepIncompleteMessage;
 
       this.openLockedModal(lockedMsg);
+    } else if (
+      !lockedIndicator &&
+      (this.router.url === '/ess-wizard/add-supports/details' ||
+        this.router.url === '/ess-wizard/add-supports/delivery')
+    ) {
+      $event.stopPropagation();
+      $event.preventDefault();
+
+      this.openWarningModal(globalConst.supportInProgressMessage, targetRoute);
     }
   }
 
@@ -129,6 +143,29 @@ export class WizardComponent implements OnInit, OnDestroy {
       },
       width: '530px'
     });
+  }
+
+  /**
+   * Opens information modal to display the support step
+   * warning message
+   *
+   * @param text message to display
+   */
+  openWarningModal(content: DialogContent, navigateTo: string) {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content
+        },
+        width: '530px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.router.navigate([navigateTo]);
+        }
+      });
   }
 
   /**
