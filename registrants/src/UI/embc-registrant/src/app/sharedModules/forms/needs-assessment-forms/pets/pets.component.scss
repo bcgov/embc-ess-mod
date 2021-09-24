@@ -1,11 +1,11 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
 }
 
 .family-button {
-  border: 2px solid #169BD5 !important;
-  color: #169BD5;
-  background-color: #FFFFFF !important;
+  border: 2px solid #169bd5 !important;
+  color: #169bd5;
+  background-color: #ffffff !important;
 }
 
 .details-button {
@@ -25,19 +25,21 @@ table {
   max-height: 500px;
 }
 
-.mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+.mat-cell:first-of-type,
+.mat-footer-cell:first-of-type,
+.mat-header-cell:first-of-type {
   padding-left: unset;
 }
 
 .mat-cell {
-  margin-right:24px;
+  margin-right: 24px;
 }
 
 .mobile-label {
   display: none;
 }
 
-@media(max-width: 600px) {
+@media (max-width: 600px) {
   .mobile-label {
     width: 80px;
     display: inline-block;
@@ -58,7 +60,9 @@ table {
   }
 
   // Tweaks for Angular Material 8
-  .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+  .mat-cell:first-of-type,
+  .mat-footer-cell:first-of-type,
+  .mat-header-cell:first-of-type {
     padding-left: unset;
   }
 
@@ -105,4 +109,13 @@ table {
 .wrapText {
   overflow-wrap: break-word;
   display: inline-block;
+}
+
+.pets-info {
+  padding: 20px;
+  margin-top: 20px;
+  background-color: rgba(242, 242, 242, 1);
+  p {
+    margin: 0px;
+  }
 }

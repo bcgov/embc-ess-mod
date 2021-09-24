@@ -77,28 +77,17 @@ export class LocationService {
     const countries = this.getCountriesList();
     const stateProvinces = this.getStateProvinceList();
 
-    const addressCommunity = communities.find(
-      (comm) => comm.code === addressObject.community
-    );
-    let addressCountry = countries.find(
-      (coun) => coun.code === addressObject.country
-    );
-    let addressStateProvince = stateProvinces.find(
-      (sp) => sp.code === addressObject.stateProvince
-    );
+    const addressCommunity =
+      communities.find((comm) => comm.code === addressObject.community) ??
+      communities.find((comm) => comm.name === addressObject.community);
 
-    if (addressStateProvince === undefined) {
-      addressStateProvince = stateProvinces.find((sp) => sp.code === 'BC');
-    }
+    const addressCountry =
+      countries.find((coun) => coun.code === addressObject.country) ??
+      stateProvinces.find((sp) => sp.code === 'BC');
 
-    if (addressCountry === undefined) {
-      addressCountry = countries.find((ct) => ct.code === 'CAN');
-    }
-
-    // ERASE LATER: Local dummy data to work only
-    // if (addressCommunity === undefined) {
-    //   addressCommunity = communities.find((comm) => comm.name === 'Vancouver');
-    // }
+    const addressStateProvince =
+      stateProvinces.find((sp) => sp.code === addressObject.stateProvince) ??
+      countries.find((ct) => ct.code === 'CAN');
 
     return {
       addressLine1: addressObject.addressLine1,

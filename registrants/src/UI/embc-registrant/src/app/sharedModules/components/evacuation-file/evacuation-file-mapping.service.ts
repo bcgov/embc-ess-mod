@@ -31,6 +31,7 @@ export class EvacuationFileMappingService {
       evacuationFile.secretPhraseEdited
     );
     this.restrictionService.restrictedAccess = evacuationFile.isRestricted;
+    this.evacuationFileDataService.supports = evacuationFile.supports;
   }
 
   private mapSecretPhrase(
