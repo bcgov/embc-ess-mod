@@ -7700,15 +7700,6 @@
         <NavigationProperty Name="era_era_embcregion_era_supplierpayments_EMBCRegion" Type="Collection(mscrm.era_supplierpayments)" Partner="era_EMBCRegion" />
         <NavigationProperty Name="era_era_embcregion_era_supplierinvoice_EMBCRegion" Type="Collection(mscrm.era_supplierinvoice)" Partner="era_EMBCRegion" />
       </EntityType>
-      <EntityType Name="era_era_evacueesupport_era_householdmember" BaseType="mscrm.crmbaseentity">
-        <Key>
-          <PropertyRef Name="era_era_evacueesupport_era_householdmemberid" />
-        </Key>
-        <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="era_householdmemberid" Type="Edm.Guid" />
-        <Property Name="era_evacueesupportid" Type="Edm.Guid" />
-        <Property Name="era_era_evacueesupport_era_householdmemberid" Type="Edm.Guid" />
-      </EntityType>
       <EntityType Name="era_era_householdmember_era_evacueesupport" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_era_householdmember_era_evacueesupportid" />
@@ -8152,6 +8143,7 @@
         <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
         <Property Name="era_selfregistrationdate" Type="Edm.DateTimeOffset" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_era_evacuatedfromid_value" Type="Edm.Guid" />
         <Property Name="era_registrationcompleteddate" Type="Edm.DateTimeOffset" />
         <Property Name="era_supportstotalamountsummary_base" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
@@ -8207,6 +8199,9 @@
         <NavigationProperty Name="era_era_evacuationfile_era_evacueesupport_ESSFileId" Type="Collection(mscrm.era_evacueesupport)" Partner="era_EvacuationFileId" />
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_era_evacuationfile">
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_EvacuatedFromID" Type="mscrm.era_jurisdiction" Nullable="false" Partner="era_era_jurisdiction_era_evacuationfile_EvacuatedFromID">
+          <ReferentialConstraint Property="_era_evacuatedfromid_value" ReferencedProperty="era_jurisdictionid" />
         </NavigationProperty>
       </EntityType>
       <EntityType Name="era_evacueesupport" BaseType="mscrm.crmbaseentity">
@@ -8309,7 +8304,6 @@
         <NavigationProperty Name="era_SupportTypeId" Type="mscrm.era_support" Nullable="false" Partner="era_era_support_era_evacueesupport_SupportType">
           <ReferentialConstraint Property="_era_supporttypeid_value" ReferencedProperty="era_supportid" />
         </NavigationProperty>
-        <NavigationProperty Name="era_era_evacueesupport_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="era_era_evacueesupport_era_householdmember" />
         <NavigationProperty Name="era_NeedsAssessmentID" Type="mscrm.era_needassessment" Nullable="false" Partner="era_era_needassessment_era_evacueesupport_NeedsAssessmentID">
           <ReferentialConstraint Property="_era_needsassessmentid_value" ReferencedProperty="era_needassessmentid" />
         </NavigationProperty>
@@ -8395,7 +8389,6 @@
         <NavigationProperty Name="era_EvacuationFileid" Type="mscrm.era_evacuationfile" Nullable="false" Partner="era_era_evacuationfile_era_householdmember_EvacuationFileid">
           <ReferentialConstraint Property="_era_evacuationfileid_value" ReferencedProperty="era_evacuationfileid" />
         </NavigationProperty>
-        <NavigationProperty Name="era_era_evacueesupport_era_householdmember" Type="Collection(mscrm.era_evacueesupport)" Partner="era_era_evacueesupport_era_householdmember" />
         <NavigationProperty Name="era_era_householdmember_era_evacueesupport" Type="Collection(mscrm.era_evacueesupport)" Partner="era_era_householdmember_era_evacueesupport" />
       </EntityType>
       <EntityType Name="era_jurisdiction" BaseType="mscrm.crmbaseentity">
@@ -8474,6 +8467,7 @@
         </NavigationProperty>
         <NavigationProperty Name="era_era_jurisdiction_era_needassessment_Jurisdiction" Type="Collection(mscrm.era_needassessment)" Partner="era_Jurisdictionid" />
         <NavigationProperty Name="era_era_jurisdiction_era_evacueesupport_GroupLodgingCityID" Type="Collection(mscrm.era_evacueesupport)" Partner="era_GroupLodgingCityID" />
+        <NavigationProperty Name="era_era_jurisdiction_era_evacuationfile_EvacuatedFromID" Type="Collection(mscrm.era_evacuationfile)" Partner="era_EvacuatedFromID" />
       </EntityType>
       <EntityType Name="era_needassessment" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -31681,7 +31675,6 @@
           <NavigationPropertyBinding Path="era_era_embcregion_era_supplierpayments_EMBCRegion" Target="era_supplierpaymentses" />
           <NavigationPropertyBinding Path="era_era_embcregion_era_supplierinvoice_EMBCRegion" Target="era_supplierinvoices" />
         </EntitySet>
-        <EntitySet Name="era_era_evacueesupport_era_householdmemberset" EntityType="Microsoft.Dynamics.CRM.era_era_evacueesupport_era_householdmember" />
         <EntitySet Name="era_era_householdmember_era_evacueesupportset" EntityType="Microsoft.Dynamics.CRM.era_era_householdmember_era_evacueesupport" />
         <EntitySet Name="era_era_householdmember_era_needassessmentset" EntityType="Microsoft.Dynamics.CRM.era_era_householdmember_era_needassessment" />
         <EntitySet Name="era_essfilenotes" EntityType="Microsoft.Dynamics.CRM.era_essfilenote">
@@ -31831,6 +31824,7 @@
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_animal_ESSFileid" Target="era_animals" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_evacueesupport_ESSFileId" Target="era_evacueesupports" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
+          <NavigationPropertyBinding Path="era_EvacuatedFromID" Target="era_jurisdictions" />
         </EntitySet>
         <EntitySet Name="era_evacueesupports" EntityType="Microsoft.Dynamics.CRM.era_evacueesupport">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31852,7 +31846,6 @@
           <NavigationPropertyBinding Path="era_SupplierId" Target="era_suppliers" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
           <NavigationPropertyBinding Path="era_SupportTypeId" Target="era_supports" />
-          <NavigationPropertyBinding Path="era_era_evacueesupport_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="era_NeedsAssessmentID" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_EvacuationFileId" Target="era_evacuationfiles" />
           <NavigationPropertyBinding Path="era_GroupLodgingCityID" Target="era_jurisdictions" />
@@ -31879,7 +31872,6 @@
           <NavigationPropertyBinding Path="era_Registrant" Target="contacts" />
           <NavigationPropertyBinding Path="era_era_householdmember_era_needassessment" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_EvacuationFileid" Target="era_evacuationfiles" />
-          <NavigationPropertyBinding Path="era_era_evacueesupport_era_householdmember" Target="era_evacueesupports" />
           <NavigationPropertyBinding Path="era_era_householdmember_era_evacueesupport" Target="era_evacueesupports" />
         </EntitySet>
         <EntitySet Name="era_jurisdictions" EntityType="Microsoft.Dynamics.CRM.era_jurisdiction">
@@ -31910,6 +31902,7 @@
           <NavigationPropertyBinding Path="era_ESSTeamId" Target="era_essteams" />
           <NavigationPropertyBinding Path="era_era_jurisdiction_era_needassessment_Jurisdiction" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_era_jurisdiction_era_evacueesupport_GroupLodgingCityID" Target="era_evacueesupports" />
+          <NavigationPropertyBinding Path="era_era_jurisdiction_era_evacuationfile_EvacuatedFromID" Target="era_evacuationfiles" />
         </EntitySet>
         <EntitySet Name="era_needassessments" EntityType="Microsoft.Dynamics.CRM.era_needassessment">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
