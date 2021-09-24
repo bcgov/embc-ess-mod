@@ -48,6 +48,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             file.era_evacuationfileid = Guid.NewGuid();
 
             essContext.AddToera_evacuationfiles(file);
+            essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
             AssignPrimaryRegistrant(file, primaryContact);
             AssignToTask(file, evacuationFile.TaskId);
             AddPets(file);
@@ -83,6 +84,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             file.era_evacuationfileid = currentFile.era_evacuationfileid;
 
             essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
+            essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
 
             foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
             {
