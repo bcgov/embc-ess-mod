@@ -5,6 +5,7 @@ import { MaskTextPipe } from './maskText.pipe';
 import { CustomDate } from './customDate.pipe';
 import { ArrayContains } from './arrayContains.pipe';
 import { ArrayValueOf } from './arrayValueOf.pipe';
+import { MaskEvacuatedAddressPipe } from './maskEvacuatedAddress.pipe';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { ArrayValueOf } from './arrayValueOf.pipe';
     MaskTextPipe,
     CustomDate,
     ArrayContains,
-    ArrayValueOf
+    ArrayValueOf,
+    MaskEvacuatedAddressPipe
   ],
   imports: [CommonModule],
   exports: [
@@ -20,7 +22,8 @@ import { ArrayValueOf } from './arrayValueOf.pipe';
     MaskTextPipe,
     CustomDate,
     ArrayContains,
-    ArrayValueOf
+    ArrayValueOf,
+    MaskEvacuatedAddressPipe
   ]
 })
 export class CustomPipeModule {}

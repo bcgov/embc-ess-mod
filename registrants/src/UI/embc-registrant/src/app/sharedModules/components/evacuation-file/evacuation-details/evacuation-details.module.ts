@@ -7,6 +7,7 @@ import { ReviewModule } from '../../../../feature-components/review/review.modul
 import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
+import { CustomPipeModule } from 'src/app/core/pipe/customPipe.module';
 
 @NgModule({
   declarations: [EvacuationDetailsComponent, ReferralDetailsComponent],
@@ -16,7 +17,8 @@ import { MatTableModule } from '@angular/material/table';
     ReviewModule,
     MatCardModule,
     MatExpansionModule,
-    MatTableModule
+    MatTableModule,
+    CustomPipeModule
   ]
 })
 export class EvacuationDetailsModule {}

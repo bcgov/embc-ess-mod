@@ -48,6 +48,7 @@ export class ProfileMappingService {
   }
 
   populateFromBCSC(profile: Profile): void {
+    console.log(profile);
     this.formCreationService
       .getPersonalDetailsForm()
       .pipe(first())
@@ -66,15 +67,26 @@ export class ProfileMappingService {
       .getAddressForm()
       .pipe(first())
       .subscribe((address) => {
-        const primaryAddress = this.locationService.getAddressRegFromAddress(
-          profile.primaryAddress
-        );
         address.setValue({
-          address: primaryAddress,
+          address: {
+            addressLine1: profile?.primaryAddress?.addressLine1,
+            addressLine2: profile?.primaryAddress?.addressLine2,
+            community: null,
+            stateProvince: profile.primaryAddress?.stateProvince,
+            country: profile.primaryAddress?.country,
+            postalCode: null
+          },
           isBcAddress: this.isBCAddress(profile?.primaryAddress?.stateProvince),
           isNewMailingAddress: null,
           isBcMailingAddress: null,
-          mailingAddress: primaryAddress
+          mailingAddress: {
+            addressLine1: null,
+            addressLine2: null,
+            community: null,
+            stateProvince: null,
+            country: null,
+            postalCode: null
+          }
         });
       });
   }

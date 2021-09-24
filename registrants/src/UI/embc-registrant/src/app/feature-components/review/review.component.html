@@ -305,7 +305,7 @@
             class="col-md-3"
             *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community.name !== undefined
+                ?.community?.name !== undefined
             "
           >
             {{
@@ -317,7 +317,7 @@
             class="col-md-3"
             *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community.name === undefined
+                ?.community?.name === undefined
             "
           >
             {{

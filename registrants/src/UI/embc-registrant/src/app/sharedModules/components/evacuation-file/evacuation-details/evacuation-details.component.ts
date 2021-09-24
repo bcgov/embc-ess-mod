@@ -1,53 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
-import { EvacuationFileStatus } from 'src/app/core/api/models';
-
-export interface Referral {
-  referralDate: string;
-  referralDetails: ReferralDetails[];
-}
-
-export interface ReferralDetails {
-  provider: string;
-  type: string;
-  issuedTo: string;
-  expiry: string;
-  code: string;
-  amount: string;
-  status: string;
-  providedTo: string[];
-  providerDetails: string;
-  issuedBy: string;
-}
-
-const REFERRALS: Referral[] = [
-  {
-    referralDate: '07-Sep-2020',
-    referralDetails: [
-      {
-        provider: 'e-Transfer',
-        type: 'Food-Groceries',
-        issuedTo: 'Smith, John',
-        expiry: 'n/a',
-        code: 'P356211',
-        amount: '$50',
-        status: 'Active',
-        providedTo: [
-          'Smith, John',
-          'Smith, Jenna',
-          'Smith, Michael',
-          'Smith, Lily'
-        ],
-        providerDetails: 'e-Transfer issued to jsmith@gmail.com',
-        issuedBy: 'Oak Bay ESS Team'
-      }
-    ]
-  }
-];
+import { EvacuationFileStatus, Support } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -63,7 +20,7 @@ export class EvacuationDetailsComponent implements OnInit {
   currentFlow: string;
   parentPageName = 'needs-assessment';
   referralDetailsText = 'expand all';
-  referralData = [];
+  referralData = new Map<string, Support[]>();
   showActiveList = true;
   showInactiveList = true;
   displayStatus: string;
@@ -91,6 +48,15 @@ export class EvacuationDetailsComponent implements OnInit {
     }
 
     this.defineEssFileStatus();
+
+    if (this.evacuationFileDataService?.supports?.length > 0) {
+      // this.referralData = this.evacuationFileDataService.supports;
+      this.referralData = this.splitReferralsByDate(
+        this.evacuationFileDataService?.supports
+      );
+      console.log(this.referralData);
+      console.log(this.referralData.size);
+    }
   }
 
   changeStatusColor(): string {
@@ -142,5 +108,27 @@ export class EvacuationDetailsComponent implements OnInit {
     } else {
       this.displayStatus = 'Inactive';
     }
+  }
+
+  private splitReferralsByDate(referrals: Support[]): Map<string, Support[]> {
+    const groupedReferrals: Map<string, Support[]> = new Map<
+      string,
+      Support[]
+    >();
+    referrals.forEach((item) => {
+      const date = item.issuedOn.split('T')[0];
+      let supports: Support[] = [];
+      if (groupedReferrals.get(date)) {
+        supports = groupedReferrals.get(date);
+        supports.push(item);
+        groupedReferrals.set(date, supports);
+      } else {
+        supports = [];
+        supports.push(item);
+        groupedReferrals.set(date, supports);
+      }
+    });
+
+    return groupedReferrals;
   }
 }
