@@ -237,7 +237,10 @@ namespace EMBC.Registrants.API.Controllers
         Expired,
 
         [EnumMember(Value = "Completed")]
-        Completed
+        Completed,
+
+        [EnumMember(Value = "Archived")]
+        Archived
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
