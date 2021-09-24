@@ -94,3 +94,13 @@ tr.example-element-row:not(.example-expanded-row):hover {
     transform: rotate(180deg);
   }
 }
+
+.support-active {
+  color: #00b055;
+}
+.support-void {
+  color: grey;
+}
+.support-expired {
+  color: #d00000;
+}

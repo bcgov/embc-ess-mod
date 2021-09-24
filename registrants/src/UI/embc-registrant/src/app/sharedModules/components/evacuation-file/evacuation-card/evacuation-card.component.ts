@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { EvacuationFileStatus } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
-import { NeedsAssessmentMappingService } from '../../../../feature-components/needs-assessment/needs-assessment-mapping.service';
-import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileMappingService } from '../evacuation-file-mapping.service';
 
 @Component({
@@ -12,7 +11,6 @@ import { EvacuationFileMappingService } from '../evacuation-file-mapping.service
 })
 export class EvacuationCardComponent implements OnInit {
   @Input() evacuationFileCard: EvacuationFileModel;
-  @Input() evacuationFileStatus: string;
 
   imageIcon: string;
   pathName: string;
@@ -29,10 +27,22 @@ export class EvacuationCardComponent implements OnInit {
   }
 
   changeStatusColor(): void {
-    if (this.evacuationFileStatus === 'Active') {
-      this.imageIcon = '/assets/images/active_status.svg';
-    } else {
-      this.imageIcon = '/assets/images/inactive_status.svg';
+    switch (this.evacuationFileCard.status) {
+      case EvacuationFileStatus.Active:
+        this.imageIcon = '/assets/images/status-blue.svg';
+        break;
+      case EvacuationFileStatus.Completed:
+        this.imageIcon = '/assets/images/status-green.svg';
+        break;
+      case EvacuationFileStatus.Expired:
+        this.imageIcon = '/assets/images/status-grey.svg';
+        break;
+      case EvacuationFileStatus.Pending:
+        this.imageIcon = '/assets/images/status-orange.svg';
+        break;
+      case EvacuationFileStatus.Archived:
+        this.imageIcon = '/assets/images/status-black.svg';
+        break;
     }
   }
 

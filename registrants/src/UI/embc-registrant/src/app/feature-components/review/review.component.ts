@@ -14,6 +14,7 @@ export class ReviewComponent implements OnInit {
   @Input() showHeading: boolean;
   @Input() currentFlow: string;
   @Input() parentPageName: string;
+  @Input() allowEdit: boolean;
   componentToLoad: Observable<any>;
   cs: any;
 

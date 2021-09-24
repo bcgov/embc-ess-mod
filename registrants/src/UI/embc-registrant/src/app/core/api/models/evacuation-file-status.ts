@@ -4,5 +4,6 @@ export enum EvacuationFileStatus {
   Pending = 'Pending',
   Active = 'Active',
   Expired = 'Expired',
-  Completed = 'Completed'
+  Completed = 'Completed',
+  Archived = 'Archived'
 }

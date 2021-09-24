@@ -47,8 +47,6 @@ export class EvacuationDetailsComponent implements OnInit {
       this.evacuationFileTab = 'Past';
     }
 
-    this.defineEssFileStatus();
-
     if (this.evacuationFileDataService?.supports?.length > 0) {
       // this.referralData = this.evacuationFileDataService.supports;
       this.referralData = this.splitReferralsByDate(
@@ -80,6 +78,19 @@ export class EvacuationDetailsComponent implements OnInit {
     }
   }
 
+  allowEdition(): boolean {
+    if (
+      this.evacuationFileDataService.evacuationFileStatus ===
+        EvacuationFileStatus.Expired ||
+      this.evacuationFileDataService.evacuationFileStatus ===
+        EvacuationFileStatus.Pending
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   onMouseOver(): void {
     this.backArrowImgSrc = '/assets/images/back_arrow_hover.svg';
   }
@@ -97,20 +108,13 @@ export class EvacuationDetailsComponent implements OnInit {
     }
   }
 
-  private defineEssFileStatus(): void {
-    if (
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Active ||
-      this.evacuationFileDataService.evacuationFileStatus ===
-        EvacuationFileStatus.Pending
-    ) {
-      this.displayStatus = 'Active';
-    } else {
-      this.displayStatus = 'Inactive';
-    }
-  }
-
   private splitReferralsByDate(referrals: Support[]): Map<string, Support[]> {
+    //Sorting referrals by Issued On Asc
+    referrals.sort(
+      (a, b) => new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
+    );
+
+    //Grouping based on Issued on date
     const groupedReferrals: Map<string, Support[]> = new Map<
       string,
       Support[]

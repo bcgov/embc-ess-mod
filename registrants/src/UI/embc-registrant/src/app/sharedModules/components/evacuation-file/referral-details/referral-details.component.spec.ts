@@ -1,3 +1,4 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ReferralDetailsComponent } from './referral-details.component';
@@ -9,7 +10,8 @@ describe('ReferralDetailsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ReferralDetailsComponent]
+        declarations: [ReferralDetailsComponent],
+        providers: [HttpClient, HttpHandler]
       }).compileComponents();
     })
   );
