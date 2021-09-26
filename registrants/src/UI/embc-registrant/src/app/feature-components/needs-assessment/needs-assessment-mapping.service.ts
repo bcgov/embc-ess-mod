@@ -52,7 +52,6 @@ export class NeedsAssessmentMappingService {
   }
 
   setInsurance(evacuatedAddress: RegAddress, insurance: InsuranceOption): void {
-    console.log(insurance);
     this.evacuationFileDataService.evacuatedAddress = evacuatedAddress;
     this.needsAssessmentService.insurance = insurance;
 
@@ -60,7 +59,6 @@ export class NeedsAssessmentMappingService {
       .getEvacuatedForm()
       .pipe(first())
       .subscribe((details) => {
-        console.log(details);
         details.setValue({
           evacuatedFromPrimary: this.isSameRegAddress(
             this.profileDataService.primaryAddressDetails,

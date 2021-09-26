@@ -13,10 +13,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import {
-  Referral,
-  ReferralDetails
-} from '../evacuation-details/evacuation-details.component';
+import { Referral, Support } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-referral-details',
@@ -35,7 +32,8 @@ import {
   encapsulation: ViewEncapsulation.None
 })
 export class ReferralDetailsComponent implements OnInit {
-  @Input() evacuationReferral: Referral;
+  @Input() referralDataSource: Support[];
+  @Input() referralsDate: string;
   @Input() allExpandState: boolean;
 
   panelOpenState = false;
@@ -47,11 +45,15 @@ export class ReferralDetailsComponent implements OnInit {
     'referral',
     'amount'
   ];
-  expandedElement: ReferralDetails | null;
+  expandedElement: Support | null;
 
   constructor() {}
 
   ngOnInit(): void {
-    // console.log(this.evacuationReferral);
+    console.log(this.referralDataSource);
+  }
+
+  getReferral(support: Support): Referral {
+    return support as Referral;
   }
 }

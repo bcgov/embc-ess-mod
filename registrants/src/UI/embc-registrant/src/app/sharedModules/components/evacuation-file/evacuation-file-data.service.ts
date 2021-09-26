@@ -5,7 +5,8 @@ import {
   Address,
   EvacuationFile,
   EvacuationFileStatus,
-  NeedsAssessment
+  NeedsAssessment,
+  Support
 } from 'src/app/core/api/models';
 import { EvacuationsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
@@ -35,6 +36,8 @@ export class EvacuationFileDataService {
   private secretPhraseVal: string;
   private secretPhraseEditedVal: boolean;
   private evacuationFileStatusVal: EvacuationFileStatus;
+
+  private supportsVal: Array<Support>;
 
   constructor(
     private evacuationService: EvacuationsService,
@@ -83,6 +86,13 @@ export class EvacuationFileDataService {
   }
   public set evacuationFileStatus(value: EvacuationFileStatus) {
     this.evacuationFileStatusVal = value;
+  }
+
+  public get supports(): Array<Support> {
+    return this.supportsVal;
+  }
+  public set supports(value: Array<Support>) {
+    this.supportsVal = value;
   }
 
   public getCurrentEvacuationFileCount(): Observable<number> {

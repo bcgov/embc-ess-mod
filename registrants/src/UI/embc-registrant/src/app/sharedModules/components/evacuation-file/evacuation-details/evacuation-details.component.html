@@ -36,7 +36,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="referralData.length === 0; else referrals">
+  <div *ngIf="referralData?.size === 0; else referrals">
     <app-review
       [type]="type"
       [showHeading]="false"
@@ -66,51 +66,24 @@
         <div class="col-md-3">Evacuated From:</div>
         <div class="col-md-3 evacuatedAddress">
           <div>
-            <span
-              >{{
-                evacuationFileDataService?.evacuatedFromAddress?.addressLine1
-              }},</span
-            >
-            <span
-              *ngIf="
-                evacuationFileDataService?.evacuatedFromAddress?.addressLine2 !=
-                null
+            <p
+              [innerHTML]="
+                evacuationFileDataService?.evacuatedAddress
+                  | maskEvacuatedaddress
               "
-            >
-              &nbsp;{{
-                evacuationFileDataService?.evacuatedFromAddress?.addressLine2
-              }},</span
-            >
-          </div>
-          <div>
-            <span
-              >{{
-                evacuationFileDataService?.evacuatedFromAddress?.community
-                  ?.name
-              }},</span
-            >
-            <span>
-              &nbsp;{{
-                evacuationFileDataService?.evacuatedFromAddress?.stateProvince
-                  ?.name
-              }}</span
-            >
-            <span
-              *ngIf="
-                evacuationFileDataService?.evacuatedFromAddress?.postalCode !=
-                null
-              "
-              >, &nbsp;{{
-                evacuationFileDataService?.evacuatedFromAddress?.postalCode
-              }}</span
-            >
+            ></p>
           </div>
         </div>
       </div>
       <div class="row info-detail">
         <div class="col-md-3">Evacuated File Created:</div>
         <div class="col-md-3">
-          <span><b>03-Sep-2020</b></span>
+          <span
+            ><b>{{
+              evacuationFileDataService?.evacuationFileDate
+                | date: 'dd-MMM-yyyy'
+            }}</b></span
+          >
         </div>
       </div>
       <br /><br />
@@ -141,10 +114,12 @@
       </div>
       <br />
       <app-referral-details
-        *ngFor="let referral of referralData"
-        [evacuationReferral]="referral"
+        *ngFor="let key of referralData.keys()"
+        [referralDataSource]="referralData.get(key)"
+        [referralsDate]="key"
         [allExpandState]="allExpandState"
-      ></app-referral-details>
+      >
+      </app-referral-details>
     </mat-card-content>
   </ng-template>
 </mat-card>
