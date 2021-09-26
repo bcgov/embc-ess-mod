@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
 using Microsoft.AspNetCore.Http;
@@ -48,7 +49,12 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<RegistrantProfile>>> SearchMatchingRegistrants([FromQuery] SearchParameters searchParameters)
         {
+            var userRole = Enum.Parse<MemberRole>(currentUserRole);
             var results = await evacuationSearchService.SearchRegistrantMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth);
+
+            if (userRole == MemberRole.Tier1 && results.Any(profile => profile.Restriction))
+                return Ok("Restricted Registrant");
+
             return Ok(results);
         }
 
