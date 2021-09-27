@@ -31,7 +31,7 @@
       <div class="statusDetailHeaderElements">
         <span>Status: </span>
         <span [ngStyle]="{ color: changeStatusColor() }">{{
-          displayStatus
+          this.evacuationFileDataService.evacuationFileStatus
         }}</span>
       </div>
     </div>
@@ -42,6 +42,7 @@
       [showHeading]="false"
       [currentFlow]="currentFlow"
       [parentPageName]="parentPageName"
+      [allowEdit]="allowEdition()"
     >
     </app-review>
     <div class="supportReceived">
