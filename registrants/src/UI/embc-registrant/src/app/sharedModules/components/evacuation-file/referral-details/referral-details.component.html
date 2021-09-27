@@ -7,65 +7,73 @@
     <mat-expansion-panel-header class="headerPanel">
       <!-- <div class="panelHeader"> -->
       <mat-panel-title class="panelTitle">
-        20-Feb-2020
-        <!-- {{evacuationReferral?.referralDate}} -->
+        {{ referralsDate | date: 'dd-MMM-yyyy' }}
       </mat-panel-title>
       <!-- </div> -->
     </mat-expansion-panel-header>
-    <table mat-table [dataSource]="" multiTemplateDataRows>
-      <!-- evacuationReferral?.referralDetails -->
+    <table mat-table [dataSource]="referralDataSource" multiTemplateDataRows>
       <!-- Position Column -->
       <ng-container matColumnDef="provider">
         <th mat-header-cell *matHeaderCellDef style="width: 220px">
-          Supporter Provider
+          Support Provider
         </th>
-        <td mat-cell *matCellDef="let element" style="width: 220px">
-          {{ element.provider }}
+        <td *matCellDef="let element" mat-cell style="width: 220px">
+          <p
+            *ngIf="
+              element.subCategory !== 'Lodging_Billeting' &&
+              element.subCategory !== 'Lodging_Group'
+            "
+          >
+            {{ element.supplierName }}
+          </p>
+          <p *ngIf="element.subCategory === 'Lodging_Billeting'">
+            {{ getBilletingReferral(element).hostName }}
+          </p>
+          <p *ngIf="element.subCategory === 'Lodging_Group'">
+            {{ getGroupReferral(element).facilityName }}
+          </p>
         </td>
       </ng-container>
 
-      <!-- Name Column -->
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef style="width: 220px">
           Support Type
         </th>
         <td mat-cell *matCellDef="let element" style="width: 220px">
-          {{ element.type }}
+          <p *ngIf="element.subCategory !== 'None'">
+            {{ element.subCategory }}
+          </p>
+          <p *ngIf="element.subCategory === 'None'">{{ element.category }}</p>
         </td>
       </ng-container>
 
-      <!-- Weight Column -->
       <ng-container matColumnDef="issuedTo">
         <th mat-header-cell *matHeaderCellDef style="width: 220px">
-          Issued To
+          Support Period
         </th>
         <td mat-cell *matCellDef="let element" style="width: 220px">
-          {{ element.issuedTo }}
+          {{ element.from | date: 'dd-MMM-yyyy' }} to
+          {{ element.to | date: 'dd-MMM-yyyy' }}
         </td>
       </ng-container>
 
-      <!-- Symbol Column -->
-      <ng-container matColumnDef="expiry" style="width: 145px">
-        <th mat-header-cell *matHeaderCellDef style="width: 145px">Expiry</th>
-        <td mat-cell *matCellDef="let element">{{ element.expiry }}</td>
-      </ng-container>
-
-      <!-- Weight Column -->
       <ng-container matColumnDef="referral">
         <th mat-header-cell *matHeaderCellDef style="width: 105px">
-          Referral #
+          Support #
         </th>
         <td mat-cell *matCellDef="let element" style="width: 105px">
-          {{ element.code }}
+          {{ element.id }}
         </td>
       </ng-container>
 
-      <!-- Symbol Column -->
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef style="width: 136px">Amount</th>
         <td mat-cell *matCellDef="let element" class="row amountCell">
           <div class="col-md-6" style="padding: 35px 20px">
-            {{ element.amount }}
+            <p *ngIf="element.totalAmount !== undefined">
+              ${{ element.totalAmount }}
+            </p>
+            <p *ngIf="element.totalAmount === undefined">n/a</p>
           </div>
           <div class="col-md-6" style="padding: 35px 20px">
             <img
@@ -91,18 +99,60 @@
             "
           >
             <div class="row info-detail" style="width: 45%; padding-top: 15px">
-              <div class="col-md-5"><b>Status</b></div>
-              <div class="col-md-3">{{ element.status }}</div>
+              <div class="col-md-5"><b>Support Status</b></div>
+              <div
+                class="col-md-5"
+                [ngClass]="{
+                  'support-active': element?.status === 'Active',
+                  'support-void': element?.status === 'Void',
+                  'support-expired': element?.status === 'Expired'
+                }"
+              >
+                {{ element.status }}
+              </div>
 
               <div class="col-md-5"><b>Support Provided to</b></div>
-              <div class="col-md-3">{{ element.providedTo }}</div>
+              <div class="col-md-5">
+                <p *ngFor="member; of: element.includedHouseholdMembers">
+                  {{ getMemberFullName(member) }}
+                </p>
+              </div>
             </div>
             <div class="row info-detail" style="width: 45%; padding-top: 15px">
               <div class="col-md-5"><b>Support Provider</b></div>
-              <div class="col-md-3">{{ element.providerDetails }}</div>
+              <div
+                class="col-md-5"
+                *ngIf="
+                  element.subCategory !== 'Lodging_Billeting' &&
+                  element.subCategory !== 'Lodging_Group'
+                "
+              >
+                <p>{{ element.supplierName }}</p>
+                <p
+                  [innerHTML]="element?.supplierAddress | maskSupplierAddress"
+                ></p>
+              </div>
+
+              <div
+                class="col-md-5"
+                *ngIf="element.subCategory === 'Lodging_Billeting'"
+              >
+                <p>{{ getBilletingReferral(element).hostName }}</p>
+                <p>{{ getBilletingReferral(element).hostAddress }}</p>
+                <p>{{ getBilletingReferral(element).hostCity }}</p>
+              </div>
+
+              <div
+                class="col-md-5"
+                *ngIf="element.subCategory === 'Lodging_Group'"
+              >
+                <p>{{ getGroupReferral(element).facilityName }}</p>
+                <p>{{ getGroupReferral(element).facilityAddress }}</p>
+                <p>{{ getGroupReferral(element).facilityCity }}</p>
+              </div>
 
               <div class="col-md-5"><b>Support Issued By</b></div>
-              <div class="col-md-3">{{ element.issuedBy }}</div>
+              <div class="col-md-5">{{ element.issuingMemberTeamName }}</div>
             </div>
           </div>
         </td>

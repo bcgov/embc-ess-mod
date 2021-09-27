@@ -305,7 +305,7 @@
             class="col-md-3"
             *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community.name !== undefined
+                ?.community?.name !== undefined
             "
           >
             {{
@@ -317,7 +317,7 @@
             class="col-md-3"
             *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community.name === undefined
+                ?.community?.name === undefined
             "
           >
             {{
@@ -503,7 +503,7 @@
         <p *ngIf="showHeading" class="review-heading">Review & Submit</p>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Restriction</div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
@@ -561,7 +561,7 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Location</div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
@@ -627,7 +627,7 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Insurance</div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
@@ -666,7 +666,7 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Household Members</div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
@@ -721,7 +721,7 @@
           <div class="col-md-6 card-heading">
             Household Medication & Dietary Requirements
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
@@ -780,7 +780,7 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Animals</div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
@@ -833,7 +833,7 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Self-Provided Needs</div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
@@ -925,7 +925,7 @@
       <mat-card-content>
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Security Phrase</div>
-          <div class="col-md-2">
+          <div class="col-md-2" *ngIf="allowEdit">
             <button
               class="edit-image"
               mat-icon-button
