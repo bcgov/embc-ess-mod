@@ -31,7 +31,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         //   //return from(this.router.navigate(['access-denied']));
         //   this.alertService.setAlert('danger','Access Denied')
         // } else {
-          return throwError(error);
+        return throwError(error);
         //}
       })
     ) as Observable<HttpEvent<any>>;

@@ -93,7 +93,7 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   setStepStatus() {
-    let index = this.supportList?.findIndex(
+    const index = this.supportList?.findIndex(
       (support) => support.status === SupportStatus.Draft
     );
     if (index > -1) {
