@@ -23,8 +23,7 @@ import { ProfileService } from './profile.service';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent
-  implements OnInit, AfterViewInit, AfterViewChecked
-{
+  implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('profileStepper') profileStepper: MatStepper;
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
@@ -168,7 +167,6 @@ export class ProfileComponent
         break;
       case 'security-questions':
         this.saveSecurityQuestions(this.form.get('questions') as FormGroup);
-        console.log(this.profileDataService.securityQuestions);
         break;
       default:
     }
