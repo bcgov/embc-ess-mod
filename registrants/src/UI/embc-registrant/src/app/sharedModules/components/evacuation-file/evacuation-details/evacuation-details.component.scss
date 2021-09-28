@@ -120,6 +120,26 @@
     }
 }
 
+.support-pending {
+    color: #f28200;
+}
+
+.support-active {
+    color: #169bd5;
+}
+
+.support-expired {
+    color: #797979;
+}
+
+.support-completed {
+    color: #3c9d0f;
+}
+
+.support-archived {
+    color: black;
+}
+
 @media (max-width: 995px) {
     .evacFileHeader {
         height: auto;

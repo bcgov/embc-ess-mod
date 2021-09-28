@@ -30,9 +30,21 @@
     <div class="col-md-3 statusDetailHeader">
       <div class="statusDetailHeaderElements">
         <span>Status: </span>
-        <span [ngStyle]="{ color: changeStatusColor() }">{{
-          this.evacuationFileDataService.evacuationFileStatus
-        }}</span>
+        <span
+          [ngClass]="{
+            'support-active':
+              evacuationFileDataService.evacuationFileStatus === 'Active',
+            'support-pending':
+              evacuationFileDataService.evacuationFileStatus === 'Pending',
+            'support-expired':
+              evacuationFileDataService.evacuationFileStatus === 'Expired',
+            'support-completed':
+              evacuationFileDataService.evacuationFileStatus === 'Completed',
+            'support-archived':
+              evacuationFileDataService.evacuationFileStatus === 'Archived'
+          }"
+          >{{ evacuationFileDataService.evacuationFileStatus }}</span
+        >
       </div>
     </div>
   </div>
