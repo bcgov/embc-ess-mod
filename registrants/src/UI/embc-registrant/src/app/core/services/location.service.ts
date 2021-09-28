@@ -34,30 +34,30 @@ export class LocationService {
   constructor(
     private configService: ConfigurationService,
     private cacheService: CacheService
-  ) {}
+  ) { }
 
   public getCommunityList(): Community[] {
     return this.communityList
       ? this.communityList
       : JSON.parse(this.cacheService.get('communityList'))
-      ? JSON.parse(this.cacheService.get('communityList'))
-      : this.getCommunities();
+        ? JSON.parse(this.cacheService.get('communityList'))
+        : this.getCommunities();
   }
 
   public getStateProvinceList(): StateProvince[] {
     return this.stateProvinceList
       ? this.stateProvinceList
       : JSON.parse(this.cacheService.get('stateProvinceList'))
-      ? JSON.parse(this.cacheService.get('stateProvinceList'))
-      : this.getStateProvinces();
+        ? JSON.parse(this.cacheService.get('stateProvinceList'))
+        : this.getStateProvinces();
   }
 
   public getCountriesList(): Country[] {
     return this.countriesList
       ? this.countriesList
       : JSON.parse(this.cacheService.get('countriesList'))
-      ? JSON.parse(this.cacheService.get('countriesList'))
-      : this.getCountries();
+        ? JSON.parse(this.cacheService.get('countriesList'))
+        : this.getCountries();
   }
 
   public getRegionalDistricts(): string[] {
@@ -83,11 +83,11 @@ export class LocationService {
 
     const addressCountry =
       countries.find((coun) => coun.code === addressObject.country) ??
-      stateProvinces.find((sp) => sp.code === 'BC');
+      countries.find((sp) => sp.code === 'CAN');
 
     const addressStateProvince =
       stateProvinces.find((sp) => sp.code === addressObject.stateProvince) ??
-      countries.find((ct) => ct.code === 'CAN');
+      stateProvinces.find((ct) => ct.code === 'BC');
 
     return {
       addressLine1: addressObject.addressLine1,
@@ -116,13 +116,13 @@ export class LocationService {
           : (addressObject.community as Community).code,
       city:
         (addressObject.community as Community).code === undefined &&
-        typeof addressObject.community === 'string'
+          typeof addressObject.community === 'string'
           ? addressObject.community
           : null,
       postalCode: addressObject.postalCode,
       stateProvince:
         addressObject.stateProvince === null ||
-        addressObject.stateProvince === undefined
+          addressObject.stateProvince === undefined
           ? null
           : addressObject.stateProvince?.code
     };
