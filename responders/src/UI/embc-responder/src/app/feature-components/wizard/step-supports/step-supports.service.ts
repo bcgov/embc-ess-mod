@@ -30,6 +30,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
+import * as moment from 'moment';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -215,11 +216,17 @@ export class StepSupportsService {
       return value.id;
     });
     const support: Support = {
-      from: this.supportDetails.fromDate,
+      from: this.convertDateTimeToString(
+        this.supportDetails.fromDate,
+        this.supportDetails.fromTime
+      ),
       includedHouseholdMembers: members,
       needsAssessmentId: this.evacFile.id,
       status: SupportStatus.Draft,
-      to: this.supportDetails.toDate,
+      to: this.convertDateTimeToString(
+        this.supportDetails.toDate,
+        this.supportDetails.toTime
+      ),
       category: null,
       method: null,
       subCategory: null
@@ -318,5 +325,24 @@ export class StepSupportsService {
     } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {
       return globalConst.clothingRateSheet;
     }
+  }
+
+  convertDateTimeToString(date: string, time: string): string {
+    const dateToDate = new Date(date);
+    const day = dateToDate.getDate();
+    const month = dateToDate.getMonth() + 1;
+    const year = dateToDate.getFullYear();
+
+    let dayString = '' + day;
+    let monthString = '' + month;
+
+    if (day < 10) {
+      dayString = '0' + day;
+    }
+
+    if (month < 10) {
+      monthString = '0' + month;
+    }
+    return year + '-' + monthString + '-' + dayString + 'T' + time + ':00Z';
   }
 }

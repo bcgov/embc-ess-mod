@@ -113,7 +113,7 @@
 
               <div class="col-md-5"><b>Support Provided to</b></div>
               <div class="col-md-5">
-                <p *ngFor="member; of: element.includedHouseholdMembers">
+                <p *ngFor="let member of element.includedHouseholdMembers">
                   {{ getMemberFullName(member) }}
                 </p>
               </div>

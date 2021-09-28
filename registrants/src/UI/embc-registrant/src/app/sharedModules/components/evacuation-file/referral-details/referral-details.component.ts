@@ -71,6 +71,7 @@ export class ReferralDetailsComponent implements OnInit {
    * @returns the Full LAST NAME, First Name of the given household member ID
    */
   getMemberFullName(memberId: string): string {
+    console.log(memberId);
     const lastName = this.needsAssessmentService.householdMembers.find(
       (member) => member.id === memberId
     ).details?.lastName;
