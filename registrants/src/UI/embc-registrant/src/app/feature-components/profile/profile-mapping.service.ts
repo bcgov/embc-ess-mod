@@ -16,7 +16,7 @@ export class ProfileMappingService {
     private conflictService: ConflictManagementService,
     private locationService: LocationService,
     private restrictionService: RestrictionService
-  ) { }
+  ) {}
 
   mapProfile(profile: Profile): void {
     this.profileDataService.setProfileId(profile.id);
