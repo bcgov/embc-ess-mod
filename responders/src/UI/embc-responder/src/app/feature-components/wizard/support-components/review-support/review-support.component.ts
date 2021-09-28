@@ -25,6 +25,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { ProcessSupportsDialogComponent } from 'src/app/shared/components/dialog-components/process-supports-dialog/process-supports-dialog.component';
 import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-review-support',
@@ -280,21 +281,22 @@ export class ReviewSupportComponent implements OnInit {
         })
         .afterClosed()
         .subscribe((value) => {
-          if (value === 'confirm') {
-            this.processDraftSupports();
-          }
+          this.processDraftSupports(value);
         });
     }
   }
 
-  private processDraftSupports(): void {
+  private processDraftSupports(addSummary: boolean): void {
+    console.log(addSummary);
     this.showLoader = !this.showLoader;
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe(
       (response) => {
+        this.referralService.clearDraftSupport();
         this.showLoader = !this.showLoader;
         console.log(response);
+        this.router.navigate(['/ess-wizard/add-supports']);
       },
       (error) => {
         this.showLoader = !this.showLoader;

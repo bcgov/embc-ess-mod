@@ -14,30 +14,18 @@
 
         <div class="row">
           <div class="col-md-12">
-            <mat-radio-group
-              formControlName="restrictedAccess"
-              class="primary-radio-group"
-              required
-            >
-              <mat-radio-button [value]="true"
-                ><span class="radio-text"><b>Yes</b></span> - You may disclose
+            <mat-radio-group formControlName="restrictedAccess" class="primary-radio-group" required>
+              <mat-radio-button [value]="false"><span class="radio-text"><b>Yes</b></span> - You may disclose
                 my location and contact information with family or
-                friends</mat-radio-button
-              >
-              <mat-radio-button [value]="false"
-                ><span class="radio-text"><b>No</b></span> - You may not
-                disclose my location or contact information</mat-radio-button
-              >
-              <mat-error
-                class="custom-mat-error field-error"
-                *ngIf="
+                friends</mat-radio-button>
+              <mat-radio-button [value]="true"><span class="radio-text"><b>No</b></span> - You may not
+                disclose my location or contact information</mat-radio-button>
+              <mat-error class="custom-mat-error field-error" *ngIf="
                   restrFormControl?.restrictedAccess.touched &&
                   restrFormControl?.restrictedAccess.invalid &&
                   restrFormControl?.restrictedAccess.hasError('required')
-                "
-              >
-                Restriction is required</mat-error
-              >
+                ">
+                Restriction is required</mat-error>
             </mat-radio-group>
           </div>
         </div>
