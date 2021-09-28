@@ -83,11 +83,11 @@ export class LocationService {
 
     const addressCountry =
       countries.find((coun) => coun.code === addressObject.country) ??
-      stateProvinces.find((sp) => sp.code === 'BC');
+      countries.find((sp) => sp.code === 'CAN');
 
     const addressStateProvince =
       stateProvinces.find((sp) => sp.code === addressObject.stateProvince) ??
-      countries.find((ct) => ct.code === 'CAN');
+      stateProvinces.find((ct) => ct.code === 'BC');
 
     return {
       addressLine1: addressObject.addressLine1,
