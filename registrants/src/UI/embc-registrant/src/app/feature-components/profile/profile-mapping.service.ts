@@ -63,17 +63,22 @@ export class ProfileMappingService {
         });
       });
 
+    this.profileDataService.primaryAddressDetails =
+      this.locationService.getAddressRegFromAddress(profile.primaryAddress);
     this.formCreationService
       .getAddressForm()
       .pipe(first())
       .subscribe((address) => {
         address.setValue({
           address: {
-            addressLine1: profile?.primaryAddress?.addressLine1,
-            addressLine2: profile?.primaryAddress?.addressLine2,
+            addressLine1:
+              this.profileDataService.primaryAddressDetails?.addressLine1,
+            addressLine2:
+              this.profileDataService.primaryAddressDetails.addressLine2,
             community: null,
-            stateProvince: profile.primaryAddress?.stateProvince,
-            country: profile.primaryAddress?.country,
+            stateProvince:
+              this.profileDataService.primaryAddressDetails.stateProvince,
+            country: this.profileDataService.primaryAddressDetails.country,
             postalCode: null
           },
           isBcAddress: this.isBCAddress(profile?.primaryAddress?.stateProvince),
