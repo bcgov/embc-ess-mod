@@ -57,6 +57,7 @@ export class SupportDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.stepSupportsService.supportDetails);
     this.createSupportDetailsForm();
     this.supportDetailsForm.get('noOfDays').patchValue(1);
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
@@ -118,7 +119,7 @@ export class SupportDetailsComponent implements OnInit {
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
         this.stepSupportsService?.supportDetails?.fromDate
-          ? this.stepSupportsService?.supportDetails?.fromDate
+          ? new Date(this.stepSupportsService?.supportDetails?.fromDate)
           : new Date(this.currentDate),
         [this.customValidation.validDateValidator(), Validators.required]
       ],
@@ -218,7 +219,10 @@ export class SupportDetailsComponent implements OnInit {
    * @returns true/false
    */
   exists(member: EvacuationFileHouseholdMember) {
-    return this.supportDetailsForm.get('members').value.indexOf(member) > -1;
+    const existingList: EvacuationFileHouseholdMember[] = this.supportDetailsForm.get(
+      'members'
+    ).value;
+    return existingList.findIndex((value) => value.id === member.id) > -1;
   }
 
   isIndeterminate() {

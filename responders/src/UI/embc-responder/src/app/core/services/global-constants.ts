@@ -178,6 +178,11 @@ export const supportDeleteMessage: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const supportEditMessage: DialogContent = {
+  text: '<p>Support successfully updated.</p>',
+  cancelButton: 'Close'
+};
+
 export const deleteMessage: DialogContent = {
   text: '<p>User has been successfully deleted from the ERA Tool.</p>',
   cancelButton: 'Close'

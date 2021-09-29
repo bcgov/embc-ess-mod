@@ -49,6 +49,7 @@ export class ViewSupportsComponent implements OnInit {
     this.showLoader = !this.showLoader;
     this.stepSupportsService.getExistingSupportList().subscribe(
       (value) => {
+        console.log(value);
         this.showLoader = !this.showLoader;
         this.supportList = value;
         this.addDraftSupports();
@@ -127,6 +128,12 @@ export class ViewSupportsComponent implements OnInit {
       }, 500);
     } else if (state?.action === 'delete') {
       displayText = globalConst.supportDeleteMessage;
+      setTimeout(() => {
+        this.openConfirmation(displayText);
+        this.setStepStatus();
+      }, 500);
+    } else if (state?.action === 'edit') {
+      displayText = globalConst.supportEditMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
         this.setStepStatus();

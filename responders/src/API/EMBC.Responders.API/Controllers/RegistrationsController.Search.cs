@@ -48,7 +48,9 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<RegistrantProfile>>> SearchMatchingRegistrants([FromQuery] SearchParameters searchParameters)
         {
-            var results = await evacuationSearchService.SearchRegistrantMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth);
+            var userRole = Enum.Parse<MemberRole>(currentUserRole);
+            var results = await evacuationSearchService.SearchRegistrantMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
+
             return Ok(results);
         }
 

@@ -9,6 +9,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 import { ApiModule } from './core/api/api.module';
 import { ErrorHandlingModule } from './shared/error-handling/error-handing.module';
 import { SharedModule } from './shared/shared.module';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +30,7 @@ import { SharedModule } from './shared/shared.module';
     ErrorHandlingModule.forRoot(),
     SharedModule
   ],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
