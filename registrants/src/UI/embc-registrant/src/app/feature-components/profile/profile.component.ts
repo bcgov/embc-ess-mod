@@ -23,7 +23,8 @@ import { ProfileService } from './profile.service';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent
-  implements OnInit, AfterViewInit, AfterViewChecked {
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   @ViewChild('profileStepper') profileStepper: MatStepper;
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();

@@ -19,8 +19,12 @@
     </div>
     <div class="row" style="margin-top: 20px">
       <div class="col">
-        <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)"
-          (serverError)="onServerError($event)"></captcha>
+        <captcha
+          language="en"
+          eagerFetchAudio="true"
+          (validToken)="onValidToken($event)"
+          (serverError)="onServerError($event)"
+        ></captcha>
       </div>
     </div>
   </div>
@@ -33,9 +37,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Restriction</div>
           <div class="col-md-2">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('restriction')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -43,17 +56,29 @@
 
         <div class="row info-detail">
           <div class="col-md-1">
-            <span *ngIf="
+            <span
+              *ngIf="
                 !(formCreationService.restrictionForm$ | async)?.value
                   .restrictedAccess
-              ">
-              <img src="/assets/images/restriction-on.svg" height="20" width="20" />
+              "
+            >
+              <img
+                src="/assets/images/restriction-on.svg"
+                height="20"
+                width="20"
+              />
             </span>
-            <span *ngIf="
+            <span
+              *ngIf="
                 (formCreationService.restrictionForm$ | async)?.value
                   .restrictedAccess
-              ">
-              <img src="/assets/images/restriction-off.svg" height="20" width="20" />
+              "
+            >
+              <img
+                src="/assets/images/restriction-off.svg"
+                height="20"
+                width="20"
+              />
             </span>
           </div>
           <div class="col-md-9">
@@ -70,9 +95,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Personal Details</div>
           <div class="col-md-2">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('personal-details')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('personal-details')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -82,8 +116,8 @@
           <div class="col-md-3">Last Name:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.personalDetailsForm$ | async)?.value
-            ?.lastName
+              (formCreationService.personalDetailsForm$ | async)?.value
+                ?.lastName
             }}
           </div>
         </div>
@@ -91,8 +125,8 @@
           <div class="col-md-3">First Name:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.personalDetailsForm$ | async)?.value
-            ?.firstName
+              (formCreationService.personalDetailsForm$ | async)?.value
+                ?.firstName
             }}
           </div>
         </div>
@@ -100,8 +134,8 @@
           <div class="col-md-3">Preferred Name:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.personalDetailsForm$ | async)?.value
-            ?.preferredName
+              (formCreationService.personalDetailsForm$ | async)?.value
+                ?.preferredName
             }}
           </div>
         </div>
@@ -109,8 +143,8 @@
           <div class="col-md-3">Initials:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.personalDetailsForm$ | async)?.value
-            ?.initials
+              (formCreationService.personalDetailsForm$ | async)?.value
+                ?.initials
             }}
           </div>
         </div>
@@ -118,8 +152,8 @@
           <div class="col-md-3">Date of Birth:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.personalDetailsForm$ | async)?.value
-            ?.dateOfBirth | customDate
+              (formCreationService.personalDetailsForm$ | async)?.value
+                ?.dateOfBirth | customDate
             }}
           </div>
         </div>
@@ -127,7 +161,7 @@
           <div class="col-md-3">Gender:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.personalDetailsForm$ | async)?.value?.gender
+              (formCreationService.personalDetailsForm$ | async)?.value?.gender
             }}
           </div>
         </div>
@@ -137,9 +171,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Primary Address</div>
           <div class="col-md-2">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('address')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -148,8 +191,8 @@
           <div class="col-md-3">Address line 1:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.address
-            ?.addressLine1
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.addressLine1
             }}
           </div>
         </div>
@@ -157,29 +200,35 @@
           <div class="col-md-3">Address line 2:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.address
-            ?.addressLine2
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.addressLine2
             }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">City:</div>
-          <div class="col-md-3" *ngIf="
+          <div
+            class="col-md-3"
+            *ngIf="
               (formCreationService.addressForm$ | async)?.value?.isBcAddress ===
               'Yes'
-            ">
+            "
+          >
             {{
-            (formCreationService.addressForm$ | async)?.value?.address
-            ?.community?.name
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.community?.name
             }}
           </div>
-          <div class="col-md-3" *ngIf="
+          <div
+            class="col-md-3"
+            *ngIf="
               (formCreationService.addressForm$ | async)?.value?.isBcAddress ===
               'No'
-            ">
+            "
+          >
             {{
-            (formCreationService.addressForm$ | async)?.value?.address
-            ?.community
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.community
             }}
           </div>
         </div>
@@ -187,8 +236,8 @@
           <div class="col-md-3">Postal Code:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.address
-            ?.postalCode
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.postalCode
             }}
           </div>
         </div>
@@ -196,8 +245,8 @@
           <div class="col-md-3">Province:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.address
-            ?.stateProvince?.name
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.stateProvince?.name
             }}
           </div>
         </div>
@@ -205,8 +254,8 @@
           <div class="col-md-3">Country:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.address
-            ?.country?.name
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.name
             }}
           </div>
         </div>
@@ -216,9 +265,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Mailing Address</div>
           <div class="col-md-2">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('address')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -227,8 +285,8 @@
           <div class="col-md-3">Address line 1:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.mailingAddress
-            ?.addressLine1
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.addressLine1
             }}
           </div>
         </div>
@@ -236,29 +294,35 @@
           <div class="col-md-3">Address line 2:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.mailingAddress
-            ?.addressLine2
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.addressLine2
             }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">City:</div>
-          <div class="col-md-3" *ngIf="
+          <div
+            class="col-md-3"
+            *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
                 ?.community?.name !== undefined
-            ">
+            "
+          >
             {{
-            (formCreationService.addressForm$ | async)?.value?.mailingAddress
-            ?.community?.name
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.community?.name
             }}
           </div>
-          <div class="col-md-3" *ngIf="
+          <div
+            class="col-md-3"
+            *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
                 ?.community?.name === undefined
-            ">
+            "
+          >
             {{
-            (formCreationService.addressForm$ | async)?.value?.mailingAddress
-            ?.community
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.community
             }}
           </div>
         </div>
@@ -266,8 +330,8 @@
           <div class="col-md-3">Postal Code:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.mailingAddress
-            ?.postalCode
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.postalCode
             }}
           </div>
         </div>
@@ -275,8 +339,8 @@
           <div class="col-md-3">Province:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.mailingAddress
-            ?.stateProvince?.name
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.stateProvince?.name
             }}
           </div>
         </div>
@@ -284,8 +348,8 @@
           <div class="col-md-3">Country:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.addressForm$ | async)?.value?.mailingAddress
-            ?.country?.name
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.name
             }}
           </div>
         </div>
@@ -295,26 +359,47 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Contact Details</div>
           <div class="col-md-2">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('contact-info')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('contact-info')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
         <hr />
         <div class="row info-detail">
           <div class="col-md-1">
-            <span *ngIf="
+            <span
+              *ngIf="
                 (formCreationService.contactDetailsForm$ | async)?.value
                   .showContacts
-              ">
-              <img src="/assets/images/restriction-on.svg" height="20" width="20" />
+              "
+            >
+              <img
+                src="/assets/images/restriction-on.svg"
+                height="20"
+                width="20"
+              />
             </span>
-            <span *ngIf="
+            <span
+              *ngIf="
                 !(formCreationService.contactDetailsForm$ | async)?.value
                   .showContacts
-              ">
-              <img src="/assets/images/restriction-off.svg" height="20" width="20" />
+              "
+            >
+              <img
+                src="/assets/images/restriction-off.svg"
+                height="20"
+                width="20"
+              />
             </span>
           </div>
           <div class="col-md-9">
@@ -329,7 +414,7 @@
           <div class="col-md-3">Telephone/Mobile:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.contactDetailsForm$ | async)?.value?.phone
+              (formCreationService.contactDetailsForm$ | async)?.value?.phone
             }}
           </div>
         </div>
@@ -337,7 +422,7 @@
           <div class="col-md-3">Email Address:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.contactDetailsForm$ | async)?.value?.email
+              (formCreationService.contactDetailsForm$ | async)?.value?.email
             }}
           </div>
         </div>
@@ -347,9 +432,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Security Questions</div>
           <div class="col-md-2">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('security-questions')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('security-questions')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -357,29 +451,14 @@
         <div class="row info-detail">
           <div class="col-md-3">
             {{
-            (formCreationService.securityQuestionsForm$ | async)?.value
-            .questions.question1
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.question1
             }}
           </div>
           <div class="col-md-3">
             {{
-            (formCreationService.securityQuestionsForm$ | async)?.value
-            .questions.answer1
-            }}
-          </div>
-        </div>
-
-        <div class="row info-detail">
-          <div class="col-md-3">
-            {{
-            (formCreationService.securityQuestionsForm$ | async)?.value
-            .questions.question2
-            }}
-          </div>
-          <div class="col-md-3">
-            {{
-            (formCreationService.securityQuestionsForm$ | async)?.value
-            .questions.answer2
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.answer1
             }}
           </div>
         </div>
@@ -387,14 +466,29 @@
         <div class="row info-detail">
           <div class="col-md-3">
             {{
-            (formCreationService.securityQuestionsForm$ | async)?.value
-            .questions.question3
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.question2
             }}
           </div>
           <div class="col-md-3">
             {{
-            (formCreationService.securityQuestionsForm$ | async)?.value
-            .questions.answer3
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.answer2
+            }}
+          </div>
+        </div>
+
+        <div class="row info-detail">
+          <div class="col-md-3">
+            {{
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.question3
+            }}
+          </div>
+          <div class="col-md-3">
+            {{
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.answer3
             }}
           </div>
         </div>
@@ -410,9 +504,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Restriction</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('restriction')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -420,17 +523,29 @@
 
         <div class="row info-detail">
           <div class="col-md-1">
-            <span *ngIf="
+            <span
+              *ngIf="
                 (formCreationService.restrictionForm$ | async)?.value
                   .restrictedAccess
-              ">
-              <img src="/assets/images/restriction-on.svg" height="20" width="20" />
+              "
+            >
+              <img
+                src="/assets/images/restriction-on.svg"
+                height="20"
+                width="20"
+              />
             </span>
-            <span *ngIf="
+            <span
+              *ngIf="
                 !(formCreationService.restrictionForm$ | async)?.value
                   .restrictedAccess
-              ">
-              <img src="/assets/images/restriction-off.svg" height="20" width="20" />
+              "
+            >
+              <img
+                src="/assets/images/restriction-off.svg"
+                height="20"
+                width="20"
+              />
             </span>
           </div>
           <div class="col-md-9">
@@ -447,9 +562,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Location</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('evac-address')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -458,35 +582,43 @@
           <div class="col-md-3">Evacuated From:</div>
           <div class="col-md-3">
             <p class="no-bottom-margin">
-              <span>{{
-                (formCreationService.evacuatedForm$ | async)?.value
-                ?.evacuatedFromAddress?.addressLine1
-                }},</span>
-              <span>&nbsp;{{
-                (formCreationService.evacuatedForm$ | async)?.value
-                ?.evacuatedFromAddress?.addressLine2
-                }}</span>
+              <span
+                >{{
+                  (formCreationService.evacuatedForm$ | async)?.value
+                    ?.evacuatedFromAddress?.addressLine1
+                }},</span
+              >
+              <span
+                >&nbsp;{{
+                  (formCreationService.evacuatedForm$ | async)?.value
+                    ?.evacuatedFromAddress?.addressLine2
+                }}</span
+              >
             </p>
             <p>
-              <span>{{
-                (formCreationService.evacuatedForm$ | async)?.value
-                ?.evacuatedFromAddress?.community?.name
+              <span
+                >{{
+                  (formCreationService.evacuatedForm$ | async)?.value
+                    ?.evacuatedFromAddress?.community?.name
                 }},
               </span>
               <span>{{
                 (formCreationService.evacuatedForm$ | async)?.value
-                ?.evacuatedFromAddress?.stateProvince?.name
-                }}</span>
-              <span [hidden]="
+                  ?.evacuatedFromAddress?.stateProvince?.name
+              }}</span>
+              <span
+                [hidden]="
                   (formCreationService.evacuatedForm$ | async).value
                     ?.evacuatedFromAddress?.postalCode == '' ||
                   (formCreationService.evacuatedForm$ | async).value
                     ?.evacuatedFromAddress?.postalCode == null
-                ">,&nbsp;</span>
+                "
+                >,&nbsp;</span
+              >
               <span>{{
                 (formCreationService.evacuatedForm$ | async).value
-                ?.evacuatedFromAddress?.postalCode
-                }}</span>
+                  ?.evacuatedFromAddress?.postalCode
+              }}</span>
             </p>
           </div>
         </div>
@@ -496,9 +628,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Insurance</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('evac-address')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -507,16 +648,16 @@
           <div class="col-md-3">Insurance:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.evacuatedForm$ | async)?.value.insurance ===
-            'Unknown'
-            ? "I don't know"
-            : (formCreationService.evacuatedForm$ | async)?.value
-            .insurance === 'Unsure'
-            ? 'Yes, but I am unsure if I have coverage for this event.'
-            : (formCreationService.evacuatedForm$ | async)?.value
-            .insurance === 'Yes'
-            ? 'Yes'
-            : 'No'
+              (formCreationService.evacuatedForm$ | async)?.value.insurance ===
+              'Unknown'
+                ? "I don't know"
+                : (formCreationService.evacuatedForm$ | async)?.value
+                    .insurance === 'Unsure'
+                ? 'Yes, but I am unsure if I have coverage for this event.'
+                : (formCreationService.evacuatedForm$ | async)?.value
+                    .insurance === 'Yes'
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -526,17 +667,28 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Household Members</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('family-information')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
         <hr />
-        <div *ngFor="
+        <div
+          *ngFor="
             let member of (formCreationService.householdMembersForm$ | async)
               ?.value.householdMembers
-          ">
+          "
+        >
           <ng-container *ngIf="member.isPrimaryRegistrant == false">
             <div class="row info-detail">
               <div class="col-md-3">First Name:</div>
@@ -570,9 +722,18 @@
             Household Medication & Dietary Requirements
           </div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('family-information')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -581,10 +742,10 @@
           <div class="col-md-3">Family Medication Requirements:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.householdMembersForm$ | async)?.value
-            .haveMedication === true
-            ? 'Yes'
-            : 'No'
+              (formCreationService.householdMembersForm$ | async)?.value
+                .haveMedication === true
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -592,22 +753,25 @@
           <div class="col-md-3">Family Dietary Requirements:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.householdMembersForm$ | async)?.value
-            .haveSpecialDiet === true
-            ? 'Yes'
-            : 'No'
+              (formCreationService.householdMembersForm$ | async)?.value
+                .haveSpecialDiet === true
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
-        <div class="row info-detail" *ngIf="
+        <div
+          class="row info-detail"
+          *ngIf="
             (formCreationService.householdMembersForm$ | async)?.value
               .haveSpecialDiet
-          ">
+          "
+        >
           <div class="col-md-3">Special Dietary Details:</div>
           <div class="col-md-3 wrap-text">
             {{
-            (formCreationService.householdMembersForm$ | async)?.value
-            .specialDietDetails
+              (formCreationService.householdMembersForm$ | async)?.value
+                .specialDietDetails
             }}
           </div>
         </div>
@@ -617,16 +781,27 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Animals</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('pets')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
         <hr />
-        <div *ngFor="
+        <div
+          *ngFor="
             let pet of (formCreationService.petsForm$ | async)?.value.pets
-          ">
+          "
+        >
           <div class="row info-detail">
             <div class="col-md-3">Pet Type:</div>
             <div class="col-md-3">{{ pet.type }}</div>
@@ -637,16 +812,19 @@
           </div>
           <br />
         </div>
-        <div *ngIf="
+        <div
+          *ngIf="
             (formCreationService.petsForm$ | async)?.value?.pets?.length > 0
-          " class="row info-detail">
+          "
+          class="row info-detail"
+        >
           <div class="col-md-3">Has sufficient pet food?</div>
           <div class="col-md-3">
             {{
-            (formCreationService.petsForm$ | async)?.value.hasPetsFood ===
-            true
-            ? 'Yes'
-            : 'No'
+              (formCreationService.petsForm$ | async)?.value.hasPetsFood ===
+              true
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -656,9 +834,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Self-Provided Needs</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('identify-needs')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('identify-needs')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
@@ -667,13 +854,13 @@
           <div class="col-md-3">Food:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideFood === 'Unsure'
-            ? "I'm not sure"
-            : (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideFood === 'Yes'
-            ? 'Yes'
-            : 'No'
+              (formCreationService.identifyNeedsForm$ | async)?.value
+                .canEvacueeProvideFood === 'Unsure'
+                ? "I'm not sure"
+                : (formCreationService.identifyNeedsForm$ | async)?.value
+                    .canEvacueeProvideFood === 'Yes'
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -681,13 +868,13 @@
           <div class="col-md-3">Lodging:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideLodging === 'Unsure'
-            ? "I'm not sure"
-            : (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideLodging === 'Yes'
-            ? 'Yes'
-            : 'No'
+              (formCreationService.identifyNeedsForm$ | async)?.value
+                .canEvacueeProvideLodging === 'Unsure'
+                ? "I'm not sure"
+                : (formCreationService.identifyNeedsForm$ | async)?.value
+                    .canEvacueeProvideLodging === 'Yes'
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -695,13 +882,13 @@
           <div class="col-md-3">Clothing:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideClothing === 'Unsure'
-            ? "I'm not sure"
-            : (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideClothing === 'Yes'
-            ? 'Yes'
-            : 'No'
+              (formCreationService.identifyNeedsForm$ | async)?.value
+                .canEvacueeProvideClothing === 'Unsure'
+                ? "I'm not sure"
+                : (formCreationService.identifyNeedsForm$ | async)?.value
+                    .canEvacueeProvideClothing === 'Yes'
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -709,13 +896,13 @@
           <div class="col-md-3">Transportation:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideTransportation === 'Unsure'
-            ? "I'm not sure"
-            : (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideTransportation === 'Yes'
-            ? 'Yes'
-            : 'No'
+              (formCreationService.identifyNeedsForm$ | async)?.value
+                .canEvacueeProvideTransportation === 'Unsure'
+                ? "I'm not sure"
+                : (formCreationService.identifyNeedsForm$ | async)?.value
+                    .canEvacueeProvideTransportation === 'Yes'
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -723,13 +910,13 @@
           <div class="col-md-3">Incidentals:</div>
           <div class="col-md-3">
             {{
-            (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideIncidentals === 'Unsure'
-            ? "I'm not sure"
-            : (formCreationService.identifyNeedsForm$ | async)?.value
-            .canEvacueeProvideIncidentals === 'Yes'
-            ? 'Yes'
-            : 'No'
+              (formCreationService.identifyNeedsForm$ | async)?.value
+                .canEvacueeProvideIncidentals === 'Unsure'
+                ? "I'm not sure"
+                : (formCreationService.identifyNeedsForm$ | async)?.value
+                    .canEvacueeProvideIncidentals === 'Yes'
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -739,9 +926,18 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Security Phrase</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('secret')"
+            >
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
             </button>
           </div>
         </div>
