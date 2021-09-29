@@ -33,7 +33,7 @@ namespace EMBC.Responders.API.Services
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId, MemberRole userRole);
 
-        Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth);
+        Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
 
         Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
     }
@@ -139,14 +139,14 @@ namespace EMBC.Responders.API.Services
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
         }
 
-        public async Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth)
+        public async Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
         {
             var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
-                IncludeRestrictedAccess = true,
+                IncludeRestrictedAccess = userRole != MemberRole.Tier1,
                 IncludeRegistrantProfilesOnly = true
             });
             return mapper.Map<IEnumerable<RegistrantProfile>>(searchResults.Profiles);
