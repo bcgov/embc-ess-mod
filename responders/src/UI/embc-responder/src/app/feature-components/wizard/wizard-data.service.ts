@@ -131,6 +131,7 @@ export class WizardDataService {
       title: 'Add Supports',
       route: '/ess-wizard/add-supports',
       isLocked: true,
+      incompleteMsg: globalConst.supportIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-supports.svg',
         altSrc: '/assets/images/wizard/supports.svg',
@@ -171,6 +172,7 @@ export class WizardDataService {
       title: 'Add Supports',
       route: '/ess-wizard/add-supports',
       isLocked: true,
+      incompleteMsg: globalConst.supportIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-supports.svg',
         altSrc: '/assets/images/wizard/supports.svg',
@@ -241,6 +243,7 @@ export class WizardDataService {
       title: 'Add Supports',
       route: '/ess-wizard/add-supports',
       isLocked: true,
+      incompleteMsg: globalConst.supportIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-supports.svg',
         altSrc: '/assets/images/wizard/supports.svg',
@@ -281,6 +284,7 @@ export class WizardDataService {
       title: 'Add Supports',
       route: '/ess-wizard/add-supports',
       isLocked: true,
+      incompleteMsg: globalConst.supportIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-supports.svg',
         altSrc: '/assets/images/wizard/supports.svg',

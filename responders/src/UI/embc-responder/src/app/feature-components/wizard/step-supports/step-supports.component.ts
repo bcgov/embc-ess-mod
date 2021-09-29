@@ -46,15 +46,24 @@ export class StepSupportsComponent implements OnInit {
             file.needsAssessment;
           console.log(file.supports);
           const supportModel = [];
+
           file.supports.forEach((support) => {
-            const value = {
-              ...support,
-              supplierAddress: this.locationsService.getAddressModelFromAddress(
-                (support as Referral).supplierAddress
-              )
-            };
-            supportModel.push(value);
+            if (
+              support.subCategory === 'Lodging_Group' ||
+              support.subCategory === 'Lodging_Billeting'
+            ) {
+              supportModel.push(support);
+            } else {
+              const value = {
+                ...support,
+                hostAddress: this.locationsService.getAddressModelFromAddress(
+                  (support as Referral).supplierAddress
+                )
+              };
+              supportModel.push(value);
+            }
           });
+
           this.stepSupportsService.setExistingSupportList(
             supportModel.sort(
               (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()

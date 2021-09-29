@@ -9,13 +9,15 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { throwError, Observable, of, from } from 'rxjs';
 import { catchError, delay, mergeMap, retryWhen } from 'rxjs/operators';
+import { AlertService } from '../components/alert/alert.service';
 import { ErrorDialogService } from './error-dialog/error-dialog.service';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
     private errorDialogService: ErrorDialogService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {}
 
   public intercept(
@@ -25,11 +27,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       this.delayedRetry(2000, 2),
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 403) {
-          return from(this.router.navigate(['access-denied']));
-        } else {
-          return throwError(error);
-        }
+        // if (error.status === 403) {
+        //   //return from(this.router.navigate(['access-denied']));
+        //   this.alertService.setAlert('danger','Access Denied')
+        // } else {
+        return throwError(error);
+        //}
       })
     ) as Observable<HttpEvent<any>>;
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Support, SupportStatus } from 'src/app/core/api/models';
@@ -13,6 +13,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-view-supports',
@@ -32,7 +33,9 @@ export class ViewSupportsComponent implements OnInit {
     private viewSupportsService: ViewSupportsService,
     private alertService: AlertService,
     private dialog: MatDialog,
-    public referralService: ReferralCreationService
+    public referralService: ReferralCreationService,
+    private wizardService: WizardService,
+    private cd: ChangeDetectorRef
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -76,7 +79,6 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   openSupportDetails($event: Support): void {
-    console.log($event);
     this.stepSupportsService.selectedSupportDetail = $event;
     this.router.navigate(['/ess-wizard/add-supports/view-detail']);
   }
@@ -87,6 +89,21 @@ export class ViewSupportsComponent implements OnInit {
         ...this.supportList,
         ...this.referralService.getDraftSupport()
       ];
+    }
+  }
+
+  setStepStatus() {
+    const index = this.supportList?.findIndex(
+      (support) => support.status === SupportStatus.Draft
+    );
+    if (index > -1) {
+      this.wizardService.setStepStatus('/ess-wizard/ess-file', true);
+      this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', true);
+      this.cd.detectChanges();
+    } else {
+      this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+      this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', false);
+      this.cd.detectChanges();
     }
   }
 
@@ -106,11 +123,13 @@ export class ViewSupportsComponent implements OnInit {
       displayText = globalConst.saveMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
+        this.setStepStatus();
       }, 500);
     } else if (state?.action === 'delete') {
       displayText = globalConst.supportDeleteMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
+        this.setStepStatus();
       }, 500);
     }
   }

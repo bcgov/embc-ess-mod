@@ -334,6 +334,20 @@ export const essFileStepIncompleteMessage: DialogContent = {
     '<p>Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.</p>',
   cancelButton: 'Close'
 };
+
+export const supportIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please process the <strong>DRAFT</strong> Supports prior to accessing this step.</p>',
+  cancelButton: 'Close'
+};
+
+export const supportInProgressMessage: DialogContent = {
+  text:
+    '<p><span class="bold field-error">WARNING: </span>You have a Support that has not been completed. This record will be lost if you continue. Do you wish to continue?</p>',
+  confirmButton: 'Yes',
+  cancelButton: 'No, Cancel'
+};
+
 export const stepIncompleteMessage: DialogContent = {
   text:
     '<p>Please <strong>complete the current step</strong> prior to proceeding to the next steps.</p>',
@@ -408,7 +422,10 @@ export const supplierStatusDefinition: DialogContent = {
     '<p class="green-info"><b>Active</b></p><p>ACTIVE suppliers will appear in your supplier list for responders to use during referral creation.</p><p class="red-alert"><b>Deactivated</b></p><p>DEACTIVATED suppliers will NOT appear in your supplier list for responders to use during referral creation</p><p><b>Status changes affect your ESS Team, as well as any ESS Teams connected to your supplier via a mutual aid agreement.</b></p>',
   cancelButton: 'Close'
 };
-// Generic error messages
+
+export const systemError =
+  'The service is temporarily unavailable. Please try again later';
+export const accessError = 'Access Denied';
 export const genericError =
   'An error occurred while loading this page. Please refresh and try again.';
 export const teamMemberListError =

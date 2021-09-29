@@ -37,7 +37,6 @@
             <app-evacuation-card
               *ngFor="let card of dataSourceActive"
               [evacuationFileCard]="card"
-              [evacuationFileStatus]="'Active'"
             >
             </app-evacuation-card>
           </div>
@@ -75,7 +74,6 @@
             <app-evacuation-card
               *ngFor="let card of dataSourceInactive"
               [evacuationFileCard]="card"
-              [evacuationFileStatus]="'Inactive'"
             >
             </app-evacuation-card>
           </div>

@@ -9,13 +9,15 @@
     </p>
   </div>
 </div>
-<div class="row checkbox-section">
-  <div class="col-md-12">
-    <mat-checkbox (change)="addEvacueeSummaryChangeEvent($event)"
-      >Include evacuee summary.
-    </mat-checkbox>
+<form [formGroup]="addEvacForm">
+  <div class="row checkbox-section">
+    <div class="col-md-12">
+      <mat-checkbox formControlName="addSummary"
+        >Include evacuee summary.
+      </mat-checkbox>
+    </div>
   </div>
-</div>
+</form>
 
 <div class="row buttons-section">
   <div class="col-md-12">

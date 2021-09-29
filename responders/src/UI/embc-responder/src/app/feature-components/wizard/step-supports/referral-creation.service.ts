@@ -53,6 +53,10 @@ export class ReferralCreationService {
     return this.draftSupportVal;
   }
 
+  clearDraftSupport(): void {
+    this.draftSupportVal = [];
+  }
+
   set groceriesReferral(groceriesReferralVal: FoodGroceriesReferral) {
     this.groceriesReferralVal = groceriesReferralVal;
     this.cacheService.set('groceriesReferral', groceriesReferralVal);
