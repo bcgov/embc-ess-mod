@@ -1,0 +1,141 @@
+<div class="container-frame container">
+  <div class="row heading-container">
+    <div class="col-md-12">
+      <span class="page-heading">Reporting</span>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-md-12">
+      <mat-card>
+        <p class="report-heading">Generate Report</p>
+        <p>
+          When exporting a report, enter any of the fields below to narrow your
+          report results. (fill any / all fields)
+        </p>
+        <br />
+        <form [formGroup]="reportForm">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Task #</mat-label>
+                <input
+                  formControlName="task"
+                  maxlength="100"
+                  matInput
+                  placeholder="Task #"
+                  required
+                />
+                <!-- <mat-error
+                  *ngIf="
+                    addFormControl.supplierLegalName.invalid &&
+                    addFormControl.supplierLegalName.hasError('whitespaceError')
+                  "
+                >
+                  Supplier Legal Name is required</mat-error -->
+                <!-- > -->
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>ESS File #</mat-label>
+                <input
+                  formControlName="essFile"
+                  maxlength="100"
+                  matInput
+                  placeholder="ESS File #"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Evacuated From</mat-label>
+                <input
+                  formControlName="evacuatedFrom"
+                  maxlength="100"
+                  matInput
+                  placeholder="Evacuated From"
+                  required
+                />
+                <!-- <mat-error
+                  *ngIf="
+                    addFormControl.supplierLegalName.invalid &&
+                    addFormControl.supplierLegalName.hasError('whitespaceError')
+                  "
+                >
+                  Supplier Legal Name is required</mat-error
+                > -->
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Evacuated To</mat-label>
+                <input
+                  formControlName="evacuatedTo"
+                  maxlength="100"
+                  matInput
+                  placeholder="Evacuated To"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-md-3">
+            <button
+              class="button-p button-width"
+              mat-button
+              (click)="evacueeReport()"
+            >
+              <img
+                class="img-align"
+                src="/assets/images/cvs-icon.svg"
+                height="22"
+                width="17"
+              />
+              Evacuee Report
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+                [color]="color"
+              >
+              </app-loader>
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button
+              class="button-p button-width"
+              mat-button
+              (click)="supportReport()"
+            >
+              <img
+                class="img-align"
+                src="/assets/images/cvs-icon.svg"
+                height="22"
+                width="17"
+              />
+              Support Report
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+                [color]="color"
+              >
+              </app-loader>
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

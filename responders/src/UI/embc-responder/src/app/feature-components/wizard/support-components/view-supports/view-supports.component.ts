@@ -49,6 +49,7 @@ export class ViewSupportsComponent implements OnInit {
     this.showLoader = !this.showLoader;
     this.stepSupportsService.getExistingSupportList().subscribe(
       (value) => {
+        console.log(value);
         this.showLoader = !this.showLoader;
         this.supportList = value;
         this.addDraftSupports();
