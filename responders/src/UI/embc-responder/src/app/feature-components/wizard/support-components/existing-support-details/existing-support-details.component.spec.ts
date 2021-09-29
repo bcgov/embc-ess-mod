@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+import { DatePipe } from '@angular/common';
 
 describe('ExistingSupportDetailsComponent', () => {
   let component: ExistingSupportDetailsComponent;
@@ -18,7 +19,8 @@ describe('ExistingSupportDetailsComponent', () => {
         MatDialogModule,
         CustomPipeModule
       ],
-      declarations: [ExistingSupportDetailsComponent]
+      declarations: [ExistingSupportDetailsComponent],
+      providers: [DatePipe]
     }).compileComponents();
   });
 

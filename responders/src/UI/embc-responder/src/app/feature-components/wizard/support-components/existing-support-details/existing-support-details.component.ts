@@ -256,6 +256,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   editDraft(): void {
+    this.existingSupportService.createEditableDraft(
+      this.selectedSupport,
+      this.needsAssessmentForSupport
+    );
     this.router.navigate(['/ess-wizard/add-supports/details'], {
       state: { action: 'edit' }
     });
