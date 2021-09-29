@@ -18,6 +18,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-support-delivery',
@@ -54,6 +55,7 @@ export class SupportDeliveryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.stepSupportsService?.supportDelivery);
     this.createSupportDeliveryForm();
     this.supplierList = this.stepSupportsService.supplierList;
     this.supportDeliveryForm.get('issuedTo').valueChanges.subscribe((value) => {
@@ -72,6 +74,8 @@ export class SupportDeliveryComponent implements OnInit {
             : null
         )
       );
+
+    this.populateExistingIssuedTo();
   }
 
   displaySupplier(item: SupplierListItemModel) {
@@ -92,6 +96,23 @@ export class SupportDeliveryComponent implements OnInit {
           this.router.navigate(['/ess-wizard/add-supports/view']);
         }
       });
+  }
+
+  populateExistingIssuedTo() {
+    if (this.editFlag) {
+      const allMembers: EvacuationFileHouseholdMember[] = this
+        .stepSupportsService?.evacFile?.needsAssessment?.householdMembers;
+      if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
+        const valueToSet = allMembers.find(
+          (mem) =>
+            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
+        );
+        this.supportDeliveryForm.get('issuedTo').setValue(valueToSet);
+      } else {
+        this.supportDeliveryForm.get('issuedTo').setValue('Someone else');
+        this.showTextField = true;
+      }
+    }
   }
 
   /**

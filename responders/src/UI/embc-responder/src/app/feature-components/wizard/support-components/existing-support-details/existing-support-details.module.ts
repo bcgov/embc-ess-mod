@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { ExistingSupportDetailsRoutingModule } from './existing-support-details-routing.module';
 import { ExistingSupportDetailsComponent } from './existing-support-details.component';

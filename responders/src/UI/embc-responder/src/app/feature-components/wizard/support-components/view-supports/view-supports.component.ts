@@ -131,6 +131,12 @@ export class ViewSupportsComponent implements OnInit {
         this.openConfirmation(displayText);
         this.setStepStatus();
       }, 500);
+    } else if (state?.action === 'edit') {
+      displayText = globalConst.supportEditMessage;
+      setTimeout(() => {
+        this.openConfirmation(displayText);
+        this.setStepStatus();
+      }, 500);
     }
   }
 
