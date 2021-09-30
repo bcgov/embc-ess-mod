@@ -2,7 +2,7 @@
   <div class="heading-container">
     <div class="row">
       <div class="col-md-12">
-        <span class="wizard-tab-heading">Notes</span>
+        <span class="wizard-tab-heading">Case Notes</span>
       </div>
     </div>
   </div>
@@ -10,7 +10,7 @@
     <div class="col-md-12 content-container">
       <div class="row">
         <div class="col-md-8">
-          <p>{{ count }} note have been added for this ESS File.</p>
+          <p>{{ count }} Case Notes have been added for this ESS File.</p>
 
           <button
             class="button-p"
@@ -18,7 +18,7 @@
             mat-button
             (click)="addNotes()"
           >
-            Add Notes
+            Add Case Notes
           </button>
 
           <div class="row">
@@ -51,17 +51,14 @@
                 height="63"
                 width="62"
               />
-              <span class="tips-heading"><b>Tip: </b>Notes</span>
+              <span class="tips-heading"><b>Tip: </b>Case Notes</span>
             </div>
             <p class="tips-info">
-              A space to add any factual case notes pertaining to the evacuee
-              and their family. Please do not add any medical information or
-              irrelevant/speculative personal details as this information may be
-              viewed by other volunteers and/or EMBC.
-            </p>
-            <p class="tips-info">
-              Further, evacuees may request to view their own records, including
-              notes.
+              Add any case notes pertaining to the evacuee and their household.
+              Do not include any medical, personal, irrelevant, and/or
+              speculative personal details pertaining to the evacuees and/or
+              their household members. Evacuees may request to view their own
+              records.
             </p>
           </mat-card>
         </div>

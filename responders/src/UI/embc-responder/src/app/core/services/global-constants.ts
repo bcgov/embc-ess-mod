@@ -390,17 +390,17 @@ export const dashboardViewProfile: DialogContent = {
 };
 
 export const hideNote: DialogContent = {
-  title: '<p class="dialog-title">Hide Note<p>',
+  title: '<p class="dialog-title">Hide Case Note<p>',
   text:
-    '<div class="row"><div class="col-md-12"><p>Are you sure you want to hide this note?</p><p>Hidden notes will only be viewable by Tier 3 responders and above.</p></div></div>',
+    '<div class="row"><div class="col-md-12"><p>Are you sure you want to hide this Case Note?</p><p>Hidden Case Notes will only be viewed by Director/Manager tier and above.</p></div></div>',
   cancelButton: 'No, Cancel',
   confirmButton: 'Yes, Hide Note'
 };
 
 export const showNote: DialogContent = {
-  title: '<p class="dialog-title">Show Note<p>',
+  title: '<p class="dialog-title">Show Case Note<p>',
   text:
-    '<div class="row"><div class="col-md-12"><p>Are you sure you want to show this note?</p><p>This note will now be viewable by all responders.</p></div></div>',
+    '<div class="row"><div class="col-md-12"><p>Are you sure you want to show this Case Note?</p><p>This Case Note can now be viewed by all ERA responders.</p></div></div>',
   cancelButton: 'No, Cancel',
   confirmButton: 'Yes, Show Note'
 };

@@ -13,10 +13,6 @@
         </div>
       </div>
       <div class="row row-align">
-        <div class="col-md-4">Paper Based ESS File Number</div>
-        <div class="col-md-8 bold">n/a</div>
-      </div>
-      <div class="row row-align">
         <div class="col-md-4">Evacuated From</div>
         <div class="col-md-8">
           <p
@@ -26,7 +22,7 @@
         </div>
       </div>
       <div class="row row-align">
-        <div class="col-md-4">Facility/ Registration Location</div>
+        <div class="col-md-4">Registration Location/ Facility Name</div>
         <div class="col-md-8 bold">
           {{
             essFile?.registrationLocation
@@ -48,7 +44,7 @@
         </div>
       </div>
       <div class="row row-align">
-        <div class="col-md-4">How Affected by the Evacuation</div>
+        <div class="col-md-4">How the Evacuee/Household are affected by the event</div>
         <div class="col-md-8 bold">
           {{
             essFile?.needsAssessment?.evacuationImpact
@@ -58,7 +54,7 @@
         </div>
       </div>
       <div class="row row-align">
-        <div class="col-md-4">Post Evacuation Recovery Plans</div>
+        <div class="col-md-4">Post Evacuation Household Recovery Plan</div>
         <div class="col-md-8 bold">
           {{
             essFile?.needsAssessment?.houseHoldRecoveryPlan
@@ -82,7 +78,7 @@
       </div>
       <div class="row row-align">
         <div class="col-md-4">
-          Service Recommendations external of Reception Centre
+          Other Service Recommendations outside of the Reception Centre
         </div>
         <div class="col-md-8 bold">
           {{
@@ -177,7 +173,7 @@
       <div class="row">
         <div class="col-12">
           <div class="row">
-            <div class="col-4">Do you have pets?</div>
+            <div class="col-4">Pets?</div>
             <div class="col-8 bold">
               {{ essFile?.needsAssessment?.pets?.length !== 0 ? 'Yes' : 'No' }}
             </div>
@@ -200,7 +196,7 @@
 
                 <ng-container matColumnDef="quantity">
                   <mat-header-cell class="header-cell" *matHeaderCellDef>
-                    How Many
+                    Number
                   </mat-header-cell>
                   <mat-cell *matCellDef="let element">
                     {{ element.quantity }}
