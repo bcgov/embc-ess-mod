@@ -205,16 +205,11 @@
   </div>
 </div>
 
-<div
-  *ngIf="essFile?.status === 'Pending'"
-  class="row banner"
->
+<div *ngIf="essFile?.status === 'Pending'" class="row banner">
   <div class="col-md-9 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
     <span class="banner-heading">Pending:</span>
-    <span
-      >Complete ESS File and add supports if required.</span
-    >
+    <span>Complete ESS File and add supports if required.</span>
   </div>
   <div class="col-md-3">
     <button
@@ -227,16 +222,11 @@
   </div>
 </div>
 
-<div
-  *ngIf="essFile?.status === 'Expired'"
-  class="row banner"
->
+<div *ngIf="essFile?.status === 'Expired'" class="row banner">
   <div class="col-md-9 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
     <span class="banner-heading">Expired:</span>
-    <span
-      >Reactivate and complete ESS File and add supports if required.</span
-    >
+    <span>Reactivate and complete ESS File and add supports if required.</span>
   </div>
   <div class="col-md-3">
     <button
@@ -254,8 +244,8 @@
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
     <span class="banner-heading">Complete:</span>
     <span
-      >Task number end date has expired and ESS File is closed. To extend or to add new supports,
-      task number must be extended.</span
+      >Task number end date has expired and ESS File is closed. To extend or to
+      add new supports, task number must be extended.</span
     >
   </div>
 </div>

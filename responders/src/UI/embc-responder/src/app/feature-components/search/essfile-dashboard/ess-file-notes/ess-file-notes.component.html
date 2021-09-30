@@ -7,7 +7,9 @@
 
   <div class="row section-padding">
     <div class="col-md-12">
-      <p>{{ notesList?.length }} case notes have been added for this ESS File.</p>
+      <p>
+        {{ notesList?.length }} case notes have been added for this ESS File.
+      </p>
       <div *ngFor="let note of notes$ | async">
         <hr class="solid-hr" />
         <div class="row list-notes">
