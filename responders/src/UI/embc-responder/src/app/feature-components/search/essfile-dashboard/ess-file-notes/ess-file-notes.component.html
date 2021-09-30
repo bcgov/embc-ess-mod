@@ -1,13 +1,15 @@
 <mat-card class="overview-card">
   <div class="row card-heading-outer">
     <div class="col-md-12">
-      <p class="margins card-heading">Notes ({{ notesList?.length }})</p>
+      <p class="margins card-heading">Case Notes ({{ notesList?.length }})</p>
     </div>
   </div>
 
   <div class="row section-padding">
     <div class="col-md-12">
-      <p>{{ notesList?.length }} notes have been added for this ESS File.</p>
+      <p>
+        {{ notesList?.length }} case notes have been added for this ESS File.
+      </p>
       <div *ngFor="let note of notes$ | async">
         <hr class="solid-hr" />
         <div class="row list-notes">

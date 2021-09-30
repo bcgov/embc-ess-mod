@@ -11,7 +11,6 @@ import { StepNotesService } from './step-notes.service';
 })
 export class StepNotesComponent implements OnInit {
   stepName: string;
-  tabs: Array<TabModel> = new Array<TabModel>();
 
   constructor(
     private router: Router,
@@ -25,15 +24,8 @@ export class StepNotesComponent implements OnInit {
           title: string;
         };
         this.stepName = state.title;
-        if (
-          this.stepNotesService.notesTab === undefined ||
-          this.stepNotesService.notesTab.length === 0
-        ) {
-          this.stepNotesService.notesTab = this.wizardDataService.createNotesSteps();
-        }
       }
     }
-    this.tabs = this.stepNotesService.notesTab;
   }
 
   ngOnInit(): void {}
