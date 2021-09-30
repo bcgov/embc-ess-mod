@@ -190,7 +190,8 @@ export class ExistingSupportDetailsService {
       selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi
     ) {
       return {
-        fromAddress: (selectedSupport as TransportationTaxiReferral).fromAddress,
+        fromAddress: (selectedSupport as TransportationTaxiReferral)
+          .fromAddress,
         toAddress: (selectedSupport as TransportationTaxiReferral).toAddress
       };
     } else if (
