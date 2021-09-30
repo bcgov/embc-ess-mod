@@ -59,7 +59,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Set up Members array
     this.members = this.stepEssFileService.householdMembers;
     this.memberSource.next(this.members);
-    console.log(this.members);
 
     // Set up type of members table to display
     if (!this.essFileNumber) {
@@ -72,8 +71,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         }
       }
     }
-
-    console.log(this.selection.selected);
 
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
     if (
