@@ -19,8 +19,6 @@ export class StepSupportsComponent implements OnInit {
   constructor(
     private router: Router,
     private stepSupportsService: StepSupportsService,
-    private evacueeSessionService: EvacueeSessionService,
-    private locationsService: LocationsService,
     private alertService: AlertService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
@@ -36,46 +34,6 @@ export class StepSupportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stepSupportsService.getCategoryList();
-    this.stepSupportsService.getSubCategoryList();
-    this.stepSupportsService
-      .getEvacFile(this.evacueeSessionService.essFileNumber)
-      .subscribe(
-        (file) => {
-          this.stepSupportsService.currentNeedsAssessment =
-            file.needsAssessment;
-          console.log(file.supports);
-          const supportModel = [];
-
-          file.supports.forEach((support) => {
-            if (
-              support.subCategory === 'Lodging_Group' ||
-              support.subCategory === 'Lodging_Billeting'
-            ) {
-              supportModel.push(support);
-            } else {
-              const value = {
-                ...support,
-                hostAddress: this.locationsService.getAddressModelFromAddress(
-                  (support as Referral).supplierAddress
-                )
-              };
-              supportModel.push(value);
-            }
-          });
-
-          this.stepSupportsService.setExistingSupportList(
-            supportModel.sort(
-              (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
-            )
-          );
-          this.stepSupportsService.evacFile = file;
-        },
-        (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.genericError);
-        }
-      );
     this.stepSupportsService.getSupplierList().subscribe((value) => {
       this.stepSupportsService.supplierList = value;
     });

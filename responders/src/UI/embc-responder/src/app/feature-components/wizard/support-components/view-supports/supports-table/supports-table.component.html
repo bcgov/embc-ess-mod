@@ -1,49 +1,66 @@
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Support#</th>
-      <td mat-cell class="bold" *matCellDef="let element">{{ element.id }}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+        Support#
+      </th>
+      <td mat-cell class="bold" *matCellDef="let element">{{ element?.id }}</td>
     </ng-container>
 
     <ng-container matColumnDef="category">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Support Type</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+        Support Type
+      </th>
       <td mat-cell *matCellDef="let element">
         {{
-          element.subCategory === 'None'
-            ? element.category
-            : element.subCategory
+          element?.subCategory === 'None'
+            ? element?.category
+            : element?.subCategory
         }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="from">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>From</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+        From
+      </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.from | date: 'dd-MMM-yyyy' }}
+        {{ element?.from | date: 'dd-MMM-yyyy' }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="to">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>To</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+        To
+      </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.to | date: 'dd-MMM-yyyy' }}
+        {{ element?.to | date: 'dd-MMM-yyyy' }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="supplierName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Supplier</th>
-      <td mat-cell *matCellDef="let element">{{ element.supplierName }}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+        Supplier
+      </th>
+      <td mat-cell *matCellDef="let element">{{ element?.supplierName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="totalAmount">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+        Amount
+      </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.totalAmount !== '' ? element.totalAmount : 'n/a' }}
+        {{
+          element?.totalAmount !== '' && element?.totalAmount !== undefined
+            ? '$' + element?.totalAmount
+            : 'n/a'
+        }}
       </td>
     </ng-container>
-
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+        Status
+      </th>
       <td
         mat-cell
         [ngClass]="{
@@ -54,7 +71,7 @@
         }"
         *matCellDef="let element"
       >
-        {{ element.status }}
+        {{ element?.status }}
       </td>
     </ng-container>
 
@@ -66,14 +83,14 @@
     ></tr>
   </table>
 
-  <!-- <app-loader
+  <app-loader
     style="display: flex; justify-content: center; align-items: center"
     class="mat-progress"
-    [showLoader]="!isLoading"
+    [showLoader]="!showLoader"
     [strokeWidth]="3"
     [diameter]="50"
     [color]="color"
-  ></app-loader> -->
+  ></app-loader>
 
   <mat-paginator
     [pageSize]="10"
