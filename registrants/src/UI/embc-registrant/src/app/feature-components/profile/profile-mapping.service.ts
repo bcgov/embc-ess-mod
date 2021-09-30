@@ -48,7 +48,6 @@ export class ProfileMappingService {
   }
 
   populateFromBCSC(profile: Profile): void {
-    console.log(profile);
     this.formCreationService
       .getPersonalDetailsForm()
       .pipe(first())

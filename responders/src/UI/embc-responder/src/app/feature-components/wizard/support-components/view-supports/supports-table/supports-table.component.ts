@@ -13,7 +13,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Support } from 'src/app/core/api/models';
+import { Support, SupportStatus } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 
 @Component({
@@ -26,6 +26,7 @@ export class SupportsTableComponent
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() supportList: Support[];
+  @Input() showLoader: boolean;
   @Input() filterTerm: TableFilterValueModel;
   @Output() clickedRow = new EventEmitter<Support>(null);
 
