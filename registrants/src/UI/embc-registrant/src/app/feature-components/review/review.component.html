@@ -58,7 +58,7 @@
           <div class="col-md-1">
             <span
               *ngIf="
-                (formCreationService.restrictionForm$ | async)?.value
+                !(formCreationService.restrictionForm$ | async)?.value
                   .restrictedAccess
               "
             >
@@ -70,7 +70,7 @@
             </span>
             <span
               *ngIf="
-                !(formCreationService.restrictionForm$ | async)?.value
+                (formCreationService.restrictionForm$ | async)?.value
                   .restrictedAccess
               "
             >

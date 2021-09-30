@@ -281,19 +281,21 @@ export class ReviewSupportComponent implements OnInit {
         })
         .afterClosed()
         .subscribe((value) => {
-          this.processDraftSupports(value);
+          if (value === 'confirm') {
+            this.processDraftSupports();
+          }
         });
     }
   }
 
-  private processDraftSupports(addSummary: boolean): void {
-    console.log(addSummary);
+  private processDraftSupports(): void {
     this.showLoader = !this.showLoader;
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe(
       (response) => {
         this.referralService.clearDraftSupport();
+        this.reviewSupportService.updateExistingSupportsList();
         this.showLoader = !this.showLoader;
         console.log(response);
         this.router.navigate(['/ess-wizard/add-supports']);

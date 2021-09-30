@@ -53,6 +53,11 @@ const routes: Routes = [
           import('../supplier-management/supplier-management.module').then(
             (m) => m.SupplierManagementModule
           )
+      },
+      {
+        path: 'reporting',
+        loadChildren: () =>
+          import('../reporting/reporting.module').then((m) => m.ReportingModule)
       }
     ]
   }

@@ -168,7 +168,6 @@ export class ProfileComponent
         break;
       case 'security-questions':
         this.saveSecurityQuestions(this.form.get('questions') as FormGroup);
-        console.log(this.profileDataService.securityQuestions);
         break;
       default:
     }
