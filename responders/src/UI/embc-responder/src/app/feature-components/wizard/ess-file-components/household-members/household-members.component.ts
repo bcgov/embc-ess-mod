@@ -199,7 +199,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    *
    * @param index
    */
-  deleteRow(index: number): void {
+  deleteRow(member: HouseholdMemberModel, index: number): void {
     this.dialog
       .open(DialogComponent, {
         data: {
@@ -214,6 +214,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         if (event === 'confirm') {
           this.members.splice(index, 1);
           this.memberSource.next(this.members);
+          this.selection.toggle(member);
 
           if (this.members.length < 2) {
             this.householdForm.get('hasHouseholdMembers').setValue('No');
@@ -305,7 +306,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Goes to the next tab from the ESS File Wizard
    */
   next(): void {
-    console.log(this.selection);
     this.router.navigate(['/ess-wizard/ess-file/animals']);
   }
 
