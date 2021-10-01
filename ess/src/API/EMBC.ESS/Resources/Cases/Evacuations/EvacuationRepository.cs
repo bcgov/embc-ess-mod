@@ -327,7 +327,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             //ensure files will be loaded only once and have a needs assessment
             files = files
                 .Where(f => f.statecode == (int)EntityState.Active && f._era_currentneedsassessmentid_value.HasValue)
-                .Distinct(new LambdaComparer<era_evacuationfile>((f1, f2) => f1.era_evacuationfileid == f2.era_evacuationfileid));
+                .Distinct(new LambdaComparer<era_evacuationfile>((f1, f2) => f1.era_evacuationfileid == f2.era_evacuationfileid, f => f.era_evacuationfileid.GetHashCode()));
 
             return (await ParallelLoadEvacuationFilesAsync(essContext, files)).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase)).ToArray();
         }
