@@ -23,14 +23,16 @@ namespace EMBC.ESS.Utilities.Extensions
     public class LambdaComparer<T> : EqualityComparer<T>
     {
         private readonly Func<T, T, bool> comparerFunc;
+        private readonly Func<T, int> hashFunc;
 
-        public LambdaComparer(Func<T, T, bool> comparerFunc)
+        public LambdaComparer(Func<T, T, bool> comparerFunc, Func<T, int> hashFunc)
         {
             this.comparerFunc = comparerFunc;
+            this.hashFunc = hashFunc;
         }
 
         public override bool Equals([AllowNull] T x, [AllowNull] T y) => comparerFunc(x, y);
 
-        public override int GetHashCode([DisallowNull] T obj) => obj.GetHashCode();
+        public override int GetHashCode([DisallowNull] T obj) => hashFunc(obj);
     }
 }
