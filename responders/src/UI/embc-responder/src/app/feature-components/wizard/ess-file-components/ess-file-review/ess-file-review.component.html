@@ -15,13 +15,6 @@
             <label class="tab-subtitle">Evacuation Details</label>
 
             <div class="row">
-              <div class="col-4">Paper Based ESS File Number</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.paperESSFile }}
-              </div>
-            </div>
-
-            <div class="row">
               <div class="col-4">Evacuated From</div>
               <div
                 class="col-8 bold"
@@ -32,7 +25,7 @@
             </div>
 
             <div class="row">
-              <div class="col-4">Facility/Registration Location</div>
+              <div class="col-4">Registration Location/ Facility Name</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.facilityName }}
               </div>
@@ -53,14 +46,16 @@
             </div>
 
             <div class="row">
-              <div class="col-4">How Affected by the Evacuation</div>
+              <div class="col-4">
+                How the Evacuee/Household are affected by the event
+              </div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.evacuationImpact }}
               </div>
             </div>
 
             <div class="row">
-              <div class="col-4">Post Evacuation Recovery Plans</div>
+              <div class="col-4">Post Evacuation Household Recovery Plans</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.householdRecoveryPlan }}
               </div>
@@ -82,7 +77,7 @@
 
             <div class="row">
               <div class="col-4">
-                Service Recommendations external of Reception Centre
+                Other Service Recommendations outside of the Reception Centre
               </div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.evacuationExternalReferrals }}
@@ -265,7 +260,7 @@
             <label class="tab-subtitle">Animals</label>
 
             <div class="row">
-              <div class="col-4">Do you have pets?</div>
+              <div class="col-4">Pets?</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.havePets }}
               </div>
@@ -292,10 +287,10 @@
 
                   <ng-container matColumnDef="quantity">
                     <mat-header-cell *matHeaderCellDef>
-                      How Many
+                      Number
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                      <span class="mobile-label">How Many:</span>
+                      <span class="mobile-label">Number:</span>
                       {{ element.quantity }}
                     </mat-cell>
                   </ng-container>
