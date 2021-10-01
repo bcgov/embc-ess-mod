@@ -1,0 +1,21 @@
+name: ci-pdf-generator
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    paths:
+      - "pdf-generator/src/API/**"
+      - ".github/workflows/ci-pdf-generator.yml"
+
+env:
+  IMAGE_NAME: pdf-generator
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        working-directory: ./pdf-generator/src/API
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME
