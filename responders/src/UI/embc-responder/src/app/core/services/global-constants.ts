@@ -307,8 +307,7 @@ export const memberProfileCreateMessage: DialogContent = {
 
 export const petDeleteDialog: DialogContent = {
   title: 'Remove Pet',
-  text:
-    '<p>Are you sure you want to remove this pet from your ESS file?</p>',
+  text: '<p>Are you sure you want to remove this pet from your ESS file?</p>',
   confirmButton: 'Yes, Remove Pet',
   cancelButton: 'No, Cancel'
 };
