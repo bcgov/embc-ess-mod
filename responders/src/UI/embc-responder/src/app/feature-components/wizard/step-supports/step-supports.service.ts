@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import {
   Code,
   NeedsAssessment,
@@ -148,6 +148,7 @@ export class StepSupportsService {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportCategory' })
       .subscribe((categories: Code[]) => {
+        console.log(categories);
         this.supportCategory = categories.filter(
           (category) => category.description !== null
         );
@@ -166,7 +167,27 @@ export class StepSupportsService {
 
   public getSupportTypeList(): Code[] {
     let combinedList: Code[] = [];
-    combinedList = [...combinedList, ...this.supportCategory];
+    const deleteCategories = new Set();
+
+    // Taking categories from subcategories that should be deleted from category list:
+    for (const subCategory of this.supportSubCategory) {
+      const categoryName = subCategory.value?.split('_', 1).pop();
+      deleteCategories.add(categoryName);
+    }
+
+    //Adding Categories to combinedList:
+    this.supportCategory.forEach((item, index) => {
+      let count = 0;
+      for (const category of deleteCategories) {
+        if (category === item.description) {
+          count++;
+        }
+      }
+      if (count === 0) {
+        combinedList.push(item);
+      }
+    });
+
     combinedList = [...combinedList, ...this.supportSubCategory];
     return combinedList;
   }

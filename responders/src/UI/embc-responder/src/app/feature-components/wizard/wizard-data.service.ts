@@ -242,7 +242,7 @@ export class WizardDataService {
       step: 'STEP 2',
       title: 'Add Supports',
       route: '/ess-wizard/add-supports',
-      isLocked: true,
+      isLocked: false,
       incompleteMsg: globalConst.supportIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-supports.svg',
