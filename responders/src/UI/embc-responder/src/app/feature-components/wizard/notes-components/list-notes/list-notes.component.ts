@@ -82,7 +82,6 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
       .subscribe((event) => {
         if (event === 'confirm') {
           const noteObject: Note = { id: noteId, isHidden: true };
-          console.log(noteObject);
           this.hideUnhideToggle.emit(noteObject);
         }
       });

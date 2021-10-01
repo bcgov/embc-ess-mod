@@ -7,14 +7,6 @@ import * as globalConst from '../../core/services/global-constants';
   providedIn: 'root'
 })
 export class WizardDataService {
-  private notesTab: Array<TabModel> = [
-    {
-      label: 'Notes',
-      route: 'notes',
-      name: 'notes'
-    }
-  ];
-
   private evacueeProfileTabs: Array<TabModel> = [
     {
       label: 'Collection Notice',
@@ -141,7 +133,7 @@ export class WizardDataService {
     },
     {
       step: 'NOTES',
-      title: 'Add ESS File Notes',
+      title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
       img: {
@@ -182,7 +174,7 @@ export class WizardDataService {
     },
     {
       step: 'NOTES',
-      title: 'Add ESS File Notes',
+      title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
       img: {
@@ -253,7 +245,7 @@ export class WizardDataService {
     },
     {
       step: 'NOTES',
-      title: 'Add ESS File Notes',
+      title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
       img: {
@@ -294,7 +286,7 @@ export class WizardDataService {
     },
     {
       step: 'NOTES',
-      title: 'Add ESS File Notes',
+      title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
       img: {
@@ -416,19 +408,5 @@ export class WizardDataService {
       essFileTabs.push({ ...tab, ...tabs });
     }
     return essFileTabs;
-  }
-
-  /**
-   * Creates the notes steps tabs
-   *
-   * @returns notes tab array
-   */
-  public createNotesSteps(): Array<TabModel> {
-    const notesTab: Array<TabModel> = new Array<TabModel>();
-    let tab: TabModel;
-    for (const tabs of this.notesTab) {
-      notesTab.push({ ...tab, ...tabs });
-    }
-    return notesTab;
   }
 }

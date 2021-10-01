@@ -191,8 +191,8 @@
 <div *ngIf="essFile?.status === 'Active'" class="row banner">
   <div class="col-md-9 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-    <span class="banner-heading">Support Extensions:</span>
-    <span>To extend or to add new supports, review the Current ESS File.</span>
+    <span class="banner-heading">Active:</span>
+    <span>Review, extend or add new supports to the current ESS File.</span>
   </div>
   <div class="col-md-3">
     <button
@@ -200,21 +200,16 @@
       (click)="reviewEssFile()"
       mat-button
     >
-      Review ESS File
+      Edit ESS File
     </button>
   </div>
 </div>
 
-<div
-  *ngIf="essFile?.status === 'Pending' || essFile?.status === 'Expired'"
-  class="row banner"
->
+<div *ngIf="essFile?.status === 'Pending'" class="row banner">
   <div class="col-md-9 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-    <span class="banner-heading">Complete ESS File:</span>
-    <span
-      >ESS File is partially complete. Complete ESS File & add supports.</span
-    >
+    <span class="banner-heading">Pending:</span>
+    <span>Complete ESS File and add supports if required.</span>
   </div>
   <div class="col-md-3">
     <button
@@ -222,7 +217,24 @@
       (click)="completeEssFile()"
       mat-button
     >
-      Complete ESS File
+      Edit ESS File
+    </button>
+  </div>
+</div>
+
+<div *ngIf="essFile?.status === 'Expired'" class="row banner">
+  <div class="col-md-9 center-content">
+    <img src="/assets/images/exclaimation.svg" height="32" width="32" />
+    <span class="banner-heading">Expired:</span>
+    <span>Reactivate and complete ESS File and add supports if required.</span>
+  </div>
+  <div class="col-md-3">
+    <button
+      class="button-p ess-file-button"
+      (click)="completeEssFile()"
+      mat-button
+    >
+      Edit ESS File
     </button>
   </div>
 </div>
@@ -230,10 +242,10 @@
 <div *ngIf="essFile?.status === 'Completed'" class="row banner">
   <div class="col-md-12 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-    <span class="banner-heading">Support Extensions:</span>
+    <span class="banner-heading">Complete:</span>
     <span
-      >Task number end date has expired. To extend or to add new supports,
-      please extend the task number.</span
+      >Task number end date has expired and ESS File is closed. To extend or to
+      add new supports, task number must be extended.</span
     >
   </div>
 </div>
@@ -347,7 +359,7 @@
               />
             </div>
             <div class="col-md-9 menu-title">
-              Notes ({{ notesList?.length }})
+              Case Notes ({{ notesList?.length }})
             </div>
           </div>
         </a>
