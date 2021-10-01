@@ -810,6 +810,37 @@ export class StepEssFileService {
   }
 
   /**
+   * Checks if the form is partially completed or not
+   *
+   * @param form form group
+   * @returns true/false
+   */
+  checkForEvacDetailsPartialUpdates(form: FormGroup): boolean {
+    const fields = [];
+    Object.keys(form.controls).forEach((field) => {
+      const control = form.controls[field] as
+        | FormControl
+        | FormGroup
+        | FormArray;
+      if (control instanceof FormControl) {
+        if (control.value instanceof Object && control.value != null) {
+          fields.push(control.value.length);
+        } else {
+          fields.push(control.value);
+        }
+      } else if (control instanceof FormGroup || control instanceof FormArray) {
+        for (const key in control.controls) {
+          if (control.controls.hasOwnProperty(key)) {
+            fields.push(control.controls[key].value);
+          }
+        }
+      }
+    });
+    const result = fields.filter((field) => !!field);
+    return result.length - 3 !== 0;
+  }
+
+  /**
    * Sets the tab status for the Review ESS File wizard
    */
   public setReviewEssFileTabStatus(): void {
