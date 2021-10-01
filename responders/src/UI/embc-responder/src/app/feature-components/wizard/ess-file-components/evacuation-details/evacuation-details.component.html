@@ -13,7 +13,7 @@
         <div class="row">
           <div class="col-8">
             <div class="row">
-              <div class="col-12">
+              <!-- <div class="col-12">
                 <label class="tab-subtitle">Paper Based ESS File #</label>
 
                 <p>
@@ -35,7 +35,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <ng-container *ngIf="!essFileNumber; else editEssFile">
                 <div class="col-12">
                   <label
@@ -122,14 +122,14 @@
 
               <div class="col-12">
                 <label class="tab-subtitle requiredField">
-                  Facility Name / Registration Location
+                  Registration Location / Facility Name
                 </label>
 
                 <p>
-                  A facility is the location of the
-                  <strong>Reception Centre</strong> (i.e. rec centre). If there
-                  is no Reception Centre, please use the street name on Level 1
-                  Activations.
+                  A facility name is the location of the
+                  <strong>Reception Centre</strong>. If there is no Reception
+                  Centre, use the address or physical location of the emergency
+                  event (e.g. use the street name for a level one house fire).
                 </p>
 
                 <div class="row">
@@ -168,11 +168,13 @@
                 </label>
 
                 <p>
-                  If you have <strong>insurance</strong>, please keep all of
-                  your receipts, and contact your insurance provider as soon as
-                  possible. If you are having difficulty contacting your
-                  insurance provider, please contact the Insurance Bureau of
-                  Canada at 1-844-227-5422.
+                  If you have insurance (e.g. home, tenant, or travel) please
+                  contact your insurance provider as soon as possible. If you
+                  are having difficulty contacting your insurance provider,
+                  please contact the Insurance Bureau of Canada at
+                  1-844-227-5422. It is strongly recommended to keep a record of
+                  all receipts and invoices if immediate needs can be covered by
+                  your insurance provider.
                 </p>
 
                 <mat-radio-group
@@ -212,8 +214,10 @@
                 </label>
 
                 <p>
-                  Please do not include any personal/medical information
-                  pertaining to the evacuee and their household members.
+                  <span class="bold">Do not</span> include any medical,
+                  personal, irrelevant, and/ or speculative personal details
+                  pertaining to the evacuee and/ or their household members.
+                  Evacuees may request to view their own records.
                 </p>
 
                 <mat-form-field appearance="outline">
@@ -248,8 +252,10 @@
                 </label>
 
                 <p>
-                  Please do not include any personal/medical information
-                  pertaining to the evacuee and their family.
+                  <span class="bold">Do not</span> include any medical,
+                  personal, irrelevant, and/ or speculative personal details
+                  pertaining to the evacuee and/ or their household members.
+                  Evacuees may request to view their own records.
                 </p>
 
                 <mat-form-field appearance="outline">
@@ -265,8 +271,9 @@
 
               <div class="col-12">
                 <label class="tab-subtitle">
-                  Has the evacuee been referred to any services available in
-                  your reception centre?
+                  Has the evacuee been referred to other supports or services
+                  connected to ESS? This applies to events with an active
+                  reception centre.
                 </label>
 
                 <mat-radio-group
@@ -307,11 +314,18 @@
                   reception centre?
                 </label>
 
+                <p>
+                  <span class="bold">Do not</span> include any medical,
+                  personal, irrelevant, and/ or speculative personal details
+                  pertaining to the evacuee and/ or their household members.
+                  Evacuees may request to view their own records.
+                </p>
+
                 <mat-form-field appearance="outline">
                   <textarea
                     rows="10"
                     formControlName="externalServices"
-                    placeholder="Please specify."
+                    placeholder="Please write in the evacuee's own words as much as possible."
                     maxlength="4000"
                     matInput
                   ></textarea>

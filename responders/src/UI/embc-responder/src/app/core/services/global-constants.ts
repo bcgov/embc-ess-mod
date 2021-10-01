@@ -184,7 +184,7 @@ export const supportEditMessage: DialogContent = {
 };
 
 export const deleteMessage: DialogContent = {
-  text: '<p>User has been successfully deleted from the ERA Tool.</p>',
+  text: '<p>User has been successfully deleted from ERA.</p>',
   cancelButton: 'Close'
 };
 export const editMessage: DialogContent = {
@@ -276,7 +276,7 @@ export const newRegWizardProfileCreatedMessage: DialogContent = {
 };
 export const newRegWizardEssFileCreatedMessage: DialogContent = {
   title: 'ESS File Saved',
-  text: '<p>ESS File has been successfully created.</p>',
+  text: '<p>ESS File has been successfully created and saved.</p>',
   confirmButton: 'Proceed to Step 3',
   exitLink: 'Exit Wizard'
 };
@@ -307,8 +307,7 @@ export const memberProfileCreateMessage: DialogContent = {
 
 export const petDeleteDialog: DialogContent = {
   title: 'Remove Pet',
-  text:
-    '<p>Are you sure you want to <b>remove</b> this pet from your evacuation file?</p>',
+  text: '<p>Are you sure you want to remove this pet from your ESS file?</p>',
   confirmButton: 'Yes, Remove Pet',
   cancelButton: 'No, Cancel'
 };

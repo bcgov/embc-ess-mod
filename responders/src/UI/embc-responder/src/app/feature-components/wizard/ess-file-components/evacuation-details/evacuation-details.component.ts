@@ -326,7 +326,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     if (this.evacDetailsForm.valid) {
       this.stepEssFileService.setTabStatus('evacuation-details', 'complete');
     } else if (
-      this.stepEssFileService.checkForPartialUpdates(this.evacDetailsForm)
+      this.stepEssFileService.checkForEvacDetailsPartialUpdates(
+        this.evacDetailsForm
+      )
     ) {
       this.stepEssFileService.setTabStatus('evacuation-details', 'incomplete');
     } else {
