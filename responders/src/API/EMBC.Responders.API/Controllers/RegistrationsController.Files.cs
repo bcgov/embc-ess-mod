@@ -145,8 +145,11 @@ namespace EMBC.Responders.API.Controllers
                 Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
                 FileId = fileId
             };
-            if (cmd.Note.CreatedBy == null) cmd.Note.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember();
-            cmd.Note.CreatedBy.Id = currentUserId;
+
+            cmd.Note.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember
+            {
+                Id = currentUserId
+            };
 
             var id = await messagingClient.Send(cmd);
 
