@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { Support, SupportStatus } from 'src/app/core/api/models';
+import { Referral, Support, SupportStatus } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -14,6 +14,8 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { MatDialog } from '@angular/material/dialog';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { WizardService } from '../../wizard.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Component({
   selector: 'app-view-supports',
@@ -35,7 +37,9 @@ export class ViewSupportsComponent implements OnInit {
     private dialog: MatDialog,
     public referralService: ReferralCreationService,
     private wizardService: WizardService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private evacueeSessionService: EvacueeSessionService,
+    private locationsService: LocationsService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -46,20 +50,7 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.showLoader = !this.showLoader;
-    this.stepSupportsService.getExistingSupportList().subscribe(
-      (value) => {
-        console.log(value);
-        this.showLoader = !this.showLoader;
-        this.supportList = value;
-        this.addDraftSupports();
-      },
-      (error) => {
-        this.showLoader = !this.showLoader;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.supportListerror);
-      }
-    );
+    this.loadSupportList();
     this.filtersToLoad = this.viewSupportsService.load();
   }
 
@@ -69,6 +60,56 @@ export class ViewSupportsComponent implements OnInit {
 
   process() {
     this.router.navigate(['/ess-wizard/add-supports/review']);
+  }
+
+  loadSupportList() {
+    this.stepSupportsService
+      .getEvacFile(this.evacueeSessionService.essFileNumber)
+      .subscribe(
+        (file) => {
+          this.showLoader = !this.showLoader;
+          this.stepSupportsService.currentNeedsAssessment =
+            file.needsAssessment;
+          console.log(file.supports);
+          const supportModel = [];
+
+          file.supports.forEach((support) => {
+            if (
+              support.subCategory === 'Lodging_Group' ||
+              support.subCategory === 'Lodging_Billeting'
+            ) {
+              supportModel.push(support);
+            } else {
+              const value = {
+                ...support,
+                hostAddress: this.locationsService.getAddressModelFromAddress(
+                  (support as Referral).supplierAddress
+                )
+              };
+              supportModel.push(value);
+            }
+          });
+
+          this.stepSupportsService.getCategoryList();
+          this.stepSupportsService.getSubCategoryList();
+
+          // this.stepSupportsService.setExistingSupportList(
+          //   supportModel.sort(
+          //     (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
+          //   )
+          // );
+          this.stepSupportsService.evacFile = file;
+          this.supportList = supportModel.sort(
+            (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
+          );
+          this.addDraftSupports();
+        },
+        (error) => {
+          this.showLoader = !this.showLoader;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.supportListerror);
+        }
+      );
   }
 
   selected(event: MatSelectChange, filterType: string): void {
@@ -87,8 +128,8 @@ export class ViewSupportsComponent implements OnInit {
   addDraftSupports() {
     if (this.referralService.getDraftSupport().length !== 0) {
       this.supportList = [
-        ...this.supportList,
-        ...this.referralService.getDraftSupport()
+        ...this.referralService.getDraftSupport(),
+        ...this.supportList
       ];
     }
   }

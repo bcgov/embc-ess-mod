@@ -75,11 +75,10 @@
         <app-supports-table
           [supportList]="supportList"
           [filterTerm]="filterTerm"
+          [showLoader]="showLoader"
           (clickedRow)="openSupportDetails($event)"
         ></app-supports-table>
       </div>
     </div>
   </div>
 </div>
-
-<app-overlay-loader [showLoader]="showLoader"></app-overlay-loader>
