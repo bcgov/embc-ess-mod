@@ -330,7 +330,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         this.evacDetailsForm
       )
     ) {
-      console.log(this.evacDetailsForm);
       this.stepEssFileService.setTabStatus('evacuation-details', 'incomplete');
     } else {
       this.stepEssFileService.setTabStatus('evacuation-details', 'not-started');

@@ -212,7 +212,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((event) => {
         if (event === 'confirm') {
-          console.log(index);
           this.members.splice(index, 1);
           this.memberSource.next(this.members);
           this.selection.toggle(member);
@@ -482,7 +481,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     ).value;
 
     this.stepEssFileService.householdMembers = this.members;
-    console.log(this.selection.selected);
     this.stepEssFileService.selectedHouseholdMembers = this.selection.selected;
 
     this.stepEssFileService.haveSpecialDiet = this.householdForm.get(
