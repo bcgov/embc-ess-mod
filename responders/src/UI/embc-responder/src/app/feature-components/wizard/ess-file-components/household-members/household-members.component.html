@@ -15,10 +15,11 @@
             <div *ngIf="!essFileNumber; else editEssFile">
               <p class="no-margin requiredField">
                 Do you have any household members (including dependents) who
-                live in the same household with you?
+                live at the same residence as you?
               </p>
               <p class="notes">
-                Please note: Roommates & tenants need to register separately.
+                Note: Household members who are independent from each other
+                (example: roommates) may register separately.
               </p>
 
               <mat-radio-group
@@ -64,17 +65,33 @@
               </div>
             </div>
             <ng-template #editEssFile>
-              <div class="col-8 description-div">
-                <p class="no-margin requiredField">
-                  <b
-                    >Please confirm that this is still the full makeup of your
-                    household.</b
-                  ><br />
+              <div class="col-12 description-div">
+                <span *ngIf="wizardType === 'complete-file'">
+                  <p class="bold no-margin">
+                    Confirm the following household members should be included
+                    in this ESS File.
+                  </p>
+                  <p class="no-margin">
+                    Add any household members that are missing from the list.
+                  </p>
+                  <p class="no-margin requiredField">
+                    Any household member not selected will not receive supports.
+                  </p>
+                </span>
 
-                  Any household member not selected will not be able to receive
-                  supports. Please add any household members that are missing
-                  from the list.
-                </p>
+                <span *ngIf="wizardType === 'review-file'">
+                  <p class="bold no-margin">
+                    Confirm the following household members should be included
+                    in this ESS File.
+                  </p>
+
+                  <p class="no-margin">
+                    Add any household members that are missing from the list.
+                  </p>
+                  <p class="no-margin requiredField">
+                    Any household member not selected will not receive supports.
+                  </p>
+                </span>
               </div>
 
               <div class="row">
@@ -299,8 +316,8 @@
             </div>
 
             <p class="requiredField">
-              Do you (or any of your household members that you listed) have any
-              dietary requirements?
+              Do you or any household member(s) listed have any dietary
+              requirements?
             </p>
 
             <mat-radio-group
@@ -333,14 +350,14 @@
                 class="col-8 additional-form"
                 *ngIf="householdFormControl?.hasSpecialDiet.value === 'Yes'"
               >
-                <label class="card-heading requiredField">Please specify</label>
+                <label class="card-heading requiredField">Please specify here</label>
 
                 <mat-form-field appearance="outline">
                   <textarea
                     rows="10"
                     matInput
                     [formControlName]="'specialDietDetails'"
-                    placeholder="Please write in the evacuees own words as much as possible. Do not include any medical information or irrelevant/ speculative personal details."
+                    placeholder="Please write in the evacuee's own words as much as possible. Do not include any medical information or irrelevant/ speculative personal details."
                     maxlength="200"
                   ></textarea>
                   <mat-error
@@ -359,8 +376,7 @@
             </div>
 
             <p class="requiredField">
-              Does the evacuee (or anyone registering with them) take
-              medication?
+              Do you or any household member(s) listed require medication?
             </p>
 
             <mat-radio-group
@@ -394,7 +410,8 @@
                 *ngIf="householdFormControl?.hasMedication.value === 'Yes'"
               >
                 <p class="requiredField">
-                  Does the evacuee have sufficient supply for the next 72 hours?
+                  Do you or any household member(s) listed have a sufficient
+                  supply of medication for the next 72 hours?
                 </p>
 
                 <mat-radio-group
@@ -424,11 +441,10 @@
 
                 <p
                   class="responder-instruction bottom-space"
-                  *ngIf="householdFormControl?.medicationSupply.value === false"
+                  *ngIf="householdFormControl?.medicationSupply.value === 'No'"
                 >
-                  Please refer the evacuee to
-                  <strong>Health Services at the Reception Centre</strong> when
-                  available.
+                  Please refer the evacuee to the nearest available Health
+                  Services for additional support.
                 </p>
               </div>
             </div>

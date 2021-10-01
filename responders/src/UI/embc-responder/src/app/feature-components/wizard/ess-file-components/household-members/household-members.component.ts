@@ -39,6 +39,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   editMembersColumns: string[] = ['select', 'members', 'buttons'];
   membersColumns: string[] = [];
   tabUpdateSubscription: Subscription;
+  wizardType: string;
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -51,6 +52,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.wizardType = this.evacueeSessionService.getWizardType();
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
 
     // Main form creation
