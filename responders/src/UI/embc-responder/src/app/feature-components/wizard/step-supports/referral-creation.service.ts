@@ -278,7 +278,7 @@ export class ReferralCreationService {
       extremeWinterConditions: (supportDetails.referral as Clothing)
         .extremeWinterConditions,
       totalAmount: (supportDetails.referral as Clothing).totalAmount,
-      subCategory: null
+      subCategory: SupportSubCategory.None
     };
     this.clothingReferral = clothingReferral;
   }
@@ -292,7 +292,7 @@ export class ReferralCreationService {
       category: SupportCategory.Incidentals,
       approvedItems: (supportDetails.referral as Incidentals).approvedItems,
       totalAmount: (supportDetails.referral as Incidentals).totalAmount,
-      subCategory: null
+      subCategory: SupportSubCategory.None
     };
     this.incidentalsReferral = incidentalsReferral;
   }

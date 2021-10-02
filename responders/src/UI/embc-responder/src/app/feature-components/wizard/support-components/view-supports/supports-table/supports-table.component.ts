@@ -15,6 +15,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Support, SupportStatus } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
+import { StepSupportsService } from '../../../step-supports/step-supports.service';
 
 @Component({
   selector: 'app-supports-table',
@@ -43,7 +44,10 @@ export class SupportsTableComponent
   color = '#169BD5';
   data: any;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private stepSupportsService: StepSupportsService
+  ) {}
 
   /**
    * Listens to input events and popluate values
@@ -118,5 +122,19 @@ export class SupportsTableComponent
    */
   rowClicked(row): void {
     this.clickedRow.emit(row);
+  }
+
+  generateSupportType(element: Support): string {
+    if (element?.subCategory === 'None') {
+      let category = this.stepSupportsService.supportCategory.find(
+        (value) => value.value === element?.category
+      );
+      return category?.description;
+    } else {
+      let subCategory = this.stepSupportsService.supportSubCategory.find(
+        (value) => value.value === element?.subCategory
+      );
+      return subCategory?.description;
+    }
   }
 }

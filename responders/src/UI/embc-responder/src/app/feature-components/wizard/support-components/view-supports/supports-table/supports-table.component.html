@@ -12,11 +12,7 @@
         Support Type
       </th>
       <td mat-cell *matCellDef="let element">
-        {{
-          element?.subCategory === 'None'
-            ? element?.category
-            : element?.subCategory
-        }}
+        {{ generateSupportType(element) }}
       </td>
     </ng-container>
 

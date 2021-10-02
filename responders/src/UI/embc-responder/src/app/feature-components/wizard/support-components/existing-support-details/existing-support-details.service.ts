@@ -114,7 +114,7 @@ export class ExistingSupportDetailsService {
     );
 
     this.stepSupportsService.supportTypeToAdd =
-      subCategory === 'None' ? category : subCategory;
+      subCategory === undefined ? category : subCategory;
     this.stepSupportsService.supportDetails = {
       fromDate: this.datePipe.transform(selectedSupport.from, 'dd-MMM-yyyy'),
       toDate: this.datePipe.transform(selectedSupport.to, 'dd-MMM-yyyy'),
