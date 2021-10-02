@@ -277,7 +277,9 @@ export class ReferralCreationService {
       category: SupportCategory.Clothing,
       extremeWinterConditions: (supportDetails.referral as Clothing)
         .extremeWinterConditions,
-      totalAmount: (supportDetails.referral as Clothing).totalAmount,
+      totalAmount: (supportDetails.referral as Clothing).userTotalAmount
+        ? (supportDetails.referral as Clothing).userTotalAmount
+        : (supportDetails.referral as Clothing).totalAmount,
       subCategory: SupportSubCategory.None
     };
     this.clothingReferral = clothingReferral;
@@ -291,7 +293,9 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Incidentals,
       approvedItems: (supportDetails.referral as Incidentals).approvedItems,
-      totalAmount: (supportDetails.referral as Incidentals).totalAmount,
+      totalAmount: (supportDetails.referral as Incidentals).userTotalAmount
+        ? (supportDetails.referral as Incidentals).userTotalAmount
+        : (supportDetails.referral as Incidentals).totalAmount,
       subCategory: SupportSubCategory.None
     };
     this.incidentalsReferral = incidentalsReferral;
@@ -299,35 +303,6 @@ export class ReferralCreationService {
 
   clearDraftSupports(supportType: string, support: Support): Observable<void> {
     this.updateDraftSupports(support);
-    // if (supportType === SupportSubCategory.Food_Restaurant) {
-    //   //this.cacheService.remove('mealReferral');
-    //   this.updateDraftSupports(support);
-    //   //this.mealReferral = null;
-    // } else if (supportType === SupportSubCategory.Food_Groceries) {
-    //   this.cacheService.remove('groceriesReferral');
-    //   this.groceriesReferral = null;
-    // } else if (supportType === SupportSubCategory.Transportation_Taxi) {
-    //   this.cacheService.remove('taxiReferral');
-    //   this.taxiReferral = null;
-    // } else if (supportType === SupportSubCategory.Transportation_Other) {
-    //   this.cacheService.remove('otherReferral');
-    //   this.otherReferral = null;
-    // } else if (supportType === SupportSubCategory.Lodging_Billeting) {
-    //   this.cacheService.remove('billetingReferral');
-    //   this.billetingReferral = null;
-    // } else if (supportType === SupportSubCategory.Lodging_Hotel) {
-    //   this.cacheService.remove('hotelMotelReferral');
-    //   this.hotelReferral = null;
-    // } else if (supportType === SupportCategory.Incidentals) {
-    //   this.cacheService.remove('incidentalsReferral');
-    //   this.incidentalsReferral = null;
-    // } else if (supportType === SupportCategory.Clothing) {
-    //   this.cacheService.remove('clothingReferralVal');
-    //   this.clothingReferral = null;
-    // } else if (supportType === SupportSubCategory.Lodging_Group) {
-    //   this.cacheService.remove('groupReferral');
-    //   this.groupReferral = null;
-    // }
     return of(void 0);
   }
 
