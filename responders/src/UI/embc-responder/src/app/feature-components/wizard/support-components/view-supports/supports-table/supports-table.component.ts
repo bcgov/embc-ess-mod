@@ -126,12 +126,12 @@ export class SupportsTableComponent
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      let category = this.stepSupportsService.supportCategory.find(
+      const category = this.stepSupportsService.supportCategory.find(
         (value) => value.value === element?.category
       );
       return category?.description;
     } else {
-      let subCategory = this.stepSupportsService.supportSubCategory.find(
+      const subCategory = this.stepSupportsService.supportSubCategory.find(
         (value) => value.value === element?.subCategory
       );
       return subCategory?.description;
