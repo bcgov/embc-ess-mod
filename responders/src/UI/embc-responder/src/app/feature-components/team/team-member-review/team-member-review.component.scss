@@ -1,29 +1,34 @@
 .details-heading {
-    font-size: 21px;
-    color: #234075;
+  font-size: 21px;
+  color: #234075;
 }
 
 .row-align {
-    padding-top: 10px;
-    padding-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .button-margin {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .tips-card {
-    background-color: rgba(35, 64, 117, 1);
+  background-color: rgba(35, 64, 117, 1);
 }
 
 .tips-heading {
-    color: white;
-    font-size: 21px;
-    margin-left: 5px;
+  color: white;
+  font-size: 21px;
+  margin-left: 5px;
 }
 
-.tips-info {
-    color: white;
-    padding: 8px;
-    margin-top: 20px;
+.tips-p {
+  padding: 8px;
+  margin-top: 20px;
+  color: white;
+}
+
+.tips-gold {
+  color: #ffd25d;
+  font-weight: bold;
 }
