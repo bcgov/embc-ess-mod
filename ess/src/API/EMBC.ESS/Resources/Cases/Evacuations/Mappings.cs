@@ -218,6 +218,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
+                .ForMember(d => d.SupportType, opts => opts.MapFrom(s => s.era_supporttype))
                 .ReverseMap()
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
@@ -402,7 +403,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public IEnumerable<Support> Convert(IEnumerable<era_evacueesupport> sourceMember, ResolutionContext context) =>
             sourceMember.Select(s => Convert(s, context));
 
-        private Type supportTypeResolver(SupportType? supportType) =>
+        public Type supportTypeResolver(SupportType? supportType) =>
             supportType switch
             {
                 SupportType.Clothing => typeof(ClothingReferral),

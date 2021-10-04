@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Print.Supports;
+using EMBC.ESS.Print.Utils;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.ESS.Utilities.Extensions;
@@ -545,6 +547,68 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 if (supplier == null) throw new Exception($"Supplier id {support._era_supplierid_value} not found");
                 essContext.SetLink(support, nameof(era_evacueesupport.era_SupplierId), supplier);
             }
+        }
+
+        public async Task<IEnumerable<Support>> ReadSupports(SupportsToPrint query)
+        {
+            var readCtx = essContext.Clone();
+            readCtx.MergeOption = MergeOption.NoTracking;
+
+            //get all supports
+            var supports = await QueryEvacueeSupports(readCtx, query);
+
+            var t = (await ParallelLoadEvacuationSupportsAsync(essContext, supports)).Select(f => MapEvacuationSupports(f)).ToArray();
+            return t;
+        }
+
+        private static async Task ParallelLoadEvacuationSupportAsync(EssContext ctx, era_evacueesupport support)
+        {
+            ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
+
+            var loadTasks = new List<Task>();
+            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport))));
+
+            await Task.WhenAll(loadTasks.ToArray());
+        }
+
+        private static async Task<IEnumerable<era_evacueesupport>> ParallelLoadEvacuationSupportsAsync(EssContext ctx, IEnumerable<era_evacueesupport> supports)
+        {
+            var readCtx = ctx.Clone();
+            readCtx.MergeOption = MergeOption.NoTracking;
+
+            //load supports' properties
+            await supports.Select(support => ParallelLoadEvacuationSupportAsync(readCtx, support)).ToArray().ForEachAsync(10, t => t);
+
+            return supports.ToArray();
+        }
+
+        private static async Task<IEnumerable<era_evacueesupport>> QueryEvacueeSupports(EssContext ctx, SupportsToPrint query)
+        {
+            var shouldQuerySupports = query.SupportsIds.Any<string>();
+
+            if (!shouldQuerySupports) return Array.Empty<era_evacueesupport>();
+
+            var supportsQuery = ctx.era_evacueesupports.Expand(f => f.era_EvacuationFileId);
+            supportsQuery = supportsQuery.Expand(f => f.era_IssuedById);
+            supportsQuery = supportsQuery.Expand(f => f.era_SupplierId);
+
+            var predicate = PredicateBuilder.Make<era_evacueesupport>();
+
+            foreach (var supportId in query.SupportsIds)
+            {
+                predicate = predicate.Or(c => c.era_name == supportId);
+            }
+
+            supportsQuery = (DataServiceQuery<era_evacueesupport>)supportsQuery.Where(predicate);
+
+            return (await supportsQuery.GetAllPagesAsync()).ToArray();
+        }
+
+        private Support MapEvacuationSupports(era_evacueesupport support)
+        {
+            var map = mapper.Map(support, support.GetType(), new SupportConverter().supportTypeResolver((SupportType?)support.era_supporttype));
+
+            return (Support)map;
         }
     }
 }

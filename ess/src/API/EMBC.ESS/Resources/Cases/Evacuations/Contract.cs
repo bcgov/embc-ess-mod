@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EMBC.ESS.Print.Supports;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -39,6 +40,8 @@ namespace EMBC.ESS.Resources.Cases
         Task<string> UpdateSupport(string fileId, Support support);
 
         Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
+
+        Task<IEnumerable<Support>> ReadSupports(SupportsToPrint printSupports);
     }
 
     public class EvacuationFile : Case
@@ -180,6 +183,8 @@ namespace EMBC.ESS.Resources.Cases
         public DateTime To { get; set; }
         public SupportStatus Status { get; set; } = SupportStatus.Active;
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+
+        public SupportType SupportType { get; set; }
     }
 
     public abstract class Referral : Support

@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EMBC.ESS.Print.Supports;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -25,6 +26,8 @@ namespace EMBC.ESS.Resources.Cases
         Task<ManageCaseCommandResult> ManageCase(ManageCaseCommand cmd);
 
         Task<CaseQueryResult> QueryCase(CaseQuery query);
+
+        Task<IEnumerable<Support>> QuerySupports(SupportsToPrint printSupports);
     }
 
     public abstract class ManageCaseCommand { }

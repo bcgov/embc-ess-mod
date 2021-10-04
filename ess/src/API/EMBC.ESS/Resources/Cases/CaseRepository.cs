@@ -15,8 +15,10 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Print.Supports;
 using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Resources.Cases
@@ -63,6 +65,16 @@ namespace EMBC.ESS.Resources.Cases
             result.Items = await evacuationRepository.Read(query);
 
             return result;
+        }
+
+        public async Task<IEnumerable<Support>> QuerySupports(SupportsToPrint printSupports)
+        {
+            return await HandleQueryEvacuationSupports(printSupports);
+        }
+
+        public async Task<IEnumerable<Support>> HandleQueryEvacuationSupports(SupportsToPrint printSupports)
+        {
+            return await evacuationRepository.ReadSupports(printSupports);
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)
