@@ -75,9 +75,11 @@ export class GroupLodging {
 export class Incidentals {
   approvedItems: string;
   totalAmount: number;
+  userTotalAmount: number;
 }
 
 export class Clothing {
   extremeWinterConditions: boolean;
   totalAmount: number;
+  userTotalAmount: number;
 }

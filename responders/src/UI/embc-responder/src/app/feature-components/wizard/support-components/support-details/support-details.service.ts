@@ -165,7 +165,10 @@ export class SupportDetailsService {
           ?.totalAmount ?? '',
         [Validators.required]
       ],
-      userTotalAmount: ['']
+      userTotalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Incidentals)
+          ?.totalAmount ?? ''
+      ]
     });
   }
 
@@ -181,7 +184,10 @@ export class SupportDetailsService {
           ?.totalAmount ?? '',
         [Validators.required]
       ],
-      userTotalAmount: ['']
+      userTotalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as Clothing)
+          ?.totalAmount ?? ''
+      ]
     });
   }
 }
