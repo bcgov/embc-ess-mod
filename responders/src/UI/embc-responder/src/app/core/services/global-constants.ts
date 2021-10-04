@@ -228,7 +228,7 @@ export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
 export const defaultRole = {
   code: 'Tier1',
-  description: 'Tier 1 (Responder)'
+  description: 'Tier 1 - Responder (default)'
 };
 
 export const postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';

@@ -1,10 +1,3 @@
-<!-- <div class="row heading-container">
-    <div class="col-md-12">
-        <span class="page-heading">Edit Responder</span>
-    </div>
-</div>
-<br> -->
-
 <div class="row">
   <div class="col-md-8">
     <mat-card>
@@ -95,10 +88,10 @@
             </div>
             <div *ngIf="isEditAllowed()" class="col-md-8">
               <p class="disabled">
-                Username cannot be edited in the ERA Tool as the user has
-                already logged in with this BCeID. If the username has been
-                changed in the BCeID application it will be auto-updated the
-                next time the user logs in.
+                Username cannot be edited as the user has already logged in with
+                this BCeID. If the username has been changed in the BCeID
+                application, it will be auto-updated the next time the user logs
+                in.
               </p>
             </div>
             <div class="col-md-4">
@@ -115,7 +108,7 @@
           <div class="row">
             <div class="col-md-3">
               <mat-form-field appearance="outline">
-                <mat-label>Role</mat-label>
+                <mat-label>User Role</mat-label>
                 <mat-select
                   formControlName="role"
                   (selectionChange)="roleSelectionChange($event)"
@@ -170,6 +163,15 @@
           </div>
 
           <div class="row">
+            <div class="col-md-12">
+              <p class="contact-subheading">
+                Contact information can be provided at the discretion of the
+                user.
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Email Address</mat-label>
@@ -215,11 +217,34 @@
     <mat-card class="tips-card">
       <div>
         <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-        <span class="tips-heading"><b>Tips: </b>Roles</span>
+        <span class="tips-heading"><b>Tips: </b>User Roles</span>
       </div>
-      <p class="tips-info">Tier 1 - Responder</p>
-      <p class="tips-info">Tier 2 - Supervisor</p>
-      <p class="tips-info">Tier 3 - ESS Director / Manager</p>
+      <p class="tips-p">
+        Access is based on a user hierarchy where each level is based on roles
+        and responsibilities. This provides a way of granting different
+        permissions to users within your organization.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold">Tier 1: Responder</span> can register and
+        complete registrations, as well as add supports based on a evacuee
+        need’s assessment.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold">Tier 2: Supervisor</span> have the additional
+        ability to manage supplier and user lists. With access to restricted
+        files and basic reporting.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold">Tier 3: Director/Manager</span> have the
+        additional access to detailed reporting.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold"
+          >Tier 4: Local Emergency Program Administrator</span
+        >
+        is the primary contact for the organization and responsible for the
+        initial setup and delegation of roles.
+      </p>
     </mat-card>
   </div>
 </div>

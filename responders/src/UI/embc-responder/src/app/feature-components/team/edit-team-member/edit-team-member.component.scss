@@ -1,43 +1,52 @@
 .content-align {
-    padding: 10px;
+  padding: 10px;
 }
 
 .details-heading {
-    font-size: 21px;
-    color: #234075;
+  font-size: 21px;
+  color: #234075;
 }
 
 mat-form-field {
-    width: 100%;
+  width: 100%;
 }
 
 .button-margin {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .tips-card {
-    background-color: rgba(35, 64, 117, 1);
+  background-color: rgba(35, 64, 117, 1);
 }
 
 .tips-heading {
-    color: white;
-    font-size: 21px;
-    margin-left: 5px;
+  color: white;
+  font-size: 21px;
+  margin-left: 5px;
 }
 
-.tips-info {
-    color: white;
-    padding: 8px;
-    margin-top: 20px;
+.tips-p {
+  padding: 8px;
+  margin-top: 20px;
+  color: white;
+}
+
+.tips-gold {
+  color: #ffd25d;
+  font-weight: bold;
 }
 
 .disabled-text {
-   color: #717171;
+  color: #717171;
 }
 
 .role-details {
-    height: 102px;
-    width: 300px;
-    background-color: rgb(252, 186, 25);
-    padding: 7px;
+  height: 102px;
+  width: 300px;
+  background-color: rgb(252, 186, 25);
+  padding: 7px;
+}
+
+.contact-subheading {
+  color: #717171;
 }
