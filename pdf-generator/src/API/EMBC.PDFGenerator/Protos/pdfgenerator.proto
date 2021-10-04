@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option csharp_namespace = "EMBC.PDFGenerator";
+
+package pdfgenerator;
+
+// The greeting service definition.
+service Generator {
+  // Sends a greeting
+  rpc Convert (ConvertRequest) returns (ConvertReply);
+}
+
+// The request message containing the user's name.
+message ConvertRequest {
+  bytes data = 1;
+}
+
+// The response message containing the greetings.
+message ConvertReply {
+  bytes data = 1;
+  ResultStatus resultStatus = 2;
+  string errorDetail = 3;
+}
+
+enum ResultStatus {
+    Fail = 0;
+    Success = 1;
+}

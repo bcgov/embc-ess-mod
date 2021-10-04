@@ -348,25 +348,25 @@ namespace EMBC.Responders.API.Controllers
     {
         None,
 
-        [Description("Hotel/Motel")]
+        [Description("Lodging - Hotel/Motel")]
         Lodging_Hotel,
 
-        [Description("Billeting")]
+        [Description("Lodging - Billeting")]
         Lodging_Billeting,
 
-        [Description("Group Lodging")]
+        [Description("Lodging - Group Lodging")]
         Lodging_Group,
 
-        [Description("Groceries")]
+        [Description("Food - Groceries")]
         Food_Groceries,
 
-        [Description("Restaurant Meals")]
+        [Description("Food - Restaurant Meals")]
         Food_Restaurant,
 
-        [Description("Taxi")]
+        [Description("Transportation - Taxi")]
         Transportation_Taxi,
 
-        [Description("Other")]
+        [Description("Transportation - Other")]
         Transportation_Other
     }
 

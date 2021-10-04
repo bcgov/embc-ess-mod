@@ -142,7 +142,7 @@
     <div class="col-md-4 box-text-color">Support Type:</div>
     <div class="col-md-4 bold">
       {{
-        selectedSupport?.subCategory
+        selectedSupport?.subCategory !== 'None'
           ? selectedSupport?.subCategory
           : selectedSupport?.category
       }}
@@ -289,7 +289,7 @@
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Extreme Winter Conditions:</div>
       <div class="col-md-4 bold">
-        {{ clothingReferral?.extremeWinterConditions }}
+        {{ clothingReferral?.extremeWinterConditions ? 'Yes' : 'No' }}
       </div>
     </div>
 
@@ -322,17 +322,65 @@
     </div>
   </div>
 
-  <div class="row row-padding">
+  <div
+    *ngIf="
+      selectedSupport?.subCategory !== 'Lodging_Billeting' &&
+      selectedSupport?.subCategory !== 'Lodging_Group'
+    "
+    class="row row-padding"
+  >
     <div class="col-md-4 box-text-color">Supplier:</div>
     <div class="col-md-4 bold">{{ referral?.supplierName }}</div>
   </div>
 
-  <div class="row row-padding">
+  <div
+    *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'"
+    class="row row-padding"
+  >
+    <div class="col-md-4 box-text-color">Supplier:</div>
+    <div class="col-md-4 bold">{{ billetingReferral?.hostName }}</div>
+  </div>
+
+  <div
+    *ngIf="selectedSupport?.subCategory === 'Lodging_Group'"
+    class="row row-padding"
+  >
+    <div class="col-md-4 box-text-color">Supplier:</div>
+    <div class="col-md-4 bold">{{ groupReferral?.facilityName }}</div>
+  </div>
+
+  <div
+    *ngIf="
+      selectedSupport?.subCategory !== 'Lodging_Billeting' &&
+      selectedSupport?.subCategory !== 'Lodging_Group'
+    "
+    class="row row-padding"
+  >
     <div class="col-md-4 box-text-color">Supplier Address:</div>
     <div
       class="col-md-4 bold"
       [innerHTML]="supplierAddress | maskEvacuatedaddress"
     ></div>
+  </div>
+
+  <div
+    *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'"
+    class="row row-padding"
+  >
+    <div class="col-md-4 box-text-color">Supplier Address:</div>
+    <div class="col-md-4 bold">
+      {{ billetingReferral?.hostAddress }}, {{ billetingReferral?.hostCity }}
+    </div>
+  </div>
+
+  <div
+    *ngIf="selectedSupport?.subCategory === 'Lodging_Group'"
+    class="row row-padding"
+  >
+    <div class="col-md-4 box-text-color">Supplier Address:</div>
+    <div class="col-md-4 bold">
+      {{ groupReferral?.facilityAddress }}, {{ groupReferral?.facilityCity }}
+    </div>
   </div>
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Notes for Supplier:</div>

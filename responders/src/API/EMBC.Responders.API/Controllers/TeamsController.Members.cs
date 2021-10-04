@@ -258,13 +258,13 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum MemberRole
     {
-        [Description("Tier 1 (Responder)")]
+        [Description("Tier 1 - Responder (default)")]
         Tier1,
 
-        [Description("Tier 2 (Supervisor)")]
+        [Description("Tier 2 - Supervisor")]
         Tier2,
 
-        [Description("Tier 3 (Director/Manager)")]
+        [Description("Tier 3 - Director/Manager")]
         Tier3,
 
         [Description("Tier 4 (LEP)")]

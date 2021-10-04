@@ -29,7 +29,7 @@
       </div>
 
       <div class="row row-align">
-        <div class="col-md-4 detail-label">Role</div>
+        <div class="col-md-4 detail-label">User Role</div>
         <div class="col-md-8">{{ teamMember?.role }}</div>
       </div>
 
@@ -63,11 +63,34 @@
     <mat-card class="tips-card">
       <div>
         <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
-        <span class="tips-heading"><b>Tips: </b>Roles</span>
+        <span class="tips-heading"><b>Tips: </b>User Roles</span>
       </div>
-      <p class="tips-info">Tier 1 - Responder</p>
-      <p class="tips-info">Tier 2 - Supervisor</p>
-      <p class="tips-info">Tier 3 - ESS Director / Manager</p>
+      <p class="tips-p">
+        Access is based on a user hierarchy where each level is based on roles
+        and responsibilities. This provides a way of granting different
+        permissions to users within your organization.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold">Tier 1: Responder</span> can register and
+        complete registrations, as well as add supports based on a evacuee
+        need’s assessment.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold">Tier 2: Supervisor</span> have the additional
+        ability to manage supplier and user lists. With access to restricted
+        files and basic reporting.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold">Tier 3: Director/Manager</span> have the
+        additional access to detailed reporting.
+      </p>
+      <p class="tips-p">
+        <span class="tips-gold"
+          >Tier 4: Local Emergency Program Administrator</span
+        >
+        is the primary contact for the organization and responsible for the
+        initial setup and delegation of roles.
+      </p>
     </mat-card>
   </div>
 </div>

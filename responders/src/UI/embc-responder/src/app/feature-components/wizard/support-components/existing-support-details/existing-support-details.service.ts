@@ -114,7 +114,7 @@ export class ExistingSupportDetailsService {
     );
 
     this.stepSupportsService.supportTypeToAdd =
-      subCategory === 'None' ? category : subCategory;
+      subCategory === undefined ? category : subCategory;
     this.stepSupportsService.supportDetails = {
       fromDate: this.datePipe.transform(selectedSupport.from, 'dd-MMM-yyyy'),
       toDate: this.datePipe.transform(selectedSupport.to, 'dd-MMM-yyyy'),
@@ -225,13 +225,15 @@ export class ExistingSupportDetailsService {
     } else if (selectedSupport.category === SupportCategory.Incidentals) {
       return {
         approvedItems: (selectedSupport as IncidentalsReferral).approvedItems,
-        totalAmount: (selectedSupport as IncidentalsReferral).totalAmount
+        totalAmount: (selectedSupport as IncidentalsReferral).totalAmount,
+        userTotalAmount: (selectedSupport as IncidentalsReferral).totalAmount
       };
     } else if (selectedSupport.category === SupportCategory.Clothing) {
       return {
         extremeWinterConditions: (selectedSupport as ClothingReferral)
           .extremeWinterConditions,
-        totalAmount: (selectedSupport as ClothingReferral).totalAmount
+        totalAmount: (selectedSupport as ClothingReferral).totalAmount,
+        userTotalAmount: (selectedSupport as ClothingReferral).totalAmount
       };
     }
   }
