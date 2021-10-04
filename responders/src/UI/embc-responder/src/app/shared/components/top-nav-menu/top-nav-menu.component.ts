@@ -13,7 +13,7 @@ import { UserService } from 'src/app/core/services/user.service';
 export class TopNavMenuComponent implements OnInit {
   @Output() public sidenavToggle = new EventEmitter();
 
-  constructor(private userService: UserService) {}
+  constructor(public userService: UserService) {}
 
   ngOnInit(): void {}
 

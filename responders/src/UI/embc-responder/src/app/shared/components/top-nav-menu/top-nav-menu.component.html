@@ -18,7 +18,12 @@
       class="top-nav"
       mat-button
       routerLinkActive="active-list-item"
-      [routerLink]="'/responder-access/search'"
+      [routerLink]="
+        userService.currentProfile.taskNumber === null ||
+        userService.currentProfile.taskNumber === ''
+          ? '/responder-access/search'
+          : '/responder-access/search/evacuee'
+      "
     >
       Evacuee Search & Registration
     </a>
