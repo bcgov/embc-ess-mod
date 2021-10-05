@@ -41,7 +41,7 @@ parameters:
     name: OIDC_CLIENTID
     required: true
   - description: REDIS Service name
-    name: REDIS_SERVER
+    name: REDIS_ENDPOINT
     required: false
   - description: REDIS Service password
     name: REDIS_PASSWORD
@@ -65,7 +65,7 @@ objects:
       JWT__AUDIENCE: ${JWT_AUDIENCE}
       OIDC__ISSUER: ${OIDC_ISSUER}
       OIDC__CLIENTID: ${OIDC_CLIENTID}
-      REDIS__ENDPOINT: ${REDIS_SERVER}
+      REDIS__ENDPOINT: ${REDIS_ENDPOINT}
 
   - kind: Secret
     apiVersion: v1
