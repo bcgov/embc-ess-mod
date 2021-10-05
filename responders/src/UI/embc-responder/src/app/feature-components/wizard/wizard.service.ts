@@ -14,14 +14,14 @@ import { WizardDataService } from './wizard-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
-  private sideMenuItems: Array<WizardSidenavModel>;
-  private originalObjectReference: RegistrantProfileModel | EvacuationFileModel;
-  private editStatus: BehaviorSubject<TabStatusManager[]> = new BehaviorSubject<
+  public editStatus: BehaviorSubject<TabStatusManager[]> = new BehaviorSubject<
     TabStatusManager[]
   >([]);
   public editStatus$: Observable<
     TabStatusManager[]
   > = this.editStatus.asObservable();
+  private sideMenuItems: Array<WizardSidenavModel>;
+  private originalObjectReference: RegistrantProfileModel | EvacuationFileModel;
 
   constructor(
     private cacheService: CacheService,
