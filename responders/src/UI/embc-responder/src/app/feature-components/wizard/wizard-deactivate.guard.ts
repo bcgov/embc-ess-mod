@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardAdapterService } from './wizard-adapter.service';
+import { WizardDataService } from './wizard-data.service';
 import { WizardComponent } from './wizard.component';
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +20,7 @@ export class WizardDeactivateGuard implements CanDeactivate<WizardComponent> {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    this.wizardAdapterService.clearWizard();
+    // this.wizardAdapterService.clearWizard();
     this.clearCachedServices();
     return true;
   }

@@ -16,8 +16,8 @@ export class SupplierListDataService {
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [],
     loadInputFilter: {
-      type: 'Search by supplier name/ legal name',
-      label: 'Search by supplier name/ legal name'
+      type: 'Search by supplier name or supplier legal name',
+      label: 'Search by supplier name or supplier legal name'
     }
   };
 

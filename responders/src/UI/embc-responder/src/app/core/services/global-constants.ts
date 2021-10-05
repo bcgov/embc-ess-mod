@@ -415,15 +415,23 @@ export const deleteSupplierFromList: DialogContent = {
 export const rescindSupplierFromList: DialogContent = {
   title: 'Rescind',
   text:
-    '<p>Are you sure you want to permanently remove this ESS Team?</p><p>They will no longer have access to use this supplier.</p>',
+    '<p>Are you sure you want to permanently remove this ESS Team from accessing this supplier? They will no longer have access to use this supplier.</p>',
   cancelButton: 'No, Cancel',
   confirmButton: 'Yes, Remove ESS Team'
+};
+
+export const updateSupplierStatus: DialogContent = {
+  title: 'Update Supplier Status',
+  text:
+    '<p>This supplier is connected to another ESS Team via a LEP mutual aid agreement. Any status changes will affect access to any shared suppliers.</p>',
+  cancelButton: 'Cancel',
+  confirmButton: 'Continue'
 };
 
 export const supplierStatusDefinition: DialogContent = {
   title: 'Status Definitions',
   text:
-    '<p class="green-info"><b>Active</b></p><p>ACTIVE suppliers will appear in your supplier list for responders to use during referral creation.</p><p class="red-alert"><b>Deactivated</b></p><p>DEACTIVATED suppliers will NOT appear in your supplier list for responders to use during referral creation</p><p><b>Status changes affect your ESS Team, as well as any ESS Teams connected to your supplier via a mutual aid agreement.</b></p>',
+    '<p class="green-info"><b>Active</b></p><p>Supplier will appear within your supplier list and can be selected on a referral.</p><p class="red-alert"><b>Deactivated</b></p><p>Supplier will NOT appear within your supplier list and cannot be selected on a referral.</b></p><p><b>All status changes will affect ESS Team access to any suppliers shared via LEP mutual aid agreements.</b></p>',
   cancelButton: 'Close'
 };
 
