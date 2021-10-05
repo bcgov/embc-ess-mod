@@ -134,6 +134,11 @@ namespace EMBC.ESS.Managers.Submissions
                     ? null
                     : new Shared.Contracts.Submissions.TeamMember { Id = s.IssuedByTeamMemberId }))
                 .ReverseMap()
+                .ForMember(d => d.SupportType, opts => opts.Ignore())
+                .ForMember(d => d.fileId, opts => opts.Ignore())
+                .ForMember(d => d.taskId, opts => opts.Ignore())
+                .ForMember(d => d.HostCommunity, opts => opts.Ignore())
+                .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
                 .ValidateMemberList(MemberList.Destination)
                 .IncludeAllDerived()
                 .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s.IssuedBy == null ? null : s.IssuedBy.Id))

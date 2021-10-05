@@ -185,6 +185,10 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
 
         public SupportType SupportType { get; set; }
+        public string fileId { get; set; }
+        public string taskId { get; set; }
+        public string HostCommunity { get; set; }
+        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
     }
 
     public abstract class Referral : Support

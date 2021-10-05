@@ -219,6 +219,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ForMember(d => d.SupportType, opts => opts.MapFrom(s => s.era_supporttype))
+                .ForMember(d => d.fileId, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_name))
+                .ForMember(d => d.taskId, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_TaskId.era_name))
+                .ForMember(d => d.HostCommunity, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_EvacuatedFromID.era_jurisdictionname))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport))
                 .ReverseMap()
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
@@ -248,7 +252,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             CreateMap<era_evacueesupport, IncidentalsReferral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_extremewinterconditions))
+                .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_approveditems))
                 .ReverseMap()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Incidentals))
                 ;

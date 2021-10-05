@@ -557,27 +557,25 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             //get all supports
             var supports = await QueryEvacueeSupports(readCtx, query);
 
-            var t = (await ParallelLoadEvacuationSupportsAsync(essContext, supports)).Select(f => MapEvacuationSupports(f)).ToArray();
+            var t = (await LoadEvacuationSupports(essContext, supports)).Select(f => MapEvacuationSupports(f)).ToArray();
             return t;
         }
 
-        private static async Task ParallelLoadEvacuationSupportAsync(EssContext ctx, era_evacueesupport support)
-        {
-            ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
-
-            var loadTasks = new List<Task>();
-            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport))));
-
-            await Task.WhenAll(loadTasks.ToArray());
-        }
-
-        private static async Task<IEnumerable<era_evacueesupport>> ParallelLoadEvacuationSupportsAsync(EssContext ctx, IEnumerable<era_evacueesupport> supports)
+        private static async Task<IEnumerable<era_evacueesupport>> LoadEvacuationSupports(EssContext ctx, IEnumerable<era_evacueesupport> supports)
         {
             var readCtx = ctx.Clone();
             readCtx.MergeOption = MergeOption.NoTracking;
 
             //load supports' properties
-            await supports.Select(support => ParallelLoadEvacuationSupportAsync(readCtx, support)).ToArray().ForEachAsync(10, t => t);
+            foreach (var support in supports)
+            {
+                readCtx.AttachTo(nameof(EssContext.era_evacueesupports), support);
+                await readCtx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
+                readCtx.AttachTo(nameof(EssContext.era_evacuationfiles), support.era_EvacuationFileId);
+                await readCtx.LoadPropertyAsync(support.era_EvacuationFileId, nameof(era_evacuationfile.era_TaskId));
+                await readCtx.LoadPropertyAsync(support.era_EvacuationFileId, nameof(era_evacuationfile.era_EvacuatedFromID));
+                readCtx.Detach(support.era_EvacuationFileId);
+            }
 
             return supports.ToArray();
         }
@@ -589,7 +587,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (!shouldQuerySupports) return Array.Empty<era_evacueesupport>();
 
             var supportsQuery = ctx.era_evacueesupports.Expand(f => f.era_EvacuationFileId);
-            supportsQuery = supportsQuery.Expand(f => f.era_IssuedById);
             supportsQuery = supportsQuery.Expand(f => f.era_SupplierId);
 
             var predicate = PredicateBuilder.Make<era_evacueesupport>();

@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EMBC.ESS.Print.Supports
 {
@@ -22,6 +23,7 @@ namespace EMBC.ESS.Print.Supports
     {
         public IEnumerable<string> SupportsIds { get; set; }
         public bool AddSummary { get; set; }
+        public string CurrentLoggedInUser { get; set; }
     }
 
     public class PrintReferral
@@ -34,46 +36,48 @@ namespace EMBC.ESS.Print.Supports
         public string ToDate { get; set; }
         public string ToTime { get; set; }
         public string PrintDate { get; set; }
-
-        //public IEnumerable<PrintEvacuee> PrintEvacuees { get; set; }
         public string TotalAmountPrinted { get; set; }
+        public string Comments { get; set; }
+        public string ApprovedItems { get; set; }
+        public string CommentsPrinted => ConvertCarriageReturnToHtml(Comments);
+        public string ApprovedItemsPrinted => ConvertCarriageReturnToHtml(ApprovedItems);
 
-        //public string CommentsPrinted => ConvertCarriageReturnToHtml(Comments);
-        //public string ApprovedItemsPrinted => ConvertCarriageReturnToHtml(ApprovedItems);
-
-        // Not mapped, only used when printing a referral.
         public string VolunteerDisplayName { get; set; }
-
-        // Not mapped, flag that enables the TRAINING SAMPLE watermark if true
         public bool DisplayWatermark { get; set; }
-
         public string SupportType { get; set; }
         public string EssNumber { get; set; }
-        public bool Active { get; set; }
-
-        public string Purchaser { get; set; }
-        public string Type { get; set; }
-
-        public string SubType { get; set; }
-
-        //public DateRange ValidDates { get; set; }
-        //public IEnumerable<ReferralEvacuee> Evacuees { get; set; }
+        public string PurchaserName { get; set; }
         public PrintSupplier Supplier { get; set; }
-
-        public string Comments { get; set; }
-
-        public bool ConfirmChecked { get; set; }
-        public int? NumBreakfasts { get; set; }
-        public int? NumLunches { get; set; }
-        public int? NumDinners { get; set; }
-        public int? NumDaysMeals { get; set; }
-        public int? NumNights { get; set; }
-        public int? NumRooms { get; set; }
-        public string ApprovedItems { get; set; }
-        public bool ExtremeWinterConditions { get; set; }
+        public int NumBreakfasts { get; set; }
+        public int NumLunches { get; set; }
+        public int NumDinners { get; set; }
+        public int NumDaysMeals { get; set; }
+        public int NumNights { get; set; }
+        public int NumRooms { get; set; }
         public string FromAddress { get; set; }
         public string ToAddress { get; set; }
         public string OtherTransportModeDetails { get; set; }
+        public IEnumerable<PrintEvacuee> PrintEvacuees { get; set; }
+
+        public object[] PrintableEvacuees
+        {
+            get
+            {
+                var evacueesToPrint = new List<object>();
+                var evacuees = PrintEvacuees.ToArray();
+
+                for (int i = 0; i <= 7; i++)
+                {
+                    evacueesToPrint.Add(new PrintableEvacueesRow(evacuees.ElementAtOrDefault(i), evacuees.ElementAtOrDefault(i + 7)));
+                }
+                return evacueesToPrint.ToArray();
+            }
+        }
+
+        private string ConvertCarriageReturnToHtml(string value)
+        {
+            return value?.Replace("\n", "<br />")?.Replace("\r", "<br />");
+        }
     }
 
     public class PrintSupplier
@@ -87,5 +91,42 @@ namespace EMBC.ESS.Print.Supports
         public string PostalCode { get; set; }
         public string Telephone { get; set; }
         public string Fax { get; set; }
+    }
+
+    public class PrintEvacuee
+    {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string EvacueeTypeCode { get; set; }
+    }
+
+    public class PrintableEvacueesRow
+    {
+        public PrintableEvacueesRow(PrintEvacuee referralEvacuee1, PrintEvacuee referralEvacuee2)
+        {
+            Column1 = GetEvacueeColumn(referralEvacuee1);
+            Column2 = GetEvacueeColumn(referralEvacuee2);
+        }
+
+        public string Column1 { get; private set; }
+        public string Column1Class => GetEvacueeColumnClass(Column1);
+        public string Column2 { get; private set; }
+        public string Column2Class => GetEvacueeColumnClass(Column2);
+
+        private string GetEvacueeColumn(PrintEvacuee referralEvacuee)
+        {
+            if (referralEvacuee == null)
+            {
+                return string.Empty;
+            }
+
+            return $"{referralEvacuee.LastName}, {referralEvacuee.FirstName} ({referralEvacuee.EvacueeTypeCode})";
+        }
+
+        private string GetEvacueeColumnClass(string columnText)
+        {
+            return string.IsNullOrEmpty(columnText) ? "nobody" : "evacuee";
+        }
     }
 }

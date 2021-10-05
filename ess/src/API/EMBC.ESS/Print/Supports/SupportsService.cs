@@ -23,6 +23,7 @@ using AutoMapper;
 using EMBC.ESS.Print.Utils;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Suppliers;
+using EMBC.ESS.Utilities.PdfGenerator;
 using HandlebarsDotNet;
 using Microsoft.Extensions.Hosting;
 
@@ -33,24 +34,26 @@ namespace EMBC.ESS.Print.Supports
         private readonly ICaseRepository caseRepository;
         private readonly IMapper mapper;
         private readonly ISupplierRepository supplierRepository;
-
-        //private readonly IUserService userService;
+        private readonly IPdfGenerator pdfGenerator;
         private readonly IHostEnvironment env;
+
+        private string currentUser;
 
         private readonly string pageBreak = $@"{Environment.NewLine}<div class=""page-break""></div>{Environment.NewLine}";
 
-        //public ReferralsService(IDataInterface dataInterface, IPdfGenerator pdfGenerator, ICurrentUser currentUser)
-        public SupportsService(ICaseRepository caseRepository, IMapper mapper, ISupplierRepository supplierRepository, IHostEnvironment environment)
+        public SupportsService(ICaseRepository caseRepository, IMapper mapper, ISupplierRepository supplierRepository, IHostEnvironment environment, IPdfGenerator pdfGenerator)
         {
             this.caseRepository = caseRepository;
             this.mapper = mapper;
             this.supplierRepository = supplierRepository;
-            //this.userService = currentUser;
+            this.pdfGenerator = pdfGenerator;
             this.env = environment;
+            this.currentUser = string.Empty;
         }
 
         public async Task<byte[]> GetReferralPdfsAsync(SupportsToPrint printReferrals)
         {
+            this.currentUser = printReferrals.CurrentLoggedInUser;
             var content = await GetReferralHtmlPagesAsync(printReferrals);
 
             if (content == null)
@@ -58,7 +61,7 @@ namespace EMBC.ESS.Print.Supports
                 return null;
             }
 
-            var result = new byte[] { 0 }; //TODO  await pdfGenerator.Generate(content);
+            var result = await pdfGenerator.Generate(content);
             return result;
         }
 
@@ -76,7 +79,6 @@ namespace EMBC.ESS.Print.Supports
             return html;
         }
 
-        //private string AssembleReferralHtml(IEnumerable<PrintReferral> referrals, bool includeSummary)
         private async Task<string> AssembleReferralHtml(IEnumerable<Support> supports, bool includeSummary)
         {
             var referralHtml = string.Empty;
@@ -95,7 +97,7 @@ namespace EMBC.ESS.Print.Supports
                     printsupplier = mapper.Map<PrintSupplier>(supplier);
                 }
 
-                var printReferral = mapper.Map<PrintReferral>(support);
+                var printReferral = mapper.Map<PrintReferral>(referral);
                 if (!string.IsNullOrEmpty(printsupplier.Id))
                     printReferral.Supplier = printsupplier;
                 var newHtml = CreateReferralHtmlPages(printReferral);
@@ -135,7 +137,7 @@ namespace EMBC.ESS.Print.Supports
 
             var template = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.Referral.ToString()));
 
-            //referral.VolunteerDisplayName = userService.GetDisplayName();
+            referral.VolunteerDisplayName = this.currentUser;
             // If we're in prod, we don't want the watermark
             referral.DisplayWatermark = !env.IsProduction();
 
