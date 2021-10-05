@@ -40,6 +40,12 @@ parameters:
   - description: OIDC client ID
     name: OIDC_CLIENTID
     required: true
+  - description: REDIS Service name
+    name: REDIS_SERVER
+    required: false
+  - description: REDIS Service password
+    name: REDIS_PASSWORD
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -59,6 +65,7 @@ objects:
       JWT__AUDIENCE: ${JWT_AUDIENCE}
       OIDC__ISSUER: ${OIDC_ISSUER}
       OIDC__CLIENTID: ${OIDC_CLIENTID}
+      REDIS__ENDPOINT: ${REDIS_SERVER}
 
   - kind: Secret
     apiVersion: v1
@@ -70,6 +77,7 @@ objects:
         app: ${APP_NAME}-responders-portal
         app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
+      REDIS__PASSWORD: ${REDIS_PASSWORD}
 
   - kind: Service
     apiVersion: v1
