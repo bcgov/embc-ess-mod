@@ -31,7 +31,6 @@ export class WizardActivateGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    this.wizardAdapterService.clearWizard();
     const loggedInTask = this.cacheService.get('loggedInTask');
     const wizardType = this.evacueeSessionService.getWizardType();
     const registrantProfileId = this.evacueeSessionService.profileId;
