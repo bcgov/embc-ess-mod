@@ -60,6 +60,19 @@ namespace EMBC.Registrants.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisEndpoint = configuration["redis:endpoint"];
+            if (!string.IsNullOrEmpty(redisEndpoint))
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = $"{redisEndpoint},name={Assembly.GetExecutingAssembly().GetName().Name},password={configuration["redis:password"]}";
+                });
+            }
+            else
+            {
+                services.AddDistributedMemoryCache();
+            }
+
             //Add configuration options
             services.Configure<JwtTokenOptions>(opts => configuration.Bind("auth:jwt", opts));
             services.Configure<JsonOptions>(opts =>
@@ -103,7 +116,6 @@ namespace EMBC.Registrants.API
             services.AddResponseCompression();
             services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
-            services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
             services.AddSecurityModule();
 
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));

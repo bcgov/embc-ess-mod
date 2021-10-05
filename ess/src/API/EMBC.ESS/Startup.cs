@@ -60,7 +60,7 @@ namespace EMBC.ESS
         public void ConfigureServices(IServiceCollection services)
         {
             var redisEndpoint = configuration["redis:address"];
-            if (redisEndpoint != null)
+            if (!string.IsNullOrEmpty(redisEndpoint))
             {
                 services.AddStackExchangeRedisCache(options =>
                 {

@@ -63,7 +63,7 @@ namespace EMBC.Responders.API
         public void ConfigureServices(IServiceCollection services)
         {
             var redisEndpoint = configuration["redis:endpoint"];
-            if (redisEndpoint != null)
+            if (!string.IsNullOrEmpty(redisEndpoint))
             {
                 services.AddStackExchangeRedisCache(options =>
                 {
