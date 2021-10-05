@@ -351,20 +351,29 @@ export class StepSupportsService {
 
   convertDateTimeToString(date: string, time: string): string {
     const dateToDate = new Date(date);
-    const day = dateToDate.getDate();
-    const month = dateToDate.getMonth() + 1;
-    const year = dateToDate.getFullYear();
+    const hours = +time.split(':', 1).pop();
+    const minutes = +time.split(':', 2).pop();
 
-    let dayString = '' + day;
-    let monthString = '' + month;
+    dateToDate.setTime(dateToDate.getTime() + hours * 60 * 60 * 1000);
+    dateToDate.setTime(dateToDate.getTime() + minutes * 60 * 1000);
+    console.log(dateToDate);
+    console.log(dateToDate.toISOString());
 
-    if (day < 10) {
-      dayString = '0' + day;
-    }
+    // const day = dateToDate.getDate();
+    // const month = dateToDate.getMonth() + 1;
+    // const year = dateToDate.getFullYear();
 
-    if (month < 10) {
-      monthString = '0' + month;
-    }
-    return year + '-' + monthString + '-' + dayString + 'T' + time + ':00Z';
+    // let dayString = '' + day;
+    // let monthString = '' + month;
+
+    // if (day < 10) {
+    //   dayString = '0' + day;
+    // }
+
+    // if (month < 10) {
+    //   monthString = '0' + month;
+    // }
+    // return year + '-' + monthString + '-' + dayString + 'T' + time + ':00Z';
+    return dateToDate.toISOString();
   }
 }
