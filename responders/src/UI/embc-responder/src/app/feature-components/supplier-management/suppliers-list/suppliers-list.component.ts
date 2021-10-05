@@ -11,6 +11,9 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { SupplierListItem } from 'src/app/core/api/models';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { SupplierDetailService } from '../supplier-detail/supplier-detail.service';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -32,6 +35,7 @@ export class SuppliersListComponent implements OnInit {
 
   constructor(
     private listSupplierDataService: SupplierListDataService,
+    private dialog: MatDialog,
     private router: Router,
     private userService: UserService,
     private supplierServices: SupplierService,
@@ -51,34 +55,8 @@ export class SuppliersListComponent implements OnInit {
     this.mutualAidSuppliersColumns = this.listSupplierDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService.currentProfile.role;
 
-    this.supplierServices.getMainSuppliersList().subscribe(
-      (values) => {
-        this.suppliersLoader = !this.suppliersLoader;
-        this.suppliersList = values;
-      },
-      (error) => {
-        console.log(error);
-        this.suppliersLoader = !this.suppliersLoader;
-        this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
-      }
-    );
-
-    this.supplierServices.getMutualAidSuppliersList().subscribe(
-      (values) => {
-        this.mutualAidLoader = !this.mutualAidLoader;
-        this.mutualAidList = values;
-      },
-      (error) => {
-        console.log(error);
-        this.mutualAidLoader = !this.mutualAidLoader;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.mutualAidListError);
-      }
-    );
+    this.getPrimarySuppliersList();
+    this.getMutualAidSuppliersList();
   }
 
   /**
@@ -118,18 +96,39 @@ export class SuppliersListComponent implements OnInit {
    * @param $event team member id
    */
   activateSupplier($event: string): void {
-    this.statusLoading = !this.statusLoading;
-    this.supplierServices.activateSuppliersStatus($event).subscribe(
-      (value) => {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.updateSupplierStatus
+        },
+        height: '260px',
+        width: '600px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
         this.statusLoading = !this.statusLoading;
-        this.suppliersList = value;
-      },
-      (error) => {
-        this.statusLoading = !this.statusLoading;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.activateSupplierError);
-      }
-    );
+        if (event === 'confirm') {
+          this.supplierServices.activateSuppliersStatus($event).subscribe(
+            (value) => {
+              this.statusLoading = !this.statusLoading;
+              this.suppliersList = value;
+            },
+            (error) => {
+              this.statusLoading = !this.statusLoading;
+              this.alertService.clearAlert();
+              this.alertService.setAlert(
+                'danger',
+                globalConst.activateSupplierError
+              );
+            }
+          );
+        } else {
+          this.statusLoading = !this.statusLoading;
+          this.getPrimarySuppliersList();
+          this.suppliersLoader = false;
+        }
+      });
   }
 
   /**
@@ -138,21 +137,39 @@ export class SuppliersListComponent implements OnInit {
    * @param $event team member id
    */
   deactivateSupplier($event: string): void {
-    this.statusLoading = !this.statusLoading;
-    this.supplierServices.deactivateSuppliersStatus($event).subscribe(
-      (value) => {
-        this.statusLoading = !this.statusLoading;
-        this.suppliersList = value;
-      },
-      (error) => {
-        this.statusLoading = !this.statusLoading;
-        this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.deActivateSupplierError
-        );
-      }
-    );
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.updateSupplierStatus
+        },
+        height: '260px',
+        width: '600px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.statusLoading = !this.statusLoading;
+          this.supplierServices.deactivateSuppliersStatus($event).subscribe(
+            (value) => {
+              this.statusLoading = !this.statusLoading;
+              this.suppliersList = value;
+            },
+            (error) => {
+              this.statusLoading = !this.statusLoading;
+              this.alertService.clearAlert();
+              this.alertService.setAlert(
+                'danger',
+                globalConst.deActivateSupplierError
+              );
+            }
+          );
+        } else {
+          this.statusLoading = !this.statusLoading;
+          this.getPrimarySuppliersList();
+          this.suppliersLoader = false;
+        }
+      });
   }
 
   /**
@@ -181,5 +198,44 @@ export class SuppliersListComponent implements OnInit {
     setTimeout(() => {
       this.listSupplierDataService.openConfirmation(displayText);
     }, 500);
+  }
+
+  /**
+   * Gets the primary suppliers list from the API
+   */
+  private getPrimarySuppliersList(): void {
+    this.supplierServices.getMainSuppliersList().subscribe(
+      (values) => {
+        this.suppliersLoader = !this.suppliersLoader;
+        this.suppliersList = values;
+      },
+      (error) => {
+        console.log(error);
+        this.suppliersLoader = !this.suppliersLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.mainSuppliersListError
+        );
+      }
+    );
+  }
+
+  /**
+   * Gets the mutual aid suppliers list from the API
+   */
+  private getMutualAidSuppliersList(): void {
+    this.supplierServices.getMutualAidSuppliersList().subscribe(
+      (values) => {
+        this.mutualAidLoader = !this.mutualAidLoader;
+        this.mutualAidList = values;
+      },
+      (error) => {
+        console.log(error);
+        this.mutualAidLoader = !this.mutualAidLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.mutualAidListError);
+      }
+    );
   }
 }
