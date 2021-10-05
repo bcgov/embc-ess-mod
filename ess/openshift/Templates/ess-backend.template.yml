@@ -48,6 +48,12 @@ parameters:
   - description: SMTP Server
     name: SMTP_SERVER
     required: true
+  - description: REDIS Service name
+    name: REDIS_ENDPOINT
+    required: false
+  - description: REDIS Service password
+    name: REDIS_PASSWORD
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -65,6 +71,7 @@ objects:
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
       notifications__email__smtpserver: ${SMTP_SERVER}
+      REDIS__ENDPOINT: ${REDIS_ENDPOINT}
 
   - kind: Secret
     apiVersion: v1
@@ -82,6 +89,7 @@ objects:
       Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
       Dynamics__ADFS__serviceAccountName: ${DYNAMICS_SERVICE_ACCOUNT_NAME}
       Dynamics__ADFS__serviceAccountPassword: ${DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+      REDIS__PASSWORD: ${REDIS_PASSWORD}
 
   - kind: Service
     apiVersion: v1

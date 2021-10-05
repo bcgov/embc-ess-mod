@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Services;
@@ -66,6 +67,7 @@ namespace EMBC.Registrants.API
                 services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = $"{redisEndpoint},name={Assembly.GetExecutingAssembly().GetName().Name},password={configuration["redis:password"]}";
+                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
                 });
             }
             else

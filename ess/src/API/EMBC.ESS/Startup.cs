@@ -65,6 +65,7 @@ namespace EMBC.ESS
                 services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = $"{redisEndpoint},name={Assembly.GetExecutingAssembly().GetName().Name},password={configuration["redis:password"]}";
+                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
                 });
             }
             else
