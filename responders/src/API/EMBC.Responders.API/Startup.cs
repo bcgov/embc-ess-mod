@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
@@ -61,6 +62,18 @@ namespace EMBC.Responders.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisEndpoint = configuration["redis:endpoint"];
+            if (redisEndpoint != null)
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = $"{redisEndpoint},name={Assembly.GetExecutingAssembly().GetName().Name},password={configuration["redis:password"]}";
+                });
+            }
+            else
+            {
+                services.AddDistributedMemoryCache();
+            }
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardLimit = 2;
@@ -142,7 +155,6 @@ namespace EMBC.Responders.API
             services.AddMessaging();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
-            services.AddDistributedMemoryCache();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
