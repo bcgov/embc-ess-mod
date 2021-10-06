@@ -13,8 +13,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
-import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -44,7 +43,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     private evacueeSessionService: EvacueeSessionService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -192,6 +192,18 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEssFileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.evacDetailsForm.controls,
+        'evacDetails'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'evacDetails',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEssFileService.updateEditedFormStatus();
+    }
     this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }

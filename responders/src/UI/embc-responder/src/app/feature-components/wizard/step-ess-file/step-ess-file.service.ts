@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TabModel } from 'src/app/core/models/tab.model';
+import { TabModel, TabStatusManager } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -632,6 +632,7 @@ export class StepEssFileService {
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     const essNeeds = essFile.needsAssessment;
+    this.wizardService.createObjectReference(essFile);
     const primaryLastName = essFile.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant
     ).lastName;
@@ -870,6 +871,30 @@ export class StepEssFileService {
         tab.status = 'incomplete';
       }
       return tab;
+    });
+  }
+
+  checkForEdit(): boolean {
+    return this.evacueeSession.essFileNumber !== null;
+  }
+
+  updateEditedFormStatus() {
+    this.wizardService.editStatus$.subscribe((statues: TabStatusManager[]) => {
+      // const index = statues.findIndex((tab) => tab.tabUpdateStatus === true);
+      // if (index !== -1) {
+      //   this.setTabStatus('review', 'incomplete');
+      //   this.wizardService.setStepStatus('/ess-wizard/ess-file', true);
+      //   this.wizardService.setStepStatus('/ess-wizard/add-supports', true);
+      //   this.wizardService.setStepStatus('/ess-wizard/add-notes', true);
+      // } else {
+      //   if (!this.checkTabsStatus()) {
+      //     this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+      //     this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
+      //     this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+      //     this.setTabStatus('review', 'complete');
+      //   }
+      // }
+      console.log(statues)
     });
   }
 }

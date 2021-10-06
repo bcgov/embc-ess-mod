@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-needs',
@@ -23,7 +24,8 @@ export class NeedsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private stepEssFileService: StepEssFileService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +65,18 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEssFileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.needsForm.controls,
+        'needs'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'needs',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEssFileService.updateEditedFormStatus();
+    }
     this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }

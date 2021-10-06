@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { SecurityQuestion } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { TabStatusManager } from 'src/app/core/models/tab.model';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
@@ -11,6 +12,7 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { Community } from 'src/app/core/services/locations.service';
 import { WizardDataService } from './wizard-data.service';
+import * as _ from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
@@ -161,8 +163,30 @@ export class WizardService {
         const initialValue = (this
           .originalObjectReference as RegistrantProfileModel)[type];
         return this.compareSecurityQuestion(initialValue, form);
+      } else if (type === 'evacDetails') {
+        const initialValue = this
+          .originalObjectReference as EvacuationFileModel;
+        console.log(this.compareEvacDetails(initialValue, form));
+      } else if (type === 'householdMember') {
+        const initialValue = this
+          .originalObjectReference as EvacuationFileModel;
+        console.log(this.compareHouseholdMembers(initialValue, form));
+      } else if (type === 'animals') {
+        const initialValue = this
+          .originalObjectReference as EvacuationFileModel;
+        console.log(this.comparePets(initialValue, form));
+      } else if (type === 'needs') {
+        const initialValue = this
+          .originalObjectReference as EvacuationFileModel;
+        console.log(this.compareNeeds(initialValue, form));
       }
     }
+  }
+
+  hasMemberChanged(members: HouseholdMemberModel[]): boolean {
+    const initialValue = (this.originalObjectReference as EvacuationFileModel)
+      .householdMembers;
+    return _.isEqual(initialValue, members);
   }
 
   compareAddress(formAddress: AddressModel, incomingAddress: AddressModel) {
@@ -190,6 +214,73 @@ export class WizardService {
       q1 === initialValue[0].question &&
       q2 === initialValue[1].question &&
       q3 === initialValue[2].question
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  compareEvacDetails(initialValue: EvacuationFileModel, form) {
+    if (
+      form.facilityName === initialValue.registrationLocation &&
+      form.insurance === initialValue.needsAssessment.insurance &&
+      form.householdAffected ===
+        initialValue.needsAssessment.evacuationImpact &&
+      form.emergencySupportServices ===
+        initialValue.needsAssessment.houseHoldRecoveryPlan &&
+      form.referredServices ===
+        initialValue.needsAssessment.recommendedReferralServices &&
+      form.referredServiceDetails ===
+        initialValue.needsAssessment.recommendedReferralServices &&
+      form.externalServices ===
+        initialValue.needsAssessment.evacuationExternalReferrals &&
+      this.compareAddress(form.evacAddress, initialValue.evacuatedFromAddress)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  compareHouseholdMembers(initialValue: EvacuationFileModel, form) {
+    if (
+      form.hasSpecialDiet === initialValue.needsAssessment.haveSpecialDiet &&
+      form.specialDietDetails ===
+        initialValue.needsAssessment.specialDietDetails &&
+      form.hasMedication === initialValue.needsAssessment.takeMedication &&
+      form.medicationSupply === initialValue.needsAssessment.haveMedicalSupplies
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  comparePets(initialValue: EvacuationFileModel, form) {
+    if (
+      form.hasPetsFood === initialValue.needsAssessment.havePetsFood &&
+      form.petCareDetails === initialValue.needsAssessment.petCarePlans &&
+      _.isEqual(form.hasMedication, initialValue.needsAssessment.pets)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  compareNeeds(initialValue: EvacuationFileModel, form) {
+    if (
+      form.canEvacueeProvideClothing ===
+        initialValue.needsAssessment.canProvideClothing &&
+      form.canEvacueeProvideFood ===
+        initialValue.needsAssessment.canProvideFood &&
+      form.canEvacueeProvideIncidentals ===
+        initialValue.needsAssessment.canProvideIncidentals &&
+      form.canEvacueeProvideLodging ===
+        initialValue.needsAssessment.canProvideLodging &&
+      form.canEvacueeProvideTransportation ===
+        initialValue.needsAssessment.canProvideTransportation
     ) {
       return false;
     } else {
