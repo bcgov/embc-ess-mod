@@ -207,9 +207,11 @@ export class AnimalsComponent implements OnInit, OnDestroy {
         'animals'
       );
 
+      const hasPetsUpdated = this.wizardService.hasPetsChanged(this.pets);
+
       this.wizardService.setEditStatus({
         tabName: 'animals',
-        tabUpdateStatus: isFormUpdated
+        tabUpdateStatus: isFormUpdated || hasPetsUpdated
       });
       this.stepEssFileService.updateEditedFormStatus();
     }

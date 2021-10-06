@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { SecurityQuestion } from 'src/app/core/api/models';
+import { Pet, SecurityQuestion } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
@@ -13,6 +13,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
 import { Community } from 'src/app/core/services/locations.service';
 import { WizardDataService } from './wizard-data.service';
 import * as _ from 'lodash';
+import * as globalConst from '../../core/services/global-constants';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
@@ -166,19 +167,19 @@ export class WizardService {
       } else if (type === 'evacDetails') {
         const initialValue = this
           .originalObjectReference as EvacuationFileModel;
-        console.log(this.compareEvacDetails(initialValue, form));
+        return this.compareEvacDetails(initialValue, form);
       } else if (type === 'householdMember') {
         const initialValue = this
           .originalObjectReference as EvacuationFileModel;
-        console.log(this.compareHouseholdMembers(initialValue, form));
+        return this.compareHouseholdMembers(initialValue, form);
       } else if (type === 'animals') {
         const initialValue = this
           .originalObjectReference as EvacuationFileModel;
-        console.log(this.comparePets(initialValue, form));
+        return this.comparePets(initialValue, form);
       } else if (type === 'needs') {
         const initialValue = this
           .originalObjectReference as EvacuationFileModel;
-        console.log(this.compareNeeds(initialValue, form));
+        return this.compareNeeds(initialValue, form);
       }
     }
   }
@@ -223,17 +224,20 @@ export class WizardService {
 
   compareEvacDetails(initialValue: EvacuationFileModel, form) {
     if (
-      form.facilityName === initialValue.registrationLocation &&
-      form.insurance === initialValue.needsAssessment.insurance &&
-      form.householdAffected ===
+      form.facilityName.value === initialValue.registrationLocation &&
+      form.insurance.value === initialValue.needsAssessment.insurance &&
+      form.householdAffected.value ===
         initialValue.needsAssessment.evacuationImpact &&
-      form.emergencySupportServices ===
+      form.emergencySupportServices.value ===
         initialValue.needsAssessment.houseHoldRecoveryPlan &&
-      form.referredServices ===
-        initialValue.needsAssessment.recommendedReferralServices &&
-      form.referredServiceDetails ===
-        initialValue.needsAssessment.recommendedReferralServices &&
-      form.externalServices ===
+      ((form.referredServices.value === 'No' &&
+        initialValue.needsAssessment.recommendedReferralServices.length ===
+          0) ||
+        _.isEqual(
+          form.referredServiceDetails.value,
+          initialValue.needsAssessment.recommendedReferralServices
+        )) &&
+      form.externalServices.value ===
         initialValue.needsAssessment.evacuationExternalReferrals &&
       this.compareAddress(form.evacAddress, initialValue.evacuatedFromAddress)
     ) {
@@ -244,12 +248,27 @@ export class WizardService {
   }
 
   compareHouseholdMembers(initialValue: EvacuationFileModel, form) {
+    const specialDietDetails =
+      form.specialDietDetails.value === ''
+        ? null
+        : form.specialDietDetails.value;
+    const medSupply =
+      globalConst.radioButtonOptions.find(
+        (ins) => ins.value === form.medicationSupply.value
+      )?.apiValue === null
+        ? 'No'
+        : globalConst.radioButtonOptions.find(
+            (ins) => ins.value === form.medicationSupply.value
+          )?.apiValue === null;
     if (
-      form.hasSpecialDiet === initialValue.needsAssessment.haveSpecialDiet &&
-      form.specialDietDetails ===
-        initialValue.needsAssessment.specialDietDetails &&
-      form.hasMedication === initialValue.needsAssessment.takeMedication &&
-      form.medicationSupply === initialValue.needsAssessment.haveMedicalSupplies
+      globalConst.radioButtonOptions.find(
+        (ins) => ins.value === form.hasSpecialDiet.value
+      )?.apiValue === initialValue.needsAssessment.haveSpecialDiet &&
+      specialDietDetails === initialValue.needsAssessment.specialDietDetails &&
+      globalConst.radioButtonOptions.find(
+        (ins) => ins.value === form.hasMedication.value
+      )?.apiValue === initialValue.needsAssessment.takeMedication &&
+      medSupply === initialValue.needsAssessment.haveMedicalSupplies
     ) {
       return false;
     } else {
@@ -257,11 +276,20 @@ export class WizardService {
     }
   }
 
+  hasPetsChanged(pets: Pet[]): boolean {
+    const initialValue = (this.originalObjectReference as EvacuationFileModel)
+      .needsAssessment.pets;
+    return _.isEqual(initialValue, pets);
+  }
+
   comparePets(initialValue: EvacuationFileModel, form) {
+    // &&
+    //   _.isEqual(form.pets.value, initialValue.needsAssessment.pets)
     if (
-      form.hasPetsFood === initialValue.needsAssessment.havePetsFood &&
-      form.petCareDetails === initialValue.needsAssessment.petCarePlans &&
-      _.isEqual(form.hasMedication, initialValue.needsAssessment.pets)
+      globalConst.radioButtonOptions.find(
+        (ins) => ins.value === form.hasPetsFood.value
+      )?.apiValue === initialValue.needsAssessment.havePetsFood &&
+      form.petCareDetails.value === initialValue.needsAssessment.petCarePlans
     ) {
       return false;
     } else {
@@ -271,16 +299,21 @@ export class WizardService {
 
   compareNeeds(initialValue: EvacuationFileModel, form) {
     if (
-      form.canEvacueeProvideClothing ===
-        initialValue.needsAssessment.canProvideClothing &&
-      form.canEvacueeProvideFood ===
-        initialValue.needsAssessment.canProvideFood &&
-      form.canEvacueeProvideIncidentals ===
-        initialValue.needsAssessment.canProvideIncidentals &&
-      form.canEvacueeProvideLodging ===
-        initialValue.needsAssessment.canProvideLodging &&
-      form.canEvacueeProvideTransportation ===
-        initialValue.needsAssessment.canProvideTransportation
+      globalConst.needsOptions.find(
+        (ins) => ins.value === form.canEvacueeProvideClothing.value
+      )?.apiValue === initialValue.needsAssessment.canProvideClothing &&
+      globalConst.needsOptions.find(
+        (ins) => ins.value === form.canEvacueeProvideFood.value
+      )?.apiValue === initialValue.needsAssessment.canProvideFood &&
+      globalConst.needsOptions.find(
+        (ins) => ins.value === form.canEvacueeProvideIncidentals.value
+      )?.apiValue === initialValue.needsAssessment.canProvideIncidentals &&
+      globalConst.needsOptions.find(
+        (ins) => ins.value === form.canEvacueeProvideLodging.value
+      )?.apiValue === initialValue.needsAssessment.canProvideLodging &&
+      globalConst.needsOptions.find(
+        (ins) => ins.value === form.canEvacueeProvideTransportation.value
+      )?.apiValue === initialValue.needsAssessment.canProvideTransportation
     ) {
       return false;
     } else {

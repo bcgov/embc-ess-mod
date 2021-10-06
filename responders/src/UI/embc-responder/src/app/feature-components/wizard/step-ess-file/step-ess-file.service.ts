@@ -690,7 +690,8 @@ export class StepEssFileService {
     )?.value;
 
     // Animals tab
-    this.petsList = essNeeds.pets;
+    const petsArray = [];
+    this.petsList = [...petsArray, ...essNeeds.pets];
     this.havePets = globalConst.radioButtonOptions.find(
       (ins) => ins.apiValue === essNeeds.pets?.length > 0
     )?.value;
@@ -897,7 +898,6 @@ export class StepEssFileService {
           this.setTabStatus('review', 'complete');
         }
       }
-      console.log(statues);
     });
   }
 }

@@ -323,13 +323,13 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         'householdMember'
       );
 
-      const hasMembersUpdated = this.wizardService.hasMemberChanged(
-        this.members
-      );
+      // const hasMembersUpdated = this.wizardService.hasMemberChanged(
+      //   this.members
+      // );
 
       this.wizardService.setEditStatus({
         tabName: 'householdMember',
-        tabUpdateStatus: isFormUpdated || hasMembersUpdated
+        tabUpdateStatus: isFormUpdated
       });
       this.stepEssFileService.updateEditedFormStatus();
     }
