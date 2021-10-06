@@ -9,3 +9,4 @@ JWT_METADATA_URL=<JWT metadata url for API authorization>
 JWT_AUDIENCE=<a valid audience to verify the JWT>
 OIDC_ISSUER=<OIDC issuer (url)>
 OIDC_CLIENTID=>OIDC client ID>
+REDIS_CONNECTIONSTRING=<optional Redis connection string>

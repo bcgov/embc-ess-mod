@@ -57,11 +57,8 @@ parameters:
   - description: ESS backend allow invalid server cert
     name: BACKEND_ALLOW_INVALID_CERT
     value: "false"
-  - description: REDIS endpoints
-    name: REDIS_ENDPOINT
-    required: false
-  - description: REDIS Service password
-    name: REDIS_PASSWORD
+  - description: REDIS Service connection string
+    name: REDIS_CONNECTIONSTRING
     required: false
 
 objects:
@@ -84,7 +81,6 @@ objects:
       auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
       backend__url: ${BACKEND_URL}
       backend__allowInvalidServerCertificate: ${BACKEND_ALLOW_INVALID_CERT}
-      REDIS__ENDPOINT: ${REDIS_ENDPOINT}
 
   - kind: Secret
     apiVersion: v1
@@ -100,7 +96,7 @@ objects:
       auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
       auth__jwt__signingKey: ${JWT_SIGNING_KEY}
       auth__jwt__encryptingKey: ${JWT_ENCRYPTING_KEY}
-      REDIS__PASSWORD: ${REDIS_PASSWORD}
+      Redis__ConnectionString: ${REDIS_CONNECTIONSTRING}
 
   - kind: Service
     apiVersion: v1
