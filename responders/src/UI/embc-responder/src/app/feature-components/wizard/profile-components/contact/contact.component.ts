@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
+import { WizardService } from '../../wizard.service';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -60,7 +61,8 @@ export class ContactComponent implements OnInit, OnDestroy {
     private router: Router,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -225,6 +227,18 @@ export class ContactComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEvacueeProfileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.contactInfoForm.controls,
+        'contactDetails'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'contact',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEvacueeProfileService.updateEditedFormStatus();
+    }
     this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
