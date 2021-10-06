@@ -59,18 +59,20 @@ namespace EMBC.ESS
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var redisEndpoint = configuration["redis:address"];
-            if (redisEndpoint != null)
+            var redisConnectionString = configuration["redis:connectionstring"];
+            if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = $"{redisEndpoint},name={Assembly.GetExecutingAssembly().GetName().Name},password={configuration["redis:password"]}";
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
                 });
             }
             else
             {
                 services.AddDistributedMemoryCache();
             }
+
             services.Configure<MessageHandlerRegistryOptions>(opts => { });
             services.AddSingleton<MessageHandlerRegistry>();
             services.AddGrpc(opts =>

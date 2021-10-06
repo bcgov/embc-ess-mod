@@ -15,6 +15,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-security-questions',
@@ -31,7 +32,8 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private customValidationService: CustomValidationService,
     public stepEvacueeProfileService: StepEvacueeProfileService,
-    public evacueeSessionService: EvacueeSessionService
+    public evacueeSessionService: EvacueeSessionService,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -267,6 +269,26 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (
+      this.stepEvacueeProfileService.checkForEdit() &&
+      this.questionForm.dirty
+    ) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.questionForm.controls,
+        'securityQuestions'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'securityQuestions',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEvacueeProfileService.updateEditedFormStatus();
+    } else {
+      this.wizardService.setEditStatus({
+        tabName: 'securityQuestions',
+        tabUpdateStatus: false
+      });
+    }
     this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }

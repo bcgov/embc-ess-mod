@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RegistrantProfile } from 'src/app/core/api/models';
-import { RegistrationsService } from 'src/app/core/api/services';
+import { Code, RegistrantProfile } from 'src/app/core/api/models';
+import {
+  ConfigurationService,
+  RegistrationsService
+} from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 
@@ -10,10 +13,12 @@ import { CacheService } from 'src/app/core/services/cache.service';
 })
 export class EssfileDashboardService {
   private essFileVal: EvacuationFileModel;
+  private supportCategoryVal: Code[];
 
   constructor(
     private cacheService: CacheService,
-    private registrationService: RegistrationsService
+    private registrationService: RegistrationsService,
+    private configService: ConfigurationService
   ) {}
 
   get essFile(): EvacuationFileModel {
@@ -27,6 +32,14 @@ export class EssfileDashboardService {
     this.cacheService.set('essFile', essFileVal);
   }
 
+  get supportCategory(): Code[] {
+    return this.supportCategoryVal;
+  }
+
+  set supportCategory(supportCategoryVal: Code[]) {
+    this.supportCategoryVal = supportCategoryVal;
+  }
+
   getPossibleProfileMatches(
     firstName: string,
     lastName: string,
@@ -37,5 +50,15 @@ export class EssfileDashboardService {
       lastName,
       dateOfBirth
     });
+  }
+
+  public getCategoryList(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportCategory' })
+      .subscribe((categories: Code[]) => {
+        this.supportCategory = categories.filter(
+          (category) => category.description !== null
+        );
+      });
   }
 }

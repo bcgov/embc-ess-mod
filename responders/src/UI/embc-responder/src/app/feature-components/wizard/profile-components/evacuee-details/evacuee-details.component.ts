@@ -14,6 +14,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-evacuee-details',
@@ -48,7 +49,8 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private evacueeSessionService: EvacueeSessionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +60,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
 
     this.createEvacueeDetailsForm();
     this.initDisabledFields();
+    //this.checkForFormChanges();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
@@ -169,6 +172,18 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEvacueeProfileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.evacueeDetailsForm.controls,
+        'personalDetails'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'details',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEvacueeProfileService.updateEditedFormStatus();
+    }
     this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }

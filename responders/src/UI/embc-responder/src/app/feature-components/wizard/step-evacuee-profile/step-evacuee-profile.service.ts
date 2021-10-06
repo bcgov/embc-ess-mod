@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
-import { TabModel } from 'src/app/core/models/tab.model';
+import { TabModel, TabStatusManager } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -379,6 +379,7 @@ export class StepEvacueeProfileService {
    * Update the wizard's values with ones fetched from API
    */
   public setFormValuesFromProfile(profile: RegistrantProfileModel) {
+    this.wizardService.createObjectReference(profile);
     // Wizard variables
     this.evacueeSession.profileId = profile.id;
 
@@ -450,6 +451,29 @@ export class StepEvacueeProfileService {
 
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
+  }
+
+  checkForEdit(): boolean {
+    return this.evacueeSession.profileId !== null;
+  }
+
+  updateEditedFormStatus() {
+    this.wizardService.editStatus$.subscribe((statues: TabStatusManager[]) => {
+      const index = statues.findIndex((tab) => tab.tabUpdateStatus === true);
+      if (index !== -1) {
+        this.setTabStatus('review', 'incomplete');
+        this.wizardService.setStepStatus('/ess-wizard/ess-file', true);
+        this.wizardService.setStepStatus('/ess-wizard/add-supports', true);
+        this.wizardService.setStepStatus('/ess-wizard/add-notes', true);
+      } else {
+        if (!this.checkTabsStatus()) {
+          this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+          this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
+          this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+          this.setTabStatus('review', 'complete');
+        }
+      }
+    });
   }
 
   private checkForSameMailingAddress(

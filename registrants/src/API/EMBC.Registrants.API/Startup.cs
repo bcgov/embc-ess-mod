@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Services;
@@ -60,6 +61,20 @@ namespace EMBC.Registrants.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisConnectionString = configuration["redis:connectionstring"];
+            if (!string.IsNullOrEmpty(redisConnectionString))
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
+                });
+            }
+            else
+            {
+                services.AddDistributedMemoryCache();
+            }
+
             //Add configuration options
             services.Configure<JwtTokenOptions>(opts => configuration.Bind("auth:jwt", opts));
             services.Configure<JsonOptions>(opts =>
@@ -103,7 +118,6 @@ namespace EMBC.Registrants.API
             services.AddResponseCompression();
             services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
-            services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
             services.AddSecurityModule();
 
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));

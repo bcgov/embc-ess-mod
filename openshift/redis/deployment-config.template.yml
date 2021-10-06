@@ -1,0 +1,306 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: redis-cluster-template
+
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      name: ${IMAGE_NAME}
+      namespace: ${NAMESPACE_PREFIX}-tools
+
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: ${IMAGE_TAG}
+          from:
+            kind: DockerImage
+            name: "artifacts.developer.gov.bc.ca/docker-remote/${IMAGE_NAME}:${IMAGE_TAG}"
+
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: ${NAME}-${INSTANCE}-secret
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    stringData:
+      clustermode: ${CLUSTER_MODE}
+      password: ${PASSWORD}
+      redis.conf: |
+        appendonly ${APPEND_ONLY}
+        cluster-enabled ${CLUSTER_MODE}
+        cluster-require-full-coverage no
+        cluster-node-timeout 15000
+        cluster-config-file /data/nodes.conf
+        cluster-migration-barrier 1
+        masterauth ${PASSWORD}
+        masteruser default
+        protected-mode no
+        requirepass ${PASSWORD}
+        save 900 1
+        save 300 10
+        save 60 10000
+    type: Opaque
+
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: "allow-redis-${INSTANCE}-to-redis-${INSTANCE}-cluster"
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      # Allow Redis pods to talk to its cluster
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: "${NAME}-${INSTANCE}"
+                  statefulset: "${NAME}-${INSTANCE}"
+                  role: redis
+            - namespaceSelector:
+                matchLabels:
+                  environment: dev
+                  name: b5e079
+          ports:
+            - port: 6379
+              protocol: TCP
+            - port: 16379
+              protocol: TCP
+      podSelector:
+        matchLabels:
+          app: "${NAME}-${INSTANCE}"
+          statefulset: "${NAME}-${INSTANCE}"
+          role: redis
+
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: ${NAME}-${INSTANCE}
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    data:
+      update-ip.sh: |
+        #!/bin/sh
+        CLUSTER_CONFIG="/data/nodes.conf"
+        if [ -f $CLUSTER_CONFIG ]; then
+          if [ -z "$POD_IP" ]; then
+            echo "Unable to determine Pod IP address!"
+            exit 1
+          fi
+          echo "Updating my IP to $POD_IP in $CLUSTER_CONFIG"
+          sed -i.bak -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/$POD_IP/" $CLUSTER_CONFIG
+        fi
+        exec "$@"
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${NAME}-${INSTANCE}
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      ports:
+        - name: redis
+          port: 6379
+          targetPort: 6379
+        - name: gossip
+          port: 16379
+          targetPort: 16379
+      selector:
+        app: ${NAME}-${INSTANCE}
+        statefulset: ${NAME}-${INSTANCE}
+
+  - apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: ${NAME}-${INSTANCE}
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      podManagementPolicy: Parallel
+      replicas: ${{REPLICAS}}
+      revisionHistoryLimit: 10
+      selector:
+        matchLabels:
+          statefulset: ${NAME}-${INSTANCE}
+      serviceName: ${NAME}-${INSTANCE}
+      template:
+        metadata:
+          labels:
+            app: ${NAME}-${INSTANCE}
+            app.kubernetes.io/component: redis
+            app.kubernetes.io/instance: ${INSTANCE}
+            app.kubernetes.io/name: redis
+            app.kubernetes.io/managed-by: template
+            app.kubernetes.io/part-of: ${APP_NAME}-${INSTANCE}
+            app.kubernetes.io/version: "6"
+            role: redis
+            statefulset: ${NAME}-${INSTANCE}
+        spec:
+          containers:
+            - name: redis
+              image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/${IMAGE_NAME}:${IMAGE_TAG}
+              imagePullPolicy: IfNotPresent
+              command:
+                - /script/update-ip.sh
+                - redis-server
+                - /conf/redis.conf
+              env:
+                - name: POD_IP
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: status.podIP
+                - name: REDISCLI_AUTH
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: ${NAME}-${INSTANCE}-secret
+              lifecycle:
+                preStop:
+                  exec:
+                    command:
+                      - /bin/sh
+                      - -c
+                      - redis-cli -h $HOSTNAME shutdown save
+              livenessProbe:
+                exec:
+                  command:
+                    - /bin/sh
+                    - -c
+                    - test "$(redis-cli -h $HOSTNAME ping)" == "PONG"
+                initialDelaySeconds: 10
+                timeoutSeconds: 1
+                failureThreshold: 3
+              ports:
+                - containerPort: 6379
+                  name: redis
+                - containerPort: 16379
+                  name: gossip
+              readinessProbe:
+                exec:
+                  command:
+                    - /bin/sh
+                    - -c
+                    - test "$(redis-cli -h $HOSTNAME ping)" == "PONG"
+                initialDelaySeconds: 15
+                timeoutSeconds: 1
+                failureThreshold: 3
+              resources:
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEMORY_REQUEST}
+                limits:
+                  cpu: ${CPU_LIMIT}
+                  memory: ${MEMORY_LIMIT}
+              volumeMounts:
+                - name: conf
+                  mountPath: /conf
+                  readOnly: false
+                - name: data
+                  mountPath: /data
+                  readOnly: false
+                - name: script
+                  mountPath: /script
+                  readOnly: false
+          volumes:
+            - name: conf
+              secret:
+                secretName: ${NAME}-${INSTANCE}-secret
+            - name: script
+              configMap:
+                name: ${NAME}-${INSTANCE}
+                defaultMode: 0755
+      volumeClaimTemplates:
+        - metadata:
+            name: data
+            labels:
+              app: ${NAME}-${INSTANCE}
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: ${PVC_SIZE}
+          storageClassName: ${STORAGE_CLASS}
+
+parameters:
+  - name: NAMESPACE_PREFIX
+    description: The name of the application which will use this.
+    displayName: OpenShift namespace prefix
+    required: true
+  - description: OpenShift namespace env name (dev/test/prod)
+    name: ENV
+    required: true
+  - name: APP_NAME
+    description: The name of the application which will use this.
+    displayName: Application client name
+    required: true
+  - name: NAME
+    description: The name of the application for labelling all artifacts.
+    displayName: Application Name
+    required: true
+    value: redis
+  - name: INSTANCE
+    description: The name of this instance of the application
+    displayName: Application Instance Name
+    required: true
+  - name: REPLICAS
+    description: The number of StatefulSet replicas to use.
+    displayName: Replicas
+    required: true
+    value: "6"
+  - name: IMAGE_NAME
+    description: Redis Image Name
+    displayName: Image Name
+    required: true
+    value: redis
+  - name: IMAGE_TAG
+    description: Redis Image Tag
+    displayName: Image Tag
+    required: true
+    value: 6-alpine
+  - name: CPU_REQUEST
+    description: Starting amount of CPU the container can use.
+    displayName: CPU Request
+    required: true
+    value: 25m
+  - name: CPU_LIMIT
+    description: Maximum amount of CPU the container can use.
+    displayName: CPU Limit
+    required: true
+    value: 100m
+  - name: MEMORY_REQUEST
+    description: Starting amount of memory the container can use.
+    displayName: Memory Request
+    required: true
+    value: 64Mi
+  - name: MEMORY_LIMIT
+    description: Maximum amount of memory the container can use.
+    displayName: Memory Limit
+    required: true
+    value: 256Mi
+  - name: PVC_SIZE
+    description: The size of the persistent volume to create.
+    displayName: Persistent Volume Size
+    required: true
+    value: 512Mi
+  - name: STORAGE_CLASS
+    description: The type of the persistent volume to create.
+    displayName: Persistent Volume Class
+    required: true
+    value: netapp-file-standard
+  - name: APPEND_ONLY
+    # https://redis.io/topics/persistence
+    description: The file format mode that Redis will save in (no for RDB, yes for AOF)
+    displayName: Redis Persistence Mode
+    required: true
+    value: "no"
+  - name: CLUSTER_MODE
+    # https://redis.io/topics/cluster-tutorial
+    description: Run Redis in standalone mode or in cluster mode
+    displayName: Redis Cluster Mode
+    required: true
+    value: "yes"
+  - name: PASSWORD
+    description: Password of the application database
+    displayName: Application Database Password
+    generate: expression
+    from: "[a-zA-Z0-9]{32}"
+    required: true
