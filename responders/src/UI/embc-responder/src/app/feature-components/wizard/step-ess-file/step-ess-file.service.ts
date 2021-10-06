@@ -22,6 +22,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
+import * as _ from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -35,7 +36,7 @@ export class StepEssFileService {
 
   // Evacuation Details tab
   private paperESSFileVal: string;
-  private evacuatedFromPrimaryVal: boolean;
+  private evacuatedFromPrimaryVal: string;
   private evacAddressVal: AddressModel;
   private facilityNameVal: string;
   private insuranceVal: InsuranceOption;
@@ -117,10 +118,10 @@ export class StepEssFileService {
     this.paperESSFileVal = paperESSFileVal;
   }
 
-  public get evacuatedFromPrimary(): boolean {
+  public get evacuatedFromPrimary(): string {
     return this.evacuatedFromPrimaryVal;
   }
-  public set evacuatedFromPrimary(evacuatedFromPrimaryVal: boolean) {
+  public set evacuatedFromPrimary(evacuatedFromPrimaryVal: string) {
     this.evacuatedFromPrimaryVal = evacuatedFromPrimaryVal;
   }
 
@@ -644,7 +645,9 @@ export class StepEssFileService {
     this.evacAddress = essFile.evacuatedFromAddress;
     this.facilityName = essFile.registrationLocation;
 
-    this.evacuatedFromPrimary = this.primaryAddress === this.evacAddress;
+    this.evacuatedFromPrimary = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === _.isEqual(this.primaryAddress, this.evacAddress)
+    )?.value;
 
     this.insurance = essNeeds.insurance;
 
@@ -787,8 +790,10 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkForPartialUpdates(form: FormGroup): boolean {
+    console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
+      console.log(field);
       const control = form.controls[field] as
         | FormControl
         | FormGroup
@@ -808,6 +813,8 @@ export class StepEssFileService {
       }
     });
     const result = fields.filter((field) => !!field);
+    console.log(result);
+    console.log(result.length);
     return result.length !== 0;
   }
 
@@ -818,8 +825,10 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkForEvacDetailsPartialUpdates(form: FormGroup): boolean {
+    console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
+      console.log(field);
       const control = form.controls[field] as
         | FormControl
         | FormGroup
@@ -828,18 +837,23 @@ export class StepEssFileService {
         if (control.value instanceof Object && control.value != null) {
           fields.push(control.value.length);
         } else {
-          fields.push(control.value);
+          if (typeof control.value !== 'boolean') {
+            fields.push(control.value);
+          }
         }
-      } else if (control instanceof FormGroup || control instanceof FormArray) {
+      } else if (control instanceof FormGroup) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
+            console.log(control.controls);
             fields.push(control.controls[key].value);
           }
         }
       }
     });
     const result = fields.filter((field) => !!field);
-    return result.length - 3 !== 0;
+    console.log(result);
+    console.log(result.length);
+    return result.length > 2;
   }
 
   /**

@@ -216,9 +216,9 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((event) => {
         if (event === 'confirm') {
+          this.selection.deselect(member);
           this.members.splice(index, 1);
           this.memberSource.next(this.members);
-          this.selection.toggle(member);
 
           if (this.members.length < 2) {
             this.householdForm.get('hasHouseholdMembers').setValue('No');
