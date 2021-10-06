@@ -16,6 +16,7 @@
 
 using System;
 using System.Net;
+using System.Reflection;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Metadata;
@@ -59,7 +60,19 @@ namespace EMBC.ESS
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDistributedMemoryCache();
+            var redisConnectionString = configuration["redis:connectionstring"];
+            if (!string.IsNullOrEmpty(redisConnectionString))
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
+                });
+            }
+            else
+            {
+                services.AddDistributedMemoryCache();
+            }
 
             services.Configure<MessageHandlerRegistryOptions>(opts => { });
             services.AddSingleton<MessageHandlerRegistry>();
