@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-restriction',
@@ -21,7 +22,8 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private stepEvacueeProfileService: StepEvacueeProfileService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +85,18 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEvacueeProfileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.restrictionForm.controls,
+        'restriction'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'restriction',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEvacueeProfileService.updateEditedFormStatus();
+    }
     this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }

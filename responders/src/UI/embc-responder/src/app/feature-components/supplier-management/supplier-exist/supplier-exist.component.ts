@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 
