@@ -880,21 +880,24 @@ export class StepEssFileService {
 
   updateEditedFormStatus() {
     this.wizardService.editStatus$.subscribe((statues: TabStatusManager[]) => {
-      // const index = statues.findIndex((tab) => tab.tabUpdateStatus === true);
-      // if (index !== -1) {
-      //   this.setTabStatus('review', 'incomplete');
-      //   this.wizardService.setStepStatus('/ess-wizard/ess-file', true);
-      //   this.wizardService.setStepStatus('/ess-wizard/add-supports', true);
-      //   this.wizardService.setStepStatus('/ess-wizard/add-notes', true);
-      // } else {
-      //   if (!this.checkTabsStatus()) {
-      //     this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
-      //     this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
-      //     this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
-      //     this.setTabStatus('review', 'complete');
-      //   }
-      // }
-      console.log(statues)
+      const index = statues.findIndex((tab) => tab.tabUpdateStatus === true);
+      if (index !== -1) {
+        this.setTabStatus('review', 'incomplete');
+        this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', true);
+        this.wizardService.setStepStatus('/ess-wizard/add-supports', true);
+        this.wizardService.setStepStatus('/ess-wizard/add-notes', true);
+      } else {
+        if (!this.checkTabsStatus()) {
+          this.wizardService.setStepStatus(
+            '/ess-wizard/evacuee-profile',
+            false
+          );
+          this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
+          this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+          this.setTabStatus('review', 'complete');
+        }
+      }
+      console.log(statues);
     });
   }
 }
