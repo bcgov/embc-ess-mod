@@ -7,7 +7,7 @@
         </p>
         <p class="review-heading" *ngIf="reviewAction === 'add'">Step 3 of 3</p>
         <p class="review-heading" *ngIf="reviewAction === 'claim'">
-          Claim Supplier
+          Select Supplier
         </p>
       </div>
     </div>
@@ -18,8 +18,11 @@
           Please review all of the information below before submitting.
         </p>
         <p *ngIf="reviewAction === 'claim'">
-          Please review all of the information below before submitting. Once
-          added to your ESS Team you will be able to edit the suppliers details.
+          <b
+            >Please review all of the information below before submitting. Once
+            added to your ESS Team you will be able to edit the suppliers
+            details.
+          </b>
         </p>
       </div>
     </div>
@@ -111,7 +114,7 @@
           (click)="claim()"
           *ngIf="reviewAction === 'claim'"
         >
-          Claim Supplier
+          Select Supplier
           <app-loader
             [strokeWidth]="3"
             [diameter]="25"

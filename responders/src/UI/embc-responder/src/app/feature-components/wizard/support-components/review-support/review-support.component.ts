@@ -255,7 +255,7 @@ export class ReviewSupportComponent implements OnInit {
    * @returns if the given date is in th epast of not
    */
   validReferralDate(referralDate: string): boolean {
-    const currentDate = moment();
+    const currentDate = new Date();
     if (moment(referralDate).isBefore(currentDate)) {
       return false;
     } else {

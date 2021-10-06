@@ -104,8 +104,6 @@ objects:
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/pdf-generator:${TAG}
               imagePullPolicy: Always
               volumeMounts:
-                - mountPath: /dpkeys
-                  name: dp-keys
                 - mountPath: /ssl
                   name: ssl
                   readonly: true
