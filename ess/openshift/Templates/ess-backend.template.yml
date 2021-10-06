@@ -85,7 +85,7 @@ objects:
       Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
       Dynamics__ADFS__serviceAccountName: ${DYNAMICS_SERVICE_ACCOUNT_NAME}
       Dynamics__ADFS__serviceAccountPassword: ${DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
-      Redis__ConnectionString: ${REDIS_PASSWORD}
+      Redis__ConnectionString: ${REDIS_CONNECTIONSTRING}
 
   - kind: Service
     apiVersion: v1
