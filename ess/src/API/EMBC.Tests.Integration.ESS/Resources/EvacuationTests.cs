@@ -24,6 +24,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private const string TestNeedsAssessmentId = "b67cbdb4-75af-4cbb-a291-c390be77f83d";
 
+        private const string TestTaskNumber = "UNIT-TEST-ACTIVE-TASK";
+
+        private const string TestJurisdictionId = "9e6adfaf-9f97-ea11-b813-005056830319";
+
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             caseRepository = services.GetRequiredService<ICaseRepository>();
@@ -108,6 +112,42 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == contact.Id));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilesByTaskNumber()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                TaskNumber = TestTaskNumber
+            };
+            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.TaskId == TestTaskNumber);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilesByEvacuatedFrom()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                EvacuatedFrom = TestJurisdictionId
+            };
+            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.EvacuatedFrom.CommunityCode == TestJurisdictionId);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilesByEvacuatedTo()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                EvacuatedTo = TestJurisdictionId
+            };
+            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.TaskLocationCommunityCode == TestJurisdictionId);
         }
 
         [Fact(Skip = RequiresDynamics)]

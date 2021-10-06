@@ -20,6 +20,7 @@ using System.Reflection;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Metadata;
+using EMBC.ESS.Managers.Reports;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
@@ -88,6 +89,7 @@ namespace EMBC.ESS
             services
                 .AddAdminManager()
                 .AddMetadataManager()
+                .AddReportsManager()
                 .AddSubmissionManager();
 
             services

@@ -73,6 +73,11 @@ namespace EMBC.ESS.Resources.Cases
         public string HouseholdMemberId { get; set; }
         public string LinkedRegistrantId { get; set; }
         public string NeedsAssessmentId { get; set; }
+
+        public string TaskNumber { get; set; }
+        public string EvacuatedFrom { get; set; }
+        public string EvacuatedTo { get; set; }
+        public bool GetAllFiles { get; set; } = false;
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand
