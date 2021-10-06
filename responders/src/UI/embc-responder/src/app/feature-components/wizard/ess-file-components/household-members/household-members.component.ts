@@ -19,6 +19,7 @@ import { HouseholdMemberModel } from 'src/app/core/models/household-member.model
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { SelectionModel } from '@angular/cdk/collections';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-household-members',
@@ -48,7 +49,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private router: Router,
-    private householdService: HouseholdMembersService
+    private householdService: HouseholdMembersService,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -315,6 +317,22 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEssFileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.householdForm.controls,
+        'householdMember'
+      );
+
+      // const hasMembersUpdated = this.wizardService.hasMemberChanged(
+      //   this.members
+      // );
+
+      this.wizardService.setEditStatus({
+        tabName: 'householdMember',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEssFileService.updateEditedFormStatus();
+    }
     this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }

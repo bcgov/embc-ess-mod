@@ -43,6 +43,7 @@ export class EssfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEssFile();
+    this.essfileDashboardService.getCategoryList();
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog(globalConst.profileLinkMessage)
         .afterClosed()

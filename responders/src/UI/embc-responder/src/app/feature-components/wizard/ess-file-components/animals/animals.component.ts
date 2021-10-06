@@ -15,6 +15,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Pet } from 'src/app/core/api/models';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-animals',
@@ -38,7 +39,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private stepEssFileService: StepEssFileService,
     private customValidation: CustomValidationService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -199,6 +201,20 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEssFileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.animalsForm.controls,
+        'animals'
+      );
+
+      const hasPetsUpdated = this.wizardService.hasPetsChanged(this.pets);
+
+      this.wizardService.setEditStatus({
+        tabName: 'animals',
+        tabUpdateStatus: isFormUpdated || hasPetsUpdated
+      });
+      this.stepEssFileService.updateEditedFormStatus();
+    }
     this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
