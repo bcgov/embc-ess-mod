@@ -13,8 +13,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
-import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -33,6 +32,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   showBCAddressForm = false;
   isBCAddress = true;
   showInsuranceMsg = false;
+
   wizardType: string;
   essFileNumber: string;
 
@@ -44,7 +44,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     private evacueeSessionService: EvacueeSessionService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -53,18 +54,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
 
     this.createEvacDetailsForm();
     this.checkAddress();
-
-    if (!this.isBCAddress) {
-      // Make sure province/country are set to BC/Can whenever address form is displayed
-      // Only set when displayed, otherwise run into "incomplete step status" issues
-      this.evacDetailsForm
-        .get('evacAddress.stateProvince')
-        .setValue(globalConst.defaultProvince);
-
-      this.evacDetailsForm
-        .get('evacAddress.country')
-        .setValue(globalConst.defaultCountry);
-    }
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
@@ -82,6 +71,11 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           .updateValueAndValidity();
       });
 
+    // Updates the validations for the evacFromPrimary formControl
+    this.evacDetailsForm
+      .get('primaryAddressIndicator')
+      .valueChanges.subscribe(() => this.updateOnVisibility());
+
     // Display the referredServiceDetails in case referred Service is set as true
     if (this.stepEssFileService.referredServices === 'Yes') {
       this.showReferredServicesForm = true;
@@ -92,7 +86,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     }
 
     // Display the Evacuation Address form if the answer is set as false
-    if (this.stepEssFileService.evacuatedFromPrimary === false) {
+    if (
+      this.stepEssFileService.evacuatedFromPrimary === 'No' &&
+      this.isBCAddress === true
+    ) {
       this.showBCAddressForm = true;
     }
   }
@@ -114,7 +111,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * @param event
    */
   evacPrimaryAddressChange(event: MatRadioChange): void {
-    if (event.value === true) {
+    if (event.value === 'Yes') {
       this.showBCAddressForm = false;
       this.evacDetailsForm
         .get('evacAddress')
@@ -192,6 +189,18 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEssFileService.checkForEdit()) {
+      const isFormUpdated = this.wizardService.hasChanged(
+        this.evacDetailsForm.controls,
+        'evacDetails'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'evacDetails',
+        tabUpdateStatus: isFormUpdated
+      });
+      this.stepEssFileService.updateEditedFormStatus();
+    }
     this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
@@ -213,7 +222,14 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.evacuatedFromPrimary !== null
           ? this.stepEssFileService.evacuatedFromPrimary
           : '',
-        Validators.required
+        this.customValidation
+          .conditionalValidation(
+            () =>
+              this.evacDetailsForm.get('primaryAddressIndicator').value ===
+              true,
+            Validators.required
+          )
+          .bind(this.customValidation)
       ],
       facilityName: [
         this.stepEssFileService.facilityName !== undefined
@@ -260,6 +276,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           ? this.stepEssFileService.evacuationExternalReferrals
           : ''
       ],
+      primaryAddressIndicator: [true],
       evacAddress: this.createEvacAddressForm()
     });
   }
@@ -314,9 +331,27 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    */
   private checkAddress() {
     if (this.stepEssFileService?.primaryAddress?.stateProvince?.code !== 'BC') {
-      this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;
+
+      // Make sure province/country are set to BC/Can whenever address form is displayed
+      // Only set when displayed, otherwise run into "incomplete step status" issues
+      this.evacDetailsForm
+        .get('evacAddress.stateProvince')
+        .setValue(globalConst.defaultProvince);
+
+      this.evacDetailsForm
+        .get('evacAddress.country')
+        .setValue(globalConst.defaultCountry);
+
+      this.evacDetailsForm.get('primaryAddressIndicator').setValue(false);
     }
+  }
+
+  /**
+   * Updates the validations for personalDetailsForm
+   */
+  private updateOnVisibility(): void {
+    this.evacDetailsForm.get('evacuatedFromPrimary').updateValueAndValidity();
   }
 
   /**
@@ -334,6 +369,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.stepEssFileService.setTabStatus('evacuation-details', 'not-started');
     }
+
     this.saveFormData();
   }
 
