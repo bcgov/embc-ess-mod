@@ -49,11 +49,8 @@ export class EssFileOverviewComponent implements OnInit {
   private calculateAnimalsTotal(): void {
     if (this.essFile?.needsAssessment?.pets?.length > 0) {
       for (const pet of this.essFile?.needsAssessment?.pets) {
-        console.log(pet);
         this.animalCount += +pet.quantity;
       }
     }
-
-    console.log(this.animalCount);
   }
 }
