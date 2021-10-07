@@ -83,7 +83,7 @@ export class AssignedCommunityListDataService {
           }
         );
 
-        let addMap: TeamCommunityModel[] = conflictMap.map((values) => {
+        const addMap: TeamCommunityModel[] = conflictMap.map((values) => {
           const existing = this.getTeamCommunityList().find(
             (x) => x.code === values.code
           );
