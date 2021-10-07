@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evacuee Registration & Assistance (ERA)</title>
+<style>
+html {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-size: 16px;
+  font-family: 'BC Sans', sans-serif;
+  color: #333;
+}
+
+*, *:before, *:after {
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+}
+
+.--orange {
+    color: rgba(252, 186, 25, 1);
+}
+
+.--blue {
+    color:#31B0E6;
+}
+
+.--center {
+    text-align: center;
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+body {
+   
+    background-image: url(img/gradient.jpg);
+    background-size: 61px 325px;
+    background-repeat: repeat-x;
+}
+
+.site-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    width: 100%;
+    height: 66px;
+    border-bottom: 2px solid rgba(252, 186, 25, 1);
+    background-color: rgba(35, 64, 117, 1);
+    margin-bottom: 40px;
+}
+
+.site-header .container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    max-width: 1140px;
+    height: 66px;
+    width: 100%;
+}
+
+.site-header .container div {
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+}
+
+@media screen and (min-width: 769px) {
+    .site-header__logo-container {
+        margin-right: 0;
+    }
+}
+
+.site-header__logo {
+    width: 188px;
+    margin-right: 30px;
+    border-right: 1px solid #fff;
+    padding-right: 10px;
+}
+
+@media screen and (min-width: 769px) {
+    .site-header__logo {
+        margin-right: 30px;
+        padding-right: 30px;
+    }
+}
+
+.site-header__title {
+    font-size: 14px;
+    color: #fff;
+    padding-left: 10px
+}
+
+@media screen and (min-width: 900px) {
+    .site-header__title {
+        font-size: 30px;
+    }
+}
+
+.register-with-card {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    min-height: 624px;
+    border: 4px solid rgba(252, 186, 25, 1);
+    -webkit-box-shadow: 0px 0px 15px -7px rgba(0,0,0,0.5); 
+    box-shadow: 0px 0px 15px -7px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
+}
+
+@media screen and (min-width: 769px) {
+    .register-with-card {
+        min-height: 624px;
+        max-width: 49%;
+        margin-bottom: 0;
+    }
+}
+
+.register-without-card {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    min-height: 576px;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: 0px 0px 15px -7px rgba(0,0,0,0.76); 
+    box-shadow: 0px 0px 15px -7px rgba(0,0,0,0.76);
+    padding: 45px 22px 40px 22px;
+}
+
+@media screen and (min-width: 769px) {
+    .register-without-card {
+        min-height: 576px;
+        max-width: 49%;
+        border: 1px solid #ccc;
+        margin-top: 49px;
+    }
+}
+
+.register-with-card__image {
+    max-width: 269px;
+    margin: 0 auto;
+    display: block;
+    margin-top: 10px;
+}
+
+.register-without-card__image {
+    max-width: 85px;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 31px;
+}
+
+.register-with-card__tab {
+    padding: 12px 0;
+    background-color: rgba(252, 186, 25, 1);
+    color: #fff;
+    text-align: center;
+}
+
+
+.register-with-card__inner {
+    padding: 0 22px 40px 22px;
+}
+
+
+.register-with-card__title {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.register-without-card__title {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 76px;
+}
+
+.register-with-card__button-container {
+    padding: 0 40px;
+    margin-bottom: 40px;
+}
+
+.register-without-card__button-container {
+    padding: 0 18px;
+   
+}
+
+.register-with-card__button {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    color: #fff;
+    background-color: rgba(35, 64, 117, 1);
+}
+
+.register-with-card__button:hover {
+    background-color: #31B0E6;
+}
+
+.register-without-card__button {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    color: #606060;
+    background-color:#fff;
+    border: 1px solid#ccc;
+}
+
+.register-without-card__button:hover {
+    background-color: #f1f1f1;
+}
+
+.register-with-card__list li {
+    margin-bottom: 20px;
+    list-style-image:  url(img/check-mark-icon.svg);
+    margin-left: 30px;
+}
+
+.grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin-bottom: 48px;
+}
+
+@media screen and (min-width: 769px) {
+    .grid {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+        margin-bottom: 48px;
+        -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                justify-content: space-between;
+    }   
+}
+
+.site-footer {
+    padding: 30px 0;
+   
+    width: 100%;
+    background-color: rgba(220, 226, 240, 0.996078431372549);
+    border-top: 2px solid rgba(252, 186, 25, 1);
+}
+
+@media screen and (min-width: 769px) {
+    .site-footer {
+       height: 140px;
+    }
+}
+
+.site-footer__container {
+    max-width: 1350px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+@media screen and (min-width: 769px) {
+    .site-footer__container {
+        -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                justify-content: space-between;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+    }
+}
+
+.site-footer__list {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+@media screen and (min-width: 769px) {
+    .site-footer__list {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .site-footer__list li {
+        margin-right: 16px;
+    }
+}
+
+.site-footer__list li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 44px;
+}
+
+@media screen and (min-width: 769px) {
+    .site-footer__list li a {
+        line-height: 20px;
+    }
+}
+
+.site-footer__list li a:hover {
+    text-decoration: underline;
+    color: #31B0E6;
+}
+
+.site-footer__contact {
+    font-size: 14px;
+}
+
+.site-footer__list span {
+    display: none;
+}
+
+@media screen and (min-width: 769px) {
+    .site-footer__list span {
+        margin-left: 15px;
+        display: inline-block;
+    }
+}
+
+</style>
+</head>
+<body>
+
+    
+<header class="site-header">
+    <div class="container">
+        <div class="site-header__logo-container">
+            <img src="img/bc-logo.svg" alt="British Columbia Logo" class="site-header__logo">
+        </div>
+        <div>
+            <h1 class="site-header__title">Evacuee Registration & Assistance <span class="--orange">(ERA)</span></h1>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="grid">
+    
+        <div class="register-with-card">
+            <div>
+                <div class="register-with-card__tab">
+                    Preferred Method
+                </div>
+                <div class="register-with-card__inner">
+                    <img src="img/services-card.png" class="register-with-card__image" alt="BC Services Card">
+                    <h2 class="register-with-card__title">Register <strong class="--blue">with</strong> BC Services Card</h2>
+                    <ul class="register-with-card__list">
+                        <li>Safe & secure way to complete an online self-registration.</li>
+                        <li>Prepares you & your household for future emergencies.</li>
+                        <li>Access your profile anytime to view supports you have received.</li>
+                        <li>Update your details, as well as view current & past emergency events.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="register-with-card__button-container">
+                <a href="" class="register-with-card__button">Self-Register using your BC Services Card</a>
+            </div>
+        </div>
+
+        <div class="register-without-card">
+                <div>
+                    <img src="img/person-icon.svg" class="register-without-card__image" alt="Person Icon">
+                    <h2 class="register-without-card__title">Register <strong class="--blue">without</strong> BC Services Card</h2>
+                    <p class="--center">If you <strong>don't</strong> have a BC Services Card, you can still self-register as an evacuee.</p>
+                </div>
+                <div class="register-without-card__button-container">
+                    <a href="" class="register-without-card__button">Self-Register</a>
+                </div>
+        </div>
+    </div>
+</main>
+   
+<footer class="site-footer">
+    <div class="container">
+        <div class="site-footer__container">
+            <div class="site-footer__contact">Contact ERA Support toll free at 1-844-537-7377</div>
+            <ul class="site-footer__list">
+                <li><a href="https://ess.gov.bc.ca/">Home</a><span>|</span></li>
+                <li><a href="https://www2.gov.bc.ca/gov/content/home/disclaimer">Disclaimer</a><span>|</span></li>
+                <li><a href="https://www2.gov.bc.ca/gov/content/home/privacy">Privacy</a><span>|</span></li>
+                <li><a href="https://www2.gov.bc.ca/gov/content/home/accessibility">Accessibility</a><span>|</span></li>
+                <li><a href="https://www2.gov.bc.ca/gov/content/home/copyright">Copyright</a><span>|</span></li>
+                <li><a href="https://www2.gov.bc.ca/gov/content/home/get-help-with-government-services">Contact Us</a></li>   
+            </ul>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -13,6 +13,7 @@ import {
   Validators
 } from '@angular/forms';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-security-phrase',
@@ -30,7 +31,8 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     private evacueeSessionService: EvacueeSessionService,
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private wizardService: WizardService
   ) {}
 
   ngOnInit(): void {
@@ -140,6 +142,18 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    if (this.stepEssFileService.checkForEdit() && this.securityForm.dirty) {
+      this.wizardService.setEditStatus({
+        tabName: 'needs',
+        tabUpdateStatus: true
+      });
+      this.stepEssFileService.updateEditedFormStatus();
+    } else {
+      this.wizardService.setEditStatus({
+        tabName: 'needs',
+        tabUpdateStatus: false
+      });
+    }
     this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }

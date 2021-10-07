@@ -87,3 +87,10 @@ services:
       - "ASPNETCORE_Kestrel__Certificates__Default__Path=/ssl/aspnetapp.pfx"
     volumes:
       - ~/.aspnet/https:/ssl/
+
+  landing-page:
+    build:
+      context: ./landing-page/src
+    image: landing-page:dev
+    ports:
+      - 7200:2015
