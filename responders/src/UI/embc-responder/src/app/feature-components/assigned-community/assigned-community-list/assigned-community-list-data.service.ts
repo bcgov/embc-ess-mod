@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { CommunityType } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import {
@@ -9,6 +10,7 @@ import {
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
+import { AssignedCommunityListService } from './assigned-community-list.service';
 
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListDataService {
@@ -53,7 +55,8 @@ export class AssignedCommunityListDataService {
 
   constructor(
     private locationsService: LocationsService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private assignedCommunityListService: AssignedCommunityListService
   ) {}
 
   public setCommunitiesToDelete(
@@ -70,42 +73,32 @@ export class AssignedCommunityListDataService {
     this.cacheService.set('teamCommunityList', teamCommunityList);
     this.teamCommunityList = teamCommunityList;
   }
-
-  public setAllTeamCommunityList(
-    allTeamCommunityList: TeamCommunityModel[]
-  ): void {
-    this.cacheService.set('allTeamCommunityList', allTeamCommunityList);
-    this.allTeamCommunityList = allTeamCommunityList;
-  }
-
   public getCommunitiesToAddList(): Observable<TeamCommunityModel[]> {
-    const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(
-      (values) => {
-        const conflicts = this.getAllTeamCommunityList().find(
-          (x) => x.code === values.code
+    return this.assignedCommunityListService.getAllAssignedCommunityList().pipe(
+      map((allList: TeamCommunityModel[]) => {
+        const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(
+          (values) => {
+            const conflicts = allList.find((x) => x.code === values.code);
+            return this.mergeData(values, conflicts);
+          }
         );
-        return this.mergeData(values, conflicts);
-      }
+
+        let addMap: TeamCommunityModel[] = conflictMap.map((values) => {
+          const existing = this.getTeamCommunityList().find(
+            (x) => x.code === values.code
+          );
+          return this.mergeData(values, existing);
+        });
+
+        return addMap;
+      })
     );
-    const addMap: TeamCommunityModel[] = conflictMap.map((values) => {
-      const existing = this.getTeamCommunityList().find(
-        (x) => x.code === values.code
-      );
-      return this.mergeData(values, existing);
-    });
-    return of(addMap);
   }
 
   private getTeamCommunityList(): TeamCommunityModel[] {
     return this.teamCommunityList
       ? this.teamCommunityList
       : JSON.parse(this.cacheService.get('teamCommunityList'));
-  }
-
-  private getAllTeamCommunityList(): TeamCommunityModel[] {
-    return this.allTeamCommunityList
-      ? this.allTeamCommunityList
-      : JSON.parse(this.cacheService.get('allTeamCommunityList'));
   }
 
   private mergedCommunityList(): TeamCommunityModel[] {
