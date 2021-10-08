@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Reports;
 using EMBC.ESS.Shared.Contracts.Reports;
 
 namespace EMBC.ESS.Managers.Reports
@@ -27,29 +28,26 @@ namespace EMBC.ESS.Managers.Reports
     public class ReportsManager
     {
         private readonly IMapper mapper;
-        private readonly ICaseRepository caseRepository;
+        private readonly IReportRepository reportRepository;
 
         public ReportsManager(
             IMapper mapper,
-            ICaseRepository caseRepository)
+            IReportRepository reportRepository)
         {
             this.mapper = mapper;
-            this.caseRepository = caseRepository;
+            this.reportRepository = reportRepository;
         }
 
         public async Task<EvacueeReportQueryResult> Handle(EvacueeReportQuery query)
         {
             bool getAllFiles = string.IsNullOrEmpty(query.FileId) && string.IsNullOrEmpty(query.TaskNumber) && string.IsNullOrEmpty(query.EvacuatedFrom) && string.IsNullOrEmpty(query.EvacuatedTo);
-            var cases = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
+            var cases = (await reportRepository.QueryEvacuee(new EvacueeQuery
             {
                 FileId = query.FileId,
                 TaskNumber = query.TaskNumber,
                 EvacuatedFrom = query.EvacuatedFrom,
-                EvacuatedTo = query.EvacuatedTo,
-                GetAllFiles = getAllFiles
-            })).Items.Cast<Resources.Cases.EvacuationFile>();
-
-            var files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
+                EvacuatedTo = query.EvacuatedTo
+            })).Items;
 
             //initialize csv with query parameter info and Headers
 
