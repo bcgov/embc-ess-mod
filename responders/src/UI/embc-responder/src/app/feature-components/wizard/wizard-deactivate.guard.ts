@@ -20,8 +20,8 @@ export class WizardDeactivateGuard implements CanDeactivate<WizardComponent> {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    this.wizardAdapterService.clearWizard();
-    this.clearCachedServices();
+    //this.wizardAdapterService.clearWizard();
+    //this.clearCachedServices();
     return true;
   }
 

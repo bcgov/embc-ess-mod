@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Code } from 'src/app/core/api/models';
 import { SupportStatus } from 'src/app/core/api/models/support-status';
-import { ConfigurationService } from 'src/app/core/api/services';
 import {
   ObjectWrapper,
   TableFilterModel
 } from 'src/app/core/models/table-filter.model';
-import { StepSupportsService } from 'src/app/feature-components/wizard/step-supports/step-supports.service';
+import { EssfileDashboardService } from '../essfile-dashboard.service';
 
 @Injectable({ providedIn: 'root' })
 export class EssFileSupportsService {
@@ -20,11 +18,7 @@ export class EssFileSupportsService {
     description: 'All Status'
   };
 
-  private supportCategory: Code[] = [];
-
-  constructor(private configService: ConfigurationService) {
-    this.getCategoryList();
-  }
+  constructor(private essfileDashboardService: EssfileDashboardService) {}
 
   public load(): TableFilterModel {
     return {
@@ -32,7 +26,7 @@ export class EssFileSupportsService {
         {
           type: 'type',
           label: this.defaultType,
-          values: this.supportCategory
+          values: this.essfileDashboardService.supportCategory
         },
         {
           type: 'status',
@@ -54,15 +48,5 @@ export class EssFileSupportsService {
       }
     }
     return status;
-  }
-
-  public getCategoryList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportCategory' })
-      .subscribe((categories: Code[]) => {
-        this.supportCategory = categories.filter(
-          (category) => category.description !== null
-        );
-      });
   }
 }

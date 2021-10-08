@@ -302,7 +302,10 @@ export class ReviewSupportComponent implements OnInit {
       },
       (error) => {
         this.showLoader = !this.showLoader;
-        this.alertService.setAlert('danger', error.error.title);
+        this.alertService.setAlert(
+          'danger',
+          globalConst.processSupportDraftsError
+        );
       }
     );
   }
