@@ -9,6 +9,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
 import { StepEssFileService } from './step-ess-file/step-ess-file.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile/step-evacuee-profile.service';
+import { ReferralCreationService } from './step-supports/referral-creation.service';
 import { WizardDataService } from './wizard-data.service';
 import { WizardService } from './wizard.service';
 
@@ -24,7 +25,8 @@ export class WizardAdapterService {
     private evacueeProfileService: EvacueeProfileService,
     private essFileService: EssFileService,
     private stepEvacueeProfileService: StepEvacueeProfileService,
-    private stepEssFileService: StepEssFileService
+    private stepEssFileService: StepEssFileService,
+    private referralCreation: ReferralCreationService
   ) {}
 
   /**
@@ -37,29 +39,34 @@ export class WizardAdapterService {
       case WizardType.NewRegistration:
         this.stepEvacueeProfileService.clearService();
         this.stepEssFileService.clearService();
-        // Clear supports & notes
+        this.referralCreation.clearDraftSupport();
         return;
 
       case WizardType.EditRegistration:
         this.stepEvacueeProfileService.clearService();
         this.stepEssFileService.clearService();
+        this.referralCreation.clearDraftSupport();
         return;
 
       case WizardType.NewEssFile:
         this.stepEssFileService.clearService();
+        this.referralCreation.clearDraftSupport();
         return;
 
       case WizardType.MemberRegistration:
         this.stepEvacueeProfileService.clearService();
         this.stepEssFileService.clearService();
+        this.referralCreation.clearDraftSupport();
         return;
 
       case WizardType.ReviewFile:
         this.stepEssFileService.clearService();
+        this.referralCreation.clearDraftSupport();
         return;
 
       case WizardType.CompleteFile:
         this.stepEssFileService.clearService();
+        this.referralCreation.clearDraftSupport();
         return;
     }
   }
@@ -104,7 +111,7 @@ export class WizardAdapterService {
             registrantProfileModel
           );
 
-          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewEditProfileSteps();
           this.stepEvacueeProfileService.setEditProfileTabStatus();
 
           obs.next(true);
