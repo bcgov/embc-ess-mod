@@ -337,7 +337,7 @@ export class StepEvacueeProfileService {
       this.profileTabs.length = 0;
     }
     // Wizard variables
-    this.nextTabUpdate.next(null);
+    this.nextTabUpdate.next();
 
     // Restriction tab
     this.restrictedAccess = undefined;

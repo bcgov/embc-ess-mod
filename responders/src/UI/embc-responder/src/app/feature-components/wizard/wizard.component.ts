@@ -9,6 +9,8 @@ import { WizardService } from './wizard.service';
 import { Subscription } from 'rxjs';
 import * as globalConst from '../../core/services/global-constants';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { WizardAdapterService } from './wizard-adapter.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-wizard',
@@ -25,7 +27,9 @@ export class WizardComponent implements OnInit, OnDestroy {
     private cacheService: CacheService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private wizardAdapterService: WizardAdapterService,
+    private evacueeSessionService: EvacueeSessionService
   ) {
     const params = this.route.snapshot.queryParams;
     if (params && params.type) {
@@ -173,5 +177,15 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.scrollSubscription.unsubscribe();
+    this.wizardAdapterService.clearWizard();
+    this.clearCachedServices();
+  }
+
+  private clearCachedServices() {
+    this.cacheService.remove('wizardMenu');
+    this.cacheService.remove('wizardType');
+    this.cacheService.remove('wizardOpenedFrom');
+    this.evacueeSessionService.setMemberFlag(null);
+    this.evacueeSessionService.setEditWizardFlag(null);
   }
 }
