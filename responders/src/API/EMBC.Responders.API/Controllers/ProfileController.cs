@@ -147,7 +147,7 @@ namespace EMBC.Responders.API.Controllers
             }
 
             // Set the Agreement Sign Date
-            currentMember.AgreementSignDate = DateTime.UtcNow;
+            currentMember.AgreementSignDate = DateTime.Now;
 
             // Update current user
             await messagingClient.Send(new SaveTeamMemberCommand
