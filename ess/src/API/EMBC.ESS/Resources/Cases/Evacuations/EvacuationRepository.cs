@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Print.Supports;
-using EMBC.ESS.Print.Utils;
+using EMBC.ESS.Resources.Print.Supports;
+using EMBC.ESS.Resources.Print.Utils;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.ESS.Utilities.Extensions;
@@ -549,7 +549,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             }
         }
 
-        public async Task<IEnumerable<Support>> ReadSupports(SupportsToPrint query)
+        public async Task<IEnumerable<Support>> ReadSupports(EvacuationFileSupportsQuery query)
         {
             var readCtx = essContext.Clone();
             readCtx.MergeOption = MergeOption.NoTracking;
@@ -580,9 +580,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return supports.ToArray();
         }
 
-        private static async Task<IEnumerable<era_evacueesupport>> QueryEvacueeSupports(EssContext ctx, SupportsToPrint query)
+        private static async Task<IEnumerable<era_evacueesupport>> QueryEvacueeSupports(EssContext ctx, EvacuationFileSupportsQuery query)
         {
-            var shouldQuerySupports = query.SupportsIds.Any<string>();
+            var shouldQuerySupports = query.SupportIds.Any<string>();
 
             if (!shouldQuerySupports) return Array.Empty<era_evacueesupport>();
 
@@ -591,7 +591,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             var predicate = PredicateBuilder.Make<era_evacueesupport>();
 
-            foreach (var supportId in query.SupportsIds)
+            foreach (var supportId in query.SupportIds)
             {
                 predicate = predicate.Or(c => c.era_name == supportId);
             }

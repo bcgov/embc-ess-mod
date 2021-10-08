@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EMBC.ESS.Print.Supports;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -26,8 +25,6 @@ namespace EMBC.ESS.Resources.Cases
         Task<ManageCaseCommandResult> ManageCase(ManageCaseCommand cmd);
 
         Task<CaseQueryResult> QueryCase(CaseQuery query);
-
-        Task<IEnumerable<Support>> QuerySupports(SupportsToPrint printSupports);
     }
 
     public abstract class ManageCaseCommand { }
@@ -76,6 +73,11 @@ namespace EMBC.ESS.Resources.Cases
         public string HouseholdMemberId { get; set; }
         public string LinkedRegistrantId { get; set; }
         public string NeedsAssessmentId { get; set; }
+    }
+
+    public class EvacuationFileSupportsQuery : CaseQuery
+    {
+        public IEnumerable<string> SupportIds { get; set; }
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand

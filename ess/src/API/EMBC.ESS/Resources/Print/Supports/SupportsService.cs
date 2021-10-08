@@ -18,16 +18,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Print.Utils;
 using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Print.Utils;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Utilities.PdfGenerator;
 using HandlebarsDotNet;
 using Microsoft.Extensions.Hosting;
 
-namespace EMBC.ESS.Print.Supports
+namespace EMBC.ESS.Resources.Print.Supports
 {
     public class SupportsService
     {
@@ -67,8 +68,7 @@ namespace EMBC.ESS.Print.Supports
 
         public async Task<string> GetReferralHtmlPagesAsync(SupportsToPrint printSupports)
         {
-            var supports = await caseRepository.QuerySupports(printSupports);
-
+            var supports = (await caseRepository.QueryCase(new EvacuationFileSupportsQuery() { SupportIds = printSupports.SupportsIds })).Items.Cast<Support>();
             if (!supports.Any())
             {
                 return null;
@@ -104,7 +104,7 @@ namespace EMBC.ESS.Print.Supports
                 referralHtml = $"{referralHtml}{newHtml}";
             }
 
-            var summaryHtml = includeSummary ? CreateReferalHtmlSummary(supports) : string.Empty;
+            var summaryHtml = includeSummary ? await CreateReferalHtmlSummary(supports) : string.Empty;
             var finalHtml = $"{summaryHtml}{referralHtml}";
 
             var handleBars = Handlebars.Create();
@@ -146,51 +146,73 @@ namespace EMBC.ESS.Print.Supports
             return $"{result}{pageBreak}";
         }
 
-        private string CreateReferalHtmlSummary(IEnumerable<Support> supports)
+        private async Task<string> CreateReferalHtmlSummary(IEnumerable<Support> supports)
         {
-            //var handleBars = Handlebars.Create();
+            var handleBars = Handlebars.Create();
 
             var result = string.Empty;
-            //var itemsHtml = string.Empty;
-            //var summaryBreakCount = 0;
-            //var printedCount = 0;
-            //var volunteerDisplayName = userService.GetDisplayName();
-            //var purchaserName = supports.FirstOrDefault()?.Purchaser;
-            //foreach (var support in supports)
-            //{
-            //    summaryBreakCount += 1;
-            //    printedCount += 1;
-            //    var partialViewType = MapToReferralType(support.SupportType.ToString());
+            var itemsHtml = string.Empty;
+            var summaryBreakCount = 0;
+            var printedCount = 0;
+            var volunteerDisplayName = this.currentUser;
+            foreach (var support in supports)
+            {
+                summaryBreakCount += 1;
+                printedCount += 1;
+                var partialViewType = MapToReferralType(support.SupportType.ToString());
 
-            //    handleBars.RegisterTemplate("titlePartial", partialViewType.GetDisplayName());
+                var partialViewDisplayName = partialViewType.GetType()
+                        .GetMember(partialViewType.ToString())
+                        .First()
+                        .GetCustomAttribute<DisplayAttribute>()
+                        .GetName();
 
-            //    var useSummaryVersion = partialViewType == ReferralPartialView.Hotel || partialViewType == ReferralPartialView.Billeting;
-            //    var partialItemsSource = GetItemsPartialView(partialViewType, useSummaryVersion);
-            //    handleBars.RegisterTemplate("itemsPartial", partialItemsSource);
+                handleBars.RegisterTemplate("titlePartial", partialViewDisplayName);
 
-            //    handleBars.RegisterTemplate("itemsDetailTitle", "Details");
+                var useSummaryVersion = partialViewType == ReferralPartialView.Hotel || partialViewType == ReferralPartialView.Billeting;
+                var partialItemsSource = GetItemsPartialView(partialViewType, useSummaryVersion);
+                handleBars.RegisterTemplate("itemsPartial", partialItemsSource);
 
-            //    var partialNotesSource = GetNotesPartialView(partialViewType);
-            //    handleBars.RegisterTemplate("notesPartial", partialNotesSource);
+                handleBars.RegisterTemplate("itemsDetailTitle", "Details");
 
-            //    var template = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
-            //    var itemResult = template(support);
+                var partialNotesSource = GetNotesPartialView(partialViewType);
+                handleBars.RegisterTemplate("notesPartial", partialNotesSource);
 
-            //    itemsHtml = $"{itemsHtml}{itemResult}";
+                var template = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
 
-            //    if (summaryBreakCount == 3 || printedCount == support.Count())
-            //    {
-            //        summaryBreakCount = 0;
+                var referral = (Referral)support;
+                var printsupplier = new PrintSupplier();
 
-            //        handleBars.RegisterTemplate("summaryItemsPartial", itemsHtml);
+                if (!string.IsNullOrEmpty(referral.SupplierId))
+                {
+                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+                    {
+                        SupplierId = referral.SupplierId,
+                    })).Items.SingleOrDefault(m => m.Id == referral.SupplierId);
+                    printsupplier = mapper.Map<PrintSupplier>(supplier);
+                }
 
-            //        var mainTemplate = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.Summary.ToString()));
+                var printReferral = mapper.Map<PrintReferral>(referral);
+                if (!string.IsNullOrEmpty(printsupplier.Id))
+                    printReferral.Supplier = printsupplier;
+                var purchaserName = printReferral.PurchaserName;
+                var itemResult = template(printReferral);
 
-            //        var data = new { volunteerDisplayName, purchaserName };
-            //        result = $"{result}{mainTemplate(data)}{pageBreak}";
-            //        itemsHtml = string.Empty;
-            //    }
-            //}
+                itemsHtml = $"{itemsHtml}{itemResult}";
+
+                if (summaryBreakCount == 3 || printedCount == supports.Count())
+                {
+                    summaryBreakCount = 0;
+
+                    handleBars.RegisterTemplate("summaryItemsPartial", itemsHtml);
+
+                    var mainTemplate = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.Summary.ToString()));
+
+                    var data = new { volunteerDisplayName, purchaserName };
+                    result = $"{result}{mainTemplate(data)}{pageBreak}";
+                    itemsHtml = string.Empty;
+                }
+            }
 
             return result;
         }
@@ -270,7 +292,7 @@ namespace EMBC.ESS.Print.Supports
 
         private ReferralPartialView MapToReferralType(string referralType)
         {
-            var referralTypeEnum = EnumHelper<SupportType>.GetValueFromName(referralType);
+            var referralTypeEnum = EnumHelper<SupportType>.GetValueFromDisplayName(referralType);
 
             switch (EnumHelper<SupportType>.GetValueFromName(referralType))
             {

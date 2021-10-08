@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Print.Supports;
+using EMBC.ESS.Resources.Print.Supports;
 using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Resources.Cases
@@ -54,6 +54,7 @@ namespace EMBC.ESS.Resources.Cases
             return query.GetType().Name switch
             {
                 nameof(EvacuationFilesQuery) => await HandleQueryEvacuationFile((EvacuationFilesQuery)query),
+                nameof(EvacuationFileSupportsQuery) => await HandleQueryEvacuationFileSupports((EvacuationFileSupportsQuery)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
@@ -67,14 +68,11 @@ namespace EMBC.ESS.Resources.Cases
             return result;
         }
 
-        public async Task<IEnumerable<Support>> QuerySupports(SupportsToPrint printSupports)
+        public async Task<CaseQueryResult> HandleQueryEvacuationFileSupports(EvacuationFileSupportsQuery query)
         {
-            return await HandleQueryEvacuationSupports(printSupports);
-        }
-
-        public async Task<IEnumerable<Support>> HandleQueryEvacuationSupports(SupportsToPrint printSupports)
-        {
-            return await evacuationRepository.ReadSupports(printSupports);
+            var result = new CaseQueryResult();
+            result.Items = await evacuationRepository.ReadSupports(query);
+            return result;
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)

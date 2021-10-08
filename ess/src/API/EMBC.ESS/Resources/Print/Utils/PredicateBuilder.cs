@@ -18,7 +18,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace EMBC.ESS.Print.Utils
+namespace EMBC.ESS.Resources.Print.Utils
 {
     internal static class PredicateBuilder
     {

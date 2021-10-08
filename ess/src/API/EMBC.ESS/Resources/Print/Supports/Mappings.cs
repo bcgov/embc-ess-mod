@@ -20,7 +20,7 @@ using AutoMapper;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Suppliers;
 
-namespace EMBC.ESS.Print.Supports
+namespace EMBC.ESS.Resources.Print.Supports
 {
     public class Mappings : Profile
     {
@@ -28,6 +28,7 @@ namespace EMBC.ESS.Print.Supports
         {
             CreateMap<Support, PrintReferral>()
                .IncludeAllDerived()
+               .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToString("dd-MMM-yyyy")))
                .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToString("hh:mm tt")))
                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToString("dd-MMM-yyyy")))

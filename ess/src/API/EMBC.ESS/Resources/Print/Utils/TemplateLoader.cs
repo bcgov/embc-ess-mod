@@ -17,14 +17,14 @@
 using System.IO;
 using System.Reflection;
 
-namespace EMBC.ESS.Print.Utils
+namespace EMBC.ESS.Resources.Print.Utils
 {
     public class TemplateLoader
     {
         public static string LoadTemplate(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var manifestName = $"EMBC.ESS.Print.Supports.Views.{name}.hbs";
+            var manifestName = $"EMBC.ESS.Resources.Print.Supports.Views.{name}.hbs";
             using (var stream = assembly.GetManifestResourceStream(manifestName))
             {
                 using (var reader = new StreamReader(stream))

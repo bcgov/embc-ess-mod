@@ -5,14 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 using AutoMapper;
 using EMBC.ESS.Resources.Suppliers;
-using EMBC.ESS.Print.Supports;
+using EMBC.ESS.Resources.Print.Supports;
 using Xunit;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Extensions.Hosting;
 using EMBC.ESS.Utilities.PdfGenerator;
 
-namespace EMBC.Tests.Integration.ESS.Print
+namespace EMBC.Tests.Integration.ESS.Resources
 {
     public class PrintTests : WebAppTestBase
     {
@@ -44,7 +44,7 @@ namespace EMBC.Tests.Integration.ESS.Print
             var supportsToPrint = new SupportsToPrint() { SupportsIds = new string[] { "D2001353" }, AddSummary = false, CurrentLoggedInUser = "Testing U." };
             var supportsService = new SupportsService(caseRepository, mapper, supplierRepository, env, pdfGenerator);
             var pdfs = await supportsService.GetReferralPdfsAsync(supportsToPrint);
-            await File.WriteAllBytesAsync("./newPdfFile.pdf", pdfs);
+            await File.WriteAllBytesAsync("./newSupportPdfFile.pdf", pdfs);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -53,7 +53,25 @@ namespace EMBC.Tests.Integration.ESS.Print
             var supportsToPrint = new SupportsToPrint() { SupportsIds = new string[] { "D2001127", "D2001131", "D2001132", "D2001328", "D2001335", "D2001352", "D2001353", "D2001356", "D2001357", }, AddSummary = false, CurrentLoggedInUser = "Testing U." };
             var supportsService = new SupportsService(caseRepository, mapper, supplierRepository, env, pdfGenerator);
             var pdfs = await supportsService.GetReferralPdfsAsync(supportsToPrint);
-            await File.WriteAllBytesAsync("./newPdfFile.pdf", pdfs);
+            await File.WriteAllBytesAsync("./newSupportPdfsFile.pdf", pdfs);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CreateSupportPdfWithSummary()
+        {
+            var supportsToPrint = new SupportsToPrint() { SupportsIds = new string[] { "D2001353" }, AddSummary = true, CurrentLoggedInUser = "Testing U." };
+            var supportsService = new SupportsService(caseRepository, mapper, supplierRepository, env, pdfGenerator);
+            var pdfs = await supportsService.GetReferralPdfsAsync(supportsToPrint);
+            await File.WriteAllBytesAsync("./newSupportPdfWithSummaryFile.pdf", pdfs);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CreateMultipleSupportsPdfsWithSummary()
+        {
+            var supportsToPrint = new SupportsToPrint() { SupportsIds = new string[] { "D2001127", "D2001131", "D2001132", "D2001328", "D2001335", "D2001352", "D2001353", "D2001356", "D2001357", }, AddSummary = true, CurrentLoggedInUser = "Testing U." };
+            var supportsService = new SupportsService(caseRepository, mapper, supplierRepository, env, pdfGenerator);
+            var pdfs = await supportsService.GetReferralPdfsAsync(supportsToPrint);
+            await File.WriteAllBytesAsync("./newSupportPdfsWithSummaryFile.pdf", pdfs);
         }
     }
 }

@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EMBC.ESS.Print.Supports;
+using EMBC.ESS.Resources.Suppliers;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -41,7 +41,7 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
 
-        Task<IEnumerable<Support>> ReadSupports(SupportsToPrint printSupports);
+        Task<IEnumerable<Support>> ReadSupports(EvacuationFileSupportsQuery SupportIds);
     }
 
     public class EvacuationFile : Case
@@ -173,10 +173,11 @@ namespace EMBC.ESS.Resources.Cases
         Archived = 174360004
     }
 
-    public abstract class Support
+    public abstract class Support : Case
     {
-        public string Id { get; set; }
+        //public string Id { get; set; }
         public DateTime IssuedOn { get; set; }
+
         public string IssuedByTeamMemberId { get; set; }
         public string OriginatingNeedsAssessmentId { get; set; }
         public DateTime From { get; set; }
@@ -189,6 +190,7 @@ namespace EMBC.ESS.Resources.Cases
         public string taskId { get; set; }
         public string HostCommunity { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
+        public Supplier Supplier { get; set; }
     }
 
     public abstract class Referral : Support

@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EMBC.ESS.Print.Supports
+namespace EMBC.ESS.Resources.Print.Supports
 {
     public class SupportsToPrint
     {
