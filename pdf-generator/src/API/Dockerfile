@@ -27,6 +27,15 @@ FROM build AS publish
 RUN dotnet publish "EMBC.PDFGenerator/EMBC.PDFGenerator.csproj" -c Release -o /app/publish
 
 FROM base AS final
+
+RUN apt-get update \
+    && apt-get install -y wget gnupg --no-install-recommends \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EMBC.PDFGenerator.dll"]
