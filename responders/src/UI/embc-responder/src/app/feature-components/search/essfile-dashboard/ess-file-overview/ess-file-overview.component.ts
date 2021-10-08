@@ -11,6 +11,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 })
 export class EssFileOverviewComponent implements OnInit {
   essFile: EvacuationFileModel;
+  animalCount = 0;
 
   constructor(
     private router: Router,
@@ -29,7 +30,9 @@ export class EssFileOverviewComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.calculateAnimalsTotal();
+  }
 
   /**
    * Maps needs assessment api value to UI string
@@ -41,5 +44,13 @@ export class EssFileOverviewComponent implements OnInit {
     return globalConst.needsOptions.find(
       (ins) => ins.apiValue === incomingValue
     )?.name;
+  }
+
+  private calculateAnimalsTotal(): void {
+    if (this.essFile?.needsAssessment?.pets?.length > 0) {
+      for (const pet of this.essFile?.needsAssessment?.pets) {
+        this.animalCount += +pet.quantity;
+      }
+    }
   }
 }
