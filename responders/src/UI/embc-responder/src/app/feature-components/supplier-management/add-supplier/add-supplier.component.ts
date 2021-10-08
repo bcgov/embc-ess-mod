@@ -61,7 +61,7 @@ export class AddSupplierComponent implements OnInit {
    */
   cancel(): void {
     this.router.navigate([
-      '/responder-access/supplier-management/list-suppliers'
+      '/responder-access/supplier-management/suppliers-list'
     ]);
   }
 

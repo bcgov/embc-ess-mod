@@ -1,4 +1,4 @@
-<div class="row verified">
+<!-- <div class="row verified">
   <div class="col-12" style="text-align: center">
     <button class="login-button" mat-button (click)="verifyUser()">
       Self-Register using your BC Services Card
@@ -12,4 +12,87 @@
       Self-Register
     </button>
   </div>
-</div>
+</div> -->
+
+<main class="container">
+  <div class="grid">
+    <div class="register-with-card">
+      <div>
+        <div class="register-with-card-tab">Preferred Method</div>
+        <div class="register-with-card-inner">
+          <img
+            src="/assets/images/services-card.png"
+            class="register-with-card-image"
+            alt="BC Services Card"
+          />
+          <h2 class="register-with-card-title">
+            Register <strong class="--blue">with</strong> BC Services Card
+          </h2>
+          <div class="register-with-card-list">
+            <table>
+              <tr>
+                <td class="icon-table">
+                  <img src="/assets/images/check-mark-icon.svg" />
+                </td>
+                <td>
+                  Safe & secure way to complete an online self-registration.
+                </td>
+              </tr>
+              <tr>
+                <td class="icon-table">
+                  <img src="/assets/images/check-mark-icon.svg" />
+                </td>
+                <td>Prepares you & your household for future emergencies.</td>
+              </tr>
+              <tr>
+                <td class="icon-table">
+                  <img src="/assets/images/check-mark-icon.svg" />
+                </td>
+                <td>
+                  Access your profile anytime to view supports you have
+                  received.
+                </td>
+              </tr>
+              <tr>
+                <td class="icon-table">
+                  <img src="/assets/images/check-mark-icon.svg" />
+                </td>
+                <td>
+                  Update your details, as well as view current & past emergency
+                  events.
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="register-with-card-button-container">
+        <button mat-button class="button-p btn-width" (click)="verifyUser()">
+          Self-Register using your BC Services Card
+        </button>
+      </div>
+    </div>
+
+    <div class="register-without-card">
+      <div>
+        <img
+          src="/assets/images/person-icon.svg"
+          class="register-without-card-image"
+          alt="Person Icon"
+        />
+        <h2 class="register-without-card-title">
+          Register <strong class="--blue">without</strong> BC Services Card
+        </h2>
+        <p class="--center">
+          If you <strong>don't</strong> have a BC Services Card, you can still
+          self-register as an evacuee.
+        </p>
+      </div>
+      <div class="register-without-card__button-container">
+        <button (click)="nonVerifiedUser()" class="button-s btn-width">
+          Self-Register
+        </button>
+      </div>
+    </div>
+  </div>
+</main>

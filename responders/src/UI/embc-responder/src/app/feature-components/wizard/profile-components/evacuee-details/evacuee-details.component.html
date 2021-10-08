@@ -8,131 +8,154 @@
   </div>
   <div class="row">
     <div class="col-md-12 content-container">
-      <form class="form-container" [formGroup]="evacueeDetailsForm">
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
-              <input
-                formControlName="firstName"
-                matInput
-                placeholder="First Name"
-                required
+      <div class="row">
+        <div class="col-md-8">
+          <form class="form-container" [formGroup]="evacueeDetailsForm">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>First Name</mat-label>
+                  <input
+                    formControlName="firstName"
+                    matInput
+                    placeholder="First Name"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-1" *ngIf="showLockIcon">
+                <img
+                  class="locked-field"
+                  src="/assets/images/field-lock.svg"
+                  width="13"
+                  height="17"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Last Name</mat-label>
+                  <input
+                    formControlName="lastName"
+                    matInput
+                    placeholder="Last Name"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-1" *ngIf="showLockIcon">
+                <img
+                  class="locked-field"
+                  src="/assets/images/field-lock.svg"
+                  width="13"
+                  height="17"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline">
+                  <mat-label>Preferred Name</mat-label>
+                  <input
+                    maxlength="100"
+                    formControlName="preferredName"
+                    matInput
+                    placeholder="Preferred Name"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Initials</mat-label>
+                  <input
+                    maxlength="100"
+                    formControlName="initials"
+                    matInput
+                    placeholder="Initials"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Gender</mat-label>
+                  <mat-select formControlName="gender" required>
+                    <mat-option *ngFor="let gen of gender" [value]="gen.value">
+                      {{ gen.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      detailsFormControl.gender.invalid &&
+                      detailsFormControl.gender.hasError('whitespaceError')
+                    "
+                  >
+                    Gender is required</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <mat-form-field type="date" appearance="outline">
+                  <mat-label>Date of Birth</mat-label>
+                  <input
+                    formControlName="dateOfBirth"
+                    matInput
+                    placeholder="mm/dd/yyyy"
+                    [textMask]="{ mask: dateMask, keepCharPositions: true }"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-1" *ngIf="showLockIcon">
+                <img
+                  class="locked-field"
+                  src="/assets/images/field-lock.svg"
+                  width="13"
+                  height="17"
+                />
+              </div>
+            </div>
+
+            <div class="row" *ngIf="this.showUnlockLink">
+              <div class="col-md-3">
+                <button class="btn unlock-link" (click)="editLockedFields()">
+                  Edit locked fields
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-md-4">
+          <mat-card class="tips-card">
+            <div>
+              <img
+                class="img-align"
+                src="/assets/images/tips-lightbulb.svg"
+                height="63"
+                width="62"
               />
-            </mat-form-field>
-          </div>
-          <div class="col-md-1" *ngIf="showLockIcon">
-            <img
-              class="locked-field"
-              src="/assets/images/field-lock.svg"
-              width="13"
-              height="17"
-            />
-          </div>
+              <span class="tips-heading"><b>Tip: </b>Editable Details</span>
+            </div>
+            <p class="tips-info">
+              If you need to update either first name, last name or date of
+              birth, please start a new search using the correct information.
+            </p>
+          </mat-card>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
-              <input
-                formControlName="lastName"
-                matInput
-                placeholder="Last Name"
-                required
-              />
-            </mat-form-field>
-          </div>
-          <div class="col-md-1" *ngIf="showLockIcon">
-            <img
-              class="locked-field"
-              src="/assets/images/field-lock.svg"
-              width="13"
-              height="17"
-            />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
-              <mat-label>Preferred Name</mat-label>
-              <input
-                maxlength="100"
-                formControlName="preferredName"
-                matInput
-                placeholder="Preferred Name"
-              />
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3">
-            <mat-form-field appearance="outline">
-              <mat-label>Initials</mat-label>
-              <input
-                maxlength="100"
-                formControlName="initials"
-                matInput
-                placeholder="Initials"
-              />
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3">
-            <mat-form-field appearance="outline">
-              <mat-label>Gender</mat-label>
-              <mat-select formControlName="gender" required>
-                <mat-option *ngFor="let gen of gender" [value]="gen.value">
-                  {{ gen.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error
-                *ngIf="
-                  detailsFormControl.gender.invalid &&
-                  detailsFormControl.gender.hasError('whitespaceError')
-                "
-              >
-                Gender is required</mat-error
-              >
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-3">
-            <mat-form-field type="date" appearance="outline">
-              <mat-label>Date of Birth</mat-label>
-              <input
-                formControlName="dateOfBirth"
-                matInput
-                placeholder="mm/dd/yyyy"
-                [textMask]="{ mask: dateMask, keepCharPositions: true }"
-                required
-              />
-            </mat-form-field>
-          </div>
-          <div class="col-md-1" *ngIf="showLockIcon">
-            <img
-              class="locked-field"
-              src="/assets/images/field-lock.svg"
-              width="13"
-              height="17"
-            />
-          </div>
-        </div>
-
-        <div class="row" *ngIf="this.showUnlockLink">
-          <div class="col-md-3">
-            <button class="btn unlock-link" (click)="editLockedFields()">
-              Edit locked fields
-            </button>
-          </div>
-        </div>
-      </form>
       <div class="row">
         <div class="col-md-6">
           <button class="button-s back" mat-button (click)="back()">

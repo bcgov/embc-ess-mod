@@ -578,7 +578,7 @@ export class StepEssFileService {
     }
 
     // Wizard variables
-    this.nextTabUpdate.next(null);
+    this.nextTabUpdate.next();
 
     // Important values not set on form
     // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
