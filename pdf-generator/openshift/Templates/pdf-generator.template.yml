@@ -60,7 +60,7 @@ objects:
             - podSelector:
                 matchLabels:
                   app.kubernetes.io/part-of: ${APP_NAME}
-                  role: api
+                  role: backend
           ports:
             - protocol: TCP
               port: 8080

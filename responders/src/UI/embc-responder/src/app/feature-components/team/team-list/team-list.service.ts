@@ -40,7 +40,6 @@ export class TeamListService {
   public activateTeamMember(memberId: string): Observable<TeamMember[]> {
     return this.teamMembersService.teamsActivateTeamMember({ memberId }).pipe(
       mergeMap((result) => {
-        console.log(result);
         return this.getTeamMembers();
       })
     );
@@ -49,7 +48,6 @@ export class TeamListService {
   public deactivatedTeamMember(memberId: string): Observable<TeamMember[]> {
     return this.teamMembersService.teamsDeactivateTeamMember({ memberId }).pipe(
       mergeMap((result) => {
-        console.log(result);
         return this.getTeamMembers();
       })
     );

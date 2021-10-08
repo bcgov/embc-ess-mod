@@ -1,22 +1,133 @@
-.login-button {
-    background-color: #234075;
-    color: #FFFFFF ;
-    height: 55px;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+    padding: 0;
     font-weight: normal;
-    font-size: 17px;
-    width: 50%;
 }
 
-.self-button {
-    margin-top: 40px;
-    margin-left: 200px;
-    margin-right: 200px;
-    margin-bottom: 200px;
+.--blue {
+    color: #31b0e6;
 }
 
-.verified {
-     margin-top: 200px;
-     margin-left: 200px;
-     margin-right: 200px;
-     margin-bottom: 40px;
+.--center {
+    text-align: center;
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.register-with-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 624px;
+    border: 4px solid rgba(252, 186, 25, 1);
+    box-shadow: 0px 0px 15px -7px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
+
+.register-without-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 576px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 15px -7px rgba(0, 0, 0, 0.76);
+    padding: 45px 22px 40px 22px;
+}
+
+.register-with-card-image {
+    max-width: 269px;
+    margin: 0 auto;
+    display: block;
+    margin-top: 10px;
+}
+
+.register-without-card-image {
+    max-width: 85px;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 31px;
+}
+
+.register-with-card-tab {
+    padding: 12px 0;
+    background-color: rgba(252, 186, 25, 1);
+    color: #fff;
+    text-align: center;
+}
+
+.register-with-card-inner {
+    padding: 0 22px 40px 22px;
+}
+
+.register-with-card-button-container {
+    padding: 0 40px;
+    margin-bottom: 40px;
+}
+
+.register-without-card-button-container {
+    padding: 0 18px;
+}
+
+.register-with-card-title {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.register-without-card-title {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 76px;
+}
+
+.btn-width {
+    width: 100%;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    margin-top: 70px;
+    margin-bottom: 48px;
+}
+
+.register-with-card-list table {
+    margin-bottom: 20px;
+    margin-left: 30px;
+}
+
+.icon-table {
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+@media screen and (min-width: 769px) {
+    .register-with-card {
+        min-height: 624px;
+        max-width: 49%;
+        margin-bottom: 0;
+    }
+
+    .register-without-card {
+        min-height: 576px;
+        max-width: 49%;
+        border: 1px solid #ccc;
+        margin-top: 49px;
+    }
+
+    .grid {
+        flex-direction: row;
+        margin-bottom: 48px;
+        justify-content: space-between;
+    }
 }
