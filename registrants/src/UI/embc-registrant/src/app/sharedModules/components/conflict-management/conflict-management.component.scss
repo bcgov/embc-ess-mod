@@ -6,3 +6,33 @@
     font-size: 18px !important;
     font-weight: 400 !important;
 }
+
+.conflicts-table {
+    width: 100%;
+    p {
+        margin: 0px !important;
+    }
+}
+
+.mobile-label {
+    display: none;
+}
+
+.alt-BCSC {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .mobile-label {
+        width: 80px;
+        display: inline-block;
+    }
+
+    .main-view {
+        display: none;
+    }
+
+    .alt-BCSC {
+        display: table-row;
+    }
+}
