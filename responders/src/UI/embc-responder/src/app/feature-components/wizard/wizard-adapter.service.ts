@@ -104,7 +104,7 @@ export class WizardAdapterService {
             registrantProfileModel
           );
 
-          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewEditProfileSteps();
           this.stepEvacueeProfileService.setEditProfileTabStatus();
 
           obs.next(true);
