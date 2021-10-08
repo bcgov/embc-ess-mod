@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TabModel } from 'src/app/core/models/tab.model';
+import { TabModel, TabStatusManager } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -22,6 +22,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
+import * as _ from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -35,7 +36,7 @@ export class StepEssFileService {
 
   // Evacuation Details tab
   private paperESSFileVal: string;
-  private evacuatedFromPrimaryVal: boolean;
+  private evacuatedFromPrimaryVal: string;
   private evacAddressVal: AddressModel;
   private facilityNameVal: string;
   private insuranceVal: InsuranceOption;
@@ -117,10 +118,10 @@ export class StepEssFileService {
     this.paperESSFileVal = paperESSFileVal;
   }
 
-  public get evacuatedFromPrimary(): boolean {
+  public get evacuatedFromPrimary(): string {
     return this.evacuatedFromPrimaryVal;
   }
-  public set evacuatedFromPrimary(evacuatedFromPrimaryVal: boolean) {
+  public set evacuatedFromPrimary(evacuatedFromPrimaryVal: string) {
     this.evacuatedFromPrimaryVal = evacuatedFromPrimaryVal;
   }
 
@@ -577,7 +578,7 @@ export class StepEssFileService {
     }
 
     // Wizard variables
-    this.nextTabUpdate.next(null);
+    this.nextTabUpdate.next();
 
     // Important values not set on form
     // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
@@ -632,6 +633,7 @@ export class StepEssFileService {
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     const essNeeds = essFile.needsAssessment;
+    this.wizardService.createObjectReference(essFile);
     const primaryLastName = essFile.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant
     ).lastName;
@@ -643,7 +645,9 @@ export class StepEssFileService {
     this.evacAddress = essFile.evacuatedFromAddress;
     this.facilityName = essFile.registrationLocation;
 
-    this.evacuatedFromPrimary = this.primaryAddress === this.evacAddress;
+    this.evacuatedFromPrimary = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === _.isEqual(this.primaryAddress, this.evacAddress)
+    )?.value;
 
     this.insurance = essNeeds.insurance;
 
@@ -689,7 +693,8 @@ export class StepEssFileService {
     )?.value;
 
     // Animals tab
-    this.petsList = essNeeds.pets;
+    const petsArray = [];
+    this.petsList = [...petsArray, ...essNeeds.pets];
     this.havePets = globalConst.radioButtonOptions.find(
       (ins) => ins.apiValue === essNeeds.pets?.length > 0
     )?.value;
@@ -785,8 +790,10 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkForPartialUpdates(form: FormGroup): boolean {
+    console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
+      console.log(field);
       const control = form.controls[field] as
         | FormControl
         | FormGroup
@@ -806,6 +813,8 @@ export class StepEssFileService {
       }
     });
     const result = fields.filter((field) => !!field);
+    console.log(result);
+    console.log(result.length);
     return result.length !== 0;
   }
 
@@ -816,8 +825,10 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkForEvacDetailsPartialUpdates(form: FormGroup): boolean {
+    console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
+      console.log(field);
       const control = form.controls[field] as
         | FormControl
         | FormGroup
@@ -826,18 +837,23 @@ export class StepEssFileService {
         if (control.value instanceof Object && control.value != null) {
           fields.push(control.value.length);
         } else {
-          fields.push(control.value);
+          if (typeof control.value !== 'boolean') {
+            fields.push(control.value);
+          }
         }
-      } else if (control instanceof FormGroup || control instanceof FormArray) {
+      } else if (control instanceof FormGroup) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
+            console.log(control.controls);
             fields.push(control.controls[key].value);
           }
         }
       }
     });
     const result = fields.filter((field) => !!field);
-    return result.length - 3 !== 0;
+    console.log(result);
+    console.log(result.length);
+    return result.length > 2;
   }
 
   /**
@@ -870,6 +886,32 @@ export class StepEssFileService {
         tab.status = 'incomplete';
       }
       return tab;
+    });
+  }
+
+  checkForEdit(): boolean {
+    return this.evacueeSession.essFileNumber !== null;
+  }
+
+  updateEditedFormStatus() {
+    this.wizardService.editStatus$.subscribe((statues: TabStatusManager[]) => {
+      const index = statues.findIndex((tab) => tab.tabUpdateStatus === true);
+      if (index !== -1) {
+        this.setTabStatus('review', 'incomplete');
+        this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', true);
+        this.wizardService.setStepStatus('/ess-wizard/add-supports', true);
+        this.wizardService.setStepStatus('/ess-wizard/add-notes', true);
+      } else {
+        if (!this.checkTabsStatus()) {
+          this.wizardService.setStepStatus(
+            '/ess-wizard/evacuee-profile',
+            false
+          );
+          this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
+          this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+          this.setTabStatus('review', 'complete');
+        }
+      }
     });
   }
 }

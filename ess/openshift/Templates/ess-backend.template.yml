@@ -159,6 +159,7 @@ objects:
             app: ${APP_NAME}-ess-backend
             app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-ess-backend
+            role: backend
         spec:
           containers:
             - name: ess-backend
