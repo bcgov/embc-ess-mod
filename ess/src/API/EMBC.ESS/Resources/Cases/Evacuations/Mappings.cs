@@ -247,7 +247,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             CreateMap<era_evacueesupport, IncidentalsReferral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_extremewinterconditions))
+                .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_approveditems))
                 .ReverseMap()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Incidentals))
                 ;
