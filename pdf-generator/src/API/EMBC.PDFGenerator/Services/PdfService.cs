@@ -1,5 +1,4 @@
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EMBC.PDFGenerator.Utilities.PdfGenerator;
 using Google.Protobuf;
 using Grpc.Core;
@@ -20,7 +19,7 @@ namespace EMBC.PDFGenerator
 
         public override async Task<ConvertReply> Convert(ConvertRequest request, ServerCallContext context)
         {
-            var data = await _generator.Generate(request.Data.ToString());
+            var data = await _generator.Generate(request.Data.ToStringUtf8());
             return await Task.FromResult(new ConvertReply
             {
                 Data = ByteString.CopyFrom(data),

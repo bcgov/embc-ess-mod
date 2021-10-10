@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -53,7 +54,9 @@ namespace EMBC.Responders.API.Controllers
                 supports = mappedSupports
             });
 
-            return Ok();
+            //TODO: ensure the print id returned from ProcessSupportsCommand is returned and not a guid
+            var id = result ?? Guid.NewGuid().ToString();
+            return Ok(new { printRequestId = id });
         }
 
         [HttpPost("files/{fileId}/supports/{supportId}/void")]
@@ -78,7 +81,20 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason)
         {
-            return await Task.FromResult(Ok());
+            //TODO: send print request to backend and return the id
+            var id = Guid.NewGuid().ToString();
+            return await Task.FromResult(Ok(new { printRequestId = id }));
+        }
+
+        [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
+        public async Task<IActionResult> GetPrint(string fileId, string printRequestId)
+        {
+            await Task.CompletedTask;
+
+            //TODO: call backend with print request id to generate the actual pdf and return to caller
+            var text = $"pdf generated for print request {printRequestId}, file {fileId}";
+            var content = Encoding.UTF8.GetBytes(text);
+            return new FileContentResult(content, "text/plain");
         }
     }
 
