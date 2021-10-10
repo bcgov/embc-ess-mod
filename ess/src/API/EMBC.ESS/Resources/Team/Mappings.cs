@@ -49,7 +49,7 @@ namespace EMBC.ESS.Resources.Team
                 .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.GetName(typeof(TeamUserLabelOptionSet), s.era_label)))
                 .ForMember(d => d.LastSuccessfulLogin, opts => opts.MapFrom(s => s.era_lastsuccessfullogin.HasValue ? s.era_lastsuccessfullogin.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.AgreementSignDate, opts => opts.MapFrom(s => s.era_electronicaccessagreementaccepteddate.HasValue ?
-                    new DateTime(s.era_electronicaccessagreementaccepteddate.Value.Year, s.era_electronicaccessagreementaccepteddate.Value.Month, s.era_electronicaccessagreementaccepteddate.Value.Day)
+                    new DateTime(s.era_electronicaccessagreementaccepteddate.Value.Year, s.era_electronicaccessagreementaccepteddate.Value.Month, s.era_electronicaccessagreementaccepteddate.Value.Day, 0, 0, 0, 0, DateTimeKind.Utc)
                     : (DateTime?)null))
                 .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.statuscode == (int)TeamMemberStatus.Active))
                 ;
