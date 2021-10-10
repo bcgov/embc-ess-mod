@@ -30,7 +30,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -148,7 +147,6 @@ namespace EMBC.Responders.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
-                options.Filters.Add(new AuthorizeFilter());
             });
 
             services.AddHttpContextAccessor();
@@ -194,7 +192,9 @@ namespace EMBC.Responders.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers()
+                    .RequireAuthorization()
+                    ;
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });

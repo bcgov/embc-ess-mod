@@ -52,6 +52,45 @@ export class WizardDataService {
     }
   ];
 
+  private evacueeEditProfileTabs: Array<TabModel> = [
+    {
+      label: 'Restriction',
+      route: 'restriction',
+      name: 'restriction',
+      status: 'not-started'
+    },
+    {
+      label: 'Evacuee Details',
+      route: 'evacuee-details',
+      name: 'evacuee-details',
+      status: 'incomplete'
+    },
+    {
+      label: 'Address',
+      route: 'address',
+      name: 'address',
+      status: 'not-started'
+    },
+    {
+      label: 'Contact',
+      route: 'contact',
+      name: 'contact',
+      status: 'not-started'
+    },
+    {
+      label: 'Security Questions',
+      route: 'security-questions',
+      name: 'security-questions',
+      status: 'not-started'
+    },
+    {
+      label: 'Review & Save',
+      route: 'review',
+      name: 'review',
+      status: 'not-started'
+    }
+  ];
+
   private essFileTabs: Array<TabModel> = [
     {
       label: 'Evacuation Details',
@@ -408,5 +447,19 @@ export class WizardDataService {
       essFileTabs.push({ ...tab, ...tabs });
     }
     return essFileTabs;
+  }
+
+  /**
+   * Creates the profile tabs to load
+   *
+   * @returns profile tab array
+   */
+  public createNewEditProfileSteps(): Array<TabModel> {
+    const profileTabs: Array<TabModel> = new Array<TabModel>();
+    let tab: TabModel;
+    for (const tabs of this.evacueeEditProfileTabs) {
+      profileTabs.push({ ...tab, ...tabs });
+    }
+    return profileTabs;
   }
 }
