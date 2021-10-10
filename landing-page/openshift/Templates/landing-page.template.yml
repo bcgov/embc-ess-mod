@@ -24,7 +24,7 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}
+      name: ${APP_NAME}-landing-page
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}
@@ -35,7 +35,7 @@ objects:
     apiVersion: v1
     type: Opaque
     metadata:
-      name: ${APP_NAME}
+      name: ${APP_NAME}-landing-page
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}
@@ -48,7 +48,7 @@ objects:
       labels:
         app: ${APP_NAME}
         app.kubernetes.io/part-of: ${APP_NAME}
-      name: ${APP_NAME}
+      name: ${APP_NAME}-landing-page
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       ports:
@@ -57,7 +57,7 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: ${APP_NAME}
+        deploymentconfig: ${APP_NAME}-landing-page
       type: ClusterIP
 
   - kind: Route
@@ -66,7 +66,7 @@ objects:
       labels:
         app: ${APP_NAME}
         app.kubernetes.io/part-of: ${APP_NAME}
-      name: ${APP_NAME}
+      name: ${APP_NAME}-landing-page
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       host: ${HOST}
@@ -78,13 +78,13 @@ objects:
         termination: edge
       to:
         kind: Service
-        name: ${APP_NAME}
+        name: ${APP_NAME}-landing-page
         weight: 100
 
   - kind: NetworkPolicy
     apiVersion: networking.k8s.io/v1
     metadata:
-      name: ${APP_NAME}
+      name: ${APP_NAME}-landing-page
       labels:
         app: ${APP_NAME}
         app.kubernetes.io/part-of: ${APP_NAME}
@@ -104,12 +104,12 @@ objects:
       labels:
         app: ${APP_NAME}
         app.kubernetes.io/part-of: ${APP_NAME}
-      name: ${APP_NAME}
+      name: ${APP_NAME}-landing-page
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        deploymentconfig: ${APP_NAME}
+        deploymentconfig: ${APP_NAME}-landing-page
       strategy:
         activeDeadlineSeconds: 21600
         resources: {}
@@ -125,7 +125,7 @@ objects:
           labels:
             app: ${APP_NAME}
             app.kubernetes.io/part-of: ${APP_NAME}
-            deploymentconfig: ${APP_NAME}
+            deploymentconfig: ${APP_NAME}-landing-page
         spec:
           containers:
             - name: landing-page

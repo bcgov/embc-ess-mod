@@ -106,8 +106,8 @@ namespace EMBC.ESS
                 .AddDynamics(configuration)
                 .AddCache()
                 .AddTransformator()
-                .AddPdfGenerator()
-                .AddNotificationSenders(configuration);
+                .AddNotificationSenders(configuration)
+                .AddPdfGenerator(configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

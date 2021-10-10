@@ -14,49 +14,39 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
+using System;
+using System.Net.Http;
+using EMBC.PDFGenerator;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using PuppeteerSharp;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
 {
     public static class Configuration
     {
-        public static IServiceCollection AddPdfGenerator(this IServiceCollection services)
+        public static IServiceCollection AddPdfGenerator(this IServiceCollection services, IConfiguration configuration)
         {
-            services.TryAddSingleton(sp =>
+            var pdfGeneratorUrl = configuration.GetValue<Uri>("pdfGenerator:url");
+            if (pdfGeneratorUrl == null) throw new Exception("PdfGenerator url is not configured");
+            var allowInvalidServerCertificates = configuration.GetValue("pdfGenerator:allowInvalidServerCertificate", false);
+
+            var httpClientBuilder = services.AddGrpcClient<Generator.GeneratorClient>(opts =>
             {
-                var logger = sp.GetRequiredService<ILogger<PdfGenerator>>();
-                var options = new BrowserFetcherOptions()
-                {
-                    Product = Product.Chrome,
-                    Path = Path.Combine(Path.GetTempPath(), "chrome/"),
-                    Platform = Platform.Linux
-                };
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) options.Platform = Platform.Win64;
-
-                logger.LogInformation("Setting up Puppeteer to use platform {0}", options.Platform);
-
-                var fetcher = Puppeteer.CreateBrowserFetcher(options);
-
-                var currentRevisions = fetcher.LocalRevisions();
-                if (currentRevisions.Any())
-                {
-                    var info = fetcher.GetRevisionInfoAsync().GetAwaiter().GetResult();
-                    logger.LogInformation("Found Puppeteer at {0}", info.ExecutablePath);
-                    if (info.Downloaded) return info;
-                }
-                logger.LogInformation("Downloading Puppeteer");
-                return fetcher.DownloadAsync().GetAwaiter().GetResult();
+                opts.Address = pdfGeneratorUrl;
             });
 
-            services.TryAddScoped<IPdfGenerator, PdfGenerator>();
-
+            if (allowInvalidServerCertificates)
+            {
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    return new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    };
+                });
+            }
+            services.TryAddTransient<IPdfGenerator, PdfGenerator>();
             return services;
         }
     }
