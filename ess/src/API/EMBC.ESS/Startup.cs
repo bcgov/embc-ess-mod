@@ -20,10 +20,12 @@ using System.Reflection;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Metadata;
+using EMBC.ESS.Managers.Reports;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Metadata;
+using EMBC.ESS.Resources.Reports;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
@@ -89,6 +91,7 @@ namespace EMBC.ESS
             services
                 .AddAdminManager()
                 .AddMetadataManager()
+                .AddReportsManager()
                 .AddSubmissionManager();
 
             services
@@ -100,7 +103,8 @@ namespace EMBC.ESS
                 .AddContactRepository()
                 .AddCaseRepository()
                 .AddTaskRepository()
-                .AddSupplierRepository();
+                .AddSupplierRepository()
+                .AddReportRepository();
 
             services
                 .AddDynamics(configuration)
