@@ -37,6 +37,7 @@ export class StepEvacueeProfileComponent {
     }
 
     this.tabs = this.stepEvacueeProfileService.profileTabs;
+    this.loadTab();
 
     // Load security question list as soon as wizard is initialized
     this.securityQuestionsService.getSecurityQuestionList().subscribe(
@@ -49,6 +50,14 @@ export class StepEvacueeProfileComponent {
         else this.alertService.setAlert('danger', globalConst.genericError);
       }
     );
+  }
+
+  loadTab() {
+    if (this.tabs !== null && this.tabs !== undefined) {
+      const firstTabUrl = this.tabs[0].route;
+
+      this.router.navigate(['/ess-wizard/evacuee-profile/' + firstTabUrl]);
+    }
   }
 
   /**
