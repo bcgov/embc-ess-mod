@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Resources.Print.Supports;
 using EMBC.ESS.Resources.Print.Utils;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -557,8 +556,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             //get all supports
             var supports = await QueryEvacueeSupports(readCtx, query);
 
-            var t = (await LoadEvacuationSupports(essContext, supports)).Select(f => MapEvacuationSupports(f)).ToArray();
-            return t;
+            return (await LoadEvacuationSupports(essContext, supports)).Select(f => MapEvacuationSupports(f)).ToArray();
         }
 
         private static async Task<IEnumerable<era_evacueesupport>> LoadEvacuationSupports(EssContext ctx, IEnumerable<era_evacueesupport> supports)
@@ -606,6 +604,87 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var map = mapper.Map(support, support.GetType(), new SupportConverter().supportTypeResolver((SupportType?)support.era_supporttype));
 
             return (Support)map;
+        }
+
+        public async Task<string> CreateRefferalPrint(string FileId, IEnumerable<string> supportIds)
+        {
+            var referralprint = new ReferralPrint()
+            {
+                Type = ReferralPrintType.New,
+                IncludeSummary = false,
+                ReprintReason = string.Empty
+            };
+
+            var newreferralprint = mapper.Map<era_referralprint>(referralprint);
+            newreferralprint.era_referralprintid = Guid.NewGuid();
+            essContext.AddToera_referralprints(newreferralprint);
+            await essContext.SaveChangesAsync();
+
+            essContext.UpdateObject(newreferralprint);
+
+            var supports = essContext.era_evacueesupports;
+
+            foreach (var supportId in supportIds)
+            {
+                var support = supports.Where(s => s.era_name == supportId).SingleOrDefault();
+                essContext.AddLink(newreferralprint, nameof(era_era_referralprint_era_evacueesupport), support);
+            }
+
+            var firstSupport = supports.Where(s => s.era_name == supportIds.First()).SingleOrDefault();
+
+            var file = essContext.era_evacuationfiles.Where(f => f.era_name == FileId).First();
+            essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_referralprint_ESSFile), newreferralprint);
+
+            var teamMember = essContext.era_essteamusers.ByKey(firstSupport._era_issuedbyid_value).GetValue();
+            essContext.SetLink(newreferralprint, nameof(era_referralprint.era_RequestingUserId), teamMember);
+
+            await essContext.SaveChangesAsync();
+
+            essContext.Detach(newreferralprint);
+
+            //var referralprintId = essContext.era_referralprints
+            //    .Where(s => s.era_referralprintid == newreferralprint.era_referralprintid)
+            //    .Select(r => r.era_name)
+            //    .Single();
+
+            var referralprintId = newreferralprint.era_referralprintid;
+
+            essContext.DetachAll();
+
+            return referralprintId.ToString();
+        }
+
+        public async Task<IEnumerable<ReferralPrint>> ReadRefferalPrint(ReferralPrintQuery query)
+        {
+            var readCtx = essContext.Clone();
+            readCtx.MergeOption = MergeOption.NoTracking;
+
+            //get all supports
+            var referalprint = await QueryRefferalPrint(readCtx, query);
+
+            return new ReferralPrint[] { MapReferralPrint(referalprint) };
+        }
+
+        private static async Task<era_referralprint> QueryRefferalPrint(EssContext ctx, ReferralPrintQuery query)
+        {
+            var shouldQueryReferralPrint = query.ReferralPrintId;
+
+            if (string.IsNullOrEmpty(shouldQueryReferralPrint)) return new era_referralprint() { };
+
+            var referralPrint = ctx.era_referralprints
+                .Expand(r => r.era_RequestingUserId)
+                .Where(r => r.era_referralprintid == new Guid(query.ReferralPrintId))
+                .Single();
+            ctx.AttachTo(nameof(EssContext.era_referralprints), referralPrint);
+            await ctx.LoadPropertyAsync(referralPrint, nameof(era_referralprint.era_era_referralprint_era_evacueesupport));
+
+            return referralPrint;
+        }
+
+        private ReferralPrint MapReferralPrint(era_referralprint referalprint)
+        {
+            var map = mapper.Map<ReferralPrint>(referalprint);
+            return map;
         }
     }
 }

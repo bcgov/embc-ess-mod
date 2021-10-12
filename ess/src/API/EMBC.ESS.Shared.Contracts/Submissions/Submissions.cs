@@ -85,6 +85,11 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<Support> supports { get; set; }
     }
 
+    public class PrintRequestCommand : Command
+    {
+        public string PrintRequestId { get; set; }
+    }
+
     public class VoidSupportCommand : Command
     {
         public string FileId { get; set; }

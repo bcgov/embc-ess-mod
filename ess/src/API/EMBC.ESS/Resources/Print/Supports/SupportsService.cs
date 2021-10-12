@@ -30,7 +30,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS.Resources.Print.Supports
 {
-    public class SupportsService
+    public class SupportsService : ISupportsService
     {
         private readonly ICaseRepository caseRepository;
         private readonly IMapper mapper;

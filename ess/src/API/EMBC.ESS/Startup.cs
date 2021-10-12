@@ -24,6 +24,7 @@ using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Metadata;
+using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
@@ -100,7 +101,8 @@ namespace EMBC.ESS
                 .AddContactRepository()
                 .AddCaseRepository()
                 .AddTaskRepository()
-                .AddSupplierRepository();
+                .AddSupplierRepository()
+                .AddPrint();
 
             services
                 .AddDynamics(configuration)

@@ -16,9 +16,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EMBC.ESS.Resources.Print.Supports
 {
+    public interface ISupportsService
+    {
+        Task<byte[]> GetReferralPdfsAsync(SupportsToPrint printReferrals);
+
+        Task<string> GetReferralHtmlPagesAsync(SupportsToPrint printSupports);
+    }
+
     public class SupportsToPrint
     {
         public IEnumerable<string> SupportsIds { get; set; }

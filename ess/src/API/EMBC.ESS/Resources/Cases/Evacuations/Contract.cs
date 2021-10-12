@@ -42,6 +42,10 @@ namespace EMBC.ESS.Resources.Cases
         Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
 
         Task<IEnumerable<Support>> ReadSupports(EvacuationFileSupportsQuery SupportIds);
+
+        Task<string> CreateRefferalPrint(string fileId, IEnumerable<string> supportIds);
+
+        Task<IEnumerable<ReferralPrint>> ReadRefferalPrint(ReferralPrintQuery query);
     }
 
     public class EvacuationFile : Case
@@ -300,5 +304,20 @@ namespace EMBC.ESS.Resources.Cases
         Clothing = 174360006,
         TransporationTaxi = 174360007,
         TransportationOther = 174360008
+    }
+
+    public class ReferralPrint : Case
+    {
+        public ReferralPrintType Type { get; set; } = ReferralPrintType.New;
+        public bool IncludeSummary { get; set; }
+        public string ReprintReason { get; set; }
+        public IEnumerable<string> SupportIds { get; set; }
+        public string RequestingUser { get; set; }
+    }
+
+    public enum ReferralPrintType
+    {
+        New = 174360000,
+        Reprint = 174360001
     }
 }

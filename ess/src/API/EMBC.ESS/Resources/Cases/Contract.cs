@@ -80,6 +80,11 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<string> SupportIds { get; set; }
     }
 
+    public class ReferralPrintQuery : CaseQuery
+    {
+        public string ReferralPrintId { get; set; }
+    }
+
     public class SaveEvacuationFileNote : ManageCaseCommand
     {
         public string FileId { get; set; }
@@ -90,6 +95,12 @@ namespace EMBC.ESS.Resources.Cases
     {
         public string FileId { get; set; }
         public Support Support { get; set; }
+    }
+
+    public class SaveSupportReferralPrintCommand : ManageCaseCommand
+    {
+        public string FileId { get; set; }
+        public IEnumerable<string> SupportIds { get; set; }
     }
 
     public class VoidEvacuationFileSupportCommand : ManageCaseCommand

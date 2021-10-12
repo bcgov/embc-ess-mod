@@ -11,12 +11,17 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Extensions.Hosting;
 using EMBC.ESS.Utilities.PdfGenerator;
+using EMBC.ESS.Managers.Submissions;
+using EMBC.ESS.Shared.Contracts.Submissions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
     public class PrintTests : WebAppTestBase
     {
+        private readonly SubmissionsManager manager;
+
         private readonly ICaseRepository caseRepository;
+
         private readonly ISupplierRepository supplierRepository;
 
         private readonly MapperConfiguration mapperConfig;
@@ -30,6 +35,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             pdfGenerator = services.GetRequiredService<IPdfGenerator>();
             env = services.GetRequiredService<IHostEnvironment>();
+            manager = services.GetRequiredService<SubmissionsManager>();
             caseRepository = services.GetRequiredService<ICaseRepository>();
             supplierRepository = services.GetRequiredService<ISupplierRepository>();
             mapperConfig = new MapperConfiguration(cfg =>
@@ -72,6 +78,26 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var supportsService = new SupportsService(caseRepository, mapper, supplierRepository, env, pdfGenerator);
             var pdfs = await supportsService.GetReferralPdfsAsync(supportsToPrint);
             await File.WriteAllBytesAsync("./newSupportPdfsWithSummaryFile.pdf", pdfs);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CreateReferralPrintAsync()
+        {
+            var referralPrint = new SaveSupportReferralPrintCommand() { FileId = "101010", SupportIds = new string[] { "D2001358", "D2001357" } };
+            var referralPrintId = (await caseRepository.ManageCase(referralPrint)).Id;
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task ReadReferralPrint()
+        {
+            var referralPrintQuery = new ReferralPrintQuery() { ReferralPrintId = "fb9e0fea-ea63-4cb1-9ab6-04fac7d7dda4" };
+            var referralPrintId = (await caseRepository.QueryCase(referralPrintQuery));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task SubmitPrintRequest()
+        {
+            var pdf = await manager.Handle(new PrintRequestCommand { PrintRequestId = "fb9e0fea-ea63-4cb1-9ab6-04fac7d7dda4" });
         }
     }
 }

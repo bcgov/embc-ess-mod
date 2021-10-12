@@ -23,6 +23,7 @@ using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Print.Supports;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
@@ -46,18 +47,20 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
+        private readonly ISupportsService supportsService;
 
         public SubmissionsManager(
-            IMapper mapper,
-            IContactRepository contactRepository,
-            ITemplateProviderResolver templateProviderResolver,
-            ICaseRepository caseRepository,
-            ITransformator transformator,
-            INotificationSender notificationSender,
-            ITaskRepository taskRepository,
-            ITeamRepository teamRepository,
-            ISupplierRepository supplierRepository,
-            ISearchEngine searchEngine)
+             IMapper mapper,
+             IContactRepository contactRepository,
+             ITemplateProviderResolver templateProviderResolver,
+             ICaseRepository caseRepository,
+             ITransformator transformator,
+             INotificationSender notificationSender,
+             ITaskRepository taskRepository,
+             ITeamRepository teamRepository,
+             ISupplierRepository supplierRepository,
+             ISearchEngine searchEngine,
+             ISupportsService supportsService)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -69,6 +72,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
+            this.supportsService = supportsService;
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -441,7 +445,7 @@ namespace EMBC.ESS.Managers.Submissions
             return new TasksSearchQueryResult { Items = esstasks };
         }
 
-        public async System.Threading.Tasks.Task Handle(ProcessSupportsCommand cmd)
+        public async Task<string> Handle(ProcessSupportsCommand cmd)
         {
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
 
@@ -453,8 +457,29 @@ namespace EMBC.ESS.Managers.Submissions
                     FileId = cmd.FileId,
                     Support = mapper.Map<Resources.Cases.Support>(support)
                 });
-                supportId.Equals(supportId);
+                supportIds.Add(supportId.Id);
             }
+
+            var referralPrintId = await caseRepository.ManageCase(new SaveSupportReferralPrintCommand
+            {
+                FileId = cmd.FileId,
+                SupportIds = supportIds
+            });
+
+            return referralPrintId.Id;
+        }
+
+        public async Task<byte[]> Handle(PrintRequestCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.PrintRequestId)) throw new ArgumentNullException("PrintRequestId is required");
+
+            var referralPrintInfo = (await caseRepository.QueryCase(new ReferralPrintQuery() { ReferralPrintId = cmd.PrintRequestId })).Items.Cast<ReferralPrint>().FirstOrDefault(); // .FirstOrDefault();
+
+            var supportsToPrint = new SupportsToPrint() { SupportsIds = referralPrintInfo.SupportIds, AddSummary = referralPrintInfo.IncludeSummary, CurrentLoggedInUser = referralPrintInfo.RequestingUser };
+
+            var pdfs = await supportsService.GetReferralPdfsAsync(supportsToPrint);
+
+            return pdfs;
         }
 
         public async Task<string> Handle(VoidSupportCommand cmd)
