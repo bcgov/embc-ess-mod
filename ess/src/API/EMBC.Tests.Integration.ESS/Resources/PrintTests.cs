@@ -98,6 +98,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task SubmitPrintRequest()
         {
             var pdf = await manager.Handle(new PrintRequestCommand { PrintRequestId = "fb9e0fea-ea63-4cb1-9ab6-04fac7d7dda4" });
+            await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", pdf);
         }
     }
 }

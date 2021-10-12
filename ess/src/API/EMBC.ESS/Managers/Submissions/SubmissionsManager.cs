@@ -473,11 +473,9 @@ namespace EMBC.ESS.Managers.Submissions
         {
             if (string.IsNullOrEmpty(cmd.PrintRequestId)) throw new ArgumentNullException("PrintRequestId is required");
 
-            var referralPrintInfo = (await caseRepository.QueryCase(new ReferralPrintQuery() { ReferralPrintId = cmd.PrintRequestId })).Items.Cast<ReferralPrint>().FirstOrDefault(); // .FirstOrDefault();
+            var referralPrintInfo = (await caseRepository.QueryCase(new ReferralPrintQuery() { ReferralPrintId = cmd.PrintRequestId })).Items.Cast<ReferralPrint>().FirstOrDefault();
 
-            var supportsToPrint = new SupportsToPrint() { SupportsIds = referralPrintInfo.SupportIds, AddSummary = referralPrintInfo.IncludeSummary, CurrentLoggedInUser = referralPrintInfo.RequestingUser };
-
-            var pdfs = await supportsService.GetReferralPdfsAsync(supportsToPrint);
+            var pdfs = await supportsService.GetReferralPdfsAsync(new SupportsToPrint() { SupportsIds = referralPrintInfo.SupportIds, AddSummary = referralPrintInfo.IncludeSummary, CurrentLoggedInUser = referralPrintInfo.RequestingUser });
 
             return pdfs;
         }

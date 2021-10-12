@@ -87,6 +87,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
 
     public class PrintRequestCommand : Command
     {
+        public string FileId { get; set; }
         public string PrintRequestId { get; set; }
     }
 
