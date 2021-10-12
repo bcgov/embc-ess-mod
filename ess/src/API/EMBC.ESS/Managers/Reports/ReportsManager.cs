@@ -40,8 +40,7 @@ namespace EMBC.ESS.Managers.Reports
 
         public async Task<EvacueeReportQueryResult> Handle(EvacueeReportQuery query)
         {
-            bool getAllFiles = string.IsNullOrEmpty(query.FileId) && string.IsNullOrEmpty(query.TaskNumber) && string.IsNullOrEmpty(query.EvacuatedFrom) && string.IsNullOrEmpty(query.EvacuatedTo);
-            var cases = (await reportRepository.QueryEvacuee(new EvacueeQuery
+            var evacuees = (await reportRepository.QueryEvacuee(new EvacueeQuery
             {
                 FileId = query.FileId,
                 TaskNumber = query.TaskNumber,

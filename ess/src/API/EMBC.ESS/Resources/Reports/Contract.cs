@@ -61,24 +61,28 @@ namespace EMBC.ESS.Resources.Reports
         public string Initials { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
+        public string City { get; set; }
         public string Community { get; set; }
         public string Province { get; set; }
+        public string PostalCode { get; set; }
         public string Country { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
         public string MailingAddressLine1 { get; set; }
         public string MailingAddressLine2 { get; set; }
+        public string MailingCity { get; set; }
         public string MailingCommunity { get; set; }
         public string MailingProvince { get; set; }
+        public string MailingPostal { get; set; }
         public string MailingCountry { get; set; }
-        public string Insurance { get; set; }
+        public InsuranceOption Insurance { get; set; }
         public int NumberOfPets { get; set; }
-        public string Inquiry { get; set; }
-        public string HealthServices { get; set; }
-        public string FirstAid { get; set; }
-        public string PersonalServices { get; set; }
-        public string ChildCare { get; set; }
-        public string PetCare { get; set; }
+        public bool Inquiry { get; set; }
+        public bool HealthServices { get; set; }
+        public bool FirstAid { get; set; }
+        public bool PersonalServices { get; set; }
+        public bool ChildCare { get; set; }
+        public bool PetCare { get; set; }
         public bool CanProvideAccommodation { get; set; }
         public bool CanProvideClothing { get; set; }
         public bool CanProvideFood { get; set; }
@@ -87,6 +91,8 @@ namespace EMBC.ESS.Resources.Reports
         public bool NeedsMedication { get; set; }
         public bool HasEnoughSupply { get; set; }
         public string DietaryNeeds { get; set; }
+        public int NumberOfSupports { get; set; }
+        public decimal SupportsTotalAmount { get; set; }
     }
 
     public enum EvacuationFileStatus
@@ -96,5 +102,13 @@ namespace EMBC.ESS.Resources.Reports
         Completed = 174360002,
         Expired = 174360003,
         Archived = 174360004
+    }
+
+    public enum InsuranceOption
+    {
+        No,
+        Yes,
+        Unsure,
+        Unknown
     }
 }
