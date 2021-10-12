@@ -7,11 +7,11 @@ const routes: Routes = [
     path: '',
     component: StepEvacueeProfileComponent,
     children: [
-      {
-        path: '',
-        redirectTo: 'collection-notice',
-        pathMatch: 'full'
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'collection-notice',
+      //   pathMatch: 'full'
+      // },
       {
         path: 'collection-notice',
         loadChildren: () =>

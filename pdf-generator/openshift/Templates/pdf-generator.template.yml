@@ -21,6 +21,19 @@ parameters:
     value: Staging
 
 objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-pdf-generator-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-pdf-generator
+        app.kubernetes.io/part-of: ${APP_NAME}
+    data:
+      ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
+      KEY_RING_PATH: "/dpkeys"
+      CHROME_CACHE_PATH: "/cache"
+
   - kind: Service
     apiVersion: v1
     metadata:
@@ -107,6 +120,10 @@ objects:
                 - mountPath: /ssl
                   name: ssl
                   readonly: true
+                - mountPath: /dpkeys
+                  name: dp-keys
+                - mountPath: /cache
+                  name: cache
               livenessProbe:
                 httpGet:
                   scheme: HTTPS
@@ -131,6 +148,12 @@ objects:
             - name: ssl
               secret:
                 secretName: ${APP_NAME}-pdf-generator-ssl
+            - name: dp-keys
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-pdf-generator-key-ring
+            - name: cache
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-pfd-generator-cache
       test: false
       triggers:
         - type: ConfigChange
@@ -158,3 +181,18 @@ objects:
       resources:
         requests:
           storage: "100Mi"
+
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: ${APP_NAME}-pfd-generator-cache
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-pdf-generator
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "256Mi"
