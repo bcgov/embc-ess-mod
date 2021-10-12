@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { WizardService } from '../../wizard.service';
 
@@ -18,16 +19,19 @@ import { WizardService } from '../../wizard.service';
 export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: FormGroup;
   tabUpdateSubscription: Subscription;
+  editFlag: boolean;
 
   constructor(
     private router: Router,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
     this.createRestrictionForm();
+    this.editFlag = this.evacueeSessionService.getEditWizardFlag();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
