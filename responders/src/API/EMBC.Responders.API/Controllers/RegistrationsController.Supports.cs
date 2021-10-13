@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -89,12 +88,8 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
         public async Task<IActionResult> GetPrint(string fileId, string printRequestId)
         {
-            await Task.CompletedTask;
-
-            //TODO: call backend with print request id to generate the actual pdf and return to caller
-            var text = $"pdf generated for print request {printRequestId}, file {fileId}";
-            var content = Encoding.UTF8.GetBytes(text);
-            return new FileContentResult(content, "text/plain");
+            var result = await messagingClient.Send(new PrintRequestQuery { FileId = fileId, PrintRequestId = printRequestId });
+            return new FileContentResult(result.Content, result.ContentType);
         }
     }
 
