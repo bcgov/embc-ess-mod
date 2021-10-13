@@ -16,7 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace EMBC.ESS.Resources.Reports
@@ -28,9 +28,16 @@ namespace EMBC.ESS.Resources.Reports
 
     public class EvacueeQuery
     {
+        [Display(Name = "File Id")]
         public string FileId { get; set; }
+
+        [Display(Name = "Task Number")]
         public string TaskNumber { get; set; }
+
+        [Display(Name = "Evacuated From")]
         public string EvacuatedFrom { get; set; }
+
+        [Display(Name = "Evacuted To")]
         public string EvacuatedTo { get; set; }
     }
 
@@ -41,57 +48,160 @@ namespace EMBC.ESS.Resources.Reports
 
     public class Evacuee
     {
+        [Display(Name = "ESS File Number")]
         public string FileId { get; set; }
+
+        [Display(Name = "Registration Completed")]
         public bool RegistrationCompleted { get; set; }
+
+        [Display(Name = "Task #")]
         public string TaskNumber { get; set; }
-        public DateTime TaskStartDate { get; set; }
-        public DateTime TaskEndDate { get; set; }
+
+        [Display(Name = "Task # Start Date")]
+        public string TaskStartDate { get; set; }
+
+        [Display(Name = "Task # Start Time")]
+        public string TaskStartTime { get; set; }
+
+        [Display(Name = "Task # End Date")]
+        public string TaskEndDate { get; set; }
+
+        [Display(Name = "Task # End Time")]
+        public string TaskEndTime { get; set; }
+
+        [Display(Name = "ESS File Status")]
         public EvacuationFileStatus EvacuationFileStatus { get; set; }
+
+        [Display(Name = "Evacuated To")]
         public string EvacuatedTo { get; set; }
+
+        [Display(Name = "Evacuated From")]
         public string EvacuatedFrom { get; set; }
+
+        [Display(Name = "Facility Name")]
         public string FacilityName { get; set; }
-        public DateTime SelfRegistrationDate { get; set; }
-        public DateTime RegistrationCompletedDate { get; set; }
+
+        [Display(Name = "Self Registration Date")]
+        public string SelfRegistrationDate { get; set; }
+
+        [Display(Name = "Self Registration Time")]
+        public string SelfRegistrationTime { get; set; }
+
+        [Display(Name = "Registration Completed Date")]
+        public string RegistrationCompletedDate { get; set; }
+
+        [Display(Name = "Registration Completed Time")]
+        public string RegistrationCompletedTime { get; set; }
+
+        [Display(Name = "Is Head Of Household")]
         public bool IsHeadOfHousehold { get; set; }
+
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
+
+        [Display(Name = "Date Of Birth")]
         public DateTime DateOfBirth { get; set; }
+
         public string Gender { get; set; }
+
+        [Display(Name = "Preferred Name")]
         public string PreferredName { get; set; }
+
         public string Initials { get; set; }
+
+        [Display(Name = "Address Line 1")]
         public string AddressLine1 { get; set; }
+
+        [Display(Name = "Address Line 2")]
         public string AddressLine2 { get; set; }
-        public string City { get; set; }
+
         public string Community { get; set; }
+
         public string Province { get; set; }
+
+        [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
+
         public string Country { get; set; }
+
+        [Display(Name = "Phone Number")]
         public string Phone { get; set; }
+
+        [Display(Name = "Email Address")]
         public string Email { get; set; }
+
+        [Display(Name = "Mailing Address Line 1")]
         public string MailingAddressLine1 { get; set; }
+
+        [Display(Name = "Mailing Address Line 2")]
         public string MailingAddressLine2 { get; set; }
-        public string MailingCity { get; set; }
+
+        [Display(Name = "Mailing Community")]
         public string MailingCommunity { get; set; }
+
+        [Display(Name = "Mailing Province")]
         public string MailingProvince { get; set; }
+
+        [Display(Name = "Mailing Postal Code")]
         public string MailingPostal { get; set; }
+
+        [Display(Name = "Mailing Country")]
         public string MailingCountry { get; set; }
+
         public InsuranceOption Insurance { get; set; }
+
+        [Display(Name = "Pets")]
         public int NumberOfPets { get; set; }
+
+        [Display(Name = "Service Recommendation Inquiry")]
         public bool Inquiry { get; set; }
+
+        [Display(Name = "Service Recommendation Health Services")]
         public bool HealthServices { get; set; }
+
+        [Display(Name = "Service Recommendation First Aid")]
         public bool FirstAid { get; set; }
+
+        [Display(Name = "Service Recommendation Personal Services")]
         public bool PersonalServices { get; set; }
+
+        [Display(Name = "Service Recommendation Child Care")]
         public bool ChildCare { get; set; }
+
+        [Display(Name = "Service Recommendation Pet Care")]
         public bool PetCare { get; set; }
+
+        [Display(Name = "Able to Provide Accommodation")]
         public bool CanProvideAccommodation { get; set; }
+
+        [Display(Name = "Able to Provide Clothing")]
         public bool CanProvideClothing { get; set; }
+
+        [Display(Name = "Able to Provide Food")]
         public bool CanProvideFood { get; set; }
+
+        [Display(Name = "Able to Provide Incidentals")]
         public bool CanProvideIncidentals { get; set; }
+
+        [Display(Name = "Able to Provide Transportation")]
         public bool CanProvideTransportation { get; set; }
+
+        [Display(Name = "Medication Needs")]
         public bool NeedsMedication { get; set; }
+
+        [Display(Name = "Medication supply for 3 days")]
         public bool HasEnoughSupply { get; set; }
+
+        [Display(Name = "Dietary Needs")]
         public string DietaryNeeds { get; set; }
+
+        [Display(Name = "Supports Provided")]
         public int NumberOfSupports { get; set; }
+
+        [Display(Name = "Supports Total Amount Summary")]
         public decimal SupportsTotalAmount { get; set; }
     }
 

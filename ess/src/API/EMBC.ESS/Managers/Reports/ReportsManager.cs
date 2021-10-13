@@ -41,15 +41,17 @@ namespace EMBC.ESS.Managers.Reports
 
         public async Task<EvacueeReportQueryResult> Handle(EvacueeReportQuery query)
         {
-            var evacuees = (await reportRepository.QueryEvacuee(new EvacueeQuery
+            var evacueeQuery = new EvacueeQuery
             {
                 FileId = query.FileId,
                 TaskNumber = query.TaskNumber,
                 EvacuatedFrom = query.EvacuatedFrom,
-                EvacuatedTo = query.EvacuatedTo
-            })).Items;
+                EvacuatedTo = query.EvacuatedTo,
+            };
 
-            var csv = evacuees.ToCSV(query, true);
+            var evacuees = (await reportRepository.QueryEvacuee(evacueeQuery)).Items;
+
+            var csv = evacuees.ToCSV(evacueeQuery);
             return new EvacueeReportQueryResult { EvacueeReport = csv };
         }
     }

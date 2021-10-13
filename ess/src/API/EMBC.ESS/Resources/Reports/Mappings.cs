@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
@@ -31,14 +30,18 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_name))
                 .ForMember(d => d.RegistrationCompleted, opts => opts.Ignore())
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_name))
-                .ForMember(d => d.TaskStartDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId.era_taskstartdate.Value.UtcDateTime))
-                .ForMember(d => d.TaskEndDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId.era_taskenddate.Value.UtcDateTime))
+                .ForMember(d => d.TaskStartDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_taskstartdate.Value.LocalDateTime.ToString("yyyy/MM/dd")))
+                .ForMember(d => d.TaskStartTime, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_taskstartdate.Value.LocalDateTime.ToString("hh:mm tt")))
+                .ForMember(d => d.TaskEndDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_taskenddate.Value.LocalDateTime.ToString("yyyy/MM/dd")))
+                .ForMember(d => d.TaskEndTime, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_taskenddate.Value.LocalDateTime.ToString("hh:mm tt")))
                 .ForMember(d => d.EvacuationFileStatus, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_essfilestatus))
                 .ForMember(d => d.EvacuatedTo, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_JurisdictionID == null ? null : s.era_EvacuationFileid.era_TaskId.era_JurisdictionID.era_jurisdictionname))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_EvacuatedFromID == null ? null : s.era_EvacuationFileid.era_EvacuatedFromID.era_jurisdictionname))
                 .ForMember(d => d.FacilityName, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_registrationlocation))
-                .ForMember(d => d.SelfRegistrationDate, opts => opts.MapFrom(s => DateTime.MinValue)) //need to verify what field this maps to.   s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_registrationcompleteddate.Value.UtcDateTime))
-                .ForMember(d => d.RegistrationCompletedDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileid.era_registrationcompleteddate.Value.UtcDateTime : DateTime.MinValue))
+                .ForMember(d => d.SelfRegistrationDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_selfregistrationdate.HasValue ? s.era_EvacuationFileid.era_selfregistrationdate.Value.LocalDateTime.ToString("yyyy/MM/dd") : null))
+                .ForMember(d => d.SelfRegistrationTime, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_selfregistrationdate.HasValue ? s.era_EvacuationFileid.era_selfregistrationdate.Value.LocalDateTime.ToString("hh:mm tt") : null))
+                .ForMember(d => d.RegistrationCompletedDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileid.era_registrationcompleteddate.Value.LocalDateTime.ToString("yyyy/MM/dd") : null))
+                .ForMember(d => d.RegistrationCompletedTime, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileid.era_registrationcompleteddate.Value.LocalDateTime.ToString("hh:mm tt") : null))
                 .ForMember(d => d.IsHeadOfHousehold, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname))
@@ -48,8 +51,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initials))
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address1_line1))
                 .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address1_line2))
-                .ForMember(d => d.City, opts => opts.MapFrom(s => s.era_Registrant == null ? null : isGuid(s.era_Registrant.address1_city) ? null : s.era_Registrant.address1_city))
-                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_City == null ? null : s.era_Registrant.era_City.era_jurisdictionid.ToString()))
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_City == null ? s.era_Registrant.address1_city : s.era_Registrant.era_City.era_jurisdictionname))
                 .ForMember(d => d.Province, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_ProvinceState == null ? s.era_Registrant.address1_stateorprovince : s.era_Registrant.era_ProvinceState.era_code))
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address1_postalcode))
                 .ForMember(d => d.Country, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_Country == null ? s.era_Registrant.address1_country : s.era_Registrant.era_Country.era_countrycode))
@@ -57,8 +59,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.emailaddress1))
                 .ForMember(d => d.MailingAddressLine1, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address2_line1))
                 .ForMember(d => d.MailingAddressLine2, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address2_line2))
-                .ForMember(d => d.MailingCity, opts => opts.MapFrom(s => s.era_Registrant == null ? null : isGuid(s.era_Registrant.address2_city) ? null : s.era_Registrant.address2_city))
-                .ForMember(d => d.MailingCommunity, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_MailingCity == null ? null : s.era_Registrant.era_MailingCity.era_jurisdictionid.ToString()))
+                .ForMember(d => d.MailingCommunity, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_MailingCity == null ? s.era_Registrant.address2_city : s.era_Registrant.era_MailingCity.era_jurisdictionname))
                 .ForMember(d => d.MailingProvince, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_MailingProvinceState == null ? s.era_Registrant.address2_stateorprovince : s.era_Registrant.era_MailingProvinceState.era_code))
                 .ForMember(d => d.MailingPostal, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address2_postalcode))
                 .ForMember(d => d.MailingCountry, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_MailingCountry == null ? s.era_Registrant.address2_country : s.era_Registrant.era_MailingCountry.era_countrycode))
