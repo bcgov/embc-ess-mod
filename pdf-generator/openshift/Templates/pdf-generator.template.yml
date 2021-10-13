@@ -114,6 +114,9 @@ objects:
                   value: "/ssl/tls.crt"
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__KeyPath"
                   value: "/ssl/tls.key"
+              envFrom:
+                - configMapRef:
+                    name: ${APP_NAME}-pdf-generator-config
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/pdf-generator:${TAG}
               imagePullPolicy: Always
               volumeMounts:
@@ -195,4 +198,4 @@ objects:
         - "ReadWriteMany"
       resources:
         requests:
-          storage: "256Mi"
+          storage: "1024Mi"

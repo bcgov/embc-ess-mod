@@ -47,7 +47,7 @@ parameters:
   - description: cron schedule syntax for the scheduler
     name: CRON_SCHEDULE
     required: true
-    value: "*/2 * * * *"
+    value: "0 15 * * *"
 
 objects:
   - kind: ConfigMap
@@ -87,6 +87,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         cronjob: ${APP_NAME}-dynamics-job-scheduling
+        app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       schedule: ${CRON_SCHEDULE}
       concurrencyPolicy: Forbid
