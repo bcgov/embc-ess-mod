@@ -2,11 +2,11 @@ node('master') {
     def sourcetag = 'latest'
     def desttag = 'test'
 	def envname = 'test'
-	def images = ['ess-backend', 
+	def images = ['ess-backend', 'pdf-generator',
 		'registrants-portal-api', 'registrants-portal-ui', 
 		'responders-portal-api', 'responders-portal-ui', 
 		'suppliers-portal-api', 'suppliers-portal-ui',
-		'cas-interface-service']
+		'cas-interface-service', 'job-scheduling']
 
 	stage("Deploy") {
 		openshift.withCluster() {
