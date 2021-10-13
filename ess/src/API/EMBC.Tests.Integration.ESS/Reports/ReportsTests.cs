@@ -32,7 +32,7 @@ namespace EMBC.Tests.Integration.ESS.Reports
             var res = await reportsManager.Handle(new EvacueeReportQuery
             {
                 //TaskNumber = "UNIT-TEST-ACTIVE-TASK",
-                //FileId = "101010",
+                FileId = "101010",
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
                 IncludePersonalInfo = false,

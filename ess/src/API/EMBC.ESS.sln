@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Tests.Integration.ESS"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Tests.Unit.ESS", "EMBC.Tests.Unit.ESS\EMBC.Tests.Unit.ESS.csproj", "{455DC023-1285-456C-B060-CC81D5F4FF1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMBC.ESS.Utilities.Dynamics", "EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj", "{3B7BB8D6-8ED4-4BFB-AE0A-83265D60A59C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.ESS.Utilities.Dynamics", "EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj", "{3B7BB8D6-8ED4-4BFB-AE0A-83265D60A59C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

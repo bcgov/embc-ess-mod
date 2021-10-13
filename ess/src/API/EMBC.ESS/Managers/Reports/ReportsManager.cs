@@ -22,6 +22,7 @@ using AutoMapper;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Reports;
 using EMBC.ESS.Shared.Contracts.Reports;
+using EMBC.ESS.Utilities.CsvConverter;
 
 namespace EMBC.ESS.Managers.Reports
 {
@@ -47,6 +48,8 @@ namespace EMBC.ESS.Managers.Reports
                 EvacuatedFrom = query.EvacuatedFrom,
                 EvacuatedTo = query.EvacuatedTo
             })).Items;
+
+            var csv = evacuees.ToCSV(query, true);
 
             //initialize csv with query parameter info and Headers
 
