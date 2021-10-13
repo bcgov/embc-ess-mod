@@ -67,3 +67,10 @@
   align-self: center;
   padding-left: 40px;
 }
+
+@media(max-width: 1260px) {
+    
+  .section-padding {
+    display: block;
+  }
+}
