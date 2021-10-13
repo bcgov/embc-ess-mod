@@ -1,6 +1,7 @@
 name: cd-ess-backend
 
 on:
+  workflow_dispatch:
   push:
     # Publish `master` as Docker `latest` image.
     branches:
