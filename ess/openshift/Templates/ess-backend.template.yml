@@ -69,7 +69,7 @@ objects:
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
       notifications__email__smtpserver: ${SMTP_SERVER}
       pdfGenerator__url: https://${APP_NAME}-pdf-generator:2020
-      pdfGenerator__allowInvalidServerCertificate: "false"
+      pdfGenerator__allowInvalidServerCertificate: "true"
 
   - kind: Secret
     apiVersion: v1
