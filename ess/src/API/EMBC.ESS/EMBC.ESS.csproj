@@ -56,7 +56,7 @@
 
     <ItemGroup>
         <Protobuf Include="Protos\pdfgenerator.proto" GrpcServices="Client">
-          <SourceUri>https://raw.githubusercontent.com/bcgov/embc-ess-mod/master/pdf-generator/src/API/EMBC.PDFGenerator/Protos/pdfgenerator.proto</SourceUri>
+            <SourceUri>https://raw.githubusercontent.com/bcgov/embc-ess-mod/master/pdf-generator/src/API/EMBC.PDFGenerator/Protos/pdfgenerator.proto</SourceUri>
         </Protobuf>
         <Protobuf Include="Utilities\Messaging\Dispatcher.proto" GrpcServices="Server" />
     </ItemGroup>
