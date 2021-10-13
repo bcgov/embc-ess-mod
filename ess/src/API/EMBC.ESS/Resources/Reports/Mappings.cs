@@ -29,12 +29,13 @@ namespace EMBC.ESS.Resources.Reports
 
             CreateMap<era_householdmember, Evacuee>()
                 .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_name))
+                .ForMember(d => d.RegistrationCompleted, opts => opts.Ignore())
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_name))
                 .ForMember(d => d.TaskStartDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId.era_taskstartdate.Value.UtcDateTime))
                 .ForMember(d => d.TaskEndDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId == null ? DateTime.MinValue : s.era_EvacuationFileid.era_TaskId.era_taskenddate.Value.UtcDateTime))
                 .ForMember(d => d.EvacuationFileStatus, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_essfilestatus))
-                .ForMember(d => d.EvacuatedTo, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId._era_jurisdictionid_value))
-                .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid._era_evacuatedfromid_value))
+                .ForMember(d => d.EvacuatedTo, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_JurisdictionID == null ? null : s.era_EvacuationFileid.era_TaskId.era_JurisdictionID.era_jurisdictionname))
+                .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_EvacuatedFromID == null ? null : s.era_EvacuationFileid.era_EvacuatedFromID.era_jurisdictionname))
                 .ForMember(d => d.FacilityName, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_registrationlocation))
                 .ForMember(d => d.SelfRegistrationDate, opts => opts.MapFrom(s => DateTime.MinValue)) //need to verify what field this maps to.   s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_registrationcompleteddate.Value.UtcDateTime))
                 .ForMember(d => d.RegistrationCompletedDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? DateTime.MinValue : s.era_EvacuationFileid.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileid.era_registrationcompleteddate.Value.UtcDateTime : DateTime.MinValue))
@@ -78,7 +79,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.HasEnoughSupply, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_hasenoughsupply))
                 .ForMember(d => d.DietaryNeeds, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_dietaryrequirement))
                 .ForMember(d => d.NumberOfSupports, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? 0 : s.era_EvacuationFileid.era_era_evacuationfile_era_evacueesupport_ESSFileId.Count))
-                //.ForMember(d => d.SupportsTotalAmount, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_haspetcarereferral))
+                .ForMember(d => d.SupportsTotalAmount, opts => opts.Ignore())
                 .AfterMap((s, d) =>
                 {
                     d.RegistrationCompleted = !string.IsNullOrEmpty(d.TaskNumber);

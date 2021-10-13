@@ -50,19 +50,7 @@ namespace EMBC.ESS.Managers.Reports
             })).Items;
 
             var csv = evacuees.ToCSV(query, true);
-
-            //initialize csv with query parameter info and Headers
-
-            //foreach (var file in files)
-            //{
-            //    foreach (var member in file.HouseholdMembers)
-            //    {
-            //        //add line to csv - enforce personal info rule
-            //    }
-            //}
-
-            //return csv
-            return new EvacueeReportQueryResult { EvacueeReport = "test" };
+            return new EvacueeReportQueryResult { EvacueeReport = csv };
         }
     }
 }

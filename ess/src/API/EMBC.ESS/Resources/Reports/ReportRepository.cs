@@ -113,8 +113,11 @@ namespace EMBC.ESS.Resources.Reports
 
             var members = new List<era_householdmember>();
 
+            var jurisdictions = ctx.era_jurisdictions.Where(j => j.statecode == (int)EntityState.Active).ToArray();
+
             foreach (var file in files)
             {
+                if (file.era_TaskId != null) file.era_TaskId.era_JurisdictionID = jurisdictions.Where(j => j.era_jurisdictionid == file.era_TaskId._era_jurisdictionid_value).FirstOrDefault();
                 foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
                 {
                     member.era_EvacuationFileid = file;
@@ -134,10 +137,12 @@ namespace EMBC.ESS.Resources.Reports
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid))));
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId))));
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId))));
+            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_EvacuatedFromID))));
 
             loadTasks.Add(Task.Run(async () =>
             {
                 await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+
                 if (file.era_CurrentNeedsAssessmentid == null)
                     await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
 
