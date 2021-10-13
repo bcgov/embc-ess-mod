@@ -31,7 +31,7 @@ namespace EMBC.Tests.Integration.ESS
             await File.WriteAllBytesAsync("./pdf_test.pdf", pdf);
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task LoadTestPdfGenerator()
         {
             Func<string> template = () => $@"<!DOCTYPE html>
