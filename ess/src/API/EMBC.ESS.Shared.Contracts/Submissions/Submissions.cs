@@ -92,13 +92,25 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public SupportVoidReason VoidReason { get; set; }
     }
 
-    public class SuppliersListQuery : Query<SuppliersListQueryResult>
+    public class SuppliersListQuery : Query<SuppliersListQueryResponse>
     {
         public string TaskId { get; set; }
     }
 
-    public class SuppliersListQueryResult
+    public class SuppliersListQueryResponse
     {
         public IEnumerable<SupplierDetails> Items { get; set; }
+    }
+
+    public class PrintRequestQuery : Query<PrintRequestQueryResponse>
+    {
+        public string FileId { get; set; }
+        public string PrintRequestId { get; set; }
+    }
+
+    public class PrintRequestQueryResponse
+    {
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
     }
 }

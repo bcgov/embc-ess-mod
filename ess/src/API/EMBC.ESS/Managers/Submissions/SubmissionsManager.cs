@@ -30,6 +30,7 @@ using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
+using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.ESS.Utilities.Transformation;
 
 namespace EMBC.ESS.Managers.Submissions
@@ -46,6 +47,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
+        private readonly IPdfGenerator pdfGenerator;
 
         public SubmissionsManager(
             IMapper mapper,
@@ -57,7 +59,8 @@ namespace EMBC.ESS.Managers.Submissions
             ITaskRepository taskRepository,
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
-            ISearchEngine searchEngine)
+            ISearchEngine searchEngine,
+            IPdfGenerator pdfGenerator)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -69,6 +72,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
+            this.pdfGenerator = pdfGenerator;
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -472,7 +476,7 @@ namespace EMBC.ESS.Managers.Submissions
             return id;
         }
 
-        public async Task<SuppliersListQueryResult> Handle(SuppliersListQuery query)
+        public async Task<SuppliersListQueryResponse> Handle(SuppliersListQuery query)
         {
             var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = query.TaskId })).Items.SingleOrDefault();
             if (task == null) throw new NotFoundException($"Task not found", query.TaskId);
@@ -480,7 +484,22 @@ namespace EMBC.ESS.Managers.Submissions
             if (team == null) throw new NotFoundException($"No team is managing community {task.CommunityCode}", task.CommunityCode);
             var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery { TeamId = team.Id })).Items;
 
-            return new SuppliersListQueryResult { Items = mapper.Map<IEnumerable<SupplierDetails>>(suppliers) };
+            return new SuppliersListQueryResponse { Items = mapper.Map<IEnumerable<SupplierDetails>>(suppliers) };
+        }
+
+        public async Task<PrintRequestQueryResponse> Handle(PrintRequestQuery query)
+        {
+            await System.Threading.Tasks.Task.CompletedTask;
+
+            var text = $"<h1>pdf generated for print request {query.PrintRequestId}, file {query.FileId}, at {DateTime.Now}</h1>";
+            var content = await pdfGenerator.Generate(text);
+            var contentType = "application/pdf";
+
+            return new PrintRequestQueryResponse
+            {
+                Content = content,
+                ContentType = contentType
+            };
         }
     }
 }
