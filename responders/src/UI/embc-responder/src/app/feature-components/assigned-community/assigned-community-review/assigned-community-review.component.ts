@@ -5,6 +5,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AddCommunityService } from '../add-community/add-community.service';
 import { AssignedCommunityListDataService } from '../assigned-community-list/assigned-community-list-data.service';
 import { AssignedCommunityReviewService } from './assigned-community-review.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-assigned-community-review',
@@ -65,7 +66,11 @@ export class AssignedCommunityReviewComponent implements OnInit {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
-          this.alertService.setAlert('danger', error.error.title);
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.saveCommunityListError
+          );
         }
       );
   }
@@ -99,7 +104,11 @@ export class AssignedCommunityReviewComponent implements OnInit {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
-          this.alertService.setAlert('danger', error.error.title);
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.removeCommunityListError
+          );
         }
       );
   }

@@ -134,6 +134,18 @@ objects:
             role: redis
             statefulset: ${NAME}-${INSTANCE}
         spec:
+          affinity:
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - ${NAME}-${INSTANCE}
+                    topologyKey: kubernetes.io/hostname
           containers:
             - name: redis
               image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/${IMAGE_NAME}:${IMAGE_TAG}

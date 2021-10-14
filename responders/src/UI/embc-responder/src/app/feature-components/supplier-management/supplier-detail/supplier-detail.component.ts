@@ -22,10 +22,8 @@ import {
   LocationsService
 } from 'src/app/core/services/locations.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
-import { MatRadioChange } from '@angular/material/radio/public-api';
-import { SupplierManagementService } from '../supplier-management.service';
 
 @Component({
   selector: 'app-supplier-detail',

@@ -97,7 +97,6 @@ export class AddSupplierComponent implements OnInit {
         }
       },
       (error) => {
-        console.log(error);
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.supplierCheckerror);
