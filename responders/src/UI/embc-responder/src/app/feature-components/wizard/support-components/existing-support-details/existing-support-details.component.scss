@@ -4,6 +4,23 @@
 
 .back-link:hover {
   text-decoration: underline;
+  cursor: pointer;
+}
+
+.active-status {
+  color: #3c9d0f;
+}
+
+.void-status {
+  color: #797979;
+}
+
+.expired-status {
+  color: red;  
+}
+
+.draft-status {
+  color: #f28200;
 }
 
 .row-padding {

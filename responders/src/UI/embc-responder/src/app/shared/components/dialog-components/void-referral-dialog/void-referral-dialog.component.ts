@@ -54,4 +54,19 @@ export class VoidReferralDialogComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * Splits the reasons into words with spaces to be displayed to the user
+   *
+   * @param reasonOption options to choose for reasons for reprinting
+   * @returns the same reason for reprinting with spaces between words.
+   */
+  splitString(reasonOption: string): string {
+    const stringArray: string[] = reasonOption.split(/(?=[A-Z])/);
+    let result = '';
+    stringArray.forEach((word) => {
+      result += word + ' ';
+    });
+    return result;
+  }
 }
