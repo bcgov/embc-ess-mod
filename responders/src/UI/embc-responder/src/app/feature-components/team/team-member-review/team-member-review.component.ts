@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TeamMember } from 'src/app/core/api/models';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TeamListDataService } from '../team-list/team-list-data.service';
 import { TeamMemberReviewService } from './team-member-review.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-team-member-review',
@@ -80,11 +81,11 @@ export class TeamMemberReviewComponent {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
-          if (error.title) {
-            this.alertService.setAlert('danger', error.title);
-          } else {
-            this.alertService.setAlert('danger', error.statusText);
-          }
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.updateTeamMemberError
+          );
         }
       );
   }
@@ -104,11 +105,8 @@ export class TeamMemberReviewComponent {
       (error) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
-        if (error.title) {
-          this.alertService.setAlert('danger', error.title);
-        } else {
-          this.alertService.setAlert('danger', error.statusText);
-        }
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.saveTeamMemberError);
       }
     );
   }

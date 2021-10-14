@@ -8,7 +8,9 @@ import {
 } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-essfile-security-phrase',
@@ -30,7 +32,8 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private essFileSecurityPhraseService: EssFileSecurityPhraseService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -41,9 +44,18 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     } else {
       this.essFileSecurityPhraseService
         .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
-        .subscribe((results) => {
-          this.securityPhrase = results;
-        });
+        .subscribe(
+          (results) => {
+            this.securityPhrase = results;
+          },
+          (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.securityPhraseError
+            );
+          }
+        );
     }
   }
 
@@ -65,45 +77,53 @@ export class EssfileSecurityPhraseComponent implements OnInit {
 
     this.essFileSecurityPhraseService
       .verifySecurityPhrase(this.evacueeSessionService.essFileNumber, body)
-      .subscribe((results) => {
-        console.log(results);
-        this.showLoader = !this.showLoader;
-        if (results.isCorrect) {
-          this.wrongAnswerFlag = false;
-          this.correctAnswerFlag = true;
+      .subscribe(
+        (results) => {
+          console.log(results);
+          this.showLoader = !this.showLoader;
+          if (results.isCorrect) {
+            this.wrongAnswerFlag = false;
+            this.correctAnswerFlag = true;
 
-          if (this.evacueeSessionService.fileLinkFlag === 'Y') {
-            this.evacueeProfileService
-              .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
-              .subscribe(
-                (value) => {
-                  this.evacueeSessionService.fileLinkStatus = 'S';
-                  console.log(this.evacueeSessionService.fileLinkStatus);
-                  this.router.navigate([
-                    'responder-access/search/evacuee-profile-dashboard'
-                  ]);
-                },
-                (error) => {
-                  this.evacueeSessionService.fileLinkStatus = 'E';
-                  console.log(this.evacueeSessionService.fileLinkStatus);
-                  this.router.navigate([
-                    'responder-access/search/evacuee-profile-dashboard'
-                  ]);
-                }
-              );
+            if (this.evacueeSessionService.fileLinkFlag === 'Y') {
+              this.evacueeProfileService
+                .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
+                .subscribe(
+                  (value) => {
+                    this.evacueeSessionService.fileLinkStatus = 'S';
+                    console.log(this.evacueeSessionService.fileLinkStatus);
+                    this.router.navigate([
+                      'responder-access/search/evacuee-profile-dashboard'
+                    ]);
+                  },
+                  (error) => {
+                    this.evacueeSessionService.fileLinkStatus = 'E';
+                    this.router.navigate([
+                      'responder-access/search/evacuee-profile-dashboard'
+                    ]);
+                  }
+                );
+            } else {
+              setTimeout(() => {
+                this.router.navigate([
+                  'responder-access/search/essfile-dashboard'
+                ]);
+              }, 1000);
+            }
           } else {
-            setTimeout(() => {
-              this.router.navigate([
-                'responder-access/search/essfile-dashboard'
-              ]);
-            }, 1000);
+            this.securityPhraseForm.get('phraseAnswer').reset();
+            this.attemptsRemaning--;
+            this.wrongAnswerFlag = true;
           }
-        } else {
-          this.securityPhraseForm.get('phraseAnswer').reset();
-          this.attemptsRemaning--;
-          this.wrongAnswerFlag = true;
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.verifySecurityPhraseError
+          );
         }
-      });
+      );
   }
 
   /**
