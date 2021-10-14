@@ -16,7 +16,7 @@
 
 namespace EMBC.ESS.Shared.Contracts.Reports
 {
-    public class EvacueeReportQuery : Query<EvacueeReportQueryResult>
+    public class EvacueeReportQuery : Query<ReportQueryResult>
     {
         public string TaskNumber { get; set; }
         public string FileId { get; set; }
@@ -25,8 +25,9 @@ namespace EMBC.ESS.Shared.Contracts.Reports
         public bool IncludePersonalInfo { get; set; }
     }
 
-    public class EvacueeReportQueryResult
+    public class ReportQueryResult
     {
-        public string EvacueeReport { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
     }
 }
