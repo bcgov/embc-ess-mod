@@ -116,6 +116,7 @@ export class EditUserProfileComponent implements OnInit {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.editProfileError);
         }
       );

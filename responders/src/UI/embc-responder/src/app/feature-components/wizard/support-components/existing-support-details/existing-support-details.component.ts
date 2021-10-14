@@ -72,6 +72,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
         },
         (error) => {
           this.isLoading = !this.isLoading;
+          this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.supportNeedsAssessmentError
@@ -232,6 +233,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
             },
             (error) => {
               this.isLoading = !this.isLoading;
+              this.alertService.clearAlert();
               this.alertService.setAlert(
                 'danger',
                 globalConst.reprintReferralError

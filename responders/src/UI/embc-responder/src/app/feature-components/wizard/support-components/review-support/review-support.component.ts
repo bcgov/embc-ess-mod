@@ -308,6 +308,7 @@ export class ReviewSupportComponent implements OnInit {
       },
       (error) => {
         this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',
           globalConst.processSupportDraftsError
