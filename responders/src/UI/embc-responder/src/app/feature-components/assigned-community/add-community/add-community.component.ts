@@ -8,6 +8,8 @@ import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { Community } from 'src/app/core/services/locations.service';
 import { AssignedCommunityListDataService } from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
 import { AddCommunityService } from './add-community.service';
+import * as globalConst from '../../../core/services/global-constants';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-add-community',
@@ -22,10 +24,12 @@ export class AddCommunityComponent implements OnInit {
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
   isLoading = false;
+
   constructor(
     private assignedCommunityListDataService: AssignedCommunityListDataService,
     private router: Router,
-    private addCommunityService: AddCommunityService
+    private addCommunityService: AddCommunityService,
+    private alertService: AlertService
   ) {}
 
   /**
@@ -36,10 +40,19 @@ export class AddCommunityComponent implements OnInit {
     this.assignedCommunityListDataService
       .getCommunitiesToAddList()
       .pipe(delay(1000))
-      .subscribe((values) => {
-        this.isLoading = !this.isLoading;
-        this.communities = values;
-      });
+      .subscribe(
+        (values) => {
+          this.isLoading = !this.isLoading;
+          this.communities = values;
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.addCommunityListError
+          );
+        }
+      );
     this.filtersToLoad = this.addCommunityService.filtersToLoad;
     this.displayedColumns = this.addCommunityService.displayedColumns;
   }

@@ -45,9 +45,8 @@ export class StepEvacueeProfileComponent {
         this.stepEvacueeProfileService.securityQuestionOptions = questions;
       },
       (error) => {
-        if (error?.error?.title)
-          this.alertService.setAlert('danger', error.error.title);
-        else this.alertService.setAlert('danger', globalConst.genericError);
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.genericError);
       }
     );
   }

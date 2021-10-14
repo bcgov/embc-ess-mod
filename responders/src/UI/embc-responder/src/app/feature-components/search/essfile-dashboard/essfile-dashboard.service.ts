@@ -7,6 +7,8 @@ import {
 } from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,8 @@ export class EssfileDashboardService {
   constructor(
     private cacheService: CacheService,
     private registrationService: RegistrationsService,
-    private configService: ConfigurationService
+    private configService: ConfigurationService,
+    private alertService: AlertService
   ) {}
 
   get essFile(): EvacuationFileModel {
@@ -55,10 +58,19 @@ export class EssfileDashboardService {
   public getCategoryList(): void {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportCategory' })
-      .subscribe((categories: Code[]) => {
-        this.supportCategory = categories.filter(
-          (category) => category.description !== null
-        );
-      });
+      .subscribe(
+        (categories: Code[]) => {
+          this.supportCategory = categories.filter(
+            (category) => category.description !== null
+          );
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      );
   }
 }

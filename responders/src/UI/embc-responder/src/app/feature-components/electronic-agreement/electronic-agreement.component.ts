@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ElectronicAgreementService } from './electronic-agreement.service';
+import * as globalConst from '../../core/services/global-constants';
 
 @Component({
   selector: 'app-electronic-agreement',
@@ -14,15 +15,22 @@ export class ElectronicAgreementComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private eaaService: ElectronicAgreementService
+    private eaaService: ElectronicAgreementService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {}
 
   submitEAA(): void {
-    this.eaaService.signAgreement().subscribe(() => {
-      this.router.navigateByUrl('responder-access');
-    });
+    this.eaaService.signAgreement().subscribe(
+      () => {
+        this.router.navigateByUrl('responder-access');
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.agreementError);
+      }
+    );
   }
 
   agreementChangeEvent(event: MatCheckboxChange): void {

@@ -8,6 +8,8 @@ import {
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { ProfileSecurityQuestionsService } from './profile-security-questions.service';
+import * as globalConst from '../../../core/services/global-constants';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-profile-security-questions',
@@ -33,7 +35,8 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     private router: Router,
     private evacueeSessionService: EvacueeSessionService,
     private formBuilder: FormBuilder,
-    private evacueeProfileService: EvacueeProfileService
+    private evacueeProfileService: EvacueeProfileService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -47,12 +50,20 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     } else {
       this.profileSecurityQuestionsService
         .getSecurityQuestions(this.evacueeSessionService.profileId)
-        .subscribe((results) => {
-          this.securityQuestions = this.profileSecurityQuestionsService.shuffleSecurityQuestions(
-            results?.questions
-          );
-          // this.isLoading = !this.isLoading;
-        });
+        .subscribe(
+          (results) => {
+            this.securityQuestions = this.profileSecurityQuestionsService.shuffleSecurityQuestions(
+              results?.questions
+            );
+          },
+          (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.securityQuestionsError
+            );
+          }
+        );
     }
   }
 
@@ -85,56 +96,65 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     };
     this.profileSecurityQuestionsService
       .verifySecurityQuestions(this.evacueeSessionService.profileId, body)
-      .subscribe((results) => {
-        this.securityQuestionResult = results.numberOfCorrectAnswers;
-        this.showLoader = !this.showLoader;
+      .subscribe(
+        (results) => {
+          this.securityQuestionResult = results.numberOfCorrectAnswers;
+          this.showLoader = !this.showLoader;
 
-        if (
-          this.securityQuestionResult === 0 ||
-          (this.securityQuestionResult === 1 && this.defaultScreen === false)
-        ) {
-          this.incorrectScreen = true;
-        } else if (
-          this.securityQuestionResult === 1 &&
-          this.defaultScreen === true
-        ) {
-          this.defaultScreen = false;
-        } else {
-          this.firstTryCorrect = true;
-        }
-
-        if (
-          this.securityQuestionResult === 3 ||
-          (this.securityQuestionResult === 2 && this.firstTryCorrect)
-        ) {
-          this.correctAnswerFlag = true;
-          this.showLoader = true;
-          if (this.evacueeSessionService.fileLinkFlag === 'Y') {
-            this.evacueeProfileService
-              .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
-              .subscribe(
-                (value) => {
-                  this.evacueeSessionService.fileLinkStatus = 'S';
-                  this.router.navigate([
-                    'responder-access/search/essfile-dashboard'
-                  ]);
-                },
-                (error) => {
-                  this.evacueeSessionService.fileLinkStatus = 'E';
-                  this.router.navigate([
-                    'responder-access/search/essfile-dashboard'
-                  ]);
-                }
-              );
+          if (
+            this.securityQuestionResult === 0 ||
+            (this.securityQuestionResult === 1 && this.defaultScreen === false)
+          ) {
+            this.incorrectScreen = true;
+          } else if (
+            this.securityQuestionResult === 1 &&
+            this.defaultScreen === true
+          ) {
+            this.defaultScreen = false;
           } else {
-            setTimeout(() => {
-              this.router.navigate([
-                'responder-access/search/evacuee-profile-dashboard'
-              ]);
-            }, 1000);
+            this.firstTryCorrect = true;
           }
+
+          if (
+            this.securityQuestionResult === 3 ||
+            (this.securityQuestionResult === 2 && this.firstTryCorrect)
+          ) {
+            this.correctAnswerFlag = true;
+            this.showLoader = true;
+            if (this.evacueeSessionService.fileLinkFlag === 'Y') {
+              this.evacueeProfileService
+                .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
+                .subscribe(
+                  (value) => {
+                    this.evacueeSessionService.fileLinkStatus = 'S';
+                    this.router.navigate([
+                      'responder-access/search/essfile-dashboard'
+                    ]);
+                  },
+                  (error) => {
+                    this.evacueeSessionService.fileLinkStatus = 'E';
+                    this.router.navigate([
+                      'responder-access/search/essfile-dashboard'
+                    ]);
+                  }
+                );
+            } else {
+              setTimeout(() => {
+                this.router.navigate([
+                  'responder-access/search/evacuee-profile-dashboard'
+                ]);
+              }, 1000);
+            }
+          }
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.verifySecurityQuestionError
+          );
         }
-      });
+      );
   }
 
   /**
