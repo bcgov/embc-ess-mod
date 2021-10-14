@@ -28,7 +28,6 @@ export class SupplierExistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.addSupplierService.existingSuppliersList);
     this.dataSource.next(this.addSupplierService.existingSuppliersList);
   }
 

@@ -97,6 +97,7 @@
         <button
           class="button-p button-width"
           mat-button
+          [disabled]="isSubmitted"
           (click)="save()"
           *ngIf="reviewAction !== 'claim'"
         >
@@ -111,6 +112,7 @@
         <button
           class="button-p button-width"
           mat-button
+          [disabled]="isSubmitted"
           (click)="claim()"
           *ngIf="reviewAction === 'claim'"
         >
