@@ -14,12 +14,10 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Reports;
 using EMBC.ESS.Shared.Contracts.Reports;
 using EMBC.ESS.Utilities.CsvConverter;
@@ -39,7 +37,7 @@ namespace EMBC.ESS.Managers.Reports
             this.reportRepository = reportRepository;
         }
 
-        public async Task<EvacueeReportQueryResult> Handle(EvacueeReportQuery query)
+        public async Task<ReportQueryResult> Handle(EvacueeReportQuery query)
         {
             var evacueeQuery = new EvacueeQuery
             {
@@ -53,7 +51,15 @@ namespace EMBC.ESS.Managers.Reports
             var evacuees = mapper.Map<IEnumerable<Evacuee>>(results, opt => opt.Items["IncludePersonalInfo"] = query.IncludePersonalInfo.ToString());
 
             var csv = evacuees.ToCSV(evacueeQuery);
-            return new EvacueeReportQueryResult { EvacueeReport = csv };
+
+            var content = Encoding.ASCII.GetBytes(csv);
+            var contentType = "text/csv";
+
+            return new ReportQueryResult
+            {
+                Content = content,
+                ContentType = contentType
+            };
         }
     }
 }
