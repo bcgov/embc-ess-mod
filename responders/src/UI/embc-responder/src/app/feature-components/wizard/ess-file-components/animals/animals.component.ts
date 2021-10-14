@@ -84,12 +84,31 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     if (event.value === 'Yes') {
       this.addPets();
     } else {
+      if (this.pets.length > 0) {
+        this.dialog
+          .open(DialogComponent, {
+            data: {
+              component: InformationDialogComponent,
+              content: globalConst.noPetsDialog
+            },
+            height: 'auto',
+            width: '650px'
+          })
+          .afterClosed()
+          .subscribe((response) => {
+            if (response === 'confirm') {
+              this.cancel();
+              this.pets = [];
+              this.petSource.next(this.pets);
+              this.animalsForm.get('pets').setValue(this.pets);
+              this.animalsForm.get('hasPetsFood').reset();
+              this.animalsForm.get('petCareDetails').reset();
+            } else {
+              this.animalsForm.get('hasPets').setValue('Yes');
+            }
+          });
+      }
       this.cancel();
-      this.pets = [];
-      this.petSource.next(this.pets);
-      this.animalsForm.get('pets').setValue(this.pets);
-      this.animalsForm.get('hasPetsFood').reset();
-      this.animalsForm.get('petCareDetails').reset();
     }
   }
 
@@ -163,7 +182,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           if (this.pets.length === 0) {
             this.animalsForm.get('hasPetsFood').reset();
             this.animalsForm.get('petCareDetails').reset();
-            this.animalsForm.get('hasPets').setValue(false);
+            this.animalsForm.get('hasPets').setValue('No');
           }
         }
       });
@@ -303,6 +322,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
   private updateTabStatus() {
+    console.log(this.animalsForm);
     if (this.animalsForm.valid) {
       this.stepEssFileService.setTabStatus('animals', 'complete');
     } else if (
