@@ -173,6 +173,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.saveLoader = false;
+          this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.createEssFileError);
         }
       );
@@ -219,6 +220,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.saveLoader = false;
+          this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.editEssFileError);
         }
       );

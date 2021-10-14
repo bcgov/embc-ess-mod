@@ -135,6 +135,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.saveLoader = false;
+          this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.createRegProfileError
@@ -158,6 +159,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.saveLoader = false;
+          this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.createRegProfileError
@@ -206,6 +208,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.saveLoader = false;
+          this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.createRegProfileError

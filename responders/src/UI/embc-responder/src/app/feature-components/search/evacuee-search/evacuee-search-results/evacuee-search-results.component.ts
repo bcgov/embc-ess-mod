@@ -93,6 +93,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
         },
         (error) => {
           this.isLoading = !this.isLoading;
+          this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeSearchError);
         }
       );
