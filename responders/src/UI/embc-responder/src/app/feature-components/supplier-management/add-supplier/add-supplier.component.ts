@@ -115,11 +115,11 @@ export class AddSupplierComponent implements OnInit {
         {
           part1: [
             '',
-            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+            [Validators.required, Validators.pattern(/^-?([0-9][1-9]\d*)?$/)]
           ],
           part2: [
             '',
-            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+            [Validators.required, Validators.pattern(/^-?([0-9][1-9]\d*)?$/)]
           ]
         },
         {
