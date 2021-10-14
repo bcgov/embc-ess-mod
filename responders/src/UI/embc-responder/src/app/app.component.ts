@@ -7,6 +7,7 @@ import { LocationsService } from './core/services/locations.service';
 import { UserService } from './core/services/user.service';
 import { AlertService } from './shared/components/alert/alert.service';
 import * as globalConst from './core/services/global-constants';
+import { LoadTeamListService } from './core/services/load-team-list.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private configService: ConfigService,
     private alertService: AlertService,
-    private locationService: LocationsService
+    private locationService: LocationsService,
+    private loadTeamListService: LoadTeamListService
   ) {
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
@@ -46,7 +48,8 @@ export class AppComponent implements OnInit {
     try {
       const nextUrl = await this.authenticationService.login();
       const userProfile = await this.userService.loadUserProfile();
-      this.loadStaticLists();
+      const location = await this.locationService.loadStaticLocationLists();
+      const team = await this.loadTeamListService.loadStaticTeamLists();
       this.getBackendVersionInfo();
       const nextRoute = decodeURIComponent(
         userProfile.requiredToSignAgreement
@@ -64,13 +67,6 @@ export class AppComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
-  }
-
-  private loadStaticLists(): void {
-    this.locationService.getCommunityList();
-    this.locationService.getCountriesList();
-    this.locationService.getRegionalDistricts();
-    this.locationService.getStateProvinceList();
   }
 
   private getBackendVersionInfo(): void {
