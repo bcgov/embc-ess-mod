@@ -440,16 +440,28 @@ export const systemError =
 export const accessError = 'Access Denied';
 export const genericError =
   'An error occurred while loading this page. Please refresh and try again.';
+export const agreementError =
+  'Unable to submit electronic access agreement at this time. Please try again later';
 export const teamMemberListError =
   'Unable to retrieve team members at this time. Please try again later';
 export const activateTeamMemberError =
   'Unable to activate team member at this time. Please try again later';
 export const deActivateTeamMemberError =
   'Unable to deactivate team member at this time. Please try again later';
+export const saveTeamMemberError =
+  'Unable to add team member at this time. Please try again later';
+export const updateTeamMemberError =
+  'Unable to update team member at this time. Please try again later';
 export const usernameCheckerror =
   'Unable to check username at this time. Please try again later';
 export const communityListError =
   'Unable to retrieve assigned communities at this time. Please try again later';
+export const addCommunityListError =
+  'Unable to retrieve community list at this time. Please try again later';
+export const saveCommunityListError =
+  'Unable to add communities at this time. Please try again later';
+export const removeCommunityListError =
+  'Unable to remove communities at this time. Please try again later';
 export const createRegProfileError =
   'Unable to create evacuee profile at this time. Please try again later';
 export const editProfileError =
@@ -500,3 +512,19 @@ export const supportNeedsAssessmentError =
   'Unable to retrieve needs assessment at this time. Please try again later';
 export const processSupportDraftsError =
   'Unable to process draft supports at this time. Please try again later';
+export const supportCategoryListError =
+  'Unable to retrieve support categories at this time. Please try again later';
+export const securityPhraseError =
+  'Unable to retrieve security phrase at this time. Please try again later';
+export const verifySecurityPhraseError =
+  'Unable to verify security phrase at this time. Please try again later';
+export const linkProfileError =
+  'Unable to link to ESS File. Please try again later';
+export const securityQuestionsError =
+  'Unable to retrieve security questions at this time. Please try again later';
+export const verifySecurityQuestionError =
+  'Unable to verify security questions at this time. Please try again later';
+export const getProfileError =
+  'Unable to retrieve profile at this time. Please try again later';
+export const getEssFileError =
+  'Unable to retrieve ESS file at this time. Please try again later';

@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { Address, Code, CommunityType } from '../api/models';
 import { CommunityCode } from '../api/models/community-code';
 import { ConfigurationService } from '../api/services';
 import { AddressModel } from '../models/address.model';
 import { CacheService } from './cache.service';
+import * as globalConst from './global-constants';
 
 export interface Country {
   code?: null | string;
@@ -142,6 +145,44 @@ export class LocationsService {
     }
   }
 
+  public async loadStaticLocationLists(): Promise<void> {
+    const community = this.configService.configurationGetCommunities();
+    const province = this.configService.configurationGetStateProvinces();
+    const country = this.configService.configurationGetCountries();
+
+    return forkJoin([community, province, country])
+      .pipe(
+        map((results) => {
+          this.setCountriesList(
+            [...results[2]].map((c) => ({ code: c.value, name: c.description }))
+          );
+
+          this.setCommunityList(
+            [...results[0]].map((c) => ({
+              code: c.value,
+              name: c.description,
+              districtName: c.districtName,
+              stateProvinceCode: c.parentCode.value,
+              countryCode: c.parentCode.parentCode.value,
+              type: c.communityType
+            }))
+          );
+          this.setRegionalDistricts(
+            results[0].map((comm) => comm.districtName)
+          );
+
+          this.setStateProvinceList(
+            [...results[1]].map((sp) => ({
+              code: sp.value,
+              name: sp.description,
+              countryCode: sp.parentCode.value
+            }))
+          );
+        })
+      )
+      .toPromise();
+  }
+
   private setCommunityList(communityList: Community[]): void {
     this.communityList = communityList;
     this.cacheService.set('communityList', communityList);
@@ -179,10 +220,7 @@ export class LocationsService {
       },
       (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          'The service is temporarily unavailable. Please try again later'
-        );
+        this.alertService.setAlert('danger', globalConst.systemError);
       }
     );
     return this.communityList || [];
@@ -201,10 +239,7 @@ export class LocationsService {
       },
       (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          'The service is temporarily unavailable. Please try again later'
-        );
+        this.alertService.setAlert('danger', globalConst.systemError);
       }
     );
     return this.stateProvinceList || [];
@@ -219,10 +254,7 @@ export class LocationsService {
       },
       (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          'The service is temporarily unavailable. Please try again later'
-        );
+        this.alertService.setAlert('danger', globalConst.systemError);
       }
     );
     return this.countriesList || [];
