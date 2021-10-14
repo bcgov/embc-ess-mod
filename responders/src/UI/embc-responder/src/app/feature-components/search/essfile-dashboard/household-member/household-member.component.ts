@@ -76,7 +76,6 @@ export class HouseholdMemberComponent implements OnInit {
         )
         .subscribe(
           (value) => {
-            console.log(value);
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
             if (value.length > 0) {
@@ -86,6 +85,7 @@ export class HouseholdMemberComponent implements OnInit {
           },
           (error) => {
             this.isLoading = !this.isLoading;
+            this.alertService.setAlert('danger', globalConst.genericError);
           }
         );
     } else {

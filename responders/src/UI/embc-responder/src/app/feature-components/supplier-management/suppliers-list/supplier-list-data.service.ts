@@ -9,7 +9,9 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Supplier, Team } from 'src/app/core/api/models';
+import { Team } from 'src/app/core/api/models';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Injectable({ providedIn: 'root' })
 export class SupplierListDataService {
@@ -45,7 +47,8 @@ export class SupplierListDataService {
     private cacheService: CacheService,
     private router: Router,
     private supplierServices: SupplierService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private alertService: AlertService
   ) {}
 
   /**
@@ -117,19 +120,24 @@ export class SupplierListDataService {
    * @param viewType the type of view to be rendered whether the details dsplayed are from a main supplier or a mutual aid.
    */
   getSupplierDetails(supplierId: string, viewType: string): void {
-    this.supplierServices.getSupplierById(supplierId).subscribe((supplier) => {
-      this.setSelectedSupplier(supplier);
-      console.log(supplier);
+    this.supplierServices.getSupplierById(supplierId).subscribe(
+      (supplier) => {
+        this.setSelectedSupplier(supplier);
 
-      const essTeams: Team[] = this.getEssTeamsList();
-      const filteredEssTeams = this.filterEssTeams(essTeams);
-      this.setNonMutualAidTeams(filteredEssTeams);
+        const essTeams: Team[] = this.getEssTeamsList();
+        const filteredEssTeams = this.filterEssTeams(essTeams);
+        this.setNonMutualAidTeams(filteredEssTeams);
 
-      this.router.navigate(
-        ['/responder-access/supplier-management/supplier-detail'],
-        { queryParams: { type: viewType } }
-      );
-    });
+        this.router.navigate(
+          ['/responder-access/supplier-management/supplier-detail'],
+          { queryParams: { type: viewType } }
+        );
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.getSupportByIdError);
+      }
+    );
   }
 
   /**
@@ -171,7 +179,6 @@ export class SupplierListDataService {
         this.setEssTeams(essTeamsResult);
       });
     return essTeams;
-    // return this.supplierServices.getMutualAidByEssTeam();
   }
 
   /**

@@ -210,7 +210,6 @@ export class SuppliersListComponent implements OnInit {
         this.suppliersList = values;
       },
       (error) => {
-        console.log(error);
         this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -231,7 +230,6 @@ export class SuppliersListComponent implements OnInit {
         this.mutualAidList = values;
       },
       (error) => {
-        console.log(error);
         this.mutualAidLoader = !this.mutualAidLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.mutualAidListError);
