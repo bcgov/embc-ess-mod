@@ -38,7 +38,7 @@ namespace EMBC.Tests.Integration.ESS.Reports
                 IncludePersonalInfo = false,
             });
 
-            res.Content.ShouldBeOfType(typeof(byte[]));
+            res.Content.ShouldNotBeEmpty();
             res.ContentType.ShouldBe("text/csv");
         }
     }
