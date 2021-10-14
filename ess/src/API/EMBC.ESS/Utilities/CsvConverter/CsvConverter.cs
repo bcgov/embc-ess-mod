@@ -31,7 +31,8 @@ namespace EMBC.ESS.Utilities.CsvConverter
                 var attr = properties[i].GetCustomAttribute<DisplayAttribute>();
                 sw.Write(Quote(attr != null ? attr.Name : properties[i].Name, quoteIdentifier) + ",");
             }
-            var lastProp = properties[properties.Length - 1].Name;
+            var lastAttr = properties[properties.Length - 1].GetCustomAttribute<DisplayAttribute>();
+            var lastProp = lastAttr != null ? lastAttr.Name : properties[properties.Length - 1].Name;
             sw.Write(Quote(lastProp, quoteIdentifier) + sw.NewLine);
         }
 
