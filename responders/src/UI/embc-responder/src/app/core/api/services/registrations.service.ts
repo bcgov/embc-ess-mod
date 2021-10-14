@@ -15,6 +15,7 @@ import { EvacuationFileSummary } from '../models/evacuation-file-summary';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
 import { Note } from '../models/note';
+import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
 import { RegistrantLinkRequest } from '../models/registrant-link-request';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
@@ -1316,7 +1317,7 @@ export class RegistrationsService extends BaseService {
   registrationsProcessSupports$Response(params: {
     fileId: string;
     body: Array<Support>
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessSupportsPath, 'post');
     if (params) {
@@ -1325,12 +1326,12 @@ export class RegistrationsService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<ReferralPrintRequestResponse>;
       })
     );
   }
@@ -1344,10 +1345,10 @@ export class RegistrationsService extends BaseService {
   registrationsProcessSupports(params: {
     fileId: string;
     body: Array<Support>
-  }): Observable<void> {
+  }): Observable<ReferralPrintRequestResponse> {
 
     return this.registrationsProcessSupports$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<ReferralPrintRequestResponse>) => r.body as ReferralPrintRequestResponse)
     );
   }
 
@@ -1418,7 +1419,7 @@ export class RegistrationsService extends BaseService {
     fileId: string;
     supportId: string;
     reprintReason?: SupportReprintReason;
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsReprintSupportPath, 'post');
     if (params) {
@@ -1428,12 +1429,12 @@ export class RegistrationsService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<ReferralPrintRequestResponse>;
       })
     );
   }
@@ -1448,10 +1449,59 @@ export class RegistrationsService extends BaseService {
     fileId: string;
     supportId: string;
     reprintReason?: SupportReprintReason;
-  }): Observable<void> {
+  }): Observable<ReferralPrintRequestResponse> {
 
     return this.registrationsReprintSupport$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<ReferralPrintRequestResponse>) => r.body as ReferralPrintRequestResponse)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsGetPrint
+   */
+  static readonly RegistrationsGetPrintPath = '/api/Registrations/files/{fileId}/supports/print/{printRequestId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsGetPrint()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetPrint$Response(params: {
+    fileId: string;
+    printRequestId: string;
+  }): Observable<StrictHttpResponse<Blob>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetPrintPath, 'get');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.path('printRequestId', params.printRequestId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'blob',
+      accept: 'application/octet-stream'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Blob>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsGetPrint$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetPrint(params: {
+    fileId: string;
+    printRequestId: string;
+  }): Observable<Blob> {
+
+    return this.registrationsGetPrint$Response(params).pipe(
+      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
     );
   }
 
