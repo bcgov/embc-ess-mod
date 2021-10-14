@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { Referral } from 'src/app/core/api/models';
+import {
+  Referral,
+  ReferralPrintRequestResponse
+} from 'src/app/core/api/models';
 import { Support } from 'src/app/core/api/models/support';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -8,6 +11,7 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewSupportService {
@@ -31,11 +35,21 @@ export class ReviewSupportService {
   /**
    * Calls the REST API to post new supports associated to a given ESSFile
    */
-  processSupports(fileId: string, supportsDraft: Support[]): Observable<void> {
-    return this.registrationService.registrationsProcessSupports({
-      fileId,
-      body: supportsDraft
-    });
+  processSupports(fileId: string, supportsDraft: Support[]): Observable<Blob> {
+    return this.registrationService
+      .registrationsProcessSupports({
+        fileId,
+        body: supportsDraft
+      })
+      .pipe(
+        mergeMap((result: ReferralPrintRequestResponse) => {
+          const printRequestId = result.printRequestId;
+          return this.registrationService.registrationsGetPrint({
+            fileId,
+            printRequestId
+          });
+        })
+      );
   }
 
   updateExistingSupportsList(): void {

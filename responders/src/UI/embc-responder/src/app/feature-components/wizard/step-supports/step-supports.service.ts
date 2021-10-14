@@ -148,7 +148,6 @@ export class StepSupportsService {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportCategory' })
       .subscribe((categories: Code[]) => {
-        console.log(categories);
         this.supportCategory = categories.filter(
           (category) => category.description !== null
         );
@@ -356,24 +355,7 @@ export class StepSupportsService {
 
     dateToDate.setTime(dateToDate.getTime() + hours * 60 * 60 * 1000);
     dateToDate.setTime(dateToDate.getTime() + minutes * 60 * 1000);
-    console.log(dateToDate);
-    console.log(dateToDate.toISOString());
 
-    // const day = dateToDate.getDate();
-    // const month = dateToDate.getMonth() + 1;
-    // const year = dateToDate.getFullYear();
-
-    // let dayString = '' + day;
-    // let monthString = '' + month;
-
-    // if (day < 10) {
-    //   dayString = '0' + day;
-    // }
-
-    // if (month < 10) {
-    //   monthString = '0' + month;
-    // }
-    // return year + '-' + monthString + '-' + dayString + 'T' + time + ':00Z';
     return dateToDate.toISOString();
   }
 }

@@ -52,6 +52,7 @@ export { RegistrantProfileSearchResult } from './models/registrant-profile-searc
 export { RegistrantStatus } from './models/registrant-status';
 export { EvacuationFileSearchResult } from './models/evacuation-file-search-result';
 export { EvacuationFileSearchResultHouseholdMember } from './models/evacuation-file-search-result-household-member';
+export { ReferralPrintRequestResponse } from './models/referral-print-request-response';
 export { SupportVoidReason } from './models/support-void-reason';
 export { SupportReprintReason } from './models/support-reprint-reason';
 export { SupplierListItem } from './models/supplier-list-item';

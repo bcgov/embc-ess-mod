@@ -11,6 +11,7 @@ import {
   LodgingGroupReferral,
   LodgingHotelReferral,
   Referral,
+  ReferralPrintRequestResponse,
   Support,
   SupportCategory,
   SupportReprintReason,
@@ -35,6 +36,7 @@ import {
   SupplierDetailsModel,
   Taxi
 } from 'src/app/core/models/support-details.model';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ExistingSupportDetailsService {
@@ -60,12 +62,22 @@ export class ExistingSupportDetailsService {
     fileId: string,
     supportId: string,
     reprintReason: SupportReprintReason
-  ): Observable<void> {
-    return this.registrationService.registrationsReprintSupport({
-      fileId,
-      supportId,
-      reprintReason
-    });
+  ): Observable<Blob> {
+    return this.registrationService
+      .registrationsReprintSupport({
+        fileId,
+        supportId,
+        reprintReason
+      })
+      .pipe(
+        mergeMap((result: ReferralPrintRequestResponse) => {
+          const printRequestId = result.printRequestId;
+          return this.registrationService.registrationsGetPrint({
+            fileId,
+            printRequestId
+          });
+        })
+      );
   }
 
   mapMember(
