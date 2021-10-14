@@ -35,6 +35,7 @@ export class AddSupplierComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.addSupplierService.clearAddedSupplier();
     this.constructAddForm();
   }
 
