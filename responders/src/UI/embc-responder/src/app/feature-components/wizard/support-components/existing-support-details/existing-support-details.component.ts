@@ -186,12 +186,21 @@ export class ExistingSupportDetailsComponent implements OnInit {
             this.selectedSupport.id,
             reason
           )
-          .subscribe((value) => {
-            const stateIndicator = { action: 'void' };
-            this.router.navigate(['/ess-wizard/add-supports/view'], {
-              state: stateIndicator
-            });
-          });
+          .subscribe(
+            (value) => {
+              const stateIndicator = { action: 'void' };
+              this.router.navigate(['/ess-wizard/add-supports/view'], {
+                state: stateIndicator
+              });
+            },
+            (error) => {
+              this.alertService.clearAlert();
+              this.alertService.setAlert(
+                'danger',
+                globalConst.voidReferralError
+              );
+            }
+          );
       });
   }
 

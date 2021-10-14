@@ -444,6 +444,8 @@ export const agreementError =
   'Unable to submit electronic access agreement at this time. Please try again later';
 export const teamMemberListError =
   'Unable to retrieve team members at this time. Please try again later';
+export const teamMemberDeleteError =
+  'Unable to remove team members at this time. Please try again later';
 export const activateTeamMemberError =
   'Unable to activate team member at this time. Please try again later';
 export const deActivateTeamMemberError =
@@ -528,5 +530,17 @@ export const getProfileError =
   'Unable to retrieve profile at this time. Please try again later';
 export const getEssFileError =
   'Unable to retrieve ESS file at this time. Please try again later';
+export const voidReferralError =
+  'Unable to void referral at this time. Please try again later';
 export const reprintReferralError =
-    'Unable to reprint the selected referral at this time. Please try again later';
+  'Unable to reprint referral at this time. Please try again later';
+export const getSupportByIdError =
+  'Unable to retrieve support at this time. Please try again later';
+export const claimSupplierError =
+  'Unable to claim supplier at this time. Please try again later';
+export const rescindSupplierError =
+  'Unable to rescind mutual aid supplier at this time. Please try again later';
+export const addSupplierError =
+  'Unable to add mutual aid supplier at this time. Please try again later';
+export const deleteSupplierError =
+  'Unable to remove supplier at this time. Please try again later';
