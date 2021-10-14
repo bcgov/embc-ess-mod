@@ -52,7 +52,7 @@ namespace EMBC.ESS.Managers.Reports
 
             var csv = evacuees.ToCSV(evacueeQuery);
 
-            var content = Encoding.ASCII.GetBytes(csv);
+            var content = Encoding.UTF8.GetBytes(csv);
             var contentType = "text/csv";
 
             return new ReportQueryResult

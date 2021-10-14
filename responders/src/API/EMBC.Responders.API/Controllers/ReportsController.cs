@@ -42,7 +42,8 @@ namespace EMBC.Responders.API.Controllers
         public async Task<IActionResult> GetPrint(string taskNumber, string fileId, string evacuatedFrom, string evacuatedTo)
         {
             var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            var result = await messagingClient.Send(new EvacueeReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo, IncludePersonalInfo = userRole > MemberRole.Tier2 });
+            var includePersonalInfo = userRole == MemberRole.Tier3 || userRole == MemberRole.Tier4;
+            var result = await messagingClient.Send(new EvacueeReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo, IncludePersonalInfo = includePersonalInfo });
 
             return Ok(result.EvacueeReport);
             //update once shared contract is updated...
