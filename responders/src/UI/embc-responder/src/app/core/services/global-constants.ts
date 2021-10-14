@@ -312,6 +312,14 @@ export const petDeleteDialog: DialogContent = {
   cancelButton: 'No, Cancel'
 };
 
+export const noPetsDialog: DialogContent = {
+  title: 'Alert',
+  text:
+    '<p>By changing your selection to "No" all previously added pets will be removed</p>',
+  confirmButton: 'Yes, Remove Pets',
+  cancelButton: 'No, Cancel'
+};
+
 export const householdMemberDeleteDialog: DialogContent = {
   title: 'Remove Household Member',
   text:
