@@ -103,7 +103,7 @@ namespace EMBC.ESS.Resources.Reports
         public string FirstName { get; set; }
 
         [Display(Name = "Date Of Birth")]
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
 
         public string Gender { get; set; }
 

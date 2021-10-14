@@ -49,7 +49,8 @@ namespace EMBC.ESS.Managers.Reports
                 EvacuatedTo = query.EvacuatedTo,
             };
 
-            var evacuees = (await reportRepository.QueryEvacuee(evacueeQuery)).Items;
+            var results = (await reportRepository.QueryEvacuee(evacueeQuery)).Items;
+            var evacuees = mapper.Map<IEnumerable<Evacuee>>(results, opt => opt.Items["IncludePersonalInfo"] = query.IncludePersonalInfo.ToString());
 
             var csv = evacuees.ToCSV(evacueeQuery);
             return new EvacueeReportQueryResult { EvacueeReport = csv };
