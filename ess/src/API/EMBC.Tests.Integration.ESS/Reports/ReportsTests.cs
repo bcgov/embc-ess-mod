@@ -38,8 +38,8 @@ namespace EMBC.Tests.Integration.ESS.Reports
                 IncludePersonalInfo = false,
             });
 
-            res.EvacueeReport.ShouldBeOfType(typeof(string));
-            res.EvacueeReport.ShouldContain(",");
+            res.Content.ShouldBeOfType(typeof(byte[]));
+            res.ContentType.ShouldBe("text/csv");
         }
     }
 }
