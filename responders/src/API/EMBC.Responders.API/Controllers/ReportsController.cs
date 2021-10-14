@@ -45,9 +45,7 @@ namespace EMBC.Responders.API.Controllers
             var includePersonalInfo = userRole == MemberRole.Tier3 || userRole == MemberRole.Tier4;
             var result = await messagingClient.Send(new EvacueeReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo, IncludePersonalInfo = includePersonalInfo });
 
-            return Ok(result.EvacueeReport);
-            //update once shared contract is updated...
-            //return new FileContentResult(result.Content, result.ContentType);
+            return new FileContentResult(result.Content, result.ContentType);
         }
     }
 }
