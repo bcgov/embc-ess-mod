@@ -85,7 +85,6 @@ export class SupplierReviewComponent {
         );
       },
       (error) => {
-        console.log(error);
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         if (error.title) {
@@ -135,7 +134,6 @@ export class SupplierReviewComponent {
       .subscribe(
         (value) => {
           this.showLoader = !this.showLoader;
-          console.log(value);
           const stateIndicator = { action: 'add' };
           this.router.navigate(
             ['/responder-access/supplier-management/suppliers-list'],

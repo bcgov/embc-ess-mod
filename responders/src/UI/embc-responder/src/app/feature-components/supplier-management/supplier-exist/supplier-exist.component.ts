@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
+import * as globalConst from '../../../core/services/global-constants';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-supplier-exist',
@@ -21,7 +23,8 @@ export class SupplierExistComponent implements OnInit {
   constructor(
     private addSupplierService: AddSupplierService,
     private supplierService: SupplierService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -54,11 +57,17 @@ export class SupplierExistComponent implements OnInit {
    * @param $event the supplier object to be claimed as main supplier
    */
   claimSupplier($event): void {
-    this.supplierService.getSupplierById($event.id).subscribe((supplier) => {
-      this.router.navigate(
-        ['/responder-access/supplier-management/review-supplier'],
-        { state: { ...supplier }, queryParams: { action: 'claim' } }
-      );
-    });
+    this.supplierService.getSupplierById($event.id).subscribe(
+      (supplier) => {
+        this.router.navigate(
+          ['/responder-access/supplier-management/review-supplier'],
+          { state: { ...supplier }, queryParams: { action: 'claim' } }
+        );
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.claimSupplierError);
+      }
+    );
   }
 }
