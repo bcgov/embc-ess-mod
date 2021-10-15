@@ -120,7 +120,6 @@ export class ProfileMappingService {
   }
 
   private setAddressDetails(profile: Profile): void {
-    console.log(profile);
     let formGroup: FormGroup;
     this.formCreationService
       .getAddressForm()

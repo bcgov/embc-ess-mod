@@ -65,7 +65,6 @@ export default class FamilyInformationComponent implements OnInit {
       this.householdMemberForm.get('householdMembers').value
     );
     this.data = this.householdMemberForm.get('householdMembers').value;
-    console.log(this.dataSource);
   }
 
   addMembers(): void {
