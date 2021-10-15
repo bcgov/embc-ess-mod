@@ -64,6 +64,7 @@ export class SupplierReviewComponent {
    */
   save(): void {
     this.showLoader = !this.showLoader;
+    this.isSubmitted = !this.isSubmitted;
     if (this.selectedSupplier.id) {
       this.updateSupplier();
     } else {
@@ -73,7 +74,7 @@ export class SupplierReviewComponent {
 
   claim(): void {
     this.showLoader = !this.showLoader;
-    console.log(this.selectedSupplier);
+    this.isSubmitted = !this.isSubmitted;
     this.supplierService.claimSupplier(this.selectedSupplier.id).subscribe(
       (value) => {
         console.log(value);
@@ -85,9 +86,9 @@ export class SupplierReviewComponent {
         );
       },
       (error) => {
-        console.log(error);
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
+        this.alertService.clearAlert();
         if (error.title) {
           this.alertService.setAlert('danger', error.title);
         } else {
@@ -117,6 +118,7 @@ export class SupplierReviewComponent {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
           if (error.title) {
             this.alertService.setAlert('danger', error.title);
           } else {
@@ -135,7 +137,6 @@ export class SupplierReviewComponent {
       .subscribe(
         (value) => {
           this.showLoader = !this.showLoader;
-          console.log(value);
           const stateIndicator = { action: 'add' };
           this.router.navigate(
             ['/responder-access/supplier-management/suppliers-list'],
@@ -145,6 +146,7 @@ export class SupplierReviewComponent {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
           if (error.title) {
             this.alertService.setAlert('danger', error.title);
           } else {

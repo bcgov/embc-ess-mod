@@ -31,7 +31,16 @@
               <p class="box-text-color">Status:</p>
             </div>
             <div class="col-md-4 bold">
-              <p>{{ selectedSupport?.status }}</p>
+              <p
+                [ngClass]="{
+                  'active-status': selectedSupport?.status === 'Active',
+                  'void-status': selectedSupport?.status === 'Void',
+                  'expired-status': selectedSupport?.status === 'Expired',
+                  'draft-status': selectedSupport?.status === 'Draft'
+                }"
+              >
+                {{ selectedSupport?.status }}
+              </p>
             </div>
           </div>
 
@@ -75,7 +84,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" *ngIf="selectedSupport?.status === 'Active'">
             <div class="col-md-12">
               <a (click)="reprint()"
                 ><img
@@ -87,7 +96,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" *ngIf="selectedSupport?.status !== 'Void'">
             <div class="col-md-12">
               <a (click)="voidReferral()"
                 ><img

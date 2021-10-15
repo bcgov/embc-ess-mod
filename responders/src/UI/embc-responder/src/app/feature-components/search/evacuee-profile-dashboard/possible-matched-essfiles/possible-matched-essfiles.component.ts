@@ -86,8 +86,6 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
 
   linkToESSFile(fileId: string) {
     this.essFileService.getFileFromId(fileId).subscribe((essFile) => {
-      console.log(essFile);
-
       const householdMemberId = this.getRegistrantIdToLink(essFile.householdMembers);
       this.evacueeSessionService.essFileNumber = essFile.id;
       this.evacueeSessionService.fileLinkFlag = 'Y';
@@ -101,6 +99,10 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
       }
     };
     this.router.navigate(['responder-access/search/security-phrase']);
+    },
+    (error) => {
+      this.alertService.clearAlert();
+      this.alertService.setAlert('danger', globalConst.linkProfileError);
     });
     
   }

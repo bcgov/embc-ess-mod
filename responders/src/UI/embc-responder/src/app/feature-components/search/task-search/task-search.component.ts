@@ -75,6 +75,7 @@ export class TaskSearchComponent implements OnInit {
           } else {
             this.showLoader = !this.showLoader;
             this.isSubmitted = !this.isSubmitted;
+            this.alertService.clearAlert();
             this.alertService.setAlert('danger', globalConst.taskSearchError);
           }
         }

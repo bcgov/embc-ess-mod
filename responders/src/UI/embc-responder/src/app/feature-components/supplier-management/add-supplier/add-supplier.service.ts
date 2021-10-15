@@ -91,16 +91,6 @@ export class AddSupplierService {
    * @returns Supplier object
    */
   getAddedSupplier(): SupplierModel {
-    console.log({
-      legalName: this.supplierLegalName,
-      name: this.supplierName,
-      address: this.supplierAddress,
-      sharedWithTeams: this.sharedWithTeams,
-      isActive: this.status,
-      supplierGstNumber: this.supplierGstNumber,
-      contact: this.contact
-    });
-
     return {
       legalName: this.supplierLegalName,
       name: this.supplierName,

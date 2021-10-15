@@ -49,12 +49,6 @@ export class AssignedCommunityListComponent implements OnInit {
       }
     );
 
-    // this.assignedCommunityListService
-    //   .getAllAssignedCommunityList()
-    //   .subscribe((values) => {
-    //     this.assignedCommunityListDataService.setAllTeamCommunityList(values);
-    //   });
-
     this.filtersToLoad = this.assignedCommunityListDataService.filtersToLoad;
     this.displayedColumns = this.assignedCommunityListDataService.displayedColumns;
   }

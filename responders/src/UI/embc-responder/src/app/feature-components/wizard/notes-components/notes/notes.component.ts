@@ -65,6 +65,7 @@ export class NotesComponent implements OnInit {
       },
       (error) => {
         this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
         if (note.isHidden) {
           this.alertService.setAlert('danger', globalConst.hideNoteError);
         } else {
@@ -104,6 +105,7 @@ export class NotesComponent implements OnInit {
       },
       (error) => {
         this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.notesListError);
       }
     );

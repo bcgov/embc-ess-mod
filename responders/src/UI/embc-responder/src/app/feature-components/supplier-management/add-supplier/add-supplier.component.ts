@@ -35,6 +35,7 @@ export class AddSupplierComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.addSupplierService.clearAddedSupplier();
     this.constructAddForm();
   }
 
@@ -97,7 +98,6 @@ export class AddSupplierComponent implements OnInit {
         }
       },
       (error) => {
-        console.log(error);
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.supplierCheckerror);
@@ -116,11 +116,11 @@ export class AddSupplierComponent implements OnInit {
         {
           part1: [
             '',
-            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+            [Validators.required, Validators.pattern(/^-?([0-9][1-9]\d*)?$/)]
           ],
           part2: [
             '',
-            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+            [Validators.required, Validators.pattern(/^-?([0-9][1-9]\d*)?$/)]
           ]
         },
         {

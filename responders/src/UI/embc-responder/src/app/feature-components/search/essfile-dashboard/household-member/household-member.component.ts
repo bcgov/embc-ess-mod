@@ -16,12 +16,6 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import * as globalConst from '../../../../core/services/global-constants';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
-import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
-import {
-  RepositionScrollStrategy,
-  ScrollStrategyOptions
-} from '@angular/cdk/overlay';
-import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 
@@ -82,7 +76,6 @@ export class HouseholdMemberComponent implements OnInit {
         )
         .subscribe(
           (value) => {
-            console.log(value);
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
             if (value.length > 0) {
@@ -92,6 +85,8 @@ export class HouseholdMemberComponent implements OnInit {
           },
           (error) => {
             this.isLoading = !this.isLoading;
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.genericError);
           }
         );
     } else {

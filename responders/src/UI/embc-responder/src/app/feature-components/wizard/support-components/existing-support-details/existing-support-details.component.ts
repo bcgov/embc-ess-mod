@@ -27,6 +27,7 @@ import { ExistingSupportDetailsService } from './existing-support-details.servic
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -45,7 +46,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private dialog: MatDialog,
     private existingSupportService: ExistingSupportDetailsService,
     private referralCreationService: ReferralCreationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +63,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   getNeedsAssessment() {
     this.isLoading = !this.isLoading;
     this.stepSupportsService
-      .getEvacFile(this.selectedSupport?.needsAssessmentId)
+      .getEvacFile(this.evacueeSessionService.essFileNumber) //this.selectedSupport?.needsAssessmentId
       .subscribe(
         (value) => {
           this.isLoading = !this.isLoading;
@@ -70,6 +72,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
         },
         (error) => {
           this.isLoading = !this.isLoading;
+          this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.supportNeedsAssessmentError
@@ -184,12 +187,21 @@ export class ExistingSupportDetailsComponent implements OnInit {
             this.selectedSupport.id,
             reason
           )
-          .subscribe((value) => {
-            const stateIndicator = { action: 'void' };
-            this.router.navigate(['/ess-wizard/add-supports/view'], {
-              state: stateIndicator
-            });
-          });
+          .subscribe(
+            (value) => {
+              const stateIndicator = { action: 'void' };
+              this.router.navigate(['/ess-wizard/add-supports/view'], {
+                state: stateIndicator
+              });
+            },
+            (error) => {
+              this.alertService.clearAlert();
+              this.alertService.setAlert(
+                'danger',
+                globalConst.voidReferralError
+              );
+            }
+          );
       });
   }
 
@@ -205,15 +217,29 @@ export class ExistingSupportDetailsComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((reason) => {
+        this.isLoading = !this.isLoading;
         this.existingSupportService
           .reprintSupport(
             this.needsAssessmentForSupport.id,
             this.selectedSupport.id,
             reason
           )
-          .subscribe((value) => {
-            //TODO: PDF generation
-          });
+          .subscribe(
+            (value) => {
+              const blob = value;
+              const url = window.URL.createObjectURL(blob);
+              window.open(url, '_blank');
+              this.isLoading = !this.isLoading;
+            },
+            (error) => {
+              this.isLoading = !this.isLoading;
+              this.alertService.clearAlert();
+              this.alertService.setAlert(
+                'danger',
+                globalConst.reprintReferralError
+              );
+            }
+          );
       });
   }
 

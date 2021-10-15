@@ -31,6 +31,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
 import * as moment from 'moment';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -58,7 +59,8 @@ export class StepSupportsService {
     private userService: UserService,
     private locationService: LocationsService,
     private dialog: MatDialog,
-    private referralService: ReferralCreationService
+    private referralService: ReferralCreationService,
+    private alertService: AlertService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -147,22 +149,39 @@ export class StepSupportsService {
   public getCategoryList(): void {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportCategory' })
-      .subscribe((categories: Code[]) => {
-        console.log(categories);
-        this.supportCategory = categories.filter(
-          (category) => category.description !== null
-        );
-      });
+      .subscribe(
+        (categories: Code[]) => {
+          this.supportCategory = categories.filter(
+            (category) => category.description !== null
+          );
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      );
   }
 
   public getSubCategoryList(): void {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
-      .subscribe((subCategories: Code[]) => {
-        this.supportSubCategory = subCategories.filter(
-          (subCategory) => subCategory.description !== null
-        );
-      });
+      .subscribe(
+        (subCategories: Code[]) => {
+          this.supportSubCategory = subCategories.filter(
+            (subCategory) => subCategory.description !== null
+          );
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      );
   }
 
   public getSupportTypeList(): Code[] {
@@ -356,24 +375,7 @@ export class StepSupportsService {
 
     dateToDate.setTime(dateToDate.getTime() + hours * 60 * 60 * 1000);
     dateToDate.setTime(dateToDate.getTime() + minutes * 60 * 1000);
-    console.log(dateToDate);
-    console.log(dateToDate.toISOString());
 
-    // const day = dateToDate.getDate();
-    // const month = dateToDate.getMonth() + 1;
-    // const year = dateToDate.getFullYear();
-
-    // let dayString = '' + day;
-    // let monthString = '' + month;
-
-    // if (day < 10) {
-    //   dayString = '0' + day;
-    // }
-
-    // if (month < 10) {
-    //   monthString = '0' + month;
-    // }
-    // return year + '-' + monthString + '-' + dayString + 'T' + time + ':00Z';
     return dateToDate.toISOString();
   }
 }

@@ -74,6 +74,7 @@ export class AddNotesComponent implements OnInit {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.addNotesError);
         }
       );
@@ -97,6 +98,7 @@ export class AddNotesComponent implements OnInit {
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
+          this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.editNotesError);
         }
       );

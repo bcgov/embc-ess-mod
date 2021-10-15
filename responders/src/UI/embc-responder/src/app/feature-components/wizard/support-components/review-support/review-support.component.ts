@@ -294,14 +294,21 @@ export class ReviewSupportComponent implements OnInit {
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe(
       (response) => {
+        // Displaying PDF into a new browser tab:
+        // const blob = new Blob(response.stream, { type: fileInput.target.files[0].type });
+        const blob = response;
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+
+        //Clearing Draft supports array and updating the supports list for the selected ESS File
         this.referralService.clearDraftSupport();
         this.reviewSupportService.updateExistingSupportsList();
         this.showLoader = !this.showLoader;
-        console.log(response);
         this.router.navigate(['/ess-wizard/add-supports']);
       },
       (error) => {
         this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',
           globalConst.processSupportDraftsError

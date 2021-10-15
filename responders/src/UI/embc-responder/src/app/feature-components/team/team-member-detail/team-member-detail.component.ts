@@ -11,6 +11,8 @@ import { DeleteConfirmationDialogComponent } from 'src/app/shared/components/dia
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { TeamListDataService } from '../team-list/team-list-data.service';
 import { TeamMemberDetailsService } from './team-member-details.service';
+import * as globalConst from '../../../core/services/global-constants';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-team-member-detail',
@@ -25,7 +27,8 @@ export class TeamMemberDetailComponent {
     private dialog: MatDialog,
     private teamDetailsService: TeamMemberDetailsService,
     private teamDataService: TeamListDataService,
-    private userService: UserService
+    private userService: UserService,
+    private alertService: AlertService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -56,13 +59,24 @@ export class TeamMemberDetailComponent {
         if (event === 'delete') {
           this.teamDetailsService
             .deleteTeamMember(this.teamMember.id)
-            .subscribe((value) => {
-              const stateIndicator = { action: 'delete' };
-              this.router.navigate(
-                ['/responder-access/responder-management/details/member-list'],
-                { state: stateIndicator }
-              );
-            });
+            .subscribe(
+              (value) => {
+                const stateIndicator = { action: 'delete' };
+                this.router.navigate(
+                  [
+                    '/responder-access/responder-management/details/member-list'
+                  ],
+                  { state: stateIndicator }
+                );
+              },
+              (error) => {
+                this.alertService.clearAlert();
+                this.alertService.setAlert(
+                  'danger',
+                  globalConst.teamMemberDeleteError
+                );
+              }
+            );
         }
       });
   }

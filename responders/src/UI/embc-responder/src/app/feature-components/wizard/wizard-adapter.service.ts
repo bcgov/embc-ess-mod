@@ -12,6 +12,8 @@ import { StepEvacueeProfileService } from './step-evacuee-profile/step-evacuee-p
 import { ReferralCreationService } from './step-supports/referral-creation.service';
 import { WizardDataService } from './wizard-data.service';
 import { WizardService } from './wizard.service';
+import * as globalConst from '../../core/services/global-constants';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +28,8 @@ export class WizardAdapterService {
     private essFileService: EssFileService,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private stepEssFileService: StepEssFileService,
-    private referralCreation: ReferralCreationService
+    private referralCreation: ReferralCreationService,
+    private alertService: AlertService
   ) {}
 
   /**
@@ -118,6 +121,8 @@ export class WizardAdapterService {
         },
         (error) => {
           obs.next(false);
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.getProfileError);
         }
       );
     });
@@ -137,6 +142,8 @@ export class WizardAdapterService {
         },
         (error) => {
           obs.next(false);
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.getProfileError);
         }
       );
     });
@@ -184,6 +191,8 @@ export class WizardAdapterService {
           },
           (error) => {
             obs.next(false);
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.getEssFileError);
           }
         );
     });
@@ -203,6 +212,8 @@ export class WizardAdapterService {
           },
           (error) => {
             obs.next(false);
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.getEssFileError);
           }
         );
     });

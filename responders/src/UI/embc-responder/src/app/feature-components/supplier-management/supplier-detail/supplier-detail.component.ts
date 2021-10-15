@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user.service';
@@ -22,10 +22,9 @@ import {
   LocationsService
 } from 'src/app/core/services/locations.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
-import { MatRadioChange } from '@angular/material/radio/public-api';
-import { SupplierManagementService } from '../supplier-management.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-supplier-detail',
@@ -61,7 +60,7 @@ export class SupplierDetailComponent implements OnInit {
     private supplierDetailService: SupplierDetailService,
     private locationService: LocationsService,
     private supplierService: SupplierService,
-    private cd: ChangeDetectorRef
+    private alertService: AlertService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras !== undefined) {
@@ -158,13 +157,22 @@ export class SupplierDetailComponent implements OnInit {
         if (event === 'confirm') {
           this.supplierService
             .deleteSupplier(this.selectedSupplier.id)
-            .subscribe((value) => {
-              const stateIndicator = { action: 'delete' };
-              this.router.navigate(
-                ['/responder-access/supplier-management/suppliers-list'],
-                { state: stateIndicator }
-              );
-            });
+            .subscribe(
+              (value) => {
+                const stateIndicator = { action: 'delete' };
+                this.router.navigate(
+                  ['/responder-access/supplier-management/suppliers-list'],
+                  { state: stateIndicator }
+                );
+              },
+              (error) => {
+                this.alertService.clearAlert();
+                this.alertService.setAlert(
+                  'danger',
+                  globalConst.deleteSupplierError
+                );
+              }
+            );
         }
       });
   }
@@ -206,9 +214,8 @@ export class SupplierDetailComponent implements OnInit {
     this.essTeamsListResult = [];
     this.noneResults = false;
     this.searchESSTeamLoader = !this.searchESSTeamLoader;
-    this.supplierService
-      .getMutualAidByCommunity(community.code)
-      .subscribe((results) => {
+    this.supplierService.getMutualAidByCommunity(community.code).subscribe(
+      (results) => {
         this.essTeamsListResult = this.supplierListDataService.filterEssTeams(
           results
         );
@@ -216,7 +223,13 @@ export class SupplierDetailComponent implements OnInit {
           this.noneResults = true;
         }
         this.searchESSTeamLoader = !this.searchESSTeamLoader;
-      });
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.searchESSTeamLoader = !this.searchESSTeamLoader;
+        this.alertService.setAlert('danger', globalConst.genericError);
+      }
+    );
   }
 
   /**

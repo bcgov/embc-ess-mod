@@ -14,6 +14,7 @@ import { SupplierDetailService } from '../supplier-detail/supplier-detail.servic
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { AddSupplierService } from '../add-supplier/add-supplier.service';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -39,7 +40,8 @@ export class SuppliersListComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private supplierServices: SupplierService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private addSupplierService: AddSupplierService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -50,6 +52,7 @@ export class SuppliersListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.addSupplierService.clearAddedSupplier();
     this.filtersToLoad = this.listSupplierDataService.filtersToLoad;
     this.primarySuppliersColumns = this.listSupplierDataService.primarySupplierColumns;
     this.mutualAidSuppliersColumns = this.listSupplierDataService.mutualAidSupplierColumns;
@@ -210,7 +213,6 @@ export class SuppliersListComponent implements OnInit {
         this.suppliersList = values;
       },
       (error) => {
-        console.log(error);
         this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -231,7 +233,6 @@ export class SuppliersListComponent implements OnInit {
         this.mutualAidList = values;
       },
       (error) => {
-        console.log(error);
         this.mutualAidLoader = !this.mutualAidLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.mutualAidListError);
