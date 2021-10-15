@@ -254,6 +254,22 @@ export class NeedsAssessmentService {
     this.verifiedRegistrationResult = null;
   }
 
+  public clearNeedsAssessmentData(): void {
+    this.id = undefined;
+    this.insurance = undefined;
+    this.canEvacueeProvideClothing = undefined;
+    this.canEvacueeProvideFood = undefined;
+    this.canEvacueeProvideIncidentals = undefined;
+    this.canEvacueeProvideLodging = undefined;
+    this.canEvacueeProvideTransportation = undefined;
+    this.hasPetsFood = undefined;
+    this.pets = undefined;
+    this.haveMedication = undefined;
+    this.haveSpecialDiet = undefined;
+    this.householdMembers = undefined;
+    this.specialDietDetails = undefined;
+  }
+
   addPrimaryApplicantToHousehold() {
     const primaryMember: HouseholdMember = {
       details: this.profileDataService.createProfileDTO().personalDetails,

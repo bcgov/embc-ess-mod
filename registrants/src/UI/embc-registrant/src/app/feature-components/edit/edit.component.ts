@@ -55,6 +55,7 @@ export class EditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
     this.route.paramMap.subscribe((params) => {
+      console.log(params);
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
@@ -126,6 +127,8 @@ export class EditComponent implements OnInit, OnDestroy {
       this.form,
       this.currentFlow
     );
+    console.log(this.currentFlow);
+    console.log(this.parentPageName);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
@@ -134,13 +137,22 @@ export class EditComponent implements OnInit, OnDestroy {
       } else if (this.parentPageName === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard/profile']);
       } else if (this.parentPageName === 'needs-assessment') {
-        this.router.navigate([
-          '/verified-registration/dashboard/current/' +
-            this.evacuationFileDataService.essFileId
-        ]);
+        if (this.evacuationFileDataService.essFileId !== undefined) {
+          this.router.navigate([
+            '/verified-registration/dashboard/current/' +
+              this.evacuationFileDataService.essFileId
+          ]);
+        } else {
+          this.router.navigate(
+            [this.verifiedNeedsAssessments],
+            this.navigationExtras
+          );
+        }
       }
     }
   }
+
+  ///verified-registration/needs-assessment
 
   /**
    * Loads the form into view

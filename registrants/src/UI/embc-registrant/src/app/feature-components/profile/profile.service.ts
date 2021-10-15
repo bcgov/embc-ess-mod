@@ -24,6 +24,7 @@ export class ProfileService {
 
   public getProfile(): void {
     this.profileService.profileGetProfile().subscribe((profile) => {
+      console.log(profile);
       this.profileMapping.mapProfile(profile);
     });
   }
