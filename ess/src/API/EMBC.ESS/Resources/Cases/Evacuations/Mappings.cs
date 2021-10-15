@@ -402,7 +402,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public IEnumerable<Support> Convert(IEnumerable<era_evacueesupport> sourceMember, ResolutionContext context) =>
             sourceMember.Select(s => Convert(s, context));
 
-        public Type supportTypeResolver(SupportType? supportType) =>
+        private Type supportTypeResolver(SupportType? supportType) =>
             supportType switch
             {
                 SupportType.Clothing => typeof(ClothingReferral),

@@ -174,7 +174,6 @@ namespace EMBC.ESS.Resources.Cases
     {
         public string Id { get; set; }
         public DateTime IssuedOn { get; set; }
-
         public string IssuedByTeamMemberId { get; set; }
         public string OriginatingNeedsAssessmentId { get; set; }
         public DateTime From { get; set; }
