@@ -7,7 +7,7 @@ node('master') {
 		'registrants-portal-api', 'registrants-portal-ui', 
 		'responders-portal-api', 'responders-portal-ui', 
 		'suppliers-portal-api', 'suppliers-portal-ui',
-		'cas-interface-service', 'job-scheduling']
+		'cas-interface-service']
 
 	stage('Confirm') {
 		input ("Confirm promote TRAIN to PROD")
