@@ -47,15 +47,13 @@ namespace EMBC.Responders.API.Controllers
                 support.IssuedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
             }
 
-            var result = await messagingClient.Send(new ProcessSupportsCommand
+            var printRequestId = await messagingClient.Send(new ProcessSupportsCommand
             {
                 FileId = fileId,
-                supports = mappedSupports
+                supports = mappedSupports,
+                RequestingUserId = userId
             });
-
-            //TODO: ensure the print id returned from ProcessSupportsCommand is returned and not a guid
-            var id = result ?? Guid.NewGuid().ToString();
-            return Ok(new ReferralPrintRequestResponse { PrintRequestId = id });
+            return Ok(new ReferralPrintRequestResponse { PrintRequestId = printRequestId });
         }
 
         [HttpPost("files/{fileId}/supports/{supportId}/void")]
@@ -88,7 +86,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
         public async Task<IActionResult> GetPrint(string fileId, string printRequestId)
         {
-            var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId });
+            var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId, RequestingUserId = currentUserId });
             return new FileContentResult(result.Content, result.ContentType);
         }
     }
