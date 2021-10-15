@@ -114,7 +114,7 @@ objects:
                   name: ${APP_NAME}-dynamics-job-scheduling
                   imagePullPolicy: Always
                   terminationMessagePolicy: File
-                  image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/job-scheduling:latest
+                  image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/job-scheduling:${TAG}
                   envFrom:
                     - configMapRef:
                         name: ${APP_NAME}-dynamics-job-scheduling-config
