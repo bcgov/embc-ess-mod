@@ -84,6 +84,7 @@ namespace EMBC.ESS.Resources.Suppliers
             CreateMap<era_essteamsupplier, Team>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_ESSTeamID.era_essteamid))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_ESSTeamID.era_name))
+                .ForMember(d => d.SharedWithDate, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
                 ;
 
             CreateMap<Team, era_essteamsupplier>(MemberList.None)
