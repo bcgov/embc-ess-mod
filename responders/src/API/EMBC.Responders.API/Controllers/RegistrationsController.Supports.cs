@@ -88,7 +88,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
         public async Task<IActionResult> GetPrint(string fileId, string printRequestId)
         {
-            var result = await messagingClient.Send(new PrintRequestQuery { FileId = fileId, PrintRequestId = printRequestId });
+            var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId });
             return new FileContentResult(result.Content, result.ContentType);
         }
     }

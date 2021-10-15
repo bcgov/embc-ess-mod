@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -99,7 +100,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (supplier.Team == null)
             {
-                supplier.Team = new Team();
+                supplier.Team = new SupplierTeamDetails();
             }
             supplier.Team.Id = teamId;
             var id = await messagingClient.Send(new SaveSupplierCommand
@@ -257,7 +258,7 @@ namespace EMBC.Responders.API.Controllers
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
-        public Team Team { get; set; }
+        public SupplierTeamDetails Team { get; set; }
         public SupplierStatus Status { get; set; }
         public bool IsPrimarySupplier { get; set; }
         public bool ProvidesMutualAid { get; set; }
@@ -271,9 +272,17 @@ namespace EMBC.Responders.API.Controllers
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
-        public Team Team { get; set; }
-        public IEnumerable<Team> SharedWithTeams { get; set; }
+        public SupplierTeamDetails Team { get; set; }
+        public IEnumerable<SupplierTeamDetails> SharedWithTeams { get; set; }
         public SupplierStatus Status { get; set; }
+    }
+
+    public class SupplierTeamDetails
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public DateTime SharedWithDate { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 
     public class SupplierContact
@@ -317,11 +326,11 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Verified, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Suppliers.Team, Team>()
+            CreateMap<ESS.Shared.Contracts.Suppliers.Team, SupplierTeamDetails>()
                 .ForMember(d => d.IsActive, opts => opts.Ignore())
                 ;
 
-            CreateMap<Team, ESS.Shared.Contracts.Suppliers.Team>()
+            CreateMap<SupplierTeamDetails, ESS.Shared.Contracts.Suppliers.Team>()
                 ;
 
             CreateMap<ESS.Shared.Contracts.Suppliers.Address, Address>()
