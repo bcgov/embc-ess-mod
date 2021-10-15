@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Suppliers
@@ -116,5 +117,6 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public DateTime SharedWithDate { get; set; }
     }
 }

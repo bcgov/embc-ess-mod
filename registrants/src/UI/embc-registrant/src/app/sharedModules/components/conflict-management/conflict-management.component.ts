@@ -54,7 +54,6 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   ngOnInit(): void {
     this.conflictService.getConflicts().subscribe((bcscConflicts) => {
       this.conflicts = bcscConflicts;
-      console.log(this.conflicts);
       this.nameConflict = bcscConflicts.find(
         (element) => element.dataElementName === 'NameDataConflict'
       );

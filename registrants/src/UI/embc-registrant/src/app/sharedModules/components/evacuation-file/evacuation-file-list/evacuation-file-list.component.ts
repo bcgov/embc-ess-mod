@@ -40,7 +40,6 @@ export class EvacuationFileListComponent implements OnInit {
       this.evacuationFileService
         .getCurrentEvacuationFiles()
         .subscribe((files) => {
-          console.log(files);
           this.dataSourceActive = files;
           this.dataSourceActive.sort(
             (a, b) =>
@@ -50,6 +49,7 @@ export class EvacuationFileListComponent implements OnInit {
           this.evacuationFileDataService.setCurrentEvacuationFileCount(
             files.length
           );
+          this.evacuationFileDataService.setHasPendingEssFiles(files);
           this.primaryEssFile = this.dataSourceActive[0];
           this.showLoading = false;
         });
@@ -84,6 +84,7 @@ export class EvacuationFileListComponent implements OnInit {
       .subscribe((value) => {
         if (value === 'confirm') {
           this.formCreationService.clearNeedsAssessmentData();
+          this.evacuationFileDataService.clearESSFileData();
           this.router.navigate(['/verified-registration/confirm-restriction']);
         }
       });
