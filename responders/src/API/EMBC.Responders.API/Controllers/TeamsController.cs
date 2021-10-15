@@ -85,8 +85,6 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string Name { get; set; }
 
-        public DateTime SharedWithDate { get; set; }
-
         public bool IsActive { get; set; } = true;
     }
 
@@ -97,7 +95,6 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<ESS.Shared.Contracts.Team.Team, Team>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Name))
-                .ForMember(d => d.SharedWithDate, opts => opts.Ignore())
                 .ForMember(d => d.IsActive, opts => opts.Ignore())
                 ;
         }
