@@ -106,5 +106,6 @@ namespace EMBC.ESS.Resources.Suppliers
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public DateTime SharedWithDate { get; set; }
     }
 }
