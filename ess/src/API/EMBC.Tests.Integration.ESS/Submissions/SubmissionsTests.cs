@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -632,7 +634,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-            fileId.ShouldNotBeNull();
 
             var supports = new Support[]
             {
@@ -654,7 +655,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 s.IssuedOn = DateTime.Now;
             }
 
-            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports });
+            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = teamUserId });
 
             var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
             refreshedFile.Supports.ShouldNotBeEmpty();
@@ -704,7 +705,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 s.IssuedOn = DateTime.Now;
             }
 
-            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports });
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = teamUserId });
 
             var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
@@ -729,6 +730,25 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var taskId = "UNIT-TEST-ACTIVE-TASK";
             var list = (await manager.Handle(new SuppliersListQuery { TaskId = taskId })).Items;
             list.ShouldNotBeEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanQueryPrintRequest()
+        {
+            var dynamicsContext = services.GetRequiredService<EssContext>();
+            var testPrintRequest = dynamicsContext.era_referralprints
+                .Where(pr => pr.statecode == (int)EntityState.Active && pr._era_requestinguserid_value != null)
+                .OrderByDescending(pr => pr.createdon)
+                .Take(new Random().Next(20))
+                .ToArray()
+                .First();
+
+            var response = await manager.Handle(new PrintRequestQuery
+            {
+                PrintRequestId = testPrintRequest.era_referralprintid.ToString(),
+                RequestingUserId = testPrintRequest._era_requestinguserid_value.Value.ToString()
+            });
+            await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", response.Content);
         }
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)

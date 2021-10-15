@@ -23,6 +23,8 @@ using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Print;
+using EMBC.ESS.Resources.Print.Supports;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
@@ -47,7 +49,10 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
+        private readonly ISupportsService supportsService;
+        private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
+        private readonly EvacuationFileLoader evacuationFileLoader;
 
         public SubmissionsManager(
             IMapper mapper,
@@ -60,6 +65,8 @@ namespace EMBC.ESS.Managers.Submissions
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
             ISearchEngine searchEngine,
+            ISupportsService supportsService,
+            IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator)
         {
             this.mapper = mapper;
@@ -72,7 +79,10 @@ namespace EMBC.ESS.Managers.Submissions
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
+            this.supportsService = supportsService;
+            this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
+            this.evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -186,7 +196,7 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.RegistrantId })).Items.SingleOrDefault();
-            if (contact == null) throw new Exception($"Couuld not find existing Registrant with id {cmd.RegistrantId}");
+            if (contact == null) throw new Exception($"Could not find existing Registrant with id {cmd.RegistrantId}");
             contact.Verified = cmd.Verified;
             var res = await contactRepository.ManageContact(new SaveContact { Contact = contact });
             return res.ContactId;
@@ -242,67 +252,10 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var file in files)
             {
-                await PostFillEvacuationFiles(file);
+                await evacuationFileLoader.Load(file);
             }
 
             return new EvacuationFilesQueryResponse { Items = files };
-        }
-
-        private async System.Threading.Tasks.Task PostFillEvacuationFiles(Shared.Contracts.Submissions.EvacuationFile file)
-        {
-            if (file.NeedsAssessment.CompletedBy?.Id != null)
-            {
-                var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id, onlyActive: false)).SingleOrDefault();
-                if (member != null)
-                {
-                    file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";
-                    file.NeedsAssessment.CompletedBy.TeamId = member.TeamId;
-                    file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
-                }
-            }
-            if (file.RelatedTask?.Id != null)
-            {
-                var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.RelatedTask.Id })).Items.SingleOrDefault();
-                if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
-            }
-
-            foreach (var note in file.Notes)
-            {
-                if (string.IsNullOrEmpty(note.CreatedBy?.Id)) continue;
-                var teamMembers = await teamRepository.GetMembers(null, null, note.CreatedBy.Id);
-                var member = teamMembers.SingleOrDefault();
-                if (member != null)
-                {
-                    note.CreatedBy.DisplayName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
-                    note.CreatedBy.TeamId = member.TeamId;
-                    note.CreatedBy.TeamName = member.TeamName;
-                }
-            }
-
-            foreach (var support in file.Supports)
-            {
-                if (!string.IsNullOrEmpty(support.IssuedBy?.Id))
-                {
-                    var teamMember = (await teamRepository.GetMembers(userId: support.IssuedBy.Id)).SingleOrDefault();
-                    if (teamMember != null)
-                    {
-                        support.IssuedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
-                        support.IssuedBy.TeamId = teamMember.TeamId;
-                        support.IssuedBy.TeamName = teamMember.TeamName;
-                    }
-                }
-                if (support is Shared.Contracts.Submissions.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
-                {
-                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
-                    if (supplier != null)
-                    {
-                        referral.SupplierDetails.Name = supplier.LegalName;
-                        referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Submissions.Address>(supplier.Address);
-                        referral.SupplierDetails.TeamId = supplier.Team?.Id;
-                        referral.SupplierDetails.TeamName = supplier.Team?.Name;
-                    }
-                }
-            }
         }
 
         public async Task<EvacueeSearchQueryResponse> Handle(EvacueeSearchQuery query)
@@ -445,10 +398,12 @@ namespace EMBC.ESS.Managers.Submissions
             return new TasksSearchQueryResult { Items = esstasks };
         }
 
-        public async System.Threading.Tasks.Task Handle(ProcessSupportsCommand cmd)
+        public async Task<string> Handle(ProcessSupportsCommand cmd)
         {
-            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
+            if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId)).Cast<Resources.Team.TeamMember>().Single();
             var supportIds = new List<string>();
             foreach (var support in cmd.supports)
             {
@@ -457,8 +412,23 @@ namespace EMBC.ESS.Managers.Submissions
                     FileId = cmd.FileId,
                     Support = mapper.Map<Resources.Cases.Support>(support)
                 });
-                supportId.Equals(supportId);
+                supportIds.Add(supportId.Id);
             }
+
+            var referralPrintId = await printingRepository.Manage(new SavePrintRequest
+            {
+                PrintRequest = new ReferralPrintRequest
+                {
+                    FileId = cmd.FileId,
+                    SupportIds = supportIds,
+                    IncludeSummary = cmd.IncludeSummaryInReferralsPrintout,
+                    RequestingUserId = requestingUser.Id,
+                    Type = ReferralPrintType.New,
+                    Comments = "Process supports"
+                }
+            });
+
+            return referralPrintId;
         }
 
         public async Task<string> Handle(VoidSupportCommand cmd)
@@ -487,18 +457,49 @@ namespace EMBC.ESS.Managers.Submissions
             return new SuppliersListQueryResponse { Items = mapper.Map<IEnumerable<SupplierDetails>>(suppliers) };
         }
 
-        public async Task<PrintRequestQueryResponse> Handle(PrintRequestQuery query)
+        public async Task<PrintRequestQueryResult> Handle(PrintRequestQuery query)
         {
-            await System.Threading.Tasks.Task.CompletedTask;
+            if (string.IsNullOrEmpty(query.PrintRequestId)) throw new ArgumentNullException(nameof(query.PrintRequestId));
+            if (string.IsNullOrEmpty(query.RequestingUserId)) throw new ArgumentNullException(nameof(query.RequestingUserId));
 
-            var text = $"<h1>pdf generated for print request {query.PrintRequestId}, file {query.FileId}, at {DateTime.Now}</h1>";
-            var content = await pdfGenerator.Generate(text);
+            //get the print request
+            var printRequest = (await printingRepository.Query(new QueryPrintRequests { ById = query.PrintRequestId })).Cast<ReferralPrintRequest>().SingleOrDefault();
+            if (printRequest == null) throw new NotFoundException("print request not found", query.PrintRequestId);
+
+            //get requesting user
+            if (printRequest.RequestingUserId != query.RequestingUserId) throw new Exception($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
+            var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId)).Cast<Resources.Team.TeamMember>().SingleOrDefault();
+            if (requestingUser == null) throw new Exception($"User {printRequest.RequestingUserId} not found");
+
+            //load the file
+            var file = mapper.Map<Shared.Contracts.Submissions.EvacuationFile>((await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = printRequest.FileId })).Items.Cast<Resources.Cases.EvacuationFile>().SingleOrDefault());
+            if (file == null) throw new NotFoundException($"Evacuation file {printRequest.FileId} not found", printRequest.Id);
+            await evacuationFileLoader.Load(file);
+
+            //Find referrals to print
+            var referrals = mapper.Map<IEnumerable<PrintReferral>>(file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)), opts => opts.Items.Add("evacuationFile", file)).ToArray();
+            if (referrals.Count() != printRequest.SupportIds.Count())
+                throw new Exception($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
+
+            //convert referrals to html
+            var printedReferrals = await supportsService.GetReferralHtmlPagesAsync(new SupportsToPrint()
+            {
+                Referrals = referrals,
+                AddSummary = printRequest.IncludeSummary,
+                RequestingUser = new PrintRequestingUser { Id = requestingUser.Id, DisplayName = $"{requestingUser.FirstName} {requestingUser.LastName[0]}." }
+            });
+
+            //convert to pdf
+            var content = await pdfGenerator.Generate(printedReferrals);
             var contentType = "application/pdf";
 
-            return new PrintRequestQueryResponse
+            //TODO: mark the print request as completed in Dynamics
+
+            return new PrintRequestQueryResult
             {
                 Content = content,
-                ContentType = contentType
+                ContentType = contentType,
+                PrintedOn = DateTime.Now
             };
         }
     }

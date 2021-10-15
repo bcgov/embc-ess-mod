@@ -1,0 +1,57 @@
+<div class="info-block summary-item">
+    <div class="row">
+        <div class="col-6">
+            <h2>{{> titlePartial}}</h2>
+        </div>
+        <div class="col-6 push-right">
+            <h2>Referral #: {{Id}}</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 col-pushed">
+            <h3 class="with-icon dates">Valid Only Dates</h3>
+            <div class="row">
+                <div class="col-5 no-padding">
+                    <label class="blocked-label">From:</label> <span class="input-output">{{FromDate}}</span>
+                </div>
+                <div class="col-7">
+                    <label>at:</label> <span class="input-output">{{FromTime}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5 no-padding">
+                    <label class="blocked-label">To:</label> <span class="input-output">{{ToDate}}</span>
+                </div>
+                <div class="col-7">
+                    <label>at:</label> <span class="input-output">{{ToTime}}</span>
+                </div>
+            </div>
+
+            {{> itemsPartial}}
+        </div>
+        <div class="col-6">
+            <h3 class="with-icon supplier">Supplier Information</h3>
+            <div class="row">
+                <div class="col-6">
+                    <strong>{{Supplier.Name}}</strong><br />
+                    {{Supplier.Address}}<br />
+                </div>
+                <div class="col-6">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    {{Supplier.City}}, {{Supplier.Province}}<br />
+                    <strong>Phone:</strong> {{Supplier.Telephone}}
+                </div>
+                <div class="col-6">
+                    {{Supplier.PostalCode}}<br />
+                    <strong>Fax:</strong> {{Supplier.Fax}}
+                </div>
+            </div>
+
+            {{> notesPartial}}
+        </div>
+    </div>
+</div>
