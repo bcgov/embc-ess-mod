@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormCreationService } from '../core/services/formCreation.service';
+import { NeedsAssessmentService } from '../feature-components/needs-assessment/needs-assessment.service';
 
 @Component({
   selector: 'app-login-page',
@@ -7,9 +9,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./login-page.component.scss']
 })
 export class LoginPageComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private formCreationService: FormCreationService,
+    private needsAssessmentService: NeedsAssessmentService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.needsAssessmentService.clearEvacuationFileNo();
+    this.formCreationService.clearProfileData();
+    this.formCreationService.clearNeedsAssessmentData();
+  }
 
   verifyUser(): void {
     this.router.navigate(['/verified-registration']);

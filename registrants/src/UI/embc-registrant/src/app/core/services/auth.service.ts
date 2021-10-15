@@ -1,7 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { EMPTY, Observable, of, Subscription, throwError, timer } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  of,
+  Subject,
+  Subscription,
+  throwError,
+  timer
+} from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -18,6 +26,9 @@ import { LoginService } from '../api/services';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  public loggedInStatus: Subject<boolean> = new Subject<boolean>();
+  public loggedInStatus$: Observable<boolean> =
+    this.loggedInStatus.asObservable();
   private refreshTokenSub: Subscription;
   private refreshInterval: number =
     environment.tokenRefreshPeriodInSeconds * 1000;
@@ -32,6 +43,7 @@ export class AuthService {
     return window.sessionStorage.getItem('auth:token');
   }
   private set token(v: string) {
+    this.loggedInStatus.next(v != null);
     if (v != null) {
       window.sessionStorage.setItem('auth:token', v);
     } else {

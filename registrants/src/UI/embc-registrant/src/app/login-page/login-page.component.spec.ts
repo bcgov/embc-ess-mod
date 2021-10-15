@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LoginPageComponent } from './login-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
@@ -11,7 +13,12 @@ describe('LoginPageComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [LoginPageComponent],
-        imports: [RouterTestingModule]
+        imports: [
+          RouterTestingModule,
+          ReactiveFormsModule,
+          HttpClientTestingModule
+        ],
+        providers: [FormBuilder]
       }).compileComponents();
     })
   );

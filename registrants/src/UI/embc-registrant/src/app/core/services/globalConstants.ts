@@ -39,9 +39,6 @@ export const gender = [
   { name: 'X', value: 'X' }
 ];
 
-export const securityQuesError =
-  'An error occurred while loading the security questions. Please try again later';
-
 export const deleteMemberInfoBody: DialogContent = {
   text: '<p>Are you sure you want to remove this family member from your evacuation file?</p>',
   cancelButton: 'No, Cancel',
@@ -60,3 +57,8 @@ export const invalidGoBack: DialogContent = {
   text: '<p>The Go Back action is disabled on this page</p>',
   cancelButton: 'Close'
 };
+
+export const securityQuesError =
+  'An error occurred while loading the security questions. Please try again later';
+export const systemError =
+  'The service is temporarily unavailable. Please try again later';

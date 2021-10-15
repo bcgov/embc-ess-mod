@@ -31,7 +31,6 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     // only set authentication header for API requests
     const whiteListed = this.isWhiteListed(req.url);
-    console.log(req.url, ' whitelisted ', whiteListed);
     if (whiteListed) {
       return next.handle(req);
     }
