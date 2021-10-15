@@ -43,7 +43,6 @@ namespace EMBC.ESS.Resources.Cases
                 nameof(SaveEvacuationFileNote) => await HandleSaveEvacuationFileNote((SaveEvacuationFileNote)cmd),
                 nameof(SaveEvacuationFileSupportCommand) => await HandleAddSupportToEvacuationFileCommand((SaveEvacuationFileSupportCommand)cmd),
                 nameof(VoidEvacuationFileSupportCommand) => await HandleVoidEvacuationFileSupportCommand((VoidEvacuationFileSupportCommand)cmd),
-                nameof(SaveSupportReferralPrintCommand) => await HandleAddReferralPrintToSupportCommand((SaveSupportReferralPrintCommand)cmd),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -53,8 +52,6 @@ namespace EMBC.ESS.Resources.Cases
             return query.GetType().Name switch
             {
                 nameof(EvacuationFilesQuery) => await HandleQueryEvacuationFile((EvacuationFilesQuery)query),
-                nameof(EvacuationFileSupportsQuery) => await HandleQueryEvacuationFileSupports((EvacuationFileSupportsQuery)query),
-                nameof(ReferralPrintQuery) => await HandleQueryReferralPrint((ReferralPrintQuery)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
@@ -65,20 +62,6 @@ namespace EMBC.ESS.Resources.Cases
 
             result.Items = await evacuationRepository.Read(query);
 
-            return result;
-        }
-
-        public async Task<CaseQueryResult> HandleQueryEvacuationFileSupports(EvacuationFileSupportsQuery query)
-        {
-            var result = new CaseQueryResult();
-            result.Items = await evacuationRepository.ReadSupports(query);
-            return result;
-        }
-
-        public async Task<CaseQueryResult> HandleQueryReferralPrint(ReferralPrintQuery query)
-        {
-            var result = new CaseQueryResult();
-            result.Items = await evacuationRepository.ReadRefferalPrint(query);
             return result;
         }
 
@@ -126,11 +109,6 @@ namespace EMBC.ESS.Resources.Cases
         private async Task<ManageCaseCommandResult> HandleVoidEvacuationFileSupportCommand(VoidEvacuationFileSupportCommand cmd)
         {
             return new ManageCaseCommandResult { Id = await evacuationRepository.VoidSupport(cmd.FileId, cmd.SupportId, cmd.VoidReason) };
-        }
-
-        private async Task<ManageCaseCommandResult> HandleAddReferralPrintToSupportCommand(SaveSupportReferralPrintCommand cmd)
-        {
-            return new ManageCaseCommandResult { Id = await evacuationRepository.CreateRefferalPrint(cmd.FileId, cmd.SupportIds) };
         }
     }
 }

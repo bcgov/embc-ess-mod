@@ -23,6 +23,7 @@ namespace EMBC.ESS.Resources.Print
     {
         public static IServiceCollection AddPrint(this IServiceCollection services)
         {
+            services.AddTransient<IPrintRequestsRepository, PrintRequestsRepository>();
             services.AddTransient<ISupportsService, SupportsService>();
 
             return services;

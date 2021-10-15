@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EMBC.ESS.Resources.Suppliers;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -40,12 +39,6 @@ namespace EMBC.ESS.Resources.Cases
         Task<string> UpdateSupport(string fileId, Support support);
 
         Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
-
-        Task<IEnumerable<Support>> ReadSupports(EvacuationFileSupportsQuery SupportIds);
-
-        Task<string> CreateRefferalPrint(string fileId, IEnumerable<string> supportIds);
-
-        Task<IEnumerable<ReferralPrint>> ReadRefferalPrint(ReferralPrintQuery query);
     }
 
     public class EvacuationFile : Case
@@ -177,9 +170,9 @@ namespace EMBC.ESS.Resources.Cases
         Archived = 174360004
     }
 
-    public abstract class Support : Case
+    public abstract class Support
     {
-        //public string Id { get; set; }
+        public string Id { get; set; }
         public DateTime IssuedOn { get; set; }
 
         public string IssuedByTeamMemberId { get; set; }
@@ -188,13 +181,6 @@ namespace EMBC.ESS.Resources.Cases
         public DateTime To { get; set; }
         public SupportStatus Status { get; set; } = SupportStatus.Active;
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
-
-        public SupportType SupportType { get; set; }
-        public string fileId { get; set; }
-        public string taskId { get; set; }
-        public string HostCommunity { get; set; }
-        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
-        public Supplier Supplier { get; set; }
     }
 
     public abstract class Referral : Support
@@ -304,20 +290,5 @@ namespace EMBC.ESS.Resources.Cases
         Clothing = 174360006,
         TransporationTaxi = 174360007,
         TransportationOther = 174360008
-    }
-
-    public class ReferralPrint : Case
-    {
-        public ReferralPrintType Type { get; set; } = ReferralPrintType.New;
-        public bool IncludeSummary { get; set; }
-        public string ReprintReason { get; set; }
-        public IEnumerable<string> SupportIds { get; set; }
-        public string RequestingUser { get; set; }
-    }
-
-    public enum ReferralPrintType
-    {
-        New = 174360000,
-        Reprint = 174360001
     }
 }

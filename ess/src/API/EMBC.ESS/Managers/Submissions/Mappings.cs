@@ -15,6 +15,8 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 
 namespace EMBC.ESS.Managers.Submissions
@@ -134,14 +136,6 @@ namespace EMBC.ESS.Managers.Submissions
                     ? null
                     : new Shared.Contracts.Submissions.TeamMember { Id = s.IssuedByTeamMemberId }))
                 .ReverseMap()
-                .ForMember(d => d.SupportType, opts => opts.Ignore())
-                .ForMember(d => d.fileId, opts => opts.Ignore())
-                .ForMember(d => d.taskId, opts => opts.Ignore())
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
-                .ForMember(d => d.HostCommunity, opts => opts.Ignore())
-                .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
-                .ForMember(d => d.Supplier, opts => opts.Ignore())
                 .ValidateMemberList(MemberList.Destination)
                 .IncludeAllDerived()
                 .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s.IssuedBy == null ? null : s.IssuedBy.Id))
@@ -198,7 +192,132 @@ namespace EMBC.ESS.Managers.Submissions
                 .ValidateMemberList(MemberList.Destination);
 
             CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Submissions.SupplierDetails>()
+                .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.Contact == null ? null : s.Contact.Phone))
+                ;
+
+            //referral printing mappings
+
+            CreateMap<Shared.Contracts.Submissions.Referral, Resources.Print.Supports.PrintReferral>()
+                .IncludeAllDerived()
+                .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
+                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.IssuedToPersonName))
+                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToString("hh:mm tt")))
+                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToString("hh:mm tt")))
+                .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
+                .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.UtcNow.ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.Comments, opts => opts.MapFrom(s => s.SupplierNotes))
+                .ForMember(d => d.Supplier, opts => opts.MapFrom(s => s.SupplierDetails))
+                .ForMember(d => d.IncidentTaskNumber, opts => opts.Ignore())
+                .ForMember(d => d.EssNumber, opts => opts.Ignore())
+                .ForMember(d => d.HostCommunity, opts => opts.Ignore())
+                .ForMember(d => d.Evacuees, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
+                {
+                    var file = (Shared.Contracts.Submissions.EvacuationFile)ctx.Items["evacuationFile"];
+                    if (file == null) return;
+                    d.IncidentTaskNumber = file.RelatedTask.Id;
+                    d.EssNumber = file.Id;
+                    //TODO: add community name resolution
+                    d.HostCommunity = file.RelatedTask.CommunityCode;
+                    d.Evacuees = ctx.Mapper.Map<IEnumerable<Resources.Print.Supports.PrintEvacuee>>(file.HouseholdMembers.Where(m => s.IncludedHouseholdMembers.Contains(m.Id)));
+                })
+                .ForAllOtherMembers(opts => opts.Ignore())
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.FoodRestaurantReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount))
+                .ForMember(d => d.NumBreakfasts, opts => opts.MapFrom(s => s.NumberOfBreakfastsPerPerson))
+                .ForMember(d => d.NumLunches, opts => opts.MapFrom(s => s.NumberOfLunchesPerPerson))
+                .ForMember(d => d.NumDinners, opts => opts.MapFrom(s => s.NumberOfDinnersPerPerson))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.ClothingReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.IncidentalsReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount))
+                .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.ApprovedItems))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.FoodGroceriesReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount))
+                .ForMember(d => d.NumDaysMeals, opts => opts.MapFrom(s => s.NumberOfDays))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.LodgingHotelReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
+                .ForMember(d => d.NumRooms, opts => opts.MapFrom(s => s.NumberOfRooms))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.LodgingBilletingReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
+                .ForMember(d => d.Supplier, opts => opts.MapFrom(s => new Resources.Print.Supports.PrintSupplier
+                {
+                    Address = s.HostAddress,
+                    City = s.HostCity,
+                    Telephone = s.HostPhone,
+                    Name = s.HostName
+                }))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.LodgingGroupReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
+                .ForMember(d => d.Supplier, opts => opts.MapFrom(supplier => new Resources.Print.Supports.PrintSupplier
+                {
+                    Address = supplier.FacilityAddress,
+                    City = supplier.FacilityCity,
+                    Telephone = supplier.FacilityContactPhone,
+                    Name = supplier.FacilityName
+                }))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.TransportationOtherReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount))
+                .ForMember(d => d.OtherTransportModeDetails, opts => opts.MapFrom(s => s.TransportMode))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.TransportationTaxiReferral, Resources.Print.Supports.PrintReferral>()
+                .ForMember(d => d.FromAddress, opts => opts.MapFrom(s => s.FromAddress))
+                .ForMember(d => d.ToAddress, opts => opts.MapFrom(s => s.ToAddress))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.SupplierDetails, Resources.Print.Supports.PrintSupplier>()
+                .ForMember(d => d.Address, opts => opts.MapFrom(s => s.Address.AddressLine1 + s.Address.AddressLine2))
+                .ForMember(d => d.City, opts => opts.MapFrom(s => s.Address.City))
+                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Name))
+                .ForMember(d => d.Province, opts => opts.MapFrom(s => s.Address.StateProvince))
+                .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.Address.PostalCode))
+                .ForMember(d => d.Telephone, opts => opts.MapFrom(s => s.Phone))
+                ;
+
+            Func<Shared.Contracts.Submissions.HouseholdMember, string> mapEvacueeTType = m =>
+                m.IsPrimaryRegistrant
+                    ? "M" //main
+                    : m.IsUnder19
+                        ? "C" //child
+                        : "A"; //adult
+
+            CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Print.Supports.PrintEvacuee>()
+                .ForMember(d => d.EvacueeTypeCode, opts => opts.MapFrom(s => mapEvacueeTType(s)))
                 ;
         }
+
+        private static Resources.Print.Supports.PrintReferralType MapSupportType(Shared.Contracts.Submissions.Support support) =>
+            support switch
+            {
+                Shared.Contracts.Submissions.ClothingReferral _ => Resources.Print.Supports.PrintReferralType.Clothing,
+                Shared.Contracts.Submissions.FoodGroceriesReferral _ => Resources.Print.Supports.PrintReferralType.Groceries,
+                Shared.Contracts.Submissions.FoodRestaurantReferral _ => Resources.Print.Supports.PrintReferralType.Meals,
+                Shared.Contracts.Submissions.IncidentalsReferral _ => Resources.Print.Supports.PrintReferralType.Incidentals,
+                Shared.Contracts.Submissions.LodgingBilletingReferral _ => Resources.Print.Supports.PrintReferralType.Billeting,
+                Shared.Contracts.Submissions.LodgingGroupReferral _ => Resources.Print.Supports.PrintReferralType.GroupLodging,
+                Shared.Contracts.Submissions.LodgingHotelReferral _ => Resources.Print.Supports.PrintReferralType.Hotel,
+                Shared.Contracts.Submissions.TransportationOtherReferral _ => Resources.Print.Supports.PrintReferralType.Transportation,
+                Shared.Contracts.Submissions.TransportationTaxiReferral _ => Resources.Print.Supports.PrintReferralType.Taxi,
+                _ => throw new NotImplementedException()
+            };
     }
 }

@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
@@ -81,6 +82,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
 
     public class ProcessSupportsCommand : Command
     {
+        public string RequestingUserId { get; set; }
+        public bool IncludeSummaryInReferralsPrintout { get; set; }
         public string FileId { get; set; }
         public IEnumerable<Support> supports { get; set; }
     }
@@ -108,15 +111,16 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<SupplierDetails> Items { get; set; }
     }
 
-    public class PrintRequestQuery : Query<PrintRequestQueryResponse>
+    public class PrintRequestQuery : Query<PrintRequestQueryResult>
     {
-        public string FileId { get; set; }
         public string PrintRequestId { get; set; }
+        public string RequestingUserId { get; set; }
     }
 
-    public class PrintRequestQueryResponse
+    public class PrintRequestQueryResult
     {
         public string ContentType { get; set; }
         public byte[] Content { get; set; }
+        public DateTime PrintedOn { get; set; }
     }
 }

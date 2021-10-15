@@ -14,7 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,16 +24,16 @@ namespace EMBC.ESS.Resources.Print.Supports
 {
     public interface ISupportsService
     {
-        Task<byte[]> GetReferralPdfsAsync(SupportsToPrint printReferrals);
-
         Task<string> GetReferralHtmlPagesAsync(SupportsToPrint printSupports);
     }
 
     public class SupportsToPrint
     {
-        public IEnumerable<string> SupportsIds { get; set; }
+        public IEnumerable<PrintReferral> Referrals { get; set; }
+
         public bool AddSummary { get; set; }
-        public string CurrentLoggedInUser { get; set; }
+        public bool AddWatermark { get; set; }
+        public PrintRequestingUser RequestingUser { get; set; }
     }
 
     public class PrintReferral
@@ -52,7 +54,7 @@ namespace EMBC.ESS.Resources.Print.Supports
 
         public string VolunteerDisplayName { get; set; }
         public bool DisplayWatermark { get; set; }
-        public string SupportType { get; set; }
+        public PrintReferralType Type { get; set; }
         public string EssNumber { get; set; }
         public string PurchaserName { get; set; }
         public PrintSupplier Supplier { get; set; }
@@ -65,14 +67,14 @@ namespace EMBC.ESS.Resources.Print.Supports
         public string FromAddress { get; set; }
         public string ToAddress { get; set; }
         public string OtherTransportModeDetails { get; set; }
-        public IEnumerable<PrintEvacuee> PrintEvacuees { get; set; }
+        public IEnumerable<PrintEvacuee> Evacuees { get; set; } = Array.Empty<PrintEvacuee>();
 
-        public object[] PrintableEvacuees
+        public PrintableEvacueesRow[] PrintableEvacuees
         {
             get
             {
-                var evacueesToPrint = new List<object>();
-                var evacuees = PrintEvacuees.ToArray();
+                var evacueesToPrint = new List<PrintableEvacueesRow>();
+                var evacuees = Evacuees.ToArray();
 
                 for (int i = 0; i <= 7; i++)
                 {
@@ -90,21 +92,23 @@ namespace EMBC.ESS.Resources.Print.Supports
 
     public class PrintSupplier
     {
-        public string Id { get; set; }
-        public bool Active { get; set; }
+        //public string Id { get; set; }
+        //public bool Active { get; set; }
         public string Name { get; set; }
+
         public string Address { get; set; }
         public string City { get; set; }
         public string Province { get; set; }
         public string PostalCode { get; set; }
         public string Telephone { get; set; }
-        public string Fax { get; set; }
+        //public string Fax { get; set; }
     }
 
     public class PrintEvacuee
     {
-        public string Id { get; set; }
+        //public string Id { get; set; }
         public string FirstName { get; set; }
+
         public string LastName { get; set; }
         public string EvacueeTypeCode { get; set; }
     }
@@ -136,5 +140,41 @@ namespace EMBC.ESS.Resources.Print.Supports
         {
             return string.IsNullOrEmpty(columnText) ? "nobody" : "evacuee";
         }
+    }
+
+    public class PrintRequestingUser
+    {
+        public string Id { get; set; }
+        public string DisplayName { get; set; }
+    }
+
+    public enum PrintReferralType
+    {
+        [Display(Name = "BILLETING")]
+        Billeting,
+
+        [Display(Name = "CLOTHING")]
+        Clothing,
+
+        [Display(Name = "FOOD, GROCERIES")]
+        Groceries,
+
+        [Display(Name = "GROUP LODGING")]
+        GroupLodging,
+
+        [Display(Name = "HOTEL/MOTEL")]
+        Hotel,
+
+        [Display(Name = "INCIDENTALS")]
+        Incidentals,
+
+        [Display(Name = "FOOD, RESTAURANT MEALS")]
+        Meals,
+
+        [Display(Name = "TAXI")]
+        Taxi,
+
+        [Display(Name = "TRANSPORTATION")]
+        Transportation
     }
 }

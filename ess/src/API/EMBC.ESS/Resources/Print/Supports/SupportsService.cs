@@ -17,100 +17,43 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using AutoMapper;
-using EMBC.ESS.Resources.Cases;
-using EMBC.ESS.Resources.Print.Utils;
-using EMBC.ESS.Resources.Suppliers;
-using EMBC.ESS.Utilities.PdfGenerator;
 using HandlebarsDotNet;
-using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS.Resources.Print.Supports
 {
     public class SupportsService : ISupportsService
     {
-        private readonly ICaseRepository caseRepository;
-        private readonly IMapper mapper;
-        private readonly ISupplierRepository supplierRepository;
-        private readonly IPdfGenerator pdfGenerator;
-        private readonly IHostEnvironment env;
-
-        private string currentUser;
-
         private readonly string pageBreak = $@"{Environment.NewLine}<div class=""page-break""></div>{Environment.NewLine}";
 
-        public SupportsService(ICaseRepository caseRepository, IMapper mapper, ISupplierRepository supplierRepository, IHostEnvironment environment, IPdfGenerator pdfGenerator)
+        public async Task<string> GetReferralHtmlPagesAsync(SupportsToPrint supportsToPrint)
         {
-            this.caseRepository = caseRepository;
-            this.mapper = mapper;
-            this.supplierRepository = supplierRepository;
-            this.pdfGenerator = pdfGenerator;
-            this.env = environment;
-            this.currentUser = string.Empty;
+            return await AssembleReferralHtml(supportsToPrint.RequestingUser, supportsToPrint.Referrals, supportsToPrint.AddSummary, supportsToPrint.AddWatermark);
         }
 
-        public async Task<byte[]> GetReferralPdfsAsync(SupportsToPrint printReferrals)
-        {
-            this.currentUser = printReferrals.CurrentLoggedInUser;
-            var content = await GetReferralHtmlPagesAsync(printReferrals);
-
-            if (content == null)
-            {
-                return null;
-            }
-
-            var result = await pdfGenerator.Generate(content);
-            return result;
-        }
-
-        public async Task<string> GetReferralHtmlPagesAsync(SupportsToPrint printSupports)
-        {
-            var supports = (await caseRepository.QueryCase(new EvacuationFileSupportsQuery() { SupportIds = printSupports.SupportsIds })).Items.Cast<Support>();
-            if (!supports.Any())
-            {
-                return null;
-            }
-
-            var html = await AssembleReferralHtml(supports, printSupports.AddSummary);
-
-            return html;
-        }
-
-        private async Task<string> AssembleReferralHtml(IEnumerable<Support> supports, bool includeSummary)
+        private async Task<string> AssembleReferralHtml(PrintRequestingUser requestingUser, IEnumerable<PrintReferral> referrals, bool includeSummary, bool addWatermark)
         {
             var referralHtml = string.Empty;
 
-            foreach (var support in supports)
+            foreach (var referral in referrals)
             {
-                var referral = (Referral)support;
-                var printsupplier = new PrintSupplier();
+                referral.VolunteerDisplayName = requestingUser.DisplayName;
+                referral.DisplayWatermark = addWatermark;
 
-                if (!string.IsNullOrEmpty(referral.SupplierId))
-                {
-                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
-                    {
-                        SupplierId = referral.SupplierId,
-                    })).Items.SingleOrDefault(m => m.Id == referral.SupplierId);
-                    printsupplier = mapper.Map<PrintSupplier>(supplier);
-                }
-
-                var printReferral = mapper.Map<PrintReferral>(referral);
-                if (!string.IsNullOrEmpty(printsupplier.Id))
-                    printReferral.Supplier = printsupplier;
-                var newHtml = CreateReferralHtmlPages(printReferral);
+                var newHtml = CreateReferralHtmlPages(referral);
                 referralHtml = $"{referralHtml}{newHtml}";
             }
 
-            var summaryHtml = includeSummary ? await CreateReferalHtmlSummary(supports) : string.Empty;
+            var summaryHtml = includeSummary ? await CreateReferalHtmlSummary(referrals) : string.Empty;
             var finalHtml = $"{summaryHtml}{referralHtml}";
 
             var handleBars = Handlebars.Create();
             handleBars.RegisterTemplate("stylePartial", GetCSSPartialView());
             handleBars.RegisterTemplate("bodyPartial", finalHtml);
-            var template = handleBars.Compile(TemplateLoader.LoadTemplate("MasterLayout"));
+            var template = handleBars.Compile(LoadTemplate("MasterLayout"));
             var assembledHtml = template(string.Empty);
 
             return assembledHtml;
@@ -122,7 +65,7 @@ namespace EMBC.ESS.Resources.Print.Supports
 
             handleBars.RegisterTemplate("stylePartial", GetCSSPartialView());
 
-            var partialViewType = MapToReferralType(referral.SupportType);
+            var partialViewType = referral.Type;
 
             var partialItemsSource = GetItemsPartialView(partialViewType);
             handleBars.RegisterTemplate("itemsPartial", partialItemsSource);
@@ -135,31 +78,27 @@ namespace EMBC.ESS.Resources.Print.Supports
             var partialChecklistSource = GetChecklistPartialView(partialViewType);
             handleBars.RegisterTemplate("checklistPartial", partialChecklistSource);
 
-            var template = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.Referral.ToString()));
-
-            referral.VolunteerDisplayName = this.currentUser;
-            // If we're in prod, we don't want the watermark
-            referral.DisplayWatermark = !env.IsProduction();
+            var template = handleBars.Compile(LoadTemplate(ReferalMainViews.Referral.ToString()));
 
             var result = template(referral);
 
             return $"{result}{pageBreak}";
         }
 
-        private async Task<string> CreateReferalHtmlSummary(IEnumerable<Support> supports)
+        private async Task<string> CreateReferalHtmlSummary(IEnumerable<PrintReferral> supports)
         {
+            await Task.CompletedTask;
             var handleBars = Handlebars.Create();
 
             var result = string.Empty;
             var itemsHtml = string.Empty;
             var summaryBreakCount = 0;
             var printedCount = 0;
-            var volunteerDisplayName = this.currentUser;
-            foreach (var support in supports)
+            foreach (var printReferral in supports)
             {
                 summaryBreakCount += 1;
                 printedCount += 1;
-                var partialViewType = MapToReferralType(support.SupportType.ToString());
+                var partialViewType = printReferral.Type;
 
                 var partialViewDisplayName = partialViewType.GetType()
                         .GetMember(partialViewType.ToString())
@@ -169,7 +108,7 @@ namespace EMBC.ESS.Resources.Print.Supports
 
                 handleBars.RegisterTemplate("titlePartial", partialViewDisplayName);
 
-                var useSummaryVersion = partialViewType == ReferralPartialView.Hotel || partialViewType == ReferralPartialView.Billeting;
+                var useSummaryVersion = partialViewType == PrintReferralType.Hotel || partialViewType == PrintReferralType.Billeting;
                 var partialItemsSource = GetItemsPartialView(partialViewType, useSummaryVersion);
                 handleBars.RegisterTemplate("itemsPartial", partialItemsSource);
 
@@ -178,23 +117,8 @@ namespace EMBC.ESS.Resources.Print.Supports
                 var partialNotesSource = GetNotesPartialView(partialViewType);
                 handleBars.RegisterTemplate("notesPartial", partialNotesSource);
 
-                var template = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
+                var template = handleBars.Compile(LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
 
-                var referral = (Referral)support;
-                var printsupplier = new PrintSupplier();
-
-                if (!string.IsNullOrEmpty(referral.SupplierId))
-                {
-                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
-                    {
-                        SupplierId = referral.SupplierId,
-                    })).Items.SingleOrDefault(m => m.Id == referral.SupplierId);
-                    printsupplier = mapper.Map<PrintSupplier>(supplier);
-                }
-
-                var printReferral = mapper.Map<PrintReferral>(referral);
-                if (!string.IsNullOrEmpty(printsupplier.Id))
-                    printReferral.Supplier = printsupplier;
                 var purchaserName = printReferral.PurchaserName;
                 var itemResult = template(printReferral);
 
@@ -206,9 +130,9 @@ namespace EMBC.ESS.Resources.Print.Supports
 
                     handleBars.RegisterTemplate("summaryItemsPartial", itemsHtml);
 
-                    var mainTemplate = handleBars.Compile(TemplateLoader.LoadTemplate(ReferalMainViews.Summary.ToString()));
+                    var mainTemplate = handleBars.Compile(LoadTemplate(ReferalMainViews.Summary.ToString()));
 
-                    var data = new { volunteerDisplayName, purchaserName };
+                    var data = new { printReferral.VolunteerDisplayName, purchaserName };
                     result = $"{result}{mainTemplate(data)}{pageBreak}";
                     itemsHtml = string.Empty;
                 }
@@ -219,32 +143,32 @@ namespace EMBC.ESS.Resources.Print.Supports
 
         private string GetCSSPartialView()
         {
-            return TemplateLoader.LoadTemplate("Css");
+            return LoadTemplate("Css");
         }
 
-        private string GetItemsPartialView(ReferralPartialView partialView, bool useSummaryPartial = false)
+        private string GetItemsPartialView(PrintReferralType partialView, bool useSummaryPartial = false)
         {
             var summary = useSummaryPartial ? "Summary" : string.Empty;
-            var name = $"{partialView.ToString()}.{partialView.ToString()}Items{summary}Partial";
-            return TemplateLoader.LoadTemplate(name);
+            var name = $"{partialView}.{partialView}Items{summary}Partial";
+            return LoadTemplate(name);
         }
 
-        private string GetChecklistPartialView(ReferralPartialView partialView)
+        private string GetChecklistPartialView(PrintReferralType partialView)
         {
-            var name = $"{partialView.ToString()}.{partialView.ToString()}ChecklistPartial";
-            return TemplateLoader.LoadTemplate(name);
+            var name = $"{partialView}.{partialView}ChecklistPartial";
+            return LoadTemplate(name);
         }
 
-        private string GetSupplierPartialView(ReferralPartialView partialView)
+        private string GetSupplierPartialView(PrintReferralType partialView)
         {
-            var name = $"{partialView.ToString()}.{partialView.ToString()}SupplierPartial";
-            return TemplateLoader.LoadTemplate(name);
+            var name = $"{partialView}.{partialView}SupplierPartial";
+            return LoadTemplate(name);
         }
 
-        private string GetNotesPartialView(ReferralPartialView partialView)
+        private string GetNotesPartialView(PrintReferralType partialView)
         {
-            var name = $"{partialView.ToString()}.{partialView.ToString()}NotesPartial";
-            return TemplateLoader.LoadTemplate(name);
+            var name = $"{partialView}.{partialView}NotesPartial";
+            return LoadTemplate(name);
         }
 
         public enum ReferalMainViews
@@ -254,77 +178,17 @@ namespace EMBC.ESS.Resources.Print.Supports
             SummaryItem
         }
 
-        public enum ReferralPartialView
+        private static string LoadTemplate(string name)
         {
-            [Display(Name = "BILLETING")]
-            Billeting,
-
-            [Display(Name = "CLOTHING")]
-            Clothing,
-
-            [Display(Name = "FOOD, GROCERIES")]
-            Groceries,
-
-            [Display(Name = "GROUP LODGING")]
-            GroupLodging,
-
-            [Display(Name = "HOTEL/MOTEL")]
-            Hotel,
-
-            [Display(Name = "INCIDENTALS")]
-            Incidentals,
-
-            [Display(Name = "FOOD, RESTAURANT MEALS")]
-            Meals,
-
-            [Display(Name = "TAXI")]
-            Taxi,
-
-            [Display(Name = "TRANSPORTATION")]
-            Transportation
-        }
-
-        //public bool IsValidReferralType(string type, string subType)
-        //{
-        //    subType = string.IsNullOrEmpty(subType) ? "" : "_" + subType;
-        //    return Enum.GetNames(typeof(Models.Db.ReferralType)).Any(t => t.Equals($"{type}{subType}", StringComparison.OrdinalIgnoreCase));
-        //}
-
-        private ReferralPartialView MapToReferralType(string referralType)
-        {
-            var referralTypeEnum = EnumHelper<SupportType>.GetValueFromDisplayName(referralType);
-
-            switch (EnumHelper<SupportType>.GetValueFromName(referralType))
+            var assembly = Assembly.GetExecutingAssembly();
+            var manifestName = $"EMBC.ESS.Resources.Print.Supports.Views.{name}.hbs";
+            using (var stream = assembly.GetManifestResourceStream(manifestName))
             {
-                case SupportType.Clothing:
-                    return ReferralPartialView.Clothing;
-
-                case SupportType.FoodGroceries:
-                    return ReferralPartialView.Groceries;
-
-                case SupportType.FoodRestaurant:
-                    return ReferralPartialView.Meals;
-
-                case SupportType.Incidentals:
-                    return ReferralPartialView.Incidentals;
-
-                case SupportType.LodgingBilleting:
-                    return ReferralPartialView.Billeting;
-
-                case SupportType.LodgingGroup:
-                    return ReferralPartialView.GroupLodging;
-
-                case SupportType.LodgingHotel:
-                    return ReferralPartialView.Hotel;
-
-                case SupportType.TransportationOther:
-                    return ReferralPartialView.Transportation;
-
-                case SupportType.TransporationTaxi:
-                    return ReferralPartialView.Taxi;
-
-                default:
-                    throw new ArgumentException($"{referralType} not a valid ReferralType");
+                using (var reader = new StreamReader(stream))
+                {
+                    string template = reader.ReadToEnd();
+                    return template;
+                }
             }
         }
     }

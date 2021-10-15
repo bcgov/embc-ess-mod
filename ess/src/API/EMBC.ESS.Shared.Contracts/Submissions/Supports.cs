@@ -47,6 +47,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Name { get; set; }
         public string TeamId { get; set; }
         public string TeamName { get; set; }
+        public string Phone { get; set; }
     }
 
     public class ClothingReferral : Referral

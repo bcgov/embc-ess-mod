@@ -212,20 +212,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .IncludeAllDerived()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s._era_issuedbyid_value))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.MapFrom(s => s._era_needsassessmentid_value))
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
-                .ForMember(d => d.SupportType, opts => opts.MapFrom(s => s.era_supporttype))
-                .ForMember(d => d.fileId, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_name))
-                .ForMember(d => d.taskId, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_TaskId.era_name))
-                .ForMember(d => d.HostCommunity, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_EvacuatedFromID.era_jurisdictionname))
-                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport))
-                .ForMember(d => d.Supplier, opts => opts.MapFrom(s => s.era_SupplierId))
                 .ReverseMap()
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
@@ -318,29 +310,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ReverseMap()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.TransporationTaxi))
                 ;
-
-            CreateMap<era_referralprint, ReferralPrint>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_referralprintid))
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_type))
-                .ForMember(d => d.IncludeSummary, opts => opts.MapFrom(s => s.era_includedsummary))
-                .ForMember(d => d.ReprintReason, opts => opts.MapFrom(s => s.era_reprintreason))
-                .ForMember(d => d.RequestingUser, opts => opts.MapFrom(s => s.era_RequestingUserId.era_firstname + ' ' + s.era_RequestingUserId.era_lastname[0] + '.'))
-                .ForMember(d => d.SupportIds, opts => opts.MapFrom(s => extractSupportIds(s.era_era_referralprint_era_evacueesupport)))
-                .ReverseMap()
-                ;
-        }
-
-        private IEnumerable<string> extractSupportIds(IEnumerable<era_evacueesupport> supports)
-        {
-            List<string> list = new List<string>();
-            foreach (var support in supports)
-            {
-                list.Add(support.era_name);
-            }
-
-            return list.ToArray();
         }
 
         private static int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
