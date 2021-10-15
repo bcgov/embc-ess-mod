@@ -10,6 +10,7 @@ import {
 } from 'src/app/core/api/models';
 import { EvacuationsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
+import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import { LocationService } from 'src/app/core/services/location.service';
 import { RestrictionService } from 'src/app/feature-components/restriction/restriction.service';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
@@ -26,8 +27,11 @@ export class EvacuationFileDataService {
   public pastEvacuationFileCount$: Observable<number> =
     this.pastEvacuationFileCount.asObservable();
 
-  private currentEvacuationFilesVal: Array<NeedsAssessment>;
-  private pastEvacuationFilesVal: Array<NeedsAssessment>;
+  hasPendingEssFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  public hasPendingEssFiles$: Observable<boolean> =
+    this.hasPendingEssFiles.asObservable();
 
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
@@ -103,16 +107,6 @@ export class EvacuationFileDataService {
     this.currentEvacuationFileCount.next(count);
   }
 
-  public getCurrentEvacuationFiles(): Array<NeedsAssessment> {
-    return this.currentEvacuationFilesVal;
-  }
-
-  public setCurrentEvacuationFiles(
-    evacuationFiles: Array<NeedsAssessment>
-  ): void {
-    this.currentEvacuationFilesVal = evacuationFiles;
-  }
-
   public getPastEvacuationFileCount(): Observable<number> {
     return this.pastEvacuationFileCount$;
   }
@@ -121,12 +115,25 @@ export class EvacuationFileDataService {
     this.pastEvacuationFileCount.next(count);
   }
 
-  public getPastEvacuationFiles(): Array<NeedsAssessment> {
-    return this.pastEvacuationFilesVal;
+  public getHasPendingEssFiles(): Observable<boolean> {
+    return this.hasPendingEssFiles$;
   }
 
-  public setPastEvacuationFiles(evacuationFiles: Array<NeedsAssessment>): void {
-    this.pastEvacuationFilesVal = evacuationFiles;
+  public setHasPendingEssFiles(
+    evacuationFiles: Array<EvacuationFileModel>
+  ): void {
+    let totalPendingFiles = 0;
+    evacuationFiles.forEach((item) => {
+      if (item.status === EvacuationFileStatus.Pending) {
+        totalPendingFiles += 1;
+      }
+    });
+
+    if (totalPendingFiles > 0) {
+      this.hasPendingEssFiles.next(true);
+    } else {
+      this.hasPendingEssFiles.next(false);
+    }
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
@@ -160,6 +167,17 @@ export class EvacuationFileDataService {
     return this.evacuationService
       .evacuationsUpsertEvacuationFile({ body: this.createEvacuationFileDTO() })
       .pipe(map((response) => response.referenceNumber));
+  }
+
+  public clearESSFileData(): void {
+    this.evacuatedAddress = undefined;
+    this.evacuationFileDate = undefined;
+    this.essFileId = undefined;
+    this.secretPhrase = undefined;
+    this.secretPhraseEdited = undefined;
+    this.evacuationFileStatus = undefined;
+    this.supports = undefined;
+    this.needsAssessmentService.clearNeedsAssessmentData();
   }
 
   // private setAddressObject(addressObject: RegAddress): Address {

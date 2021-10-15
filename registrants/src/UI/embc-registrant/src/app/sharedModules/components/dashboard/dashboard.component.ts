@@ -18,7 +18,6 @@ import * as globalConst from '../../../core/services/globalConstants';
 export class DashboardComponent implements OnInit {
   currentFlow: string;
   activeFiles: number;
-  evacuationFileWithTask: boolean;
   emptyRegistrationResult: string = null;
 
   tabs: TabModel[] = [
@@ -53,7 +52,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    this.evacuationFileWithTask = false;
 
     setTimeout(() => {
       this.openReferenceNumberPopup();
