@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CommunityType, CommunityCode, Code, Address } from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { RegAddress } from '../model/address';
@@ -64,6 +66,44 @@ export class LocationService {
     return this.regionalDistricts
       ? this.regionalDistricts
       : JSON.parse(this.cacheService.get('regionalDistrictsList'));
+  }
+
+  public async loadStaticLocationLists(): Promise<void> {
+    const community = this.configService.configurationGetCommunities();
+    const province = this.configService.configurationGetStateProvinces();
+    const country = this.configService.configurationGetCountries();
+
+    return forkJoin([community, province, country])
+      .pipe(
+        map((results) => {
+          this.setCountriesList(
+            [...results[2]].map((c) => ({ code: c.value, name: c.description }))
+          );
+
+          this.setCommunityList(
+            [...results[0]].map((c) => ({
+              code: c.value,
+              name: c.description,
+              districtName: c.districtName,
+              stateProvinceCode: c.parentCode.value,
+              countryCode: c.parentCode.parentCode.value,
+              type: c.communityType
+            }))
+          );
+          this.setRegionalDistricts(
+            results[0].map((comm) => comm.districtName)
+          );
+
+          this.setStateProvinceList(
+            [...results[1]].map((sp) => ({
+              code: sp.value,
+              name: sp.description,
+              countryCode: sp.parentCode.value
+            }))
+          );
+        })
+      )
+      .toPromise();
   }
 
   /**

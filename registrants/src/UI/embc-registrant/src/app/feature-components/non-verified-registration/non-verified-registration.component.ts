@@ -14,8 +14,8 @@ export class NonVerifiedRegistrationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.needsAssessmentService.clearEvacuationFileNo();
-    this.formCreationService.clearProfileData();
-    this.formCreationService.clearNeedsAssessmentData();
+    // this.needsAssessmentService.clearEvacuationFileNo();
+    // this.formCreationService.clearProfileData();
+    // this.formCreationService.clearNeedsAssessmentData();
   }
 }

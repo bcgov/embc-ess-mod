@@ -62,10 +62,6 @@ export class EvacuationFileService {
   }
 
   updateEvacuationFile(): Observable<string> {
-    // console.log({
-    //     essFileNumber: this.evacuationFileDataService.essFileNumber,
-    //     body: this.evacuationFileDataService.createEvacuationFileDTO()
-    // });
     return this.evacuationService
       .evacuationsUpsertEvacuationFile({
         body: this.evacuationFileDataService.createEvacuationFileDTO()

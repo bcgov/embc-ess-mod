@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { CacheService } from './cache.service';
 
@@ -36,5 +36,16 @@ export class SecurityQuestionsService {
       .subscribe((list) => {
         this.securityQuestionOptions = list;
       });
+  }
+
+  public async loadSecurityQuesList(): Promise<void> {
+    return this.configurationService
+      .configurationGetSecurityQuestions()
+      .pipe(
+        map((results) => {
+          this.securityQuestionOptions = results;
+        })
+      )
+      .toPromise();
   }
 }

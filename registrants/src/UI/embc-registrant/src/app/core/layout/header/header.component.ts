@@ -14,22 +14,20 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     public formCreationService: FormCreationService,
-    private authService: AuthService,
+    public authService: AuthService,
     private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
-      this.showLoginMatMenu = true;
-    } else {
-      this.showLoginMatMenu = false;
-    }
+    this.authService.loggedInStatus$.subscribe((val) => {
+      this.showLoginMatMenu = val;
+    });
   }
 
   homeButton(): void {}
 
   signOut(): void {
     this.cacheService.clear();
-    this.authService.logout('https://www.emergencyinfobc.gov.bc.ca/');
+    this.authService.logout('/registration-method');
   }
 }

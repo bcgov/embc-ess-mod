@@ -1,128 +1,134 @@
 .header-style {
-    justify-content: normal;
+  justify-content: space-between;
 }
 
 .app-heading {
-    font-size: 30px;
-    margin: 0px 270px 0px 0px;
+  font-size: 30px;
+  //margin: 0px 270px 0px 0px;
 }
 
 .heading-text1 {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .heading-text2 {
-    color: #fcba19;
+  color: #fcba19;
 }
 
 .divider {
-    width: 1px;
-    height: 44px;
-    background-color: #ffffff;
-    border-radius: 0px;
-    margin-right: 20px;
-}
-
-::ng-deep .mat-menu-content {
-    border-bottom: 2px solid #fcba19;
-}
-
-.signOut-button {
-    color: rgb(252, 186, 25) !important;
-}
-
-.signOut-button:hover {
-    text-decoration: underline;
-}
-
-.menuButton {
-    background: #036;
-    color: white;
-    font-size: 15px;
-}
-
-::ng-deep .mat-menu-panel {
-    border-radius: 0px !important;
-    background: #036 !important;
-    min-width: 200px !important;
-}
-
-.mat-menu-item {
-    color: #ffffff;
-}
-
-.text {
-    color: white;
-    padding-left: 10px;
-}
-
-.img-align {
-    margin-right: 5px;
-    margin-left: 20px;
-}
-
-.align-content {
-    display: inline-block;
-    line-height: 0;
-}
-
-@media (max-width: 1200px) {
-    .app-heading {
-        margin: 0px 100px 0px 0px;
-    }
-}
-
-@media (max-width: 900px) {
-    .app-heading {
-        margin: 0px 100px 0px 0px;
-    }
-
-    .img-align {
-        margin-right: 5px;
-        margin-left: 5px;
-    }
+  width: 1px;
+  height: 44px;
+  background-color: #ffffff;
+  border-radius: 0px;
+  margin-right: 20px;
 }
 
 @media (max-width: 768px) {
-    .divider {
-        width: 0px;
-    }
+  .divider {
+    width: 0px;
+  }
+}
 
-    .app-heading {
-        margin: 0px 0px 0px 0px;
-    }
+::ng-deep .mat-menu-content {
+  border-bottom: 2px solid #fcba19;
+}
 
-    .menuButton {
-        margin: 0px 0px 0px 600px;
-    }
+.signOut-button {
+  color: rgb(252, 186, 25) !important;
+}
+
+.signOut-button:hover {
+  text-decoration: underline;
+}
+
+.menuButton {
+  background: #036;
+  color: white;
+  font-size: 15px;
+}
+
+::ng-deep .mat-menu-panel {
+  border-radius: 0px !important;
+  background: #036 !important;
+  min-width: 200px !important;
+}
+
+.mat-menu-item {
+  color: #ffffff;
+}
+
+.text {
+  color: white;
+  padding-left: 10px;
+}
+
+.img-align {
+  margin-right: 5px;
+  // margin-left: 20px;
+}
+
+.align-content {
+  display: inline-block;
+  line-height: 0;
+}
+
+@media (max-width: 1200px) {
+  .app-heading {
+    margin: 0px 100px 0px 0px;
+  }
+}
+
+@media (max-width: 900px) {
+  .app-heading {
+    margin: 0px 100px 0px 0px;
+  }
+
+  .img-align {
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .divider {
+    width: 0px;
+  }
+
+  .app-heading {
+    margin: 0px 0px 0px 0px;
+  }
+
+  .menuButton {
+    margin: 0px 0px 0px 600px;
+  }
 }
 
 @media (max-width: 766px) {
-    .menuButton {
-        margin: 0px 0px 0px 420px;
-    }
+  .menuButton {
+    margin: 0px 0px 0px 420px;
+  }
 }
 
 @media (max-width: 500px) {
-    .menuButton {
-        margin: 0px 0px 0px 270px;
-    }
+  .menuButton {
+    margin: 0px 0px 0px 270px;
+  }
 }
 
 @media (max-width: 380px) {
-    .menuButton {
-        margin: 0px 0px 0px 220px;
-    }
+  .menuButton {
+    margin: 0px 0px 0px 220px;
+  }
 }
 
 @media (max-width: 320px) {
-    .menuButton {
-        margin: 0px 0px 0px 180px;
-    }
+  .menuButton {
+    margin: 0px 0px 0px 180px;
+  }
 }
 
 @media (max-width: 280px) {
-    .menuButton {
-        margin: 0px 0px 0px 130px;
-    }
+  .menuButton {
+    margin: 0px 0px 0px 130px;
+  }
 }
