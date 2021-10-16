@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivate } from '@angular/router';
 import { FileSubmissionComponent } from '../../feature-components/file-submission/file-submission.component';
 import { DialogComponent } from '../components/dialog/dialog.component';
-import { DialogService } from './dialog.service';
 import * as globalConst from '../services/globalConstants';
 import { InformationDialogComponent } from '../components/dialog-components/information-dialog/information-dialog.component';
 
@@ -11,7 +10,7 @@ import { InformationDialogComponent } from '../components/dialog-components/info
 export class DisableBackGuard
   implements CanDeactivate<FileSubmissionComponent>
 {
-  constructor(public dialog: MatDialog, public dialogService: DialogService) {}
+  constructor(public dialog: MatDialog) {}
 
   canDeactivate(): boolean {
     console.log(window.location.pathname);

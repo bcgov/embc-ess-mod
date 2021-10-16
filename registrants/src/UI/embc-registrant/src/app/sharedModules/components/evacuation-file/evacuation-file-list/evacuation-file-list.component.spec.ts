@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DialogService } from 'src/app/core/services/dialog.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EvacuationFileListComponent } from './evacuation-file-list.component';
@@ -20,7 +19,7 @@ describe('EvacuationFileListComponent', () => {
         BrowserAnimationsModule,
         MatDialogModule
       ],
-      providers: [FormBuilder, DialogService, HttpClient, HttpHandler]
+      providers: [FormBuilder, HttpClient, HttpHandler]
     }).compileComponents();
   });
 
