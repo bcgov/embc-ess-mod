@@ -1,13 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  DoCheck,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { Address, Profile, ProfileDataConflict } from 'src/app/core/api/models';
+import { Profile, ProfileDataConflict } from 'src/app/core/api/models';
 import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
 import { ProfileService } from '../../../feature-components/profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -15,6 +9,7 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { FormGroup } from '@angular/forms';
 import { ConflictManagementService } from './conflict-management.service';
 import { LocationService } from 'src/app/core/services/location.service';
+import * as globalConst from '../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-conflict-management',
@@ -52,21 +47,27 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   }
 
   ngOnInit(): void {
-    this.conflictService.getConflicts().subscribe((bcscConflicts) => {
-      this.conflicts = bcscConflicts;
-      this.nameConflict = bcscConflicts.find(
-        (element) => element.dataElementName === 'NameDataConflict'
-      );
-      this.dobConflict = bcscConflicts.find(
-        (element) => element.dataElementName === 'DateOfBirthDataConflict'
-      );
-      this.addressConflict = bcscConflicts.find(
-        (element) => element.dataElementName === 'AddressDataConflict'
-      );
-      if (this.conflicts) {
-        this.loadAddressForm();
+    this.conflictService.getConflicts().subscribe(
+      (bcscConflicts) => {
+        this.conflicts = bcscConflicts;
+        this.nameConflict = bcscConflicts.find(
+          (element) => element.dataElementName === 'NameDataConflict'
+        );
+        this.dobConflict = bcscConflicts.find(
+          (element) => element.dataElementName === 'DateOfBirthDataConflict'
+        );
+        this.addressConflict = bcscConflicts.find(
+          (element) => element.dataElementName === 'AddressDataConflict'
+        );
+        if (this.conflicts) {
+          this.loadAddressForm();
+        }
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.genericError);
       }
-    });
+    );
   }
 
   loadAddressForm(): void {
@@ -147,36 +148,16 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   updateProfileAndNavigate(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
+    this.alertService.clearAlert();
     this.profileService.upsertProfile(this.profile).subscribe(
       (profileId) => {
-        console.log(profileId);
         this.router.navigate(['/verified-registration/dashboard']);
       },
       (error) => {
-        console.log(error);
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
-        this.alertService.setAlert('danger', error.title);
+        this.alertService.setAlert('danger', globalConst.editProfileError);
       }
     );
   }
-
-  // private setAddressObject(addressObject): Address {
-  //   const address: Address = {
-  //     addressLine1: addressObject.addressLine1,
-  //     addressLine2: addressObject.addressLine2,
-  //     country: addressObject.country,
-  //     community:
-  //       addressObject.community.code === undefined
-  //         ? null
-  //         : addressObject.community.code,
-  //     postalCode: addressObject.postalCode,
-  //     stateProvince:
-  //       addressObject.stateProvince === null
-  //         ? addressObject.stateProvince
-  //         : addressObject.stateProvince.code
-  //   };
-
-  //   return address;
-  // }
 }

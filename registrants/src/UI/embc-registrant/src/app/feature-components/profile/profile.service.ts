@@ -4,12 +4,15 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Profile, ProfileDataConflict } from '../../core/api/models';
 import { ProfileService as Service } from '../../core/api/services/profile.service';
 import { ProfileMappingService } from './profile-mapping.service';
+import * as globalConst from '../../core/services/globalConstants';
+import { AlertService } from 'src/app/core/services/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   constructor(
     private profileService: Service,
-    private profileMapping: ProfileMappingService
+    private profileMapping: ProfileMappingService,
+    private alertService: AlertService
   ) {}
 
   public profileExists(): Observable<boolean> {
@@ -17,15 +20,27 @@ export class ProfileService {
   }
 
   public getLoginProfile(): void {
-    this.profileService.profileGetProfile().subscribe((loginProfile) => {
-      this.profileMapping.mapLoginProfile(loginProfile);
-    });
+    this.profileService.profileGetProfile().subscribe(
+      (loginProfile) => {
+        this.profileMapping.mapLoginProfile(loginProfile);
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.getProfileError);
+      }
+    );
   }
 
   public getProfile(): void {
-    this.profileService.profileGetProfile().subscribe((profile) => {
-      this.profileMapping.mapProfile(profile);
-    });
+    this.profileService.profileGetProfile().subscribe(
+      (profile) => {
+        this.profileMapping.mapProfile(profile);
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.getProfileError);
+      }
+    );
   }
 
   public getConflicts(): Observable<ProfileDataConflict[]> {

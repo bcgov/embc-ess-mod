@@ -6,10 +6,10 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { EvacuationFileService } from '../../sharedModules/components/evacuation-file/evacuation-file.service';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ProfileService } from '../profile/profile.service';
 import { EditService } from './edit.service';
+import * as globalConst from '../../core/services/globalConstants';
 
 @Component({
   selector: 'app-edit',
@@ -55,7 +55,6 @@ export class EditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
     this.route.paramMap.subscribe((params) => {
-      console.log(params);
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
@@ -89,7 +88,10 @@ export class EditComponent implements OnInit, OnDestroy {
             },
             (error) => {
               this.showLoader = !this.showLoader;
-              this.alertService.setAlert('danger', error.title);
+              this.alertService.setAlert(
+                'danger',
+                globalConst.editProfileError
+              );
             }
           );
       } else if (this.parentPageName === 'needs-assessment') {
@@ -109,7 +111,7 @@ export class EditComponent implements OnInit, OnDestroy {
             },
             (error) => {
               this.showLoader = !this.showLoader;
-              this.alertService.setAlert('danger', error.title);
+              this.alertService.setAlert('danger', globalConst.editNeedsError);
             }
           );
         }

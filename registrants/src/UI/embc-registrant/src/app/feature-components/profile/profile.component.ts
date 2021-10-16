@@ -16,6 +16,7 @@ import { FormCreationService } from '../../core/services/formCreation.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { ProfileDataService } from './profile-data.service';
 import { ProfileService } from './profile.service';
+import * as globalConst from '../../core/services/globalConstants';
 
 @Component({
   selector: 'app-profile',
@@ -223,7 +224,7 @@ export class ProfileComponent
         },
         (error) => {
           this.showLoader = !this.showLoader;
-          this.alertService.setAlert('danger', error.title);
+          this.alertService.setAlert('danger', globalConst.saveProfileError);
         }
       );
   }

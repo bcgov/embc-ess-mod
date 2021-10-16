@@ -18,6 +18,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { NonVerifiedRegistrationService } from '../non-verified-registration/non-verified-registration.services';
 import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
+import * as globalConst from '../../core/services/globalConstants';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -225,7 +226,7 @@ export class NeedsAssessmentComponent
       (error: any) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
-        this.alertService.setAlert('danger', error.error.title);
+        this.alertService.setAlert('danger', globalConst.submissionError);
       }
     );
   }
@@ -242,7 +243,7 @@ export class NeedsAssessmentComponent
       (error: any) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
-        this.alertService.setAlert('danger', error);
+        this.alertService.setAlert('danger', globalConst.submissionError);
       }
     );
   }

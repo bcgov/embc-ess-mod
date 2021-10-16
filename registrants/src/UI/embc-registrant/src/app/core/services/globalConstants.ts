@@ -62,3 +62,20 @@ export const securityQuesError =
   'An error occurred while loading the security questions. Please try again later';
 export const systemError =
   'The service is temporarily unavailable. Please try again later';
+export const profileExistError = 'User profile does not exist.';
+export const editProfileError =
+  'Unable to update profile at this time. Please try again later';
+export const editNeedsError =
+  'Unable to update needs assessment at this time. Please try again later';
+export const saveProfileError =
+  'Unable to save profile at this time. Please try again later';
+export const getProfileError =
+  'Unable to retrieve profile at this time. Please try again later';
+export const submissionError =
+  'Unable to submit request at this time. Please try again later';
+export const genericError =
+  'An error occurred while loading this page. Please refresh and try again.';
+export const currentEvacError =
+  'Unable to retrieve current evacuations at this time. Please try again later';
+export const pastEvacError =
+  'Unable to retrieve past evacuations at this time. Please try again later';

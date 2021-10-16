@@ -39,10 +39,6 @@ export class FileSubmissionComponent implements OnInit {
         this.router.navigate(['/registration-method']);
       }
     }
-
-    // this.router.events.pipe(filter((event: any) => event instanceof NavigationStart)).subscribe(event => {
-    //   console.log(event);
-    // })
   }
 
   /**

@@ -8,6 +8,7 @@ import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import * as globalConst from '../../../../core/services/globalConstants';
+import { AlertService } from 'src/app/core/services/alert.service';
 
 @Component({
   selector: 'app-evacuation-file-list',
@@ -29,7 +30,8 @@ export class EvacuationFileListComponent implements OnInit {
     private router: Router,
     public formCreationService: FormCreationService,
     private evacuationFileService: EvacuationFileService,
-    private evacuationFileDataService: EvacuationFileDataService
+    private evacuationFileDataService: EvacuationFileDataService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -37,9 +39,8 @@ export class EvacuationFileListComponent implements OnInit {
 
     if (this.currentPath === '/verified-registration/dashboard/current') {
       this.showLoading = true;
-      this.evacuationFileService
-        .getCurrentEvacuationFiles()
-        .subscribe((files) => {
+      this.evacuationFileService.getCurrentEvacuationFiles().subscribe(
+        (files) => {
           this.dataSourceActive = files;
           this.dataSourceActive.sort(
             (a, b) =>
@@ -52,19 +53,29 @@ export class EvacuationFileListComponent implements OnInit {
           this.evacuationFileDataService.setHasPendingEssFiles(files);
           this.primaryEssFile = this.dataSourceActive[0];
           this.showLoading = false;
-        });
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.currentEvacError);
+        }
+      );
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
       this.showLoading = true;
-      this.evacuationFileService.getPastEvacuationFiles().subscribe((files) => {
-        this.dataSourceInactive = files;
-        this.dataSourceInactive.sort(
-          (a, b) =>
-            new Date(b.evacuationFileDate).valueOf() -
-            new Date(a.evacuationFileDate).valueOf()
-        );
-        console.log(this.dataSourceInactive);
-        this.showLoading = false;
-      });
+      this.evacuationFileService.getPastEvacuationFiles().subscribe(
+        (files) => {
+          this.dataSourceInactive = files;
+          this.dataSourceInactive.sort(
+            (a, b) =>
+              new Date(b.evacuationFileDate).valueOf() -
+              new Date(a.evacuationFileDate).valueOf()
+          );
+          this.showLoading = false;
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.pastEvacError);
+        }
+      );
     }
   }
 
