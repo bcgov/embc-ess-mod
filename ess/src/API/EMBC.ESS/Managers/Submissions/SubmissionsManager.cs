@@ -404,16 +404,14 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId)).Cast<Resources.Team.TeamMember>().Single();
-            var supportIds = new List<string>();
-            foreach (var support in cmd.supports)
+
+            //Not ideal solution - the IDs are concatenated by CaseRepository to ensure
+            //all supports are created in a single transaction
+            var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
             {
-                var supportId = await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
-                {
-                    FileId = cmd.FileId,
-                    Support = mapper.Map<Resources.Cases.Support>(support)
-                });
-                supportIds.Add(supportId.Id);
-            }
+                FileId = cmd.FileId,
+                Supports = mapper.Map<IEnumerable<Resources.Cases.Support>>(cmd.supports)
+            })).Id.Split(';');
 
             var referralPrintId = await printingRepository.Manage(new SavePrintRequest
             {

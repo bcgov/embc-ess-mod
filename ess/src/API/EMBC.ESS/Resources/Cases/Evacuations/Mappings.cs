@@ -219,6 +219,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ReverseMap()
+                .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
                 .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))

@@ -41,7 +41,7 @@ namespace EMBC.ESS.Resources.Cases
                 nameof(SaveEvacuationFile) => await HandleSaveEvacuationFile((SaveEvacuationFile)cmd),
                 nameof(DeleteEvacuationFile) => await HandleDeleteEvacuationFile((DeleteEvacuationFile)cmd),
                 nameof(SaveEvacuationFileNote) => await HandleSaveEvacuationFileNote((SaveEvacuationFileNote)cmd),
-                nameof(SaveEvacuationFileSupportCommand) => await HandleAddSupportToEvacuationFileCommand((SaveEvacuationFileSupportCommand)cmd),
+                nameof(SaveEvacuationFileSupportCommand) => await HandleSaveSupportsToEvacuationFileCommand((SaveEvacuationFileSupportCommand)cmd),
                 nameof(VoidEvacuationFileSupportCommand) => await HandleVoidEvacuationFileSupportCommand((VoidEvacuationFileSupportCommand)cmd),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
@@ -94,16 +94,11 @@ namespace EMBC.ESS.Resources.Cases
             }
         }
 
-        private async Task<ManageCaseCommandResult> HandleAddSupportToEvacuationFileCommand(SaveEvacuationFileSupportCommand cmd)
+        private async Task<ManageCaseCommandResult> HandleSaveSupportsToEvacuationFileCommand(SaveEvacuationFileSupportCommand cmd)
         {
-            if (string.IsNullOrEmpty(cmd.Support.Id))
-            {
-                return new ManageCaseCommandResult { Id = await evacuationRepository.CreateSupport(cmd.FileId, cmd.Support) };
-            }
-            else
-            {
-                return new ManageCaseCommandResult { Id = await evacuationRepository.UpdateSupport(cmd.FileId, cmd.Support) };
-            }
+            //Concatenating the generated IDs is not the ideal solution, might worth considering splitting supports
+            //to their own resource access service. The intent is to ensure all supports are created in a single transaction (Dynamics batch)
+            return new ManageCaseCommandResult { Id = string.Join(';', await evacuationRepository.SaveSupports(cmd.FileId, cmd.Supports)) };
         }
 
         private async Task<ManageCaseCommandResult> HandleVoidEvacuationFileSupportCommand(VoidEvacuationFileSupportCommand cmd)

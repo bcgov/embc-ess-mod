@@ -34,9 +34,7 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> UpdateNote(string fileId, Note note);
 
-        Task<string> CreateSupport(string fileId, Support support);
-
-        Task<string> UpdateSupport(string fileId, Support support);
+        Task<string[]> SaveSupports(string fileId, IEnumerable<Support> supports);
 
         Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
     }

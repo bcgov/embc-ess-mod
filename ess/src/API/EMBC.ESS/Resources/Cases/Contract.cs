@@ -84,7 +84,7 @@ namespace EMBC.ESS.Resources.Cases
     public class SaveEvacuationFileSupportCommand : ManageCaseCommand
     {
         public string FileId { get; set; }
-        public Support Support { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
     }
 
     public class VoidEvacuationFileSupportCommand : ManageCaseCommand
