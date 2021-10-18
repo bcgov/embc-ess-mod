@@ -56,7 +56,7 @@ export { ReferralPrintRequestResponse } from './models/referral-print-request-re
 export { SupportVoidReason } from './models/support-void-reason';
 export { SupportReprintReason } from './models/support-reprint-reason';
 export { SupplierListItem } from './models/supplier-list-item';
-export { Team } from './models/team';
+export { SupplierTeamDetails } from './models/supplier-team-details';
 export { SupplierStatus } from './models/supplier-status';
 export { Supplier } from './models/supplier';
 export { SupplierContact } from './models/supplier-contact';
@@ -64,6 +64,7 @@ export { SupplierResult } from './models/supplier-result';
 export { EssTask } from './models/ess-task';
 export { SuppliersListItem } from './models/suppliers-list-item';
 export { AssignedCommunity } from './models/assigned-community';
+export { Team } from './models/team';
 export { TeamMember } from './models/team-member';
 export { MemberRole } from './models/member-role';
 export { MemberLabel } from './models/member-label';
