@@ -22,14 +22,21 @@ namespace EMBC.ESS.Resources.Print
 {
     public interface IPrintRequestsRepository
     {
-        Task<string> Manage(SavePrintRequest request);
+        Task<string> Manage(ManagePrintRequestCommand request);
 
         Task<IEnumerable<PrintRequest>> Query(QueryPrintRequests query);
     }
 
-    public class SavePrintRequest
+    public abstract class ManagePrintRequestCommand { }
+
+    public class SavePrintRequest : ManagePrintRequestCommand
     {
         public PrintRequest PrintRequest { get; set; }
+    }
+
+    public class MarkPrintRequestAsComplete : ManagePrintRequestCommand
+    {
+        public string PrintRequestId { get; set; }
     }
 
     public class QueryPrintRequests

@@ -92,10 +92,10 @@ namespace EMBC.ESS.Utilities.Dynamics
             }
         }
 
-        public static void ActivateObject(this EssContext context, object entity, int activeStatusValue) =>
+        public static void ActivateObject(this EssContext context, object entity, int activeStatusValue = -1) =>
             ModifyEntityStatus(context, entity, (int)EntityState.Active, activeStatusValue);
 
-        public static void DeactivateObject(this EssContext context, object entity, int inactiveStatusValue) =>
+        public static void DeactivateObject(this EssContext context, object entity, int inactiveStatusValue = -1) =>
             ModifyEntityStatus(context, entity, (int)EntityState.Inactive, inactiveStatusValue);
 
         private static void ModifyEntityStatus(this EssContext context, object entity, int state, int status)
@@ -106,7 +106,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             var stateProp = entity.GetType().GetProperty("statecode");
 
             statusProp.SetValue(entity, status);
-            stateProp.SetValue(entity, state);
+            if (state >= 0) stateProp.SetValue(entity, state);
 
             context.UpdateObject(entity);
         }

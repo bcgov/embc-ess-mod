@@ -404,16 +404,14 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId)).Cast<Resources.Team.TeamMember>().Single();
-            var supportIds = new List<string>();
-            foreach (var support in cmd.supports)
+
+            //Not ideal solution - the IDs are concatenated by CaseRepository to ensure
+            //all supports are created in a single transaction
+            var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
             {
-                var supportId = await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
-                {
-                    FileId = cmd.FileId,
-                    Support = mapper.Map<Resources.Cases.Support>(support)
-                });
-                supportIds.Add(supportId.Id);
-            }
+                FileId = cmd.FileId,
+                Supports = mapper.Map<IEnumerable<Resources.Cases.Support>>(cmd.supports)
+            })).Id.Split(';');
 
             var referralPrintId = await printingRepository.Manage(new SavePrintRequest
             {
@@ -493,7 +491,7 @@ namespace EMBC.ESS.Managers.Submissions
             var content = await pdfGenerator.Generate(printedReferrals);
             var contentType = "application/pdf";
 
-            //TODO: mark the print request as completed in Dynamics
+            await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });
 
             return new PrintRequestQueryResult
             {
@@ -501,6 +499,30 @@ namespace EMBC.ESS.Managers.Submissions
                 ContentType = contentType,
                 PrintedOn = DateTime.Now
             };
+        }
+
+        public async Task<string> Handle(ReprintSupportCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
+            if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
+            if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException(nameof(cmd.SupportId));
+
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId)).Cast<Resources.Team.TeamMember>().Single();
+
+            var referralPrintId = await printingRepository.Manage(new SavePrintRequest
+            {
+                PrintRequest = new ReferralPrintRequest
+                {
+                    FileId = cmd.FileId,
+                    SupportIds = new[] { cmd.SupportId },
+                    IncludeSummary = false,
+                    RequestingUserId = requestingUser.Id,
+                    Type = ReferralPrintType.Reprint,
+                    Comments = cmd.ReprintReason
+                }
+            });
+
+            return referralPrintId;
         }
     }
 }

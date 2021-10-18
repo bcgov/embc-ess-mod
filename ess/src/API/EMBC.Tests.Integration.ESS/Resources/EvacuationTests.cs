@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
@@ -276,12 +275,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var supportIds = new List<string>();
-            foreach (var support in supports)
-            {
-                var supportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = fileId, Support = support })).Id;
-                supportIds.Add(supportId);
-            }
+            var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = fileId, Supports = supports })).Id.Split(';');
 
             var file = (EvacuationFile)(await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
 
@@ -327,7 +321,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    TotalAmount = 0
                }
             };
-            var createdSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Support = newSupport.Single() })).Id;
+            var createdSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Supports = newSupport })).Id;
 
             //____
             //Then update the created support
@@ -349,7 +343,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supportToUpdate.IssuedByTeamMemberId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
             supportToUpdate.IncludedHouseholdMembers = includedHouseholdMembers;
 
-            var updatedSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Support = supportToUpdate })).Id;
+            var updatedSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Supports = new[] { supportToUpdate } })).Id.Split(';').Single();
 
             //__
             //Performing test

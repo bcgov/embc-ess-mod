@@ -36,11 +36,12 @@ namespace EMBC.ESS.Resources.Print
             this.essContext = essContext;
         }
 
-        public async Task<string> Manage(SavePrintRequest request)
+        public async Task<string> Manage(ManagePrintRequestCommand command)
         {
-            return request.PrintRequest switch
+            return command switch
             {
-                ReferralPrintRequest pr => await SavePrintRequest(pr),
+                SavePrintRequest cmd => await SavePrintRequest(cmd),
+                MarkPrintRequestAsComplete cmd => await MarkPrintRequestAsComplete(cmd),
                 _ => throw new NotImplementedException()
             };
         }
@@ -48,6 +49,15 @@ namespace EMBC.ESS.Resources.Print
         public async Task<IEnumerable<PrintRequest>> Query(QueryPrintRequests query)
         {
             return await QueryReferralPrintRequests(query);
+        }
+
+        private async Task<string> SavePrintRequest(SavePrintRequest request)
+        {
+            return request.PrintRequest switch
+            {
+                ReferralPrintRequest pr => await SavePrintRequest(pr),
+                _ => throw new NotImplementedException()
+            };
         }
 
         private async Task<string> SavePrintRequest(ReferralPrintRequest printRequest)
@@ -93,6 +103,18 @@ namespace EMBC.ESS.Resources.Print
             essContext.DetachAll();
 
             return mapper.Map<IEnumerable<ReferralPrintRequest>>(requests);
+        }
+
+        private async Task<string> MarkPrintRequestAsComplete(MarkPrintRequestAsComplete cmd)
+        {
+            var pr = essContext.era_referralprints.Where(pr => pr.era_referralprintid == Guid.Parse(cmd.PrintRequestId)).SingleOrDefault();
+            if (pr == null) throw new Exception($"Print request {cmd.PrintRequestId} not found");
+
+            essContext.DeactivateObject(pr);
+
+            await essContext.SaveChangesAsync();
+
+            return cmd.PrintRequestId;
         }
     }
 }

@@ -7,6 +7,7 @@ using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Dynamics;
+using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -657,6 +658,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = teamUserId });
 
+            printRequestId.ShouldNotBeNullOrEmpty();
+
             var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
             refreshedFile.Supports.ShouldNotBeEmpty();
             refreshedFile.Supports.Count().ShouldBe(supports.Length);
@@ -683,7 +686,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-            fileId.ShouldNotBeNull();
 
             var supports = new Support[]
             {
@@ -749,6 +751,34 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 RequestingUserId = testPrintRequest._era_requestinguserid_value.Value.ToString()
             });
             await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", response.Content);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanReprintSupport()
+        {
+            var dynamicsContext = services.GetRequiredService<EssContext>();
+            var testPrintRequest = dynamicsContext.era_referralprints
+                .Expand(pr => pr.era_ESSFileId)
+                .Where(pr => pr.statecode == (int)EntityState.Active && pr._era_requestinguserid_value != null)
+                .OrderByDescending(pr => pr.createdon)
+                .Take(new Random().Next(20))
+                .ToArray()
+                .First();
+
+            await dynamicsContext.LoadPropertyAsync(testPrintRequest, nameof(era_referralprint.era_era_referralprint_era_evacueesupport));
+
+            var supportId = testPrintRequest.era_era_referralprint_era_evacueesupport.First().era_name;
+            var fileId = testPrintRequest.era_ESSFileId.era_name;
+
+            var printRequestId = await manager.Handle(new ReprintSupportCommand
+            {
+                FileId = fileId,
+                ReprintReason = "test",
+                RequestingUserId = teamUserId,
+                SupportId = supportId
+            });
+
+            printRequestId.ShouldNotBeNullOrEmpty();
         }
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
