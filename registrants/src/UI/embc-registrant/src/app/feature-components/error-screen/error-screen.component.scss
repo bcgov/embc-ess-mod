@@ -1,0 +1,86 @@
+.main {
+  margin: 250px 200px;
+}
+
+.image-content {
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+.text-content {
+  text-align: center;
+}
+
+.heading-padding {
+  padding: 25px;
+  color: red;
+}
+
+@media screen and (max-width: 900px) {
+  .main {
+    margin: 0 0 !important;
+  }
+  .text-content {
+    text-align: unset;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+.--blue {
+  color: #31b0e6;
+}
+
+.--center {
+  text-align: center;
+}
+
+.register-without-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 576px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 0px 15px -7px rgba(0, 0, 0, 0.76);
+  padding: 45px 22px 40px 22px;
+  margin-bottom: 25px;
+}
+
+.register-without-card-image {
+  max-width: 85px;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 31px;
+}
+
+.register-without-card-button-container {
+  padding: 0 18px;
+}
+
+.register-without-card-title {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 76px;
+}
+
+.btn-width {
+  width: 100%;
+}
+
+@media screen and (min-width: 769px) {
+  .register-without-card {
+    min-height: 576px;
+    border: 1px solid #ccc;
+  }
+}

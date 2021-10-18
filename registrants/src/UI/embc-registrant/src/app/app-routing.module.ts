@@ -27,6 +27,13 @@ const routes: Routes = [
         './feature-components/verified-registration/verified-registration.module'
       ).then((m) => m.VerifiedRegistrationModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'error',
+    loadChildren: () =>
+      import('./feature-components/error-screen/error-screen.module').then(
+        (m) => m.ErrorScreenModule
+      )
   }
 ];
 
