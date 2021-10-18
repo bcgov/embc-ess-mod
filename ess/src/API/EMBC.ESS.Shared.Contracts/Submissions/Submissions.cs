@@ -123,4 +123,12 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public byte[] Content { get; set; }
         public DateTime PrintedOn { get; set; }
     }
+
+    public class ReprintSupportCommand : Command
+    {
+        public string FileId { get; set; }
+        public string RequestingUserId { get; set; }
+        public string SupportId { get; set; }
+        public string ReprintReason { get; set; }
+    }
 }

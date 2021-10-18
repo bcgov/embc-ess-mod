@@ -491,7 +491,7 @@ namespace EMBC.ESS.Managers.Submissions
             var content = await pdfGenerator.Generate(printedReferrals);
             var contentType = "application/pdf";
 
-            //TODO: mark the print request as completed in Dynamics
+            await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });
 
             return new PrintRequestQueryResult
             {
@@ -499,6 +499,30 @@ namespace EMBC.ESS.Managers.Submissions
                 ContentType = contentType,
                 PrintedOn = DateTime.Now
             };
+        }
+
+        public async Task<string> Handle(ReprintSupportCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
+            if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
+            if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException(nameof(cmd.SupportId));
+
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId)).Cast<Resources.Team.TeamMember>().Single();
+
+            var referralPrintId = await printingRepository.Manage(new SavePrintRequest
+            {
+                PrintRequest = new ReferralPrintRequest
+                {
+                    FileId = cmd.FileId,
+                    SupportIds = new[] { cmd.SupportId },
+                    IncludeSummary = false,
+                    RequestingUserId = requestingUser.Id,
+                    Type = ReferralPrintType.Reprint,
+                    Comments = cmd.ReprintReason
+                }
+            });
+
+            return referralPrintId;
         }
     }
 }
