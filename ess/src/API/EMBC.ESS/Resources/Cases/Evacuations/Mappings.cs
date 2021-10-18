@@ -44,7 +44,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_era_evacuationfile_era_householdmember_EvacuationFileid, opts => opts.MapFrom(s => s.HouseholdMembers))
                 .AfterMap((s, d) =>
                 {
-                    //set link to primary regitrant's household member entity
+                    //set link to primary registrant's household member entity
                     var primaryHouseholdMember = d.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment.SingleOrDefault(m => m.era_isprimaryregistrant == true);
                     if (primaryHouseholdMember != null)
                         primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
@@ -63,7 +63,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.Value.UtcDateTime))
                 .ForMember(d => d.NeedsAssessment, opts => opts.MapFrom(s => s.era_CurrentNeedsAssessmentid))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.era_essfilestatus))
-                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid
+                    .Where(m => m.era_Registrant != null)
+                    .Any(m => m.era_Registrant.era_restriction == true)))
                 .ForMember(d => d.RegistrationLocation, opts => opts.MapFrom(s => s.era_CurrentNeedsAssessmentid.era_registrationlocation))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid))
                 .ForMember(d => d.Notes, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_essfilenote_ESSFileID))
