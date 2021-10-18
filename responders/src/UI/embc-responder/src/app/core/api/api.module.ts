@@ -8,6 +8,7 @@ import { ErrorService } from './services/error.service';
 import { ConfigurationService } from './services/configuration.service';
 import { ProfileService } from './services/profile.service';
 import { RegistrationsService } from './services/registrations.service';
+import { ReportsService } from './services/reports.service';
 import { SuppliersService } from './services/suppliers.service';
 import { TasksService } from './services/tasks.service';
 import { TeamCommunitiesAssignmentsService } from './services/team-communities-assignments.service';
@@ -25,6 +26,7 @@ import { TeamsService } from './services/teams.service';
     ConfigurationService,
     ProfileService,
     RegistrationsService,
+    ReportsService,
     SuppliersService,
     TasksService,
     TeamCommunitiesAssignmentsService,

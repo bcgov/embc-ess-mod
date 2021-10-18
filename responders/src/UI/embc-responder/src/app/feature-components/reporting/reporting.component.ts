@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ReportsService } from 'src/app/core/api/services';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import * as globalConst from '../../core/services/global-constants';
 
 @Component({
   selector: 'app-reporting',
@@ -8,16 +11,37 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ReportingComponent implements OnInit {
   reportForm: FormGroup;
-  showLoader = false;
+  // showLoader = false;
   color = '#FFFFFF';
+  isLoading = false;
 
-  constructor(private builder: FormBuilder) {}
+  constructor(
+    private builder: FormBuilder,
+    private reportService: ReportsService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.createReportingForm();
   }
 
-  evacueeReport(): void {}
+  evacueeReport(): void {
+    this.isLoading = true;
+    this.reportService.reportsGetPrint(this.reportForm.getRawValue()).subscribe(
+      (reportResponse) => {
+        // Displaying PDF into a new browser tab:
+        const blob = reportResponse;
+        const url = window.URL.createObjectURL(blob);
+        this.isLoading = !this.isLoading;
+        window.open(url, '_blank');
+      },
+      (error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.evacueeReportError);
+      }
+    );
+  }
 
   supportReport(): void {}
 
@@ -26,9 +50,8 @@ export class ReportingComponent implements OnInit {
    */
   private createReportingForm(): void {
     this.reportForm = this.builder.group({
-      task: [''],
-      supplierName: [''],
-      essFile: [''],
+      taskNumber: [''],
+      fileId: [''],
       evacuatedFrom: [''],
       evacuatedTo: ['']
     });

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-error-screen',
@@ -6,7 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./error-screen.component.scss']
 })
 export class ErrorScreenComponent implements OnInit {
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
+
+  nonVerifiedUser(): void {
+    this.router.navigate(['/non-verified-registration/collection-notice']);
+  }
 }

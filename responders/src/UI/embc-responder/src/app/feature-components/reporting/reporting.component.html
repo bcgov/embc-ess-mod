@@ -20,20 +20,11 @@
               <mat-form-field appearance="outline">
                 <mat-label>Task #</mat-label>
                 <input
-                  formControlName="task"
+                  formControlName="taskNumber"
                   maxlength="100"
                   matInput
                   placeholder="Task #"
-                  required
                 />
-                <!-- <mat-error
-                  *ngIf="
-                    addFormControl.supplierLegalName.invalid &&
-                    addFormControl.supplierLegalName.hasError('whitespaceError')
-                  "
-                >
-                  Supplier Legal Name is required</mat-error -->
-                <!-- > -->
               </mat-form-field>
             </div>
           </div>
@@ -43,7 +34,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>ESS File #</mat-label>
                 <input
-                  formControlName="essFile"
+                  formControlName="fileId"
                   maxlength="100"
                   matInput
                   placeholder="ESS File #"
@@ -61,16 +52,7 @@
                   maxlength="100"
                   matInput
                   placeholder="Evacuated From"
-                  required
                 />
-                <!-- <mat-error
-                  *ngIf="
-                    addFormControl.supplierLegalName.invalid &&
-                    addFormControl.supplierLegalName.hasError('whitespaceError')
-                  "
-                >
-                  Supplier Legal Name is required</mat-error
-                > -->
               </mat-form-field>
             </div>
           </div>
@@ -103,13 +85,13 @@
                 width="17"
               />
               Evacuee Report
-              <app-loader
+              <!-- <app-loader
                 [strokeWidth]="3"
                 [diameter]="25"
                 [showLoader]="showLoader"
                 [color]="color"
               >
-              </app-loader>
+              </app-loader> -->
             </button>
           </div>
           <div class="col-md-3">
@@ -125,13 +107,13 @@
                 width="17"
               />
               Support Report
-              <app-loader
+              <!-- <app-loader
                 [strokeWidth]="3"
                 [diameter]="25"
                 [showLoader]="showLoader"
                 [color]="color"
               >
-              </app-loader>
+              </app-loader> -->
             </button>
           </div>
         </div>
@@ -139,3 +121,5 @@
     </div>
   </div>
 </div>
+
+<app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>

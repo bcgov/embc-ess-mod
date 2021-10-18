@@ -552,3 +552,7 @@ export const addSupplierError =
   'Unable to add mutual aid supplier at this time. Please try again later';
 export const deleteSupplierError =
   'Unable to remove supplier at this time. Please try again later';
+export const evacueeReportError =
+  'Unable to retrieve an Evacuee Report at this time. Please try again later';
+export const supportReportError =
+  'Unable to retrieve a Support Report at this time. Please try again later';
