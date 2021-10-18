@@ -1,7 +1,9 @@
 <div class="container container-frame">
   <div class="row heading-container">
     <div class="col-12">
-      <span class="page-heading">Create Evacuation File</span>
+      <span class="page-heading"
+        >Create Emergency Support Services (ESS) File</span
+      >
     </div>
   </div>
 
@@ -15,7 +17,7 @@
   >
     <mat-step *ngFor="let step of needsSteps" [stepControl]="form">
       <ng-template matStepLabel>{{ step.stepName }}</ng-template>
-      <div *ngIf="step.stepName === 'Evacuated From'; else altText">
+      <div *ngIf="step.stepName === 'Location'; else altText">
         <ng-container *ngIf="currentFlow === 'non-verified-registration'">
           <p>
             The purpose of creating an Emergency Support Services (ESS) File is
@@ -89,8 +91,9 @@
         submitting.
       </p>
       <p>
-        Once you have submitted this form you will only be able to edit your
-        details with the assistance of an Emergency Support Services volunteer.
+        Once you have completed your submission, you will only be able to edit
+        your details with the assistance of an Emergency Support Services (ESS)
+        Responder.
       </p>
       <ng-template matStepLabel>Review & Submit</ng-template>
       <app-review

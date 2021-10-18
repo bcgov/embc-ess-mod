@@ -52,21 +52,21 @@ export class ComponentCreationService {
   needsAssessmentComponents: Array<any> = [
     {
       component: 'evac-address',
-      nextButtonLabel: 'Next - Family Information',
+      nextButtonLabel: 'Next - Household Information',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
       lastStep: -1,
-      stepName: 'Evacuated From'
+      stepName: 'Location'
     },
     {
       component: 'family-information',
-      nextButtonLabel: 'Next - Pets',
+      nextButtonLabel: 'Next - Animals',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Family Members'
+      stepName: 'Household Members'
     },
     {
       component: 'pets',
@@ -75,7 +75,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Pets'
+      stepName: 'Animals'
     },
     {
       component: 'identify-needs',
