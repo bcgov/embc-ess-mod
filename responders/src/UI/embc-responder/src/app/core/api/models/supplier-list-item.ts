@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { Address } from './address';
 import { SupplierStatus } from './supplier-status';
-import { Team } from './team';
+import { SupplierTeamDetails } from './supplier-team-details';
 export interface SupplierListItem {
   address?: null | Address;
   gstNumber?: null | string;
@@ -12,5 +12,5 @@ export interface SupplierListItem {
   name?: null | string;
   providesMutualAid?: boolean;
   status?: SupplierStatus;
-  team?: null | Team;
+  team?: null | SupplierTeamDetails;
 }
