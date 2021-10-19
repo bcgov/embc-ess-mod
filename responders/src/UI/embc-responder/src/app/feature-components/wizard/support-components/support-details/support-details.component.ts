@@ -57,11 +57,10 @@ export class SupportDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.stepSupportsService.supportDetails);
     this.createSupportDetailsForm();
     this.supportDetailsForm.get('noOfDays').patchValue(1);
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
-      this.updateValidToDate();
+      this.updateValidToDate(value);
     });
     this.addExistingMembers();
   }
@@ -102,14 +101,37 @@ export class SupportDetailsComponent implements OnInit {
    * @param $event form group
    */
   setDateTime($event: FormGroup) {
-    this.currentDate = $event.get('date').value;
-    this.selectedStartDate = $event.get('date').value;
-    this.currentTime = $event.get('time').value;
+    this.currentDate = this.datePipe.transform(
+      $event.get('date').value,
+      'dd-MMM-yyyy'
+    );
+    const updatedSupportStartDate = new Date(
+      this.datePipe.transform($event.get('date').value, 'yyyy-MM-dd') +
+        'T' +
+        $event.get('time').value +
+        ':00'
+    );
+    this.now = updatedSupportStartDate.getTime();
+    this.currentTime = this.datePipe.transform(
+      updatedSupportStartDate,
+      'hh:mm'
+    );
     this.toggle = false;
-    this.supportDetailsForm.get('fromDate').patchValue(this.currentDate);
+
+    const nextDay = new Date();
+    nextDay.setDate($event.get('date').value.getDate() + 1);
+    console.log(this.datePipe.transform(nextDay, 'MM/dd/yyyy'));
+
+    this.supportDetailsForm
+      .get('fromDate')
+      .patchValue($event.get('date').value);
+    this.supportDetailsForm
+      .get('fromTime')
+      .patchValue($event.get('time').value);
     this.supportDetailsForm
       .get('toDate')
-      .patchValue(this.datePipe.transform(this.currentDate, 'MM/dd/yyyy'));
+      .patchValue(this.datePipe.transform(nextDay, 'MM/dd/yyyy'));
+    this.supportDetailsForm.get('toTime').patchValue($event.get('time').value);
   }
 
   /**
@@ -120,7 +142,7 @@ export class SupportDetailsComponent implements OnInit {
       fromDate: [
         this.stepSupportsService?.supportDetails?.fromDate
           ? new Date(this.stepSupportsService?.supportDetails?.fromDate)
-          : new Date(this.currentDate),
+          : new Date(this.now),
         [this.customValidation.validDateValidator(), Validators.required]
       ],
       fromTime: [
@@ -139,7 +161,10 @@ export class SupportDetailsComponent implements OnInit {
         {
           value: this.stepSupportsService?.supportDetails?.toDate
             ? this.stepSupportsService?.supportDetails?.toDate
-            : this.datePipe.transform(this.currentDate, 'MM/dd/yyyy'),
+            : this.datePipe.transform(
+                this.now + 3600 * 1000 * 24,
+                'MM/dd/yyyy'
+              ),
           disabled: true
         }
       ],
@@ -243,14 +268,13 @@ export class SupportDetailsComponent implements OnInit {
   /**
    * Updates date field based on number of days to be added
    */
-  updateValidToDate() {
-    const currentVal = this.supportDetailsForm.get('toDate').value;
+  updateValidToDate(days: number) {
+    const currentVal = this.supportDetailsForm.get('fromDate').value;
     const date = new Date(currentVal);
     const finalValue = this.datePipe.transform(
-      date.setDate(date.getDate() + 2),
+      date.setDate(date.getDate() + days),
       'MM/dd/yyyy'
     );
-    console.log(finalValue);
     this.supportDetailsForm.get('toDate').patchValue(finalValue);
   }
 

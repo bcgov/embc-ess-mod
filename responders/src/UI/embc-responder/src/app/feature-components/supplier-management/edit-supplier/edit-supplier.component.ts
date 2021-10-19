@@ -123,12 +123,12 @@ export class EditSupplierComponent implements OnInit {
           part1: [
             this.editSupplierService.editedSupplier?.supplierGstNumber?.part1 ??
               '',
-            [Validators.required, Validators.pattern(/^-?([0-9][1-9]\d*)?$/)]
+            [Validators.required, Validators.pattern(/^-?([0-9]\d*)?$/)]
           ],
           part2: [
             this.editSupplierService.editedSupplier?.supplierGstNumber?.part2 ??
               '',
-            [Validators.required, Validators.pattern(/^-?([0-9][1-9]\d*)?$/)]
+            [Validators.required, Validators.pattern(/^-?([0-9]\d*)?$/)]
           ]
         },
         {
