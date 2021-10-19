@@ -28,14 +28,14 @@ namespace EMBC.ESS.Utilities.Dynamics
     {
         private readonly Uri serviceRoot;
         private readonly Uri endpointUrl;
-        private readonly string token;
+        private readonly ISecurityTokenProvider tokenProvider;
         private readonly ILogger<EssContext> logger;
 
-        public EssContext(Uri serviceRoot, Uri endpointUrl, string token, ILogger<EssContext> logger) : base(serviceRoot)
+        public EssContext(Uri serviceRoot, Uri endpointUrl, ISecurityTokenProvider tokenProvider, ILogger<EssContext> logger) : base(serviceRoot)
         {
             this.serviceRoot = serviceRoot;
             this.endpointUrl = endpointUrl;
-            this.token = token;
+            this.tokenProvider = tokenProvider;
             this.logger = logger;
             this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
             this.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
@@ -46,7 +46,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             BuildingRequest += (sender, args) =>
             {
-                args.Headers.Add("Authorization", $"Bearer {this.token}");
+                args.Headers.Add("Authorization", $"Bearer {this.tokenProvider.AcquireToken().GetAwaiter().GetResult()}");
                 args.RequestUri = formatUri(args.RequestUri);
             };
 
@@ -59,7 +59,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
         public EssContext Clone()
         {
-            return new EssContext(serviceRoot, endpointUrl, this.token, logger);
+            return new EssContext(serviceRoot, endpointUrl, this.tokenProvider, logger);
         }
     }
 
