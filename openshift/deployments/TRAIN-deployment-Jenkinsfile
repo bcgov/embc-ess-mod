@@ -1,8 +1,8 @@
 node('master') {
 	def sourcetag = 'test'
-    def desttag = 'train'
-	def backuptag = 'train-backup'
-	def envname = 'train'
+   	def desttag = 'training'
+	def backuptag = 'training-backup'
+	def envname = 'training'
 	def images = ['ess-backend', 'pdf-generator',
 		'registrants-portal-api', 'registrants-portal-ui', 
 		'responders-portal-api', 'responders-portal-ui', 
