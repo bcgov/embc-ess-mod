@@ -30,6 +30,10 @@ namespace EMBC.Responders.API.Utilities
             where TEnum : struct =>
            Enum.GetNames(typeof(TEnum)).Select(e => (Enum.Parse<TEnum>(e), GetEnumDescription(typeof(TEnum), e)));
 
+        public static string GetEnumDescription<TEnum>(TEnum value)
+            where TEnum : Enum =>
+            GetEnumDescription(typeof(TEnum), value.ToString());
+
         private static string GetEnumDescription(Type enumType, string value) =>
             (enumType.GetField(value.ToString())
                 .GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[])
