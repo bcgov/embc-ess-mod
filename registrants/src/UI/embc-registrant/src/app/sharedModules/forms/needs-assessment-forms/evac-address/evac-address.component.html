@@ -95,7 +95,10 @@
             *ngIf="evacuatedFormControl?.evacuatedFromPrimary.value === 'No'"
           >
             <div class="col-md-12">
-              <p>Where are you being evacuated from?</p>
+              <p>
+                Please identify where in <b>BC</b> you have been
+                <b>evacuated from</b>?
+              </p>
               <app-bc-address
                 [addressForm]="evacuatedFormControl?.evacuatedFromAddress"
               >
@@ -166,10 +169,12 @@
           <div class="note-box">
             <p><b>Notes:</b></p>
             <p>
-              If you have insurance, please keep all of your receipts, and
-              contact your insurance provider as soon as possible.If you are
-              having difficulty contacting your insurance provider, please
-              contact the Insurance Bureau of Canada at 1-844-227-5422.
+              If you have insurance, it is best to contact your insurance
+              provider as soon as possible.
+            </p>
+            <p>
+              If you are having difficulty contacting your insurance provider,
+              please contact the Insurance Bureau of Canada at 1-844-227-5422.
             </p>
           </div>
         </div>

@@ -40,9 +40,9 @@ export const gender = [
 ];
 
 export const deleteMemberInfoBody: DialogContent = {
-  text: '<p>Are you sure you want to remove this family member from your evacuation file?</p>',
+  text: '<p>Are you sure you want to remove this household member from your Emergency Support Services (ESS) file?</p>',
   cancelButton: 'No, Cancel',
-  confirmButton: 'Yes, remove this family member'
+  confirmButton: 'Yes, remove this household member'
 };
 
 export const addEssFile: DialogContent = {

@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md-12">
           <label class="card-heading requiredField">
-            If you have any <strong>family members</strong> (including
+            If you have any <strong>household members</strong> (including
             dependents) who live in the same household with you, please add them
             below.
           </label>
@@ -115,9 +115,10 @@
             type="button"
             (click)="addMembers()"
           >
-            + Add Family Member
+            + Add Household Member
           </button>
           <div *ngIf="showFamilyForm">
+            <p class="card-heading">Household Members</p>
             <app-person-detail-form
               [personalDetailsForm]="householdFormControl?.householdMember"
             >
@@ -160,7 +161,8 @@
             id="haveSpecialDiet-radio-group-label"
             class="card-heading requiredField"
           >
-            Do you or any of your family members have any dietary requirements?
+            Do you or any of your household members have any dietary
+            requirements?
           </label>
           <br />
           <mat-radio-group
@@ -218,12 +220,12 @@
   <mat-card class="card-align">
     <mat-card-content>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
           <label
             id="haveMedication-radio-group-label"
             class="card-heading requiredField"
           >
-            Do you or any of your family members take any medication?
+            Do you or any of your household members take any medication?
           </label>
           <br />
           <mat-radio-group
@@ -250,6 +252,14 @@
               Medication is required</mat-error
             >
           </mat-radio-group>
+        </div>
+        <div class="col-md-4">
+          <div class="services-info">
+            <p>
+              Please ensure you have an adequate supply of medication for the
+              duration of the evacuation.
+            </p>
+          </div>
         </div>
       </div>
     </mat-card-content>
