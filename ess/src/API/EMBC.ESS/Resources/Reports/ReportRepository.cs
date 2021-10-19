@@ -38,15 +38,14 @@ namespace EMBC.ESS.Resources.Reports
             this.mapper = mapper;
         }
 
-        public async Task<EvacueeQueryResult> QueryEvacuee(EvacueeQuery query)
+        public async Task<EvacueeQueryResult> QueryEvacuee(ReportQuery query)
         {
             var readCtx = essContext.Clone();
             readCtx.MergeOption = MergeOption.NoTracking;
 
             var files = (await QueryEvacuationFiles(readCtx, query)).Concat(await QueryTasks(readCtx, query));
 
-            var results = (await ParallelLoadEvacuationFilesAsync(essContext, files)).Select(e => mapper.Map<Evacuee>(e)).ToArray();
-            //var results = (await LoadEvacuees(essContext, evacuees)).Select(e => mapper.Map<Evacuee>(e)).ToArray();
+            var results = (await ParallelLoadEvacueesAsync(essContext, files)).Select(e => mapper.Map<Evacuee>(e)).ToArray();
 
             return new EvacueeQueryResult
             {
@@ -54,7 +53,22 @@ namespace EMBC.ESS.Resources.Reports
             };
         }
 
-        private static async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EssContext ctx, EvacueeQuery query)
+        public async Task<SupportQueryResult> QuerySupport(ReportQuery query)
+        {
+            var readCtx = essContext.Clone();
+            readCtx.MergeOption = MergeOption.NoTracking;
+
+            var files = (await QueryEvacuationFiles(readCtx, query)).Concat(await QueryTasks(readCtx, query));
+
+            var results = (await ParallelLoadSupportsAsync(essContext, files)).Select(e => mapper.Map<Support>(e)).ToArray();
+
+            return new SupportQueryResult
+            {
+                Items = results
+            };
+        }
+
+        private static async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EssContext ctx, ReportQuery query)
         {
             bool getAllFiles = string.IsNullOrEmpty(query.FileId) && string.IsNullOrEmpty(query.TaskNumber) && string.IsNullOrEmpty(query.EvacuatedFrom) && string.IsNullOrEmpty(query.EvacuatedTo);
             var shouldQueryFiles =
@@ -76,7 +90,7 @@ namespace EMBC.ESS.Resources.Reports
             return files;
         }
 
-        private static async Task<IEnumerable<era_evacuationfile>> QueryTasks(EssContext ctx, EvacueeQuery query)
+        private static async Task<IEnumerable<era_evacuationfile>> QueryTasks(EssContext ctx, ReportQuery query)
         {
             var shouldQueryTasks = string.IsNullOrEmpty(query.FileId) && string.IsNullOrEmpty(query.EvacuatedFrom) && (!string.IsNullOrEmpty(query.TaskNumber) || !string.IsNullOrEmpty(query.EvacuatedTo));
 
@@ -103,13 +117,13 @@ namespace EMBC.ESS.Resources.Reports
             return files;
         }
 
-        private static async Task<IEnumerable<era_householdmember>> ParallelLoadEvacuationFilesAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
+        private static async Task<IEnumerable<era_householdmember>> ParallelLoadEvacueesAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
         {
             var readCtx = ctx.Clone();
             readCtx.MergeOption = MergeOption.NoTracking;
 
             //load files' properties
-            await files.Select(file => ParallelLoadEvacuationFileAsync(readCtx, file)).ToArray().ForEachAsync(10, t => t);
+            await files.Select(file => ParallelLoadEvacueeAsync(readCtx, file)).ToArray().ForEachAsync(10, t => t);
 
             var members = new List<era_householdmember>();
 
@@ -117,7 +131,7 @@ namespace EMBC.ESS.Resources.Reports
 
             foreach (var file in files)
             {
-                if (file.era_TaskId != null) file.era_TaskId.era_JurisdictionID = jurisdictions.Where(j => j.era_jurisdictionid == file.era_TaskId._era_jurisdictionid_value).FirstOrDefault();
+                if (file.era_TaskId != null) file.era_TaskId.era_JurisdictionID = jurisdictions.Where(j => j.era_jurisdictionid == file.era_TaskId._era_jurisdictionid_value).SingleOrDefault();
                 foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
                 {
                     member.era_EvacuationFileid = file;
@@ -129,7 +143,7 @@ namespace EMBC.ESS.Resources.Reports
             return members;
         }
 
-        private static async Task ParallelLoadEvacuationFileAsync(EssContext ctx, era_evacuationfile file)
+        private static async Task ParallelLoadEvacueeAsync(EssContext ctx, era_evacuationfile file)
         {
             ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
 
@@ -156,6 +170,57 @@ namespace EMBC.ESS.Resources.Reports
                     }
                 }
             }));
+            await Task.WhenAll(loadTasks.ToArray());
+        }
+
+        private static async Task<IEnumerable<era_evacueesupport>> ParallelLoadSupportsAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
+        {
+            var readCtx = ctx.Clone();
+            readCtx.MergeOption = MergeOption.NoTracking;
+
+            //load files' properties
+            await files.Select(file => ParallelLoadSupportAsync(readCtx, file)).ToArray().ForEachAsync(10, t => t);
+
+            var supports = new List<era_evacueesupport>();
+
+            var jurisdictions = ctx.era_jurisdictions.Where(j => j.statecode == (int)EntityState.Active).ToArray();
+
+            foreach (var file in files)
+            {
+                if (file.era_TaskId != null) file.era_TaskId.era_JurisdictionID = jurisdictions.Where(j => j.era_jurisdictionid == file.era_TaskId._era_jurisdictionid_value).SingleOrDefault();
+                foreach (var support in file.era_era_evacuationfile_era_evacueesupport_ESSFileId)
+                {
+                    if (support.era_SupplierId != null) support.era_SupplierId.era_RelatedCity = jurisdictions.Where(j => j.era_jurisdictionid == support.era_SupplierId._era_relatedcity_value).SingleOrDefault();
+                    support.era_EvacuationFileId = file;
+                    supports.Add(support);
+                }
+            }
+
+            return supports;
+        }
+
+        private static async Task ParallelLoadSupportAsync(EssContext ctx, era_evacuationfile file)
+        {
+            ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
+
+            var loadTasks = new List<Task>();
+            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId))));
+            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_EvacuatedFromID))));
+
+            loadTasks.Add(Task.Run(async () =>
+            {
+                await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+
+                foreach (var support in file.era_era_evacuationfile_era_evacueesupport_ESSFileId)
+                {
+                    ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
+                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_SupplierId));
+                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_GroupLodgingCityID));
+                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
+                    ctx.Detach(support);
+                }
+            }));
+
             await Task.WhenAll(loadTasks.ToArray());
         }
     }
