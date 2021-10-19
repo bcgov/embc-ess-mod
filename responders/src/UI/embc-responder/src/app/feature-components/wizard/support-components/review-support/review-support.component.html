@@ -151,7 +151,9 @@
               <div
                 class="col-md-4 bold"
                 [ngStyle]="{
-                  color: validReferralDate(support?.from, support?.to) ? 'black' : 'red'
+                  color: validReferralDate(support?.from, support?.to)
+                    ? 'black'
+                    : 'red'
                 }"
               >
                 {{ support?.to | date: 'dd-MMM-yyyy' }} at
