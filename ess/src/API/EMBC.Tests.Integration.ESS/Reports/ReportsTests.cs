@@ -41,5 +41,20 @@ namespace EMBC.Tests.Integration.ESS.Reports
             res.Content.ShouldNotBeEmpty();
             res.ContentType.ShouldBe("text/csv");
         }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetSupportReport()
+        {
+            var res = await reportsManager.Handle(new SupportReportQuery
+            {
+                //TaskNumber = "UNIT-TEST-ACTIVE-TASK",
+                //FileId = "101010",
+                //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
+                //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
+            });
+
+            res.Content.ShouldNotBeEmpty();
+            res.ContentType.ShouldBe("text/csv");
+        }
     }
 }
