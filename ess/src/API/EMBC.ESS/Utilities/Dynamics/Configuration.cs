@@ -38,7 +38,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                 var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
                 var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                 var logger = sp.GetRequiredService<ILogger<EssContext>>();
-                return new EssContext(new Uri(options.DynamicsApiBaseUri), new Uri(options.DynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
+                return new EssContext(new Uri(options.DynamicsApiBaseUri), new Uri(options.DynamicsApiEndpoint), tokenProvider, logger);
             });
 
             return services;

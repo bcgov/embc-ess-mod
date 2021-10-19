@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.Extensions.Logging;
 using Microsoft.OData;
@@ -29,14 +28,14 @@ namespace EMBC.ESS.Utilities.Dynamics
     {
         private readonly Uri serviceRoot;
         private readonly Uri endpointUrl;
-        private readonly Func<Task<string>> tokenFactory;
+        private readonly ISecurityTokenProvider tokenProvider;
         private readonly ILogger<EssContext> logger;
 
-        public EssContext(Uri serviceRoot, Uri endpointUrl, Func<Task<string>> tokenFactory, ILogger<EssContext> logger) : base(serviceRoot)
+        public EssContext(Uri serviceRoot, Uri endpointUrl, ISecurityTokenProvider tokenProvider, ILogger<EssContext> logger) : base(serviceRoot)
         {
             this.serviceRoot = serviceRoot;
             this.endpointUrl = endpointUrl;
-            this.tokenFactory = tokenFactory;
+            this.tokenProvider = tokenProvider;
             this.logger = logger;
             this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
             this.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
@@ -47,7 +46,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             BuildingRequest += (sender, args) =>
             {
-                args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
+                args.Headers.Add("Authorization", $"Bearer {this.tokenProvider.AcquireToken().GetAwaiter().GetResult()}");
                 args.RequestUri = formatUri(args.RequestUri);
             };
 
@@ -60,7 +59,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
         public EssContext Clone()
         {
-            return new EssContext(serviceRoot, endpointUrl, tokenFactory, logger);
+            return new EssContext(serviceRoot, endpointUrl, this.tokenProvider, logger);
         }
     }
 

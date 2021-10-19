@@ -24,6 +24,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -78,9 +79,15 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ReferralPrintRequestResponse>> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason)
         {
-            //TODO: send print request to backend and return the id
-            var id = Guid.NewGuid().ToString();
-            return await Task.FromResult(Ok(new ReferralPrintRequestResponse { PrintRequestId = id }));
+            var result = await messagingClient.Send(new ReprintSupportCommand
+            {
+                FileId = fileId,
+                SupportId = supportId,
+                ReprintReason = EnumDescriptionHelper.GetEnumDescription(reprintReason),
+                RequestingUserId = currentUserId
+            });
+
+            return Ok(new ReferralPrintRequestResponse { PrintRequestId = result });
         }
 
         [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
