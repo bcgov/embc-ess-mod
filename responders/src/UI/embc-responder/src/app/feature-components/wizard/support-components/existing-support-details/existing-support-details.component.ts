@@ -28,6 +28,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -43,6 +44,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   constructor(
     private router: Router,
     public stepSupportsService: StepSupportsService,
+    private stepEssFileService: StepEssFileService,
     private dialog: MatDialog,
     private existingSupportService: ExistingSupportDetailsService,
     private referralCreationService: ReferralCreationService,
@@ -53,33 +55,33 @@ export class ExistingSupportDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     console.log(this.selectedSupport);
-    this.getNeedsAssessment();
+    this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
   }
 
   back() {
     this.router.navigate(['/ess-wizard/add-supports/view']);
   }
 
-  getNeedsAssessment() {
-    this.isLoading = !this.isLoading;
-    this.stepSupportsService
-      .getEvacFile(this.evacueeSessionService.essFileNumber) //this.selectedSupport?.needsAssessmentId
-      .subscribe(
-        (value) => {
-          this.isLoading = !this.isLoading;
-          this.needsAssessmentForSupport = value;
-          console.log(value);
-        },
-        (error) => {
-          this.isLoading = !this.isLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportNeedsAssessmentError
-          );
-        }
-      );
-  }
+  // getNeedsAssessment() {
+  //   this.isLoading = !this.isLoading;
+  //   this.stepSupportsService
+  //     .getEvacFile(this.evacueeSessionService.essFileNumber) //this.selectedSupport?.needsAssessmentId
+  //     .subscribe(
+  //       (value) => {
+  //         this.isLoading = !this.isLoading;
+  //         this.needsAssessmentForSupport = value;
+  //         console.log(value);
+  //       },
+  //       (error) => {
+  //         this.isLoading = !this.isLoading;
+  //         this.alertService.clearAlert();
+  //         this.alertService.setAlert(
+  //           'danger',
+  //           globalConst.supportNeedsAssessmentError
+  //         );
+  //       }
+  //     );
+  // }
 
   checkGroceryMaxRate(): boolean {
     const maxRate =
