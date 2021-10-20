@@ -21,19 +21,19 @@ export class DashboardComponent implements OnInit {
 
   tabs: TabModel[] = [
     {
-      label: 'Current Evacuations',
+      label: 'Current Events',
       route: 'current',
       activeImage: '/assets/images/curr-evac-active.svg',
       inactiveImage: '/assets/images/curr-evac.svg'
     },
     {
-      label: 'Past Evacuations',
+      label: 'Past Events',
       route: 'past',
       activeImage: '/assets/images/past-evac-active.svg',
       inactiveImage: '/assets/images/past-evac.svg'
     },
     {
-      label: 'User Profile',
+      label: 'Profile',
       route: 'profile',
       activeImage: '/assets/images/profile-active.svg',
       inactiveImage: '/assets/images/profile.svg'

@@ -2,13 +2,11 @@
 <div class="row" style="max-width: 100%">
   <div class="col-md-12 breadCrumb">
     <a class="goBackLink" (click)="goToCurrent()"
-      >{{ evacuationFileTab }} Evacuations ({{
+      >{{ evacuationFileTab }} Events ({{
         evacuationFileDataService.currentEvacuationFileCount$ | async
       }}) &nbsp;</a
     >
-    <span>
-      / &nbsp; Evacuation File #{{ evacuationFileDataService?.essFileId }}</span
-    >
+    <span> / &nbsp; ESS File #{{ evacuationFileDataService?.essFileId }}</span>
   </div>
 </div>
 <mat-card class="detailsCard">
@@ -23,7 +21,7 @@
         <img [src]="backArrowImgSrc" height="28" width="31" />
       </button>
       <span class="evacFileSpan"
-        >Evacuation File #{{ evacuationFileDataService?.essFileId }}</span
+        >ESS File #{{ evacuationFileDataService?.essFileId }}</span
       >
     </div>
 
@@ -71,7 +69,7 @@
   <ng-template #referrals>
     <mat-card-content class="contentCard">
       <div class="row justify-content-between">
-        <div class="col-md-6 card-heading">Evacuation Details</div>
+        <div class="col-md-6 card-heading">Event Details</div>
       </div>
       <hr />
 
@@ -89,7 +87,7 @@
         </div>
       </div>
       <div class="row info-detail">
-        <div class="col-md-3">Evacuated File Created:</div>
+        <div class="col-md-3">ESS File Created:</div>
         <div class="col-md-3">
           <span
             ><b>{{

@@ -252,11 +252,10 @@ export class ReviewSupportComponent implements OnInit {
    * Checks if the given date is in the past
    *
    * @param referralDate the date to compare with the Current Date
-   * @returns if the given date is in th epast of not
+   * @returns if the given date is in the past or not
    */
-  validReferralDate(referralDate: string): boolean {
-    const currentDate = new Date();
-    if (moment(referralDate).isBefore(currentDate)) {
+  validReferralDate(fromDate: string, toDate: string): boolean {
+    if (moment(toDate).isBefore(fromDate)) {
       return false;
     } else {
       return true;

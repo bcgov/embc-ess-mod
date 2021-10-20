@@ -30,6 +30,9 @@ export class StepEssFileService {
   private essTabsVal: Array<TabModel>;
   private nextTabUpdateVal: Subject<void> = new Subject();
 
+  //Selected ESS File object
+  private selectedEssFileVal: EvacuationFileModel;
+
   // Important values not set on form
   // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
   private primaryAddressVal: AddressModel;
@@ -85,6 +88,15 @@ export class StepEssFileService {
     private userService: UserService,
     private locationService: LocationsService
   ) {}
+
+  // Selected ESS File Model getter and setter
+  public get selectedEssFile(): EvacuationFileModel {
+    return this.selectedEssFileVal;
+  }
+
+  public set selectedEssFile(essFile: EvacuationFileModel) {
+    this.selectedEssFileVal = essFile;
+  }
 
   // Wizard variables
   public get essTabs(): Array<TabModel> {
@@ -632,6 +644,7 @@ export class StepEssFileService {
    * Update the wizard's values with ones fetched from API
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
+    this.selectedEssFile = essFile;
     const essNeeds = essFile.needsAssessment;
     this.wizardService.createObjectReference(essFile);
     const primaryLastName = essFile.householdMembers?.find(

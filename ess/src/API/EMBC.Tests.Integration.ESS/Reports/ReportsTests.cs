@@ -1,14 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EMBC.ESS;
-using EMBC.ESS.Managers.Admin;
-using EMBC.ESS.Managers.Metadata;
 using EMBC.ESS.Managers.Reports;
-using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.ESS.Shared.Contracts.Reports;
-using EMBC.ESS.Shared.Contracts.Suppliers;
-using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -36,6 +29,21 @@ namespace EMBC.Tests.Integration.ESS.Reports
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
                 IncludePersonalInfo = false,
+            });
+
+            res.Content.ShouldNotBeEmpty();
+            res.ContentType.ShouldBe("text/csv");
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetSupportReport()
+        {
+            var res = await reportsManager.Handle(new SupportReportQuery
+            {
+                //TaskNumber = "UNIT-TEST-ACTIVE-TASK",
+                //FileId = "101010",
+                //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
+                //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
             });
 
             res.Content.ShouldNotBeEmpty();
