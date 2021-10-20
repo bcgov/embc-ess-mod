@@ -197,8 +197,8 @@ export class SupportDetailsComponent implements OnInit {
     if (typeof date === 'object') {
       date = this.datePipe.transform(date, 'dd-MMM-yyyy');
     }
-    console.log(date)
-    var months = {
+    console.log(date);
+    const months = {
       jan: 0,
       feb: 1,
       mar: 2,
@@ -212,7 +212,7 @@ export class SupportDetailsComponent implements OnInit {
       nov: 10,
       dec: 11
     };
-    var p = date.split('-');
+    const p = date.split('-');
     return new Date(p[2], months[p[1].toLowerCase()], p[0]);
   }
 
