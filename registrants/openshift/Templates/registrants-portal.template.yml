@@ -96,7 +96,7 @@ objects:
       auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
       auth__jwt__signingKey: ${JWT_SIGNING_KEY}
       auth__jwt__encryptingKey: ${JWT_ENCRYPTING_KEY}
-      Redis__ConnectionString: ${REDIS_CONNECTIONSTRING}
+      REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
 
   - kind: Service
     apiVersion: v1

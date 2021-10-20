@@ -73,7 +73,7 @@ objects:
         app: ${APP_NAME}-responders-portal
         app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
-      Redis__ConnectionString: ${REDIS_CONNECTIONSTRING}
+      REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
 
   - kind: Service
     apiVersion: v1
