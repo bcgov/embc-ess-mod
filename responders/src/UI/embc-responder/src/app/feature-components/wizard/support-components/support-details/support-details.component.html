@@ -129,6 +129,7 @@
                           matInput
                           formControlName="fromDate"
                           [matDatepicker]="picker"
+                          (dateChange)="updateToDate($event)"
                           required
                         />
                         <mat-datepicker-toggle

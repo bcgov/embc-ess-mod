@@ -4,7 +4,7 @@ import { SupplierListItemModel } from './supplier-list-item.model';
 export class SupportDetailsModel {
   fromDate: string;
   fromTime: string;
-  noOfDays: string;
+  noOfDays: number;
   toDate: string;
   toTime: string;
   members: Array<EvacuationFileHouseholdMember>;
