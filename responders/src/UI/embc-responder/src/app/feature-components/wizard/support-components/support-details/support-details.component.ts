@@ -141,8 +141,16 @@ export class SupportDetailsComponent implements OnInit {
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
         this.stepSupportsService?.supportDetails?.fromDate
-          ? new Date(this.stepSupportsService?.supportDetails?.fromDate)
-          : new Date(this.now),
+          ? new Date(
+              this.convertStringToDate(
+                this.stepSupportsService?.supportDetails?.fromDate
+              )
+            )
+          : new Date(
+              this.convertStringToDate(
+                this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
+              )
+            ),
         [this.customValidation.validDateValidator(), Validators.required]
       ],
       fromTime: [
@@ -182,6 +190,30 @@ export class SupportDetailsComponent implements OnInit {
         this.stepSupportsService?.supportTypeToAdd?.value
       )
     });
+  }
+
+  convertStringToDate(date) {
+    console.log('------------' + date);
+    if (typeof date === 'object') {
+      date = this.datePipe.transform(date, 'dd-MMM-yyyy');
+    }
+    console.log(date);
+    const months = {
+      jan: 0,
+      feb: 1,
+      mar: 2,
+      apr: 3,
+      may: 4,
+      jun: 5,
+      jul: 6,
+      aug: 7,
+      sep: 8,
+      oct: 9,
+      nov: 10,
+      dec: 11
+    };
+    const p = date.split('-');
+    return new Date(p[2], months[p[1].toLowerCase()], p[0]);
   }
 
   addExistingMembers() {
