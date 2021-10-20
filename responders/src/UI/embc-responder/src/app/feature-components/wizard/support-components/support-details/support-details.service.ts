@@ -14,6 +14,7 @@ import {
 } from 'src/app/core/models/support-details.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Injectable({ providedIn: 'root' })
 export class SupportDetailsService {
@@ -83,7 +84,8 @@ export class SupportDetailsService {
       ],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
-          ?.userTotalAmount ?? ''
+          ?.userTotalAmount ?? '',
+        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
       ]
     });
   }
@@ -113,7 +115,7 @@ export class SupportDetailsService {
       totalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as OtherTransport)
           ?.totalAmount ?? '',
-        [Validators.required]
+        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
       ]
     });
   }
@@ -167,7 +169,8 @@ export class SupportDetailsService {
       ],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)
-          ?.totalAmount ?? ''
+          ?.totalAmount ?? '',
+        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
       ]
     });
   }
@@ -186,7 +189,8 @@ export class SupportDetailsService {
       ],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Clothing)
-          ?.totalAmount ?? ''
+          ?.totalAmount ?? '',
+        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
       ]
     });
   }

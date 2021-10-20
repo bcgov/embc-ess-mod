@@ -153,8 +153,7 @@ export class SupportDeliveryComponent implements OnInit {
         ]
       ],
       supplierNote: [
-        this.stepSupportsService?.supportDelivery?.supplierNote ?? '',
-        [this.customValidation.whitespaceValidator()]
+        this.stepSupportsService?.supportDelivery?.supplierNote ?? ''
       ],
       details: this.createSupplierDetailsForm()
     });

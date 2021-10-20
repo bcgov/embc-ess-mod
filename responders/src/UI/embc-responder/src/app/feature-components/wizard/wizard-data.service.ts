@@ -171,7 +171,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
@@ -212,7 +212,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
@@ -273,7 +273,7 @@ export class WizardDataService {
       step: 'STEP 2',
       title: 'Add Supports',
       route: '/ess-wizard/add-supports',
-      isLocked: true,
+      isLocked: false,
       incompleteMsg: globalConst.supportIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-supports.svg',
@@ -283,7 +283,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
@@ -324,7 +324,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,

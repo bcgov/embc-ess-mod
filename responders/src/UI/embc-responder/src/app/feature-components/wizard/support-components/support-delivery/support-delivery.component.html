@@ -208,7 +208,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <p class="question-heading requiredField">Supplier Support Notes</p>
+        <p class="question-heading">Supplier Support Notes</p>
       </div>
     </div>
     <div class="row">
@@ -224,9 +224,8 @@
             placeholder="Add Notes"
             maxlength="250"
             matInput
-            required
           ></textarea>
-          <mat-error
+          <!-- <mat-error
             *ngIf="
               supportDeliveryFormControl?.supplierNote.touched &&
               supportDeliveryFormControl?.supplierNote.invalid &&
@@ -236,7 +235,7 @@
             "
           >
             Required
-          </mat-error>
+          </mat-error> -->
         </mat-form-field>
       </div>
     </div>
