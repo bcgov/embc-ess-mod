@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.ESS.Utilities.Extensions;
@@ -214,9 +213,13 @@ namespace EMBC.ESS.Resources.Reports
                 foreach (var support in file.era_era_evacuationfile_era_evacueesupport_ESSFileId)
                 {
                     ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
-                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_SupplierId));
-                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_GroupLodgingCityID));
-                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
+
+                    var loadSubTasks = new List<Task>();
+                    loadSubTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_SupplierId))));
+                    loadSubTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_GroupLodgingCityID))));
+                    loadSubTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport))));
+                    await Task.WhenAll(loadSubTasks.ToArray());
+
                     ctx.Detach(support);
                 }
             }));
