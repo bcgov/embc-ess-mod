@@ -18,6 +18,7 @@ using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Net;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
@@ -41,6 +42,7 @@ using Microsoft.IdentityModel.Tokens;
 using NSwag.AspNetCore;
 using Serilog;
 using Serilog.Events;
+using StackExchange.Redis;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
 
@@ -49,6 +51,8 @@ namespace EMBC.Suppliers.API
     public class Startup
     {
         private const string HealthCheckReadyTag = "ready";
+        private const string HealthCheckAliveTag = "alive";
+
         private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
@@ -60,6 +64,27 @@ namespace EMBC.Suppliers.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
+            var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
+            if (!string.IsNullOrEmpty(redisConnectionString))
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
+                });
+                services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name)
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "data-protection-keys");
+            }
+            else
+            {
+                services.AddDistributedMemoryCache();
+                var dpBuilder = services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name);
+
+                if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
+            }
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -107,8 +132,6 @@ namespace EMBC.Suppliers.API
                 {
                     policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                         .RequireAuthenticatedUser();
-                    // .RequireClaim("user_role")
-                    // .RequireClaim("user_team");
                 });
                 options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme);
             });
@@ -118,13 +141,10 @@ namespace EMBC.Suppliers.API
                 options.Filters.Add(new HttpResponseExceptionFilter());
                 options.Filters.Add(new AuthorizeFilter());
             });
-            var dpBuilder = services.AddDataProtection();
-            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
-            if (!string.IsNullOrWhiteSpace(keyRingPath))
-            {
-                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
-            }
-            services.AddHealthChecks().AddCheck("Suppliers API", () => HealthCheckResult.Healthy("OK"), new[] { HealthCheckReadyTag });
+
+            services.AddHealthChecks()
+                .AddCheck("Suppliers API ready hc", () => HealthCheckResult.Healthy("API ready"), new[] { HealthCheckReadyTag })
+                .AddCheck("Suppliers live hc", () => HealthCheckResult.Healthy("API alive"), new[] { HealthCheckAliveTag });
 
             services.AddOpenApiDocument();
             services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
@@ -217,15 +237,9 @@ namespace EMBC.Suppliers.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
-                {
-                    Predicate = (check) => check.Tags.Contains(HealthCheckReadyTag)
-                });
-
-                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()
-                {
-                    Predicate = (_) => false
-                });
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
+                endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
             });
         }
 
