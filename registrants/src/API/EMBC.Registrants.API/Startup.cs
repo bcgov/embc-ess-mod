@@ -102,7 +102,6 @@ namespace EMBC.Registrants.API
             });
 
             //Add services
-            AddDataProtection(services);
             AddOpenApi(services);
             services.AddCors(opts => opts.AddDefaultPolicy(policy =>
             {
@@ -183,16 +182,6 @@ namespace EMBC.Registrants.API
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
             });
-        }
-
-        private void AddDataProtection(IServiceCollection services)
-        {
-            var dpBuilder = services.AddDataProtection();
-            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
-            if (!string.IsNullOrWhiteSpace(keyRingPath))
-            {
-                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
-            }
         }
 
         private void AddOpenApi(IServiceCollection services)
