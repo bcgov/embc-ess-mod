@@ -272,6 +272,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    From = now.AddDays(20),
                    To = now.AddDays(50),
                    IssuedOn = now
+               },
+               new IncidentalsReferral {
+                   SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4",
+                   SupplierNotes = "notes",
+                   IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4",
+                   IssuedToPersonName = "test person",
+                   IncludedHouseholdMembers = includedHouseholdMembers,
+                   From = now.AddDays(20),
+                   To = now.AddDays(50),
+                   IssuedOn = now
                }
             };
 

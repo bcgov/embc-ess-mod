@@ -498,7 +498,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var currentHouseholdMembers = existingSupport.era_era_householdmember_era_evacueesupport.ToArray();
 
             essContext.Detach(existingSupport);
-            foreach (var member in existingSupport.era_era_householdmember_era_evacueesupport) essContext.Detach(member);
+            //foreach (var member in existingSupport.era_era_householdmember_era_evacueesupport) essContext.Detach(member);
 
             support.era_evacueesupportid = existingSupport.era_evacueesupportid;
             essContext.AttachTo(nameof(EssContext.era_evacueesupports), support);
@@ -537,8 +537,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             foreach (var member in householdMembers)
             {
-                essContext.AttachTo(nameof(EssContext.era_householdmembers), member);
-                essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
+                essContext.AddLink(essContext.AttachOrGetTracked(nameof(EssContext.era_householdmembers), member, member => member.era_householdmemberid), nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
             }
         }
 
@@ -546,8 +545,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             foreach (var member in householdMembers)
             {
-                essContext.AttachTo(nameof(EssContext.era_householdmembers), member);
-                essContext.DeleteLink(member, nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
+                essContext.DeleteLink(essContext.AttachOrGetTracked(nameof(EssContext.era_householdmembers), member, member => member.era_householdmemberid), nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
             }
         }
 

@@ -83,12 +83,27 @@ namespace EMBC.ESS.Utilities.Dynamics
             }
         }
 
-        public static void Detach(this EssContext context, params object[] entities)
+        /// <summary>
+        /// Check if the entity is already tracked by the context, if no, then attach and return, if yes, return the tracked entity instead
+        /// </summary>
+        /// <typeparam name="TEntity">entity type</typeparam>
+        /// <param name="context">Dynamics context</param>
+        /// <param name="entitySetName">name of the entity set</param>
+        /// <param name="entity">the entity to attach</param>
+        /// <param name="entityKeyGetter"> a function to resolve the entity id</param>
+        /// <returns>a tracked entity - either existing or newly attached</returns>
+        public static TEntity AttachOrGetTracked<TEntity>(this EssContext context, string entitySetName, TEntity entity, Func<TEntity, Guid?> entityKeyGetter)
+            where TEntity : crmbaseentity
         {
-            foreach (var entity in entities)
-            {
-                context.Detach(entity);
-            }
+            var currentEntityKey = entityKeyGetter(entity);
+            if (!currentEntityKey.HasValue) return entity;
+            var matchedEntity = context.EntityTracker.Entities
+                .Where(ed => ed.Entity is TEntity && entityKeyGetter((TEntity)ed.Entity) == currentEntityKey)
+                .SingleOrDefault()?.Entity as TEntity;
+
+            if (matchedEntity == null) context.AttachTo(entitySetName, entity);
+
+            return matchedEntity ?? entity;
         }
 
         public static void ActivateObject(this EssContext context, object entity, int activeStatusValue = -1) =>
