@@ -204,7 +204,13 @@ objects:
         deploymentconfig: ${APP_NAME}-suppliers-portal-api
       strategy:
         activeDeadlineSeconds: 21600
-        resources: {}
+        resources:
+          limits:
+            cpu: 15m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
         rollingParams:
           intervalSeconds: 1
           maxSurge: 25%
@@ -221,6 +227,13 @@ objects:
         spec:
           containers:
             - name: suppliers-portal-api
+              resources:
+                limits:
+                  cpu: 150m
+                  memory: 512Mi
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
               envFrom:
                 - configMapRef:
                     name: ${APP_NAME}-suppliers-api-config
@@ -285,7 +298,13 @@ objects:
         deploymentconfig: ${APP_NAME}-suppliers-portal-ui
       strategy:
         activeDeadlineSeconds: 21600
-        resources: {}
+        resources:
+          limits:
+            cpu: 15m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
         rollingParams:
           intervalSeconds: 1
           maxSurge: 25%
@@ -302,6 +321,13 @@ objects:
         spec:
           containers:
             - name: suppliers-portal-ui
+              resources:
+                limits:
+                  cpu: 50m
+                  memory: 64Mi
+                requests:
+                  cpu: 25m
+                  memory: 32Mi
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/suppliers-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:

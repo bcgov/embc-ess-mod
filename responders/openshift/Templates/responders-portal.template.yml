@@ -187,11 +187,17 @@ objects:
         deploymentconfig: ${APP_NAME}-responders-portal-api
       strategy:
         activeDeadlineSeconds: 21600
-        resources: {}
+        resources:
+          limits:
+            cpu: 15m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 25%
-          maxUnavailable: 25%
+          maxSurge: 50%
+          maxUnavailable: 50%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
         type: Rolling
@@ -205,6 +211,13 @@ objects:
         spec:
           containers:
             - name: responders-portal-api
+              resources:
+                limits:
+                  cpu: 150m
+                  memory: 256Mi
+                requests:
+                  cpu: 50m
+                  memory: 64Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
@@ -272,11 +285,17 @@ objects:
         deploymentconfig: ${APP_NAME}-responders-portal-ui
       strategy:
         activeDeadlineSeconds: 21600
-        resources: {}
+        resources:
+          limits:
+            cpu: 15m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 25%
-          maxUnavailable: 25%
+          maxSurge: 50%
+          maxUnavailable: 50%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
         type: Rolling
@@ -289,12 +308,18 @@ objects:
         spec:
           containers:
             - name: responders-portal-ui
+              resources:
+                limits:
+                  cpu: 50m
+                  memory: 64Mi
+                requests:
+                  cpu: 25m
+                  memory: 32Mi
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/responders-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
                 - containerPort: 2015
                   protocol: TCP
-              resources: {}
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
               livenessProbe:

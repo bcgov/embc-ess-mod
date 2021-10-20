@@ -112,7 +112,13 @@ objects:
         deploymentconfig: ${APP_NAME}-landing-page
       strategy:
         activeDeadlineSeconds: 21600
-        resources: {}
+        resources:
+          limits:
+            cpu: 15m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
         rollingParams:
           intervalSeconds: 1
           maxSurge: 25%
@@ -134,7 +140,13 @@ objects:
               ports:
                 - containerPort: 2015
                   protocol: TCP
-              resources: {}
+              resources:
+                limits:
+                  cpu: 20m,
+                  memory: 64Mi
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
           dnsPolicy: ClusterFirst
