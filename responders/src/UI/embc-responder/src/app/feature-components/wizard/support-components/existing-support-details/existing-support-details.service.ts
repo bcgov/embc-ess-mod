@@ -105,8 +105,6 @@ export class ExistingSupportDetailsService {
       this.datePipe.transform(selectedSupport.to, 'yyyy-MM-dd')
     ).diff(this.datePipe.transform(selectedSupport.from, 'yyy-MM-dd'));
 
-
-
     const days = milliseconds / 86400000;
 
     const referralDelivery = selectedSupport as Referral;

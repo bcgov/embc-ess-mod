@@ -58,7 +58,6 @@ export class SupportDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
     this.createSupportDetailsForm();
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
       this.updateValidToDate(value);
@@ -138,8 +137,6 @@ export class SupportDetailsComponent implements OnInit {
       .patchValue(this.datePipe.transform(nextDay, 'MM/dd/yyyy'));
     this.supportDetailsForm.get('toTime').patchValue($event.get('time').value);
   }
-
-  
 
   addExistingMembers() {
     if (this.stepSupportsService?.supportDetails?.members) {
@@ -238,11 +235,10 @@ export class SupportDetailsComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param event 
+   *
+   * @param event
    */
   updateToDate(event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value);
     const days = this.supportDetailsForm.get('noOfDays').value;
     const finalValue = this.datePipe.transform(
       event.value.setDate(event.value.getDate() + days),
@@ -294,7 +290,7 @@ export class SupportDetailsComponent implements OnInit {
   /**
    * Support details form
    */
-   private createSupportDetailsForm(): void {
+  private createSupportDetailsForm(): void {
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
         this.stepSupportsService?.supportDetails?.fromDate

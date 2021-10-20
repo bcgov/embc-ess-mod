@@ -370,6 +370,7 @@ export class StepSupportsService {
 
   /**
    * Converts dates strings to ISOString
+   *
    * @param date the date to convert
    * @param time the time to add to the ISOString
    * @returns a ISOString with a valid Date format
@@ -387,6 +388,7 @@ export class StepSupportsService {
 
   /**
    * Converts Date object into a valid date format for datepickers
+   *
    * @param date the date object
    * @returns a valid date format for datepicker
    */
