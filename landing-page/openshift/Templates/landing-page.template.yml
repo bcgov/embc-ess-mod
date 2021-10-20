@@ -111,6 +111,7 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-landing-page
       strategy:
+        type: Rolling
         activeDeadlineSeconds: 21600
         resources:
           limits:
@@ -121,11 +122,10 @@ objects:
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 25%
-          maxUnavailable: 25%
+          maxSurge: 50%
+          maxUnavailable: 50%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
-        type: Rolling
       template:
         metadata:
           labels:
@@ -142,7 +142,7 @@ objects:
                   protocol: TCP
               resources:
                 limits:
-                  cpu: 20m,
+                  cpu: 20m
                   memory: 64Mi
                 requests:
                   cpu: 10m
