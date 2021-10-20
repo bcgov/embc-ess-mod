@@ -272,12 +272,12 @@ parameters:
     description: Starting amount of CPU the container can use.
     displayName: CPU Request
     required: true
-    value: 25m
+    value: 10m
   - name: CPU_LIMIT
     description: Maximum amount of CPU the container can use.
     displayName: CPU Limit
     required: true
-    value: 100m
+    value: 30m
   - name: MEMORY_REQUEST
     description: Starting amount of memory the container can use.
     displayName: Memory Request
@@ -287,7 +287,7 @@ parameters:
     description: Maximum amount of memory the container can use.
     displayName: Memory Limit
     required: true
-    value: 256Mi
+    value: 512Mi
   - name: PVC_SIZE
     description: The size of the persistent volume to create.
     displayName: Persistent Volume Size
