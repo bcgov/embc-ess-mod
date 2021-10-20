@@ -24,8 +24,6 @@ namespace EMBC.ESS.Resources.Reports
     {
         public Mappings()
         {
-            Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
-
             CreateMap<era_householdmember, Evacuee>()
                 .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_name))
                 .ForMember(d => d.RegistrationCompleted, opts => opts.Ignore())
@@ -94,6 +92,131 @@ namespace EMBC.ESS.Resources.Reports
                     }
                     d.SupportsTotalAmount = total;
                 });
+
+            Func<int?, string> resolveSupportType = s =>
+            {
+                var res = string.Empty;
+                switch (s)
+                {
+                    case (int)SupportType.Food_Groceries:
+                    case (int)SupportType.Food_Restaurant:
+                        res = "Food";
+                        break;
+
+                    case (int)SupportType.Lodging_Hotel:
+                    case (int)SupportType.Lodging_Bileting:
+                    case (int)SupportType.Lodging_Group:
+                        res = "Lodging";
+                        break;
+
+                    case (int)SupportType.Incidentals:
+                        res = "Incidentals";
+                        break;
+
+                    case (int)SupportType.Clothing:
+                        res = "Clothing";
+                        break;
+
+                    case (int)SupportType.Transportation_Taxi:
+                    case (int)SupportType.Transportation_Other:
+                        res = "Transportation";
+                        break;
+
+                    default:
+                        break;
+                }
+                return res;
+            };
+
+            Func<int?, string> resolveSupportSubType = s =>
+            {
+                var res = string.Empty;
+                switch (s)
+                {
+                    case (int)SupportType.Food_Groceries:
+                        res = "Groceries";
+                        break;
+
+                    case (int)SupportType.Food_Restaurant:
+                        res = "Restaurant";
+                        break;
+
+                    case (int)SupportType.Lodging_Hotel:
+                        res = "Hotel";
+                        break;
+
+                    case (int)SupportType.Lodging_Bileting:
+                        res = "Bileting";
+                        break;
+
+                    case (int)SupportType.Lodging_Group:
+                        res = "Group";
+                        break;
+
+                    case (int)SupportType.Transportation_Taxi:
+                        res = "Taxi";
+                        break;
+
+                    case (int)SupportType.Transportation_Other:
+                        res = "Other";
+                        break;
+
+                    default:
+                        break;
+                }
+                return res;
+            };
+
+            CreateMap<era_evacueesupport, Support>()
+                .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_name))
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_name))
+                .ForMember(d => d.TaskStartDate, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_taskstartdate.Value.LocalDateTime.ToString("yyyy/MM/dd")))
+                .ForMember(d => d.TaskStartTime, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_taskstartdate.Value.LocalDateTime.ToString("hh:mm tt")))
+                .ForMember(d => d.TaskEndDate, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_taskenddate.Value.LocalDateTime.ToString("yyyy/MM/dd")))
+                .ForMember(d => d.TaskEndTime, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_taskenddate.Value.LocalDateTime.ToString("hh:mm tt")))
+                .ForMember(d => d.EvacuationFileStatus, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_essfilestatus))
+                .ForMember(d => d.EvacuatedTo, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_JurisdictionID == null ? null : s.era_EvacuationFileId.era_TaskId.era_JurisdictionID.era_jurisdictionname))
+                .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_EvacuatedFromID == null ? null : s.era_EvacuationFileId.era_EvacuatedFromID.era_jurisdictionname))
+                .ForMember(d => d.FacilityName, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileId.era_CurrentNeedsAssessmentid.era_registrationlocation))
+                .ForMember(d => d.SelfRegistrationDate, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_selfregistrationdate.HasValue ? s.era_EvacuationFileId.era_selfregistrationdate.Value.LocalDateTime.ToString("yyyy/MM/dd") : null))
+                .ForMember(d => d.SelfRegistrationTime, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_selfregistrationdate.HasValue ? s.era_EvacuationFileId.era_selfregistrationdate.Value.LocalDateTime.ToString("hh:mm tt") : null))
+                .ForMember(d => d.RegistrationCompletedDate, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileId.era_registrationcompleteddate.Value.LocalDateTime.ToString("yyyy/MM/dd") : null))
+                .ForMember(d => d.RegistrationCompletedTime, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileId.era_registrationcompleteddate.Value.LocalDateTime.ToString("hh:mm tt") : null))
+                .ForMember(d => d.PurchaserOfGoods, opts => opts.MapFrom(s => s.era_purchaserofgoods))
+                .ForMember(d => d.SupportNumber, opts => opts.MapFrom(s => s.era_name))
+                .ForMember(d => d.SupportType, opts => opts.MapFrom(s => resolveSupportType(s.era_supporttype)))
+                .ForMember(d => d.SubSupportType, opts => opts.MapFrom(s => resolveSupportSubType(s.era_supporttype)))
+                .ForMember(d => d.ValidFromDate, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.LocalDateTime.ToString("yyyy/MM/dd") : null))
+                .ForMember(d => d.ValidFromTime, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.LocalDateTime.ToString("hh:mm tt") : null))
+                .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.era_validfrom.HasValue && s.era_validto.HasValue ? (s.era_validto.Value.DateTime - s.era_validfrom.Value.DateTime).Days : 0))
+                .ForMember(d => d.ValidToDate, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.LocalDateTime.ToString("yyyy/MM/dd") : null))
+                .ForMember(d => d.ValidToTime, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.LocalDateTime.ToString("yyyy/MM/dd") : null))
+                .ForMember(d => d.NumberOfEvacuees, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Count))
+                .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
+                .ForMember(d => d.Breakfasts, opts => opts.MapFrom(s => s.era_numberofbreakfasts))
+                .ForMember(d => d.Lunches, opts => opts.MapFrom(s => s.era_numberoflunches))
+                .ForMember(d => d.Dinners, opts => opts.MapFrom(s => s.era_numberofdinners))
+                .ForMember(d => d.NumberOfRooms, opts => opts.MapFrom(s => s.era_numberofrooms))
+                .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
+                .ForMember(d => d.SupportCreatedDate, opts => opts.MapFrom(s => s.createdon.Value.LocalDateTime.ToString("yyyy/MM/dd")))
+                .ForMember(d => d.SupportCreatedTime, opts => opts.MapFrom(s => s.createdon.Value.LocalDateTime.ToString("hh:mm tt")))
+                .ForMember(d => d.ExtremeWinterConditions, opts => opts.MapFrom(s => s.era_extremewinterconditions == (int)EraTwoOptions.Yes))
+                .ForMember(d => d.NumberOfMeals, opts => opts.MapFrom(s => s.era_numberofmeals))
+                .ForMember(d => d.SupplierLegalName, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_name : null))
+                .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_suppliername : null))
+                .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_addressline1 : null))
+                .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_addressline2 : null))
+                .ForMember(d => d.City, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_RelatedCity != null ? s.era_SupplierId.era_RelatedCity.era_jurisdictionname : null : null))
+                .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_postalcode : null))
+                .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_businessnumber : null))
+                .ForMember(d => d.Fax, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_fax : null))
+                .ForMember(d => d.LodgingName, opts => opts.MapFrom(s => s.era_lodgingname))
+                .ForMember(d => d.LodgingAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
+                .ForMember(d => d.BiletingCity, opts => opts.MapFrom(s => s.era_billetinglodgingcity))
+                .ForMember(d => d.GroupLodgingCity, opts => opts.MapFrom(s => s.era_GroupLodgingCityID != null ? s.era_GroupLodgingCityID.era_jurisdictionname : null))
+                .ForMember(d => d.LodgingContactNumber, opts => opts.MapFrom(s => s.era_lodgingcontactnumber))
+                .ForMember(d => d.LodgingEmail, opts => opts.MapFrom(s => s.era_lodgingemailaddress))
+                ;
         }
     }
 
@@ -103,5 +226,11 @@ namespace EMBC.ESS.Resources.Reports
         Yes = 174360001,
         Unsure = 174360002,
         Unknown = 174360003
+    }
+
+    public enum EraTwoOptions
+    {
+        Yes = 174360000,
+        No = 174360001
     }
 }

@@ -39,7 +39,7 @@ namespace EMBC.ESS.Managers.Reports
 
         public async Task<ReportQueryResult> Handle(EvacueeReportQuery query)
         {
-            var evacueeQuery = new EvacueeQuery
+            var evacueeQuery = new ReportQuery
             {
                 FileId = query.FileId,
                 TaskNumber = query.TaskNumber,
@@ -51,6 +51,29 @@ namespace EMBC.ESS.Managers.Reports
             var evacuees = mapper.Map<IEnumerable<Evacuee>>(results, opt => opt.Items["IncludePersonalInfo"] = query.IncludePersonalInfo.ToString());
 
             var csv = evacuees.ToCSV(evacueeQuery);
+
+            var content = Encoding.UTF8.GetBytes(csv);
+            var contentType = "text/csv";
+
+            return new ReportQueryResult
+            {
+                Content = content,
+                ContentType = contentType
+            };
+        }
+
+        public async Task<ReportQueryResult> Handle(SupportReportQuery query)
+        {
+            var supportQuery = new ReportQuery
+            {
+                FileId = query.FileId,
+                TaskNumber = query.TaskNumber,
+                EvacuatedFrom = query.EvacuatedFrom,
+                EvacuatedTo = query.EvacuatedTo,
+            };
+
+            var supports = (await reportRepository.QuerySupport(supportQuery)).Items;
+            var csv = supports.ToCSV(supportQuery, "\"");
 
             var content = Encoding.UTF8.GetBytes(csv);
             var contentType = "text/csv";
