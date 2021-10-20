@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
-
+import { DatePipe } from '@angular/common';
 import { ReviewSupportComponent } from './review-support.component';
 
 describe('ReviewSupportComponent', () => {
@@ -12,7 +12,8 @@ describe('ReviewSupportComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
-      declarations: [ReviewSupportComponent]
+      declarations: [ReviewSupportComponent],
+      providers: [DatePipe]
     }).compileComponents();
   });
 

@@ -18,6 +18,7 @@ import { SupportDetailsService } from './support-details.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker/public-api';
 
 @Component({
   selector: 'app-support-details',
@@ -58,11 +59,14 @@ export class SupportDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createSupportDetailsForm();
-    this.supportDetailsForm.get('noOfDays').patchValue(1);
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
       this.updateValidToDate(value);
     });
     this.addExistingMembers();
+
+    if (this.stepSupportsService?.supportDetails?.noOfDays === undefined) {
+      this.supportDetailsForm.get('noOfDays').patchValue(1);
+    }
   }
 
   /**
@@ -132,88 +136,6 @@ export class SupportDetailsComponent implements OnInit {
       .get('toDate')
       .patchValue(this.datePipe.transform(nextDay, 'MM/dd/yyyy'));
     this.supportDetailsForm.get('toTime').patchValue($event.get('time').value);
-  }
-
-  /**
-   * Support details form
-   */
-  createSupportDetailsForm(): void {
-    this.supportDetailsForm = this.formBuilder.group({
-      fromDate: [
-        this.stepSupportsService?.supportDetails?.fromDate
-          ? new Date(
-              this.convertStringToDate(
-                this.stepSupportsService?.supportDetails?.fromDate
-              )
-            )
-          : new Date(
-              this.convertStringToDate(
-                this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
-              )
-            ),
-        [this.customValidation.validDateValidator(), Validators.required]
-      ],
-      fromTime: [
-        this.stepSupportsService?.supportDetails?.fromTime
-          ? this.stepSupportsService?.supportDetails?.fromTime
-          : this.currentTime,
-        [Validators.required]
-      ],
-      noOfDays: [
-        this.stepSupportsService?.supportDetails?.noOfDays
-          ? this.stepSupportsService?.supportDetails?.noOfDays
-          : '',
-        [Validators.required]
-      ],
-      toDate: [
-        {
-          value: this.stepSupportsService?.supportDetails?.toDate
-            ? this.stepSupportsService?.supportDetails?.toDate
-            : this.datePipe.transform(
-                this.now + 3600 * 1000 * 24,
-                'MM/dd/yyyy'
-              ),
-          disabled: true
-        }
-      ],
-      toTime: [
-        this.stepSupportsService?.supportDetails?.toTime
-          ? this.stepSupportsService?.supportDetails?.toTime
-          : this.currentTime,
-        [Validators.required]
-      ],
-      members: this.formBuilder.array(
-        [],
-        [this.customValidation.memberCheckboxValidator()]
-      ),
-      referral: this.supportDetailsService.generateDynamicForm(
-        this.stepSupportsService?.supportTypeToAdd?.value
-      )
-    });
-  }
-
-  convertStringToDate(date) {
-    console.log('------------' + date);
-    if (typeof date === 'object') {
-      date = this.datePipe.transform(date, 'dd-MMM-yyyy');
-    }
-    console.log(date);
-    const months = {
-      jan: 0,
-      feb: 1,
-      mar: 2,
-      apr: 3,
-      may: 4,
-      jun: 5,
-      jul: 6,
-      aug: 7,
-      sep: 8,
-      oct: 9,
-      nov: 10,
-      dec: 11
-    };
-    const p = date.split('-');
-    return new Date(p[2], months[p[1].toLowerCase()], p[0]);
   }
 
   addExistingMembers() {
@@ -300,13 +222,29 @@ export class SupportDetailsComponent implements OnInit {
   /**
    * Updates date field based on number of days to be added
    */
-  updateValidToDate(days: number) {
+  updateValidToDate(days?: number): void {
     const currentVal = this.supportDetailsForm.get('fromDate').value;
     const date = new Date(currentVal);
+    console.log(date);
     const finalValue = this.datePipe.transform(
       date.setDate(date.getDate() + days),
       'MM/dd/yyyy'
     );
+    console.log(finalValue);
+    this.supportDetailsForm.get('toDate').patchValue(finalValue);
+  }
+
+  /**
+   *
+   * @param event
+   */
+  updateToDate(event: MatDatepickerInputEvent<Date>) {
+    const days = this.supportDetailsForm.get('noOfDays').value;
+    const finalValue = this.datePipe.transform(
+      event.value.setDate(event.value.getDate() + days),
+      'MM/dd/yyyy'
+    );
+    console.log(finalValue);
     this.supportDetailsForm.get('toDate').patchValue(finalValue);
   }
 
@@ -342,7 +280,68 @@ export class SupportDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * Navigates back to the View Details page
+   */
   backToEdit() {
     this.router.navigate(['/ess-wizard/add-supports/view-detail']);
+  }
+
+  /**
+   * Support details form
+   */
+  private createSupportDetailsForm(): void {
+    this.supportDetailsForm = this.formBuilder.group({
+      fromDate: [
+        this.stepSupportsService?.supportDetails?.fromDate
+          ? new Date(
+              this.stepSupportsService.convertStringToDate(
+                this.stepSupportsService?.supportDetails?.fromDate
+              )
+            )
+          : new Date(
+              this.stepSupportsService.convertStringToDate(
+                this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
+              )
+            ),
+        [this.customValidation.validDateValidator(), Validators.required]
+      ],
+      fromTime: [
+        this.stepSupportsService?.supportDetails?.fromTime
+          ? this.stepSupportsService?.supportDetails?.fromTime
+          : this.currentTime,
+        [Validators.required]
+      ],
+      noOfDays: [
+        this.stepSupportsService?.supportDetails?.noOfDays
+          ? this.stepSupportsService?.supportDetails?.noOfDays
+          : '',
+        [Validators.required]
+      ],
+      toDate: [
+        {
+          value: this.stepSupportsService?.supportDetails?.toDate
+            ? this.stepSupportsService?.supportDetails?.toDate
+            : this.datePipe.transform(
+                this.now + 3600 * 1000 * 24,
+                'MM/dd/yyyy'
+              ),
+          disabled: true
+        }
+      ],
+      toTime: [
+        this.stepSupportsService?.supportDetails?.toTime
+          ? this.stepSupportsService?.supportDetails?.toTime
+          : this.currentTime,
+        [Validators.required]
+      ],
+      members: this.formBuilder.array(
+        [],
+        [this.customValidation.memberCheckboxValidator()]
+      ),
+      referral: this.supportDetailsService.generateDynamicForm(
+        this.stepSupportsService?.supportTypeToAdd?.value
+      )
+    });
   }
 }
