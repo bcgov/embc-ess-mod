@@ -14,14 +14,18 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.IO;
+using System.Reflection;
 using EMBC.PDFGenerator.Utilities.PdfGenerator;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using StackExchange.Redis;
 
 namespace EMBC.PDFGenerator
 {
@@ -38,6 +42,27 @@ namespace EMBC.PDFGenerator
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
+            var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
+            if (!string.IsNullOrEmpty(redisConnectionString))
+            {
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
+                });
+                services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name)
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "data-protection-keys");
+            }
+            else
+            {
+                services.AddDistributedMemoryCache();
+                var dpBuilder = services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name);
+
+                if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
+            }
             services.AddGrpc();
             services.AddPdfGenerator(configuration);
             services.AddHealthChecks()
