@@ -156,8 +156,8 @@ objects:
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 50%
-          maxUnavailable: 50%
+          maxSurge: 25%
+          maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
         type: Rolling
@@ -192,7 +192,7 @@ objects:
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
-                  name: dp-keys
+                  name: dp
                 - mountPath: /ssl
                   name: ssl
                   readonly: true
@@ -217,9 +217,9 @@ objects:
           securityContext: {}
           terminationGracePeriodSeconds: 30
           volumes:
-            - name: dp-keys
+            - name: dp
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-ess-backend-key-ring
+                claimName: ${APP_NAME}-data-protection
             - name: ssl
               secret:
                 secretName: ${APP_NAME}-ess-backend-ssl
@@ -236,17 +236,18 @@ objects:
               name: ess-backend:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
 
+  # pvc shared with all .net pods for data protection keys
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
-      name: ${APP_NAME}-ess-backend-key-ring
+      name: ${APP_NAME}-data-protection
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}-ess-backend
+        app: ${APP_NAME}
         app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       accessModes:
         - "ReadWriteMany"
       resources:
         requests:
-          storage: "100Mi"
+          storage: "256Mi"

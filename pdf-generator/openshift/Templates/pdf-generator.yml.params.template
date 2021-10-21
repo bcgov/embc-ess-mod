@@ -3,3 +3,4 @@ ENV=<openshift namespace env>
 APP_NAME=<app name>
 TAG=<image stream tag to deploy from>
 RUNTIME_ENVIRONMENT=<ASP.Net core environment development|staging|production>
+REDIS_CONNECTIONSTRING=<optional Redis connection string>
