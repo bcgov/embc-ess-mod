@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bogus" Version="33.0.2" />
+    <PackageReference Include="bogus" Version="33.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="shouldly" Version="4.0.3" />

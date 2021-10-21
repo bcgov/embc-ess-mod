@@ -92,9 +92,15 @@ objects:
           updatePeriodSeconds: 1
           intervalSeconds: 1
           timeoutSeconds: 600
-          maxUnavailable: 25%
-          maxSurge: 25%
-        resources: {}
+          maxUnavailable: 50%
+          maxSurge: 50%
+        resources:
+          limits:
+            cpu: 15m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
         activeDeadlineSeconds: 21600
       triggers:
         - type: ImageChange
@@ -121,6 +127,13 @@ objects:
         spec:
           containers:
             - name: cas-interface-service
+              resources:
+                limits:
+                  cpu: 15m
+                  memory: 256Mi
+                requests:
+                  cpu: 10m
+                  memory: 64Mi
               image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/cas-interface-service:${TAG}
               ports:
                 - containerPort: 8080

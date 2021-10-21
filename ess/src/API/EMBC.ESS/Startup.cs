@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Net;
 using System.Reflection;
 using EMBC.ESS.Engines.Search;
@@ -37,6 +38,7 @@ using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.ESS.Utilities.Transformation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +48,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using StackExchange.Redis;
 
 namespace EMBC.ESS
 {
@@ -63,7 +66,8 @@ namespace EMBC.ESS
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var redisConnectionString = configuration["redis:connectionstring"];
+            var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
+            var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 services.AddStackExchangeRedisCache(options =>
@@ -71,10 +75,17 @@ namespace EMBC.ESS
                     options.Configuration = redisConnectionString;
                     options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
                 });
+                services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name)
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "data-protection-keys");
             }
             else
             {
                 services.AddDistributedMemoryCache();
+                var dpBuilder = services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name);
+
+                if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
 
             services.Configure<MessageHandlerRegistryOptions>(opts => { });
