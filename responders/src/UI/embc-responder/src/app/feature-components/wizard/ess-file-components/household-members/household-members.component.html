@@ -50,8 +50,9 @@
               </mat-radio-group>
 
               <div class="row" *ngIf="memberSource.getValue().length >= 2">
-                <div class="col-12">
-                  <div class="col-4 float-right add-members">
+                <div class="col-md-12">
+                  <div class="col-md-4 button-justify">
+                    <!--float-right -->
                     <button
                       class="family-button details-button"
                       mat-button
@@ -65,7 +66,7 @@
               </div>
             </div>
             <ng-template #editEssFile>
-              <div class="col-12 description-div">
+              <div class="col-md-12 description-div">
                 <span *ngIf="wizardType === 'complete-file'">
                   <p class="bold no-margin">
                     Confirm the following household members should be included
@@ -94,19 +95,19 @@
                 </span>
               </div>
 
-              <div class="row">
-                <div class="col-12">
-                  <div class="col-4 float-right add-members">
-                    <button
-                      class="family-button details-button"
-                      mat-button
-                      type="button"
-                      (click)="addMembers()"
-                    >
-                      + Add Household Member
-                    </button>
-                  </div>
+              <div class="row button-justify">
+                <!-- <div class="col-md-12"> -->
+                <div class="col-md-4">
+                  <button
+                    class="family-button"
+                    mat-button
+                    type="button"
+                    (click)="addMembers()"
+                  >
+                    + Add Household Member
+                  </button>
                 </div>
+                <!-- </div> -->
               </div>
             </ng-template>
 
