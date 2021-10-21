@@ -421,7 +421,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
               () => this.householdForm.get('addMemberIndicator').value === true,
               Validators.required
             )
-            .bind(this.customValidation)
+            .bind(this.customValidation),
+          this.customValidation.dateOfBirthValidator()
         ]
       ],
       gender: [

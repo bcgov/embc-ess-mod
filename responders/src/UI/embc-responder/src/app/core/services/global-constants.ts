@@ -231,6 +231,7 @@ export const defaultRole = {
   description: 'Tier 1 - Responder (default)'
 };
 
+export const currencyPattern = '^([0-9]+(((,[0-9]{3}){1})?([.][0-9]{0,2})?))$';
 export const postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
 export const defaultProvince = { code: 'BC', name: 'British Columbia' };
 export const defaultCountry = { code: 'CAN', name: 'Canada' };
@@ -399,7 +400,7 @@ export const dashboardViewProfile: DialogContent = {
 export const hideNote: DialogContent = {
   title: '<p class="dialog-title">Hide Case Note<p>',
   text:
-    '<div class="row"><div class="col-md-12"><p>Are you sure you want to hide this Case Note?</p><p>Hidden Case Notes will only be viewed by Director/Manager tier and above.</p></div></div>',
+    '<div class="row"><div class="col-md-12"><p>Are you sure you want to hide this Case Note?</p><p>Hidden Case Notes can only be viewed by Managers (third user access tier) and above.</p></div></div>',
   cancelButton: 'No, Cancel',
   confirmButton: 'Yes, Hide Note'
 };
@@ -407,7 +408,7 @@ export const hideNote: DialogContent = {
 export const showNote: DialogContent = {
   title: '<p class="dialog-title">Show Case Note<p>',
   text:
-    '<div class="row"><div class="col-md-12"><p>Are you sure you want to show this Case Note?</p><p>This Case Note can now be viewed by all ERA responders.</p></div></div>',
+    '<div class="row"><div class="col-md-12"><p>Are you sure you want to show this Case Note?</p><p>This Case Note can now be viewed by all users (all user access tiers).</p></div></div>',
   cancelButton: 'No, Cancel',
   confirmButton: 'Yes, Show Note'
 };

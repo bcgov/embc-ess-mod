@@ -83,6 +83,20 @@ export class ExistingSupportDetailsComponent implements OnInit {
   //     );
   // }
 
+  generateSupportType(element: Support): string {
+    if (element?.subCategory === 'None') {
+      const category = this.stepSupportsService.supportCategory.find(
+        (value) => value.value === element?.category
+      );
+      return category?.description;
+    } else {
+      const subCategory = this.stepSupportsService.supportSubCategory.find(
+        (value) => value.value === element?.subCategory
+      );
+      return subCategory?.description;
+    }
+  }
+
   checkGroceryMaxRate(): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
@@ -183,27 +197,29 @@ export class ExistingSupportDetailsComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((reason) => {
-        this.existingSupportService
-          .voidSupport(
-            this.needsAssessmentForSupport.id,
-            this.selectedSupport.id,
-            reason
-          )
-          .subscribe(
-            (value) => {
-              const stateIndicator = { action: 'void' };
-              this.router.navigate(['/ess-wizard/add-supports/view'], {
-                state: stateIndicator
-              });
-            },
-            (error) => {
-              this.alertService.clearAlert();
-              this.alertService.setAlert(
-                'danger',
-                globalConst.voidReferralError
-              );
-            }
-          );
+        if (reason !== undefined && reason !== 'close') {
+          this.existingSupportService
+            .voidSupport(
+              this.needsAssessmentForSupport.id,
+              this.selectedSupport.id,
+              reason
+            )
+            .subscribe(
+              (value) => {
+                const stateIndicator = { action: 'void' };
+                this.router.navigate(['/ess-wizard/add-supports/view'], {
+                  state: stateIndicator
+                });
+              },
+              (error) => {
+                this.alertService.clearAlert();
+                this.alertService.setAlert(
+                  'danger',
+                  globalConst.voidReferralError
+                );
+              }
+            );
+        }
       });
   }
 
@@ -219,29 +235,31 @@ export class ExistingSupportDetailsComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((reason) => {
-        this.isLoading = !this.isLoading;
-        this.existingSupportService
-          .reprintSupport(
-            this.needsAssessmentForSupport.id,
-            this.selectedSupport.id,
-            reason
-          )
-          .subscribe(
-            (value) => {
-              const blob = value;
-              const url = window.URL.createObjectURL(blob);
-              window.open(url, '_blank');
-              this.isLoading = !this.isLoading;
-            },
-            (error) => {
-              this.isLoading = !this.isLoading;
-              this.alertService.clearAlert();
-              this.alertService.setAlert(
-                'danger',
-                globalConst.reprintReferralError
-              );
-            }
-          );
+        if (reason !== undefined && reason !== 'close') {
+          this.isLoading = !this.isLoading;
+          this.existingSupportService
+            .reprintSupport(
+              this.needsAssessmentForSupport.id,
+              this.selectedSupport.id,
+              reason
+            )
+            .subscribe(
+              (value) => {
+                const blob = value;
+                const url = window.URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                this.isLoading = !this.isLoading;
+              },
+              (error) => {
+                this.isLoading = !this.isLoading;
+                this.alertService.clearAlert();
+                this.alertService.setAlert(
+                  'danger',
+                  globalConst.reprintReferralError
+                );
+              }
+            );
+        }
       });
   }
 

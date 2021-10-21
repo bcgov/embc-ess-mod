@@ -41,11 +41,10 @@
           matInput
           type="number"
           class="amount-right-align"
-          placeholder="0"
+          placeholder="0.00"
           required
         />
         <span matPrefix>$&nbsp;</span>
-        <span matSuffix>.00</span>
         <mat-error
           *ngIf="
             referralFormControl?.totalAmount.invalid &&
@@ -53,6 +52,14 @@
           "
         >
           Total Amount is required</mat-error
+        >
+        <mat-error
+          *ngIf="
+            referralFormControl?.totalAmount.invalid &&
+            referralFormControl?.totalAmount.hasError('pattern')
+          "
+        >
+          Invalid amount</mat-error
         >
       </mat-form-field>
     </div>

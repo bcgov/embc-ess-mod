@@ -101,9 +101,11 @@ export class ExistingSupportDetailsService {
       }
     );
 
-    const days = moment(
-      this.datePipe.transform(selectedSupport.to, 'dd-MMM-yyyy')
-    ).diff(this.datePipe.transform(selectedSupport.from, 'dd-MMM-yyyy'));
+    const milliseconds = moment(
+      this.datePipe.transform(selectedSupport.to, 'yyyy-MM-dd')
+    ).diff(this.datePipe.transform(selectedSupport.from, 'yyy-MM-dd'));
+
+    const days = milliseconds / 86400000;
 
     const referralDelivery = selectedSupport as Referral;
     const name = referralDelivery.issuedToPersonName.split(',');
@@ -133,7 +135,7 @@ export class ExistingSupportDetailsService {
       toTime: this.datePipe.transform(selectedSupport.to, 'HH:mm'),
       fromTime: this.datePipe.transform(selectedSupport.from, 'HH:mm'),
       members,
-      noOfDays: days.toString(),
+      noOfDays: days,
       referral: this.createReferral(selectedSupport)
     };
 

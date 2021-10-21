@@ -171,7 +171,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
@@ -212,7 +212,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
@@ -283,7 +283,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
@@ -324,7 +324,7 @@ export class WizardDataService {
       }
     },
     {
-      step: 'NOTES',
+      step: 'CASE NOTES',
       title: 'Add Case Notes',
       route: '/ess-wizard/add-notes',
       isLocked: true,
