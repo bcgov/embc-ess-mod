@@ -22,24 +22,24 @@ export class ReportsService extends BaseService {
   }
 
   /**
-   * Path part for operation reportsGetPrint
+   * Path part for operation reportsGetEvacueeReport
    */
-  static readonly ReportsGetPrintPath = '/api/Reports/evacuee';
+  static readonly ReportsGetEvacueeReportPath = '/api/Reports/evacuee';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `reportsGetPrint()` instead.
+   * To access only the response body, use `reportsGetEvacueeReport()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reportsGetPrint$Response(params?: {
+  reportsGetEvacueeReport$Response(params?: {
     taskNumber?: string;
     fileId?: string;
     evacuatedFrom?: string;
     evacuatedTo?: string;
   }): Observable<StrictHttpResponse<Blob>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetPrintPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetEvacueeReportPath, 'get');
     if (params) {
       rb.query('taskNumber', params.taskNumber, {});
       rb.query('fileId', params.fileId, {});
@@ -60,18 +60,73 @@ export class ReportsService extends BaseService {
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `reportsGetPrint$Response()` instead.
+   * To access the full response (for headers, for example), `reportsGetEvacueeReport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reportsGetPrint(params?: {
+  reportsGetEvacueeReport(params?: {
     taskNumber?: string;
     fileId?: string;
     evacuatedFrom?: string;
     evacuatedTo?: string;
   }): Observable<Blob> {
 
-    return this.reportsGetPrint$Response(params).pipe(
+    return this.reportsGetEvacueeReport$Response(params).pipe(
+      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+    );
+  }
+
+  /**
+   * Path part for operation reportsGetSupportReport
+   */
+  static readonly ReportsGetSupportReportPath = '/api/Reports/support';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `reportsGetSupportReport()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  reportsGetSupportReport$Response(params?: {
+    taskNumber?: string;
+    fileId?: string;
+    evacuatedFrom?: string;
+    evacuatedTo?: string;
+  }): Observable<StrictHttpResponse<Blob>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetSupportReportPath, 'get');
+    if (params) {
+      rb.query('taskNumber', params.taskNumber, {});
+      rb.query('fileId', params.fileId, {});
+      rb.query('evacuatedFrom', params.evacuatedFrom, {});
+      rb.query('evacuatedTo', params.evacuatedTo, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'blob',
+      accept: 'application/octet-stream'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Blob>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `reportsGetSupportReport$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  reportsGetSupportReport(params?: {
+    taskNumber?: string;
+    fileId?: string;
+    evacuatedFrom?: string;
+    evacuatedTo?: string;
+  }): Observable<Blob> {
+
+    return this.reportsGetSupportReport$Response(params).pipe(
       map((r: StrictHttpResponse<Blob>) => r.body as Blob)
     );
   }

@@ -283,6 +283,7 @@ export class ReferralCreationService {
       subCategory: SupportSubCategory.None
     };
     this.clothingReferral = clothingReferral;
+    console.log(this.clothingReferral);
   }
 
   createIncidentalsReferral(
