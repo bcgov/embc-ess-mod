@@ -13,8 +13,8 @@ export class SupplierContactPipe implements PipeTransform {
    * @returns Sanitized Two-line SafeHTML string, <br> as only included HTML
    */
   transform(phoneNumber: string, email: string): SafeHtml {
-    let line1 = phoneNumber;
-    let line2 = email;
+    const line1 = phoneNumber;
+    const line2 = email;
 
     // All values must be HTML-sanitized for us to include <br> line break.
     if (line1 !== null && line1.length > 0) {
@@ -24,7 +24,7 @@ export class SupplierContactPipe implements PipeTransform {
         contactStr += '<br>' + _.escape(line2);
       return this.sanitizer.bypassSecurityTrustHtml(contactStr);
     } else if (line1.length === 0 || line1 === null) {
-      let contactStr = _.escape(line2);
+      const contactStr = _.escape(line2);
       return this.sanitizer.bypassSecurityTrustHtml(contactStr);
     }
   }
