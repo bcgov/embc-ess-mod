@@ -56,7 +56,7 @@ parameters:
   - description: ASPNET runtime environment (Development/Staging/Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
- - description: REDIS Service connection string
+  - description: REDIS Service connection string
     name: REDIS_CONNECTIONSTRING
     required: false
 
@@ -249,7 +249,7 @@ objects:
                 - mountPath: ${SUBMISSIONS_STORAGE_DIR}
                   name: submissions-storage
                 - mountPath: /dpkeys
-                  name: dp-keys
+                  name: dp
                 - mountPath: ${DYNAMICS_LISTS_CACHE_DIR}
                   name: lists-cache
               livenessProbe:
@@ -269,9 +269,9 @@ objects:
             - name: submissions-storage
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-suppliers-submissions
-            - name: dp-keys
+            - name: dp
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-suppliers-key-ring
+                claimName: ${APP_NAME}-data-protection #defined in ess backend template
             - name: lists-cache
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-suppliers-cache
@@ -372,20 +372,7 @@ objects:
       resources:
         requests:
           storage: "1Gi"
-  - kind: "PersistentVolumeClaim"
-    apiVersion: "v1"
-    metadata:
-      name: "${APP_NAME}-suppliers-key-ring"
-      labels:
-        app: ${APP_NAME}-suppliers-portal
-        app.kubernetes.io/part-of: ${APP_NAME}
-      namespace: ${NAMESPACE_PREFIX}-${ENV}
-    spec:
-      accessModes:
-        - "ReadWriteMany"
-      resources:
-        requests:
-          storage: "100Mi"
+          
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:

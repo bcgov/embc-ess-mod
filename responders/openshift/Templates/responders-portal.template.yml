@@ -119,6 +119,10 @@ objects:
         app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
+      annotations:
+        haproxy.router.openshift.io/hsts_header: max-age=31536000;includeSubDomains;preload
+        haproxy.router.openshift.io/timeout: 120s
+        haproxy.router.openshift.io/balance: leastconn
     spec:
       host: ${APP_NAME}-embc-responders.apps.silver.devops.gov.bc.ca
       path: /api
@@ -141,6 +145,9 @@ objects:
         app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
+      annotations:
+        haproxy.router.openshift.io/hsts_header: max-age=31536000;includeSubDomains;preload
+        haproxy.router.openshift.io/balance: leastconn
     spec:
       host: ${APP_NAME}-embc-responders.apps.silver.devops.gov.bc.ca
       path: /
@@ -196,8 +203,8 @@ objects:
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 50%
-          maxUnavailable: 50%
+          maxSurge: 25%
+          maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
         type: Rolling
@@ -230,7 +237,7 @@ objects:
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
-                  name: dp-keys
+                  name: dp
                 - mountPath: /ssl
                   name: ssl
                   readonly: true
@@ -252,9 +259,9 @@ objects:
           securityContext: {}
           terminationGracePeriodSeconds: 30
           volumes:
-            - name: dp-keys
+            - name: dp
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-responders-key-ring
+                claimName: ${APP_NAME}-data-protection #defined in ess backend template
             - name: ssl
               secret:
                 secretName: ${APP_NAME}-ess-backend-ssl
@@ -294,8 +301,8 @@ objects:
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 50%
-          maxUnavailable: 50%
+          maxSurge: 25%
+          maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
         type: Rolling
@@ -351,18 +358,3 @@ objects:
               kind: ImageStreamTag
               name: responders-portal-ui:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
-
-  - kind: "PersistentVolumeClaim"
-    apiVersion: "v1"
-    metadata:
-      name: ${APP_NAME}-responders-key-ring
-      namespace: ${NAMESPACE_PREFIX}-${ENV}
-      labels:
-        app: ${APP_NAME}-responders-portal
-        app.kubernetes.io/part-of: ${APP_NAME}
-    spec:
-      accessModes:
-        - "ReadWriteMany"
-      resources:
-        requests:
-          storage: "100Mi"

@@ -19,6 +19,9 @@ parameters:
   - description: ASPNET runtime environment (Development/Staging/Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
+  - description: REDIS Service connection string
+    name: REDIS_CONNECTIONSTRING
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -33,6 +36,18 @@ objects:
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
       CHROME_CACHE_PATH: "/cache"
+
+  - kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+      name: ${APP_NAME}-pdf-generator-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-pdf-generator
+        app.kubernetes.io/part-of: ${APP_NAME}
+    stringData:
+      REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
 
   - kind: Service
     apiVersion: v1
@@ -102,8 +117,8 @@ objects:
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 50%
-          maxUnavailable: 50%
+          maxSurge: 25%
+          maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
       template:
@@ -130,6 +145,8 @@ objects:
               envFrom:
                 - configMapRef:
                     name: ${APP_NAME}-pdf-generator-config
+                - secretRef:
+                    name: ${APP_NAME}-pdf-generator-secrets
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/pdf-generator:${TAG}
               imagePullPolicy: Always
               volumeMounts:
@@ -137,7 +154,7 @@ objects:
                   name: ssl
                   readonly: true
                 - mountPath: /dpkeys
-                  name: dp-keys
+                  name: dp
                 - mountPath: /cache
                   name: cache
               livenessProbe:
@@ -164,12 +181,12 @@ objects:
             - name: ssl
               secret:
                 secretName: ${APP_NAME}-pdf-generator-ssl
-            - name: dp-keys
+            - name: dp
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-pdf-generator-key-ring
+                claimName: ${APP_NAME}-data-protection #defined in ess backend template
             - name: cache
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-pfd-generator-cache
+                claimName: ${APP_NAME}-pdf-generator-cache
       test: false
       triggers:
         - type: ConfigChange
@@ -186,22 +203,7 @@ objects:
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
-      name: ${APP_NAME}-pdf-generator-key-ring
-      namespace: ${NAMESPACE_PREFIX}-${ENV}
-      labels:
-        app: ${APP_NAME}-pdf-generator
-        app.kubernetes.io/part-of: ${APP_NAME}
-    spec:
-      accessModes:
-        - "ReadWriteMany"
-      resources:
-        requests:
-          storage: "100Mi"
-
-  - kind: "PersistentVolumeClaim"
-    apiVersion: "v1"
-    metadata:
-      name: ${APP_NAME}-pfd-generator-cache
+      name: ${APP_NAME}-pdf-generator-cache
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-pdf-generator
