@@ -350,9 +350,7 @@
                 class="col-8 additional-form"
                 *ngIf="householdFormControl?.hasSpecialDiet.value === 'Yes'"
               >
-                <label class="card-heading requiredField"
-                  >Please specify here</label
-                >
+                <label class="card-heading">Please specify here</label>
 
                 <mat-form-field appearance="outline">
                   <textarea
@@ -362,7 +360,7 @@
                     placeholder="Please write in the evacuee's own words as much as possible. Do not include any medical information or irrelevant/ speculative personal details."
                     maxlength="200"
                   ></textarea>
-                  <mat-error
+                  <!-- <mat-error
                     *ngIf="
                       householdFormControl?.specialDietDetails.touched &&
                       householdFormControl?.specialDietDetails.invalid &&
@@ -372,7 +370,7 @@
                     "
                   >
                     Dietary requirements specifications are required</mat-error
-                  >
+                  > -->
                 </mat-form-field>
               </div>
             </div>

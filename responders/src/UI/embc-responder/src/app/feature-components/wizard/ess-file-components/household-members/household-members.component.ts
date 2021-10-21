@@ -355,15 +355,15 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         Validators.required
       ],
       specialDietDetails: [
-        this.stepEssFileService.specialDietDetails ?? '',
-        [
-          this.customValidation
-            .conditionalValidation(
-              () => this.householdForm.get('hasSpecialDiet').value === 'Yes',
-              this.customValidation.whitespaceValidator()
-            )
-            .bind(this.customValidation)
-        ]
+        this.stepEssFileService.specialDietDetails ?? ''
+        // [
+        //   this.customValidation
+        //     .conditionalValidation(
+        //       () => this.householdForm.get('hasSpecialDiet').value === 'Yes',
+        //       this.customValidation.whitespaceValidator()
+        //     )
+        //     .bind(this.customValidation)
+        // ]
       ],
       hasMedication: [
         this.stepEssFileService.takeMedication,
