@@ -42,6 +42,7 @@ using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
 using Serilog;
 using Serilog.Events;
+using StackExchange.Redis;
 
 namespace EMBC.Registrants.API
 {
@@ -61,7 +62,8 @@ namespace EMBC.Registrants.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var redisConnectionString = configuration["redis:connectionstring"];
+            var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
+            var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 services.AddStackExchangeRedisCache(options =>
@@ -69,10 +71,17 @@ namespace EMBC.Registrants.API
                     options.Configuration = redisConnectionString;
                     options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
                 });
+                services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name)
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "data-protection-keys");
             }
             else
             {
                 services.AddDistributedMemoryCache();
+                var dpBuilder = services.AddDataProtection()
+                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name);
+
+                if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
 
             //Add configuration options
@@ -93,7 +102,6 @@ namespace EMBC.Registrants.API
             });
 
             //Add services
-            AddDataProtection(services);
             AddOpenApi(services);
             services.AddCors(opts => opts.AddDefaultPolicy(policy =>
             {
@@ -174,16 +182,6 @@ namespace EMBC.Registrants.API
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
             });
-        }
-
-        private void AddDataProtection(IServiceCollection services)
-        {
-            var dpBuilder = services.AddDataProtection();
-            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
-            if (!string.IsNullOrWhiteSpace(keyRingPath))
-            {
-                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
-            }
         }
 
         private void AddOpenApi(IServiceCollection services)

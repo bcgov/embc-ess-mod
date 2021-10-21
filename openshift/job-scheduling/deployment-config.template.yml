@@ -83,7 +83,7 @@ objects:
   - kind: CronJob
     apiVersion: batch/v1beta1
     metadata:
-      name: dynamics-job-scheduling
+      name: ${APP_NAME}-dynamics-job-scheduling
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         cronjob: ${APP_NAME}-dynamics-job-scheduling
@@ -109,9 +109,16 @@ objects:
               schedulerName: default-scheduler
               terminationGracePeriodSeconds: 30
               containers:
-                - resources: {}
+                - name: ${APP_NAME}-dynamics-job-scheduling
                   terminationMessagePath: /dev/termination-log
-                  name: ${APP_NAME}-dynamics-job-scheduling
+                  resources:
+                    # best effort
+                    limits:
+                      cpu: 0
+                      memory: 0
+                    requests:
+                      cpu: 0
+                      memory: 0
                   imagePullPolicy: Always
                   terminationMessagePolicy: File
                   image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/job-scheduling:${TAG}
