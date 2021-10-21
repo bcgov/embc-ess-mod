@@ -83,6 +83,20 @@ export class ExistingSupportDetailsComponent implements OnInit {
   //     );
   // }
 
+  generateSupportType(element: Support): string {
+    if (element?.subCategory === 'None') {
+      const category = this.stepSupportsService.supportCategory.find(
+        (value) => value.value === element?.category
+      );
+      return category?.description;
+    } else {
+      const subCategory = this.stepSupportsService.supportSubCategory.find(
+        (value) => value.value === element?.subCategory
+      );
+      return subCategory?.description;
+    }
+  }
+
   checkGroceryMaxRate(): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
