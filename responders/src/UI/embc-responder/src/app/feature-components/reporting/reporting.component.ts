@@ -30,10 +30,17 @@ export class ReportingComponent implements OnInit {
     this.reportService.reportsGetPrint(this.reportForm.getRawValue()).subscribe(
       (reportResponse) => {
         // Displaying PDF into a new browser tab:
-        const blob = reportResponse;
+        // const blob = reportResponse;
+        const blob = new Blob([reportResponse], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.download = 'evacueeReport.csv';
+        anchor.href = url;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
         this.isLoading = !this.isLoading;
-        window.open(url, '_blank');
+        // window.open(url, '_blank');
       },
       (error) => {
         this.isLoading = !this.isLoading;
