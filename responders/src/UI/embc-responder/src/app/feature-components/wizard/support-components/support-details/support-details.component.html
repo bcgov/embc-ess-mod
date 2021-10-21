@@ -10,8 +10,6 @@
     </div>
   </div>
 
-  <!-- {{ supportDetailsForm.value | json }} -->
-
   <div class="heading-container row-padding">
     <div class="row">
       <div class="col-md-8">
@@ -73,8 +71,8 @@
           </div>
           <div class="col-md-4">
             <p class="bold">
-              {{ currentDate }} at {{ currentTime }}
-              {{ now | date: 'a' }}
+              {{ currentDate }} at 
+              {{ now | date: 'hh:mm a' }}
             </p>
           </div>
           <div *ngIf="isVisible" class="col-md-4">

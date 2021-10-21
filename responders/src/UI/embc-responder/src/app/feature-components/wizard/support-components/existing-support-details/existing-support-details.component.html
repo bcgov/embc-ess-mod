@@ -150,13 +150,13 @@
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Support Type:</div>
     <div class="col-md-4 bold">
-      {{
-        selectedSupport?.subCategory !== 'None'
-          ? selectedSupport?.subCategory
-          : selectedSupport?.category
-      }}
+      {{ generateSupportType(selectedSupport) }}
     </div>
   </div>
+
+  <!--  selectedSupport?.subCategory !== 'None'
+          ? selectedSupport?.subCategory
+          : selectedSupport?.category-->
 
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Valid From:</div>
@@ -391,6 +391,31 @@
       {{ groupReferral?.facilityAddress }}, {{ groupReferral?.facilityCity }}
     </div>
   </div>
+
+  <div
+    *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'"
+    class="row row-padding"
+  >
+    <div class="col-md-4 box-text-color">Supplier Contact Details:</div>
+    <div
+      class="col-md-4 bold"
+      [innerHTML]="
+        billetingReferral?.hostPhone
+          | supplierContact: billetingReferral?.hostEmail
+      "
+    ></div>
+  </div>
+
+  <div
+    *ngIf="selectedSupport?.subCategory === 'Lodging_Group'"
+    class="row row-padding"
+  >
+    <div class="col-md-4 box-text-color">Contact Details:</div>
+    <div class="col-md-4 bold">
+      {{ groupReferral?.facilityContactPhone }}
+    </div>
+  </div>
+
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Notes for Supplier:</div>
     <div class="col-md-4 bold">{{ referral?.supplierNotes }}</div>
