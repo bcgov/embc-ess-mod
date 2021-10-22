@@ -78,7 +78,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(DeactivateTeamMemberCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            var member = (await teamRepository.GetMembers(cmd.TeamId, includeStatuses: activeAndInactiveStatus)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = false;
@@ -87,7 +87,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(ActivateTeamMemberCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            var member = (await teamRepository.GetMembers(cmd.TeamId, includeStatuses: activeAndInactiveStatus)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = true;
