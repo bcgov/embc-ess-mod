@@ -152,12 +152,12 @@ namespace EMBC.ESS.Resources.Reports
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId))));
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_EvacuatedFromID))));
 
+            if (file.era_CurrentNeedsAssessmentid == null)
+                loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid))));
+
             loadTasks.Add(Task.Run(async () =>
             {
                 await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-
-                if (file.era_CurrentNeedsAssessmentid == null)
-                    await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
 
                 foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
                 {

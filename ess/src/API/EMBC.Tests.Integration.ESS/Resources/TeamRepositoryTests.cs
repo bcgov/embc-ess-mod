@@ -144,7 +144,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             await teamRepository.DeleteMember(teamId, memberId);
 
-            var newMembers = await teamRepository.GetMembers(teamId, onlyActive: false);
+            var newMembers = await teamRepository.GetMembers(teamId);
 
             newMembers.SingleOrDefault(m => m.Id == memberId).ShouldBeNull();
         }
