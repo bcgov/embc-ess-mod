@@ -33,7 +33,6 @@ namespace EMBC.ESS.Managers.Admin
         private readonly Resources.Team.ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly IMapper mapper;
-        private static TeamMemberStatus[] allTeamMemberStatuses = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive, TeamMemberStatus.SoftDelete };
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
         private static TeamMemberStatus[] activeAndInactiveStatus = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive };
 
@@ -53,7 +52,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<TeamMembersQueryResponse> Handle(TeamMembersQuery cmd)
         {
-            var teamMemberStatuses = cmd.IncludeActiveUsersOnly ? activeOnlyStatus : allTeamMemberStatuses;
+            var teamMemberStatuses = cmd.IncludeActiveUsersOnly ? activeOnlyStatus : null;
             var members = await teamRepository.GetMembers(cmd.TeamId, cmd.UserName, cmd.MemberId, teamMemberStatuses);
 
             return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<Shared.Contracts.Team.TeamMember>>(members) };
@@ -79,7 +78,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(DeactivateTeamMemberCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(cmd.TeamId, includeStatuses: allTeamMemberStatuses)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = false;
@@ -88,7 +87,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(ActivateTeamMemberCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(cmd.TeamId, includeStatuses: allTeamMemberStatuses)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = true;
