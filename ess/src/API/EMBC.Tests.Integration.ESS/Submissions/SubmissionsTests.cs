@@ -138,7 +138,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSubmitNewEvacuation()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var file = CreateNewTestEvacuationFile(registrant);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
@@ -168,7 +168,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Create_EvacuationFileNoPrimaryRegistrant_ThrowsError()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var file = CreateNewTestEvacuationFile(registrant);
             foreach (var member in file.NeedsAssessment.HouseholdMembers)
             {
@@ -186,7 +186,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             var file = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
 
@@ -218,7 +218,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             var file = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
 
@@ -239,7 +239,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateNewRegistrantProfile()
         {
-            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var baseRegistrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = "CAN";
@@ -278,7 +278,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteRegistrantProfile()
         {
-            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var baseRegistrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             baseRegistrant.Id = null;
             baseRegistrant.UserId = Guid.NewGuid().ToString("N").Substring(0, 10);
@@ -294,7 +294,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var currentCommunity = registrant.PrimaryAddress.Community;
             var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
@@ -335,7 +335,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
-            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var updatedRegistrant = await GetRegistrantByUserId("CHRIS-TEST");
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.Email.ShouldBe(newEmail);
@@ -350,7 +350,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
-            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var baseRegistrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = "CAN";
@@ -382,11 +382,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteProfileAddressLinks()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             if (string.IsNullOrEmpty(registrant.PrimaryAddress.StateProvince))
             {
                 await CanUpdateProfile(); //populates the community and state/province fields
-                registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+                registrant = await GetRegistrantByUserId("CHRIS-TEST");
             }
 
             string newProvince = null;
@@ -396,7 +396,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
-            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var updatedRegistrant = await GetRegistrantByUserId("CHRIS-TEST");
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
@@ -406,7 +406,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateRegistrantVerified()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var currentVerifiedStatus = registrant.VerifiedUser;
             var newStatus = !currentVerifiedStatus;
 
@@ -440,7 +440,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacuationFilesByRegistrantUserName()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = registrant.UserId })).Items;
 
             files.ShouldNotBeEmpty();
@@ -450,7 +450,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacuationFilesByLinkedRegistrantId()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var statuses = new[] { EvacuationFileStatus.Active, EvacuationFileStatus.Archived, EvacuationFileStatus.Completed, EvacuationFileStatus.Expired, EvacuationFileStatus.Pending };
 
             var files = (await manager.Handle(new EvacuationFilesQuery { LinkedRegistrantId = registrant.Id, IncludeFilesInStatuses = statuses })).Items;
@@ -523,7 +523,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanVerifySecurityQuestions()
         {
             var expectedNumberOfCorrectAnswers = 3;
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             //if need to update security questions
             //List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
@@ -547,7 +547,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanPartlyVerifySecurityQuestions()
         {
             var expectedNumberOfCorrectAnswers = 2;
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             var answers = registrant.SecurityQuestions.Select(q =>
             {
@@ -628,7 +628,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanProcessSupports()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var file = CreateNewTestEvacuationFile(registrant);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
@@ -679,7 +679,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVoidSupport()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var file = CreateNewTestEvacuationFile(registrant);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
@@ -779,6 +779,19 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             });
 
             printRequestId.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanInviteRegistrant()
+        {
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var inviteId = await manager.Handle(new InviteRegistrantCommand
+            {
+                ContactId = registrant.Id,
+                Email = "test@nowhere.notavailable",
+                RequestingUserId = null
+            });
+            inviteId.ShouldNotBeNullOrEmpty();
         }
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)

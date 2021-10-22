@@ -131,4 +131,11 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string SupportId { get; set; }
         public string ReprintReason { get; set; }
     }
+
+    public class InviteRegistrantCommand
+    {
+        public string ContactId { get; set; }
+        public string Email { get; set; }
+        public string RequestingUserId { get; set; }
+    }
 }

@@ -525,5 +525,29 @@ namespace EMBC.ESS.Managers.Submissions
 
             return referralPrintId;
         }
+
+        public async Task<string> Handle(InviteRegistrantCommand cmd)
+        {
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.ContactId })).Items.SingleOrDefault();
+            if (contact == null) throw new NotFoundException($"registrant not found", cmd.ContactId);
+            if (contact.Authenticated) throw new Exception($"registrant {cmd.ContactId} is already authenticated");
+
+            var inviteId = (await contactRepository.ManageContactInvite(new CreateNewContactEmailInvite
+            {
+                ContactId = cmd.ContactId,
+                Email = cmd.Email,
+                InviteDate = DateTime.Now,
+                RequestingUserId = cmd.RequestingUserId
+            })).InviteId;
+
+            await notificationSender.Send(new EmailNotification
+            {
+                Content = "BCSC invite",
+                Subject = "BCSC invite",
+                To = new[] { new EmailAddress { Address = cmd.Email, Name = $"{contact.FirstName} {contact.LastName}" } }
+            });
+
+            return inviteId;
+        }
     }
 }
