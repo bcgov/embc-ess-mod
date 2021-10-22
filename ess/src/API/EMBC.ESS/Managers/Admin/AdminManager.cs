@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Suppliers;
+using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Profile;
 using EMBC.ESS.Shared.Contracts.Suppliers;
@@ -32,6 +33,8 @@ namespace EMBC.ESS.Managers.Admin
         private readonly Resources.Team.ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly IMapper mapper;
+        private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
+        private static TeamMemberStatus[] activeAndInactiveStatus = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive };
 
         public AdminManager(Resources.Team.ITeamRepository teamRepository, ISupplierRepository supplierRepository, IMapper mapper)
         {
@@ -49,14 +52,15 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<TeamMembersQueryResponse> Handle(TeamMembersQuery cmd)
         {
-            var members = await teamRepository.GetMembers(cmd.TeamId, cmd.UserName, cmd.MemberId, cmd.IncludeActiveUsersOnly);
+            var teamMemberStatuses = cmd.IncludeActiveUsersOnly ? activeOnlyStatus : null;
+            var members = await teamRepository.GetMembers(cmd.TeamId, cmd.UserName, cmd.MemberId, teamMemberStatuses);
 
-            return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
+            return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<Shared.Contracts.Team.TeamMember>>(members) };
         }
 
         public async Task<string> Handle(SaveTeamMemberCommand cmd)
         {
-            var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName);
+            var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName, includeStatuses: activeAndInactiveStatus);
             //filter this user if exists
             if (cmd.Member.Id != null) teamMembersWithSameUserName = teamMembersWithSameUserName.Where(m => m.Id != cmd.Member.Id);
             if (teamMembersWithSameUserName.Any()) throw new UsernameAlreadyExistsException(cmd.Member.UserName);
@@ -74,7 +78,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(DeactivateTeamMemberCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(cmd.TeamId, onlyActive: false)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            var member = (await teamRepository.GetMembers(cmd.TeamId, includeStatuses: activeAndInactiveStatus)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = false;
@@ -83,7 +87,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(ActivateTeamMemberCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(cmd.TeamId, onlyActive: false)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            var member = (await teamRepository.GetMembers(cmd.TeamId, includeStatuses: activeAndInactiveStatus)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = true;
@@ -92,7 +96,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<ValidateTeamMemberResponse> Handle(ValidateTeamMemberCommand cmd)
         {
-            var members = await teamRepository.GetMembers(userName: cmd.TeamMember.UserName, onlyActive: true);
+            var members = await teamRepository.GetMembers(userName: cmd.TeamMember.UserName, includeStatuses: activeAndInactiveStatus);
             //filter this user if exists
             if (!string.IsNullOrEmpty(cmd.TeamMember.Id)) members = members.Where(m => m.Id != cmd.TeamMember.Id);
             return new ValidateTeamMemberResponse
@@ -130,7 +134,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<LogInUserResponse> Handle(LogInUserCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(userName: cmd.UserName, onlyActive: true)).SingleOrDefault();
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName, includeStatuses: activeOnlyStatus)).SingleOrDefault();
             if (member == null) return new FailedLogin { Reason = $"User {cmd.UserName} not found" };
             if (member.ExternalUserId != null && member.ExternalUserId != cmd.UserId)
                 throw new Exception($"User {cmd.UserName} has external id {member.ExternalUserId} but trying to log in with user id {cmd.UserId}");
@@ -151,7 +155,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(SignResponderAgreementCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(userName: cmd.UserName, onlyActive: true)).SingleOrDefault();
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName, includeStatuses: activeOnlyStatus)).SingleOrDefault();
             if (member == null) throw new NotFoundException($"team member not found", cmd.UserName);
 
             member.AgreementSignDate = cmd.SignatureDate;

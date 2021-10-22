@@ -53,6 +53,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly EvacuationFileLoader evacuationFileLoader;
+        private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
 
         public SubmissionsManager(
             IMapper mapper,
@@ -403,7 +404,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId)).Cast<Resources.Team.TeamMember>().Single();
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().Single();
 
             //Not ideal solution - the IDs are concatenated by CaseRepository to ensure
             //all supports are created in a single transaction
@@ -449,7 +450,7 @@ namespace EMBC.ESS.Managers.Submissions
             var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = query.TaskId })).Items.SingleOrDefault();
             if (task == null) throw new NotFoundException($"Task not found", query.TaskId);
             var team = (await teamRepository.QueryTeams(new TeamQuery { AssignedCommunityCode = task.CommunityCode })).Items.SingleOrDefault();
-            if (team == null) throw new NotFoundException($"No team is managing community {task.CommunityCode}", task.CommunityCode);
+            if (team == null) return new SuppliersListQueryResponse { Items = Array.Empty<SupplierDetails>() };
             var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery { TeamId = team.Id })).Items;
 
             return new SuppliersListQueryResponse { Items = mapper.Map<IEnumerable<SupplierDetails>>(suppliers) };
@@ -466,7 +467,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             //get requesting user
             if (printRequest.RequestingUserId != query.RequestingUserId) throw new Exception($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
-            var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId)).Cast<Resources.Team.TeamMember>().SingleOrDefault();
+            var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().SingleOrDefault();
             if (requestingUser == null) throw new Exception($"User {printRequest.RequestingUserId} not found");
 
             //load the file
@@ -507,7 +508,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException(nameof(cmd.SupportId));
 
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId)).Cast<Resources.Team.TeamMember>().Single();
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().Single();
 
             var referralPrintId = await printingRepository.Manage(new SavePrintRequest
             {

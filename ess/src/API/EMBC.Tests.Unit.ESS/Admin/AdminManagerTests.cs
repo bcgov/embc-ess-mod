@@ -133,14 +133,15 @@ namespace EMBC.Tests.Unit.ESS.Admin
             return memeber != null;
         }
 
-        public async Task<IEnumerable<EMBC.ESS.Resources.Team.TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, bool onlyActive = true)
+        public async Task<IEnumerable<EMBC.ESS.Resources.Team.TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
         {
+            includeStatuses = includeStatuses ?? new[] { TeamMemberStatus.Active };
             await Task.CompletedTask;
             return stagedTeamMembers.Values.Where(m =>
                 (teamId == null || m.TeamId == teamId) &&
                 (userId == null || m.Id == userId) &&
                 (userName == null || m.UserName == userName) &&
-                (onlyActive && m.IsActive)
+                (includeStatuses.Contains(TeamMemberStatus.Active) && m.IsActive)
             );
         }
 
