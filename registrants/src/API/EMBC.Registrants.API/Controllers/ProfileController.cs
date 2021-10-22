@@ -135,6 +135,16 @@ namespace EMBC.Registrants.API.Controllers
                 ? null
                 : JsonSerializer.Deserialize<Profile>(userData);
         }
+
+        [HttpPost("invite-anonymous")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [AllowAnonymous]
+        public async Task<IActionResult> Invite(InviteRequest request)
+        {
+            await Task.CompletedTask;
+            return Ok();
+        }
     }
 
     /// <summary>
@@ -225,5 +235,14 @@ namespace EMBC.Registrants.API.Controllers
 
         [Required]
         public new Address OriginalValue { get; set; }
+    }
+
+    public class InviteRequest
+    {
+        [Required]
+        public string FileId { get; set; }
+
+        [Required]
+        public string Email { get; set; }
     }
 }
