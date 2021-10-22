@@ -29,7 +29,6 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ITeamRepository teamRepository;
         private readonly ITaskRepository taskRepository;
         private readonly ISupplierRepository supplierRepository;
-        private static TeamMemberStatus[] allTeamMemberStatuses = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive, TeamMemberStatus.SoftDelete };
 
         public EvacuationFileLoader(IMapper mapper, ITeamRepository teamRepository, ITaskRepository taskRepository, ISupplierRepository supplierRepository)
         {
@@ -43,7 +42,7 @@ namespace EMBC.ESS.Managers.Submissions
         {
             if (file.NeedsAssessment.CompletedBy?.Id != null)
             {
-                var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id, includeStatuses: allTeamMemberStatuses)).SingleOrDefault();
+                var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id)).SingleOrDefault();
                 if (member != null)
                 {
                     file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";

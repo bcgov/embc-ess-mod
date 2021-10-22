@@ -16,7 +16,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
     {
         private readonly ITeamRepository teamRepository;
         private string teamId = "98275853-2581-eb11-b825-00505683fbf4";
-        private static TeamMemberStatus[] allTeamMemberStatuses = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive, TeamMemberStatus.SoftDelete };
 
         public TeamRepositoryTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -145,7 +144,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             await teamRepository.DeleteMember(teamId, memberId);
 
-            var newMembers = await teamRepository.GetMembers(teamId, includeStatuses: allTeamMemberStatuses);
+            var newMembers = await teamRepository.GetMembers(teamId);
 
             newMembers.SingleOrDefault(m => m.Id == memberId).ShouldBeNull();
         }

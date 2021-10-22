@@ -61,7 +61,6 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
         {
-            includeStatuses = includeStatuses ?? new[] { TeamMemberStatus.Active };
             var query = EssTeamUsers;
 
             if (!string.IsNullOrEmpty(teamId)) query = query.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
