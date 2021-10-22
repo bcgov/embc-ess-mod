@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace EMBC.ESS.Resources.Contacts
@@ -24,7 +25,11 @@ namespace EMBC.ESS.Resources.Contacts
     {
         Task<ContactCommandResult> ManageContact(ContactCommand cmd);
 
-        Task<ContactQueryResult> QueryContact(ContactQuery cmd);
+        Task<ContactQueryResult> QueryContact(ContactQuery query);
+
+        Task<ContactInviteCommandResult> ManageContactInvite(ContactInviteCommand cmd);
+
+        Task<ContactInviteQueryResult> QueryContactInvite(ContactInviteQuery query);
     }
 
     public abstract class ContactCommand { }
@@ -48,16 +53,60 @@ namespace EMBC.ESS.Resources.Contacts
 
     public class SaveContact : ContactCommand
     {
+        [Required]
         public Contact Contact { get; set; }
     }
 
     public class DeleteContact : ContactCommand
     {
+        [Required]
         public string ContactId { get; set; }
     }
 
     public class RegistrantQuery : ContactQuery
     {
+    }
+
+    public abstract class ContactInviteCommand { }
+
+    public class ContactInviteCommandResult
+    {
+        public string InviteId { get; set; }
+    }
+
+    public abstract class ContactInviteQuery { }
+
+    public class ContactInviteQueryResult
+    {
+        public IEnumerable<ContactInvite> Items { get; set; }
+    }
+
+    public class CreateNewContactEmailInvite : ContactInviteCommand
+    {
+        [Required]
+        public string ContactId { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        public string RequestingUserId { get; set; }
+
+        [Required]
+        public DateTime InviteDate { get; set; }
+    }
+
+    public class MarkContactInviteAsUsed : ContactInviteCommand
+    {
+        [Required]
+        public string ContactId { get; set; }
+
+        [Required]
+        public string InviteId { get; set; }
+    }
+
+    public class ContactEmailInviteQuery : ContactInviteQuery
+    {
+        public string InviteId { get; set; }
     }
 
     public class Contact
@@ -103,5 +152,18 @@ namespace EMBC.ESS.Resources.Contacts
         public string Question { get; set; }
         public string Answer { get; set; }
         public bool AnswerIsMasked { get; set; } = true;
+    }
+
+    public class ContactInvite
+    {
+        public string InviteId { get; set; }
+        public string ContactId { get; set; }
+    }
+
+    public enum ContactInviteStatus
+    {
+        Active,
+        Used,
+        Expired
     }
 }

@@ -36,26 +36,36 @@ namespace EMBC.ESS.Resources.Contacts
             this.mapper = mapper;
         }
 
-        public async Task<ContactCommandResult> ManageContact(ContactCommand cmd)
-        {
-            return cmd.GetType().Name switch
+        public async Task<ContactCommandResult> ManageContact(ContactCommand cmd) =>
+            cmd switch
             {
-                nameof(SaveContact) => await HandleSaveContact((SaveContact)cmd),
-                nameof(DeleteContact) => await HandleDeleteContact((DeleteContact)cmd),
+                SaveContact command => await Handle(command),
+                DeleteContact command => await Handle(command),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
-        }
 
-        public async Task<ContactQueryResult> QueryContact(ContactQuery query)
-        {
-            return query.GetType().Name switch
+        public async Task<ContactQueryResult> QueryContact(ContactQuery query) =>
+            query switch
             {
-                nameof(RegistrantQuery) => await HandleSearchQuery((RegistrantQuery)query),
+                RegistrantQuery q => await Handle(q),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
-        }
 
-        private async Task<ContactCommandResult> HandleSaveContact(SaveContact cmd)
+        public async Task<ContactInviteCommandResult> ManageContactInvite(ContactInviteCommand cmd) =>
+            cmd switch
+            {
+                CreateNewContactEmailInvite command => await Handle(command),
+                _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
+            };
+
+        public async Task<ContactInviteQueryResult> QueryContactInvite(ContactInviteQuery query) =>
+            query switch
+            {
+                ContactEmailInviteQuery q => await Handle(q),
+                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
+            };
+
+        private async Task<ContactCommandResult> Handle(SaveContact cmd)
         {
             var contact = mapper.Map<contact>(cmd.Contact);
             var existingContact = contact.contactid.HasValue
@@ -103,7 +113,7 @@ namespace EMBC.ESS.Resources.Contacts
                     .Where(c => c.era_bcservicescardid == bcscId)
                     .SingleOrDefault();
 
-        private async Task<ContactCommandResult> HandleDeleteContact(DeleteContact cmd)
+        private async Task<ContactCommandResult> Handle(DeleteContact cmd)
         {
             var contact = essContext.contacts.Where(c => c.contactid == Guid.Parse(cmd.ContactId)).SingleOrDefault();
             if (contact != null)
@@ -117,12 +127,9 @@ namespace EMBC.ESS.Resources.Contacts
             return new ContactCommandResult { ContactId = cmd.ContactId };
         }
 
-        private async Task<ContactQueryResult> HandleSearchQuery(RegistrantQuery query)
+        private async Task<ContactQueryResult> Handle(RegistrantQuery query)
         {
-            var readContext = essContext.Clone();
-            readContext.MergeOption = MergeOption.NoTracking;
-
-            IQueryable<contact> contactQuery = readContext.contacts
+            IQueryable<contact> contactQuery = essContext.contacts
                   .Expand(c => c.era_City)
                   .Expand(c => c.era_ProvinceState)
                   .Expand(c => c.era_Country)
@@ -136,7 +143,67 @@ namespace EMBC.ESS.Resources.Contacts
 
             var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
 
+            essContext.DetachAll();
+
             return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
         }
+
+        private async Task<ContactInviteCommandResult> Handle(CreateNewContactEmailInvite cmd)
+        {
+            var contact = await essContext.contacts.ByKey(Guid.Parse(cmd.ContactId)).GetValueAsync();
+            var invitingTeamMember = string.IsNullOrEmpty(cmd.RequestingUserId)
+                ? null
+                : essContext.era_essteamusers.Where(m => m.statecode == (int)EntityState.Active && m.era_essteamuserid == Guid.Parse(cmd.RequestingUserId)).Single();
+
+            //deactivate all current invites for this contact
+            var currentInvites = await ((DataServiceQuery<era_evacueeemailinvite>)essContext.era_evacueeemailinvites
+                .Where(i => i.statecode == (int)EntityState.Active && i._era_registrant_value == Guid.Parse(cmd.ContactId)))
+                .GetAllPagesAsync();
+
+            foreach (var currentInvite in currentInvites)
+            {
+                essContext.DeactivateObject(currentInvite, (int)EmailInviteStatus.Expired);
+            }
+
+            //create new invite
+            var newInvite = new era_evacueeemailinvite
+            {
+                era_evacueeemailinviteid = Guid.NewGuid(),
+                era_emailaddress = cmd.Email
+            };
+
+            essContext.AddToera_evacueeemailinvites(newInvite);
+
+            //link to registrant and inviting user
+            essContext.SetLink(newInvite, nameof(era_evacueeemailinvite.era_Registrant), contact);
+            if (invitingTeamMember != null) essContext.SetLink(newInvite, nameof(era_evacueeemailinvite.era_ESSTeamUser), invitingTeamMember);
+
+            await essContext.SaveChangesAsync();
+
+            essContext.DetachAll();
+
+            return new ContactInviteCommandResult { InviteId = newInvite.era_evacueeemailinviteid.ToString() };
+        }
+
+        private async Task<ContactInviteQueryResult> Handle(ContactEmailInviteQuery query)
+        {
+            var invites = await ((DataServiceQuery<era_evacueeemailinvite>)essContext.era_evacueeemailinvites
+                .Where(i => i.statecode == (int)EntityState.Active && i.era_evacueeemailinviteid == Guid.Parse(query.InviteId)))
+                .GetAllPagesAsync();
+
+            essContext.DetachAll();
+
+            return new ContactInviteQueryResult
+            {
+                Items = mapper.Map<IEnumerable<ContactInvite>>(invites)
+            };
+        }
+    }
+
+    internal enum EmailInviteStatus
+    {
+        Active = 1,
+        Used = 174360000,
+        Expired = 2,
     }
 }

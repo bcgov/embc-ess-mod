@@ -8,7 +8,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.ESS.Reports
+namespace EMBC.Tests.Integration.ESS.Resources
 {
     public class ReportsTests : WebAppTestBase
     {
