@@ -450,7 +450,7 @@ namespace EMBC.ESS.Managers.Submissions
             var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = query.TaskId })).Items.SingleOrDefault();
             if (task == null) throw new NotFoundException($"Task not found", query.TaskId);
             var team = (await teamRepository.QueryTeams(new TeamQuery { AssignedCommunityCode = task.CommunityCode })).Items.SingleOrDefault();
-            if (team == null) throw new NotFoundException($"No team is managing community {task.CommunityCode}", task.CommunityCode);
+            if (team == null) return new SuppliersListQueryResponse { Items = Array.Empty<SupplierDetails>() };
             var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery { TeamId = team.Id })).Items;
 
             return new SuppliersListQueryResponse { Items = mapper.Map<IEnumerable<SupplierDetails>>(suppliers) };

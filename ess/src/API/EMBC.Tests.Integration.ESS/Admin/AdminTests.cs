@@ -247,14 +247,6 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task QueryNullTeam_Suppliers_ReturnsNothing()
-        {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = null });
-
-            searchResults.Items.ShouldBeEmpty();
-        }
-
-        [Fact(Skip = RequiresDynamics)]
         public async Task Query_Suppliers_ReturnsSuppliersById()
         {
             var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = ACBSupplierId });
