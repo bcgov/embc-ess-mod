@@ -59,17 +59,19 @@ namespace EMBC.ESS.Resources.Team
             return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
         }
 
-        public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, bool onlyActive = true)
+        public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
         {
+            includeStatuses = includeStatuses ?? new[] { TeamMemberStatus.Active };
             var query = EssTeamUsers;
 
             if (!string.IsNullOrEmpty(teamId)) query = query.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
             if (!string.IsNullOrEmpty(userName)) query = query.Where(u => u.era_externalsystemusername.Equals(userName, StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(userId)) query = query.Where(u => u.era_essteamuserid == Guid.Parse(userId));
-            if (onlyActive) query = query.Where(u => u.statuscode == (int)TeamMemberStatus.Active);
 
             var users = query.ToArray();
             context.DetachAll();
+
+            if (includeStatuses != null && includeStatuses.Any()) users = users.Where(u => includeStatuses.Any(s => (int)s == u.statuscode)).ToArray();
 
             return await Task.FromResult(mapper.Map<IEnumerable<TeamMember>>(users));
         }
