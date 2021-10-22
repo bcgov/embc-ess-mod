@@ -188,7 +188,7 @@ namespace EMBC.ESS.Managers.Admin
             }
             else
             {
-                throw new Exception($"Unknown query type");
+                return new SuppliersQueryResult { Items = Array.Empty<Shared.Contracts.Suppliers.Supplier>() };
             }
         }
 
