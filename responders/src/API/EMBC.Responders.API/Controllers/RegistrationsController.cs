@@ -176,7 +176,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var inviteRequest = new InviteRegistrantCommand
             {
-                ContactId = registrantId,
+                RegistrantId = registrantId,
                 Email = request.Email,
                 RequestingUserId = currentUserId
             };
