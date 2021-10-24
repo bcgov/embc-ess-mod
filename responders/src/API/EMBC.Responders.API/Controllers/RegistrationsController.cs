@@ -253,6 +253,7 @@ namespace EMBC.Responders.API.Controllers
     public class InviteRequest
     {
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
     }
 
