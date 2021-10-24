@@ -284,5 +284,24 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var id = await manager.Handle(new SaveEvacuationFileNoteCommand { Note = note, FileId = fileId });
             id.ShouldNotBeNull();
         }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanQueryFileNoteByFileId()
+        {
+            var fileId = "101010";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId })).Notes;
+
+            notes.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanQueryFileNoteByFileIdAndNoteId()
+        {
+            var fileId = "101010";
+            var noteId = "65dea67d-760a-445d-aa78-101564bbf0b7";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId, FileId = fileId })).Notes;
+
+            notes.ShouldNotBeNull();
+        }
     }
 }

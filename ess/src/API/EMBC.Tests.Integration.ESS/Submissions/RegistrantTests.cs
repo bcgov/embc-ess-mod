@@ -24,7 +24,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId);
 
-
         public RegistrantTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             manager = services.GetRequiredService<SubmissionsManager>();
@@ -292,6 +291,32 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 RequestingUserId = null
             });
             inviteId.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanProcessRegistrantInvite()
+        {
+            var uniqueId = Guid.NewGuid().ToString().Substring(0, 4);
+            var registrant = TestHelper.CreateRegistrantProfile(uniqueId);
+            registrant.Id = null;
+            registrant.UserId = null;
+            registrant.AuthenticatedUser = false;
+            registrant.VerifiedUser = false;
+
+            var registrantId = await TestHelper.SaveRegistrant(manager, registrant);
+
+            var inviteId = await manager.Handle(new InviteRegistrantCommand
+            {
+                ContactId = registrantId,
+                Email = "test@nowhere.notavailable",
+                RequestingUserId = null
+            });
+            var loggedInUserId = uniqueId;
+            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = loggedInUserId });
+
+            var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, uniqueId)).ShouldNotBeNull();
+            actualRegistrant.AuthenticatedUser.ShouldBeTrue();
+            actualRegistrant.VerifiedUser.ShouldBeTrue();
         }
     }
 }

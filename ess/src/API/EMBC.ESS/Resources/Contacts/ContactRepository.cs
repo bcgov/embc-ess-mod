@@ -55,6 +55,7 @@ namespace EMBC.ESS.Resources.Contacts
             cmd switch
             {
                 CreateNewContactEmailInvite command => await Handle(command),
+                MarkContactInviteAsUsed command => await Handle(command),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
 
@@ -197,6 +198,21 @@ namespace EMBC.ESS.Resources.Contacts
             {
                 Items = mapper.Map<IEnumerable<ContactInvite>>(invites)
             };
+        }
+
+        private async Task<ContactInviteCommandResult> Handle(MarkContactInviteAsUsed cmd)
+        {
+            var invite = essContext.era_evacueeemailinvites
+            .Where(i => i.statecode == (int)EntityState.Active && i.era_evacueeemailinviteid == Guid.Parse(cmd.InviteId))
+            .SingleOrDefault();
+
+            if (invite != null)
+            {
+                essContext.DeactivateObject(invite, (int)EmailInviteStatus.Used);
+                await essContext.SaveChangesAsync();
+            }
+
+            return new ContactInviteCommandResult { InviteId = cmd.InviteId };
         }
     }
 

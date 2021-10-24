@@ -92,10 +92,35 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             return file;
         }
 
+        public static RegistrantProfile CreateRegistrantProfile(string uniqueIdentifier)
+        {
+            var address = new Address
+            {
+                AddressLine1 = $"{uniqueIdentifier} st.",
+                Community = "9e6adfaf-9f97-ea11-b813-005056830319",
+                StateProvince = "BC",
+                Country = "CAN",
+                PostalCode = "V1V1V1"
+            };
+            return new RegistrantProfile
+            {
+                FirstName = $"{uniqueIdentifier}_first",
+                LastName = $"{uniqueIdentifier}_last",
+                Email = $"{uniqueIdentifier}@test.na",
+                DateOfBirth = "12/13/2000",
+                Gender = "M",
+                PrimaryAddress = address,
+                MailingAddress = address
+            };
+        }
+
         public static async Task<RegistrantProfile> GetRegistrantByUserId(SubmissionsManager manager, string userId) =>
             (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
 
         public static async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(SubmissionsManager manager, string fileId) =>
             (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items;
+
+        public static async Task<string> SaveRegistrant(SubmissionsManager manager, RegistrantProfile registrantProfile) =>
+            await manager.Handle(new SaveRegistrantCommand { Profile = registrantProfile });
     }
 }

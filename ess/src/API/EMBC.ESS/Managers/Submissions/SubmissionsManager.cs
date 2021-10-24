@@ -568,8 +568,10 @@ namespace EMBC.ESS.Managers.Submissions
             var contactByUser = (await contactRepository.QueryContact(new RegistrantQuery { UserId = cmd.LoggedInUserId })).Items.SingleOrDefault();
             if (contactByUser != null) throw new BusinessLogicException($"registrant {contactByUser.Id} is already associated with user id {contactByUser.UserId}");
 
-            //associate the contact with the user id
+            //associate the contact with the user id and mark as verified and authenticated
             contact.UserId = cmd.LoggedInUserId;
+            contact.Authenticated = true;
+            contact.Verified = true;
             var contactId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
 
             //mark invite as used
