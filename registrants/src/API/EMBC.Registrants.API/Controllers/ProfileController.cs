@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text.Json;
@@ -138,12 +139,15 @@ namespace EMBC.Registrants.API.Controllers
 
         [HttpPost("invite-anonymous")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         public async Task<IActionResult> Invite(InviteRequest request)
         {
-            await Task.CompletedTask;
-            return Ok();
+            var file = (await messagingClient.Send(new EvacuationFilesQuery { FileId = request.FileId })).Items.SingleOrDefault();
+            if (file == null) return NotFound(request.FileId);
+            var inviteId = await messagingClient.Send(new InviteRegistrantCommand { RegistrantId = file.PrimaryRegistrantId, Email = request.Email });
+            return Ok(inviteId);
         }
     }
 
@@ -243,6 +247,7 @@ namespace EMBC.Registrants.API.Controllers
         public string FileId { get; set; }
 
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
     }
 }
