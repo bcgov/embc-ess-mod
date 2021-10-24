@@ -528,13 +528,13 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(InviteRegistrantCommand cmd)
         {
-            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.ContactId })).Items.SingleOrDefault();
-            if (contact == null) throw new NotFoundException($"registrant not found", cmd.ContactId);
-            if (contact.Authenticated) throw new BusinessLogicException($"registrant {cmd.ContactId} is already authenticated");
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.RegistrantId })).Items.SingleOrDefault();
+            if (contact == null) throw new NotFoundException($"registrant not found", cmd.RegistrantId);
+            if (contact.Authenticated) throw new BusinessLogicException($"registrant {cmd.RegistrantId} is already authenticated");
 
             var inviteId = (await contactRepository.ManageContactInvite(new CreateNewContactEmailInvite
             {
-                ContactId = cmd.ContactId,
+                ContactId = cmd.RegistrantId,
                 Email = cmd.Email,
                 InviteDate = DateTime.Now,
                 RequestingUserId = cmd.RequestingUserId

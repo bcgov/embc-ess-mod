@@ -174,8 +174,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> InviteToRegistrantPortal(string registrantId, InviteRequest request)
         {
-            await Task.CompletedTask;
-            return Ok();
+            var inviteRequest = new InviteRegistrantCommand
+            {
+                RegistrantId = registrantId,
+                Email = request.Email,
+                RequestingUserId = currentUserId
+            };
+            var inviteId = await messagingClient.Send(inviteRequest);
+            return Ok(inviteId);
         }
     }
 

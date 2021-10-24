@@ -130,7 +130,10 @@ namespace EMBC.ESS.Resources.Contacts
 
         private async Task<ContactQueryResult> Handle(RegistrantQuery query)
         {
-            IQueryable<contact> contactQuery = essContext.contacts
+            var readCtx = essContext.Clone();
+            readCtx.MergeOption = MergeOption.NoTracking;
+
+            IQueryable<contact> contactQuery = readCtx.contacts
                   .Expand(c => c.era_City)
                   .Expand(c => c.era_ProvinceState)
                   .Expand(c => c.era_Country)
@@ -143,8 +146,6 @@ namespace EMBC.ESS.Resources.Contacts
             if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
 
             var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
-
-            essContext.DetachAll();
 
             return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
         }
