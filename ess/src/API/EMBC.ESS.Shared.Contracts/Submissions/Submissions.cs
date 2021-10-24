@@ -155,7 +155,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class InviteRegistrantCommand : Command
     {
-        public string ContactId { get; set; }
+        public string RegistrantId { get; set; }
         public string Email { get; set; }
         public string RequestingUserId { get; set; }
     }

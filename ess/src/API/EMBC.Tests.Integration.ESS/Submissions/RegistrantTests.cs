@@ -286,7 +286,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var inviteId = await manager.Handle(new InviteRegistrantCommand
             {
-                ContactId = registrant.Id,
+                RegistrantId = registrant.Id,
                 Email = "test@nowhere.notavailable",
                 RequestingUserId = null
             });
@@ -307,7 +307,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var inviteId = await manager.Handle(new InviteRegistrantCommand
             {
-                ContactId = registrantId,
+                RegistrantId = registrantId,
                 Email = "test@nowhere.notavailable",
                 RequestingUserId = null
             });
