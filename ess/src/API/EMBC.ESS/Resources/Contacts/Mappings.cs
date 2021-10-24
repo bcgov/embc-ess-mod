@@ -113,6 +113,11 @@ namespace EMBC.ESS.Resources.Contacts
                     ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
                     : null))
               ;
+
+            CreateMap<era_evacueeemailinvite, ContactInvite>()
+                .ForMember(d => d.InviteId, opts => opts.MapFrom(s => s.era_evacueeemailinviteid.ToString()))
+                .ForMember(d => d.ContactId, opts => opts.MapFrom(s => s._era_registrant_value.ToString()))
+                ;
         }
     }
 

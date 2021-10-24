@@ -124,7 +124,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             var contact = (await contactRepository.QueryContact(query)).Items.SingleOrDefault();
 
-            if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
+            if (contact == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
             file.PrimaryRegistrantId = contact.Id;
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
@@ -144,7 +144,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
-            if (cmd.Profile.SecurityQuestions.Count() > 3) throw new Exception($"Registrant can have a max of 3 Security Questions");
+            if (cmd.Profile.SecurityQuestions.Count() > 3) throw new BusinessLogicException($"Registrant can have a max of 3 Security Questions");
             var contact = mapper.Map<Contact>(cmd.Profile);
             var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
 
@@ -174,9 +174,9 @@ namespace EMBC.ESS.Managers.Submissions
             var member = file.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
 
             var memberAlreadyLinked = file.HouseholdMembers.Where(m => m.LinkedRegistrantId == cmd.RegistantId).FirstOrDefault();
-            if (memberAlreadyLinked != null) throw new Exception($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
+            if (memberAlreadyLinked != null) throw new BusinessLogicException($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
 
-            if (member == null) throw new Exception($"HouseholdMember not found '{cmd.HouseholdMemberId}'");
+            if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
 
             member.LinkedRegistrantId = cmd.RegistantId;
             var needsAssessmentMember = file.NeedsAssessment.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
@@ -197,7 +197,7 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.RegistrantId })).Items.SingleOrDefault();
-            if (contact == null) throw new Exception($"Could not find existing Registrant with id {cmd.RegistrantId}");
+            if (contact == null) throw new NotFoundException($"Could not find existing Registrant with id {cmd.RegistrantId}", cmd.RegistrantId);
             contact.Verified = cmd.Verified;
             var res = await contactRepository.ManageContact(new SaveContact { Contact = contact });
             return res.ContactId;
@@ -237,7 +237,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId))
             {
                 var registrant = (await contactRepository.QueryContact(new RegistrantQuery { UserId = query.PrimaryRegistrantUserId })).Items.SingleOrDefault();
-                if (registrant == null) throw new Exception($"registrant with user id '{query.PrimaryRegistrantUserId}' not found");
+                if (registrant == null) throw new NotFoundException($"registrant with user id '{query.PrimaryRegistrantUserId}' not found", query.PrimaryRegistrantUserId);
                 query.PrimaryRegistrantId = registrant.Id;
             }
             var cases = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
@@ -337,7 +337,7 @@ namespace EMBC.ESS.Managers.Submissions
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = query.RegistrantId, MaskSecurityAnswers = false })).Items.FirstOrDefault();
 
-            if (contact == null) throw new Exception($"registrant {query.RegistrantId} not found");
+            if (contact == null) throw new NotFoundException($"registrant {query.RegistrantId} not found", query.RegistrantId);
 
             var numberOfCorrectAnswers = query.Answers
                 .Select(a => contact.SecurityQuestions.Any(q => a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase) && a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase)))
@@ -353,7 +353,7 @@ namespace EMBC.ESS.Managers.Submissions
                 MaskSecurityPhrase = false
             })).Items.Cast<Resources.Cases.EvacuationFile>().FirstOrDefault();
 
-            if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
+            if (file == null) throw new NotFoundException($"Evacuation File {query.FileId} not found", query.FileId);
 
             var isCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase);
 
@@ -379,7 +379,7 @@ namespace EMBC.ESS.Managers.Submissions
                 FileId = query.FileId,
             })).Items.Cast<Resources.Cases.EvacuationFile>().FirstOrDefault();
 
-            if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
+            if (file == null) throw new NotFoundException($"Evacuation File {query.FileId} not found", query.FileId);
 
             var notes = file.Notes;
 
@@ -466,9 +466,9 @@ namespace EMBC.ESS.Managers.Submissions
             if (printRequest == null) throw new NotFoundException("print request not found", query.PrintRequestId);
 
             //get requesting user
-            if (printRequest.RequestingUserId != query.RequestingUserId) throw new Exception($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
+            if (printRequest.RequestingUserId != query.RequestingUserId) throw new BusinessLogicException($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
             var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().SingleOrDefault();
-            if (requestingUser == null) throw new Exception($"User {printRequest.RequestingUserId} not found");
+            if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
             //load the file
             var file = mapper.Map<Shared.Contracts.Submissions.EvacuationFile>((await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = printRequest.FileId })).Items.Cast<Resources.Cases.EvacuationFile>().SingleOrDefault());
@@ -478,7 +478,7 @@ namespace EMBC.ESS.Managers.Submissions
             //Find referrals to print
             var referrals = mapper.Map<IEnumerable<PrintReferral>>(file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)), opts => opts.Items.Add("evacuationFile", file)).ToArray();
             if (referrals.Count() != printRequest.SupportIds.Count())
-                throw new Exception($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
+                throw new BusinessLogicException($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
 
             //convert referrals to html
             var printedReferrals = await supportsService.GetReferralHtmlPagesAsync(new SupportsToPrint()
@@ -524,6 +524,60 @@ namespace EMBC.ESS.Managers.Submissions
             });
 
             return referralPrintId;
+        }
+
+        public async Task<string> Handle(InviteRegistrantCommand cmd)
+        {
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.ContactId })).Items.SingleOrDefault();
+            if (contact == null) throw new NotFoundException($"registrant not found", cmd.ContactId);
+            if (contact.Authenticated) throw new BusinessLogicException($"registrant {cmd.ContactId} is already authenticated");
+
+            var inviteId = (await contactRepository.ManageContactInvite(new CreateNewContactEmailInvite
+            {
+                ContactId = cmd.ContactId,
+                Email = cmd.Email,
+                InviteDate = DateTime.Now,
+                RequestingUserId = cmd.RequestingUserId
+            })).InviteId;
+
+            await notificationSender.Send(new EmailNotification
+            {
+                //TODO: set the correct content and subject
+                Content = "ERA invite",
+                Subject = "ERA invite",
+                To = new[] { new EmailAddress { Address = cmd.Email, Name = $"{contact.FirstName} {contact.LastName}" } }
+            });
+
+            return inviteId;
+        }
+
+        public async Task<string> Handle(ProcessRegistrantInviteCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.InviteId)) throw new ArgumentNullException(nameof(cmd.InviteId));
+            if (string.IsNullOrEmpty(cmd.LoggedInUserId)) throw new ArgumentNullException(nameof(cmd.LoggedInUserId));
+
+            var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = cmd.InviteId })).Items.SingleOrDefault();
+            if (invite == null) throw new NotFoundException($"invite not found", cmd.InviteId);
+
+            var registrantId = invite.ContactId;
+
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = registrantId })).Items.SingleOrDefault();
+            if (contact == null) throw new NotFoundException($"registrant not found", registrantId);
+            if (contact.UserId != null) throw new BusinessLogicException($"registrant {contact.Id} is already associated with user id {contact.UserId}");
+
+            var contactByUser = (await contactRepository.QueryContact(new RegistrantQuery { UserId = cmd.LoggedInUserId })).Items.SingleOrDefault();
+            if (contactByUser != null) throw new BusinessLogicException($"registrant {contactByUser.Id} is already associated with user id {contactByUser.UserId}");
+
+            //associate the contact with the user id and mark as verified and authenticated
+            contact.UserId = cmd.LoggedInUserId;
+            contact.Authenticated = true;
+            contact.Verified = true;
+            var contactId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
+
+            //mark invite as used
+            await contactRepository.ManageContactInvite(new MarkContactInviteAsUsed { InviteId = invite.InviteId });
+
+            return contactId;
         }
     }
 }

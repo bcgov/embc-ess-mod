@@ -42,7 +42,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             contact.PrimaryAddress.Country.ShouldNotBeNull();
         }
 
-        
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateContact()
         {
@@ -53,7 +52,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var contact = queryResult.Items.FirstOrDefault();
-            
+
             var currentCity = contact.PrimaryAddress.Community;
             var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
@@ -111,24 +110,24 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             newContact.ShouldNotBeNull().Id.ShouldBe(newContactId);
 
-            /* Delete New Contact */
-            DeleteContact deleteCmd = new DeleteContact
-            {
-                ContactId = newContactId
-            };
-            var deleteResult = await contactRepository.ManageContact(deleteCmd);
-            var deletedContactId = deleteResult.ContactId;
+            ///* Delete New Contact */
+            //DeleteContact deleteCmd = new DeleteContact
+            //{
+            //    ContactId = newContactId
+            //};
+            //var deleteResult = await contactRepository.ManageContact(deleteCmd);
+            //var deletedContactId = deleteResult.ContactId;
 
-            /* Get Deleted Contact */
-            var deletedCaseQuery = new RegistrantQuery
-            {
-                ContactId = deletedContactId
-            };
-            var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
-            var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
-            deletedContact.ShouldBeNull();          
+            ///* Get Deleted Contact */
+            //var deletedCaseQuery = new RegistrantQuery
+            //{
+            //    ContactId = deletedContactId
+            //};
+            //var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
+            //var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
+            //deletedContact.ShouldBeNull();
         }
-        
+
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateContactWithAddressLookupValues()
         {
@@ -179,23 +178,30 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newContact.MailingAddress.Country.ShouldBe(country);
             newContact.MailingAddress.StateProvince.ShouldBe(province);
             newContact.MailingAddress.Community.ShouldBe(city);
+        }
 
-            /* Delete New Contact */
-            DeleteContact deleteCmd = new DeleteContact
-            {
-                ContactId = newContactId
-            };
-            var deleteResult = await contactRepository.ManageContact(deleteCmd);
-            var deletedContactId = deleteResult.ContactId;
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanCreateEmailInvite()
+        {
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = TestUserId })).Items.Single();
 
-            /* Get deleted contact */
-            var deletedCaseQuery = new RegistrantQuery
+            var email = "test@email.com";
+
+            var inviteId = (await contactRepository.ManageContactInvite(new CreateNewContactEmailInvite
             {
-                ContactId = deletedContactId
-            };
-            var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
-            var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
-            deletedContact.ShouldBeNull();
-        }            
+                ContactId = contact.Id,
+                Email = email,
+                InviteDate = DateTime.Now,
+                RequestingUserId = null
+            })).InviteId;
+
+            inviteId.ShouldNotBeNullOrEmpty();
+
+            var invites = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = inviteId })).Items;
+
+            var savedInvite = invites.ShouldHaveSingleItem();
+            savedInvite.ContactId.ShouldBe(contact.Id);
+            savedInvite.InviteId.ShouldBe(inviteId);
+        }
     }
 }

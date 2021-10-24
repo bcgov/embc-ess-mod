@@ -26,7 +26,14 @@ namespace EMBC.ESS.Shared.Contracts
 
 #pragma warning restore SA1302 // Interface names should begin with I
 
-    public class NotFoundException : Exception
+    public abstract class EssApplicationException : Exception
+    {
+        public EssApplicationException(string message) : base(message)
+        {
+        }
+    }
+
+    public class NotFoundException : EssApplicationException
     {
         public NotFoundException(string message, string id) : base(message)
         {
@@ -34,5 +41,12 @@ namespace EMBC.ESS.Shared.Contracts
         }
 
         public string Id { get; }
+    }
+
+    public class BusinessLogicException : EssApplicationException
+    {
+        public BusinessLogicException(string message) : base(message)
+        {
+        }
     }
 }
