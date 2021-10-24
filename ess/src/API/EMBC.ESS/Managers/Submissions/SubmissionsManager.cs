@@ -543,8 +543,8 @@ namespace EMBC.ESS.Managers.Submissions
             await notificationSender.Send(new EmailNotification
             {
                 //TODO: set the correct content and subject
-                Content = "ERA invite",
-                Subject = "ERA invite",
+                Content = $"ERA invite {inviteId} to {contact.FirstName} {contact.LastName} ({contact.Id})",
+                Subject = $"ERA invite {inviteId}",
                 To = new[] { new EmailAddress { Address = cmd.Email, Name = $"{contact.FirstName} {contact.LastName}" } }
             });
 
