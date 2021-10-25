@@ -27,30 +27,53 @@ export class ReportingComponent implements OnInit {
 
   evacueeReport(): void {
     this.isLoading = true;
-    this.reportService.reportsGetPrint(this.reportForm.getRawValue()).subscribe(
-      (reportResponse) => {
-        // Displaying PDF into a new browser tab:
-        // const blob = reportResponse;
-        const blob = new Blob([reportResponse], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const anchor = document.createElement('a');
-        anchor.download = 'evacueeReport.csv';
-        anchor.href = url;
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-        this.isLoading = !this.isLoading;
-        // window.open(url, '_blank');
-      },
-      (error) => {
-        this.isLoading = !this.isLoading;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.evacueeReportError);
-      }
-    );
+    this.reportService
+      .reportsGetEvacueeReport(this.reportForm.getRawValue())
+      .subscribe(
+        (reportResponse) => {
+          // Displaying PDF into a new browser tab:
+          const blob = new Blob([reportResponse], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.download = 'evacueeReport.csv';
+          anchor.href = url;
+          document.body.appendChild(anchor);
+          anchor.click();
+          document.body.removeChild(anchor);
+          this.isLoading = !this.isLoading;
+        },
+        (error) => {
+          this.isLoading = !this.isLoading;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.evacueeReportError);
+        }
+      );
   }
 
-  supportReport(): void {}
+  supportReport(): void {
+    this.isLoading = true;
+    this.reportService
+      .reportsGetSupportReport(this.reportForm.getRawValue())
+      .subscribe(
+        (reportResponse) => {
+          // Displaying PDF into a new browser tab:
+          const blob = new Blob([reportResponse], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.download = 'supportReport.csv';
+          anchor.href = url;
+          document.body.appendChild(anchor);
+          anchor.click();
+          document.body.removeChild(anchor);
+          this.isLoading = !this.isLoading;
+        },
+        (error) => {
+          this.isLoading = !this.isLoading;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.evacueeReportError);
+        }
+      );
+  }
 
   /**
    * Creates a new form to handle the addition of new supplier to the system

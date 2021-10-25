@@ -322,7 +322,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
   private updateTabStatus() {
-    console.log(this.animalsForm);
     if (this.animalsForm.valid) {
       this.stepEssFileService.setTabStatus('animals', 'complete');
     } else if (

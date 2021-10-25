@@ -230,7 +230,6 @@ export class SupportDetailsComponent implements OnInit {
       date.setDate(date.getDate() + days),
       'MM/dd/yyyy'
     );
-    console.log(finalValue);
     this.supportDetailsForm.get('toDate').patchValue(finalValue);
   }
 
@@ -244,7 +243,6 @@ export class SupportDetailsComponent implements OnInit {
       event.value.setDate(event.value.getDate() + days),
       'MM/dd/yyyy'
     );
-    console.log(finalValue);
     this.supportDetailsForm.get('toDate').patchValue(finalValue);
   }
 
@@ -256,7 +254,6 @@ export class SupportDetailsComponent implements OnInit {
       this.supportDetailsForm.markAllAsTouched();
     } else {
       this.stepSupportsService.supportDetails = this.supportDetailsForm.getRawValue();
-      console.log(this.stepSupportsService.supportDetails);
       if (!this.editFlag) {
         this.router.navigate(['/ess-wizard/add-supports/delivery']);
       } else {
