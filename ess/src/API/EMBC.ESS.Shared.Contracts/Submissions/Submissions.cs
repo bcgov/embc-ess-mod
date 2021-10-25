@@ -80,6 +80,18 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string HouseholdMemberId { get; set; }
     }
 
+    /// <summary>
+    /// Link Registrant with a user
+    /// </summary>
+    public class ProcessRegistrantInviteCommand : Command
+    {
+        public string InviteId { get; set; }
+        public string LoggedInUserId { get; set; }
+    }
+
+    /// <summary>
+    /// Proccess supports for a file, return a print request id
+    /// </summary>
     public class ProcessSupportsCommand : Command
     {
         public string RequestingUserId { get; set; }
@@ -88,12 +100,9 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<Support> supports { get; set; }
     }
 
-    public class PrintRequestCommand : Command
-    {
-        public string FileId { get; set; }
-        public string PrintRequestId { get; set; }
-    }
-
+    /// <summary>
+    /// void a support in a file by id
+    /// </summary>
     public class VoidSupportCommand : Command
     {
         public string FileId { get; set; }
@@ -101,6 +110,9 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public SupportVoidReason VoidReason { get; set; }
     }
 
+    /// <summary>
+    /// query the supplier list for a task
+    /// </summary>
     public class SuppliersListQuery : Query<SuppliersListQueryResponse>
     {
         public string TaskId { get; set; }
@@ -111,6 +123,9 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<SupplierDetails> Items { get; set; }
     }
 
+    /// <summary>
+    /// query a print request's content
+    /// </summary>
     public class PrintRequestQuery : Query<PrintRequestQueryResult>
     {
         public string PrintRequestId { get; set; }
@@ -124,11 +139,24 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public DateTime PrintedOn { get; set; }
     }
 
+    /// <summary>
+    /// create a new support reprint request, returns the new print request id
+    /// </summary>
     public class ReprintSupportCommand : Command
     {
         public string FileId { get; set; }
         public string RequestingUserId { get; set; }
         public string SupportId { get; set; }
         public string ReprintReason { get; set; }
+    }
+
+    /// <summary>
+    /// send an registrant an invite to join the application
+    /// </summary>
+    public class InviteRegistrantCommand : Command
+    {
+        public string RegistrantId { get; set; }
+        public string Email { get; set; }
+        public string RequestingUserId { get; set; }
     }
 }

@@ -168,6 +168,21 @@ namespace EMBC.Responders.API.Controllers
             var response = await messagingClient.Send(verifySecurityQuestionsQuery);
             return Ok(mapper.Map<VerifySecurityQuestionsResponse>(response));
         }
+
+        [HttpPost("registrants/{registrantId}/invite")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> InviteToRegistrantPortal(string registrantId, InviteRequest request)
+        {
+            var inviteRequest = new InviteRegistrantCommand
+            {
+                RegistrantId = registrantId,
+                Email = request.Email,
+                RequestingUserId = currentUserId
+            };
+            var inviteId = await messagingClient.Send(inviteRequest);
+            return Ok(inviteId);
+        }
     }
 
     public class RegistrationResult
@@ -233,6 +248,13 @@ namespace EMBC.Responders.API.Controllers
         public SecurityQuestion[] SecurityQuestions { get; set; }
         public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
+    }
+
+    public class InviteRequest
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
     }
 
     public class RegistrationsMapping : Profile

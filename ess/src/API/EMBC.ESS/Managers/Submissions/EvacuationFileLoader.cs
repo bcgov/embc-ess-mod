@@ -42,7 +42,7 @@ namespace EMBC.ESS.Managers.Submissions
         {
             if (file.NeedsAssessment.CompletedBy?.Id != null)
             {
-                var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id, onlyActive: false)).SingleOrDefault();
+                var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id)).SingleOrDefault();
                 if (member != null)
                 {
                     file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";

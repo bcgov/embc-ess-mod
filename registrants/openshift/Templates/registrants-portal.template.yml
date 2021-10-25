@@ -140,6 +140,10 @@ objects:
       labels:
         app: ${APP_NAME}-registrants-portal
         app.kubernetes.io/part-of: ${APP_NAME}
+      annotations:
+        haproxy.router.openshift.io/hsts_header: max-age=31536000;includeSubDomains;preload
+        haproxy.router.openshift.io/timeout: 120s
+        haproxy.router.openshift.io/balance: leastconn
       name: ${APP_NAME}-era-registrants-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -162,6 +166,9 @@ objects:
       labels:
         app: ${APP_NAME}-registrants-portal
         app.kubernetes.io/part-of: ${APP_NAME}
+      annotations:
+        haproxy.router.openshift.io/hsts_header: max-age=31536000;includeSubDomains;preload
+        haproxy.router.openshift.io/balance: leastconn
       name: ${APP_NAME}-era-registrants-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -219,8 +226,8 @@ objects:
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 50%
-          maxUnavailable: 50%
+          maxSurge: 25%
+          maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
         type: Rolling
@@ -250,7 +257,7 @@ objects:
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
-                  name: dp-keys
+                  name: dp
               livenessProbe:
                 httpGet:
                   path: /hc/live
@@ -269,9 +276,9 @@ objects:
           securityContext: {}
           terminationGracePeriodSeconds: 30
           volumes:
-            - name: dp-keys
+            - name: dp
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-registrants-key-ring
+                claimName: ${APP_NAME}-data-protection #defined in ess backend template
       test: false
       triggers:
         - type: ConfigChange
@@ -308,8 +315,8 @@ objects:
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
-          maxSurge: 50%
-          maxUnavailable: 50%
+          maxSurge: 25%
+          maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
         type: Rolling
@@ -368,18 +375,3 @@ objects:
               kind: ImageStreamTag
               name: registrants-portal-ui:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
-
-  - kind: "PersistentVolumeClaim"
-    apiVersion: "v1"
-    metadata:
-      name: ${APP_NAME}-registrants-key-ring
-      namespace: ${NAMESPACE_PREFIX}-${ENV}
-      labels:
-        app: ${APP_NAME}-registrants-portal
-        app.kubernetes.io/part-of: ${APP_NAME}
-    spec:
-      accessModes:
-        - "ReadWriteMany"
-      resources:
-        requests:
-          storage: "100Mi"

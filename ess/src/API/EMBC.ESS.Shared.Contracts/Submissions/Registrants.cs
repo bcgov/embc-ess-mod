@@ -40,7 +40,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public Address PrimaryAddress { get; set; }
         public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
-        public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
+        public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; } = Array.Empty<SecurityQuestion>();
         public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
     }

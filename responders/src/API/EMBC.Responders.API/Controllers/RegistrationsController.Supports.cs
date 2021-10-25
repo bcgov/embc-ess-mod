@@ -35,11 +35,18 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public partial class RegistrationsController
     {
+        /// <summary>
+        /// Process draft supports by the API and create a print supports request
+        /// </summary>
+        /// <param name="fileId">evacuation file if</param>
+        /// <param name="includeSummaryInPrintRequest">true/false to include a summary page in the print requwst</param>
+        /// <param name="supports">the draft supports to process</param>
+        /// <returns>the generated print request id which can be later used to request the printed PDF</returns>
         [HttpPost("files/{fileId}/supports")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ReferralPrintRequestResponse>> ProcessSupports(string fileId, IEnumerable<Support> supports)
+        public async Task<ActionResult<ReferralPrintRequestResponse>> ProcessSupports(string fileId, bool includeSummaryInPrintRequest, IEnumerable<Support> supports)
         {
             var userId = currentUserId;
             var mappedSupports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.Support>>(supports ?? Array.Empty<Support>());
@@ -52,7 +59,8 @@ namespace EMBC.Responders.API.Controllers
             {
                 FileId = fileId,
                 supports = mappedSupports,
-                RequestingUserId = userId
+                RequestingUserId = userId,
+                IncludeSummaryInReferralsPrintout = includeSummaryInPrintRequest
             });
             return Ok(new ReferralPrintRequestResponse { PrintRequestId = printRequestId });
         }
