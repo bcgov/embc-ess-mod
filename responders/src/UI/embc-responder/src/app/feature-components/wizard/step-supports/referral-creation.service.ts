@@ -272,8 +272,6 @@ export class ReferralCreationService {
     referral: Referral,
     supportDetails: SupportDetailsModel
   ) {
-
-
     const clothingReferral: ClothingReferral = {
       ...referral,
       category: SupportCategory.Clothing,
@@ -315,6 +313,4 @@ export class ReferralCreationService {
       this.draftSupportVal.splice(index, 1);
     }
   }
-
-
 }
