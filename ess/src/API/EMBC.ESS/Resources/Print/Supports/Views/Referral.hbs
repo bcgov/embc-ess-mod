@@ -11,9 +11,9 @@
         Training Sample Only
     </div>
     {{/if}}
-    <div class="volunteer-name">
-        Processed By: {{VolunteerDisplayName}}
-    </div>
+<div class="volunteer-name">
+    Processed By: {{volunteerFirstName}} {{zeroIndex volunteerLastName}}
+</div>
     <div class="form-header">
         <div class="row">
             <div class="col-6">
@@ -51,12 +51,8 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            {{Supplier.City}}, {{Supplier.Province}}<br />
+                            {{Supplier.City}}, {{Supplier.PostalCode}}<br />
                             <strong>Phone:</strong> {{Supplier.Telephone}}
-                        </div>
-                        <div class="col-6">
-                            {{Supplier.PostalCode}}<br />
-                            <strong>Fax:</strong> {{Supplier.Fax}}
                         </div>
                     </div>
                 </div>
@@ -77,18 +73,18 @@
                 <h3 class="with-icon dates">Valid Only Dates</h3>
                 <div class="row">
                     <div class="col-5 no-padding">
-                        <label class="blocked-label">From:</label> <span class="input-output">{{FromDate}}</span>
+                        <label class="blocked-label">From:</label> <span class="input-output">{{dateFormatter FromDate}}</span>
                     </div>
                     <div class="col-7">
-                        <label>at:</label> <span class="input-output">{{FromTime}}</span>
+                        <label>at:</label> <span class="input-output">{{timeFormatter FromTime}}</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-5 no-padding">
-                        <label class="blocked-label">To:</label> <span class="input-output">{{ToDate}}</span>
+                        <label class="blocked-label">To:</label> <span class="input-output">{{dateFormatter ToDate}}</span>
                     </div>
                     <div class="col-7">
-                        <label>at:</label> <span class="input-output">{{ToTime}}</span>
+                        <label>at:</label> <span class="input-output">{{timeFormatter ToTime}}</span>
                     </div>
                 </div>
                 <br />
@@ -118,10 +114,10 @@
                     {{#PrintableEvacuees}}
                     <div class="row">
                         <div class="col-6">
-                            <span class="{{Column1Class}}">{{Column1}}</span>
+                            <span class="{{Column1Class}}">{{upperCase Column1}}</span>
                         </div>
                         <div class="col-6">
-                            <span class="{{Column2Class}}">{{Column2}}</span>
+                            <span class="{{Column2Class}}">{{upperCase Column2}}</span>
                         </div>
                     </div>
                     {{/PrintableEvacuees}}
@@ -144,7 +140,7 @@
             </div>
             <div class="col col-3">
                 <label>Date:</label>
-                <div class="signature-date input-output">{{PrintDate}}</div>
+                <div class="signature-date input-output">{{dateFormatter PrintDate}}</div>
             </div>
         </div>
     </div>

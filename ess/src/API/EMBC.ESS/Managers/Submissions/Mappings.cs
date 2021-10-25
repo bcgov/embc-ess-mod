@@ -193,6 +193,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Submissions.SupplierDetails>()
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.Contact == null ? null : s.Contact.Phone))
+                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Name == null ? s.LegalName : s.Name))
                 ;
 
             //referral printing mappings
@@ -285,7 +286,7 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.SupplierDetails, Resources.Print.Supports.PrintSupplier>()
-                .ForMember(d => d.Address, opts => opts.MapFrom(s => s.Address.AddressLine1 + s.Address.AddressLine2))
+                .ForMember(d => d.Address, opts => opts.MapFrom(s => s.Address.AddressLine1 + "," + s.Address.AddressLine2))
                 .ForMember(d => d.City, opts => opts.MapFrom(s => s.Address.City))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Name))
                 .ForMember(d => d.Province, opts => opts.MapFrom(s => s.Address.StateProvince))
