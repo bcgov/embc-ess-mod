@@ -51,8 +51,8 @@ namespace EMBC.ESS.Resources.Print.Supports
         public string ApprovedItems { get; set; }
         public string CommentsPrinted => ConvertCarriageReturnToHtml(Comments);
         public string ApprovedItemsPrinted => ConvertCarriageReturnToHtml(ApprovedItems);
-
-        public string VolunteerDisplayName { get; set; }
+        public string VolunteerFirstName { get; set; }
+        public string VolunteerLastName { get; set; }
         public bool DisplayWatermark { get; set; }
         public PrintReferralType Type { get; set; }
         public string EssNumber { get; set; }
@@ -145,7 +145,9 @@ namespace EMBC.ESS.Resources.Print.Supports
     public class PrintRequestingUser
     {
         public string Id { get; set; }
-        public string DisplayName { get; set; }
+        public string firstName { get; set; }
+
+        public string lastName { get; set; }
     }
 
     public enum PrintReferralType
@@ -156,7 +158,7 @@ namespace EMBC.ESS.Resources.Print.Supports
         [Display(Name = "CLOTHING")]
         Clothing,
 
-        [Display(Name = "FOOD, GROCERIES")]
+        [Display(Name = "FOOD - GROCERIES")]
         Groceries,
 
         [Display(Name = "GROUP LODGING")]
@@ -168,7 +170,7 @@ namespace EMBC.ESS.Resources.Print.Supports
         [Display(Name = "INCIDENTALS")]
         Incidentals,
 
-        [Display(Name = "FOOD, RESTAURANT MEALS")]
+        [Display(Name = "FOOD - RESTAURANT MEALS")]
         Meals,
 
         [Display(Name = "TAXI")]

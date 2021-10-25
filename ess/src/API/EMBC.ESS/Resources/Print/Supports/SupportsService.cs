@@ -37,17 +37,16 @@ namespace EMBC.ESS.Resources.Print.Supports
         private async Task<string> AssembleReferralHtml(PrintRequestingUser requestingUser, IEnumerable<PrintReferral> referrals, bool includeSummary, bool addWatermark)
         {
             var referralHtml = string.Empty;
-
             foreach (var referral in referrals)
             {
-                referral.VolunteerDisplayName = requestingUser.DisplayName;
+                referral.VolunteerFirstName = requestingUser.firstName;
+                referral.VolunteerLastName = requestingUser.lastName;
                 referral.DisplayWatermark = addWatermark;
 
                 var newHtml = CreateReferralHtmlPages(referral);
                 referralHtml = $"{referralHtml}{newHtml}";
             }
-
-            var summaryHtml = includeSummary ? await CreateReferalHtmlSummary(referrals) : string.Empty;
+            var summaryHtml = includeSummary ? await CreateReferalHtmlSummary(referrals, requestingUser, addWatermark) : string.Empty;
             var finalHtml = $"{summaryHtml}{referralHtml}";
 
             var handleBars = Handlebars.Create();
@@ -62,6 +61,26 @@ namespace EMBC.ESS.Resources.Print.Supports
         private string CreateReferralHtmlPages(PrintReferral referral)
         {
             var handleBars = Handlebars.Create();
+            handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
+            {
+                string incoming = (string)arguments[0];
+                output.WriteSafeString(incoming[0]);
+            });
+            handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
+            {
+                DateTime.TryParse((string)arguments[0], out DateTime parsedDate);
+                output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
+            });
+            handleBars.RegisterHelper("timeFormatter", (output, context, arguments) =>
+            {
+                var samp = Convert.ToDateTime((string)arguments[0]);
+                output.WriteSafeString(samp.ToString("hh:mm tt"));
+            });
+            handleBars.RegisterHelper("upperCase", (output, context, arguments) =>
+            {
+                string upperCaseString = (string)arguments[0];
+                output.WriteSafeString(upperCaseString.ToUpper());
+            });
 
             handleBars.RegisterTemplate("stylePartial", GetCSSPartialView());
 
@@ -85,11 +104,25 @@ namespace EMBC.ESS.Resources.Print.Supports
             return $"{result}{pageBreak}";
         }
 
-        private async Task<string> CreateReferalHtmlSummary(IEnumerable<PrintReferral> supports)
+        private async Task<string> CreateReferalHtmlSummary(IEnumerable<PrintReferral> supports, PrintRequestingUser requestingUser, bool addWatermark)
         {
             await Task.CompletedTask;
             var handleBars = Handlebars.Create();
-
+            handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
+            {
+                string incoming = (string)arguments[0];
+                output.WriteSafeString(incoming[0]);
+            });
+            handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
+            {
+                DateTime.TryParse((string)arguments[0], out DateTime parsedDate);
+                output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
+            });
+            handleBars.RegisterHelper("timeFormatter", (output, context, arguments) =>
+            {
+                var samp = Convert.ToDateTime((string)arguments[0]);
+                output.WriteSafeString(samp.ToString("hh:mm tt"));
+            });
             var result = string.Empty;
             var itemsHtml = string.Empty;
             var summaryBreakCount = 0;
@@ -99,13 +132,11 @@ namespace EMBC.ESS.Resources.Print.Supports
                 summaryBreakCount += 1;
                 printedCount += 1;
                 var partialViewType = printReferral.Type;
-
                 var partialViewDisplayName = partialViewType.GetType()
                         .GetMember(partialViewType.ToString())
                         .First()
                         .GetCustomAttribute<DisplayAttribute>()
                         .GetName();
-
                 handleBars.RegisterTemplate("titlePartial", partialViewDisplayName);
 
                 var useSummaryVersion = partialViewType == PrintReferralType.Hotel || partialViewType == PrintReferralType.Billeting;
@@ -120,19 +151,18 @@ namespace EMBC.ESS.Resources.Print.Supports
                 var template = handleBars.Compile(LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
 
                 var purchaserName = printReferral.PurchaserName;
+                var volunteerFirstName = requestingUser.firstName;
+                var volunteerLastName = requestingUser.lastName;
                 var itemResult = template(printReferral);
-
                 itemsHtml = $"{itemsHtml}{itemResult}";
 
                 if (summaryBreakCount == 3 || printedCount == supports.Count())
                 {
                     summaryBreakCount = 0;
-
                     handleBars.RegisterTemplate("summaryItemsPartial", itemsHtml);
 
                     var mainTemplate = handleBars.Compile(LoadTemplate(ReferalMainViews.Summary.ToString()));
-
-                    var data = new { printReferral.VolunteerDisplayName, purchaserName };
+                    var data = new { volunteerFirstName, volunteerLastName, purchaserName };
                     result = $"{result}{mainTemplate(data)}{pageBreak}";
                     itemsHtml = string.Empty;
                 }

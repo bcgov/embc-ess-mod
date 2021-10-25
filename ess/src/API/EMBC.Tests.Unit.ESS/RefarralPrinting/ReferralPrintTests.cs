@@ -22,7 +22,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateSupportPdfWithoutSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", DisplayName = "User T." };
+            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = false,
@@ -40,7 +40,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateMultipleSupportsPdfsWithoutSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", DisplayName = "User T." };
+            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = false,
@@ -58,7 +58,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateSupportPdfWithSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", DisplayName = "User T." };
+            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = true,
@@ -76,7 +76,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateMultipleSupportsPdfsWithSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", DisplayName = "User T." };
+            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = true,
@@ -119,7 +119,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                     .RuleFor(o => o.TotalAmountPrinted, (f, o) => o.Type == PrintReferralType.Transportation ? f.Random.Decimal(max: 1000m).ToString() : null)
                     .RuleFor(o => o.OtherTransportModeDetails, (f, o) => o.Type == PrintReferralType.Transportation ? f.Vehicle.Type() : null)
                     .RuleFor(o => o.Supplier, f => new Faker<PrintSupplier>()
-                        .RuleFor(o => o.Address, f => f.Address.StreetAddress())
+                        .RuleFor(o => o.Address, f => f.Address.StreetAddress() + "," + f.Address.StreetName())
                         .RuleFor(o => o.City, f => f.Address.City())
                         .RuleFor(o => o.Name, f => f.Company.CompanyName())
                         .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
