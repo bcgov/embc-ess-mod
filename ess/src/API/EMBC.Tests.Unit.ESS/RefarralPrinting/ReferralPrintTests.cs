@@ -22,7 +22,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateSupportPdfWithoutSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
+            var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = false,
@@ -40,7 +40,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateMultipleSupportsPdfsWithoutSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
+            var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = false,
@@ -58,7 +58,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateSupportPdfWithSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
+            var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = true,
@@ -76,7 +76,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task CreateMultipleSupportsPdfsWithSummary()
         {
-            var requestingUser = new PrintRequestingUser { Id = "123", firstName = "First Name", lastName = "LastName" };
+            var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var request = new SupportsToPrint
             {
                 AddSummary = true,

@@ -485,7 +485,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 Referrals = referrals,
                 AddSummary = printRequest.IncludeSummary,
-                RequestingUser = new PrintRequestingUser { Id = requestingUser.Id, firstName = requestingUser.FirstName, lastName = requestingUser.LastName }
+                RequestingUser = new PrintRequestingUser { Id = requestingUser.Id, FirstName = requestingUser.FirstName, LastName = requestingUser.LastName }
             });
 
             //convert to pdf

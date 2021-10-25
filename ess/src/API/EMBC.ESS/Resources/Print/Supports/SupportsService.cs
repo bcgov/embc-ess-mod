@@ -39,8 +39,8 @@ namespace EMBC.ESS.Resources.Print.Supports
             var referralHtml = string.Empty;
             foreach (var referral in referrals)
             {
-                referral.VolunteerFirstName = requestingUser.firstName;
-                referral.VolunteerLastName = requestingUser.lastName;
+                referral.VolunteerFirstName = requestingUser.FirstName;
+                referral.VolunteerLastName = requestingUser.LastName;
                 referral.DisplayWatermark = addWatermark;
 
                 var newHtml = CreateReferralHtmlPages(referral);
@@ -58,7 +58,7 @@ namespace EMBC.ESS.Resources.Print.Supports
             return assembledHtml;
         }
 
-        private string CreateReferralHtmlPages(PrintReferral referral)
+        private IHandlebars CreateHandleBars()
         {
             var handleBars = Handlebars.Create();
             handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
@@ -81,6 +81,13 @@ namespace EMBC.ESS.Resources.Print.Supports
                 string upperCaseString = (string)arguments[0];
                 output.WriteSafeString(upperCaseString.ToUpper());
             });
+
+            return handleBars;
+        }
+
+        private string CreateReferralHtmlPages(PrintReferral referral)
+        {
+            var handleBars = CreateHandleBars();
 
             handleBars.RegisterTemplate("stylePartial", GetCSSPartialView());
 
@@ -107,22 +114,8 @@ namespace EMBC.ESS.Resources.Print.Supports
         private async Task<string> CreateReferalHtmlSummary(IEnumerable<PrintReferral> supports, PrintRequestingUser requestingUser, bool addWatermark)
         {
             await Task.CompletedTask;
-            var handleBars = Handlebars.Create();
-            handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
-            {
-                string incoming = (string)arguments[0];
-                output.WriteSafeString(incoming[0]);
-            });
-            handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
-            {
-                DateTime.TryParse((string)arguments[0], out DateTime parsedDate);
-                output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
-            });
-            handleBars.RegisterHelper("timeFormatter", (output, context, arguments) =>
-            {
-                var samp = Convert.ToDateTime((string)arguments[0]);
-                output.WriteSafeString(samp.ToString("hh:mm tt"));
-            });
+            var handleBars = CreateHandleBars();
+
             var result = string.Empty;
             var itemsHtml = string.Empty;
             var summaryBreakCount = 0;
@@ -151,8 +144,8 @@ namespace EMBC.ESS.Resources.Print.Supports
                 var template = handleBars.Compile(LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
 
                 var purchaserName = printReferral.PurchaserName;
-                var volunteerFirstName = requestingUser.firstName;
-                var volunteerLastName = requestingUser.lastName;
+                var volunteerFirstName = requestingUser.FirstName;
+                var volunteerLastName = requestingUser.LastName;
                 var itemResult = template(printReferral);
                 itemsHtml = $"{itemsHtml}{itemResult}";
 
