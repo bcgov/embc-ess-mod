@@ -193,6 +193,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Submissions.SupplierDetails>()
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.Contact == null ? null : s.Contact.Phone))
+                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Name == null ? s.LegalName : s.Name))
                 ;
 
             //referral printing mappings
