@@ -255,8 +255,6 @@ export class ReviewSupportComponent implements OnInit {
    * @returns if the given date is in the past or not
    */
   validReferralDate(fromDate: string, toDate: string): boolean {
-    console.log('FROM DATE' + fromDate);
-    console.log('TO DATE' + toDate);
     if (moment(toDate).isBefore(fromDate)) {
       return false;
     } else {

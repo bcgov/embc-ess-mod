@@ -192,7 +192,9 @@
 
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-2 bold">${{ groceryReferral?.totalAmount }}</div>
+      <div class="col-md-2 bold">
+        ${{ groceryReferral?.totalAmount | number: '1.2-2':'en-CA' }}
+      </div>
       <div *ngIf="!checkGroceryMaxRate()" class="col-md-4 warning">
         Total monetary value exceeds the recommended ESS rate
       </div>
@@ -273,7 +275,9 @@
 
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Up to Maximum Value of</div>
-      <div class="col-md-4 bold">${{ otherReferral?.totalAmount }}</div>
+      <div class="col-md-4 bold">
+        ${{ otherReferral?.totalAmount | number: '1.2-2':'en-CA' }}
+      </div>
     </div>
   </div>
 
@@ -286,7 +290,9 @@
 
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">${{ incidentalReferral?.totalAmount }}</div>
+      <div class="col-md-4 bold">
+        ${{ incidentalReferral?.totalAmount | number: '1.2-2':'en-CA' }}
+      </div>
       <div *ngIf="!checkIncidentalMaxRate()" class="col-md-4 warning">
         Total monetary value exceeds the recommended ESS rate
       </div>
@@ -304,7 +310,9 @@
 
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">${{ clothingReferral?.totalAmount }}</div>
+      <div class="col-md-4 bold">
+        ${{ clothingReferral?.totalAmount | number: '1.2-2':'en-CA' }}
+      </div>
       <div *ngIf="!checkClothingMaxRate()" class="col-md-4 warning">
         Total monetary value exceeds the recommended ESS rate
       </div>
