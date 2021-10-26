@@ -68,6 +68,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\AnonymousNewTemplate.hbs">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\NewTemplate.hbs">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="Resources\Print\Supports\Views\Billeting\BilletingItemsSummaryPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>

@@ -14,16 +14,23 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using System.Reflection;
 
-namespace EMBC.ESS.Utilities.Transformation
+namespace EMBC.ESS.Utilities.Extensions
 {
-    public static class Configuration
+    public static class AssemblyEx
     {
-        public static IServiceCollection AddTransformator(this IServiceCollection services)
+        public static string GetManifestResourceString(this Assembly assembly, string manifestName)
         {
-            services.AddTransient<ITransformator, HbsTransformator>();
-            return services;
+            using (var stream = assembly.GetManifestResourceStream(manifestName))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    string template = reader.ReadToEnd();
+                    return template;
+                }
+            }
         }
     }
 }
