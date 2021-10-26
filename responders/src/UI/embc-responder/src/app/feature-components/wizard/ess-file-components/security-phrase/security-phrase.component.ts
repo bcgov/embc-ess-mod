@@ -42,7 +42,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     // Set up wizard type
     this.wizardType = this.evacueeSessionService.getWizardType();
 
-    // Setting the edites Security Flag in case the wizard type is set to edit an ESS File
+    // Setting the edit Security Flag in case the wizard type is set to edit an ESS File
     this.editedPhraseFlag();
 
     // Setting form validation
@@ -114,7 +114,24 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    */
   editSecurityPhrase() {
     this.editedSecurityPhrase = !this.editedSecurityPhrase;
-    this.formValidation();
+    this.securityFormControl.securityPhrase.enable();
+    this.stepEssFileService.editedSecurityPhrase = true;
+    // this.formValidation();
+  }
+
+  /**
+   * Cancels the change of security phrase and goes back to the previous view
+   */
+  cancel(): void {
+    if (
+      this.stepEssFileService.securityPhrase ===
+      this.stepEssFileService.originalSecurityPhrase
+    ) {
+      this.editedSecurityPhrase = !this.editedSecurityPhrase;
+      this.stepEssFileService.editedSecurityPhrase = false;
+    } else {
+      this.securityForm.get('securityPhrase').markAllAsTouched();
+    }
   }
 
   /**
@@ -164,7 +181,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   private createSecurityPhraseForm() {
     this.securityForm = this.formBuilder.group({
       securityPhrase: [
-        this.stepEssFileService.securityPhrase,
+        this.stepEssFileService.securityPhrase ?? '',
         [
           Validators.minLength(6),
           Validators.maxLength(50),
@@ -181,13 +198,18 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
       this.wizardType === 'review-file' ||
       this.wizardType === 'complete-file'
     ) {
-      if (this.editedSecurityPhrase) {
-        this.setFormDisabled(false);
+      if (
+        this.stepEssFileService.securityPhrase ===
+        this.stepEssFileService.originalSecurityPhrase
+      ) {
+        this.securityFormControl.securityPhrase.disable();
+        this.editedSecurityPhrase = false;
       } else {
-        this.setFormDisabled(true);
+        this.securityFormControl.securityPhrase.enable();
+        this.editedSecurityPhrase = true;
       }
-    } else if (this.wizardType === 'new-ess-file') {
-      this.setFormDisabled(this.stepEssFileService.bypassPhrase);
+      // } else if (this.wizardType === 'new-ess-file') {
+      //   this.setFormDisabled(this.stepEssFileService.bypassPhrase);
     }
   }
 

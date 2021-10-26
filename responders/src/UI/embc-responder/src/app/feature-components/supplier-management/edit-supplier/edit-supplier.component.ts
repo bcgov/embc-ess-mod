@@ -114,21 +114,21 @@ export class EditSupplierComponent implements OnInit {
         this.editSupplierService.editedSupplier?.legalName ?? '',
         [this.customValidation.whitespaceValidator()]
       ],
-      supplierName: [
-        this.editSupplierService.editedSupplier?.name ?? '',
-        [this.customValidation.whitespaceValidator()]
-      ],
+      supplierName: [this.editSupplierService.editedSupplier?.name ?? ''],
       gstNumber: this.formBuilder.group(
         {
           part1: [
             this.editSupplierService.editedSupplier?.supplierGstNumber?.part1 ??
               '',
-            [Validators.required, Validators.pattern(/^-?([0-9]\d*)?$/)]
+            [Validators.required, Validators.pattern(globalConst.gstFirstField)]
           ],
           part2: [
             this.editSupplierService.editedSupplier?.supplierGstNumber?.part2 ??
               '',
-            [Validators.required, Validators.pattern(/^-?([0-9]\d*)?$/)]
+            [
+              Validators.required,
+              Validators.pattern(globalConst.gstSecondField)
+            ]
           ]
         },
         {

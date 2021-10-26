@@ -288,7 +288,6 @@ export class ReferralCreationService {
       ),
       subCategory: SupportSubCategory.None
     };
-    console.log(clothingReferral);
     this.clothingReferral = clothingReferral;
   }
 

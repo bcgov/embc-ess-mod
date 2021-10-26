@@ -11,14 +11,14 @@
       <form [formGroup]="restrictionForm">
         <div class="row">
           <div class="col-12">
+            <p><b>Consent to share registration status:</b></p>
             <p>
-              In the event of an emergency, concerned family and friends may
-              inquire about you and your family.
+              Concerned family and friends may inquire about your household
+              because of this emergency event.
             </p>
             <p id="restrictedAccess-radio-group-label" class="requiredField">
-              Do you consent to have your location and contact information
-              <strong>shared with concerned family or friends</strong> who ask
-              about your wellbeing?
+              Do you consent to have your registration STATUS shared with those
+              who may ask about your wellbeing?
             </p>
 
             <div class="row">
@@ -30,15 +30,43 @@
                   required
                 >
                   <mat-radio-button [value]="false"
-                    ><span class="bold radio-text">Yes</span> - You may disclose
-                    my location and contact information with family or
-                    friends</mat-radio-button
-                  >
+                    ><span class="bold radio-text">Yes</span> - you may share
+                    the status of my ESS registration status:
+                  </mat-radio-button>
+                  <p>
+                    I acknowledge that an ESS Responder may ONLY share the
+                    status of my ESS registration (pending, active or complete)
+                    with concerned family and friends. For reunification
+                    purposes, concerned family and frineds may opt to leave
+                    their contact details (telephone number and/ or email
+                    address) where they can be reached. These contact details
+                    can be added under the Notes section of the active ESS File,
+                    by trained ERA Responder.
+                  </p>
+
                   <mat-radio-button [value]="true"
-                    ><span class="bold radio-text">No</span> - You may not
-                    disclose my location or contact
-                    information</mat-radio-button
-                  >
+                    ><span class="bold radio-text">No</span> - please
+                    <strong>RESTRICT</strong> access to my ESS registration
+                    status:
+                  </mat-radio-button>
+                  <p>
+                    I acknowledge that by RESTRICTING access to my registration
+                    status I am:
+                  </p>
+                  <ul>
+                    <li>
+                      restricting access to my E.R.A. Profile and ESS File,
+                      including ALL household members listed on ESS file(s) and
+                      past ESS Files and Profile.
+                    </li>
+                    <li>
+                      limiting access to ERA users with permission to
+                      view/locate RESTRICTED status files (ERA Manager/Director
+                      and above), which may increase wait times for service
+                      delivery (in-person or virtually).
+                    </li>
+                  </ul>
+
                   <mat-error
                     class="custom-mat-error field-error"
                     *ngIf="

@@ -15,8 +15,10 @@
     <div class="col-md-12 content-container">
       <form [formGroup]="primaryAddressForm">
         <p>
-          Primary residence: The dwelling where an individual or household
-          spends most of their personal time.
+          Primary residence is the primary location that a person or household
+          inhabits. A primary residence can be any type of dwelling (e.g. house,
+          apartment, trailer, boat), but is where the person or household lives
+          most of the time.
         </p>
         <p>
           A person can only have one primary residence at any moment in time.
@@ -162,8 +164,7 @@
               id="isNewMailingAddress-radio-group-label"
               class="requiredField"
             >
-              Is your <b>mailing address</b> the same as their primary residence
-              above?
+              Is your <b>mailing address</b> the same as your primary residence?
             </label>
             <mat-radio-group
               formControlName="isNewMailingAddress"

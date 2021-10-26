@@ -233,6 +233,8 @@ export const defaultRole = {
 
 export const currencyPattern = '^([0-9]+(((,[0-9]{3}){1})?([.][0-9]{0,2})?))$';
 export const postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
+export const gstFirstField = '^-?([0-9]\\d*)?$';
+export const gstSecondField = '^(?!0{4})[0-9]{4}$';
 export const defaultProvince = { code: 'BC', name: 'British Columbia' };
 export const defaultCountry = { code: 'CAN', name: 'Canada' };
 export const usDefaultObject = {
