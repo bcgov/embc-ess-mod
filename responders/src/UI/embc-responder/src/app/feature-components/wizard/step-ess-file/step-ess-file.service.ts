@@ -79,6 +79,7 @@ export class StepEssFileService {
   // Security Phrase tab
   private bypassPhraseVal: boolean;
   private securityPhraseVal: string;
+  private originalPhraseVal: string;
   private editedSecurityPhraseVal: boolean;
 
   constructor(
@@ -349,6 +350,14 @@ export class StepEssFileService {
   }
   public set securityPhrase(securityPhraseVal: string) {
     this.securityPhraseVal = securityPhraseVal;
+  }
+
+  public set originalSecurityPhrase(originalSecurityPhrase: string) {
+    this.originalPhraseVal = originalSecurityPhrase;
+  }
+
+  public get originalSecurityPhrase(): string {
+    return this.originalPhraseVal;
   }
 
   public get editedSecurityPhrase(): boolean {
@@ -740,6 +749,7 @@ export class StepEssFileService {
 
     // Security Phrase tab
     this.securityPhrase = essFile.securityPhrase;
+    this.originalSecurityPhrase = essFile.securityPhrase;
     this.editedSecurityPhrase = essFile.securityPhraseEdited;
   }
 
