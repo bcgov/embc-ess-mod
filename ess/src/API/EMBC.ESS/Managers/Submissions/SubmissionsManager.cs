@@ -127,6 +127,15 @@ namespace EMBC.ESS.Managers.Submissions
             if (contact == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
             file.PrimaryRegistrantId = contact.Id;
 
+            if (!string.IsNullOrEmpty(file.Id))
+            {
+                var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = file.Id })).Items.SingleOrDefault();
+                var existingFile = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
+
+                if (!string.IsNullOrEmpty(existingFile.TaskId) && !existingFile.TaskId.Equals(file.TaskId))
+                    throw new BusinessLogicException($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
+            }
+
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
