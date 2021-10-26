@@ -58,6 +58,11 @@ export const invalidGoBack: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const successfulBcscInvite: DialogContent = {
+  text: '<p>Email successfully sent.</p>',
+  cancelButton: 'Close'
+};
+
 export const securityQuesError =
   'An error occurred while loading the security questions. Please try again later';
 export const systemError =
@@ -79,3 +84,5 @@ export const currentEvacError =
   'Unable to retrieve current evacuations at this time. Please try again later';
 export const pastEvacError =
   'Unable to retrieve past evacuations at this time. Please try again later';
+export const bcscInviteError =
+  'Unable to send BC Services Card invitation at this time. Please try again later';

@@ -33,6 +33,7 @@ export { DateOfBirthDataConflict } from './models/date-of-birth-data-conflict';
 export { NameDataConflict } from './models/name-data-conflict';
 export { ValueTupleOfStringAndString } from './models/value-tuple-of-string-and-string';
 export { AddressDataConflict } from './models/address-data-conflict';
+export { InviteRequest } from './models/invite-request';
 export { Configuration } from './models/configuration';
 export { Code } from './models/code';
 export { CommunityCode } from './models/community-code';
