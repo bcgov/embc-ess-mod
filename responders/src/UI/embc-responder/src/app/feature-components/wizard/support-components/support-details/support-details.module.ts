@@ -16,6 +16,7 @@ import { LodgingBilletingComponent } from './details-type/lodging-billeting/lodg
 import { LodgingGroupComponent } from './details-type/lodging-group/lodging-group.component';
 import { ClothingComponent } from './details-type/clothing/clothing.component';
 import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
+import { CustomDirectiveModule } from 'src/app/shared/directives/customDirective.module';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { IncidentalsComponent } from './details-type/incidentals/incidentals.com
     SupportDetailsRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    CustomPipeModule
+    CustomPipeModule,
+    CustomDirectiveModule
   ],
   providers: [DatePipe]
 })

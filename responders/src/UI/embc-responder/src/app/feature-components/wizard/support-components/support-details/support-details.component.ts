@@ -124,7 +124,6 @@ export class SupportDetailsComponent implements OnInit {
 
     const nextDay = new Date();
     nextDay.setDate($event.get('date').value.getDate() + 1);
-    console.log(this.datePipe.transform(nextDay, 'MM/dd/yyyy'));
 
     this.supportDetailsForm
       .get('fromDate')
