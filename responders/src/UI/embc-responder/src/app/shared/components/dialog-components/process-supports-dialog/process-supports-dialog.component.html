@@ -12,7 +12,7 @@
 <form [formGroup]="addEvacForm">
   <div class="row checkbox-section">
     <div class="col-md-12">
-      <mat-checkbox formControlName="addSummary"
+      <mat-checkbox formControlName="addSummary" (change)="evacueeSummChangeEvent($event)"
         >Include evacuee summary.
       </mat-checkbox>
     </div>

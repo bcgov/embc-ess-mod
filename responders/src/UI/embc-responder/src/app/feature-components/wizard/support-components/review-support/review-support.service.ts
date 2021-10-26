@@ -39,7 +39,8 @@ export class ReviewSupportService {
     return this.registrationService
       .registrationsProcessSupports({
         fileId,
-        body: supportsDraft
+        includeSummaryInPrintRequest: this.includeEvacueeSummary,
+        body: supportsDraft,
       })
       .pipe(
         mergeMap((result: ReferralPrintRequestResponse) => {
