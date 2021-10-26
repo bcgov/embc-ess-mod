@@ -135,9 +135,31 @@
                 evacuee to link their profile with BC Services Card.
               </p>
               <div class="button-div">
-                <button class="button-p invite-button" mat-button>
-                  Send email invitation
+                <button
+                  (click)="sendEmail()"
+                  class="button-p invite-button"
+                  mat-button
+                >
+                  Send email invitation &nbsp;
+                  <app-loader
+                    style="
+                      display: inline-flex;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                    [strokeWidth]="3"
+                    [diameter]="20"
+                    [showLoader]="emailLoader"
+                  ></app-loader>
                 </button>
+                <span class="email-success bold" *ngIf="emailSuccessMessage"
+                  ><img
+                    src="/assets/images/status/complete.svg"
+                    height="20"
+                    width="20"
+                  />
+                  {{ emailSuccessMessage }}</span
+                >
               </div>
             </div>
             <div class="col-md-4">
@@ -215,7 +237,7 @@
                     width="71"
                   />
                   <p>Primary</p>
-                  <p>Address</p>
+                  <p>Residence</p>
                 </div>
                 <div class="col-md-9 table-parent">
                   <p

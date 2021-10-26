@@ -31,6 +31,7 @@ import { CustomPipeModule } from './pipes/customPipe.module';
 import { VoidReferralDialogComponent } from './components/dialog-components/void-referral-dialog/void-referral-dialog.component';
 import { ReprintReferralDialogComponent } from './components/dialog-components/reprint-referral-dialog/reprint-referral-dialog.component';
 import { ProcessSupportsDialogComponent } from './components/dialog-components/process-supports-dialog/process-supports-dialog.component';
+import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ProcessSupportsDialogComponent } from './components/dialog-components/p
     ViewAssessmentDialogComponent,
     VoidReferralDialogComponent,
     ReprintReferralDialogComponent,
-    ProcessSupportsDialogComponent
+    ProcessSupportsDialogComponent,
+    BcscInviteDialogComponent
   ],
   imports: [
     CommonModule,
@@ -94,7 +96,8 @@ import { ProcessSupportsDialogComponent } from './components/dialog-components/p
     CustomGstFieldComponent,
     ViewAssessmentDialogComponent,
     VoidReferralDialogComponent,
-    ReprintReferralDialogComponent
+    ReprintReferralDialogComponent,
+    BcscInviteDialogComponent
   ]
 })
 export class SharedModule {}

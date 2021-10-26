@@ -499,6 +499,8 @@ export const editNotesError =
   'Unable to edit note at this time. Please try again later';
 export const verifyRegistrantProfileError =
   'Unable to verify the Registrant Profile at this time. Please try again later';
+export const bcscInviteError =
+  'Unable to send BC Services Card invitation at this time. Please try again later';
 export const getProfileEssFilesError =
   'Unable to verify get the ESS Files associated to the registrant at this time. Please try again later';
 export const getPossibleEssfileMatchError =

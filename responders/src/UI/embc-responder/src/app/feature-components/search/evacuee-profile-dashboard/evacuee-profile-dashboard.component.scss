@@ -124,6 +124,7 @@
 .invite-button {
     height: 45px !important;
     width: 40%;
+    margin-right: 10px;
 }
 
 .dotted-hr {
@@ -186,5 +187,9 @@
   .divider {
       display: none;
   }
+}
+
+.email-success {
+  color: #3C9D0F;
 }
 

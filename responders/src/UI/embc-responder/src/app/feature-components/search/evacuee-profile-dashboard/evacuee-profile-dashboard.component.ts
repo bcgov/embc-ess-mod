@@ -8,11 +8,13 @@ import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { BcscInviteDialogComponent } from 'src/app/shared/components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../core/services/global-constants';
+import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.service';
 
 @Component({
   selector: 'app-evacuee-profile-dashboard',
@@ -23,6 +25,8 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   evacueeProfile: RegistrantProfileModel;
   evacueeProfileId: string;
   isLoading = false;
+  emailLoader = false;
+  emailSuccessMessage: string;
 
   constructor(
     private dialog: MatDialog,
@@ -30,11 +34,13 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     private cacheService: CacheService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private evacueeProfileDashboardService: EvacueeProfileDashboardService
   ) {}
 
   ngOnInit(): void {
     this.evacueeProfileId = this.evacueeSessionService.profileId;
+    this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog(globalConst.essFileLinkMessage)
@@ -124,6 +130,41 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     });
   }
 
+  sendEmail(): void {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: BcscInviteDialogComponent,
+          profileData: this.evacueeProfile?.contactDetails?.email
+        },
+        height: '520px',
+        width: '600px'
+      })
+      .afterClosed()
+      .subscribe((emailId) => {
+        if (emailId !== 'close') {
+          this.emailLoader = !this.emailLoader;
+          this.evacueeProfileDashboardService
+            .inviteByEmail(emailId, this.evacueeProfile.id)
+            .subscribe(
+              (value) => {
+                this.emailLoader = !this.emailLoader;
+                this.emailSuccessMessage =
+                  'Email sent successfully to ' + emailId;
+              },
+              (error) => {
+                this.emailLoader = !this.emailLoader;
+                this.alertService.clearAlert();
+                this.alertService.setAlert(
+                  'danger',
+                  globalConst.bcscInviteError
+                );
+              }
+            );
+        }
+      });
+  }
+
   /**
    * Open the dialog to indicate evacuee has been successfully
    * verified
@@ -137,7 +178,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         content
       },
       height: '230px',
-      width: '530px'
+      width: '630px'
     });
   }
 
