@@ -14,6 +14,7 @@ import { EvacuationFileSearchResult } from '../models/evacuation-file-search-res
 import { EvacuationFileSummary } from '../models/evacuation-file-summary';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
+import { InviteRequest } from '../models/invite-request';
 import { Note } from '../models/note';
 import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
 import { RegistrantLinkRequest } from '../models/registrant-link-request';
@@ -441,6 +442,55 @@ export class RegistrationsService extends BaseService {
 
     return this.registrationsVerifySecurityQuestions$Response(params).pipe(
       map((r: StrictHttpResponse<VerifySecurityQuestionsResponse>) => r.body as VerifySecurityQuestionsResponse)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsInviteToRegistrantPortal
+   */
+  static readonly RegistrationsInviteToRegistrantPortalPath = '/api/Registrations/registrants/{registrantId}/invite';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsInviteToRegistrantPortal()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsInviteToRegistrantPortal$Response(params: {
+    registrantId: string;
+    body: InviteRequest
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsInviteToRegistrantPortalPath, 'post');
+    if (params) {
+      rb.path('registrantId', params.registrantId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsInviteToRegistrantPortal$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsInviteToRegistrantPortal(params: {
+    registrantId: string;
+    body: InviteRequest
+  }): Observable<void> {
+
+    return this.registrationsInviteToRegistrantPortal$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
@@ -1309,19 +1359,37 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsProcessSupportsPath = '/api/Registrations/files/{fileId}/supports';
 
   /**
+   * Process draft supports by the API and create a print supports request.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `registrationsProcessSupports()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsProcessSupports$Response(params: {
+
+    /**
+     * evacuation file if
+     */
     fileId: string;
+
+    /**
+     * true/false to include a summary page in the print requwst
+     */
+    includeSummaryInPrintRequest?: boolean;
+
+    /**
+     * the draft supports to process
+     */
     body: Array<Support>
   }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessSupportsPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
+      rb.query('includeSummaryInPrintRequest', params.includeSummaryInPrintRequest, {});
       rb.body(params.body, 'application/json');
     }
 
@@ -1337,13 +1405,30 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Process draft supports by the API and create a print supports request.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `registrationsProcessSupports$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   registrationsProcessSupports(params: {
+
+    /**
+     * evacuation file if
+     */
     fileId: string;
+
+    /**
+     * true/false to include a summary page in the print requwst
+     */
+    includeSummaryInPrintRequest?: boolean;
+
+    /**
+     * the draft supports to process
+     */
     body: Array<Support>
   }): Observable<ReferralPrintRequestResponse> {
 
