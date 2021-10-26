@@ -231,7 +231,9 @@
               <div class="col-8 bold">
                 {{
                   stepEssFileService?.haveSpecialDiet === 'Yes'
-                    ? 'Yes - ' + stepEssFileService?.specialDietDetails
+                    ? stepEssFileService?.specialDietDetails
+                      ? 'Yes - ' + stepEssFileService?.specialDietDetails
+                      : 'Yes'
                     : 'No'
                 }}
               </div>

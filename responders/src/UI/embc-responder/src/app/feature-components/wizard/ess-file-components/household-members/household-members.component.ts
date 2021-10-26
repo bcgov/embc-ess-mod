@@ -142,7 +142,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Set up form field with member values
     this.householdService.editRow(this.householdForm, member);
     this.editIndex = index;
-
+    this.selection.deselect(member);
     this.showMemberForm = true;
     this.editFlag = true;
   }

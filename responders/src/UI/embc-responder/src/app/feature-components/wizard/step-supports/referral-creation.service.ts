@@ -188,9 +188,11 @@ export class ReferralCreationService {
       category: SupportCategory.Food,
       numberOfDays: (supportDetails.referral as Groceries).noOfMeals,
       subCategory: SupportSubCategory.Food_Groceries,
-      totalAmount: (supportDetails.referral as Groceries).userTotalAmount
-        ? (supportDetails.referral as Groceries).userTotalAmount
-        : (supportDetails.referral as Groceries).totalAmount
+      totalAmount: this.parseTextNumber(
+        (supportDetails.referral as Groceries).userTotalAmount
+          ? (supportDetails.referral as Groceries).userTotalAmount
+          : (supportDetails.referral as Groceries).totalAmount
+      )
     };
     this.groceriesReferral = groceriesReferral;
   }
@@ -211,7 +213,9 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Transportation,
       transportMode: (supportDetails.referral as OtherTransport).transportMode,
-      totalAmount: (supportDetails.referral as OtherTransport).totalAmount,
+      totalAmount: this.parseTextNumber(
+        (supportDetails.referral as OtherTransport).totalAmount
+      ),
       subCategory: SupportSubCategory.Transportation_Other
     };
     this.otherReferral = otherReferral;
@@ -277,11 +281,14 @@ export class ReferralCreationService {
       category: SupportCategory.Clothing,
       extremeWinterConditions: (supportDetails.referral as Clothing)
         .extremeWinterConditions,
-      totalAmount: (supportDetails.referral as Clothing).userTotalAmount
-        ? (supportDetails.referral as Clothing).userTotalAmount
-        : (supportDetails.referral as Clothing).totalAmount,
+      totalAmount: this.parseTextNumber(
+        (supportDetails.referral as Clothing).userTotalAmount
+          ? (supportDetails.referral as Clothing).userTotalAmount
+          : (supportDetails.referral as Clothing).totalAmount
+      ),
       subCategory: SupportSubCategory.None
     };
+    console.log(clothingReferral);
     this.clothingReferral = clothingReferral;
   }
 
@@ -293,9 +300,11 @@ export class ReferralCreationService {
       ...referral,
       category: SupportCategory.Incidentals,
       approvedItems: (supportDetails.referral as Incidentals).approvedItems,
-      totalAmount: (supportDetails.referral as Incidentals).userTotalAmount
-        ? (supportDetails.referral as Incidentals).userTotalAmount
-        : (supportDetails.referral as Incidentals).totalAmount,
+      totalAmount: this.parseTextNumber(
+        (supportDetails.referral as Incidentals).userTotalAmount
+          ? (supportDetails.referral as Incidentals).userTotalAmount
+          : (supportDetails.referral as Incidentals).totalAmount
+      ),
       subCategory: SupportSubCategory.None
     };
     this.incidentalsReferral = incidentalsReferral;
@@ -312,5 +321,9 @@ export class ReferralCreationService {
     if (index > -1) {
       this.draftSupportVal.splice(index, 1);
     }
+  }
+
+  parseTextNumber(numberInput: any): number {
+    return parseFloat(numberInput.replace(',', ''));
   }
 }

@@ -181,7 +181,10 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
-                  ${{ getGroceryReferral(support)?.totalAmount }}
+                  ${{
+                    getGroceryReferral(support)?.totalAmount
+                      | number: '1.2-2':'en-CA'
+                  }}
                 </div>
                 <div
                   *ngIf="!checkGroceryMaxRate(support)"
@@ -290,7 +293,10 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
-                  ${{ getOtherReferral(support)?.totalAmount }}
+                  ${{
+                    getOtherReferral(support)?.totalAmount
+                      | number: '1.2-2':'en-CA'
+                  }}
                 </div>
               </div>
             </ng-container>
@@ -308,7 +314,10 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{ getClothingReferral(support)?.totalAmount }}
+                  ${{
+                    getClothingReferral(support)?.totalAmount
+                      | number: '1.2-2':'en-CA'
+                  }}
                 </div>
                 <div
                   *ngIf="!checkClothingMaxRate(support)"
@@ -337,7 +346,10 @@
               <div class="row row-padding">
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
-                  ${{ getIncidentalReferral(support)?.totalAmount }}
+                  ${{
+                    getIncidentalReferral(support)?.totalAmount
+                      | number: '1.2-2':'en-CA'
+                  }}
                 </div>
                 <div
                   *ngIf="!checkIncidentalMaxRate(support)"

@@ -48,7 +48,7 @@
       <td mat-cell *matCellDef="let element">
         {{
           element?.totalAmount !== '' && element?.totalAmount !== undefined
-            ? '$' + element?.totalAmount
+            ? '$' + [element?.totalAmount | number: '1.2-2':'en-CA']
             : 'n/a'
         }}
       </td>
