@@ -48,13 +48,13 @@ namespace EMBC.Registrants.API.Mappers
                 .ReverseMap()
 
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
-                    string.Equals(s.MailingAddress.Country, s.PrimaryAddress.Country, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(s.MailingAddress.StateProvince, s.PrimaryAddress.StateProvince, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(s.MailingAddress.Community, s.PrimaryAddress.Community, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(s.MailingAddress.City, s.PrimaryAddress.City, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(s.MailingAddress.PostalCode, s.PrimaryAddress.PostalCode, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(s.MailingAddress.AddressLine1, s.PrimaryAddress.AddressLine1, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(s.MailingAddress.AddressLine2, s.PrimaryAddress.AddressLine2, StringComparison.OrdinalIgnoreCase)))
+                    string.Equals(s.MailingAddress.Country, s.PrimaryAddress.Country, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(s.MailingAddress.StateProvince, s.PrimaryAddress.StateProvince, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(s.MailingAddress.Community, s.PrimaryAddress.Community, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(s.MailingAddress.City, s.PrimaryAddress.City, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(s.MailingAddress.PostalCode, s.PrimaryAddress.PostalCode, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(s.MailingAddress.AddressLine1, s.PrimaryAddress.AddressLine1, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(s.MailingAddress.AddressLine2, s.PrimaryAddress.AddressLine2, StringComparison.InvariantCultureIgnoreCase)))
                 ;
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
