@@ -209,7 +209,7 @@ namespace EMBC.ESS.Managers.Submissions
             var emailContent = (await transformator.Transform(new TransformationData
             {
                 Template = template.Content,
-                Tokens = tokens
+                Tokens = new Dictionary<string, string>(tokens)
             })).Content;
 
             await notificationSender.Send(new EmailNotification

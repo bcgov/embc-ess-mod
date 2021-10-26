@@ -15,7 +15,9 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
+using EMBC.ESS.Utilities.Extensions;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -52,112 +54,22 @@ namespace EMBC.ESS.Managers.Submissions
         private EmailTemplate GetNewTemplate()
         {
             string emailSubject = "Registration completed successfully";
-            string emailBody = @"
-<p>
-<p style='font-size: 18pt;color:darkblue;font-weight: bold;'>Submission Complete</p>
-<p>
-<p>
-<p style='font-size: 16pt;color:lightblue;'>Your Emergency Support Services (ESS) File Number is: {fileNumber}</p>
-<p>Thank you for submitting your online self-registration.
-<p>
-<p>
-<p style='font-size: 18pt;color:lightblue;font-weight: bold;'>Next Steps</p>
-<p>
-    <li>Please keep a record of your Emergency Support Services File Number to receive emergency support services that
-        can
-        be provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception
-        Centre.
-    </li>
-</p>
-<br>
-<p>
-    <li>After a need's assessment interview with a local ESS Responder has been completed, supports are provided to
-        purchase goods and services if eligible.</li>
-</p>
-<br>
-<p>
-    <li>Any goods and services purchased prior to a need’s assessment interview are not eligible for retroactive
-        reimbursement.</li>
-</p>
-<br>
-<p>
-    <li>If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency serves at this time, no further
-        action is required.</li>
-</p>
-<br>
-<p>
-    <li>If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to your nearest Reception
-        Centre. A list of open Reception Centres can be found at Emergency Info BC.</li>
-</p>
-<br>
-<p>
-    <li>If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your Local
-        Emergency Program for next steps.</li>
-</p>
-<br>
-<p>
-    <li>If you have a registered account please use the following link to login to the tool and review and/or edit your
-        new ESS File: <a href='https://ess.gov.bc.ca'>https://ess.gov.bc.ca</a> (select the 'Already have an account?
-        Log in' link)</li>
-</p>";
-
+            string emailBody = LoadTemplate("NewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
         private EmailTemplate GetAnonymousnewTemplate()
         {
             string emailSubject = "Registration completed successfully";
-            string emailBody = @"
-<p>
-<p style='font-size: 18pt;color:darkblue;font-weight: bold;'>Submission Complete</p>
-<p>
-<p>
-<p style='font-size: 16pt;color:lightblue;'>Your Emergency Support Services (ESS) File Number is: {fileNumber}
-</p>
-<p>Thank you for submitting your online self-registration.
-<p>
-<p>
-<p style='font-size: 18pt;color:lightblue;font-weight: bold;'>Next Steps</p>
-<p>
-    <li>Please keep a record of your Emergency Support Services File Number to receive emergency support services that
-        can
-        be provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception
-        Centre.
-    </li>
-</p>
-<br>
-<p>
-    <li>After a need's assessment interview with a local ESS Responder has been completed, supports are provided to
-        purchase goods and services if eligible.</li>
-</p>
-<br>
-<p>
-    <li>Any goods and services purchased prior to a need’s assessment interview are not eligible for retroactive
-        reimbursement.</li>
-</p>
-<br>
-<p>
-    <li>If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency serves at this time, no further
-        action is required.</li>
-</p>
-<br>
-<p>
-    <li>If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to your nearest Reception
-        Centre. A list of open Reception Centres can be found at Emergency Info BC.</li>
-</p>
-<br>
-<p>
-    <li>If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your Local
-        Emergency Program for next steps.</li>
-</p>
-<br>
-<p>
-    <li>If you have a registered account please use the following link to login to the tool and review and/or edit your
-        new ESS File: <a href='https://ess.gov.bc.ca'>https://ess.gov.bc.ca</a> (select the 'Already have an account?
-        Log in' link)</li>
-</p>";
-
+            string emailBody = LoadTemplate("AnonymousNewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
+        }
+
+        private static string LoadTemplate(string name)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var manifestName = $"EMBC.ESS.Managers.Submissions.Notifications.Templates.{name}.hbs";
+            return assembly.GetManifestResourceString(manifestName);
         }
     }
 }

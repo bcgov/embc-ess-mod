@@ -17,10 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using EMBC.ESS.Utilities.Extensions;
 using HandlebarsDotNet;
 
 namespace EMBC.ESS.Resources.Print.Supports
@@ -205,14 +205,7 @@ namespace EMBC.ESS.Resources.Print.Supports
         {
             var assembly = Assembly.GetExecutingAssembly();
             var manifestName = $"EMBC.ESS.Resources.Print.Supports.Views.{name}.hbs";
-            using (var stream = assembly.GetManifestResourceStream(manifestName))
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    string template = reader.ReadToEnd();
-                    return template;
-                }
-            }
+            return assembly.GetManifestResourceString(manifestName);
         }
     }
 }
