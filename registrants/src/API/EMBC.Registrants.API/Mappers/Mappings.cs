@@ -46,6 +46,15 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
 
                 .ReverseMap()
+
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
+                    s.MailingAddress.Country == s.PrimaryAddress.Country &&
+                    s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
+                    s.MailingAddress.Community == s.PrimaryAddress.Community &&
+                    s.MailingAddress.City == s.PrimaryAddress.City &&
+                    s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
+                    s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
+                    s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 ;
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
