@@ -217,6 +217,14 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task Update_EvacuationFileTask_ThrowsError()
+        {
+            var fileWithTask = (await GetEvacuationFileById("101010")).ShouldHaveSingleItem();
+            fileWithTask.RelatedTask.Id = fileWithTask.RelatedTask.Id == "0001" ? "0002" : "0001";
+            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask })).Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
