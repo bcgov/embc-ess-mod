@@ -39,37 +39,6 @@ table {
   display: none;
 }
 
-@media(max-width: 600px) {
-  .mobile-label {
-    width: 80px;
-    display: inline-block;
-    font-weight: bold;
-  }
-
-  // Remove the header row altogether
-  .mat-header-row {
-    display: none;
-  }
-
-  // The row cells should display as a column, justified left, with a bit of extra padding
-  .mat-row {
-    flex-direction: column;
-    align-items: start;
-    padding: 8px 24px;
-    min-height: unset; // Tweak for Angular Material 8
-  }
-
-  // Tweaks for Angular Material 8
-  .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
-    padding-left: unset;
-  }
-
-  .mat-cell {
-    align-items: unset;
-    min-height: unset;
-  }
-}
-
 .edit-image img:last-child {
   display: none;
 }
@@ -132,4 +101,47 @@ table {
 
 .primary-paragraph {
   margin-top: 10px;
+}
+
+@media(max-width: 800px) {
+  .mobile-label {
+    width: 80px;
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  // Remove the header row altogether
+  .mat-header-row {
+    display: none;
+  }
+
+  // The row cells should display as a column, justified left, with a bit of extra padding
+  .mat-row {
+    flex-direction: column;
+    align-items: start;
+    padding: 8px 24px;
+    min-height: unset; // Tweak for Angular Material 8
+  }
+
+  // Tweaks for Angular Material 8
+  .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+    padding-left: unset;
+  }
+
+  .mat-cell {
+    align-items: unset;
+    min-height: unset;
+  }
+
+  .image-col {
+    display: contents;
+  }
+
+  .img-align {
+    margin: 10px 10px;
+  }
+
+  .form-btns {
+    width: 100%;
+  }
 }

@@ -72,15 +72,14 @@ button.save {
   display: none;
 }
 
-@media(max-width: 600px) {
+@media(max-width: 770px) {
   .mobile-label {
-    width: 80px;
     display: inline-block;
     font-weight: bold;
   }
 
   // Remove the header row altogether
-  .mat-header-row {
+  mat-header-row {
     display: none;
   }
 
@@ -88,7 +87,7 @@ button.save {
   .mat-row {
     flex-direction: column;
     align-items: start;
-    padding: 8px 24px;
+    padding: 8px 14px;
     min-height: unset; // Tweak for Angular Material 8
   }
 

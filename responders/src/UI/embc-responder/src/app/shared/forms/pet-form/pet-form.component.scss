@@ -7,3 +7,7 @@ mat-form-field {
   color: #234075;
   line-height: 21px;
 }
+
+@media(max-width: 800px) { 
+  .pet-form {flex-direction: column;}
+}
