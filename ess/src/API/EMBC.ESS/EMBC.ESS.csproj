@@ -28,6 +28,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="Managers\Submissions\Notifications\Templates\InviteTemplate.hbs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
@@ -70,6 +74,9 @@
     <ItemGroup>
         <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\AnonymousNewTemplate.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\InviteTemplate.hbs">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\NewTemplate.hbs">
           <CopyToOutputDirectory>Never</CopyToOutputDirectory>

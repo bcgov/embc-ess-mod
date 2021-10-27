@@ -158,6 +158,7 @@ namespace EMBC.ESS.Resources.Contacts
     {
         public string InviteId { get; set; }
         public string ContactId { get; set; }
+        public DateTime ExpiryDate { get; set; }
     }
 
     public enum ContactInviteStatus

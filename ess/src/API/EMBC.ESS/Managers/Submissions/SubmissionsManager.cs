@@ -163,7 +163,7 @@ namespace EMBC.ESS.Managers.Submissions
                 if (contact.Email != null)
                 {
                     await SendEmailNotification(
-                        SubmissionTemplateType.newProfileRegistration,
+                        SubmissionTemplateType.NewProfileRegistration,
                         email: contact.Email,
                         name: $"{contact.LastName}, {contact.FirstName}",
                         tokens: Array.Empty<KeyValuePair<string, string>>());
@@ -549,13 +549,17 @@ namespace EMBC.ESS.Managers.Submissions
                 RequestingUserId = cmd.RequestingUserId
             })).InviteId;
 
-            await notificationSender.Send(new EmailNotification
-            {
-                //TODO: set the correct content and subject
-                Content = $"ERA invite {inviteId} to {contact.FirstName} {contact.LastName} ({contact.Id})",
-                Subject = $"ERA invite {inviteId}",
-                To = new[] { new EmailAddress { Address = cmd.Email, Name = $"{contact.FirstName} {contact.LastName}" } }
-            });
+            var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = inviteId })).Items.Single();
+
+            await SendEmailNotification(
+                SubmissionTemplateType.InviteProfile,
+                email: cmd.Email,
+                name: $"{contact.LastName}, {contact.FirstName}",
+                tokens: new[]
+                {
+                    KeyValuePair.Create("inviteExpiryDate", invite.ExpiryDate.ToShortDateString()),
+                    KeyValuePair.Create("inviteUrl", $"https://test-era-registrants.apps.silver.devops.gov.bc.ca/join?token={inviteId}")
+                });
 
             return inviteId;
         }
