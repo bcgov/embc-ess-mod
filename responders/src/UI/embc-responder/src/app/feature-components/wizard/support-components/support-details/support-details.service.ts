@@ -169,7 +169,7 @@ export class SupportDetailsService {
       ],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)
-          ?.totalAmount ?? '',
+          ?.userTotalAmount ?? '',
         [Validators.required, Validators.pattern(globalConst.currencyPattern)]
       ]
     });
@@ -189,7 +189,7 @@ export class SupportDetailsService {
       ],
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Clothing)
-          ?.totalAmount ?? '',
+          ?.userTotalAmount ?? '',
         [Validators.required, Validators.pattern(globalConst.currencyPattern)]
       ]
     });

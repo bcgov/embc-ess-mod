@@ -3,10 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild
+  QueryList,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSelectChange } from '@angular/material/select';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -26,6 +28,7 @@ import {
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { EssFileSupportsService } from './ess-file-supports.service';
 
 @Component({
@@ -35,6 +38,7 @@ import { EssFileSupportsService } from './ess-file-supports.service';
 })
 export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChildren('matRef') matRef: QueryList<MatSelect>;
   supportList: Support[];
   supports = new MatTableDataSource([]);
   supports$: Observable<Support[]>;
@@ -44,7 +48,8 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private cd: ChangeDetectorRef,
-    private essFileSupportsService: EssFileSupportsService
+    private essFileSupportsService: EssFileSupportsService,
+    private essfileDashboardService: EssfileDashboardService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -73,12 +78,22 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   }
 
   selected(event: MatSelectChange, filterType: string): void {
+    this.resetFilter(filterType);
     const selectedValue =
       event.value === undefined || event.value === ''
         ? ''
         : event.value.description;
     const filterTerm = { type: filterType, value: selectedValue };
     this.filter(filterTerm);
+  }
+
+  resetFilter(filterType: string) {
+    const selectRef = this.matRef.filter((select) => {
+      return select.id !== filterType;
+    });
+    selectRef.forEach((select: MatSelect) => {
+      select.value = '';
+    });
   }
 
   /**
@@ -158,10 +173,6 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     return selectedSupport as Referral;
   }
 
-  // getSupplierAddress(selectedSupport: Support): AddressModel {
-  //   return referral?.supplierAddress as AddressModel;
-  // }
-
   mapMemberName(memberId: string): string {
     const memberObject = this.essFile?.householdMembers.find((value) => {
       if (value?.id === memberId) {
@@ -169,5 +180,19 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
       }
     });
     return memberObject?.lastName + ',' + memberObject?.firstName;
+  }
+
+  generateSupportType(element: Support): string {
+    if (element?.subCategory === 'None') {
+      const category = this.essfileDashboardService.supportCategory.find(
+        (value) => value.value === element?.category
+      );
+      return category?.description;
+    } else {
+      const subCategory = this.essfileDashboardService.supportSubCategory.find(
+        (value) => value.value === element?.subCategory
+      );
+      return subCategory?.description;
+    }
   }
 }

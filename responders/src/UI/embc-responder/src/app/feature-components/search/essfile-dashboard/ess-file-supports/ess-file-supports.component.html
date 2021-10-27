@@ -20,7 +20,7 @@
             <mat-label>{{ filter?.label.description }}</mat-label>
             <mat-select
               #matRef
-              id="custom-select"
+              id="{{ filter?.type }}"
               (selectionChange)="selected($event, filter?.type)"
             >
               <mat-option value="">{{ filter?.label.description }}</mat-option>
@@ -53,16 +53,6 @@
                 {{ support?.status }}
               </p>
             </div>
-            <!-- <div class="col">
-              <p class="bold supplier-align">
-                {{ getReferral(support)?.supplierName }}
-              </p>
-            </div>
-            <div class="col">
-              <p class="bold supplier-align">
-                {{ getReferral(support)?.supplierName }}
-              </p>
-            </div> -->
             <div class="col">
               <p
                 *ngIf="
@@ -97,11 +87,7 @@
                 </div>
                 <div class="col-md-6">
                   <p class="bold">
-                    {{
-                      support?.subCategory
-                        ? support?.subCategory
-                        : support?.category
-                    }}
+                    {{ generateSupportType(support) }}
                   </p>
                 </div>
               </div>

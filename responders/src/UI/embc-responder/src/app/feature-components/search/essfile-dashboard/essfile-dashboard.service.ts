@@ -15,7 +15,8 @@ import * as globalConst from '../../../core/services/global-constants';
 })
 export class EssfileDashboardService {
   private essFileVal: EvacuationFileModel;
-  private supportCategoryVal: Code[];
+  private supportCategoryVal: Code[] = [];
+  private supportSubCategoryVal: Code[] = [];
 
   constructor(
     private cacheService: CacheService,
@@ -36,11 +37,29 @@ export class EssfileDashboardService {
   }
 
   get supportCategory(): Code[] {
-    return this.supportCategoryVal;
+    return this.supportCategoryVal.length > 0
+      ? this.supportCategoryVal
+      : JSON.parse(this.cacheService.get('supportCategory'))
+      ? JSON.parse(this.cacheService.get('supportCategory'))
+      : this.getCategoryList();
   }
 
   set supportCategory(supportCategoryVal: Code[]) {
     this.supportCategoryVal = supportCategoryVal;
+    this.cacheService.set('supportCategory', supportCategoryVal);
+  }
+
+  set supportSubCategory(supportSubCategoryVal: Code[]) {
+    this.supportSubCategoryVal = supportSubCategoryVal;
+    this.cacheService.set('supportSubCategory', supportSubCategoryVal);
+  }
+
+  get supportSubCategory() {
+    return this.supportSubCategoryVal.length > 0
+      ? this.supportSubCategoryVal
+      : JSON.parse(this.cacheService.get('supportSubCategory'))
+      ? JSON.parse(this.cacheService.get('supportSubCategory'))
+      : this.getSubCategoryList();
   }
 
   getPossibleProfileMatches(
@@ -62,6 +81,25 @@ export class EssfileDashboardService {
         (categories: Code[]) => {
           this.supportCategory = categories.filter(
             (category) => category.description !== null
+          );
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      );
+  }
+
+  public getSubCategoryList(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
+      .subscribe(
+        (subCategories: Code[]) => {
+          this.supportSubCategory = subCategories.filter(
+            (subCategory) => subCategory.description !== null
           );
         },
         (error) => {

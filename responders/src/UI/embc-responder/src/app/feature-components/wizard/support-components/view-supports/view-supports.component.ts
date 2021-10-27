@@ -88,15 +88,6 @@ export class ViewSupportsComponent implements OnInit {
               supportModel.push(value);
             }
           });
-
-          this.stepSupportsService.getCategoryList();
-          this.stepSupportsService.getSubCategoryList();
-
-          // this.stepSupportsService.setExistingSupportList(
-          //   supportModel.sort(
-          //     (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
-          //   )
-          // );
           this.stepSupportsService.evacFile = file;
           this.supportList = supportModel.sort(
             (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()

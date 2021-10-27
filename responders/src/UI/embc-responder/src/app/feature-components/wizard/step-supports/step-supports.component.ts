@@ -30,6 +30,8 @@ export class StepSupportsComponent implements OnInit {
         this.stepId = state.step;
         this.stepName = state.title;
       }
+      this.stepSupportsService.getCategoryList();
+      this.stepSupportsService.getSubCategoryList();
     }
   }
 
