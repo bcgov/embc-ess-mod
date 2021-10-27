@@ -117,6 +117,7 @@ namespace EMBC.ESS.Resources.Contacts
             CreateMap<era_evacueeemailinvite, ContactInvite>()
                 .ForMember(d => d.InviteId, opts => opts.MapFrom(s => s.era_evacueeemailinviteid.ToString()))
                 .ForMember(d => d.ContactId, opts => opts.MapFrom(s => s._era_registrant_value.ToString()))
+                .ForMember(d => d.ExpiryDate, opts => opts.MapFrom(s => s.era_expirydate.Value.UtcDateTime))
                 ;
         }
     }

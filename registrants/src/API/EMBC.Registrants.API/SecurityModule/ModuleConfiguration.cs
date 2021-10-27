@@ -65,7 +65,7 @@ namespace EMBC.Registrants.API.SecurityModule
                         RequireExpirationTime = true,
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.FromSeconds(60),
-                        NameClaimType = ClaimTypes.NameIdentifier,
+                        NameClaimType = TokenClaimTypes.Id,
                         RoleClaimType = ClaimTypes.Role,
                         ValidateActor = true,
                         ValidateIssuerSigningKey = true,
@@ -88,7 +88,7 @@ namespace EMBC.Registrants.API.SecurityModule
                         {
                             await Task.CompletedTask;
                             var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                            logger.LogDebug("Token validated {0}", c.Principal.Identity.Name);
+                            logger.LogDebug("JWT validated {0}", c.Principal.Identity.Name);
                         }
                     };
                     configuration.Bind("auth:jwt", options);

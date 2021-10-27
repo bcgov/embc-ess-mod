@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using EMBC.ESS.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +28,7 @@ namespace EMBC.ESS.Managers.Submissions
             services.AddTransient<SubmissionsManager>();
             services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(SubmissionsManager)));
             services.AddTransient<EmailTemplateProvider>();
+            services.AddTransient<IPrintReferralService, PrintReferralService>();
             services.AddTransient<ITemplateProviderResolver>(sp =>
            {
                Func<NotificationChannelType, ITemplateProvider> resolverFunc = (type) => type switch

@@ -31,6 +31,7 @@
 		reverse_proxy /signin-oidc* {$API_URL}
 		reverse_proxy /login* {$API_URL}
 		reverse_proxy /token* {$API_URL}
+		reverse_proxy /join* {$API_URL}
 		try_files {path} {path}/ /index.html?{query}
 	}
 	

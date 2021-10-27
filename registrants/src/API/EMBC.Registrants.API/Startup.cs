@@ -21,6 +21,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.SecurityModule;
+using EMBC.Registrants.API.services;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Builder;
@@ -131,6 +132,7 @@ namespace EMBC.Registrants.API
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
+            services.AddTransient<IProfileInviteService, ProfileInviteService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

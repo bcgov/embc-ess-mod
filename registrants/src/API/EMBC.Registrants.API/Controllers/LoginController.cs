@@ -64,7 +64,7 @@ namespace EMBC.Registrants.API.Controllers
                 //support for user impersonation for automated testing and better development experience
                 var identity = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, loginAs),
+                    new Claim(TokenClaimTypes.Id, loginAs),
                     new Claim(TokenClaimTypes.UserData, JsonSerializer.Serialize(Mappings.GetDummyProfile(loginAs)))
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
@@ -118,6 +118,19 @@ namespace EMBC.Registrants.API.Controllers
 
             var token = tokenManager.Create(User);
             return Ok(token);
+        }
+
+        [HttpGet("join")]
+        public async Task<IActionResult> ProcessInvite([FromQuery] string token)
+        {
+            await Task.CompletedTask;
+
+            var inviteId = token;
+            return new ChallengeResult(BcscAuthenticationDefaults.AuthenticationScheme, new AuthenticationProperties
+            {
+                RedirectUri = "/verified-registration",
+                Items = { { "inviteId", inviteId } },
+            });
         }
     }
 }

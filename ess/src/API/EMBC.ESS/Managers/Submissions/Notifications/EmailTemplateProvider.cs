@@ -34,7 +34,8 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 SubmissionTemplateType.NewAnonymousEvacuationFileSubmission => GetAnonymousnewTemplate(),
                 SubmissionTemplateType.NewEvacuationFileSubmission => GetNewTemplate(),
-                SubmissionTemplateType.newProfileRegistration => GetRegisterNewTemplate(),
+                SubmissionTemplateType.NewProfileRegistration => GetRegisterNewTemplate(),
+                SubmissionTemplateType.InviteProfile => GetInviteTemplate(),
                 _ => throw new NotImplementedException($"No template found for {template}")
             });
 
@@ -57,6 +58,15 @@ namespace EMBC.ESS.Managers.Submissions
             string emailSubject = "Registration completed successfully";
             string emailBody = LoadTemplate("AnonymousNewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
+        }
+
+        private EmailTemplate GetInviteTemplate()
+        {
+            return new EmailTemplate
+            {
+                Subject = "Connect your Evacuee Registration & Assistance (ERA) Profile with BC Services Card",
+                Content = LoadTemplate("InviteTemplate")
+            };
         }
 
         private static string LoadTemplate(string name)

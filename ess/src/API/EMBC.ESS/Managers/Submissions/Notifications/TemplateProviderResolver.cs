@@ -47,7 +47,8 @@ namespace EMBC.ESS.Managers.Submissions
     {
         NewEvacuationFileSubmission,
         NewAnonymousEvacuationFileSubmission,
-        newProfileRegistration
+        NewProfileRegistration,
+        InviteProfile
     }
 
     public abstract class Template { }

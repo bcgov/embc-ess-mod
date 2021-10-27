@@ -62,7 +62,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<Profile>> GetProfile()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(TokenClaimTypes.Id);
             var profile = mapper.Map<Profile>(await evacuationSearchService.GetRegistrantByUserId(userId));
             if (profile == null)
             {
@@ -99,7 +99,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
-            profile.Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            profile.Id = User.FindFirstValue(TokenClaimTypes.Id);
             var mappedProfile = mapper.Map<RegistrantProfile>(profile);
             //BCSC profiles are authenticated and verified
             mappedProfile.AuthenticatedUser = true;
@@ -118,7 +118,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(TokenClaimTypes.Id);
 
             var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
             if (profile == null) return NotFound(userId);

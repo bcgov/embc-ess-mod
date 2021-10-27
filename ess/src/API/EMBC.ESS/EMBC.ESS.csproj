@@ -28,6 +28,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Remove="Managers\Submissions\Notifications\Templates\InviteTemplate.hbs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
@@ -71,136 +75,139 @@
         <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\AnonymousNewTemplate.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\InviteTemplate.hbs">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\NewTemplate.hbs">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Billeting\BilletingItemsSummaryPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Billeting\BilletingItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Billeting\BilletingItemsSummaryPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Billeting\BilletingChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Billeting\BilletingItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Billeting\BilletingNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Billeting\BilletingChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Billeting\BilletingSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Billeting\BilletingNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Clothing\ClothingChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Billeting\BilletingSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Clothing\ClothingItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Clothing\ClothingChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Clothing\ClothingSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Clothing\ClothingItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Clothing\ClothingNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Clothing\ClothingSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Css.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Clothing\ClothingNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Groceries\GroceriesChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Css.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Groceries\GroceriesItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Groceries\GroceriesChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Groceries\GroceriesSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Groceries\GroceriesItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Groceries\GroceriesNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Groceries\GroceriesSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\GroupLodging\GroupLodgingChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Groceries\GroceriesNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\GroupLodging\GroupLodgingItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\GroupLodging\GroupLodgingChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\GroupLodging\GroupLodgingSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\GroupLodging\GroupLodgingItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\GroupLodging\GroupLodgingNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\GroupLodging\GroupLodgingSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Hotel\HotelChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\GroupLodging\GroupLodgingNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Hotel\HotelItemsSummaryPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Hotel\HotelChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Hotel\HotelItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Hotel\HotelItemsSummaryPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Hotel\HotelSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Hotel\HotelItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Hotel\HotelNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Hotel\HotelSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Incidentals\IncidentalsChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Hotel\HotelNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Incidentals\IncidentalsItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Incidentals\IncidentalsChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Incidentals\IncidentalsSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Incidentals\IncidentalsItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Incidentals\IncidentalsNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Incidentals\IncidentalsSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\MasterLayout.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Incidentals\IncidentalsNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Referral.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\MasterLayout.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Meals\MealsChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Referral.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Meals\MealsSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Meals\MealsChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Meals\MealsItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Meals\MealsSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Meals\MealsNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Meals\MealsItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\SummaryItem.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Meals\MealsNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Summary.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\SummaryItem.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Taxi\TaxiNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Summary.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Taxi\TaxiChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Taxi\TaxiNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Taxi\TaxiSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Taxi\TaxiChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Taxi\TaxiItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Taxi\TaxiSupplierPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Transportation\TransportationNotesPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Taxi\TaxiItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Transportation\TransportationChecklistPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Transportation\TransportationNotesPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Transportation\TransportationSupplierPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Transportation\TransportationChecklistPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Resources\Print\Supports\Views\Transportation\TransportationItemsPartial.hbs">
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Transportation\TransportationSupplierPartial.hbs">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Transportation\TransportationItemsPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>

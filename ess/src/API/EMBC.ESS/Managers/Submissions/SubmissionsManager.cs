@@ -21,10 +21,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
+using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Print;
-using EMBC.ESS.Resources.Print.Supports;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
@@ -49,7 +49,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
-        private readonly ISupportsService supportsService;
+        private readonly IPrintReferralService supportsService;
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly EvacuationFileLoader evacuationFileLoader;
@@ -66,7 +66,7 @@ namespace EMBC.ESS.Managers.Submissions
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
             ISearchEngine searchEngine,
-            ISupportsService supportsService,
+            IPrintReferralService supportsService,
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator)
         {
@@ -163,7 +163,7 @@ namespace EMBC.ESS.Managers.Submissions
                 if (contact.Email != null)
                 {
                     await SendEmailNotification(
-                        SubmissionTemplateType.newProfileRegistration,
+                        SubmissionTemplateType.NewProfileRegistration,
                         email: contact.Email,
                         name: $"{contact.LastName}, {contact.FirstName}",
                         tokens: Array.Empty<KeyValuePair<string, string>>());
@@ -549,13 +549,17 @@ namespace EMBC.ESS.Managers.Submissions
                 RequestingUserId = cmd.RequestingUserId
             })).InviteId;
 
-            await notificationSender.Send(new EmailNotification
-            {
-                //TODO: set the correct content and subject
-                Content = $"ERA invite {inviteId} to {contact.FirstName} {contact.LastName} ({contact.Id})",
-                Subject = $"ERA invite {inviteId}",
-                To = new[] { new EmailAddress { Address = cmd.Email, Name = $"{contact.FirstName} {contact.LastName}" } }
-            });
+            var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = inviteId })).Items.Single();
+
+            await SendEmailNotification(
+                SubmissionTemplateType.InviteProfile,
+                email: cmd.Email,
+                name: $"{contact.LastName}, {contact.FirstName}",
+                tokens: new[]
+                {
+                    KeyValuePair.Create("inviteExpiryDate", invite.ExpiryDate.ToShortDateString()),
+                    KeyValuePair.Create("inviteId", inviteId)
+                });
 
             return inviteId;
         }
