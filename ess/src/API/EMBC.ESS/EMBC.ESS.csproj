@@ -29,6 +29,7 @@
 
     <ItemGroup>
         <None Remove="Managers\Submissions\Notifications\Templates\InviteTemplate.hbs" />
+        <None Remove="Managers\Submissions\Notifications\Templates\RegisterNewTemplate.hbs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -81,6 +82,9 @@
         </EmbeddedResource>
         <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\NewTemplate.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Managers\Submissions\Notifications\Templates\RegisterNewTemplate.hbs">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="Managers\Submissions\PrintReferrals\Views\Billeting\BilletingItemsSummaryPartial.hbs">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
