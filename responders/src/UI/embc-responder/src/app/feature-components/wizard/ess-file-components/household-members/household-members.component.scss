@@ -37,7 +37,6 @@
 
 .family-button {
   float: left;
-  width: 30%;
   border: 2px solid rgba(35, 64, 117, 1) !important;
   color: rgba(35, 64, 117, 1);
   background-color: #ffffff !important;
@@ -48,6 +47,11 @@
 .family-button:hover {
   color: white;
   background-color: rgba(35, 64, 117, 1) !important;
+}
+
+.save-button {
+  @extend .family-button;
+  width: 30%;
 }
 
 .add-members {
@@ -231,7 +235,7 @@ mat-row:nth-child(even) {
 }
 
 @media (max-width: 800px) {
-  .family-button {
+  .save-button {
     width: 100% !important;
   }
 }

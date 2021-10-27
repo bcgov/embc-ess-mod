@@ -322,7 +322,11 @@ export class ReferralCreationService {
     }
   }
 
-  parseTextNumber(numberInput: any): number {
-    return parseFloat(numberInput.replace(',', ''));
+  parseTextNumber(numberInput: string | number): number {
+    if (typeof numberInput === 'number') {
+      return numberInput;
+    } else {
+      return parseFloat(numberInput.replace(',', ''));
+    }
   }
 }
