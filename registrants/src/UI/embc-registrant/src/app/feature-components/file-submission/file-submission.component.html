@@ -110,9 +110,14 @@
                 class="button-p edit-button"
                 mat-stroked-button
                 type="button"
-                (click)="verifyUser()"
+                (click)="sendEmail()"
               >
                 Send Email Invitation
+                <app-loader
+                  [strokeWidth]="3"
+                  [diameter]="25"
+                  [showLoader]="showLoader"
+                ></app-loader>
               </button>
             </div>
           </div>

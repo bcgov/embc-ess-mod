@@ -29,7 +29,15 @@
   margin: 15px 0;
 }
 
+.cancel-button {
+  float: right;
+  width: 30%;
+}
+
+
 .family-button {
+  float: left;
+  width: 30%;
   border: 2px solid rgba(35, 64, 117, 1) !important;
   color: rgba(35, 64, 117, 1);
   background-color: #ffffff !important;
@@ -40,10 +48,6 @@
 .family-button:hover {
   color: white;
   background-color: rgba(35, 64, 117, 1) !important;
-}
-
-.details-button {
-  width: 100%;
 }
 
 .add-members {
@@ -223,5 +227,11 @@ mat-row:nth-child(even) {
 @media (max-width: 1200px) {
   .cell-button {
     display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .family-button {
+    width: 100% !important;
   }
 }

@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { InviteRequest } from '../models/invite-request';
 import { Profile } from '../models/profile';
 import { ProfileDataConflict } from '../models/profile-data-conflict';
 
@@ -235,6 +236,52 @@ export class ProfileService extends BaseService {
 
     return this.profileGetProfileConflicts$Response(params).pipe(
       map((r: StrictHttpResponse<Array<ProfileDataConflict>>) => r.body as Array<ProfileDataConflict>)
+    );
+  }
+
+  /**
+   * Path part for operation profileInvite
+   */
+  static readonly ProfileInvitePath = '/api/profiles/invite-anonymous';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `profileInvite()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  profileInvite$Response(params: {
+    body: InviteRequest
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileInvitePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `profileInvite$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  profileInvite(params: {
+    body: InviteRequest
+  }): Observable<void> {
+
+    return this.profileInvite$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 

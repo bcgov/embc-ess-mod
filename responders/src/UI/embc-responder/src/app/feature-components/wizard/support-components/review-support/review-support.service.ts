@@ -39,6 +39,7 @@ export class ReviewSupportService {
     return this.registrationService
       .registrationsProcessSupports({
         fileId,
+        includeSummaryInPrintRequest: this.includeEvacueeSummary,
         body: supportsDraft
       })
       .pipe(

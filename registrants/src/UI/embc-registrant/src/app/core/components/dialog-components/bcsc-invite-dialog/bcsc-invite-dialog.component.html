@@ -1,0 +1,137 @@
+<div class="row row-padding">
+  <div class="col-md-12 heading">Send BC Services Card Invitation</div>
+</div>
+
+<div
+  *ngIf="
+    initDialog !== null &&
+      initDialog !== '' &&
+      initDialog !== undefined &&
+      hideForm;
+    else noEmail
+  "
+>
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <p>Send initation to evacuee submitted email address:</p>
+      <p class="email-id bold">{{ initDialog }}</p>
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <p>
+        <a class="email-link" (click)="openForm()"
+          >Send to a different email address</a
+        >
+      </p>
+    </div>
+  </div>
+</div>
+
+<ng-template #noEmail>
+  <ng-container *ngTemplateOutlet="emailForm"></ng-container>
+</ng-template>
+
+<div class="row row-padding">
+  <div *ngIf="showError" class="col-md-12 field-error">
+    <span>
+      Please provide the email address and confirm email address before
+      attempting to send the email</span
+    >
+  </div>
+</div>
+<div class="row row-padding">
+  <div class="col-md-6">
+    <button class="button-s button-width" mat-button (click)="close()">
+      Cancel
+    </button>
+  </div>
+  <div class="col-md-6">
+    <button class="button-p button-width" mat-button (click)="send()">
+      Send
+    </button>
+  </div>
+</div>
+
+<ng-template #emailForm>
+  <form [formGroup]="emailFormGroup">
+    <div class="row">
+      <div class="col-md-12">
+        <p>Please provide an <strong>email address</strong></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label class="requiredField">Email Address</mat-label>
+          <input
+            formControlName="email"
+            matInput
+            placeholder="joe@myemail.com"
+          />
+          <mat-error
+            *ngIf="
+              emailFormControl?.email.invalid &&
+              emailFormControl?.email.hasError('whitespaceError')
+            "
+          >
+            Email is required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              emailFormControl.email.invalid &&
+              emailFormControl.email.hasError('email')
+            "
+            >Invalid email</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngIf="showConfirm">
+      <div class="row">
+        <div class="col-md-12">
+          <p><strong>Confirm email</strong> address</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline">
+            <mat-label class="requiredField">Confirm Email Address</mat-label>
+            <input
+              formControlName="confirmEmail"
+              matInput
+              placeholder="joe@myemail.com"
+              [errorStateMatcher]="emailMatcher"
+            />
+            <mat-error
+              *ngIf="
+                emailFormControl?.confirmEmail.invalid &&
+                emailFormControl?.confirmEmail.hasError('whitespaceError')
+              "
+            >
+              Confirm email is required</mat-error
+            >
+            <mat-error
+              *ngIf="
+                emailFormControl?.confirmEmail.invalid &&
+                emailFormControl?.confirmEmail.hasError('email')
+              "
+              >Invalid email</mat-error
+            >
+            <mat-error
+              *ngIf="
+                emailFormControl?.confirmEmail?.parent?.hasError('emailMatch')
+              "
+            >
+              Email address mismatch</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>

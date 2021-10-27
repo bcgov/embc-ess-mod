@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CaptchaComponent } from './components/captcha/captcha.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { AlertComponent } from './components/alert/alert.component';
@@ -13,6 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { EssFileDialogComponent } from './components/dialog-components/ess-file-dialog/ess-file-dialog.component';
 import { InformationDialogComponent } from './components/dialog-components/information-dialog/information-dialog.component';
+import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   imports: [
@@ -21,7 +24,10 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     MatProgressSpinnerModule,
     MatDialogModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule
   ],
   declarations: [
     CaptchaComponent,
@@ -31,7 +37,8 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     FooterComponent,
     DialogComponent,
     EssFileDialogComponent,
-    InformationDialogComponent
+    InformationDialogComponent,
+    BcscInviteDialogComponent
   ],
   exports: [
     CaptchaComponent,
