@@ -31,6 +31,7 @@ import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { DatePipe } from '@angular/common';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { EssfileDashboardService } from '../../search/essfile-dashboard/essfile-dashboard.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -60,7 +61,8 @@ export class StepSupportsService {
     private dialog: MatDialog,
     private referralService: ReferralCreationService,
     private alertService: AlertService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private essfileDashboardService: EssfileDashboardService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -147,41 +149,45 @@ export class StepSupportsService {
   }
 
   public getCategoryList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportCategory' })
-      .subscribe(
-        (categories: Code[]) => {
-          this.supportCategory = categories.filter(
-            (category) => category.description !== null
-          );
-        },
-        (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      );
+    this.supportCategory = this.essfileDashboardService.supportCategory;
+    console.log(this.supportCategory);
+    // this.configService
+    //   .configurationGetCodes({ forEnumType: 'SupportCategory' })
+    //   .subscribe(
+    //     (categories: Code[]) => {
+    //       this.supportCategory = categories.filter(
+    //         (category) => category.description !== null
+    //       );
+    //     },
+    //     (error) => {
+    //       this.alertService.clearAlert();
+    //       this.alertService.setAlert(
+    //         'danger',
+    //         globalConst.supportCategoryListError
+    //       );
+    //     }
+    //   );
   }
 
   public getSubCategoryList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
-      .subscribe(
-        (subCategories: Code[]) => {
-          this.supportSubCategory = subCategories.filter(
-            (subCategory) => subCategory.description !== null
-          );
-        },
-        (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      );
+    this.supportSubCategory = this.essfileDashboardService.supportSubCategory;
+    console.log(this.supportCategory);
+    // this.configService
+    //   .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
+    //   .subscribe(
+    //     (subCategories: Code[]) => {
+    //       this.supportSubCategory = subCategories.filter(
+    //         (subCategory) => subCategory.description !== null
+    //       );
+    //     },
+    //     (error) => {
+    //       this.alertService.clearAlert();
+    //       this.alertService.setAlert(
+    //         'danger',
+    //         globalConst.supportCategoryListError
+    //       );
+    //     }
+    //   );
   }
 
   public getSupportTypeList(): Code[] {
