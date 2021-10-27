@@ -28,6 +28,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
+using Serilog.Formatting.Elasticsearch;
 
 namespace EMBC.ESS
 {
@@ -79,13 +80,13 @@ namespace EMBC.ESS
                         var splunkToken = hostingContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
                         if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
                         {
-                            loggerConfiguration.WriteTo.Console(formatter: new RenderedCompactJsonFormatter());
+                            loggerConfiguration.WriteTo.Console(formatter: new ElasticsearchJsonFormatter());
                             Log.Warning($"Splunk logging sink is not configured properly, check SPLUNK_TOKEN and SPLUNK_URL env vars");
                         }
                         else
                         {
                             loggerConfiguration
-                                .WriteTo.Console(formatter: new RenderedCompactJsonFormatter())
+                                .WriteTo.Console(formatter: new ElasticsearchJsonFormatter())
                                 .WriteTo.EventCollector(
                                     splunkHost: splunkUrl,
                                     eventCollectorToken: splunkToken,

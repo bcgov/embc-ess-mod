@@ -42,6 +42,7 @@
         <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
         <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
         <PackageReference Include="Serilog.Exceptions" Version="7.1.0" />
+        <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="8.4.1" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
         <PackageReference Include="Serilog.Sinks.Splunk" Version="3.6.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
