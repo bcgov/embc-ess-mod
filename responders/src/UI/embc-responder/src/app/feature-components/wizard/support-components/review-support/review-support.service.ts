@@ -60,7 +60,7 @@ export class ReviewSupportService {
         (file) => {
           this.stepSupportsService.currentNeedsAssessment =
             file.needsAssessment;
-          console.log(file.supports);
+          // console.log(file.supports);
           const supportModel = [];
 
           file.supports.forEach((support) => {

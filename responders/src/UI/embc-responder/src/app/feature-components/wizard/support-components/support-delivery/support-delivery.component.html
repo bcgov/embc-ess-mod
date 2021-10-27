@@ -140,7 +140,17 @@
                 *ngFor="let option of filteredOptions | async"
                 [value]="option"
               >
-                {{ option.name }}
+                <div class="row">
+                  <div class="col-md-6">
+                    <b>{{ option?.name }}</b>
+                  </div>
+                  <div class="col-md-4">
+                    {{ option?.address?.addressLine1 }}
+                    <span *ngIf="option?.address?.addressLine2">
+                      , {{ option?.address?.addressLine2 }}
+                    </span>
+                  </div>
+                </div>
               </mat-option>
             </mat-autocomplete>
             <mat-error

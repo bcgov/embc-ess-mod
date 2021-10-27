@@ -52,8 +52,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.taskNumber = this.userService.currentProfile?.taskNumber;
     this.wizardType = this.evacueeSessionService.getWizardType();
+    this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
 
     // Get the displayed value for radio options
     this.insuranceDisplay = globalConst.insuranceOptions.find(
