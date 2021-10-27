@@ -24,6 +24,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -83,7 +84,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(TokenClaimTypes.Id);
             var files = await evacuationSearchService.GetFiles(userId,
                 new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired });
 
@@ -99,7 +100,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetPastEvacuations()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(TokenClaimTypes.Id);
             var files = await evacuationSearchService.GetFiles(userId,
                new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Archived, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed });
 
@@ -121,7 +122,7 @@ namespace EMBC.Registrants.API.Controllers
             if (evacuationFile == null)
                 return BadRequest();
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(TokenClaimTypes.Id);
             var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(evacuationFile);
             file.PrimaryRegistrantId = userId;
             var fileId = await messagingClient.Send(new SubmitEvacuationFileCommand { File = file });

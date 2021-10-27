@@ -18,6 +18,7 @@ using System;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
@@ -72,12 +73,20 @@ namespace EMBC.Registrants.API.SecurityModule
                      {
                          await Task.CompletedTask;
                          var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger(BcscAuthenticationDefaults.LoggerCategory);
+                         var loggedInUserId = c.SecurityToken.Subject;
                          logger.LogInformation("BCSC user {0} logged in", c.SecurityToken.Subject);
+                         if (c.Properties.Items.ContainsKey("inviteId"))
+                         {
+                             var profileInviteService = c.HttpContext.RequestServices.GetRequiredService<IProfileInviteService>();
+                             var inviteId = c.Properties.Items["inviteId"];
+                             logger.LogInformation("processing registrant invite {0}", inviteId);
+                             await profileInviteService.ProcessInvite(inviteId, loggedInUserId);
+                         }
                          c.Principal = new ClaimsPrincipal(new ClaimsIdentity(new[]
                              {
-                                 new Claim(ClaimTypes.NameIdentifier, c.SecurityToken.Subject)
+                                 new Claim(TokenClaimTypes.Id, loggedInUserId)
                              }, c.Principal.Identity.AuthenticationType,
-                             ClaimTypes.NameIdentifier,
+                             TokenClaimTypes.Id,
                              ClaimTypes.Role));
                      },
                      OnUserInformationReceived = async c =>

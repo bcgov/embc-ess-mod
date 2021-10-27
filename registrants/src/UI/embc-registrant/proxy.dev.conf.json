@@ -22,5 +22,10 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/join": {
+    "target": "http://localhost:5020",
+    "secure": false,
+    "logLevel": "debug"
   }
 }
