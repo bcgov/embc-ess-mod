@@ -1,3 +1,19 @@
 mat-form-field {
     width: 100%;
 }
+
+.check-box-col {
+    align-self: center;
+}
+
+@media(max-width: 800px) {
+    .last-name-col {
+        flex-direction: column;
+    }
+
+    .check-box-col {
+        max-width: 100% !important;
+        align-self: baseline;
+
+    }
+}

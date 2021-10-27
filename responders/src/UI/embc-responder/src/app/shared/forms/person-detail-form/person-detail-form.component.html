@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row last-name-col">
     <div class="col-md-6">
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">Last Name</mat-label>
@@ -40,7 +40,7 @@
         >
       </mat-form-field>
     </div>
-    <div class="col-md-4 align-self-center">
+    <div class="col-md-4 check-box-col">
       <mat-checkbox
         [formControlName]="'sameLastName'"
         (change)="sameLastNameEvent($event)"
