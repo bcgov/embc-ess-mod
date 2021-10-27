@@ -25,7 +25,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Debugging;
 using Serilog.Exceptions;
-using Serilog.Formatting.Compact;
+using Serilog.Formatting.Elasticsearch;
 
 namespace EMBC.Suppliers.API
 {
@@ -57,7 +57,7 @@ namespace EMBC.Suppliers.API
                      }
                      else
                      {
-                         loggerConfiguration.WriteTo.Console(formatter: new RenderedCompactJsonFormatter());
+                         loggerConfiguration.WriteTo.Console(formatter: new ElasticsearchJsonFormatter());
                          var splunkUrl = hostingContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
                          var splunkToken = hostingContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
                          if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
