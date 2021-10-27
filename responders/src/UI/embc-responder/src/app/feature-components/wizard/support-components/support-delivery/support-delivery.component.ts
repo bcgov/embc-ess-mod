@@ -99,9 +99,10 @@ export class SupportDeliveryComponent implements OnInit {
   }
 
   populateExistingIssuedTo() {
+    const allMembers: EvacuationFileHouseholdMember[] = this.stepSupportsService
+      ?.evacFile?.needsAssessment?.householdMembers;
+
     if (this.editFlag) {
-      const allMembers: EvacuationFileHouseholdMember[] = this
-        .stepSupportsService?.evacFile?.needsAssessment?.householdMembers;
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
         const valueToSet = allMembers.find(
           (mem) =>
@@ -111,6 +112,19 @@ export class SupportDeliveryComponent implements OnInit {
       } else {
         this.supportDeliveryForm.get('issuedTo').setValue('Someone else');
         this.showTextField = true;
+      }
+    } else {
+      if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
+        const valueToSet = allMembers.find(
+          (mem) =>
+            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
+        );
+        if (valueToSet !== undefined) {
+          this.supportDeliveryForm.get('issuedTo').setValue(valueToSet);
+        } else {
+          this.supportDeliveryForm.get('issuedTo').setValue('Someone else');
+          this.showTextField = true;
+        }
       }
     }
   }
@@ -184,6 +198,7 @@ export class SupportDeliveryComponent implements OnInit {
   backToDetails() {
     if (!this.editFlag) {
       this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      console.log(this.stepSupportsService.supportDelivery);
       this.router.navigate(['/ess-wizard/add-supports/details']);
     } else {
       this.router.navigate(['/ess-wizard/add-supports/details'], {
@@ -200,6 +215,7 @@ export class SupportDeliveryComponent implements OnInit {
       this.supportDeliveryForm.markAllAsTouched();
     } else {
       this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      console.log(this.stepSupportsService.supportDelivery);
       this.stepSupportsService.saveAsDraft();
       const stateIndicator = { action: 'save' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {

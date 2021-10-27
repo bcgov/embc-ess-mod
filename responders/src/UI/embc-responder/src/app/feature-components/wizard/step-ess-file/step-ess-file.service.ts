@@ -36,6 +36,7 @@ export class StepEssFileService {
   // Important values not set on form
   // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
   private primaryAddressVal: AddressModel;
+  private taskNumberVal: string;
 
   // Evacuation Details tab
   private paperESSFileVal: string;
@@ -121,6 +122,14 @@ export class StepEssFileService {
   }
   public set primaryAddress(primaryAddressVal: AddressModel) {
     this.primaryAddressVal = primaryAddressVal;
+  }
+
+  public get taskNumber(): string {
+    return this.taskNumberVal;
+  }
+
+  public set taskNumber(taskNumberVal: string) {
+    this.taskNumberVal = taskNumberVal;
   }
 
   // Evacuation Details tab
@@ -556,21 +565,21 @@ export class StepEssFileService {
       canProvideIncidentals: needsIncidentalsDTO
     };
 
-    // console.log({
-    //   primaryRegistrantId: this.evacueeSession.profileId,
+    console.log({
+      primaryRegistrantId: this.evacueeSession.profileId,
 
-    //   evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-    //     this.evacAddress
-    //   ),
-    //   registrationLocation: this.facilityName,
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
+        this.evacAddress
+      ),
+      registrationLocation: this.facilityName,
 
-    //   needsAssessment: needsObject,
-    //   securityPhrase: this.securityPhrase,
-    //   securityPhraseEdited: this.editedSecurityPhrase,
-    //   task: {
-    //     taskNumber: this.userService.currentProfile?.taskNumber
-    //   }
-    // });
+      needsAssessment: needsObject,
+      securityPhrase: this.securityPhrase,
+      securityPhraseEdited: this.editedSecurityPhrase,
+      task: {
+        taskNumber: this.taskNumber
+      }
+    });
 
     // Map out into DTO object and return
     return {
@@ -585,7 +594,7 @@ export class StepEssFileService {
       securityPhrase: this.securityPhrase,
       securityPhraseEdited: this.editedSecurityPhrase,
       task: {
-        taskNumber: this.userService.currentProfile?.taskNumber
+        taskNumber: this.taskNumber
       }
     };
   }
@@ -662,6 +671,7 @@ export class StepEssFileService {
 
     // Wizard variables
     this.evacueeSession.essFileNumber = essFile.id;
+    this.taskNumber = essFile.task.taskNumber;
 
     // Evacuation Details tab
     this.evacAddress = essFile.evacuatedFromAddress;
@@ -936,5 +946,27 @@ export class StepEssFileService {
         }
       }
     });
+  }
+
+  /**
+   * Returns the correct task number based on the type of Wizard
+   */
+  public getTaskNumber(wizardType: string): string {
+    switch (wizardType) {
+      case 'new-registration':
+        return this.userService.currentProfile?.taskNumber;
+
+      case 'edit-registration':
+        return this.taskNumber;
+
+      case 'new-ess-file':
+        return this.userService.currentProfile?.taskNumber;
+
+      case 'review-file':
+        return this.taskNumber;
+
+      case 'complete-file':
+        return this.taskNumber;
+    }
   }
 }

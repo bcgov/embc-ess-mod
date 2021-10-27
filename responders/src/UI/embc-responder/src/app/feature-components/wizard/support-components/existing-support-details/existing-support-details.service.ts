@@ -142,7 +142,8 @@ export class ExistingSupportDetailsService {
 
     this.stepSupportsService.supportDelivery = {
       issuedTo: issuedToVal !== null ? issuedToVal : null,
-      name: issuedToVal === null ? referralDelivery.issuedToPersonName : '',
+      name:
+        issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
       supplier: supplierValue,
       supplierNote: referralDelivery.supplierNotes,
       details: this.createDeliveryDetails(selectedSupport)
