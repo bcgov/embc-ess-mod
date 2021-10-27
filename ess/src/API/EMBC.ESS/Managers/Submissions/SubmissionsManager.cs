@@ -558,7 +558,7 @@ namespace EMBC.ESS.Managers.Submissions
                 tokens: new[]
                 {
                     KeyValuePair.Create("inviteExpiryDate", invite.ExpiryDate.ToShortDateString()),
-                    KeyValuePair.Create("inviteUrl", $"https://test-era-registrants.apps.silver.devops.gov.bc.ca/join?token={inviteId}")
+                    KeyValuePair.Create("inviteId", inviteId)
                 });
 
             return inviteId;
