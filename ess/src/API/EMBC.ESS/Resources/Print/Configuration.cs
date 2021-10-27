@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.ESS.Resources.Print.Supports;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Resources.Print
@@ -24,7 +23,6 @@ namespace EMBC.ESS.Resources.Print
         public static IServiceCollection AddPrint(this IServiceCollection services)
         {
             services.AddTransient<IPrintRequestsRepository, PrintRequestsRepository>();
-            services.AddTransient<ISupportsService, SupportsService>();
 
             return services;
         }

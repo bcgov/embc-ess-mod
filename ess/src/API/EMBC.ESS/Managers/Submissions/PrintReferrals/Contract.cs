@@ -20,9 +20,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Print.Supports
+namespace EMBC.ESS.Managers.Submissions.PrintReferrals
 {
-    public interface ISupportsService
+    public interface IPrintReferralService
     {
         Task<string> GetReferralHtmlPagesAsync(SupportsToPrint printSupports);
     }
@@ -76,7 +76,7 @@ namespace EMBC.ESS.Resources.Print.Supports
                 var evacueesToPrint = new List<PrintableEvacueesRow>();
                 var evacuees = Evacuees.ToArray();
 
-                for (int i = 0; i <= 7; i++)
+                for (var i = 0; i <= 7; i++)
                 {
                     evacueesToPrint.Add(new PrintableEvacueesRow(evacuees.ElementAtOrDefault(i), evacuees.ElementAtOrDefault(i + 7)));
                 }

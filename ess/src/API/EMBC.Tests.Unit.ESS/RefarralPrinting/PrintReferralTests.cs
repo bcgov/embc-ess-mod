@@ -4,19 +4,19 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
-using EMBC.ESS.Resources.Print.Supports;
+using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using Shouldly;
 using Xunit;
 
 namespace EMBC.Tests.Unit.ESS.Prints
 {
-    public class PrintTests
+    public class PrintReferralTests
     {
-        private readonly SupportsService supportsService;
+        private readonly PrintReferralService supportsService;
 
-        public PrintTests()
+        public PrintReferralTests()
         {
-            supportsService = new SupportsService();
+            supportsService = new PrintReferralService();
         }
 
         [Fact]

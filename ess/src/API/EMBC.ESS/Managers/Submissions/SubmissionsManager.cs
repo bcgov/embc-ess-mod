@@ -21,10 +21,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
+using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Print;
-using EMBC.ESS.Resources.Print.Supports;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
@@ -49,7 +49,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
-        private readonly ISupportsService supportsService;
+        private readonly IPrintReferralService supportsService;
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly EvacuationFileLoader evacuationFileLoader;
@@ -66,7 +66,7 @@ namespace EMBC.ESS.Managers.Submissions
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
             ISearchEngine searchEngine,
-            ISupportsService supportsService,
+            IPrintReferralService supportsService,
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator)
         {

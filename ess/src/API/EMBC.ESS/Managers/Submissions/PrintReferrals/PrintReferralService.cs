@@ -23,9 +23,9 @@ using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Extensions;
 using HandlebarsDotNet;
 
-namespace EMBC.ESS.Resources.Print.Supports
+namespace EMBC.ESS.Managers.Submissions.PrintReferrals
 {
-    public class SupportsService : ISupportsService
+    public class PrintReferralService : IPrintReferralService
     {
         private readonly string pageBreak = $@"{Environment.NewLine}<div class=""page-break""></div>{Environment.NewLine}";
 
@@ -63,12 +63,12 @@ namespace EMBC.ESS.Resources.Print.Supports
             var handleBars = Handlebars.Create();
             handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
             {
-                string incoming = (string)arguments[0];
+                var incoming = (string)arguments[0];
                 output.WriteSafeString(incoming[0]);
             });
             handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
             {
-                DateTime.TryParse((string)arguments[0], out DateTime parsedDate);
+                DateTime.TryParse((string)arguments[0], out var parsedDate);
                 output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
             });
             handleBars.RegisterHelper("timeFormatter", (output, context, arguments) =>
@@ -78,7 +78,7 @@ namespace EMBC.ESS.Resources.Print.Supports
             });
             handleBars.RegisterHelper("upperCase", (output, context, arguments) =>
             {
-                string upperCaseString = (string)arguments[0];
+                var upperCaseString = (string)arguments[0];
                 output.WriteSafeString(upperCaseString.ToUpper());
             });
 
@@ -204,7 +204,7 @@ namespace EMBC.ESS.Resources.Print.Supports
         private static string LoadTemplate(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var manifestName = $"EMBC.ESS.Resources.Print.Supports.Views.{name}.hbs";
+            var manifestName = $"EMBC.ESS.Managers.Submissions.PrintReferrals.Views.{name}.hbs";
             return assembly.GetManifestResourceString(manifestName);
         }
     }
