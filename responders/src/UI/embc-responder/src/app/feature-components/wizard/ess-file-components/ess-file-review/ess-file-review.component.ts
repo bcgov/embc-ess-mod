@@ -55,9 +55,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.taskNumber = this.userService.currentProfile?.taskNumber;
     this.wizardType = this.evacueeSessionService.getWizardType();
 
-    console.log(this.wizardType);
-    console.log(this.stepEssFileService.securityPhrase);
-
     // Get the displayed value for radio options
     this.insuranceDisplay = globalConst.insuranceOptions.find(
       (ins) => ins.value === this.stepEssFileService?.insurance

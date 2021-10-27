@@ -2,6 +2,10 @@ table {
   width: 100%;
 }
 
+tr:hover {
+  cursor: pointer;
+}
+
 .active {
   color: #3c9d0f;
 }
