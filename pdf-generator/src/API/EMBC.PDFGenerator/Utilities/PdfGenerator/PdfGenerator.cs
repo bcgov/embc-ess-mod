@@ -55,7 +55,7 @@ namespace EMBC.PDFGenerator.Utilities.PdfGenerator
             using var page = await browser.NewPageAsync();
             logger.LogInformation("Created Puppeteer page");
             await page.SetContentAsync(source);
-            var content = await page.PdfDataAsync();
+            var content = await page.PdfDataAsync(new PdfOptions { PrintBackground = true });
             logger.LogInformation("Generated pdf with size {0}", content.Length);
 
             return content;
