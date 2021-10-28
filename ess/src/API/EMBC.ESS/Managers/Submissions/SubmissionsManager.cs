@@ -24,6 +24,7 @@ using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
@@ -52,6 +53,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IPrintReferralService supportsService;
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
+        private readonly IMetadataRepository metadataRepository;
         private readonly EvacuationFileLoader evacuationFileLoader;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
 
@@ -68,7 +70,8 @@ namespace EMBC.ESS.Managers.Submissions
             ISearchEngine searchEngine,
             IPrintReferralService supportsService,
             IPrintRequestsRepository printingRepository,
-            IPdfGenerator pdfGenerator)
+            IPdfGenerator pdfGenerator,
+            IMetadataRepository metadataRepository)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -83,6 +86,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.supportsService = supportsService;
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
+            this.metadataRepository = metadataRepository;
             this.evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
         }
 
@@ -488,6 +492,13 @@ namespace EMBC.ESS.Managers.Submissions
             var referrals = mapper.Map<IEnumerable<PrintReferral>>(file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)), opts => opts.Items.Add("evacuationFile", file)).ToArray();
             if (referrals.Count() != printRequest.SupportIds.Count())
                 throw new BusinessLogicException($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
+
+            //replace community codes with readable name
+            var communities = await metadataRepository.GetCommunities();
+            foreach (var referral in referrals)
+            {
+                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault().Name;
+            }
 
             //convert referrals to html
             var printedReferrals = await supportsService.GetReferralHtmlPagesAsync(new SupportsToPrint()
