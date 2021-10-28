@@ -577,7 +577,8 @@ export class StepEssFileService {
       securityPhrase: this.securityPhrase,
       securityPhraseEdited: this.editedSecurityPhrase,
       task: {
-        taskNumber: this.taskNumber
+        taskNumber:
+          this.taskNumber ?? this.userService.currentProfile?.taskNumber
       }
     });
 
@@ -594,7 +595,8 @@ export class StepEssFileService {
       securityPhrase: this.securityPhrase,
       securityPhraseEdited: this.editedSecurityPhrase,
       task: {
-        taskNumber: this.taskNumber
+        taskNumber:
+          this.taskNumber ?? this.userService.currentProfile?.taskNumber
       }
     };
   }
@@ -613,6 +615,7 @@ export class StepEssFileService {
     // Important values not set on form
     // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
     this.primaryAddress = undefined;
+    this.taskNumber = undefined;
 
     // Evacuation Details tab
     this.paperESSFile = undefined;
@@ -630,6 +633,7 @@ export class StepEssFileService {
     // Household Members tab
     this.haveHouseHoldMembers = undefined;
     this.householdMembers = undefined;
+    this.selectedHouseholdMembers = undefined;
     this.addMemberIndicator = undefined;
 
     this.haveSpecialDiet = undefined;
@@ -705,6 +709,8 @@ export class StepEssFileService {
         };
       }
     );
+
+    this.selectedHouseholdMembers = undefined;
 
     this.haveHouseHoldMembers = globalConst.radioButtonOptions.find(
       (ins) => ins.apiValue === this.householdMembers?.length > 2
@@ -826,7 +832,6 @@ export class StepEssFileService {
     console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
-      console.log(field);
       const control = form.controls[field] as
         | FormControl
         | FormGroup
@@ -846,8 +851,6 @@ export class StepEssFileService {
       }
     });
     const result = fields.filter((field) => !!field);
-    console.log(result);
-    console.log(result.length);
     return result.length !== 0;
   }
 
@@ -861,7 +864,6 @@ export class StepEssFileService {
     console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
-      console.log(field);
       const control = form.controls[field] as
         | FormControl
         | FormGroup
@@ -877,15 +879,12 @@ export class StepEssFileService {
       } else if (control instanceof FormGroup) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
-            console.log(control.controls);
             fields.push(control.controls[key].value);
           }
         }
       }
     });
     const result = fields.filter((field) => !!field);
-    console.log(result);
-    console.log(result.length);
     return result.length > 2;
   }
 
@@ -966,7 +965,7 @@ export class StepEssFileService {
         return this.taskNumber;
 
       case 'complete-file':
-        return this.taskNumber;
+        return this.userService.currentProfile?.taskNumber;
     }
   }
 }

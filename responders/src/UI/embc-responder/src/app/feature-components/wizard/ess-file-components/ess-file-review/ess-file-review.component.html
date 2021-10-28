@@ -97,10 +97,7 @@
                 <mat-table
                   class="bottom-space"
                   [dataSource]="stepEssFileService?.householdMembers"
-                  *ngIf="
-                    wizardType === 'new-registration' ||
-                    wizardType === 'new-ess-file'
-                  "
+                  *ngIf="!this.essFileNumber"
                 >
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell *matHeaderCellDef
@@ -162,10 +159,7 @@
                 <mat-table
                   class="bottom-space"
                   [dataSource]="stepEssFileService?.selectedHouseholdMembers"
-                  *ngIf="
-                    wizardType === 'review-file' ||
-                    wizardType === 'complete-file'
-                  "
+                  *ngIf="this.essFileNumber"
                 >
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell *matHeaderCellDef
