@@ -35,6 +35,8 @@ using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.ESS.Utilities.Transformation;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -55,6 +57,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IPdfGenerator pdfGenerator;
         private readonly IMetadataRepository metadataRepository;
         private readonly EvacuationFileLoader evacuationFileLoader;
+        private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
 
         public SubmissionsManager(
@@ -71,6 +74,7 @@ namespace EMBC.ESS.Managers.Submissions
             IPrintReferralService supportsService,
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator,
+            IWebHostEnvironment env,
             IMetadataRepository metadataRepository)
         {
             this.mapper = mapper;
@@ -87,6 +91,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
             this.metadataRepository = metadataRepository;
+            this.env = env;
             this.evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
         }
 
@@ -500,11 +505,14 @@ namespace EMBC.ESS.Managers.Submissions
                 referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault().Name;
             }
 
+            var isProduction = env.IsProduction();
+
             //convert referrals to html
             var printedReferrals = await supportsService.GetReferralHtmlPagesAsync(new SupportsToPrint()
             {
                 Referrals = referrals,
                 AddSummary = printRequest.IncludeSummary,
+                AddWatermark = !isProduction,
                 RequestingUser = new PrintRequestingUser { Id = requestingUser.Id, FirstName = requestingUser.FirstName, LastName = requestingUser.LastName }
             });
 
