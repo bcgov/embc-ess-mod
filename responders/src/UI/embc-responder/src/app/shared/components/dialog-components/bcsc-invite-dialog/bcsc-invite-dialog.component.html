@@ -34,6 +34,15 @@
 </ng-template>
 
 <div class="row row-padding">
+  <div *ngIf="showError" class="col-md-12 field-error">
+    <span>
+      Please provide the email address and confirm email address before
+      attempting to send the email</span
+    >
+  </div>
+</div>
+
+<div class="row row-padding">
   <div class="col-md-6">
     <button class="button-s button-width" mat-button (click)="close()">
       Cancel

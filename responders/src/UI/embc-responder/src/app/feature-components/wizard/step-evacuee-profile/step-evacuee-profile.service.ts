@@ -379,7 +379,7 @@ export class StepEvacueeProfileService {
    * Update the wizard's values with ones fetched from API
    */
   public setFormValuesFromProfile(profile: RegistrantProfileModel) {
-    this.wizardService.createObjectReference(profile);
+    this.wizardService.createObjectReference(profile, 'profile');
     // Wizard variables
     this.evacueeSession.profileId = profile.id;
 
