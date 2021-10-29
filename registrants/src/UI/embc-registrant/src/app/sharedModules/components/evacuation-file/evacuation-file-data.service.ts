@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  Address,
   EvacuationFile,
   EvacuationFileStatus,
   NeedsAssessment,
   Support
 } from 'src/app/core/api/models';
-import { EvacuationsService } from 'src/app/core/api/services';
+import { EvacuationsService, ProfileService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
 import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import { LocationService } from 'src/app/core/services/location.service';
+import { ProfileDataService } from 'src/app/feature-components/profile/profile-data.service';
 import { RestrictionService } from 'src/app/feature-components/restriction/restriction.service';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 
@@ -47,7 +47,9 @@ export class EvacuationFileDataService {
     private evacuationService: EvacuationsService,
     private needsAssessmentService: NeedsAssessmentService,
     private locationService: LocationService,
-    private restrictionService: RestrictionService
+    private restrictionService: RestrictionService,
+    private profileService: ProfileService,
+    private profileDataService: ProfileDataService
   ) {}
 
   public get evacuatedAddress(): RegAddress {
@@ -137,18 +139,6 @@ export class EvacuationFileDataService {
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
-    // console.log({
-    //   evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-    //     this.evacuatedAddress
-    //   ),
-    //   evacuationFileDate: this.evacuationFileDate,
-    //   fileId: this.essFileId,
-    //   isRestricted: this.restrictionService.restrictedAccess,
-    //   needsAssessment: this.getNeedsAssessment(),
-    //   secretPhrase: this.secretPhrase,
-    //   secretPhraseEdited: this.secretPhraseEdited,
-    //   status: this.evacuationFileStatus
-    // });
     return {
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacuatedAddress
@@ -161,6 +151,15 @@ export class EvacuationFileDataService {
       secretPhraseEdited: this.secretPhraseEdited,
       status: this.evacuationFileStatus
     };
+  }
+
+  public updateRestriction(): Observable<string> {
+    return this.profileService.profileUpsert({
+      body: this.profileDataService.createProfileDTO()
+    });
+    // return this.profileService.upsertProfile(
+    //   this.profileDataService.createProfileDTO()
+    // );
   }
 
   public createEvacuationFile(): Observable<string> {
@@ -179,25 +178,6 @@ export class EvacuationFileDataService {
     this.supports = undefined;
     this.needsAssessmentService.clearNeedsAssessmentData();
   }
-
-  // private setAddressObject(addressObject: RegAddress): Address {
-  //   const address: Address = {
-  //     addressLine1: addressObject.addressLine1,
-  //     addressLine2: addressObject.addressLine2,
-  //     country: addressObject.country.code,
-  //     community:
-  //       addressObject.community?.code === undefined
-  //         ? null
-  //         : addressObject.community?.code,
-  //     postalCode: addressObject.postalCode,
-  //     stateProvince:
-  //       addressObject.stateProvince === null
-  //         ? addressObject.stateProvince
-  //         : addressObject.stateProvince.code
-  //   };
-
-  //   return address;
-  // }
 
   private getNeedsAssessment(): NeedsAssessment {
     const needsAssessment: NeedsAssessment =

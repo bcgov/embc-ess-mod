@@ -11,7 +11,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { MatStepper } from '@angular/material/stepper';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { RegistrationResult } from '../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -19,6 +19,7 @@ import { NonVerifiedRegistrationService } from '../non-verified-registration/non
 import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -56,9 +57,11 @@ export class NeedsAssessmentComponent
     private evacuationFileDataService: EvacuationFileDataService
   ) {
     const navigation = this.router.getCurrentNavigation();
-    if (navigation.extras.state !== undefined) {
-      const state = navigation.extras.state as { stepIndex: number };
-      this.stepToDisplay = state.stepIndex;
+    if (navigation !== null) {
+      if (navigation.extras.state !== undefined) {
+        const state = navigation.extras.state as { stepIndex: number };
+        this.stepToDisplay = state.stepIndex;
+      }
     }
   }
 
@@ -234,9 +237,23 @@ export class NeedsAssessmentComponent
   submitVerified(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
+    this.evacuationFileDataService.updateRestriction().subscribe(
+      (updated) => {
+        if (updated !== null) {
+          this.mapAndNavigate();
+        }
+      },
+      (error: any) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.setAlert('danger', globalConst.submissionError);
+      }
+    );
+  }
+
+  mapAndNavigate() {
     this.evacuationFileDataService.createEvacuationFile().subscribe(
       (value) => {
-        console.log(value);
         this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
         this.router.navigate(['/verified-registration/dashboard']);
       },
