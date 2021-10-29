@@ -112,6 +112,7 @@ mat-row:nth-child(even) {
   display: table-cell;
   vertical-align: middle;
   padding: 0px 0px 20px 0px;
+  overflow-wrap: anywhere;
 
   th {
     padding-right: 50px;
@@ -216,6 +217,10 @@ mat-row:nth-child(even) {
   .mobile-table-members {
     display: block;
   }
+
+  .cell-button {
+    display: none;
+  }
 }
 
 .button-justify {
@@ -228,13 +233,12 @@ mat-row:nth-child(even) {
   }
 }
 
-@media (max-width: 1200px) {
-  .cell-button {
-    display: none;
-  }
-}
+@media (max-width: 920px) {
 
-@media (max-width: 800px) {
+  .cancel-button {
+    width: 100%;
+  }
+  
   .save-button {
     width: 100% !important;
   }

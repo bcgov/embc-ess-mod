@@ -180,6 +180,45 @@
   </div>
 </div>
 
+<!-- <hr class="dotted-hr hr-padding" />
+<div class="row row-padding" *ngIf="profileData?.needsAssessment?.pets?.length > 0">
+  <div class="col-md-12">
+    <p class="subsection-heading">Pets</p>
+  </div>
+</div>
+
+<div class="row row-padding" *ngIf="profileData?.needsAssessment?.pets?.length > 0">
+  <div class="col-12">
+    <mat-table
+      class="table-outline"
+      [dataSource]="profileData?.needsAssessment?.pets"
+    >
+      <ng-container matColumnDef="firstName">
+        <mat-header-cell class="header-cell" *matHeaderCellDef
+          >Type</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.type }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="lastName">
+        <mat-header-cell class="header-cell" *matHeaderCellDef
+          >Quantity</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.quantity }}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row
+        class="table-header"
+        *matHeaderRowDef="petColumns"
+      ></mat-header-row>
+      <mat-row class="bold" *matRowDef="let row; columns: petColumns"></mat-row>
+    </mat-table>
+  </div>
+</div>
 <div
   class="row row-padding"
   *ngIf="profileData?.needsAssessment?.pets?.length > 0"
@@ -198,7 +237,7 @@
   <div class="col-7 bold">
     {{ profileData?.needsAssessment?.petCarePlans }}
   </div>
-</div>
+</div> -->
 
 <hr class="dotted-hr hr-padding" />
 <div class="row row-padding">

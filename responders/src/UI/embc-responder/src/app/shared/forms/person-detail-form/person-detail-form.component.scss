@@ -6,7 +6,7 @@ mat-form-field {
     align-self: center;
 }
 
-@media(max-width: 800px) {
+@media(max-width: 920px) {
     .last-name-col {
         flex-direction: column;
     }
@@ -16,4 +16,8 @@ mat-form-field {
         align-self: baseline;
 
     }
+
+    ::ng-deep .mat-form-field-subscript-wrapper {
+        position: absolute !important;
+    } 
 }
