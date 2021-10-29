@@ -69,9 +69,9 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.membersColumns = this.newMembersColumns;
     } else {
       this.membersColumns = this.editMembersColumns;
-      if (this.stepEssFileService.selectedHouseholdMembers.length > 0) {
+      if (this.stepEssFileService.selectedHouseholdMembers?.length > 0) {
         for (const option of this.stepEssFileService.selectedHouseholdMembers) {
-          this.selection.toggle(option);
+          this.selection.select(option);
         }
       }
     }
