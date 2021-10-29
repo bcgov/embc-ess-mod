@@ -6,6 +6,7 @@
         <input
           [formControlName]="'firstName'"
           matInput
+          maxlength="100"
           placeholder="First Name"
         />
         <mat-error
@@ -27,6 +28,7 @@
         <input
           [formControlName]="'lastName'"
           matInput
+          maxlength="100"
           placeholder="Last Name"
           [readonly]="readOnlyInput"
         />
