@@ -54,7 +54,6 @@ export class BcscInviteDialogComponent implements OnInit {
       }
     });
     this.emailFormGroup.valueChanges.subscribe((formValue) => {
-      console.log(this.emailFormGroup.valid);
       this.showError = !this.emailFormGroup.valid;
     });
   }

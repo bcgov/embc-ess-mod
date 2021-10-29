@@ -16,6 +16,7 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { WizardService } from '../../wizard.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-view-supports',
@@ -28,6 +29,9 @@ export class ViewSupportsComponent implements OnInit {
   filtersToLoad: TableFilterModel;
   showLoader = false;
   color = '#169BD5';
+  private supportListEvent: BehaviorSubject<Support[]> = new BehaviorSubject<
+    Support[]
+  >(null);
 
   constructor(
     private router: Router,
@@ -52,6 +56,11 @@ export class ViewSupportsComponent implements OnInit {
   ngOnInit(): void {
     this.loadSupportList();
     this.filtersToLoad = this.viewSupportsService.load();
+    this.supportListEvent.subscribe((values) => {
+      if (values !== null) {
+        this.setStepStatus();
+      }
+    });
   }
 
   addSupports() {
@@ -122,6 +131,7 @@ export class ViewSupportsComponent implements OnInit {
         ...this.supportList
       ];
     }
+    this.supportListEvent.next(this.supportList);
   }
 
   setStepStatus() {
@@ -155,19 +165,19 @@ export class ViewSupportsComponent implements OnInit {
       displayText = globalConst.saveMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
-        this.setStepStatus();
+        //this.setStepStatus();
       }, 500);
     } else if (state?.action === 'delete') {
       displayText = globalConst.supportDeleteMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
-        this.setStepStatus();
+        //this.setStepStatus();
       }, 500);
     } else if (state?.action === 'edit') {
       displayText = globalConst.supportEditMessage;
       setTimeout(() => {
         this.openConfirmation(displayText);
-        this.setStepStatus();
+        //this.setStepStatus();
       }, 500);
     }
   }

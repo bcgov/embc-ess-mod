@@ -38,6 +38,7 @@ export class WizardActivateGuard implements CanActivate {
     if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTask)) {
         this.evacueeSessionService.profileId = null;
+        this.evacueeSessionService.essFileNumber = null;
         this.wizardAdapterService.stepCreateProfileFromSearch();
 
         return true;
