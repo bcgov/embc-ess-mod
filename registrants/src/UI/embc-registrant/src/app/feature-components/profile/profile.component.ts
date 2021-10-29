@@ -52,9 +52,11 @@ export class ProfileComponent
     private profileService: ProfileService
   ) {
     const navigation = this.router.getCurrentNavigation();
-    if (navigation.extras.state !== undefined) {
-      const state = navigation.extras.state as { stepIndex: number };
-      this.stepToDisplay = state.stepIndex;
+    if (navigation !== null) {
+      if (navigation.extras.state !== undefined) {
+        const state = navigation.extras.state as { stepIndex: number };
+        this.stepToDisplay = state.stepIndex;
+      }
     }
   }
 

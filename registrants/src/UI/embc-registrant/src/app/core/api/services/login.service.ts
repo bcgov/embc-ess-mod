@@ -196,4 +196,50 @@ export class LoginService extends BaseService {
     );
   }
 
+  /**
+   * Path part for operation loginProcessInvite
+   */
+  static readonly LoginProcessInvitePath = '/join';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `loginProcessInvite()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  loginProcessInvite$Response(params?: {
+    token?: string;
+  }): Observable<StrictHttpResponse<Blob>> {
+
+    const rb = new RequestBuilder(this.rootUrl, LoginService.LoginProcessInvitePath, 'get');
+    if (params) {
+      rb.query('token', params.token, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'blob',
+      accept: 'application/octet-stream'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Blob>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `loginProcessInvite$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  loginProcessInvite(params?: {
+    token?: string;
+  }): Observable<Blob> {
+
+    return this.loginProcessInvite$Response(params).pipe(
+      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+    );
+  }
+
 }
