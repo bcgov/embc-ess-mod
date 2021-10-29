@@ -18,7 +18,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 export class EssFileReviewComponent implements OnInit, OnDestroy {
   taskNumber: string;
   tabUpdateSubscription: Subscription;
-
+  essFileNumber: string;
   saveLoader = false;
   disableButton = false;
   wizardType: string;
@@ -54,6 +54,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.wizardType = this.evacueeSessionService.getWizardType();
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
+    this.essFileNumber = this.evacueeSessionService.essFileNumber;
 
     // Get the displayed value for radio options
     this.insuranceDisplay = globalConst.insuranceOptions.find(
@@ -165,6 +166,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }
                 });
+                this.stepEssFileService.setReviewEssFileTabStatus();
               }
             });
         },
@@ -212,6 +214,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }
                 });
+                this.stepEssFileService.setReviewEssFileTabStatus();
               }
             });
         },

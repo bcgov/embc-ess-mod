@@ -24,6 +24,7 @@ using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
@@ -34,6 +35,8 @@ using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.ESS.Utilities.Transformation;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -52,7 +55,9 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IPrintReferralService supportsService;
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
+        private readonly IMetadataRepository metadataRepository;
         private readonly EvacuationFileLoader evacuationFileLoader;
+        private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
 
         public SubmissionsManager(
@@ -68,7 +73,9 @@ namespace EMBC.ESS.Managers.Submissions
             ISearchEngine searchEngine,
             IPrintReferralService supportsService,
             IPrintRequestsRepository printingRepository,
-            IPdfGenerator pdfGenerator)
+            IPdfGenerator pdfGenerator,
+            IWebHostEnvironment env,
+            IMetadataRepository metadataRepository)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -83,6 +90,8 @@ namespace EMBC.ESS.Managers.Submissions
             this.supportsService = supportsService;
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
+            this.metadataRepository = metadataRepository;
+            this.env = env;
             this.evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
         }
 
@@ -489,11 +498,21 @@ namespace EMBC.ESS.Managers.Submissions
             if (referrals.Count() != printRequest.SupportIds.Count())
                 throw new BusinessLogicException($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
 
+            //replace community codes with readable name
+            var communities = await metadataRepository.GetCommunities();
+            foreach (var referral in referrals)
+            {
+                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault().Name;
+            }
+
+            var isProduction = env.IsProduction();
+
             //convert referrals to html
             var printedReferrals = await supportsService.GetReferralHtmlPagesAsync(new SupportsToPrint()
             {
                 Referrals = referrals,
                 AddSummary = printRequest.IncludeSummary,
+                AddWatermark = !isProduction,
                 RequestingUser = new PrintRequestingUser { Id = requestingUser.Id, FirstName = requestingUser.FirstName, LastName = requestingUser.LastName }
             });
 

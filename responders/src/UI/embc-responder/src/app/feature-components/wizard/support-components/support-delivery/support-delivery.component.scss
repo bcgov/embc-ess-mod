@@ -48,3 +48,13 @@
 .rate-link {
   padding-left: 5px;
 }
+
+::ng-deep .mat-autocomplete-panel {
+  min-width: 500px !important;
+}
+
+@media(max-width: 800px) {
+  ::ng-deep .mat-autocomplete-panel {
+    min-width: 400px !important;
+  }
+}
