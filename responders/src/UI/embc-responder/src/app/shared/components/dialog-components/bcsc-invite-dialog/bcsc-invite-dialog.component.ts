@@ -39,6 +39,7 @@ export class BcscInviteDialogComponent implements OnInit {
   showConfirm = false;
   emailMatcher = new BcscCustomErrorMailMatcher();
   hideForm = true;
+  showError = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -52,6 +53,9 @@ export class BcscInviteDialogComponent implements OnInit {
         this.showConfirm = true;
       }
     });
+    this.emailFormGroup.valueChanges.subscribe((formValue) => {
+      this.showError = !this.emailFormGroup.valid;
+    });
   }
 
   bcscEmailForm(): void {
@@ -62,7 +66,11 @@ export class BcscInviteDialogComponent implements OnInit {
           [
             Validators.email,
             this.customValidation.conditionalValidation(
-              () => !this.hideForm,
+              () =>
+                !this.hideForm ||
+                this.profileData === null ||
+                this.profileData === '' ||
+                this.profileData === undefined,
               this.customValidation.whitespaceValidator()
             )
           ]
@@ -96,6 +104,7 @@ export class BcscInviteDialogComponent implements OnInit {
   }
 
   send() {
+    this.showError = !this.emailFormGroup.valid;
     if (!this.emailFormGroup.valid) {
       this.emailFormGroup.get('email').markAsTouched();
       this.emailFormGroup.get('confirmEmail').markAsTouched();

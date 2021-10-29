@@ -668,7 +668,7 @@ export class StepEssFileService {
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     this.selectedEssFile = essFile;
     const essNeeds = essFile.needsAssessment;
-    this.wizardService.createObjectReference(essFile);
+    this.wizardService.createObjectReference(essFile, 'file');
     const primaryLastName = essFile.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant
     ).lastName;
