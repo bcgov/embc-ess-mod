@@ -16,18 +16,19 @@ namespace EMBC.Tests.Integration.ESS.Submissions
     public class EvacuationFileTests : WebAppTestBase
     {
         private readonly SubmissionsManager manager;
+        private readonly RegistrantProfile registrant;
+        private string teamUserId => TestData.Tier4TeamMemberId;
 
-        private readonly string teamUserId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
+        private async Task<RegistrantProfile> GetTestRegistrant() => await TestHelper.GetRegistrantByUserId(manager, TestData.ContactUserId);
 
-        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => await TestHelper.GetRegistrantByUserId(manager, userId);
-
-        private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId);
+        private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => (await TestHelper.GetEvacuationFileById(manager, fileId)).SingleOrDefault();
 
         private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(registrant);
 
         public EvacuationFileTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             manager = services.GetRequiredService<SubmissionsManager>();
+            registrant = GetTestRegistrant().GetAwaiter().GetResult();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -141,7 +142,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSubmitNewEvacuation()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var file = CreateNewTestEvacuationFile(registrant);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
@@ -150,7 +150,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             fileId.ShouldNotBeNull();
 
-            var savedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
+            var savedFile = await GetEvacuationFileById(fileId);
             savedFile.PrimaryRegistrantId.ShouldBe(registrant.Id);
             savedFile.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
             savedFile.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
@@ -169,9 +169,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task Create_EvacuationFileNoPrimaryRegistrant_ThrowsError()
+        public void Create_EvacuationFileNoPrimaryRegistrant_ThrowsError()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
             var file = CreateNewTestEvacuationFile(registrant);
             foreach (var member in file.NeedsAssessment.HouseholdMembers)
             {
@@ -189,9 +188,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
-            var file = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
+            var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
             if (file.NeedsAssessment.HouseholdMembers.Count() <= 1)
             {
@@ -219,8 +217,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Update_EvacuationFileTask_ThrowsError()
         {
-            var fileWithTask = (await GetEvacuationFileById("101010")).ShouldHaveSingleItem();
-            fileWithTask.RelatedTask.Id = fileWithTask.RelatedTask.Id == "0001" ? "0002" : "0001";
+            var fileWithTask = await GetEvacuationFileById(TestData.EvacuationFileId);
+            fileWithTask.RelatedTask.Id = TestData.ActiveTaskId;
+            //update file to task
+            await manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask });
+
+            //update to a different task
+            fileWithTask.RelatedTask.Id = TestData.InactiveTaskId;
             Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask })).Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
         }
 
@@ -229,9 +232,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
-            var file = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
+            var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
@@ -242,7 +244,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
 
             fileId.ShouldNotBeNullOrEmpty();
-            var updatedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
+            var updatedFile = await GetEvacuationFileById(fileId);
             updatedFile.Id.ShouldBe(file.Id);
             updatedFile.EvacuationDate.ShouldBe(now);
         }
@@ -250,53 +252,46 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityPhrase()
         {
-            //var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
-            var fileId = "101010";
+            var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
-            //set phrase if needed
-            //var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
-            //file.SecurityPhrase = "no security phrase please";
-            //file.SecurityPhraseChanged = true;
-            //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-
-            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "no security phrase please" });
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = file.Id, SecurityPhrase = $"{TestData.TestPrefix}-{TestData.EvacuationFileSecurityPhrase}" });
             response.IsCorrect.ShouldBeTrue();
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateFileNote()
         {
-            var fileId = "101010";
-            var note = new Note { Content = "Test create note", Type = NoteType.General, CreatedBy = new TeamMember { Id = "170b9e4d-731e-4ab8-a0df-ff2612bf6840" } };
-            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note });
-            id.ShouldNotBeNull();
+            var fileId = TestData.EvacuationFileId;
+            var notePostfix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{notePostfix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
+            var actualNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
+            actualNote.Content.ShouldEndWith(notePostfix);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateFileNote()
         {
-            var fileId = "101010";
-            var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
+            var fileId = TestData.EvacuationFileId;
+            var notePostfix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{notePostfix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
+            var actualNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
 
-            var note = file.Notes.FirstOrDefault();
+            var updatedNotePostfix = Guid.NewGuid().ToString().Substring(0, 4);
+            actualNote.Content = $"{TestData.TestPrefix}-note-{updatedNotePostfix}";
+            var updatedNoteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = actualNote })).ShouldNotBeNull();
 
-            if (note.Content.Equals("_testing_ update value 1"))
-            {
-                note.Content = "_testing_ update value 2";
-            }
-            else
-            {
-                note.Content = "_testing_ update value 1";
-            }
+            updatedNoteId.ShouldBe(noteId);
+            var actualUpdatedNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
+            actualUpdatedNote.Content.ShouldEndWith(updatedNotePostfix);
 
-            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { Note = note, FileId = fileId });
-            id.ShouldNotBeNull();
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanQueryFileNoteByFileId()
         {
-            var fileId = "101010";
+            var fileId = TestData.EvacuationFileId;
             var notes = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId })).Notes;
 
             notes.ShouldNotBeNull();
@@ -305,7 +300,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanQueryFileNoteByFileIdAndNoteId()
         {
-            var fileId = "101010";
+            var fileId = TestData.EvacuationFileId;
             var noteId = "65dea67d-760a-445d-aa78-101564bbf0b7";
             var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId, FileId = fileId })).Notes;
 

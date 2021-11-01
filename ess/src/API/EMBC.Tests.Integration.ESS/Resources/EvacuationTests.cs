@@ -17,11 +17,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private readonly ICaseRepository caseRepository;
 
         // Constants
-        private const string TestUserId = "CHRIS-TEST";
+        private string TestContactId => TestData.ContactId;
+        private string TestContactUserId => TestData.ContactUserId;
 
-        private const string TestEssFileNumber = "101010";
+        private string TestEssFileNumber => TestData.EvacuationFileId;
 
-        private const string TestNeedsAssessmentId = "b67cbdb4-75af-4cbb-a291-c390be77f83d";
+        private string TestNeedsAssessmentId = "b67cbdb4-75af-4cbb-a291-c390be77f83d";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -72,11 +73,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetNoEvacuationFilessByFileIdAndRegistrant()
         {
-            var primaryContact = await GetContactByUserId(TestUserId);
             var caseQuery = new EvacuationFilesQuery
             {
                 FileId = "nofileid",
-                PrimaryRegistrantId = primaryContact.Id
+                PrimaryRegistrantId = TestContactId
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
             queryResult.Items.ShouldBeEmpty();
@@ -85,34 +85,33 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuationFilesByPrimaryRegistrantUserid()
         {
-            var primaryContact = await GetContactByUserId(TestUserId);
+            var primaryContactId = TestContactId;
             var caseQuery = new EvacuationFilesQuery
             {
-                PrimaryRegistrantId = primaryContact.Id,
+                PrimaryRegistrantId = primaryContactId,
             };
             var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
             files.ShouldNotBeEmpty();
-            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == primaryContact.Id));
-            files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContact.Id);
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == primaryContactId));
+            files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContactId);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuationFilessByLinkedRegistrantId()
         {
-            var contact = await GetContactByUserId(TestUserId);
             var caseQuery = new EvacuationFilesQuery
             {
-                LinkedRegistrantId = contact.Id
+                LinkedRegistrantId = TestContactId
             };
             var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
             files.ShouldNotBeEmpty();
-            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == contact.Id));
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == TestContactId));
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateEvacuationFile()
         {
-            var primaryContact = await GetContactByUserId(TestUserId);
+            var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
             var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
 
@@ -163,7 +162,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanMapEvacuationFile()
         {
             var now = DateTime.UtcNow;
-            var primaryContact = await GetContactByUserId(TestUserId);
+            var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
             var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
 
@@ -243,8 +242,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteEvacuationFiles()
         {
-            var registrant = await GetContactByUserId(TestUserId);
-            var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items;
+            var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = TestContactId })).Items;
 
             foreach (var file in files.OrderByDescending(f => f.CreatedOn).Skip(10))
             {
@@ -256,7 +254,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanCreateSupports()
         {
             var now = DateTime.UtcNow;
-            var primaryContact = await GetContactByUserId(TestUserId);
+            var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
             var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
             var createdFile = (EvacuationFile)(await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
@@ -376,7 +374,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         private async Task<Contact> GetContactByUserId(string userId) =>
-(await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
+            (await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
 
         private EvacuationFile CreateTestFile(Contact primaryContact)
         {
