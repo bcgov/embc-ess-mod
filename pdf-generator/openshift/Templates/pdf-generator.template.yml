@@ -30,11 +30,12 @@ objects:
       name: ${APP_NAME}-pdf-generator-config
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}-pdf-generator
+        app: ${APP_NAME}
         app.kubernetes.io/part-of: ${APP_NAME}
     data:
+      APP_NAME: ${APP_NAME}-pdf-generator
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
-      KEY_RING_PATH: "/dpkeys"
+      KEY_RING_PATH: "/dpkeys/${APP_NAME}-pdf-generator"
       CHROME_CACHE_PATH: "/cache"
 
   - kind: Secret

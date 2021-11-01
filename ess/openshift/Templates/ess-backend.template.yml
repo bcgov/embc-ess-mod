@@ -62,8 +62,9 @@ objects:
         app: ${APP_NAME}-ess-backend
         app.kubernetes.io/part-of: ${APP_NAME}
     data:
+      APP_NAME: ${APP_NAME}-ess-backend
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
-      KEY_RING_PATH: "/dpkeys"
+      KEY_RING_PATH: "/dpkeys/${APP_NAME}-ess-backend"
       Dynamics__ADFS__OAuth2TokenEndpoint: ${DYNAMICS_OAUTH_ENDPOINT}
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
