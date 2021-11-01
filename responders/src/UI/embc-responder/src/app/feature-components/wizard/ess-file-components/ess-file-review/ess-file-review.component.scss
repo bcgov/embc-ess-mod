@@ -41,6 +41,21 @@ button.save {
 	line-height: 2em;
 }
 
+mat-header-row {
+  background-color: #234075;
+  
+}
+
+mat-header-cell {
+  color: white;
+  font-size: 15px;
+}
+
+.mat-cell {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
 .data-panel {
 	.row:not(:first-child) {
 		margin-top: 0.5em;
@@ -99,6 +114,7 @@ button.save {
   .mat-cell {
     align-items: unset;
     min-height: unset;
+    overflow-wrap: break-word;
   }
 }
 

@@ -48,7 +48,11 @@
             <tr>
               <th>Type:</th>
               <td class="bold">
-                {{ file?.type }}
+                {{
+                  file?.type == 'HouseholdMember'
+                    ? 'Household Member'
+                    : file?.type
+                }}
               </td>
             </tr>
             <tr *ngIf="file?.isVerified !== null">
@@ -95,7 +99,11 @@
           </button>
         </div>
         <div
-          *ngIf="matchedProfileCount === 0 && file?.type === 'HouseholdMember'"
+          *ngIf="
+            matchedProfileCount === 0 &&
+            file?.type === 'HouseholdMember' &&
+            !isUnder19(file)
+          "
           class="row button-div"
         >
           <button class="button-p proceed-button" (click)="createProfile(file)">
@@ -106,7 +114,8 @@
           *ngIf="
             matchedProfileCount > 0 &&
             file?.type === 'HouseholdMember' &&
-            file?.linkedRegistrantId === null
+            file?.linkedRegistrantId === null &&
+            !isUnder19(file)
           "
           class="row button-div"
         >
