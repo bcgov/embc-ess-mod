@@ -72,7 +72,7 @@ button.save {
   display: none;
 }
 
-@media(max-width: 770px) {
+@media(max-width: 900px) {
   .mobile-label {
     display: inline-block;
     font-weight: bold;
@@ -100,4 +100,8 @@ button.save {
     align-items: unset;
     min-height: unset;
   }
+}
+
+@media (min-width: 833px) {
+  .save {width: auto !important;}
 }

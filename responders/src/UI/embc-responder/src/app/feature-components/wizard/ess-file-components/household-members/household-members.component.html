@@ -179,7 +179,7 @@
                     >
                     <mat-cell
                       class="cell-member-details"
-                      *matCellDef="let member"
+                      *matCellDef="let member; let index = index"
                     >
                       <div class="row member-name">
                         <span
@@ -248,6 +248,49 @@
                                   : 'Household Member'
                               }}</b>
                             </td>
+                          </tr>
+                          <tr>
+                            <button
+                              *ngIf="!editFlag && !member.isPrimaryRegistrant"
+                              class="edit-image"
+                              mat-icon-button
+                              aria-label="Edit"
+                              (click)="editRow(member, index)"
+                            >
+                              <img
+                                src="/assets/images/edit.svg"
+                                height="35"
+                                width="35"
+                              />
+                              <img
+                                src="/assets/images/edit_onhover.svg"
+                                height="35"
+                                width="35"
+                              />
+                            </button>
+
+                            <button
+                              *ngIf="
+                                !editFlag &&
+                                !member.isPrimaryRegistrant &&
+                                !member.householdMemberFromDatabase
+                              "
+                              class="delete-image"
+                              mat-icon-button
+                              aria-label="Remove"
+                              (click)="deleteRow(member, index)"
+                            >
+                              <img
+                                src="/assets/images/delete.svg"
+                                height="35"
+                                width="35"
+                              />
+                              <img
+                                src="/assets/images/delete_onhover.svg"
+                                height="35"
+                                width="35"
+                              />
+                            </button>
                           </tr>
                         </table>
                       </div>
