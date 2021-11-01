@@ -68,6 +68,7 @@ namespace EMBC.Registrants.API
             var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name);
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
+                Log.Information("Configuring {0} to use Redis cache", applicationName);
                 services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = redisConnectionString;
@@ -78,6 +79,7 @@ namespace EMBC.Registrants.API
             }
             else
             {
+                Log.Information("Configuring {0} to use in-memory cache", applicationName);
                 services.AddDistributedMemoryCache();
                 var dpBuilder = services.AddDataProtection()
                     .SetApplicationName(applicationName);
