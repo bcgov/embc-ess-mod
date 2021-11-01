@@ -9,9 +9,9 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class DynamicsBaseTests : WebAppTestBase
+    public class DynamicsConnectivityTests : WebAppTestBase
     {
-        public DynamicsBaseTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public DynamicsConnectivityTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

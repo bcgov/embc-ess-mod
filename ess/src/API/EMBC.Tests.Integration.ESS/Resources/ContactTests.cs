@@ -16,7 +16,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private readonly IContactRepository contactRepository;
 
         // Constants
-        private const string TestUserId = "CHRIS-TEST";
+        private string TestContactUserId => base.TestData.ContactUserId;
 
         public ContactTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -28,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var contactQuery = new RegistrantQuery
             {
-                UserId = TestUserId
+                UserId = TestContactUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
 
@@ -37,9 +37,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var contact = (Contact)queryResult.Items.First();
 
             contact.ShouldNotBeNull();
-
-            contact.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
-            contact.PrimaryAddress.Country.ShouldNotBeNull();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -48,17 +45,17 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get Contact */
             var contactQuery = new RegistrantQuery
             {
-                UserId = TestUserId
+                UserId = TestContactUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var contact = queryResult.Items.FirstOrDefault();
 
+            var newCommunity = TestData.RandomCommunity;
             var currentCity = contact.PrimaryAddress.Community;
-            var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
-                ? "226adfaf-9f97-ea11-b813-005056830319"
-                : "406adfaf-9f97-ea11-b813-005056830319";
 
-            contact.PrimaryAddress.Community = newCity;
+            contact.PrimaryAddress.Community = currentCity == newCommunity
+              ? TestData.RandomCommunity
+              : newCommunity; ;
 
             /* Update Contact */
             SaveContact saveContactCmd = new SaveContact
@@ -76,7 +73,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var updatedQueryResult = await contactRepository.QueryContact(updatedContactQuery);
             var updatedContact = updatedQueryResult.Items.FirstOrDefault();
 
-            updatedContact.PrimaryAddress.Community.ShouldBe(newCity);
+            updatedContact.PrimaryAddress.Community.ShouldBe(newCommunity);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -85,12 +82,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get Contact */
             var contactQuery = new RegistrantQuery
             {
-                UserId = TestUserId
+                UserId = TestContactUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var baseContact = queryResult.Items.FirstOrDefault();
             baseContact.Id = null;
-            baseContact.UserId = TestUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
+            baseContact.UserId = TestContactUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
 
             /* Create Contact */
             SaveContact saveContactCmd = new SaveContact
@@ -109,23 +106,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newContact = newQueryResult.Items.FirstOrDefault();
 
             newContact.ShouldNotBeNull().Id.ShouldBe(newContactId);
-
-            ///* Delete New Contact */
-            //DeleteContact deleteCmd = new DeleteContact
-            //{
-            //    ContactId = newContactId
-            //};
-            //var deleteResult = await contactRepository.ManageContact(deleteCmd);
-            //var deletedContactId = deleteResult.ContactId;
-
-            ///* Get Deleted Contact */
-            //var deletedCaseQuery = new RegistrantQuery
-            //{
-            //    ContactId = deletedContactId
-            //};
-            //var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
-            //var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
-            //deletedContact.ShouldBeNull();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -133,19 +113,19 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var country = "CAN";
             var province = "BC";
-            var city = "226adfaf-9f97-ea11-b813-005056830319";
+            var city = TestData.RandomCommunity;
 
             /* Get Contact */
             var contactQuery = new RegistrantQuery
             {
-                UserId = TestUserId
+                UserId = TestContactUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var baseContact = queryResult.Items.FirstOrDefault();
             baseContact.ShouldNotBeNull();
 
             baseContact.Id = null;
-            baseContact.UserId = TestUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
+            baseContact.UserId = TestContactUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
             baseContact.PrimaryAddress.Country = country;
             baseContact.PrimaryAddress.StateProvince = province;
             baseContact.PrimaryAddress.Community = city;
@@ -183,7 +163,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateEmailInvite()
         {
-            var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = TestUserId })).Items.Single();
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = TestContactUserId })).Items.Single();
 
             var email = "test@email.com";
 

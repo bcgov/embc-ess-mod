@@ -32,7 +32,7 @@ namespace EMBC.ESS.Utilities.Dynamics
     public class CachedADFSSecurityTokenProvider : ISecurityTokenProvider
     {
         private readonly string cacheKey = $"{nameof(CachedADFSSecurityTokenProvider)}_token";
-        private readonly ADFSSecurityTokenProvider internalSecurityProvider;
+        private readonly ISecurityTokenProvider internalSecurityProvider;
         private readonly ICache cache;
 
         public CachedADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsOptions> options, ICache cache)
