@@ -65,22 +65,22 @@ namespace EMBC.Registrants.API
         {
             var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
             var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
+            var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name);
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = redisConnectionString;
-                    options.InstanceName = Assembly.GetExecutingAssembly().GetName().Name;
                 });
                 services.AddDataProtection()
-                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name)
+                    .SetApplicationName(applicationName)
                     .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "data-protection-keys");
             }
             else
             {
                 services.AddDistributedMemoryCache();
                 var dpBuilder = services.AddDataProtection()
-                    .SetApplicationName(Assembly.GetExecutingAssembly().GetName().Name);
+                    .SetApplicationName(applicationName);
 
                 if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }

@@ -71,8 +71,9 @@ objects:
         app: ${APP_NAME}-registrants-portal
         app.kubernetes.io/part-of: ${APP_NAME}
     data:
+      APP_NAME: ${APP_NAME}-registrants-portal
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
-      KEY_RING_PATH: "/dpkeys"
+      KEY_RING_PATH: "/dpkeys/${APP_NAME}-registrants-portal"
       auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
       app__knownNetwork: ${APP_KNOWN_NETWORK}
       app__cors__origins: ${CORS_ORIGINS}
