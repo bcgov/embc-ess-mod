@@ -254,7 +254,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
-            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = file.Id, SecurityPhrase = $"{TestData.TestPrefix}-{TestData.EvacuationFileSecurityPhrase}" });
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = file.Id, SecurityPhrase = TestData.EvacuationFileSecurityPhrase });
             response.IsCorrect.ShouldBeTrue();
         }
 
