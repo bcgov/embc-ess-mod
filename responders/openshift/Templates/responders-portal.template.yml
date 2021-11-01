@@ -54,8 +54,9 @@ objects:
         app: ${APP_NAME}-responders-portal
         app.kubernetes.io/part-of: ${APP_NAME}
     data:
+      APP_NAME: ${APP_NAME}-responders-portal
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
-      KEY_RING_PATH: "/dpkeys"
+      KEY_RING_PATH: "/dpkeys/${APP_NAME}-responders-portal"
       BACKEND__URL: ${BACKEND_URL}
       BACKEND__ALLOWINVALIDSERVERCERTIFICATE: ${BACKEND_ALLOW_INVALID_CERT}
       JWT__METADATAADDRESS: ${JWT_METADATA_URL}
