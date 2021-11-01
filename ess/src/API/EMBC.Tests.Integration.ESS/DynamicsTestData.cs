@@ -37,7 +37,7 @@ namespace EMBC.Tests.Integration.ESS
         public DynamicsTestData(EssContext essContext)
         {
             this.essContext = essContext;
-            this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}-";
+            this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
 
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";

@@ -3,23 +3,31 @@ using EMBC.ESS;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class DynamicsConnectivityTests : WebAppTestBase
+    public class DynamicsConnectivityTests : IClassFixture<WebApplicationFactory<Startup>>
     {
-        public DynamicsConnectivityTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        private readonly ITestOutputHelper output;
+        private readonly WebApplicationFactory<Startup> webApplicationFactory;
+
+        public DynamicsConnectivityTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
+            this.output = output;
+            this.webApplicationFactory = webApplicationFactory;
         }
 
-        [Fact(Skip = RequiresDynamics)]
+#if RELEASE
+        [Fact(Skip = "requires VPN access")]
+#else
+        [Fact]
+#endif
         public async Task GetSecurityToken()
         {
-            var tokenProvider = services.GetRequiredService<ISecurityTokenProvider>();
-            testLogger.LogDebug("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
+            var tokenProvider = webApplicationFactory.Services.GetRequiredService<ISecurityTokenProvider>();
+            output.WriteLine("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
         }
     }
 }
