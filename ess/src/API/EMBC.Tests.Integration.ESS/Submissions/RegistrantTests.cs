@@ -18,7 +18,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
     public class RegistrantTests : WebAppTestBase
     {
         private readonly SubmissionsManager manager;
-        private readonly string teamUserId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => await TestHelper.GetRegistrantByUserId(manager, userId);
 
@@ -235,7 +234,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             {
                 FileId = fileId,
                 ReprintReason = "test",
-                RequestingUserId = teamUserId,
+                RequestingUserId = testPrintRequest._era_requestinguserid_value.Value.ToString(),
                 SupportId = supportId
             });
 

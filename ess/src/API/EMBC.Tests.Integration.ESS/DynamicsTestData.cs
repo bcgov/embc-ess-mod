@@ -52,7 +52,7 @@ namespace EMBC.Tests.Integration.ESS
 
             var file = CreateEvacuationFile(this.contact);
 
-            var referral = CreateReferralPrint(file);
+            CreateReferralPrint(file, this.tier4TeamMember);
 
             essContext.SaveChanges();
             essContext.DetachAll();
@@ -193,17 +193,33 @@ namespace EMBC.Tests.Integration.ESS
             return file;
         }
 
-        private era_referralprint CreateReferralPrint(era_evacuationfile file)
+        private era_referralprint CreateReferralPrint(era_evacuationfile file, era_essteamuser member)
         {
-            var referral = new era_referralprint()
+            var referralPrint = new era_referralprint()
             {
                 era_referralprintid = Guid.NewGuid(),
                 era_name = testPrefix + "-referral",
             };
 
-            essContext.AddToera_referralprints(referral);
+            essContext.AddToera_referralprints(referralPrint);
+            essContext.SetLink(referralPrint, nameof(era_referralprint.era_ESSFileId), file);
+            essContext.SetLink(referralPrint, nameof(era_referralprint.era_RequestingUserId), member);
 
-            return referral;
+            var supports = Enumerable.Range(1, random.Next(5)).Select(i => new era_evacueesupport
+            {
+                era_evacueesupportid = Guid.NewGuid(),
+                era_name = $"{testPrefix}-support-{i}",
+                era_validfrom = DateTime.Now.AddDays(-3),
+                era_validto = DateTime.Now.AddDays(3),
+            });
+
+            foreach (var support in supports)
+            {
+                essContext.AddToera_evacueesupports(support);
+                essContext.AddLink(referralPrint, nameof(era_referralprint.era_era_referralprint_era_evacueesupport), support);
+            }
+
+            return referralPrint;
         }
     }
 }
