@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Utilities.Dynamics;
@@ -33,10 +34,15 @@ namespace EMBC.Tests.Integration.ESS
         public string EvacuationFileId => evacuationfile.era_name;
         public string CurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.Value.ToString();
         public string EvacuationFileSecurityPhrase => testPrefix + "-securityphrase";
+        public string[] SupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name.ToString()).ToArray();
 
         public DynamicsTestData(EssContext essContext)
         {
             this.essContext = essContext;
+
+            //TODO - add debug condition - if debug use prefix autotest-dev
+            //check if some data exists with that prefix, and if so, we don't need to create new data
+
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
 
             this.activeTaskId = testPrefix + "-active-task";
@@ -52,7 +58,9 @@ namespace EMBC.Tests.Integration.ESS
 
             var file = CreateEvacuationFile(this.contact);
 
-            var referral = CreateReferralPrint(file);
+            var supports = CreateEvacueeSupports(file);
+
+            CreateReferralPrint(file, this.tier4TeamMember, supports);
 
             essContext.SaveChanges();
             essContext.DetachAll();
@@ -61,6 +69,8 @@ namespace EMBC.Tests.Integration.ESS
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
                 .Where(f => f.era_evacuationfileid == file.era_evacuationfileid).Single();
+
+            essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
 
             essContext.DetachAll();
         }
@@ -126,9 +136,16 @@ namespace EMBC.Tests.Integration.ESS
                 firstname = this.testPrefix + "-first",
                 lastname = this.testPrefix + "-last",
                 era_bcservicescardid = this.testPrefix + "-userId",
-                gendercode = random.Next(1, 3)
+                gendercode = random.Next(1, 3),
+                address1_line1 = this.testPrefix + "-line1",
+                address1_line2 = this.testPrefix + "-line2",
+                address1_postalcode = "v2v 2v2",
+                address1_country = "CAN",
+                address1_stateorprovince = "BC",
             };
+
             essContext.AddTocontacts(contact);
+            essContext.SetLink(contact, nameof(contact.era_City), jurisdictions.First());
             return contact;
         }
 
@@ -189,21 +206,47 @@ namespace EMBC.Tests.Integration.ESS
                 }
             }
 
-
             return file;
         }
 
-        private era_referralprint CreateReferralPrint(era_evacuationfile file)
+        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file)
         {
-            var referral = new era_referralprint()
+            var supports = Enumerable.Range(1, random.Next(1, 5)).Select(i => new era_evacueesupport
+            {
+                era_evacueesupportid = Guid.NewGuid(),
+                era_name = $"{testPrefix}-support-{i}",
+                era_validfrom = DateTime.Now.AddDays(-3),
+                era_validto = DateTime.Now.AddDays(3),
+                era_supporttype = 174360006
+            }).ToArray();
+
+            foreach (var support in supports)
+            {
+                essContext.AddToera_evacueesupports(support);
+                essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);
+            }
+
+            return supports;
+        }
+
+        private era_referralprint CreateReferralPrint(era_evacuationfile file, era_essteamuser member, IEnumerable<era_evacueesupport> supports)
+        {
+            var referralPrint = new era_referralprint()
             {
                 era_referralprintid = Guid.NewGuid(),
                 era_name = testPrefix + "-referral",
             };
 
-            essContext.AddToera_referralprints(referral);
+            essContext.AddToera_referralprints(referralPrint);
+            essContext.SetLink(referralPrint, nameof(era_referralprint.era_ESSFileId), file);
+            essContext.SetLink(referralPrint, nameof(era_referralprint.era_RequestingUserId), member);
 
-            return referral;
+            foreach (var support in supports)
+            {
+                essContext.AddLink(referralPrint, nameof(era_referralprint.era_era_referralprint_era_evacueesupport), support);
+            }
+
+            return referralPrint;
         }
     }
 }
