@@ -153,6 +153,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     }.Where(r => r != null).ToArray()))
                ;
 
+            Func<DateTime, int> getAge = dob =>
+            {
+                var now = DateTime.Now;
+                var age = now.Year - dob.Year;
+                //Handle leap years
+                if (dob > now.AddYears(-age))
+                    age--;
+
+                return age;
+            };
             CreateMap<era_householdmember, HouseholdMember>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.contactid))
@@ -173,7 +183,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
                 .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : (Guid?)null))
                 .ForMember(d => d.era_isprimaryregistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
-                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.IsUnder19))
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => getAge(DateTime.Parse(s.DateOfBirth)) < 19))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.era_initials, opts => opts.MapFrom(s => s.Initials))
