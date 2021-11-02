@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.ESS.Utilities.Dynamics;
-using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -33,8 +31,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateNewRegistrantProfile()
         {
-            var identifier = Guid.NewGuid().ToString().Substring(0, 4);
-            var newRegistrant = CreateNewTestRegistrantProfile(identifier);
+            var newRegistrant = CreateNewTestRegistrantProfile(TestData.TestPrefix);
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
@@ -42,11 +39,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var actualRegistrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
             actualRegistrant.Id.ShouldBe(id);
-            actualRegistrant.FirstName.ShouldStartWith(identifier);
-            actualRegistrant.LastName.ShouldStartWith(identifier);
-            actualRegistrant.Email.ShouldStartWith(identifier);
-            actualRegistrant.PrimaryAddress.AddressLine1.ShouldStartWith(identifier);
-            actualRegistrant.MailingAddress.AddressLine1.ShouldStartWith(identifier);
+            actualRegistrant.FirstName.ShouldStartWith(TestData.TestPrefix);
+            actualRegistrant.LastName.ShouldStartWith(TestData.TestPrefix);
+            actualRegistrant.Email.ShouldStartWith(TestData.TestPrefix);
+            actualRegistrant.PrimaryAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
+            actualRegistrant.MailingAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -108,8 +105,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
-            var identifier = Guid.NewGuid().ToString().Substring(0, 4);
-            var newRegistrant = CreateNewTestRegistrantProfile(identifier);
+            var newRegistrant = CreateNewTestRegistrantProfile(TestData.TestPrefix);
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
@@ -216,26 +212,12 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanReprintSupport()
         {
-            var dynamicsContext = services.GetRequiredService<EssContext>();
-            var testPrintRequest = dynamicsContext.era_referralprints
-                .Expand(pr => pr.era_ESSFileId)
-                .Where(pr => pr.statecode == (int)EntityState.Active && pr._era_requestinguserid_value != null)
-                .OrderByDescending(pr => pr.createdon)
-                .Take(new Random().Next(20))
-                .ToArray()
-                .First();
-
-            await dynamicsContext.LoadPropertyAsync(testPrintRequest, nameof(era_referralprint.era_era_referralprint_era_evacueesupport));
-
-            var supportId = testPrintRequest.era_era_referralprint_era_evacueesupport.First().era_name;
-            var fileId = testPrintRequest.era_ESSFileId.era_name;
-
             var printRequestId = await manager.Handle(new ReprintSupportCommand
             {
-                FileId = fileId,
+                FileId = TestData.EvacuationFileId,
                 ReprintReason = "test",
-                RequestingUserId = testPrintRequest._era_requestinguserid_value.Value.ToString(),
-                SupportId = supportId
+                RequestingUserId = TestData.Tier4TeamMemberId,
+                SupportId = TestData.SupportIds.First()
             });
 
             printRequestId.ShouldNotBeNullOrEmpty();
@@ -257,8 +239,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanProcessRegistrantInvite()
         {
-            var uniqueId = Guid.NewGuid().ToString().Substring(0, 4);
-            var registrant = TestHelper.CreateRegistrantProfile(uniqueId);
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             registrant.Id = null;
             registrant.UserId = null;
             registrant.AuthenticatedUser = false;
@@ -272,10 +253,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 Email = "test@nowhere.notavailable",
                 RequestingUserId = null
             });
-            var loggedInUserId = uniqueId;
-            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = loggedInUserId });
 
-            var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, uniqueId)).ShouldNotBeNull();
+            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = TestData.TestPrefix });
+
+            var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, TestData.TestPrefix)).ShouldNotBeNull();
             actualRegistrant.AuthenticatedUser.ShouldBeTrue();
             actualRegistrant.VerifiedUser.ShouldBeTrue();
         }
