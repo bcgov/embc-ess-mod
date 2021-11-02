@@ -217,7 +217,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanReprintSupport()
         {
-            //TODO - need to setup test data for referral prints so this can be independent as well
             var dynamicsContext = services.GetRequiredService<EssContext>();
             var testPrintRequest = dynamicsContext.era_referralprints
                 .Expand(pr => pr.era_ESSFileId)
