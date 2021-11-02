@@ -52,6 +52,8 @@ namespace EMBC.Tests.Integration.ESS
 
             var file = CreateEvacuationFile(this.contact);
 
+            var referral = CreateReferralPrint(file);
+
             essContext.SaveChanges();
             essContext.DetachAll();
 
@@ -189,6 +191,19 @@ namespace EMBC.Tests.Integration.ESS
 
 
             return file;
+        }
+
+        private era_referralprint CreateReferralPrint(era_evacuationfile file)
+        {
+            var referral = new era_referralprint()
+            {
+                era_referralprintid = Guid.NewGuid(),
+                era_name = testPrefix + "-referral",
+            };
+
+            essContext.AddToera_referralprints(referral);
+
+            return referral;
         }
     }
 }
