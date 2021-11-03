@@ -37,6 +37,7 @@ export class StepEssFileService {
   // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
   private primaryAddressVal: AddressModel;
   private taskNumberVal: string;
+  private evacuationFileDateVal: string;
 
   // Evacuation Details tab
   private paperESSFileVal: string;
@@ -130,6 +131,14 @@ export class StepEssFileService {
 
   public set taskNumber(taskNumberVal: string) {
     this.taskNumberVal = taskNumberVal;
+  }
+
+  public get evacuationFileDate(): string {
+    return this.evacuationFileDateVal;
+  }
+
+  public set evacuationFileDate(evacuationFileDateVal: string) {
+    this.evacuationFileDateVal = evacuationFileDateVal;
   }
 
   // Evacuation Details tab
@@ -584,6 +593,7 @@ export class StepEssFileService {
 
     // Map out into DTO object and return
     return {
+      evacuationFileDate: this.evacuationFileDate,
       primaryRegistrantId: this.evacueeSession.profileId,
 
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
@@ -667,15 +677,19 @@ export class StepEssFileService {
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     this.selectedEssFile = essFile;
+
     const essNeeds = essFile.needsAssessment;
     this.wizardService.createObjectReference(essFile, 'file');
     const primaryLastName = essFile.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant
     ).lastName;
 
+    //Additional Behind the scenes variables
+    this.taskNumber = essFile.task.taskNumber;
+    this.evacuationFileDate = essFile.evacuationFileDate;
+
     // Wizard variables
     this.evacueeSession.essFileNumber = essFile.id;
-    this.taskNumber = essFile.task.taskNumber;
 
     // Evacuation Details tab
     this.evacAddress = essFile.evacuatedFromAddress;

@@ -9,6 +9,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-matched-essfiles',
@@ -91,6 +92,15 @@ export class MatchedEssfilesComponent implements OnInit {
     this.router.navigate(['/responder-access/search/essfile-dashboard']);
   }
 
+  expiredTaskDateColor(essFileTaskDate: string): boolean {
+    const now = new Date();
+    if (moment(essFileTaskDate).isBefore(now)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   /**
    * Gets all the matched ESSFile list related to the selected profile Dashboard to be diplayed on the ESSFiles section.
    *
@@ -101,6 +111,7 @@ export class MatchedEssfilesComponent implements OnInit {
     this.evacueeProfileService.getProfileFiles(registrantId).subscribe(
       (essFilesArray) => {
         this.essFiles = essFilesArray;
+        console.log(this.essFiles);
         this.isLoading = !this.isLoading;
       },
       (error) => {

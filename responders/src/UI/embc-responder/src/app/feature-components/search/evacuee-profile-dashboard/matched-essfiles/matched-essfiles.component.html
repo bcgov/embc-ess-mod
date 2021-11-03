@@ -89,21 +89,25 @@
 
       <div class="row table-parent">
         <table class="table-details">
-          <tr>
+          <tr *ngIf="file?.task?.taskNumber">
             <th>Task#:</th>
             <td>
               <b>{{ file?.task?.taskNumber }}</b>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="file?.task?.taskNumber">
             <th>Task Start Date:</th>
             <td>
               <b>{{ file?.task?.from | date: 'dd-MMM-yyyy' }}</b>
             </td>
           </tr>
-          <tr>
+          <tr *ngIf="file?.task?.taskNumber">
             <th>Task End Date:</th>
-            <td>
+            <td
+              [ngStyle]="{
+                color: expiredTaskDateColor(file?.task?.to) ? 'black' : 'red'
+              }"
+            >
               <b>{{ file?.task?.to | date: 'dd-MMM-yyyy' }}</b>
             </td>
           </tr>
