@@ -147,13 +147,6 @@ export class HouseholdMemberComponent implements OnInit {
     }
   }
 
-  isUnder19(file: EvacuationFileHouseholdMember): boolean {
-    const dob = file.dateOfBirth.split('/');
-    const now = new Date();
-    const year = now.getFullYear();
-    return year - +dob[2] < 19;
-  }
-
   private createMultipleRegistrantModel(
     memberDetails: EvacuationFileHouseholdMember
   ): MultipleLinkRegistrantModel {

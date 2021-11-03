@@ -102,7 +102,7 @@
           *ngIf="
             matchedProfileCount === 0 &&
             file?.type === 'HouseholdMember' &&
-            !isUnder19(file)
+            !file?.isUnder19
           "
           class="row button-div"
         >
@@ -115,7 +115,7 @@
             matchedProfileCount > 0 &&
             file?.type === 'HouseholdMember' &&
             file?.linkedRegistrantId === null &&
-            !isUnder19(file)
+            !file?.isUnder19
           "
           class="row button-div"
         >
