@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import {
   Code,
   NeedsAssessment,
@@ -13,7 +13,7 @@ import {
   SupportCategory
 } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
-import { ConfigurationService, TasksService } from 'src/app/core/api/services';
+import { TasksService } from 'src/app/core/api/services';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
@@ -30,8 +30,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { DatePipe } from '@angular/common';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { EssfileDashboardService } from '../../search/essfile-dashboard/essfile-dashboard.service';
+import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -52,7 +51,6 @@ export class StepSupportsService {
   private selectedSupportDetailVal: Support;
 
   constructor(
-    private configService: ConfigurationService,
     private essFileService: EssFileService,
     private cacheService: CacheService,
     private taskService: TasksService,
@@ -60,9 +58,8 @@ export class StepSupportsService {
     private locationService: LocationsService,
     private dialog: MatDialog,
     private referralService: ReferralCreationService,
-    private alertService: AlertService,
     private datePipe: DatePipe,
-    private essfileDashboardService: EssfileDashboardService
+    private evacueeSearchService: EvacueeSearchService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -149,7 +146,7 @@ export class StepSupportsService {
   }
 
   public getCategoryList(): void {
-    this.supportCategory = this.essfileDashboardService.supportCategory;
+    this.supportCategory = this.evacueeSearchService.supportCategory;
     console.log(this.supportCategory);
     // this.configService
     //   .configurationGetCodes({ forEnumType: 'SupportCategory' })
@@ -170,7 +167,7 @@ export class StepSupportsService {
   }
 
   public getSubCategoryList(): void {
-    this.supportSubCategory = this.essfileDashboardService.supportSubCategory;
+    this.supportSubCategory = this.evacueeSearchService.supportSubCategory;
     console.log(this.supportCategory);
     // this.configService
     //   .configurationGetCodes({ forEnumType: 'SupportSubCategory' })

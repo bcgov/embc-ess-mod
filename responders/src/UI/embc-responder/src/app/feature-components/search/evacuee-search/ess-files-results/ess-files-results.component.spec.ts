@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { EssFilesResultsComponent } from './ess-files-results.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('EssFilesResultsComponent', () => {
   let component: EssFilesResultsComponent;
@@ -10,7 +11,7 @@ describe('EssFilesResultsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EssFilesResultsComponent],
-      imports: [RouterTestingModule]
+      imports: [HttpClientTestingModule, RouterTestingModule]
     }).compileComponents();
   });
 

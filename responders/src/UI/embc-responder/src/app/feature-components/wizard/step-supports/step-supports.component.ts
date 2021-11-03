@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Referral } from 'src/app/core/api/models';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { LocationsService } from 'src/app/core/services/locations.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from './step-supports.service';
 import * as globalConst from '../../../core/services/global-constants';
