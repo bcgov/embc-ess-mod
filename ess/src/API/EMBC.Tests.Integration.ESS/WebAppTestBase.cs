@@ -1,8 +1,8 @@
 ﻿using System;
 using EMBC.ESS;
+using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,9 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class WebAppTestBase : IClassFixture<WebApplicationFactory<Startup>>
+
+    [Collection("DynamicsFixture")]
+    public class WebAppTestBase //: IClassFixture<WebApplicationFactory<Startup>>
     {
         //set to null to run tests in this class, requires to be on VPN and Dynamics params configured in secrets.xml
 #if RELEASE
@@ -21,9 +23,11 @@ namespace EMBC.Tests.Integration.ESS
 #endif
 
         private readonly LoggerFactory loggerFactory;
-        protected readonly WebApplicationFactory<Startup> webApplicationFactory;
+        private readonly WebApplicationFactory<Startup> webApplicationFactory;
 
-        protected IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
+        public DynamicsTestData TestData { get; }
+
+        //private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
         protected IServiceProvider services => new Lazy<IServiceProvider>(() => webApplicationFactory.Services.CreateScope().ServiceProvider).Value;
         protected ILogger testLogger => loggerFactory.CreateLogger("SUT");
 
@@ -38,6 +42,14 @@ namespace EMBC.Tests.Integration.ESS
                     .ConfigureServices(services => { services.RemoveAll<ILoggerProvider>(); })
                     .ConfigureLogging(lb => { lb.ClearProviders().AddProvider(new XUnitLoggerProvider(output)); });
             });
+
+            this.TestData = new DynamicsTestData(services.GetRequiredService<EssContext>().Clone());
         }
+    }
+
+    [CollectionDefinition("DynamicsFixture")]
+    public class WebAppTestCollection : ICollectionFixture<WebApplicationFactory<Startup>>
+    {
+
     }
 }

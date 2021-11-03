@@ -15,7 +15,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
     public class TeamRepositoryTests : WebAppTestBase
     {
         private readonly ITeamRepository teamRepository;
-        private string teamId = "98275853-2581-eb11-b825-00505683fbf4";
+        private string teamId => TestData.TeamId;
 
         public TeamRepositoryTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -44,7 +44,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var originalTeam = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
             var communityCode = originalTeam.AssignedCommunities.First().Code;
             var team = (await teamRepository.QueryTeams(new TeamQuery { AssignedCommunityCode = communityCode })).Items.ShouldHaveSingleItem();
-            team.ShouldNotBeNull();
+            team.ShouldNotBeNull().Id.ShouldBe(originalTeam.Id);
             team.Name.ShouldNotBeNull();
             team.AssignedCommunities.Where(c => c.Code == communityCode).ShouldHaveSingleItem();
         }

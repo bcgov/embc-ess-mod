@@ -87,7 +87,20 @@ services:
       - "ASPNETCORE_Kestrel__Certificates__Default__Path=/ssl/aspnetapp.pfx"
     volumes:
       - ~/.aspnet/https:/ssl/
-
+      
+  pdf-generator:
+    build:
+      context: ./pdf-generator/src/API
+    image: embcess-pdf-generator:dev
+    ports:
+      - 8200:8080
+    env_file:
+      - .env
+    environment:
+      - "ASPNETCORE_Kestrel__Certificates__Default__Path=/ssl/aspnetapp.pfx"
+    volumes:
+      - ~/.aspnet/https:/ssl/
+      
   landing-page:
     build:
       context: ./landing-page/src
