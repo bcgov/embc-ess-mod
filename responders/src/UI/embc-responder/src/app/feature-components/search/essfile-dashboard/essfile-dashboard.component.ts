@@ -146,7 +146,6 @@ export class EssfileDashboardComponent implements OnInit {
         map((file: EvacuationFileModel) => {
           this.loadNotes();
           this.essFile = file;
-          console.log(this.essFile);
           this.essfileDashboardService.essFile = file;
           this.evacueeSessionService.profileId = file.primaryRegistrantId;
           return file;
