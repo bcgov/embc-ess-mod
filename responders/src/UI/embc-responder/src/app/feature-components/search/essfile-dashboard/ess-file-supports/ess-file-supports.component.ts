@@ -28,7 +28,7 @@ import {
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
-import { EssfileDashboardService } from '../essfile-dashboard.service';
+import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 import { EssFileSupportsService } from './ess-file-supports.service';
 
 @Component({
@@ -49,7 +49,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     private router: Router,
     private cd: ChangeDetectorRef,
     private essFileSupportsService: EssFileSupportsService,
-    private essfileDashboardService: EssfileDashboardService
+    private evacueeSearchService: EvacueeSearchService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -184,12 +184,12 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.essfileDashboardService.supportCategory.find(
+      const category = this.evacueeSearchService.supportCategory.find(
         (value) => value.value === element?.category
       );
       return category?.description;
     } else {
-      const subCategory = this.essfileDashboardService.supportSubCategory.find(
+      const subCategory = this.evacueeSearchService.supportSubCategory.find(
         (value) => value.value === element?.subCategory
       );
       return subCategory?.description;

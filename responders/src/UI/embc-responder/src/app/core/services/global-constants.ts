@@ -124,7 +124,7 @@ export const incidentalsRateSheet: DialogContent = {
 export const clothingRateSheet: DialogContent = {
   title: 'ESS Rate Sheet - Clothing',
   text:
-    '<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span class="bold">up to $150.00 maximum per person (incl. PST)*</span></p><p>* Where<span class="bold">extreme winter conditions</span>apply at the time of the incident, and on a needs basis, amount maybe increased to <span class="bold">$200 per person.</span></p><p>NOTE:</p><p>Clothing is provided as needed to preserve health and modesty. This is not wardrobe replacement. Clothing may include footwear or special needs items such as baby diapers.</p>',
+    '<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span class="bold">up to $150.00 maximum per person (incl. PST)*</span></p><p>* Where <span class="bold">extreme winter conditions</span> apply at the time of the incident, and on a needs basis, amount maybe increased to <span class="bold">$200 per person.</span></p><p>NOTE:</p><p>Clothing is provided as needed to preserve health and modesty. This is not wardrobe replacement. Clothing may include footwear or special needs items such as baby diapers.</p>',
   cancelButton: 'Close'
 };
 

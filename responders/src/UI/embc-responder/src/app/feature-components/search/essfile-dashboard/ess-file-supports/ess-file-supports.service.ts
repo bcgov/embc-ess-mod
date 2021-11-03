@@ -4,7 +4,7 @@ import {
   ObjectWrapper,
   TableFilterModel
 } from 'src/app/core/models/table-filter.model';
-import { EssfileDashboardService } from '../essfile-dashboard.service';
+import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Injectable({ providedIn: 'root' })
 export class EssFileSupportsService {
@@ -18,7 +18,7 @@ export class EssFileSupportsService {
     description: 'All Status'
   };
 
-  constructor(private essfileDashboardService: EssfileDashboardService) {}
+  constructor(private evacueeSearchService: EvacueeSearchService) {}
 
   public load(): TableFilterModel {
     return {
@@ -26,7 +26,7 @@ export class EssFileSupportsService {
         {
           type: 'type',
           label: this.defaultType,
-          values: this.essfileDashboardService.supportCategory
+          values: this.evacueeSearchService.supportCategory
         },
         {
           type: 'status',

@@ -19,6 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker/public-api';
+import { SupportSubCategory } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-support-details',
@@ -215,6 +216,13 @@ export class SupportDetailsComponent implements OnInit {
       this.supportDetailsForm.get('members').value.length ===
       this.stepSupportsService?.evacFile?.needsAssessment?.householdMembers
         .length
+    );
+  }
+
+  hideRateSheet(): boolean {
+    return (
+      this.stepSupportsService?.supportTypeToAdd?.value !==
+      SupportSubCategory.Lodging_Group
     );
   }
 
