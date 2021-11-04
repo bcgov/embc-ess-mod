@@ -502,7 +502,7 @@ namespace EMBC.ESS.Managers.Submissions
             var communities = await metadataRepository.GetCommunities();
             foreach (var referral in referrals)
             {
-                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault().Name;
+                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault()?.Name;
             }
 
             var isProduction = env.IsProduction();

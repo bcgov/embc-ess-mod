@@ -31,6 +31,9 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveTaskId => inactiveTaskId;
         public string ContactId => contact.contactid.Value.ToString();
         public string ContactUserId => contact.era_bcservicescardid;
+        public string ContactFirstName => contact.firstname;
+        public string ContactLastName => contact.lastname;
+        public string ContactDateOfBirth => $"{contact.birthdate.Value.Month:D2}/{contact.birthdate.Value.Day:D2}/{contact.birthdate.Value.Year:D4}";
         public string EvacuationFileId => evacuationfile.era_name;
         public string CurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.Value.ToString();
         public string EvacuationFileSecurityPhrase => testPrefix + "-securityphrase";
@@ -40,15 +43,34 @@ namespace EMBC.Tests.Integration.ESS
         {
             this.essContext = essContext;
 
-            //TODO - add debug condition - if debug use prefix autotest-dev
-            //check if some data exists with that prefix, and if so, we don't need to create new data
-
+            jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid.Value).ToArray();
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
-
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
 
-            jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid.Value).ToArray();
+            //#if DEBUG
+            //            this.testPrefix = $"autotest-dev";
+            //            this.activeTaskId = testPrefix + "-active-task";
+            //            this.inactiveTaskId = testPrefix + "-inactive-task";
+
+            //            var existingTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team").FirstOrDefault();
+            //            if (existingTeam != null)
+            //            {
+            //                this.team = existingTeam;
+            //                this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").FirstOrDefault();
+            //                this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").FirstOrDefault();
+
+            //                this.evacuationfile = essContext.era_evacuationfiles
+            //                .Expand(f => f.era_CurrentNeedsAssessmentid)
+            //                .Expand(f => f.era_Registrant)
+            //                .Where(f => f.era_name == testPrefix + "-file").FirstOrDefault();
+
+            //                essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+
+            //                return;
+            //            }
+
+            //#endif
 
             this.team = CreateTeam(Guid.NewGuid());
             this.tier4TeamMember = CreateTeamMember(team, Guid.NewGuid());
@@ -75,8 +97,6 @@ namespace EMBC.Tests.Integration.ESS
             essContext.DetachAll();
         }
 
-
-
         public string RandomCommunity => Commmunities.Skip(random.Next(jurisdictions.Length - 1)).First().ToString();
 
         private era_essteam CreateTeam(Guid id)
@@ -100,7 +120,6 @@ namespace EMBC.Tests.Integration.ESS
             }
 
             return team;
-
         }
 
         private era_essteamuser CreateTeamMember(era_essteam team, Guid id)
@@ -117,17 +136,23 @@ namespace EMBC.Tests.Integration.ESS
 
             return member;
         }
+
         private void CreateTask(string taskId, DateTime startDate)
         {
-            essContext.AddToera_tasks(new era_task
+            var task = new era_task
             {
                 era_taskid = Guid.NewGuid(),
                 era_name = taskId,
                 era_taskstartdate = startDate,
                 era_currentdateandtime = startDate.AddDays(3),
+            };
+            essContext.AddToera_tasks(task);
 
-            });
+            var jurisdictionsWithTask = essContext.era_tasks.Where(t => t._era_jurisdictionid_value != null && t.statecode == (int)EntityState.Active).ToArray().Select(t => t._era_jurisdictionid_value);
+            var openJurisdiction = jurisdictions.Where(j => !jurisdictionsWithTask.Any(jwt => jwt == j.era_jurisdictionid)).FirstOrDefault();
+            if (openJurisdiction != null) essContext.SetLink(task, nameof(era_task.era_JurisdictionID), openJurisdiction);
         }
+
         private contact CreateContact()
         {
             var contact = new contact
@@ -142,6 +167,7 @@ namespace EMBC.Tests.Integration.ESS
                 address1_postalcode = "v2v 2v2",
                 address1_country = "CAN",
                 address1_stateorprovince = "BC",
+                birthdate = new Date(1999, 5, 10)
             };
 
             essContext.AddTocontacts(contact);
@@ -184,7 +210,7 @@ namespace EMBC.Tests.Integration.ESS
                 era_isprimaryregistrant = true
             };
 
-            var householdMembers = Enumerable.Range(1, random.Next(10)).Select(i => new era_householdmember
+            var householdMembers = Enumerable.Range(1, random.Next(1, 10)).Select(i => new era_householdmember
             {
                 era_householdmemberid = Guid.NewGuid(),
                 era_dateofbirth = new Date(2000 + i, i, i),
@@ -192,7 +218,16 @@ namespace EMBC.Tests.Integration.ESS
                 era_lastname = $"{testPrefix}-member-last-{i}",
                 era_gender = random.Next(1, 3),
                 era_isprimaryregistrant = false
-            }).Prepend(primaryMember);
+            }).Prepend(primaryMember)
+            .Append(new era_householdmember
+            {
+                era_householdmemberid = Guid.NewGuid(),
+                era_dateofbirth = new Date(1998, 1, 2),
+                era_firstname = $"{testPrefix}-member-no-registrant-first",
+                era_lastname = $"{testPrefix}-member-no-registrant-last",
+                era_gender = random.Next(1, 3),
+                era_isprimaryregistrant = false
+            });
 
             foreach (var member in householdMembers)
             {
