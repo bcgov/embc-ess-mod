@@ -43,10 +43,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
                 new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
                 new LodgingBilletingReferral() { NumberOfNights = 1 },
                 new LodgingGroupReferral() { NumberOfNights = 1 },
                 new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
@@ -94,10 +94,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
                 new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
                 new LodgingBilletingReferral() { NumberOfNights = 1 },
                 new LodgingGroupReferral() { NumberOfNights = 1 },
                 new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
