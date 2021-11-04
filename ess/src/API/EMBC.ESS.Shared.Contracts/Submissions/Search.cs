@@ -118,6 +118,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Id { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public string TaskId { get; set; }
+        public DateTime? TaskStartDate { get; set; }
+        public DateTime? TaskEndDate { get; set; }
         public string TaskLocationCommunityCode { get; set; }
         public bool RestrictedAccess { get; set; }
         public DateTime CreatedOn { get; set; }
