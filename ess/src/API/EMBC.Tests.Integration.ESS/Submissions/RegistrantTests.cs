@@ -105,7 +105,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
-            var newRegistrant = CreateNewTestRegistrantProfile(TestData.TestPrefix);
+            var identifier = Guid.NewGuid().ToString().Substring(0, 4);
+            var newRegistrant = CreateNewTestRegistrantProfile(TestData.TestPrefix + "-" + identifier);
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
@@ -114,7 +115,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var registrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
 
             var file = (await GetEvacuationFileById(TestData.EvacuationFileId)).FirstOrDefault();
-            var member = file.NeedsAssessment.HouseholdMembers.FirstOrDefault();
+            var member = file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.FirstName != $"{TestData.TestPrefix}-member-no-registrant-first").FirstOrDefault();
 
             var fileId = await manager.Handle(new LinkRegistrantCommand { FileId = file.Id, RegistantId = registrant.Id, HouseholdMemberId = member.Id });
             fileId.ShouldBe(file.Id);
