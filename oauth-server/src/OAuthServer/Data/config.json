@@ -1,0 +1,70 @@
+{
+  "IdentityResources": [
+    {
+      "Name": "openid"
+    },
+    {
+      "Name": "profile"
+    },
+    {
+      "Name": "offline_access"
+    }
+  ],
+  "ApiScopes": [
+    {
+      "Name": "registrants-portal-api"
+    }
+  ],
+  "ApiResources": [
+    {
+      "Name": "registrants-portal-api",
+      "ApiSecrets": [
+        {
+          "Value": "Ljl/xDyew9tA7HvWRQW47Z/Npt91qqipvSjKXTkxk0s="
+        }
+      ],
+      "Scopes": [
+        "registrants-portal-api"
+      ]
+    }
+  ],
+  "Clients": [
+    {
+      "ClientId": "registrants-portal-ui",
+      "AccessTokenType": "Reference",
+      "RequireClientSecret": false,
+      "AllowedGrantTypes": [
+        "authorization_code"
+      ],
+      "RequirePkce": true,
+      "RedirectUris": [
+        "http://localhost:5200",
+        "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://test-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://training-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://era-registrants.apps.silver.devops.gov.bc.ca"
+      ],
+      "AllowedScopes": [
+        "openid",
+        "profile",
+        "offline_access",
+        "registrants-portal-api"
+      ],
+      "AllowOfflineAccess": true,
+      "AllowedCorsOrigins": [
+        "http://localhost:5200",
+        "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://test-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://training-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://era-registrants.apps.silver.devops.gov.bc.ca"
+      ],
+      "PostLogoutRedirectUris": [
+        "http://localhost:5200",
+        "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://test-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://training-era-registrants.apps.silver.devops.gov.bc.ca",
+        "https://era-registrants.apps.silver.devops.gov.bc.ca"
+      ]
+    }
+  ]
+}
