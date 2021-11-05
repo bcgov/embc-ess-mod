@@ -15,7 +15,7 @@ import { StepSupportsService } from '../../step-supports/step-supports.service';
   styleUrls: ['./select-support.component.scss']
 })
 export class SelectSupportComponent implements OnInit {
-  supportList: Code[];
+  supportList: Code[] = [];
   supportTypeForm: FormGroup;
 
   constructor(

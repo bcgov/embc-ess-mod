@@ -62,6 +62,8 @@ namespace EMBC.Responders.API.Services
         public string Id { get; set; }
         public bool IsRestricted { get; set; }
         public string TaskId { get; set; }
+        public DateTime? TaskStartDate { get; set; }
+        public DateTime? TaskEndDate { get; set; }
         public string TaskLocationCommunityCode { get; set; }
         public Address EvacuatedFrom { get; set; }
         public DateTime CreatedOn { get; set; }

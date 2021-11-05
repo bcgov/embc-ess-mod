@@ -11,6 +11,8 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-essfile-security-phrase',
@@ -33,7 +35,8 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
     private formBuilder: FormBuilder,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
@@ -130,7 +133,16 @@ export class EssfileSecurityPhraseComponent implements OnInit {
    * Function that redirects to Evacuation Registration page
    */
   goToEvacRegistration() {
-    this.router.navigate(['ess-wizard/evacuee-profile/collection-notice']);
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee'
+    );
+    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
+
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: WizardType.NewRegistration },
+      queryParamsHandling: 'merge'
+    });
   }
 
   private createSecurityPhraseForm() {

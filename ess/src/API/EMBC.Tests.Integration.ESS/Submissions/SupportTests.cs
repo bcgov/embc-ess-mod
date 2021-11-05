@@ -19,8 +19,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
     {
         private readonly SubmissionsManager manager;
 
-        private readonly string teamUserId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
-
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => await TestHelper.GetRegistrantByUserId(manager, userId);
 
         private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId);
@@ -35,20 +33,20 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanProcessSupports()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var file = CreateNewTestEvacuationFile(registrant);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
-            file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
 
             var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
                 new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
                 new LodgingBilletingReferral() { NumberOfNights = 1 },
                 new LodgingGroupReferral() { NumberOfNights = 1 },
                 new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
@@ -63,7 +61,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 s.IssuedOn = DateTime.Now;
             }
 
-            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = teamUserId });
+            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             printRequestId.ShouldNotBeNullOrEmpty();
 
@@ -86,20 +84,20 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVoidSupport()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var file = CreateNewTestEvacuationFile(registrant);
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
-            file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
 
             var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
                 new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
                 new LodgingBilletingReferral() { NumberOfNights = 1 },
                 new LodgingGroupReferral() { NumberOfNights = 1 },
                 new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
@@ -114,7 +112,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 s.IssuedOn = DateTime.Now;
             }
 
-            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = teamUserId });
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
@@ -136,7 +134,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanQuerySupplierList()
         {
-            var taskId = "UNIT-TEST-ACTIVE-TASK";
+            var taskId = TestData.ActiveTaskId;
             var list = (await manager.Handle(new SuppliersListQuery { TaskId = taskId })).Items;
             list.ShouldNotBeEmpty();
         }
@@ -148,7 +146,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var testPrintRequest = dynamicsContext.era_referralprints
                 .Where(pr => pr.statecode == (int)EntityState.Active && pr._era_requestinguserid_value != null)
                 .OrderByDescending(pr => pr.createdon)
-                .Take(new Random().Next(20))
+                .Take(new Random().Next(1, 20))
                 .ToArray()
                 .First();
 
