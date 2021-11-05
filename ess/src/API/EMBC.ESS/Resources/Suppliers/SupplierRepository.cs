@@ -112,7 +112,8 @@ namespace EMBC.ESS.Resources.Suppliers
             if (!string.IsNullOrEmpty(queryRequest.TeamId)) supplierQuery = supplierQuery.Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
 
             var suppliers = (await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync()).ToArray();
-            if (queryRequest.ActiveOnly) suppliers = suppliers.Where(s => s.era_SupplierId.statecode == (int)EntityState.Active).ToArray();
+            suppliers = suppliers.Where(s => s.era_SupplierId.statecode == (int)EntityState.Active).ToArray();
+            if (queryRequest.ActiveOnly) suppliers = suppliers.Where(s => s.era_active.HasValue ? s.era_active.Value : false).ToArray();
 
             foreach (var supplier in suppliers)
             {
