@@ -38,7 +38,7 @@
       </div>
       <div class="col-md-3">
         <button
-          class="button-p button-width"
+          class="button-p button-width process-button"
           mat-button
           (click)="process()"
           [disabled]="referralService.getDraftSupport().length === 0"
@@ -55,7 +55,7 @@
           <mat-label>{{ filter?.label.description }}</mat-label>
           <mat-select
             #matRef
-            id="custom-select"
+            id="{{ filter?.type }}"
             (selectionChange)="selected($event, filter?.type)"
           >
             <mat-option value="">{{ filter?.label.description }}</mat-option>
