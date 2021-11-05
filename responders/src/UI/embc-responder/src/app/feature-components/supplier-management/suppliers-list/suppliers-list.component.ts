@@ -27,8 +27,8 @@ export class SuppliersListComponent implements OnInit {
   filtersToLoad: TableFilterModel;
   primarySuppliersColumns: TableColumnModel[];
   mutualAidSuppliersColumns: TableColumnModel[];
-  suppliersList: SupplierListItem[];
-  mutualAidList: SupplierListItem[];
+  suppliersList: SupplierListItem[] = [];
+  mutualAidList: SupplierListItem[] = [];
   suppliersLoader = false;
   mutualAidLoader = false;
   statusLoading = true;
@@ -128,8 +128,7 @@ export class SuppliersListComponent implements OnInit {
           );
         } else {
           this.statusLoading = !this.statusLoading;
-          this.getPrimarySuppliersList();
-          this.suppliersLoader = false;
+          this.cancelPrimarySuppliersListChanges();
         }
       });
   }
@@ -168,9 +167,8 @@ export class SuppliersListComponent implements OnInit {
             }
           );
         } else {
-          this.statusLoading = !this.statusLoading;
-          this.getPrimarySuppliersList();
-          this.suppliersLoader = false;
+          // this.statusLoading = !this.statusLoading;
+          this.cancelPrimarySuppliersListChanges();
         }
       });
   }
@@ -214,6 +212,27 @@ export class SuppliersListComponent implements OnInit {
       },
       (error) => {
         this.suppliersLoader = !this.suppliersLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.mainSuppliersListError
+        );
+      }
+    );
+  }
+
+  /**
+   * If the user cancels activation of deactivation of any Primary Supplier, the list is restored before changes has been made.
+   */
+  private cancelPrimarySuppliersListChanges(): void {
+    this.statusLoading = !this.statusLoading;
+    this.supplierServices.getMainSuppliersList().subscribe(
+      (values) => {
+        this.statusLoading = !this.statusLoading;
+        this.suppliersList = values;
+      },
+      (error) => {
+        this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',

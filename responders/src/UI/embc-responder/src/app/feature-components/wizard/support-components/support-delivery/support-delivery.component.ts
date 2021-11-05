@@ -55,7 +55,6 @@ export class SupportDeliveryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.stepSupportsService?.supportDelivery);
     this.createSupportDeliveryForm();
     this.supplierList = this.stepSupportsService.supplierList;
     this.supportDeliveryForm.get('issuedTo').valueChanges.subscribe((value) => {
@@ -269,6 +268,7 @@ export class SupportDeliveryComponent implements OnInit {
       (value) => {
         this.showLoader = !this.showLoader;
         this.stepSupportsService.supplierList = value;
+        this.supplierList = value;
       },
       (error) => {
         this.showLoader = !this.showLoader;
