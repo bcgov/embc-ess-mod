@@ -14,3 +14,7 @@
   margin-top: 25px;
   margin-bottom: 25px;
 }
+
+.process-button:disabled {
+  background-color: rgba(187, 187, 187, 1);
+}

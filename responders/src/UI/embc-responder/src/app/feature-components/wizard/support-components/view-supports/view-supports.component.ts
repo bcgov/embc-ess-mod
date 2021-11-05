@@ -1,5 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Referral, Support, SupportStatus } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -24,6 +30,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./view-supports.component.scss']
 })
 export class ViewSupportsComponent implements OnInit {
+  @ViewChildren('matRef') matRef: QueryList<MatSelect>;
   supportList: Support[];
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
@@ -112,11 +119,21 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   selected(event: MatSelectChange, filterType: string): void {
+    this.resetFilter(filterType);
     const selectedValue =
       event.value === undefined || event.value === ''
         ? ''
         : event.value.description;
     this.filterTerm = { type: filterType, value: selectedValue };
+  }
+
+  resetFilter(filterType: string) {
+    const selectRef = this.matRef.filter((select) => {
+      return select.id !== filterType;
+    });
+    selectRef.forEach((select: MatSelect) => {
+      select.value = '';
+    });
   }
 
   openSupportDetails($event: Support): void {
