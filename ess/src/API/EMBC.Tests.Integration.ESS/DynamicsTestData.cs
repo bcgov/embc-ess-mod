@@ -49,7 +49,6 @@ namespace EMBC.Tests.Integration.ESS
         public DynamicsTestData(EssContext essContext)
         {
             this.essContext = essContext;
-
             jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid.Value).ToArray();
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
             this.activeTaskId = testPrefix + "-active-task";
@@ -324,7 +323,8 @@ namespace EMBC.Tests.Integration.ESS
             var teamSupplier = new era_essteamsupplier()
             {
                 era_essteamsupplierid = Guid.NewGuid(),
-                era_active = true
+                era_active = true,
+                era_isprimarysupplier = true
             };
 
             essContext.AddToera_essteamsuppliers(teamSupplier);

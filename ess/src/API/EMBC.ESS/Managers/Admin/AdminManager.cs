@@ -169,6 +169,7 @@ namespace EMBC.ESS.Managers.Admin
                 var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery
                 {
                     TeamId = query.TeamId,
+                    ActiveOnly = false
                 })).Items;
 
                 var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
