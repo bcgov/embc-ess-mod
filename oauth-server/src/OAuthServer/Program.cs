@@ -32,7 +32,6 @@ namespace OAuthServer
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
             logger.LogInformation("Migrating PersistedGrantDbContext");
             var dbCtx = scope.ServiceProvider.GetService<PersistedGrantDbContext>();
-            dbCtx.Database.EnsureCreated();
             dbCtx.Database.Migrate();
             logger.LogInformation("PersistedGrantDbContext migration completed");
 
