@@ -1,1 +1,1 @@
-dotnet watch -p .\EMBC.PDFGenerator\ run
+dotnet watch --project .\EMBC.PDFGenerator\ run

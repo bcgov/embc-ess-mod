@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <UserSecretsId>07057444-655a-49e0-9b8c-3647ebd2a19a</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\stylecop.json" Link="stylecop.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.20" />
+    </ItemGroup>
+
+
+</Project>
