@@ -16,6 +16,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../../wizard.service';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-security-questions',
@@ -42,6 +43,45 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     this.setFormDisabled(
       this.stepEvacueeProfileService.bypassSecurityQuestions
     );
+
+    //Update value and validity for each security question dropdown when any of the questions change
+    this.questionForm
+      .get('question1')
+      .valueChanges.pipe(distinctUntilChanged())
+      .subscribe((value) => {
+        this.questionForm.get('question2').updateValueAndValidity();
+        this.questionForm.get('question3').updateValueAndValidity();
+      });
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
+
+    this.questionForm
+      .get('question2')
+      .valueChanges.pipe(distinctUntilChanged())
+      .subscribe((value) => {
+        this.questionForm.get('question1').updateValueAndValidity();
+        this.questionForm.get('question3').updateValueAndValidity();
+      });
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
+
+    this.questionForm
+      .get('question3')
+      .valueChanges.pipe(distinctUntilChanged())
+      .subscribe((value) => {
+        this.questionForm.get('question1').updateValueAndValidity();
+        this.questionForm.get('question2').updateValueAndValidity();
+      });
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
