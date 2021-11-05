@@ -344,6 +344,19 @@ namespace EMBC.ESS.Managers.Submissions
                 fileResults = fileResults.Where(f => query.InStatuses.Contains(f.Status)).ToArray();
             }
 
+            foreach (var file in fileResults)
+            {
+                if (file.TaskId != null)
+                {
+                    var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.TaskId })).Items.SingleOrDefault();
+                    if (task != null)
+                    {
+                        file.TaskStartDate = task.StartDate;
+                        file.TaskEndDate = task.EndDate;
+                    }
+                }
+            }
+
             return new EvacueeSearchQueryResponse
             {
                 Profiles = profileResults,
@@ -502,7 +515,7 @@ namespace EMBC.ESS.Managers.Submissions
             var communities = await metadataRepository.GetCommunities();
             foreach (var referral in referrals)
             {
-                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault().Name;
+                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault()?.Name;
             }
 
             var isProduction = env.IsProduction();

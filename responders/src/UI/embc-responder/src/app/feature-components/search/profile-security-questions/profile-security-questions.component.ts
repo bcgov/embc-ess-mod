@@ -10,6 +10,8 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { ProfileSecurityQuestionsService } from './profile-security-questions.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-profile-security-questions',
@@ -36,7 +38,8 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     private evacueeSessionService: EvacueeSessionService,
     private formBuilder: FormBuilder,
     private evacueeProfileService: EvacueeProfileService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
@@ -170,7 +173,16 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    * Function that redirects to Evacuation Registration page
    */
   goToEvacRegistration() {
-    this.router.navigate(['ess-wizard/evacuee-profile/collection-notice']);
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee'
+    );
+    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
+
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: WizardType.NewRegistration },
+      queryParamsHandling: 'merge'
+    });
   }
 
   private createAnswersForm(): void {

@@ -82,6 +82,7 @@
               type="button"
               mat-button
               (click)="next()"
+              [disabled]="showLoader"
             >
               Continue
               <app-loader
@@ -142,6 +143,7 @@
               type="button"
               mat-button
               (click)="next()"
+              [disabled]="showLoader"
             >
               Continue
               <app-loader
