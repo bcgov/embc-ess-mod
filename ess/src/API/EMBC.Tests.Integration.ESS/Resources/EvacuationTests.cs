@@ -18,6 +18,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         // Constants
         private string TestContactId => TestData.ContactId;
+
         private string TestContactUserId => TestData.ContactUserId;
 
         private string TestEssFileNumber => TestData.EvacuationFileId;
@@ -134,7 +135,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var needsAssessment = fileToUpdate.NeedsAssessment;
 
             needsAssessment.HavePetsFood = !needsAssessment.HavePetsFood;
-            foreach (var member in needsAssessment.HouseholdMembers)
+            foreach (var member in needsAssessment.HouseholdMembers.Where(m => m.LinkedRegistrantId == null))
             {
                 string originalFirstName = member.FirstName.Substring(member.FirstName.LastIndexOf("_") + 1);
                 string originalLastName = member.LastName.Substring(member.LastName.LastIndexOf("_") + 1);
