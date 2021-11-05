@@ -15,7 +15,7 @@ COPY . .
 RUN dotnet test -c Release
 
 FROM build AS publish
-RUN dotnet publish "OauthServer/OauthServer.csproj" -c Release -o /app/publish
+RUN dotnet publish "OAuthServer/OAuthServer.csproj" -c Release -o /app/publish
 
 FROM base AS final
 
