@@ -166,7 +166,7 @@ namespace EMBC.Tests.Integration.ESS
             };
             essContext.AddToera_tasks(task);
 
-            var jurisdiction = jurisdictions.Where(j => j.era_jurisdictionid == team.era_ESSTeam_ESSTeamArea_ESSTeamID.First()._era_jurisdictionid_value).Single();
+            var jurisdiction = jurisdictions.Where(j => j.era_jurisdictionid == team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value).SingleOrDefault();
             if (jurisdiction != null) essContext.SetLink(task, nameof(era_task.era_JurisdictionID), jurisdiction);
 
             return task;
