@@ -34,6 +34,7 @@ export class AssignedCommunityTableComponent
   @Input() filterPredicate: any;
   @Input() disableRow = false;
   @Input() isLoading: boolean;
+  @Input() existingSelection: TeamCommunityModel[];
   @Output() selectedRows = new EventEmitter<any[]>();
 
   dataSource = new MatTableDataSource();
@@ -53,6 +54,19 @@ export class AssignedCommunityTableComponent
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      if (
+        this.existingSelection !== undefined &&
+        this.existingSelection.length > 0
+      ) {
+        this.dataSource.filteredData.forEach((row) => {
+          const r: TeamCommunityModel = row;
+          for (const sel of this.existingSelection) {
+            if (sel.code === r.code) {
+              this.selection.select(row);
+            }
+          }
+        });
+      }
       this.cd.detectChanges();
     }
 

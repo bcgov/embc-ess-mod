@@ -24,6 +24,7 @@ export class AddCommunityComponent implements OnInit {
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
   isLoading = false;
+  existingSelection: TeamCommunityModel[] = [];
 
   constructor(
     private assignedCommunityListDataService: AssignedCommunityListDataService,
@@ -53,6 +54,15 @@ export class AddCommunityComponent implements OnInit {
           );
         }
       );
+
+    if (
+      this.addCommunityService.getAddedCommunities() !== undefined &&
+      this.addCommunityService.getAddedCommunities().length > 0
+    ) {
+      this.existingSelection = this.addCommunityService.getAddedCommunities();
+      this.selectedCommunitiesList = this.addCommunityService.getAddedCommunities();
+    }
+
     this.filtersToLoad = this.addCommunityService.filtersToLoad;
     this.displayedColumns = this.addCommunityService.displayedColumns;
   }

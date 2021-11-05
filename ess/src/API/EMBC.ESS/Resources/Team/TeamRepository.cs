@@ -40,23 +40,42 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<TeamQueryResponse> QueryTeams(TeamQuery query)
         {
-            IQueryable<era_essteam> teamsQuery = context.era_essteams
+            var teams = (await QueryTeams(context, query)).Concat(await QueryTeamAreas(context, query)).ToArray();
+
+            foreach (var team in teams)
+            {
+                var loadTasks = new List<Task>();
+                loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID))));
+                loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId))));
+                await Task.WhenAll(loadTasks.ToArray());
+            }
+
+            return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
+        }
+
+        private static async Task<IEnumerable<era_essteam>> QueryTeams(EssContext ctx, TeamQuery query)
+        {
+            if (!string.IsNullOrEmpty(query.AssignedCommunityCode)) return Array.Empty<era_essteam>();
+
+            var teamsQuery = ctx.era_essteams
                 .Expand(t => t.era_ESSTeam_ESSTeamArea_ESSTeamID)
                 .Where(t => t.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(query.Id)) teamsQuery = teamsQuery.Where(t => t.era_essteamid == Guid.Parse(query.Id));
 
-            var teams = (await ((DataServiceQuery<era_essteam>)teamsQuery).GetAllPagesAsync()).ToArray();
-            foreach (var team in teams)
-            {
-                await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
-                await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId));
-            }
+            return await ((DataServiceQuery<era_essteam>)teamsQuery).GetAllPagesAsync();
+        }
 
-            if (!string.IsNullOrEmpty(query.AssignedCommunityCode))
-                teams = teams.Where(t => t.era_ESSTeam_ESSTeamArea_ESSTeamID.Any(a => a._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode))).ToArray();
+        private static async Task<IEnumerable<era_essteam>> QueryTeamAreas(EssContext ctx, TeamQuery query)
+        {
+            if (string.IsNullOrEmpty(query.AssignedCommunityCode)) return Array.Empty<era_essteam>();
 
-            return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
+            var teams = ctx.era_essteamareas
+                .Expand(ta => ta.era_ESSTeamID)
+                .Where(ta => ta._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode) && ta.statecode == (int)EntityState.Active).ToArray()
+                .Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
+
+            return await Task.FromResult(teams);
         }
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)

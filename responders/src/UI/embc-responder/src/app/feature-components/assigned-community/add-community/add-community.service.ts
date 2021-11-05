@@ -46,4 +46,8 @@ export class AddCommunityService {
   public getAddedCommunities(): TeamCommunityModel[] {
     return this.addedCommunities;
   }
+
+  public clear() {
+    this.setAddedCommunities([]);
+  }
 }
