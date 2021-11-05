@@ -40,19 +40,14 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<TeamQueryResponse> QueryTeams(TeamQuery query)
         {
-            var readCtx = context.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
-
-            var teams = (await QueryTeams(readCtx, query)).Concat(await QueryTeamAreas(readCtx, query)).ToArray();
+            var teams = (await QueryTeams(context, query)).Concat(await QueryTeamAreas(context, query)).ToArray();
 
             foreach (var team in teams)
             {
-                context.AttachTo(nameof(EssContext.era_essteams), team);
                 var loadTasks = new List<Task>();
                 loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID))));
                 loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId))));
                 await Task.WhenAll(loadTasks.ToArray());
-                context.Detach(team);
             }
 
             return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
