@@ -7,7 +7,7 @@ ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 
 WORKDIR /src
-COPY ["OAuthServer/OAuthServer.csproj", "OauthServer/"]
+COPY ["OAuthServer/OAuthServer.csproj", "OAuthServer/"]
 COPY ["oauth-server.sln", "stylecop.json", ".editorconfig", "./"]
 
 RUN dotnet restore .
