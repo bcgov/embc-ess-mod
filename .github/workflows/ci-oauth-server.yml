@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "oauth-server/src/API/**"
+      - "oauth-server/src/**"
       - ".github/workflows/ci-oauth-server.yml"
 
 env:
