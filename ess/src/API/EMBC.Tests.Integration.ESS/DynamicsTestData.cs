@@ -20,6 +20,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly string inactiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact contact;
+        private readonly era_task activeTask;
         private readonly era_evacuationfile evacuationfile;
         private readonly era_supplier supplierA;
         private readonly era_supplier supplierB;
@@ -63,6 +64,7 @@ namespace EMBC.Tests.Integration.ESS
             //            if (existingTeam != null)
             //            {
             //                this.team = existingTeam;
+            //                this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).FirstOrDefault();
             //                this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").FirstOrDefault();
             //                this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").FirstOrDefault();
             //                this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").FirstOrDefault();
@@ -83,7 +85,7 @@ namespace EMBC.Tests.Integration.ESS
 
             this.team = CreateTeam(Guid.NewGuid());
             this.tier4TeamMember = CreateTeamMember(team, Guid.NewGuid());
-            CreateTask(activeTaskId, DateTime.Now);
+            this.activeTask = CreateTask(activeTaskId, DateTime.Now);
             CreateTask(inactiveTaskId, DateTime.Now.AddDays(-7));
             this.contact = CreateContact();
 
@@ -153,7 +155,7 @@ namespace EMBC.Tests.Integration.ESS
             return member;
         }
 
-        private void CreateTask(string taskId, DateTime startDate)
+        private era_task CreateTask(string taskId, DateTime startDate)
         {
             var task = new era_task
             {
@@ -166,6 +168,8 @@ namespace EMBC.Tests.Integration.ESS
 
             var jurisdiction = jurisdictions.Where(j => j.era_jurisdictionid == team.era_ESSTeam_ESSTeamArea_ESSTeamID.First()._era_jurisdictionid_value).Single();
             if (jurisdiction != null) essContext.SetLink(task, nameof(era_task.era_JurisdictionID), jurisdiction);
+
+            return task;
         }
 
         private contact CreateContact()
@@ -201,6 +205,7 @@ namespace EMBC.Tests.Integration.ESS
             };
 
             essContext.AddToera_evacuationfiles(file);
+            essContext.SetLink(file, nameof(era_evacuationfile.era_TaskId), this.activeTask);
             var needsAssessment = new era_needassessment
             {
                 era_needassessmentid = Guid.NewGuid(),

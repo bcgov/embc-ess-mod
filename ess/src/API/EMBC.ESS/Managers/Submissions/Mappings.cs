@@ -117,6 +117,8 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Resources.Cases.EvacuationFile, Shared.Contracts.Submissions.EvacuationFileSearchResult>()
                 .ForMember(d => d.EvacuationAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
+                .ForMember(d => d.TaskStartDate, opts => opts.Ignore())
+                .ForMember(d => d.TaskEndDate, opts => opts.Ignore())
                 ;
 
             CreateMap<Resources.Contacts.Contact, Shared.Contracts.Submissions.ProfileSearchResult>()
