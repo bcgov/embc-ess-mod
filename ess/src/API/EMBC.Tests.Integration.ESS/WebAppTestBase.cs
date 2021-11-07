@@ -1,10 +1,8 @@
 ﻿using System;
 using EMBC.ESS;
 using EMBC.ESS.Utilities.Dynamics;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
@@ -12,10 +10,26 @@ using Xunit.Abstractions;
 namespace EMBC.Tests.Integration.ESS
 {
 
-    [Collection("DynamicsFixture")]
-    public class WebAppTestBase //: IClassFixture<WebApplicationFactory<Startup>>
+    public class DynamicsWebAppFixture : WebApplicationFactory<Startup>
     {
-        //set to null to run tests in this class, requires to be on VPN and Dynamics params configured in secrets.xml
+        public DynamicsTestData TestData { get; }
+
+
+        public DynamicsWebAppFixture()
+        {
+            this.TestData = new DynamicsTestData(Services.CreateScope().ServiceProvider.GetRequiredService<EssContext>().Clone());
+        }
+    }
+
+    [CollectionDefinition("DynamicsFixture")]
+    public class WebAppTestCollection : ICollectionFixture<DynamicsWebAppFixture>
+    {
+
+    }
+
+    [Collection("DynamicsFixture")]
+    public class WebAppTestBase
+    {
 #if RELEASE
         protected const string RequiresDynamics = "Integration tests that requires Dynamics connection via VPN";
 #else
@@ -23,33 +37,18 @@ namespace EMBC.Tests.Integration.ESS
 #endif
 
         private readonly LoggerFactory loggerFactory;
-        private readonly WebApplicationFactory<Startup> webApplicationFactory;
+        private readonly DynamicsWebAppFixture fixture;
 
-        public DynamicsTestData TestData { get; }
+        public IServiceProvider services => new Lazy<IServiceProvider>(() => this.fixture.Services.CreateScope().ServiceProvider).Value;
+        public ILogger testLogger => loggerFactory.CreateLogger("SUT");
+        public DynamicsTestData TestData => fixture.TestData;
 
-        //private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
-        protected IServiceProvider services => new Lazy<IServiceProvider>(() => webApplicationFactory.Services.CreateScope().ServiceProvider).Value;
-        protected ILogger testLogger => loggerFactory.CreateLogger("SUT");
-
-        public WebAppTestBase(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
+        public WebAppTestBase(ITestOutputHelper output, DynamicsWebAppFixture fixture)
         {
-            Environment.SetEnvironmentVariable("location__cache__AutoRefreshEnabled", "false");
+
             loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
-
-            this.webApplicationFactory = webApplicationFactory.WithWebHostBuilder(builder =>
-            {
-                builder
-                    .ConfigureServices(services => { services.RemoveAll<ILoggerProvider>(); })
-                    .ConfigureLogging(lb => { lb.ClearProviders().AddProvider(new XUnitLoggerProvider(output)); });
-            });
-
-            this.TestData = new DynamicsTestData(services.GetRequiredService<EssContext>().Clone());
+            this.fixture = fixture;
         }
     }
 
-    [CollectionDefinition("DynamicsFixture")]
-    public class WebAppTestCollection : ICollectionFixture<WebApplicationFactory<Startup>>
-    {
-
-    }
 }

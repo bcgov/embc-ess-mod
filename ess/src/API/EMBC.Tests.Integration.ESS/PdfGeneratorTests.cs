@@ -15,7 +15,7 @@ namespace EMBC.Tests.Integration.ESS
 {
     public class PdfGeneratorTests : WebAppTestBase
     {
-        public PdfGeneratorTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public PdfGeneratorTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
         }
 

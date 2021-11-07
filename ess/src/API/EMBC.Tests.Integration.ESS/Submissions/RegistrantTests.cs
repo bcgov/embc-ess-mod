@@ -23,7 +23,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         private RegistrantProfile CreateNewTestRegistrantProfile(string identifier) => TestHelper.CreateRegistrantProfile(identifier);
 
-        public RegistrantTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public RegistrantTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             manager = services.GetRequiredService<SubmissionsManager>();
         }

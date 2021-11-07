@@ -17,7 +17,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private readonly ITeamRepository teamRepository;
         private string teamId => TestData.TeamId;
 
-        public TeamRepositoryTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public TeamRepositoryTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             teamRepository = services.GetRequiredService<ITeamRepository>();
         }

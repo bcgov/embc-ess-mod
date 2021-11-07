@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using EMBC.ESS;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -11,7 +9,7 @@ namespace EMBC.Tests.Integration.ESS
 {
     public class DistributedCacheTests : WebAppTestBase
     {
-        public DistributedCacheTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public DistributedCacheTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
         }
 
