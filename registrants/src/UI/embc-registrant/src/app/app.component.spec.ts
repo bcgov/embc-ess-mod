@@ -14,7 +14,11 @@ describe('AppComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, RouterTestingModule, OAuthModule.forRoot()],
+        imports: [
+          HttpClientTestingModule,
+          RouterTestingModule,
+          OAuthModule.forRoot()
+        ],
         declarations: [AppComponent],
         providers: [
           { provides: LoginService, useValue: loginService },

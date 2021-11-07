@@ -24,7 +24,7 @@ describe('LoginPageComponent', () => {
         ],
         providers: [
           FormBuilder,
-          { provides: LoginService, useValue: loginService },
+          { provides: LoginService, useValue: loginService }
         ]
       }).compileComponents();
     })
