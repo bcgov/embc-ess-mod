@@ -14,7 +14,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
     {
         private readonly ReportsManager reportsManager;
 
-        public ReportsTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public ReportsTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             reportsManager = services.GetRequiredService<ReportsManager>();
         }
