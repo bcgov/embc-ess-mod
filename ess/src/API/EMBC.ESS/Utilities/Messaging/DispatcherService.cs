@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -41,29 +42,33 @@ namespace EMBC.ESS.Utilities.Messaging
 
         public async override Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
         {
+            var sw = Stopwatch.StartNew();
             try
             {
-                logger.LogDebug("Dispatching request {0}, correlation id {1}", request.Type, request.CorrelationId);
                 var requestType = System.Type.GetType(request.Type, an => Assembly.Load(an.Name), null, true, true);
                 var messageHandler = serviceRegistry.Resolve(requestType);
                 var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType);
                 var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType);
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
+                var replyType = replyMessage?.GetType();
 
-                return new ReplyEnvelope
+                var reply = new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
-                    Type = replyMessage?.GetType().AssemblyQualifiedName ?? string.Empty,
+                    Type = replyType.AssemblyQualifiedName ?? string.Empty,
                     Content = replyMessage == null
                         ? Value.ForNull()
                         : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
                     Empty = replyMessage == null
                 };
+
+                sw.Stop();
+                logger.LogInformation("GRPC Dispatch {requestType} responded {status} with {replyType} in {elapsed} ms", requestType.FullName, "OK", replyType.FullName, sw.Elapsed.TotalMilliseconds);
+                return reply;
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error when processing request {0} of type {1}", request.CorrelationId, request.Type);
-                return new ReplyEnvelope
+                var reply = new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
                     Error = true,
@@ -71,6 +76,11 @@ namespace EMBC.ESS.Utilities.Messaging
                     ErrorMessage = e.Message,
                     ErrorDetails = e.ToString()
                 };
+                sw.Stop();
+
+                logger.LogInformation(e, "GRPC Dispatch {requestType} responded {status} in {elapsed} ms", request.Type, "ERROR", sw.Elapsed.TotalMilliseconds);
+
+                return reply;
             }
         }
     }
