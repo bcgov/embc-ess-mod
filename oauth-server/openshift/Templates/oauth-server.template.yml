@@ -35,7 +35,7 @@ objects:
     data:
       APP_NAME: ${APP_NAME}-oauth-server
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
-      KEY_RING_PATH: "/dpkeys/${APP_NAME}-oauth-server"
+      KEY_RING_PATH: "/dpkeys"
 
   - kind: Secret
     apiVersion: v1
@@ -198,7 +198,7 @@ objects:
                 secretName: ${APP_NAME}-oauth-server-ssl
             - name: dp
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-data-protection #defined in ess backend template
+                claimName: ${APP_NAME}-oauth-server-data-protection
       test: false
       triggers:
         - type: ConfigChange
@@ -211,3 +211,18 @@ objects:
               kind: ImageStreamTag
               name: oauth-server:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: ${APP_NAME}-oauth-server-data-protection
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}
+        # app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "512Mi"
