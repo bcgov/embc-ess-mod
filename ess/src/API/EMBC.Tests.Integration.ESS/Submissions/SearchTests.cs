@@ -18,7 +18,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => await TestHelper.GetRegistrantByUserId(manager, userId);
 
-        public SearchTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public SearchTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             manager = services.GetRequiredService<SubmissionsManager>();
         }

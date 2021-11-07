@@ -25,7 +25,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private string TestNeedsAssessmentId => TestData.CurrentNeedsAssessmentId;
 
-        public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public EvacuationTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             caseRepository = services.GetRequiredService<ICaseRepository>();
         }

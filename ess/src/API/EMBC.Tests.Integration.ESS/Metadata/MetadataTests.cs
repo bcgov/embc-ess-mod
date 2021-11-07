@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Metadata;
 using EMBC.ESS.Shared.Contracts.Metadata;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -12,7 +10,7 @@ namespace EMBC.Tests.Integration.ESS.Metadata
 {
     public class MetadataTests : WebAppTestBase
     {
-        public MetadataTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public MetadataTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
         }
 

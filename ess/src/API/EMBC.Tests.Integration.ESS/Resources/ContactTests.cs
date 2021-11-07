@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Resources.Contacts;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -18,7 +16,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         // Constants
         private string TestContactUserId => base.TestData.ContactUserId;
 
-        public ContactTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public ContactTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             contactRepository = services.GetRequiredService<IContactRepository>();
         }
