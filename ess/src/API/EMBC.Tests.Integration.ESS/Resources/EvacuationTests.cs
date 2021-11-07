@@ -23,7 +23,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private string TestEssFileNumber => TestData.EvacuationFileId;
 
-        private string TestNeedsAssessmentId = "b67cbdb4-75af-4cbb-a291-c390be77f83d";
+        private string TestNeedsAssessmentId => TestData.CurrentNeedsAssessmentId;
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -180,7 +180,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.EvacuatedFrom.AddressLine2.ShouldBe(originalFile.EvacuatedFrom.AddressLine2);
             evacuationFile.EvacuatedFrom.CommunityCode.ShouldBe(originalFile.EvacuatedFrom.CommunityCode);
             evacuationFile.EvacuatedFrom.PostalCode.ShouldBe(originalFile.EvacuatedFrom.PostalCode);
-            evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
+            evacuationFile.EvacuationDate.ShouldBeInRange(now.AddSeconds(-1), DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
             evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
             evacuationFile.TaskId.ShouldBe(originalFile.TaskId);
