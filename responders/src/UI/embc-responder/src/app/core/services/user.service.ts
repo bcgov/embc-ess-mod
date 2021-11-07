@@ -74,6 +74,8 @@ export class UserService {
     this.cacheService.remove('regionalDistrictsList');
     this.cacheService.remove('countriesList');
     this.cacheService.remove('communityList');
+    this.cacheService.remove('supportCategory');
+    this.cacheService.remove('supportSubCategory');
   }
 }
 

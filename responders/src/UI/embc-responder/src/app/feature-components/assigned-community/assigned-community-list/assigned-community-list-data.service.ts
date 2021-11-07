@@ -95,6 +95,10 @@ export class AssignedCommunityListDataService {
     );
   }
 
+  public clear() {
+    this.setCommunitiesToDelete([]);
+  }
+
   private getTeamCommunityList(): TeamCommunityModel[] {
     return this.teamCommunityList
       ? this.teamCommunityList

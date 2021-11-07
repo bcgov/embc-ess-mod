@@ -26,7 +26,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchRegistrantsByUserId()
         {
-            var userId = "CHRIS-TEST";
+            var userId = TestData.ContactUserId;
             var registrant = (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
 
             var profile = registrant.ShouldNotBeNull().ShouldNotBeNull();
@@ -45,7 +45,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacuationFilesByRegistrantUserName()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = registrant.UserId })).Items;
 
             files.ShouldNotBeEmpty();
@@ -55,7 +55,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacuationFilesByLinkedRegistrantId()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var statuses = new[] { EvacuationFileStatus.Active, EvacuationFileStatus.Archived, EvacuationFileStatus.Completed, EvacuationFileStatus.Expired, EvacuationFileStatus.Pending };
 
             var files = (await manager.Handle(new EvacuationFilesQuery { LinkedRegistrantId = registrant.Id, IncludeFilesInStatuses = statuses })).Items;
@@ -68,10 +68,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacuationFilesByBCServicesCardId()
         {
-            var bcscId = "TX2JXF2AEFJP4NHJ2EP6SMXGGONIXEDO";
             var statuses = new[] { EvacuationFileStatus.Active, EvacuationFileStatus.Pending };
 
-            var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = bcscId, IncludeFilesInStatuses = statuses })).Items;
+            var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = TestData.ContactUserId, IncludeFilesInStatuses = statuses })).Items;
 
             files.ShouldNotBeEmpty();
         }
@@ -79,9 +78,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacueesByName()
         {
-            var firstName = "Elvis";
-            var lastName = "Presley";
-            var dateOfBirth = "08/01/1935";
+            var firstName = TestData.ContactFirstName;
+            var lastName = TestData.ContactLastName;
+            var dateOfBirth = TestData.ContactDateOfBirth;
 
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
 
@@ -100,7 +99,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Search_EvacuationFiles_IncludeRegistrantProfilesOnly()
         {
-            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRegistrantProfilesOnly = true, IncludeRestrictedAccess = true });
+            var firstName = TestData.ContactFirstName;
+            var lastName = TestData.ContactLastName;
+            var dateOfBirth = TestData.ContactDateOfBirth;
+
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRegistrantProfilesOnly = true, IncludeRestrictedAccess = true });
 
             searchResults.EvacuationFiles.ShouldBeEmpty();
             searchResults.Profiles.ShouldNotBeEmpty();
@@ -109,7 +112,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Search_EvacuationFiles_IncludeEvacuationFilesOnly()
         {
-            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeEvacuationFilesOnly = true, IncludeRestrictedAccess = true });
+            var firstName = $"{TestData.TestPrefix}-member-no-registrant-first";
+            var lastName = $"{TestData.TestPrefix}-member-no-registrant-last";
+            var dateOfBirth = "01/02/1998";
+
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeEvacuationFilesOnly = true, IncludeRestrictedAccess = true });
 
             searchResults.EvacuationFiles.ShouldNotBeEmpty();
             searchResults.Profiles.ShouldBeEmpty();
@@ -118,7 +125,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Search_EvacuationFiles_IncludeBoth()
         {
-            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRestrictedAccess = true });
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = TestData.ContactFirstName, LastName = TestData.ContactLastName, DateOfBirth = TestData.ContactDateOfBirth, IncludeRestrictedAccess = true });
 
             searchResults.EvacuationFiles.ShouldNotBeEmpty();
             searchResults.Profiles.ShouldNotBeEmpty();

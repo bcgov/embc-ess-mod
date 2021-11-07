@@ -463,6 +463,7 @@ namespace EMBC.Responders.API.Controllers
         public HouseholdMemberType Type { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public bool IsHouseholdMember => !IsPrimaryRegistrant;
+        public bool IsUnder19 { get; set; }
         public bool? IsRestricted { get; set; }
         public bool? IsVerified { get; set; }
     }
@@ -570,7 +571,6 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<EvacuationFileHouseholdMember, HouseholdMember>()
-                .ForMember(d => d.IsUnder19, opts => opts.Ignore())
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.Verified, opts => opts.Ignore())

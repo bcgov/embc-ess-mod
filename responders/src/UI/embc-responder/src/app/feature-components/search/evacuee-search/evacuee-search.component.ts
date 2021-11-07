@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { EvacueeSearchService } from './evacuee-search.service';
 
 @Component({
   selector: 'app-evacuee-search',
@@ -10,7 +11,13 @@ export class EvacueeSearchComponent implements OnInit {
   showPhotoIDComponent = true;
   showResultsComponent = false;
 
-  constructor(private evacueeSessionService: EvacueeSessionService) {}
+  constructor(
+    private evacueeSessionService: EvacueeSessionService,
+    private evacueeSearchService: EvacueeSearchService
+  ) {
+    this.evacueeSearchService.getCategoryList();
+    this.evacueeSearchService.getSubCategoryList();
+  }
 
   ngOnInit(): void {
     this.evacueeSessionService.clearEvacueeSession();

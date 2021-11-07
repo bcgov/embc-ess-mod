@@ -13,7 +13,13 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Support, SupportStatus } from 'src/app/core/api/models';
+import {
+  Support,
+  Referral,
+  SupportSubCategory,
+  LodgingBilletingReferral,
+  LodgingGroupReferral
+} from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
 
@@ -135,6 +141,16 @@ export class SupportsTableComponent
         (value) => value.value === element?.subCategory
       );
       return subCategory?.description;
+    }
+  }
+
+  displaySupplierName(element: Support): string {
+    if (element.subCategory === SupportSubCategory.Lodging_Billeting) {
+      return (element as LodgingBilletingReferral).hostName;
+    } else if (element.subCategory === SupportSubCategory.Lodging_Group) {
+      return (element as LodgingGroupReferral).facilityName;
+    } else {
+      return (element as Referral).supplierName;
     }
   }
 }

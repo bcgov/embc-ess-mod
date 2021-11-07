@@ -1,4 +1,4 @@
-FROM trion/ng-cli-karma AS ng-builder
+FROM trion/ng-cli-karma:12.2.11 AS ng-builder
 WORKDIR /src
 COPY ./embc-registrant/package*.json ./
 RUN npm install

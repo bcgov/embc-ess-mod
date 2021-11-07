@@ -143,7 +143,7 @@
                     </mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Date of Birth:</span>
-                      {{ member.dateOfBirth }}
+                      {{ member.dateOfBirth | date: 'dd-MMM-yyyy' }}
                     </mat-cell>
                   </ng-container>
 
@@ -205,7 +205,7 @@
                     </mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Date of Birth: &nbsp;</span>
-                      {{ member.dateOfBirth }}
+                      {{ member.dateOfBirth | date: 'dd-MMM-yyyy' }}
                     </mat-cell>
                   </ng-container>
 

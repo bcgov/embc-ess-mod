@@ -145,12 +145,6 @@ export class WizardService {
   }
 
   hasChanged(form: { [key: string]: AbstractControl }, type: string): boolean {
-    // if (
-    //   (this.profileObjectReference !== null &&
-    //     this.profileObjectReference !== undefined) ||
-    //   (this.fileObjectReference !== null &&
-    //     this.fileObjectReference !== undefined)
-    // ) {
     if (
       (this.profileObjectReference !== null &&
         this.profileObjectReference !== undefined &&
@@ -224,7 +218,6 @@ export class WizardService {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
       return this.compareNeeds(initialValue, form);
     }
-    //}
   }
 
   hasMemberChanged(members: HouseholdMemberModel[]): boolean {

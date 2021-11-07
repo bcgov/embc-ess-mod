@@ -10,6 +10,7 @@ export interface EvacuationFileHouseholdMember {
   isHouseholdMember?: boolean;
   isPrimaryRegistrant?: boolean;
   isRestricted?: null | boolean;
+  isUnder19?: boolean;
   isVerified?: null | boolean;
   lastName?: null | string;
   linkedRegistrantId?: null | string;
