@@ -15,13 +15,13 @@ export class HeaderComponent implements OnInit {
     public formCreationService: FormCreationService,
     public loginService: LoginService,
     private cacheService: CacheService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.showLoginMatMenu = this.loginService.isLoggedIn();
   }
 
-  homeButton(): void { }
+  homeButton(): void {}
 
   public async signOut(): Promise<void> {
     this.cacheService.clear();

@@ -23,7 +23,9 @@ import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
-        customUrlValidation: url => url.toLowerCase().includes('/api/') && !url.toLowerCase().endsWith('/configuration'),
+        customUrlValidation: (url) =>
+          url.toLowerCase().includes('/api/') &&
+          !url.toLowerCase().endsWith('/configuration')
       }
     })
   ],
@@ -42,4 +44,4 @@ import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

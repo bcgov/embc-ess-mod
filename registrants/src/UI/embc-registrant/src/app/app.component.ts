@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
     private alertService: AlertService,
     private bootstrapService: BootstrapService,
     private loginService: LoginService
-  ) { }
+  ) {}
 
   public async ngOnInit(): Promise<void> {
     try {

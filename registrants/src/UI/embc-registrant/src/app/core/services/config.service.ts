@@ -9,7 +9,6 @@ import { CacheService } from './cache.service';
   providedIn: 'root'
 })
 export class ConfigService {
-
   private get configuration(): Configuration {
     return this.cacheService.get('configuration');
   }
@@ -22,7 +21,7 @@ export class ConfigService {
     private configurationService: ConfigurationService,
     private cacheService: CacheService,
     @Inject(APP_BASE_HREF) public baseHref: string
-  ) { }
+  ) {}
 
   public async loadConfig(): Promise<Configuration> {
     await this.configurationService

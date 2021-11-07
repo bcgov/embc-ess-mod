@@ -8,29 +8,27 @@ import { ProfileService } from '../api/services';
   providedIn: 'root'
 })
 export class LoginService {
-
   public userProfile?: Profile = undefined;
 
   constructor(
     private oauthService: OAuthService,
     private profileService: ProfileService,
     private router: Router
-  ) { }
+  ) {}
 
   public async login(targetUrl: string = undefined): Promise<boolean> {
-    return await this.oauthService.tryLoginImplicitFlow()
-      .then(() => {
-        if (!this.oauthService.hasValidAccessToken()) {
-          console.debug('login - not logged in');
-          this.oauthService.initImplicitFlow(targetUrl);
-          return Promise.resolve(false);
-        }
-        console.debug('login - logged in');
-        return Promise.resolve(true);
-      });
+    return await this.oauthService.tryLoginImplicitFlow().then(() => {
+      if (!this.oauthService.hasValidAccessToken()) {
+        //console.debug('login - not logged in');
+        this.oauthService.initImplicitFlow(targetUrl);
+        return Promise.resolve(false);
+      }
+      //console.debug('login - logged in');
+      return Promise.resolve(true);
+    });
   }
   public async logout(): Promise<void> {
-    console.debug('logout');
+    //console.debug('logout');
     await this.oauthService.revokeTokenAndLogout();
   }
 
@@ -48,17 +46,16 @@ export class LoginService {
     return profile;
   }
   public async tryLogin(): Promise<void> {
-    await this.oauthService.tryLogin()
-      .then(() => {
-        if (this.oauthService.hasValidAccessToken()) {
-          console.debug('tryLogin - logged in', this.getUserSession());
-          this.oauthService.setupAutomaticSilentRefresh();
-          var targetUrl = this.oauthService.state;
-          if (targetUrl) {
-            console.debug('tryLogin - navigate when logged in', targetUrl);
-            return this.router.navigateByUrl(decodeURIComponent(targetUrl));
-          }
+    await this.oauthService.tryLogin().then(() => {
+      if (this.oauthService.hasValidAccessToken()) {
+        //console.debug('tryLogin - logged in', this.getUserSession());
+        this.oauthService.setupAutomaticSilentRefresh();
+        const targetUrl = this.oauthService.state;
+        if (targetUrl) {
+          //console.debug('tryLogin - navigate when logged in', targetUrl);
+          return this.router.navigateByUrl(decodeURIComponent(targetUrl));
         }
-      });
+      }
+    });
   }
 }

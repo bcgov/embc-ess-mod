@@ -8,13 +8,12 @@ import { SecurityQuestionsService } from './security-questions.service';
   providedIn: 'root'
 })
 export class BootstrapService {
-
   constructor(
     private configService: ConfigService,
     private oauthService: OAuthService,
     private locationService: LocationService,
     private securityQuestionsService: SecurityQuestionsService
-  ) { }
+  ) {}
 
   public async init(): Promise<void> {
     //load server config
