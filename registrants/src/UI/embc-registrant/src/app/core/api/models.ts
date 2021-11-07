@@ -35,6 +35,7 @@ export { ValueTupleOfStringAndString } from './models/value-tuple-of-string-and-
 export { AddressDataConflict } from './models/address-data-conflict';
 export { InviteRequest } from './models/invite-request';
 export { Configuration } from './models/configuration';
+export { OidcOptions } from './models/oidc-options';
 export { Code } from './models/code';
 export { CommunityCode } from './models/community-code';
 export { CommunityType } from './models/community-type';

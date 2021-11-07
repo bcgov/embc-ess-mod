@@ -6,13 +6,9 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
-import { AuthInterceptor } from './core/services/auth.interceptor';
-
-export const AUTH_INTERCEPTOR_PROVIDER: Provider = {
-  provide: HTTP_INTERCEPTORS,
-  useExisting: forwardRef(() => AuthInterceptor),
-  multi: true
-};
+import { ApiModule } from './core/api/api.module';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,9 +18,28 @@ export const AUTH_INTERCEPTOR_PROVIDER: Provider = {
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    CoreModule
+    CoreModule,
+    ApiModule.forRoot({ rootUrl: '.' }),
+    OAuthModule.forRoot({
+      resourceServer: {
+        sendAccessToken: true,
+        customUrlValidation: url => url.toLowerCase().includes('/api/') && !url.toLowerCase().endsWith('/configuration'),
+      }
+    })
   ],
-  providers: [AuthInterceptor, AUTH_INTERCEPTOR_PROVIDER],
+  providers: [
+    {
+      provide: APP_BASE_HREF,
+      useFactory: (s: PlatformLocation) => {
+        let result = s.getBaseHrefFromDOM();
+        if (result[result.length - 1] === '/') {
+          result = result.substr(0, result.length - 1);
+        }
+        return result;
+      },
+      deps: [PlatformLocation]
+    }
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
