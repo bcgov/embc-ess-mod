@@ -173,8 +173,29 @@ export class WizardAdapterService {
         type: HouseholdMemberType.Registrant
       }
     ];
+  }
 
-    console.log(this.stepEssFileService.householdMembers);
+  public stepCreateEssFileFromEditProfileRecord(
+    profile: RegistrantProfileModel
+  ) {
+    this.evacueeSessionService.profileId = profile.id;
+    this.stepEssFileService.primaryAddress = this.wizardService.setAddressObjectForForm(
+      profile.primaryAddress
+    );
+
+    this.stepEssFileService.householdMembers = [
+      {
+        dateOfBirth: profile.personalDetails.dateOfBirth,
+        firstName: profile.personalDetails.firstName,
+        lastName: profile.personalDetails.lastName,
+        gender: profile.personalDetails.gender,
+        initials: profile.personalDetails.initials,
+        sameLastName: true,
+        householdMemberFromDatabase: true,
+        isPrimaryRegistrant: true,
+        type: HouseholdMemberType.Registrant
+      }
+    ];
   }
 
   public stepReviewESSFileFromESSFileRecord(): Observable<boolean> {
