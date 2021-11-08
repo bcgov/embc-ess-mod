@@ -98,40 +98,58 @@ export class SuppliersListComponent implements OnInit {
    *
    * @param $event team member id
    */
-  activateSupplier($event: string): void {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          component: InformationDialogComponent,
-          content: globalConst.updateSupplierStatus
-        },
-        height: '260px',
-        width: '600px'
-      })
-      .afterClosed()
-      .subscribe((event) => {
-        this.statusLoading = !this.statusLoading;
-        if (event === 'confirm') {
-          this.supplierServices.activateSuppliersStatus($event).subscribe(
-            (value) => {
-              this.statusLoading = !this.statusLoading;
-              this.suppliersList = value;
-            },
-            (error) => {
-              this.statusLoading = !this.statusLoading;
-              this.alertService.clearAlert();
-              this.alertService.setAlert(
-                'danger',
-                globalConst.activateSupplierError
-              );
-            }
-          );
-        } else {
+  activateSupplier($event: SupplierListItem): void {
+    if ($event.providesMutualAid) {
+      this.dialog
+        .open(DialogComponent, {
+          data: {
+            component: InformationDialogComponent,
+            content: globalConst.updateSupplierStatus
+          },
+          height: '260px',
+          width: '600px'
+        })
+        .afterClosed()
+        .subscribe((event) => {
           this.statusLoading = !this.statusLoading;
-          this.getPrimarySuppliersList();
-          this.suppliersLoader = false;
+          if (event === 'confirm') {
+            this.supplierServices.activateSuppliersStatus($event.id).subscribe(
+              (value) => {
+                this.statusLoading = !this.statusLoading;
+                this.suppliersList = value;
+              },
+              (error) => {
+                this.statusLoading = !this.statusLoading;
+                this.alertService.clearAlert();
+                this.alertService.setAlert(
+                  'danger',
+                  globalConst.activateSupplierError
+                );
+              }
+            );
+          } else {
+            this.statusLoading = !this.statusLoading;
+            this.getPrimarySuppliersList();
+            this.suppliersLoader = false;
+          }
+        });
+    } else {
+      this.statusLoading = !this.statusLoading;
+      this.supplierServices.activateSuppliersStatus($event.id).subscribe(
+        (value) => {
+          this.statusLoading = !this.statusLoading;
+          this.suppliersList = value;
+        },
+        (error) => {
+          this.statusLoading = !this.statusLoading;
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.activateSupplierError
+          );
         }
-      });
+      );
+    }
   }
 
   /**
@@ -139,40 +157,60 @@ export class SuppliersListComponent implements OnInit {
    *
    * @param $event team member id
    */
-  deactivateSupplier($event: string): void {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          component: InformationDialogComponent,
-          content: globalConst.updateSupplierStatus
-        },
-        height: '260px',
-        width: '600px'
-      })
-      .afterClosed()
-      .subscribe((event) => {
-        if (event === 'confirm') {
-          this.statusLoading = !this.statusLoading;
-          this.supplierServices.deactivateSuppliersStatus($event).subscribe(
-            (value) => {
-              this.statusLoading = !this.statusLoading;
-              this.suppliersList = value;
-            },
-            (error) => {
-              this.statusLoading = !this.statusLoading;
-              this.alertService.clearAlert();
-              this.alertService.setAlert(
-                'danger',
-                globalConst.deActivateSupplierError
+  deactivateSupplier($event: SupplierListItem): void {
+    if ($event.providesMutualAid) {
+      this.dialog
+        .open(DialogComponent, {
+          data: {
+            component: InformationDialogComponent,
+            content: globalConst.updateSupplierStatus
+          },
+          height: '260px',
+          width: '600px'
+        })
+        .afterClosed()
+        .subscribe((event) => {
+          if (event === 'confirm') {
+            this.statusLoading = !this.statusLoading;
+            this.supplierServices
+              .deactivateSuppliersStatus($event.id)
+              .subscribe(
+                (value) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.suppliersList = value;
+                },
+                (error) => {
+                  this.statusLoading = !this.statusLoading;
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.deActivateSupplierError
+                  );
+                }
               );
-            }
-          );
-        } else {
+          } else {
+            this.statusLoading = !this.statusLoading;
+            this.getPrimarySuppliersList();
+            this.suppliersLoader = false;
+          }
+        });
+    } else {
+      this.statusLoading = !this.statusLoading;
+      this.supplierServices.deactivateSuppliersStatus($event.id).subscribe(
+        (value) => {
           this.statusLoading = !this.statusLoading;
-          this.getPrimarySuppliersList();
-          this.suppliersLoader = false;
+          this.suppliersList = value;
+        },
+        (error) => {
+          this.statusLoading = !this.statusLoading;
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.deActivateSupplierError
+          );
         }
-      });
+      );
+    }
   }
 
   /**

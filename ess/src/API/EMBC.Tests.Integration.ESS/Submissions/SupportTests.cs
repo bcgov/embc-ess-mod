@@ -25,7 +25,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(registrant);
 
-        public SupportTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public SupportTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             manager = services.GetRequiredService<SubmissionsManager>();
         }

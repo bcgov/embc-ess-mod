@@ -18,13 +18,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         // Constants
         private string TestContactId => TestData.ContactId;
+
         private string TestContactUserId => TestData.ContactUserId;
 
         private string TestEssFileNumber => TestData.EvacuationFileId;
 
-        private string TestNeedsAssessmentId = "b67cbdb4-75af-4cbb-a291-c390be77f83d";
+        private string TestNeedsAssessmentId => TestData.CurrentNeedsAssessmentId;
 
-        public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public EvacuationTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             caseRepository = services.GetRequiredService<ICaseRepository>();
         }
@@ -134,7 +135,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var needsAssessment = fileToUpdate.NeedsAssessment;
 
             needsAssessment.HavePetsFood = !needsAssessment.HavePetsFood;
-            foreach (var member in needsAssessment.HouseholdMembers)
+            foreach (var member in needsAssessment.HouseholdMembers.Where(m => m.LinkedRegistrantId == null))
             {
                 string originalFirstName = member.FirstName.Substring(member.FirstName.LastIndexOf("_") + 1);
                 string originalLastName = member.LastName.Substring(member.LastName.LastIndexOf("_") + 1);
@@ -179,7 +180,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.EvacuatedFrom.AddressLine2.ShouldBe(originalFile.EvacuatedFrom.AddressLine2);
             evacuationFile.EvacuatedFrom.CommunityCode.ShouldBe(originalFile.EvacuatedFrom.CommunityCode);
             evacuationFile.EvacuatedFrom.PostalCode.ShouldBe(originalFile.EvacuatedFrom.PostalCode);
-            evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
+            evacuationFile.EvacuationDate.ShouldBeInRange(now.AddSeconds(-1), DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
             evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
             evacuationFile.TaskId.ShouldBe(originalFile.TaskId);

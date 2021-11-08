@@ -9,6 +9,7 @@ import { AssignedCommunityListDataService } from './assigned-community-list-data
 import { AssignedCommunityListService } from './assigned-community-list.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { Community } from 'src/app/core/services/locations.service';
+import { AddCommunityService } from '../add-community/add-community.service';
 
 @Component({
   selector: 'app-assigned-community-list',
@@ -28,13 +29,16 @@ export class AssignedCommunityListComponent implements OnInit {
     private assignedCommunityListService: AssignedCommunityListService,
     private alertService: AlertService,
     private assignedCommunityListDataService: AssignedCommunityListDataService,
-    private router: Router
+    private router: Router,
+    private addCommunityService: AddCommunityService
   ) {}
 
   /**
    * On component init, loads the assigned community list and filters
    */
   ngOnInit(): void {
+    this.assignedCommunityListDataService.clear();
+    this.addCommunityService.clear();
     this.communitiesFilterPredicate();
     this.assignedCommunityListService.getAssignedCommunityList().subscribe(
       (values) => {

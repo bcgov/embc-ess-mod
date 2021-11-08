@@ -1,1 +1,1 @@
-dotnet watch -p .\EMBC.ESS\ run
+dotnet watch --project .\EMBC.ESS\ run

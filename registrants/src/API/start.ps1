@@ -1,1 +1,1 @@
-dotnet watch -p .\EMBC.Registrants.API\ run
+dotnet watch --project .\EMBC.Registrants.API\ run

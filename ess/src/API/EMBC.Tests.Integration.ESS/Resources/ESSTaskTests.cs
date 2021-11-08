@@ -21,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private const string ExpiredTaskId = "UNIT-TEST-EXPIRED-TASK";
         private const string NonExistentTaskId = "XXXXXXX";
 
-        public ESSTaskTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
+        public ESSTaskTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             taskRepository = services.GetRequiredService<ITaskRepository>();
         }
