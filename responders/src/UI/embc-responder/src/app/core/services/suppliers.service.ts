@@ -142,7 +142,6 @@ export class SupplierService {
       })
       .pipe(
         mergeMap((result) => {
-          console.log(result);
           return this.getMainSuppliersList();
         })
       );

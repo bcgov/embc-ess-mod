@@ -92,6 +92,31 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
+      <div class="row" *ngIf="file?.taskId">
+        <div class="col-md-6">Task #:</div>
+        <div class="col-md-6 file-details">
+          {{ file?.taskId }}
+        </div>
+      </div>
+
+      <div class="row" *ngIf="file?.taskId">
+        <div class="col-md-6">Task Start Date:</div>
+        <div class="col-md-6 file-details">
+          {{ file?.taskStartDate | date: 'dd-MMM-yyyy' }}
+        </div>
+      </div>
+      <div class="row" *ngIf="file?.taskId">
+        <div class="col-md-6">Task End Date:</div>
+        <div
+          class="col-md-6 file-details"
+          [ngStyle]="{
+            color: file.status === 'Completed' ? 'red' : 'black'
+          }"
+        >
+          {{ file?.taskEndDate | date: 'dd-MMM-yyyy' }}
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-md-6">ESS File Created:</div>
         <div class="col-md-6 file-details">
