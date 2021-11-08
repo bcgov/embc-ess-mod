@@ -48,7 +48,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
                 new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
                 new LodgingBilletingReferral() { NumberOfNights = 1 },
-                new LodgingGroupReferral() { NumberOfNights = 1 },
+                new LodgingGroupReferral() { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity },
                 new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
                 new TransportationOtherReferral(),
                 new TransportationTaxiReferral(),

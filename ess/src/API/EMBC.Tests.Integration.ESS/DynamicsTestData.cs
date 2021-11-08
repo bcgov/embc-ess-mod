@@ -17,6 +17,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_essteam team;
         private readonly era_essteam otherTeam;
         private readonly era_essteamuser tier4TeamMember;
+        private readonly era_essteamuser otherTeamMember;
         private readonly string activeTaskId;
         private readonly string inactiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
@@ -36,6 +37,7 @@ namespace EMBC.Tests.Integration.ESS
         public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value?.ToString();
         public string OtherCommunityId => jurisdictions.LastOrDefault()?.era_jurisdictionid?.ToString();
         public string Tier4TeamMemberId => tier4TeamMember.era_essteamuserid.Value.ToString();
+        public string OtherTeamMemberId => otherTeamMember.era_essteamuserid.Value.ToString();
         public string ActiveTaskId => activeTaskId;
         public string InactiveTaskId => inactiveTaskId;
         public string ContactId => contact.contactid.Value.ToString();
@@ -66,45 +68,46 @@ namespace EMBC.Tests.Integration.ESS
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
 
-            //#if DEBUG
-            //            this.testPrefix = $"autotest-dev";
-            //            this.activeTaskId = testPrefix + "-active-task";
-            //            this.inactiveTaskId = testPrefix + "-inactive-task";
+#if DEBUG
+            this.testPrefix = $"autotest-dev";
+            this.activeTaskId = testPrefix + "-active-task";
+            this.inactiveTaskId = testPrefix + "-inactive-task";
 
-            //            var existingTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team").FirstOrDefault();
-            //            if (existingTeam != null)
-            //            {
-            //                essContext.LoadProperty(existingTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
-            //                this.team = existingTeam;
-            //                var otherTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team-other").FirstOrDefault();
-            //                essContext.LoadProperty(otherTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
-            //                this.otherTeam = otherTeam;
-            //                this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).FirstOrDefault();
-            //                this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").FirstOrDefault();
-            //                this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").FirstOrDefault();
-            //                this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").FirstOrDefault();
-            //                this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").FirstOrDefault();
-            //                this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").FirstOrDefault();
-            //                this.inactiveSupplier = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-inactive").FirstOrDefault();
+            var existingTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team").FirstOrDefault();
+            if (existingTeam != null)
+            {
+                essContext.LoadProperty(existingTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
+                this.team = existingTeam;
+                var otherTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team-other").FirstOrDefault();
+                essContext.LoadProperty(otherTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
+                this.otherTeam = otherTeam;
+                this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).FirstOrDefault();
+                this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").FirstOrDefault();
+                this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").FirstOrDefault();
+                this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").FirstOrDefault();
+                this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").FirstOrDefault();
+                this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").FirstOrDefault();
+                this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").FirstOrDefault();
+                this.inactiveSupplier = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-inactive").FirstOrDefault();
 
-            //                this.evacuationfile = essContext.era_evacuationfiles
-            //                .Expand(f => f.era_CurrentNeedsAssessmentid)
-            //                .Expand(f => f.era_Registrant)
-            //                .Where(f => f.era_name == testPrefix + "-file").FirstOrDefault();
+                this.evacuationfile = essContext.era_evacuationfiles
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
+                .Expand(f => f.era_Registrant)
+                .Where(f => f.era_name == testPrefix + "-file").FirstOrDefault();
 
-            //                essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+                essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
 
-            //                return;
-            //            }
-            //#endif
+                return;
+            }
+#endif
 
             this.team = CreateTeam(Guid.NewGuid());
             this.otherTeam = CreateTeam(Guid.NewGuid(), "-other");
             this.tier4TeamMember = CreateTeamMember(team, Guid.NewGuid());
-            CreateTeamMember(team, Guid.NewGuid(), "-second");
+            this.CreateTeamMember(team, Guid.NewGuid(), "-second");
             CreateTeamMember(team, Guid.NewGuid(), "-third");
             CreateTeamMember(team, Guid.NewGuid(), "-fourth");
-            CreateTeamMember(otherTeam, Guid.NewGuid(), "-other");
+            this.otherTeamMember = CreateTeamMember(otherTeam, Guid.NewGuid(), "-other");
             this.activeTask = CreateTask(activeTaskId, DateTime.Now);
             CreateTask(inactiveTaskId, DateTime.Now.AddDays(-7));
             this.contact = CreateContact();
