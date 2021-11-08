@@ -9,14 +9,13 @@ import { ProfileService } from '../api/services';
   providedIn: 'root'
 })
 export class LoginService {
-
   public isLoggedIn$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private oauthService: OAuthService,
     private profileService: ProfileService,
     private router: Router
-  ) { }
+  ) {}
 
   public async login(targetUrl: string = undefined): Promise<boolean> {
     return await this.oauthService.tryLoginImplicitFlow().then(() => {

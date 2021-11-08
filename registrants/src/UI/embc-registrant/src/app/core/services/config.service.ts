@@ -21,7 +21,7 @@ export class ConfigService {
     private configurationService: ConfigurationService,
     private cacheService: CacheService,
     @Inject(APP_BASE_HREF) public baseHref: string
-  ) { }
+  ) {}
 
   public async loadConfig(): Promise<Configuration> {
     await this.configurationService

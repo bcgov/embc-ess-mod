@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
     public formCreationService: FormCreationService,
     public loginService: LoginService,
     private cacheService: CacheService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loginService.isLoggedIn$.subscribe((val) => {
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  homeButton(): void { }
+  homeButton(): void {}
 
   public async signOut(): Promise<void> {
     await this.loginService.logout();
