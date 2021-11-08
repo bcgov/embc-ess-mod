@@ -26,12 +26,12 @@ export class ReportingComponent implements OnInit {
   }
 
   evacueeReport(): void {
-    this.isLoading = true;
+    this.isLoading = !this.isLoading;
     this.reportService
       .reportsGetEvacueeReport(this.reportForm.getRawValue())
       .subscribe(
         (reportResponse) => {
-          // Displaying PDF into a new browser tab:
+          // Downloading a csv document:
           const blob = new Blob([reportResponse], { type: 'text/csv' });
           const url = window.URL.createObjectURL(blob);
           const anchor = document.createElement('a');
@@ -56,7 +56,7 @@ export class ReportingComponent implements OnInit {
       .reportsGetSupportReport(this.reportForm.getRawValue())
       .subscribe(
         (reportResponse) => {
-          // Displaying PDF into a new browser tab:
+          // Downloading a csv document:
           const blob = new Blob([reportResponse], { type: 'text/csv' });
           const url = window.URL.createObjectURL(blob);
           const anchor = document.createElement('a');

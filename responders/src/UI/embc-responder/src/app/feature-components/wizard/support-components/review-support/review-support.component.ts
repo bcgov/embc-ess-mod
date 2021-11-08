@@ -26,6 +26,7 @@ import { ProcessSupportsDialogComponent } from 'src/app/shared/components/dialog
 import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-review-support',
@@ -289,15 +290,16 @@ export class ReviewSupportComponent implements OnInit {
 
   private processDraftSupports(): void {
     this.showLoader = !this.showLoader;
+    const win = window.open('', '_blank');
+    win.document.write('Loading Referral document ... ');
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe(
       (response) => {
         // Displaying PDF into a new browser tab:
-        // const blob = new Blob(response.stream, { type: fileInput.target.files[0].type });
-        const blob = response;
+        const blob = new Blob([response], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
-        window.open(url, '_blank');
+        win.location.href = url;
 
         //Clearing Draft supports array and updating the supports list for the selected ESS File
         this.referralService.clearDraftSupport();
@@ -312,6 +314,7 @@ export class ReviewSupportComponent implements OnInit {
           'danger',
           globalConst.processSupportDraftsError
         );
+        win.document.write(globalConst.processSupportDraftsError);
       }
     );
   }
