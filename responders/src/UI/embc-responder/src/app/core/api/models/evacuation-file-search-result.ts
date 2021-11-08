@@ -11,6 +11,8 @@ export interface EvacuationFileSearchResult {
   isRestricted?: boolean;
   modifiedOn?: string;
   status?: EvacuationFileStatus;
+  taskEndDate?: null | string;
   taskId?: null | string;
   taskLocationCommunityCode?: null | string;
+  taskStartDate?: null | string;
 }
