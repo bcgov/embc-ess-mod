@@ -449,7 +449,11 @@
       <button class="button-s button-width button-margin" (click)="back()">
         Cancel
       </button>
-      <button class="button-p button-width" (click)="processReferralDraft()">
+      <button
+        class="button-p button-width"
+        (click)="processReferralDraft()"
+        [disabled]="showLoader"
+      >
         Process Support/s
         <app-loader
           [strokeWidth]="3"

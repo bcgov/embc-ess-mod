@@ -54,8 +54,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
-    console.log(this.selectedSupport);
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
+    console.log(this.needsAssessmentForSupport);
   }
 
   back() {
@@ -236,6 +236,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .afterClosed()
       .subscribe((reason) => {
         if (reason !== undefined && reason !== 'close') {
+          const win = window.open('', '_blank');
+          win.document.write('Loading referral document ... ');
           this.isLoading = !this.isLoading;
           this.existingSupportService
             .reprintSupport(
@@ -247,7 +249,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
               (value) => {
                 const blob = value;
                 const url = window.URL.createObjectURL(blob);
-                window.open(url, '_blank');
+                win.location.href = url;
                 this.isLoading = !this.isLoading;
               },
               (error) => {
@@ -257,6 +259,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
                   'danger',
                   globalConst.reprintReferralError
                 );
+                win.document.write(globalConst.reprintReferralError);
               }
             );
         }
