@@ -477,6 +477,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddLink(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_evacueesupport_NeedsAssessmentID), support);
             essContext.SetLink(support, nameof(era_evacueesupport.era_EvacuationFileId), file);
             essContext.SetLink(support, nameof(era_evacueesupport.era_NeedsAssessmentID), file.era_CurrentNeedsAssessmentid);
+            essContext.SetLink(support, nameof(era_evacueesupport.era_GroupLodgingCityID), essContext.LookupJurisdictionByCode(support._era_grouplodgingcityid_value?.ToString()));
 
             var teamMember = essContext.era_essteamusers.Where(tu => tu.era_essteamuserid == support._era_issuedbyid_value).SingleOrDefault();
             essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
@@ -502,6 +503,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             support.era_evacueesupportid = existingSupport.era_evacueesupportid;
             essContext.AttachTo(nameof(EssContext.era_evacueesupports), support);
+            essContext.SetLink(support, nameof(era_evacueesupport.era_GroupLodgingCityID), essContext.LookupJurisdictionByCode(support._era_grouplodgingcityid_value?.ToString()));
 
             var teamMember = essContext.era_essteamusers.ByKey(support._era_issuedbyid_value).GetValue();
             essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
