@@ -25,6 +25,9 @@
       ],
       "Scopes": [
         "registrants-portal-api"
+      ],
+      "UserClaims": [
+        "userInfo"
       ]
     }
   ],

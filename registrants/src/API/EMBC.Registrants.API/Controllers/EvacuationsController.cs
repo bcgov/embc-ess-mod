@@ -18,13 +18,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -40,6 +40,7 @@ namespace EMBC.Registrants.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IEvacuationSearchService evacuationSearchService;
+        private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
         public EvacuationsController(IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
         {
@@ -84,7 +85,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
-            var userId = User.FindFirstValue(TokenClaimTypes.Id);
+            var userId = currentUserId;
             var files = await evacuationSearchService.GetFiles(userId,
                 new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired });
 
@@ -100,7 +101,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetPastEvacuations()
         {
-            var userId = User.FindFirstValue(TokenClaimTypes.Id);
+            var userId = currentUserId;
             var files = await evacuationSearchService.GetFiles(userId,
                new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Archived, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed });
 
@@ -122,7 +123,7 @@ namespace EMBC.Registrants.API.Controllers
             if (evacuationFile == null)
                 return BadRequest();
 
-            var userId = User.FindFirstValue(TokenClaimTypes.Id);
+            var userId = currentUserId;
             var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(evacuationFile);
             file.PrimaryRegistrantId = userId;
             var fileId = await messagingClient.Send(new SubmitEvacuationFileCommand { File = file });
