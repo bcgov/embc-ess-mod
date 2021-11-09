@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class CacheService {
+  // public get<T>(key: string): T {
+  //   return JSON.parse(sessionStorage.getItem(key));
+  // }
   public get(key: string): string {
     return sessionStorage.getItem(key);
   }
@@ -12,6 +15,7 @@ export class CacheService {
     } else {
       sessionStorage.setItem(key, JSON.stringify(value));
     }
+    //sessionStorage.setItem(key, JSON.stringify(value));
   }
 
   public remove(key: string): void {

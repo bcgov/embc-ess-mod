@@ -6,7 +6,6 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { ErrorService } from './services/error.service';
 import { EvacuationsService } from './services/evacuations.service';
-import { LoginService } from './services/login.service';
 import { ProfileService } from './services/profile.service';
 import { ConfigurationService } from './services/configuration.service';
 
@@ -20,7 +19,6 @@ import { ConfigurationService } from './services/configuration.service';
   providers: [
     ErrorService,
     EvacuationsService,
-    LoginService,
     ProfileService,
     ConfigurationService,
     ApiConfiguration

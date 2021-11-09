@@ -135,20 +135,20 @@ namespace EMBC.ESS
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseSerilogRequestLogging(opts =>
-            {
-                opts.GetLevel = ExcludeHealthChecks;
-                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
-                {
-                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
-                    diagCtx.Set("Host", httpCtx.Request.Host);
-                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
-                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
-                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
-                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
-                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
-                };
-            });
+            //app.UseSerilogRequestLogging(opts =>
+            //{
+            //    opts.GetLevel = ExcludeHealthChecks;
+            //    opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+            //    {
+            //        diagCtx.Set("User", httpCtx.User.Identity?.Name);
+            //        diagCtx.Set("Host", httpCtx.Request.Host);
+            //        diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
+            //        diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
+            //        diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
+            //        diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
+            //        diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+            //    };
+            //});
 
             app.UseRouting();
 

@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
@@ -43,6 +44,7 @@ namespace EMBC.Registrants.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IEvacuationSearchService evacuationSearchService;
+        private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
         public ProfileController(IHostEnvironment env, IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
         {
@@ -62,7 +64,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<Profile>> GetProfile()
         {
-            var userId = User.FindFirstValue(TokenClaimTypes.Id);
+            var userId = currentUserId;
             var profile = mapper.Map<Profile>(await evacuationSearchService.GetRegistrantByUserId(userId));
             if (profile == null)
             {
@@ -82,7 +84,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
-            var userId = User.FindFirstValue(TokenClaimTypes.Id);
+            var userId = currentUserId;
             var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
             return Ok(profile != null);
         }
@@ -99,7 +101,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
-            profile.Id = User.FindFirstValue(TokenClaimTypes.Id);
+            profile.Id = currentUserId;
             var mappedProfile = mapper.Map<RegistrantProfile>(profile);
             //BCSC profiles are authenticated and verified
             mappedProfile.AuthenticatedUser = true;
@@ -118,7 +120,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
         {
-            var userId = User.FindFirstValue(TokenClaimTypes.Id);
+            var userId = currentUserId;
 
             var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
             if (profile == null) return NotFound(userId);
@@ -131,10 +133,9 @@ namespace EMBC.Registrants.API.Controllers
 
         private Profile GetUserFromPrincipal()
         {
-            var userData = User.FindFirstValue(TokenClaimTypes.UserData);
-            return userData == null
-                ? null
-                : JsonSerializer.Deserialize<Profile>(userData);
+            if (!User.HasClaim(c => c.Type.Equals("userInfo", System.StringComparison.OrdinalIgnoreCase))) return null;
+            var userProfile = BcscUserInfoMapper.MapBcscUserInfoToProfile(User.Identity.Name, JsonDocument.Parse(User.FindFirstValue("userInfo")));
+            return userProfile;
         }
 
         [HttpPost("invite-anonymous")]
