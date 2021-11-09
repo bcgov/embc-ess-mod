@@ -40,20 +40,17 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<TeamQueryResponse> QueryTeams(TeamQuery query)
         {
-            var readCtx = context.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
-
-            var teams = (await QueryTeams(readCtx, query)).Concat(await QueryTeamAreas(readCtx, query)).ToArray();
+            var teams = (await QueryTeams(context, query)).Concat(await QueryTeamAreas(context, query)).ToArray();
 
             foreach (var team in teams)
             {
-                context.AttachTo(nameof(EssContext.era_essteams), team);
                 var loadTasks = new List<Task>();
                 loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID))));
                 loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId))));
                 await Task.WhenAll(loadTasks.ToArray());
-                context.Detach(team);
             }
+
+            context.DetachAll();
 
             return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
         }
@@ -75,10 +72,14 @@ namespace EMBC.ESS.Resources.Team
         {
             if (string.IsNullOrEmpty(query.AssignedCommunityCode)) return Array.Empty<era_essteam>();
 
-            var teams = ctx.era_essteamareas
-                .Expand(ta => ta.era_ESSTeamID)
-                .Where(ta => ta._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode) && ta.statecode == (int)EntityState.Active).ToArray()
-                .Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
+            var teamAreas = ctx.era_essteamareas.Where(ta => ta._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode) && ta.statecode == (int)EntityState.Active).ToArray();
+
+            foreach (var ta in teamAreas)
+            {
+                ctx.LoadProperty(ta, nameof(era_essteamarea.era_ESSTeamID));
+            }
+
+            var teams = teamAreas.Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
 
             return await Task.FromResult(teams);
         }

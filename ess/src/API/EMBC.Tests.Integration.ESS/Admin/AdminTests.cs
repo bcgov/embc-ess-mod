@@ -86,8 +86,8 @@ namespace EMBC.Tests.Integration.ESS.Admin
             var newMember = new TeamMember
             {
                 Email = "email@email.com",
-                FirstName = "to deactivate",
-                LastName = "to deactivate",
+                FirstName = TestData.TestPrefix + "-to-deactivate",
+                LastName = TestData.TestPrefix + "-to-deactivate",
                 IsActive = true,
                 Label = "Volunteer",
                 Role = "Tier1",

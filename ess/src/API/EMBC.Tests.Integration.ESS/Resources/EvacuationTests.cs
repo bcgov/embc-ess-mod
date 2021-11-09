@@ -135,7 +135,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var needsAssessment = fileToUpdate.NeedsAssessment;
 
             needsAssessment.HavePetsFood = !needsAssessment.HavePetsFood;
-            foreach (var member in needsAssessment.HouseholdMembers.Where(m => m.LinkedRegistrantId == null))
+            foreach (var member in needsAssessment.HouseholdMembers.Where(m => m.LinkedRegistrantId == null && !m.FirstName.Contains("no-registrant")))
             {
                 string originalFirstName = member.FirstName.Substring(member.FirstName.LastIndexOf("_") + 1);
                 string originalLastName = member.LastName.Substring(member.LastName.LastIndexOf("_") + 1);
@@ -149,7 +149,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedNeedsAssessment = updatedFile.NeedsAssessment;
             updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
-            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.LinkedRegistrantId == null))
+            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.LinkedRegistrantId == null && !m.FirstName.Contains("no-registrant")))
             {
                 member.FirstName.ShouldStartWith(newUniqueSignature);
                 member.LastName.ShouldStartWith(newUniqueSignature);
