@@ -135,7 +135,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var needsAssessment = fileToUpdate.NeedsAssessment;
 
             needsAssessment.HavePetsFood = !needsAssessment.HavePetsFood;
-            foreach (var member in needsAssessment.HouseholdMembers.Where(m => m.LinkedRegistrantId == null))
+            foreach (var member in needsAssessment.HouseholdMembers.Where(m => m.LinkedRegistrantId == null && !m.FirstName.Contains("no-registrant")))
             {
                 string originalFirstName = member.FirstName.Substring(member.FirstName.LastIndexOf("_") + 1);
                 string originalLastName = member.LastName.Substring(member.LastName.LastIndexOf("_") + 1);
@@ -149,7 +149,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedNeedsAssessment = updatedFile.NeedsAssessment;
             updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
-            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.LinkedRegistrantId == null))
+            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.LinkedRegistrantId == null && !m.FirstName.Contains("no-registrant")))
             {
                 member.FirstName.ShouldStartWith(newUniqueSignature);
                 member.LastName.ShouldStartWith(newUniqueSignature);
@@ -263,9 +263,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var supports = new Support[]
             {
                new ClothingReferral {
-                   SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4",
+                   SupplierId = TestData.SupplierAId,
                    SupplierNotes = "notes",
-                   IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4",
+                   IssuedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = includedHouseholdMembers,
                    From = now.AddDays(20),
@@ -273,9 +273,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    IssuedOn = now
                },
                new IncidentalsReferral {
-                   SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4",
+                   SupplierId = TestData.SupplierAId,
                    SupplierNotes = "notes",
-                   IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4",
+                   IssuedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = includedHouseholdMembers,
                    From = now.AddDays(20),
@@ -319,9 +319,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newSupport = new Support[]
             {
                new ClothingReferral {
-                   SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4",
+                   SupplierId = TestData.SupplierAId,
                    SupplierNotes = "old notes",
-                   IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4",
+                   IssuedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IssuedToPersonName = "old test person",
                    IncludedHouseholdMembers = fileToCreateSupportFor.HouseholdMembers.Select(s => s.Id).ToArray(),
                    From = now.AddDays(20),
@@ -348,8 +348,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supportToUpdate.IssuedToPersonName = "New Test Person";
             supportToUpdate.TotalAmount = 100;
             supportToUpdate.SupplierNotes = "New note to supplier is: " + newUniqueSignature;
-            supportToUpdate.SupplierId = "5b1b6fb9-855a-ea11-b817-00505683fbf4";
-            supportToUpdate.IssuedByTeamMemberId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
+            supportToUpdate.SupplierId = TestData.SupplierBId;
+            supportToUpdate.IssuedByTeamMemberId = TestData.OtherTeamMemberId;
             supportToUpdate.IncludedHouseholdMembers = includedHouseholdMembers;
 
             var updatedSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Supports = new[] { supportToUpdate } })).Id.Split(';').Single();
