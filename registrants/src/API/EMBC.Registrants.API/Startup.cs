@@ -18,12 +18,16 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
-using EMBC.Registrants.API.SecurityModule;
+using System.Threading.Tasks;
 using EMBC.Registrants.API.services;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
+using IdentityModel.AspNetCore.OAuth2Introspection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -37,6 +41,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Converters;
 using NSwag;
 using NSwag.AspNetCore;
@@ -79,7 +84,7 @@ namespace EMBC.Registrants.API
             }
             else
             {
-                Log.Information("Configuring {0} to use in-memory cache", applicationName);
+                Log.Warning("Configuring {0} to use in-memory cache", applicationName);
                 services.AddDistributedMemoryCache();
                 var dpBuilder = services.AddDataProtection()
                     .SetApplicationName(applicationName);
@@ -87,8 +92,6 @@ namespace EMBC.Registrants.API
                 if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
 
-            //Add configuration options
-            services.Configure<JwtTokenOptions>(opts => configuration.Bind("auth:jwt", opts));
             services.Configure<JsonOptions>(opts =>
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -127,14 +130,84 @@ namespace EMBC.Registrants.API
                 options.Filters.Add(new HttpResponseExceptionFilter());
             }).AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new StringEnumConverter()));
             services.AddResponseCompression();
-            services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
-            services.AddSecurityModule();
 
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
             services.AddTransient<IProfileInviteService, ProfileInviteService>();
+
+            services.AddAuthentication()
+             //JWT tokens handling
+             .AddJwtBearer("jwt", options =>
+             {
+                 options.BackchannelHttpHandler = new HttpClientHandler
+                 {
+                     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                 };
+
+                 configuration.GetSection("auth:jwt").Bind(options);
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateAudience = false
+                 };
+
+                 // if token does not contain a dot, it is a reference token, forward to introspection auth scheme
+                 options.ForwardDefaultSelector = ctx =>
+                 {
+                     var authHeader = (string)ctx.Request.Headers["Authorization"];
+                     if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ")) return null;
+                     return authHeader.Substring("Bearer ".Length).Trim().Contains('.') ? null : "introspection";
+                 };
+                 options.Events = new JwtBearerEvents
+                 {
+                     OnTokenValidated = async ctx =>
+                     {
+                         await Task.CompletedTask;
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
+                         var userInfo = ctx.Principal.FindFirstValue("userInfo");
+                         logger.LogDebug("{0}", userInfo);
+                     },
+                     OnAuthenticationFailed = async ctx =>
+                     {
+                         await Task.CompletedTask;
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
+                         logger.LogError(ctx.Exception, "JWT authantication failed");
+                     }
+                 };
+             })
+             //reference tokens handling
+             .AddOAuth2Introspection("introspection", options =>
+             {
+                 options.EnableCaching = true;
+                 options.CacheDuration = TimeSpan.FromMinutes(20);
+                 configuration.GetSection("auth:introspection").Bind(options);
+                 options.Events = new OAuth2IntrospectionEvents
+                 {
+                     OnTokenValidated = async ctx =>
+                     {
+                         await Task.CompletedTask;
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<OAuth2IntrospectionEvents>>();
+                         var userInfo = ctx.Principal.FindFirst("userInfo");
+                         logger.LogDebug("{0}", userInfo);
+                     },
+                     OnAuthenticationFailed = async ctx =>
+                     {
+                         await Task.CompletedTask;
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
+                         logger.LogError(ctx?.Result?.Failure, "Introspection authantication failed");
+                     }
+                 };
+             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OAuth", policy =>
+                {
+                    policy.RequireAuthenticatedUser().AddAuthenticationSchemes("jwt");
+                    policy.RequireClaim("scope", "registrants-portal-api");
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -181,7 +254,7 @@ namespace EMBC.Registrants.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireAuthorization("OAuth");
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });

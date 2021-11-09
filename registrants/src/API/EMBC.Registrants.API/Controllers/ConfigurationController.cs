@@ -43,7 +43,7 @@ namespace EMBC.Responders.API.Controllers
         private readonly IConfiguration configuration;
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
-        private const int cacheDuration = 5 * 60; //5 minutes
+        private const int cacheDuration = 60 * 60; //60 minutes
 
         public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper)
         {
@@ -61,7 +61,16 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
-            var config = new Configuration();
+            var oidcConfig = configuration.GetSection("auth:oidc");
+            var config = new Configuration
+            {
+                Oidc = new OidcOptions
+                {
+                    ClientId = oidcConfig["clientId"],
+                    Issuer = oidcConfig["issuer"],
+                    Scope = oidcConfig.GetValue("scope", "openid profile registrants-portal-api")
+                }
+            };
 
             return Ok(await Task.FromResult(config));
         }
@@ -138,6 +147,14 @@ namespace EMBC.Responders.API.Controllers
 
     public class Configuration
     {
+        public OidcOptions Oidc { get; set; }
+    }
+
+    public class OidcOptions
+    {
+        public string Issuer { get; set; }
+        public string Scope { get; set; }
+        public string ClientId { get; set; }
     }
 
     public class Code

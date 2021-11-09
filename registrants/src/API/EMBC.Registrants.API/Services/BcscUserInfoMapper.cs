@@ -20,41 +20,41 @@ using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.SecurityModule
 {
-    public static class Mappings
+    public static class BcscTokenKeys
     {
-        public static Profile GetDummyProfile(string userId) => MapBCSCUserDataToProfile(userId, JsonDocument.Parse(
-            $"{{" +
-            $"\"{BcscTokenKeys.GivenName}\": \"dummygiver\"," +
-            $" \"{BcscTokenKeys.FamilyName}\": \"dummyfamily\"," +
-            $" \"{BcscTokenKeys.BirthDate}\": \"2000-01-13\"," +
-            $" \"{BcscTokenKeys.Address}\": {{" +
-            $" \"{BcscTokenKeys.AddressStreet}\": \"dummystreet\"," +
-            $" \"{BcscTokenKeys.AddressRegion}\": \"BC\"," +
-            $" \"{BcscTokenKeys.AddressCountry}\": \"CA\"," +
-            $" \"{BcscTokenKeys.AddressPostalCode}\": \"V1V 1V1\"," +
-            $" \"{BcscTokenKeys.AddressLocality}\": \"Vancouver\"" +
-            $"}}" +
-            $"}}"));
+        public const string Id = "sub";
+        public const string GivenName = "given_name";
+        public const string FamilyName = "family_name";
+        public const string Address = "address";
+        public const string AddressStreet = "street_address";
+        public const string AddressCountry = "country";
+        public const string AddressLocality = "locality";
+        public const string AddressRegion = "region";
+        public const string AddressPostalCode = "postal_code";
+        public const string AddressFormatted = "formatted";
+        public const string DisplayName = "display_name";
+        public const string BirthDate = "birthdate";
+        public const string Gender = "gender";
+        public const string Email = "email";
+    }
 
-        private static class BcscTokenKeys
-        {
-            public const string Id = "sub";
-            public const string GivenName = "given_name";
-            public const string FamilyName = "family_name";
-            public const string Address = "address";
-            public const string AddressStreet = "street_address";
-            public const string AddressCountry = "country";
-            public const string AddressLocality = "locality";
-            public const string AddressRegion = "region";
-            public const string AddressPostalCode = "postal_code";
-            public const string AddressFormatted = "formatted";
-            public const string DisplayName = "display_name";
-            public const string BirthDate = "birthdate";
-            public const string Gender = "gender";
-            public const string Email = "email";
-        }
+    public static class BcscUserInfoMapper
+    {
+        //public static Profile GetDummyProfile(string userId) => MapBCSCUserDataToProfile(userId, JsonDocument.Parse(
+        //    $"{{" +
+        //    $"\"{BcscTokenKeys.GivenName}\": \"dummygiver\"," +
+        //    $" \"{BcscTokenKeys.FamilyName}\": \"dummyfamily\"," +
+        //    $" \"{BcscTokenKeys.BirthDate}\": \"2000-01-13\"," +
+        //    $" \"{BcscTokenKeys.Address}\": {{" +
+        //    $" \"{BcscTokenKeys.AddressStreet}\": \"dummystreet\"," +
+        //    $" \"{BcscTokenKeys.AddressRegion}\": \"BC\"," +
+        //    $" \"{BcscTokenKeys.AddressCountry}\": \"CA\"," +
+        //    $" \"{BcscTokenKeys.AddressPostalCode}\": \"V1V 1V1\"," +
+        //    $" \"{BcscTokenKeys.AddressLocality}\": \"Vancouver\"" +
+        //    $"}}" +
+        //    $"}}"));
 
-        public static Profile MapBCSCUserDataToProfile(string userId, JsonDocument userData)
+        public static Profile MapBcscUserInfoToProfile(string userId, JsonDocument userData)
         {
             return new Profile
             {

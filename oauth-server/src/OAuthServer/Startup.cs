@@ -1,10 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
+﻿using System.IO;
 using System.Security.Claims;
-using System.Threading;
-using IdentityModel.Client;
+using System.Threading.Tasks;
 using IdentityServer4;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -94,8 +90,7 @@ namespace OAuthServer
                 {
                     configuration.GetSection("identityproviders:bcsc").Bind(options);
                     options.SaveTokens = true;
-                    //TODO: investigate why options.GetClaimsFromUserInfoEndpoint = true fails
-                    options.GetClaimsFromUserInfoEndpoint = false;
+                    options.GetClaimsFromUserInfoEndpoint = true;
                     options.UseTokenLifetime = true;
                     options.ResponseType = OpenIdConnectResponseType.Code;
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -120,24 +115,24 @@ namespace OAuthServer
                         //{
                         //    await Task.CompletedTask;
                         //},
-                        OnTokenValidated = async ctx =>
-                        {
-                            //manually fetch claims from userinfo endpoint because the handler throws null reference error
-                            var oidcConfig = await ctx.Options.ConfigurationManager.GetConfigurationAsync(CancellationToken.None);
-                            using var client = new HttpClient();
+                        //OnTokenValidated = async ctx =>
+                        //{
+                        //manually fetch claims from userinfo endpoint because the handler throws null reference error
+                        //var oidcConfig = await ctx.Options.ConfigurationManager.GetConfigurationAsync(CancellationToken.None);
+                        //using var client = new HttpClient();
 
-                            var response = await client.GetUserInfoAsync(new UserInfoRequest
-                            {
-                                Address = oidcConfig.UserInfoEndpoint,
-                                Token = ctx.TokenEndpointResponse.AccessToken
-                            });
-                            if (response.IsError)
-                            {
-                                ctx.Fail(new Exception(response.Error));
-                            }
-                            //ctx.Principal.AddIdentity(new ClaimsIdentity(response.Claims));
-                            ctx.Principal = new ClaimsPrincipal(new ClaimsIdentity(ctx.Principal.Identity, ctx.Principal.Claims.Concat(response.Claims)));
-                        },
+                        //var response = await client.GetUserInfoAsync(new UserInfoRequest
+                        //{
+                        //    Address = oidcConfig.UserInfoEndpoint,
+                        //    Token = ctx.TokenEndpointResponse.AccessToken
+                        //});
+                        //if (response.IsError)
+                        //{
+                        //    ctx.Fail(new Exception(response.Error));
+                        //}
+                        ////ctx.Principal.AddIdentity(new ClaimsIdentity(response.Claims));
+                        //ctx.Principal = new ClaimsPrincipal(new ClaimsIdentity(ctx.Principal.Identity, ctx.Principal.Claims.Concat(response.Claims)));
+                        //},
                         //OnRemoteFailure = async ctx =>
                         //{
                         //    await Task.CompletedTask;
@@ -146,10 +141,15 @@ namespace OAuthServer
                         //{
                         //    await Task.CompletedTask;
                         //},
-                        //OnUserInformationReceived = async ctx =>
-                        //{
-                        //    await Task.CompletedTask;
-                        //},
+                        OnUserInformationReceived = async ctx =>
+                        {
+                            await Task.CompletedTask;
+                            ctx.Principal.AddIdentity(new ClaimsIdentity(new[]
+                            {
+                              new Claim("userInfo", ctx.User.RootElement.GetRawText())
+                            }));
+                            //ctx.Success();
+                        },
                         //OnTicketReceived = async ctx =>
                         //{
                         //    await Task.CompletedTask;

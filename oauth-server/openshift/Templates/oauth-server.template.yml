@@ -22,7 +22,16 @@ parameters:
   - description: REDIS Service connection string
     name: REDIS_CONNECTIONSTRING
     required: false
-
+  - description: BCSC identity provider client id
+    name: BCSC_CLIENTID
+    required: false
+  - description: BCSC identity provider client secret
+    name: BCSC_CLIENTSECRET
+    required: false
+  - description: BCSC identity provider metadata address
+    name: BCSC_METADATAADDRESS
+    required: false
+        
 objects:
   - kind: ConfigMap
     apiVersion: v1
@@ -48,6 +57,10 @@ objects:
         # app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
       # REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
+      ConnectionStrings__DefaultConnection: "Data Source=/dpkeys/IdentityServer.db;"
+      identityProviders__bcsc__clientId : "${BCSC_CLIENTID}"
+      identityProviders__bcsc__clientSecret : "${BCSC_CLIENTSECRET}"
+      identityProviders__bcsc__metadataAddress : "${BCSC_METADATAADDRESS}"
 
   - kind: Service
     apiVersion: v1
@@ -61,8 +74,8 @@ objects:
         service.alpha.openshift.io/serving-cert-secret-name: ${APP_NAME}-oauth-server-ssl
     spec:
       ports:
-        - name: 2020-tcp
-          port: 2020
+        - name: 8080-tcp
+          port: 8080
           protocol: TCP
           targetPort: 8080
       selector:
@@ -149,10 +162,10 @@ objects:
             - name: oauth-server
               resources:
                 limits:
-                  cpu: 30m
+                  cpu: 75m
                   memory: 256Mi
                 requests:
-                  cpu: 5m
+                  cpu: 25m
                   memory: 64Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
@@ -172,21 +185,21 @@ objects:
                   readonly: true
                 - mountPath: /dpkeys
                   name: dp
-              livenessProbe:
-                httpGet:
-                  scheme: HTTPS
-                  path: /hc/live
-                  port: 8080
-              startupProbe:
-                httpGet:
-                  scheme: HTTPS
-                  path: /hc/startup
-                  port: 8080
-              readinessProbe:
-                httpGet:
-                  scheme: HTTPS
-                  path: /hc/ready
-                  port: 8080
+              # livenessProbe:
+              #   httpGet:
+              #     scheme: HTTP
+              #     path: /
+              #     port: 8080
+              # startupProbe:
+              #   httpGet:
+              #     scheme: HTTP
+              #     path: /
+              #     port: 8080
+              # readinessProbe:
+              #   httpGet:
+              #     scheme: HTTP
+              #     path: /
+              #     port: 8080
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
