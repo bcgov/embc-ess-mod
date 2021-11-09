@@ -58,7 +58,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var availableCommunities = allCommunities.Where(c => !unavailableCommunities.Any(uc => uc == c)).ToArray();
 
             var team = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
-            team.AssignedCommunities = availableCommunities.Take(10).Select(c => new AssignedCommunity { Code = c, DateAssigned = DateTime.UtcNow });
+            var toAssign = availableCommunities.Take(10).Select(c => new AssignedCommunity { Code = c, DateAssigned = DateTime.UtcNow }).ToList();
+            if (!toAssign.Any(c => c.Code == TestData.ActiveTaskCommunity)) toAssign.Add(new AssignedCommunity { Code = TestData.ActiveTaskCommunity, DateAssigned = DateTime.UtcNow });
+            team.AssignedCommunities = toAssign;
 
             var updatedTeamId = await teamRepository.SaveTeam(team);
 
@@ -140,7 +142,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteTeamMember()
         {
-            var memberId = await teamRepository.SaveMember(new TeamMember { FirstName = "to delete", LastName = "to delete", TeamId = teamId, IsActive = true });
+            var memberId = await teamRepository.SaveMember(new TeamMember { FirstName = TestData.TestPrefix + "-to-delete", LastName = TestData.TestPrefix + "-to-delete", TeamId = teamId, IsActive = true });
 
             await teamRepository.DeleteMember(teamId, memberId);
 

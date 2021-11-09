@@ -50,6 +50,8 @@ namespace EMBC.ESS.Resources.Team
                 await Task.WhenAll(loadTasks.ToArray());
             }
 
+            context.DetachAll();
+
             return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
         }
 
@@ -70,10 +72,14 @@ namespace EMBC.ESS.Resources.Team
         {
             if (string.IsNullOrEmpty(query.AssignedCommunityCode)) return Array.Empty<era_essteam>();
 
-            var teams = ctx.era_essteamareas
-                .Expand(ta => ta.era_ESSTeamID)
-                .Where(ta => ta._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode) && ta.statecode == (int)EntityState.Active).ToArray()
-                .Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
+            var teamAreas = ctx.era_essteamareas.Where(ta => ta._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode) && ta.statecode == (int)EntityState.Active).ToArray();
+
+            foreach (var ta in teamAreas)
+            {
+                ctx.LoadProperty(ta, nameof(era_essteamarea.era_ESSTeamID));
+            }
+
+            var teams = teamAreas.Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
 
             return await Task.FromResult(teams);
         }
