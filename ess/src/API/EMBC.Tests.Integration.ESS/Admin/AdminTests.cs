@@ -80,11 +80,32 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeactivateTeamMember()
         {
-            var memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var now = DateTime.UtcNow;
+            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
 
-            await adminManager.Handle(new DeactivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id });
+            var newMember = new TeamMember
+            {
+                Email = "email@email.com",
+                FirstName = TestData.TestPrefix + "-to-deactivate",
+                LastName = TestData.TestPrefix + "-to-deactivate",
+                IsActive = true,
+                Label = "Volunteer",
+                Role = "Tier1",
+                AgreementSignDate = now,
+                LastSuccessfulLogin = now,
+                ExternalUserId = "deactivate-extid",
+                Phone = "1234",
+                TeamId = TestData.TeamId,
+                UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
+            };
 
-            var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id, IncludeActiveUsersOnly = false })).TeamMembers.Single();
+            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = newMember });
+
+            memberId.ShouldNotBeNull();
+
+            await adminManager.Handle(new DeactivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
+
+            var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId, IncludeActiveUsersOnly = false })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeFalse();
         }
 

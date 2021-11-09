@@ -17,8 +17,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private readonly ITaskRepository taskRepository;
 
         // Constants
-        private const string ActiveTaskId = "UNIT-TEST-ACTIVE-TASK";
-        private const string ExpiredTaskId = "UNIT-TEST-EXPIRED-TASK";
+        private string ActiveTaskId => TestData.ActiveTaskId;
+
+        private string ExpiredTaskId => TestData.InactiveTaskId;
         private const string NonExistentTaskId = "XXXXXXX";
 
         public ESSTaskTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
