@@ -21,7 +21,7 @@ export class AuthenticationService {
   }
 
   public logout(targetUrl?: string): void {
-    this.oauthService.logOut();
+    this.oauthService.revokeTokenAndLogout();
   }
 
   public getToken(): string {
