@@ -10,6 +10,164 @@
   <edmx:DataServices>
     <Schema Namespace="Microsoft.Dynamics.CRM" Alias="mscrm" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityType Name="crmbaseentity" Abstract="true" />
+      <EntityType Name="abs_scheduledprocess" BaseType="mscrm.crmbaseentity">
+        <Key>
+          <PropertyRef Name="abs_scheduledprocessid" />
+        </Key>
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="abs_thursday" Type="Edm.Boolean" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="abs_nextactivation" Type="Edm.DateTimeOffset" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="abs_july" Type="Edm.Boolean" />
+        <Property Name="abs_monday" Type="Edm.Boolean" />
+        <Property Name="abs_hour" Type="Edm.Int32" />
+        <Property Name="abs_november" Type="Edm.Boolean" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="abs_friday" Type="Edm.Boolean" />
+        <Property Name="abs_fetchxmlquery" Type="Edm.String" Unicode="false" />
+        <Property Name="abs_tuesday" Type="Edm.Boolean" />
+        <Property Name="abs_june" Type="Edm.Boolean" />
+        <Property Name="_abs_processid_value" Type="Edm.Guid" />
+        <Property Name="abs_january" Type="Edm.Boolean" />
+        <Property Name="abs_saturday" Type="Edm.Boolean" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="abs_ampm" Type="Edm.Boolean" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="abs_february" Type="Edm.Boolean" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="abs_august" Type="Edm.Boolean" />
+        <Property Name="abs_sunday" Type="Edm.Boolean" />
+        <Property Name="abs_suspendonfailure" Type="Edm.Boolean" />
+        <Property Name="abs_recurrencepattern" Type="Edm.Int32" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="abs_march" Type="Edm.Boolean" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="abs_dayofmonth" Type="Edm.Int32" />
+        <Property Name="abs_december" Type="Edm.Boolean" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="abs_scheduledprocessid" Type="Edm.Guid" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="abs_minute" Type="Edm.Int32" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="abs_wednesday" Type="Edm.Boolean" />
+        <Property Name="abs_interval" Type="Edm.Int32" />
+        <Property Name="abs_may" Type="Edm.Boolean" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="abs_october" Type="Edm.Boolean" />
+        <Property Name="abs_name" Type="Edm.String" Unicode="false" />
+        <Property Name="abs_september" Type="Edm.Boolean" />
+        <Property Name="abs_april" Type="Edm.Boolean" />
+        <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_abs_scheduledprocess_createdby">
+          <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="createdonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_abs_scheduledprocess_createdonbehalfby">
+          <ReferentialConstraint Property="_createdonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedby" Type="mscrm.systemuser" Nullable="false" Partner="lk_abs_scheduledprocess_modifiedby">
+          <ReferentialConstraint Property="_modifiedby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_abs_scheduledprocess_modifiedonbehalfby">
+          <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owninguser" Type="mscrm.systemuser" Nullable="false" Partner="user_abs_scheduledprocess">
+          <ReferentialConstraint Property="_owninguser_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningteam" Type="mscrm.team" Nullable="false" Partner="team_abs_scheduledprocess">
+          <ReferentialConstraint Property="_owningteam_value" ReferencedProperty="teamid" />
+        </NavigationProperty>
+        <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_abs_scheduledprocess">
+          <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_abs_scheduledprocess">
+          <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
+        </NavigationProperty>
+        <NavigationProperty Name="abs_scheduledprocess_ActivityPointers" Type="Collection(mscrm.activitypointer)" Partner="regardingobjectid_abs_scheduledprocess" />
+        <NavigationProperty Name="abs_scheduledprocess_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_abs_scheduledprocess" />
+        <NavigationProperty Name="abs_scheduledprocess_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_abs_scheduledprocess" />
+        <NavigationProperty Name="abs_scheduledprocess_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_abs_scheduledprocess" />
+        <NavigationProperty Name="abs_scheduledprocess_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_abs_scheduledprocess" />
+        <NavigationProperty Name="abs_scheduledprocess_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_abs_scheduledprocess" />
+        <NavigationProperty Name="abs_scheduledprocess_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_abs_scheduledprocess" />
+        <NavigationProperty Name="abs_scheduledprocess_Appointments" Type="Collection(mscrm.appointment)" Partner="regardingobjectid_abs_scheduledprocess_appointment" />
+        <NavigationProperty Name="abs_scheduledprocess_Emails" Type="Collection(mscrm.email)" Partner="regardingobjectid_abs_scheduledprocess_email" />
+        <NavigationProperty Name="abs_scheduledprocess_Faxes" Type="Collection(mscrm.fax)" Partner="regardingobjectid_abs_scheduledprocess_fax" />
+        <NavigationProperty Name="abs_scheduledprocess_Letters" Type="Collection(mscrm.letter)" Partner="regardingobjectid_abs_scheduledprocess_letter" />
+        <NavigationProperty Name="abs_scheduledprocess_PhoneCalls" Type="Collection(mscrm.phonecall)" Partner="regardingobjectid_abs_scheduledprocess_phonecall" />
+        <NavigationProperty Name="abs_scheduledprocess_Tasks" Type="Collection(mscrm.task)" Partner="regardingobjectid_abs_scheduledprocess_task" />
+        <NavigationProperty Name="abs_scheduledprocess_RecurringAppointmentMasters" Type="Collection(mscrm.recurringappointmentmaster)" Partner="regardingobjectid_abs_scheduledprocess_recurringappointmentmaster" />
+        <NavigationProperty Name="abs_scheduledprocess_SocialActivities" Type="Collection(mscrm.socialactivity)" Partner="regardingobjectid_abs_scheduledprocess_socialactivity" />
+        <NavigationProperty Name="abs_scheduledprocess_ServiceAppointments" Type="Collection(mscrm.serviceappointment)" Partner="regardingobjectid_abs_scheduledprocess_serviceappointment" />
+        <NavigationProperty Name="abs_scheduledprocess_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_abs_scheduledprocess_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_ProcessId" Type="mscrm.workflow" Nullable="false" Partner="abs_workflow_scheduledprocess">
+          <ReferentialConstraint Property="_abs_processid_value" ReferencedProperty="workflowid" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="abs_scheduledprocessexecution" BaseType="mscrm.activitypointer">
+        <Key>
+          <PropertyRef Name="activityid" />
+        </Key>
+        <Property Name="abs_recordsprocessed" Type="Edm.Int32" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <NavigationProperty Name="regardingobjectid_new_interactionforemail_abs_scheduledprocessexecution" Type="mscrm.interactionforemail" Nullable="false" Partner="interactionforemail_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_knowledgebaserecord_abs_scheduledprocessexecution" Type="mscrm.knowledgebaserecord" Nullable="false" Partner="knowledgebaserecord_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_lead_abs_scheduledprocessexecution" Type="mscrm.lead" Nullable="false" Partner="lead_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_bookableresourcebooking_abs_scheduledprocessexecution" Type="mscrm.bookableresourcebooking" Nullable="false" Partner="bookableresourcebooking_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_bookableresourcebookingheader_abs_scheduledprocessexecution" Type="mscrm.bookableresourcebookingheader" Nullable="false" Partner="bookableresourcebookingheader_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_bulkoperation_abs_scheduledprocessexecution" Type="mscrm.bulkoperation" Nullable="false" Partner="bulkoperation_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_campaign_abs_scheduledprocessexecution" Type="mscrm.campaign" Nullable="false" Partner="campaign_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_campaignactivity_abs_scheduledprocessexecution" Type="mscrm.campaignactivity" Nullable="false" Partner="campaignactivity_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_contract_abs_scheduledprocessexecution" Type="mscrm.contract" Nullable="false" Partner="contract_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_entitlement_abs_scheduledprocessexecution" Type="mscrm.entitlement" Nullable="false" Partner="entitlement_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_entitlementtemplate_abs_scheduledprocessexecution" Type="mscrm.entitlementtemplate" Nullable="false" Partner="entitlementtemplate_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_incident_abs_scheduledprocessexecution" Type="mscrm.incident" Nullable="false" Partner="incident_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_site_abs_scheduledprocessexecution" Type="mscrm.site" Nullable="false" Partner="site_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="serviceid_abs_scheduledprocessexecution" Type="mscrm.service" Nullable="false" Partner="abs_scheduledprocessexecution_service_serviceid" />
+        <NavigationProperty Name="regardingobjectid_invoice_abs_scheduledprocessexecution" Type="mscrm.invoice" Nullable="false" Partner="invoice_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_opportunity_abs_scheduledprocessexecution" Type="mscrm.opportunity" Nullable="false" Partner="opportunity_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_quote_abs_scheduledprocessexecution" Type="mscrm.quote" Nullable="false" Partner="quote_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_salesorder_abs_scheduledprocessexecution" Type="mscrm.salesorder" Nullable="false" Partner="salesorder_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_msdyn_postalbum_abs_scheduledprocessexecution" Type="mscrm.msdyn_postalbum" Nullable="false" Partner="msdyn_postalbum_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_era_supplier_abs_scheduledprocessexecution" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_era_suppliercontact_abs_scheduledprocessexecution" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_era_supplierinvoice_abs_scheduledprocessexecution" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="regardingobjectid_account_abs_scheduledprocessexecution" Type="mscrm.account" Nullable="false" Partner="account_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="createdby_abs_scheduledprocessexecution" Type="mscrm.systemuser" Nullable="false" Partner="abs_scheduledprocessexecution_systemuser_createdby" />
+        <NavigationProperty Name="regardingobjectid_contact_abs_scheduledprocessexecution" Type="mscrm.contact" Nullable="false" Partner="contact_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="sendermailboxid_abs_scheduledprocessexecution" Type="mscrm.mailbox" Nullable="false" Partner="abs_scheduledprocessexecution_mailbox_sendermailboxid" />
+        <NavigationProperty Name="transactioncurrencyid_abs_scheduledprocessexecution" Type="mscrm.transactioncurrency" Nullable="false" Partner="abs_scheduledprocessexecution_transactioncurrency_transactioncurrencyid" />
+        <NavigationProperty Name="ownerid_abs_scheduledprocessexecution" Type="mscrm.principal" Nullable="false" Partner="abs_scheduledprocessexecution_owner_ownerid" />
+        <NavigationProperty Name="owninguser_abs_scheduledprocessexecution" Type="mscrm.systemuser" Nullable="false" Partner="abs_scheduledprocessexecution_systemuser_owninguser" />
+        <NavigationProperty Name="sla_activitypointer_sla_abs_scheduledprocessexecution" Type="mscrm.sla" Nullable="false" Partner="abs_scheduledprocessexecution_sla_slaid" />
+        <NavigationProperty Name="owningbusinessunit_abs_scheduledprocessexecution" Type="mscrm.businessunit" Nullable="false" Partner="abs_scheduledprocessexecution_businessunit_owningbusinessunit" />
+        <NavigationProperty Name="regardingobjectid_knowledgearticle_abs_scheduledprocessexecution" Type="mscrm.knowledgearticle" Nullable="false" Partner="knowledgearticle_abs_scheduledprocessexecutions" />
+        <NavigationProperty Name="modifiedonbehalfby_abs_scheduledprocessexecution" Type="mscrm.systemuser" Nullable="false" Partner="abs_scheduledprocessexecution_systemuser_modifiedonbehalfby" />
+        <NavigationProperty Name="createdonbehalfby_abs_scheduledprocessexecution" Type="mscrm.systemuser" Nullable="false" Partner="abs_scheduledprocessexecution_systemuser_createdonbehalfby" />
+        <NavigationProperty Name="modifiedby_abs_scheduledprocessexecution" Type="mscrm.systemuser" Nullable="false" Partner="abs_scheduledprocessexecution_systemuser_modifiedby" />
+        <NavigationProperty Name="owningteam_abs_scheduledprocessexecution" Type="mscrm.team" Nullable="false" Partner="abs_scheduledprocessexecution_team_owningteam" />
+        <NavigationProperty Name="slainvokedid_activitypointer_sla_abs_scheduledprocessexecution" Type="mscrm.sla" Nullable="false" Partner="abs_scheduledprocessexecution_sla_slainvokedid" />
+        <NavigationProperty Name="activityid_abs_scheduledprocessexecution" Type="mscrm.activitypointer" Nullable="false" Partner="activity_pointer_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_activity_parties" Type="Collection(mscrm.activityparty)" Partner="activityid_abs_scheduledprocessexecution_activityparty" />
+        <NavigationProperty Name="CampaignResponse_abs_scheduledprocessexecutions" Type="Collection(mscrm.campaignresponse)" Partner="originatingactivityid_abs_scheduledprocessexecution_campaignresponse" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_ActionCards" Type="Collection(mscrm.actioncard)" Partner="regardingobjectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_connections1" Type="Collection(mscrm.connection)" Partner="record1id_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_connections2" Type="Collection(mscrm.connection)" Partner="record2id_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_QueueItems" Type="Collection(mscrm.queueitem)" Partner="objectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_Annotations" Type="Collection(mscrm.annotation)" Partner="objectid_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_Feedback" Type="Collection(mscrm.feedback)" Partner="regardingobjectid_abs_scheduledprocessexecution" />
+      </EntityType>
       <EntityType Name="accountleads" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="accountleadid" />
@@ -230,6 +388,7 @@
         <NavigationProperty Name="territoryid" Type="mscrm.territory" Nullable="false" Partner="territory_accounts">
           <ReferentialConstraint Property="_territoryid_value" ReferencedProperty="territoryid" />
         </NavigationProperty>
+        <NavigationProperty Name="account_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_account_abs_scheduledprocessexecution" />
         <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_accounts">
           <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
         </NavigationProperty>
@@ -393,6 +552,7 @@
         <NavigationProperty Name="regardingobjectid_opportunity_actioncard" Type="mscrm.opportunity" Nullable="false" Partner="opportunity_actioncard">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="opportunityid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_ActionCards" />
         <NavigationProperty Name="regardingobjectid_letter_actioncard" Type="mscrm.letter" Nullable="false" Partner="letter_actioncard" />
         <NavigationProperty Name="regardingobjectid_phonecall_actioncard" Type="mscrm.phonecall" Nullable="false" Partner="phonecall_actioncard" />
         <NavigationProperty Name="regardingobjectid_fax_actioncard" Type="mscrm.fax" Nullable="false" Partner="fax_actioncard" />
@@ -565,6 +725,7 @@
         <NavigationProperty Name="partyid_era_suppliercontact" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_ActivityParties">
           <ReferentialConstraint Property="_partyid_value" ReferencedProperty="era_suppliercontactid" />
         </NavigationProperty>
+        <NavigationProperty Name="activityid_abs_scheduledprocessexecution_activityparty" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_activity_parties" />
         <NavigationProperty Name="ActivityParty_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_activityparty_syncerror" />
         <NavigationProperty Name="activityid_recurringappointmentmaster" Type="mscrm.recurringappointmentmaster" Nullable="false" Partner="recurringappointmentmaster_activity_parties" />
         <NavigationProperty Name="activityid_socialactivity" Type="mscrm.socialactivity" Nullable="false" Partner="socialactivity_activity_parties" />
@@ -725,6 +886,10 @@
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_ActivityPointers">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_supplierinvoiceid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_ActivityPointers">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="abs_scheduledprocessid" />
+        </NavigationProperty>
+        <NavigationProperty Name="activity_pointer_abs_scheduledprocessexecution" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="activityid_abs_scheduledprocessexecution" />
         <NavigationProperty Name="regardingobjectid_account" Type="mscrm.account" Nullable="false" Partner="Account_ActivityPointers">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="accountid" />
         </NavigationProperty>
@@ -919,6 +1084,7 @@
         <NavigationProperty Name="objectid_era_needassessment" Type="mscrm.era_needassessment" Nullable="false" Partner="era_needassessment_Annotations">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="era_needassessmentid" />
         </NavigationProperty>
+        <NavigationProperty Name="objectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_Annotations" />
         <NavigationProperty Name="objectid_account" Type="mscrm.account" Nullable="false" Partner="Account_Annotation">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="accountid" />
         </NavigationProperty>
@@ -1318,6 +1484,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_appointment" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_Appointments" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_appointment" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_Appointments" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_appointment" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_Appointments" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_appointment" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_Appointments" />
         <NavigationProperty Name="Appointment_QueueItem" Type="Collection(mscrm.queueitem)" Partner="objectid_appointment" />
         <NavigationProperty Name="Appointment_Annotation" Type="Collection(mscrm.annotation)" Partner="objectid_appointment" />
         <NavigationProperty Name="Appointment_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_appointment_syncerror" />
@@ -1782,6 +1949,13 @@
         <NavigationProperty Name="regardingobjectid_era_evacueeemailinvite" Type="mscrm.era_evacueeemailinvite" Nullable="false" Partner="era_evacueeemailinvite_AsyncOperations">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_evacueeemailinviteid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_AsyncOperations">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_esstaskchangerequestid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_AsyncOperations">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="abs_scheduledprocessid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_AsyncOperations" />
         <NavigationProperty Name="regardingobjectid_report" Type="mscrm.report" Nullable="false" Partner="Report_AsyncOperations">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="reportid" />
         </NavigationProperty>
@@ -2106,6 +2280,7 @@
         <NavigationProperty Name="bookableresourcebookingheader_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_bookableresourcebookingheader_opportunityclose" />
         <NavigationProperty Name="bookableresourcebookingheader_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_bookableresourcebookingheader_orderclose" />
         <NavigationProperty Name="bookableresourcebookingheader_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_bookableresourcebookingheader_quoteclose" />
+        <NavigationProperty Name="bookableresourcebookingheader_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_bookableresourcebookingheader_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="bookableresourcebooking" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -2204,6 +2379,7 @@
         <NavigationProperty Name="bookableresourcebooking_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_bookableresourcebooking_opportunityclose" />
         <NavigationProperty Name="bookableresourcebooking_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_bookableresourcebooking_orderclose" />
         <NavigationProperty Name="bookableresourcebooking_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_bookableresourcebooking_quoteclose" />
+        <NavigationProperty Name="bookableresourcebooking_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_bookableresourcebooking_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="bookableresourcecategory" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -3027,6 +3203,13 @@
         <NavigationProperty Name="regardingobjectid_era_evacueeemailinvite" Type="mscrm.era_evacueeemailinvite" Nullable="false" Partner="era_evacueeemailinvite_BulkDeleteFailures">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_evacueeemailinviteid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_BulkDeleteFailures">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_esstaskchangerequestid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_BulkDeleteFailures">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="abs_scheduledprocessid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_BulkDeleteFailures" />
         <NavigationProperty Name="regardingobjectid_customeraddress" Type="mscrm.customeraddress" Nullable="false" Partner="CustomerAddress_BulkDeleteFailures">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="customeraddressid" />
         </NavigationProperty>
@@ -3322,6 +3505,7 @@
         <NavigationProperty Name="bulkoperation_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_bulkoperation_opportunityclose" />
         <NavigationProperty Name="bulkoperation_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_bulkoperation_orderclose" />
         <NavigationProperty Name="bulkoperation_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_bulkoperation_quoteclose" />
+        <NavigationProperty Name="bulkoperation_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_bulkoperation_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="businessunitnewsarticle" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -3515,6 +3699,9 @@
         <NavigationProperty Name="business_unit_era_castest" Type="Collection(mscrm.era_castest)" Partner="owningbusinessunit" />
         <NavigationProperty Name="business_unit_era_referralprint" Type="Collection(mscrm.era_referralprint)" Partner="owningbusinessunit" />
         <NavigationProperty Name="business_unit_era_evacueeemailinvite" Type="Collection(mscrm.era_evacueeemailinvite)" Partner="owningbusinessunit" />
+        <NavigationProperty Name="business_unit_era_esstaskchangerequest" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="owningbusinessunit" />
+        <NavigationProperty Name="business_unit_abs_scheduledprocess" Type="Collection(mscrm.abs_scheduledprocess)" Partner="owningbusinessunit" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_businessunit_owningbusinessunit" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="owningbusinessunit_abs_scheduledprocessexecution" />
         <NavigationProperty Name="BusinessUnit_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_businessunit_syncerror" />
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_BusinessUnit">
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
@@ -3775,6 +3962,7 @@
         <NavigationProperty Name="campaignactivity_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_campaignactivity_orderclose" />
         <NavigationProperty Name="campaignactivity_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_campaignactivity_quoteclose" />
         <NavigationProperty Name="campaignactivitysalesliterature_association" Type="Collection(mscrm.salesliterature)" Partner="campaignactivitysalesliterature_association" />
+        <NavigationProperty Name="campaignactivity_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_campaignactivity_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="campaignactivityitem" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -3896,6 +4084,7 @@
         <NavigationProperty Name="originatingactivityid_opportunityclose_campaignresponse" Type="mscrm.opportunityclose" Nullable="false" Partner="CampaignResponse_OpportunityCloses" />
         <NavigationProperty Name="originatingactivityid_orderclose_campaignresponse" Type="mscrm.orderclose" Nullable="false" Partner="CampaignResponse_OrderCloses" />
         <NavigationProperty Name="originatingactivityid_quoteclose_campaignresponse" Type="mscrm.quoteclose" Nullable="false" Partner="CampaignResponse_QuoteCloses" />
+        <NavigationProperty Name="originatingactivityid_abs_scheduledprocessexecution_campaignresponse" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="CampaignResponse_abs_scheduledprocessexecutions" />
       </EntityType>
       <EntityType Name="campaign" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -4023,6 +4212,7 @@
         <NavigationProperty Name="campaign_orders" Type="Collection(mscrm.salesorder)" Partner="campaignid" />
         <NavigationProperty Name="campaign_quotes" Type="Collection(mscrm.quote)" Partner="campaignid" />
         <NavigationProperty Name="campaignsalesliterature_association" Type="Collection(mscrm.salesliterature)" Partner="campaignsalesliterature_association" />
+        <NavigationProperty Name="campaign_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_campaign_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="category" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -4677,6 +4867,8 @@
         <NavigationProperty Name="record2id_msdyn_postalbum" Type="mscrm.msdyn_postalbum" Nullable="false" Partner="msdyn_postalbum_connections2">
           <ReferentialConstraint Property="_record2id_value" ReferencedProperty="msdyn_postalbumid" />
         </NavigationProperty>
+        <NavigationProperty Name="record1id_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_connections1" />
+        <NavigationProperty Name="record2id_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_connections2" />
         <NavigationProperty Name="record1id_contact" Type="mscrm.contact" Nullable="false" Partner="contact_connections1">
           <ReferentialConstraint Property="_record1id_value" ReferencedProperty="contactid" />
         </NavigationProperty>
@@ -5198,6 +5390,7 @@
           <ReferentialConstraint Property="_era_reviewedbyid_value" ReferencedProperty="era_essteamuserid" />
         </NavigationProperty>
         <NavigationProperty Name="era_contact_era_evacueeemailinvite_Registrant" Type="Collection(mscrm.era_evacueeemailinvite)" Partner="era_Registrant" />
+        <NavigationProperty Name="contact_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_contact_abs_scheduledprocessexecution" />
         <NavigationProperty Name="contact_connections1" Type="Collection(mscrm.connection)" Partner="record1id_contact" />
         <NavigationProperty Name="Contact_Feedback" Type="Collection(mscrm.feedback)" Partner="ContactId" />
         <NavigationProperty Name="Contact_ProcessSessions" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_contact" />
@@ -5538,6 +5731,7 @@
         <NavigationProperty Name="serviceaddress" Type="mscrm.customeraddress" Nullable="false" Partner="customer_address_contracts_as_service_address">
           <ReferentialConstraint Property="_serviceaddress_value" ReferencedProperty="customeraddressid" />
         </NavigationProperty>
+        <NavigationProperty Name="contract_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_contract_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="contracttemplate" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -6349,11 +6543,11 @@
         <NavigationProperty Name="baserecordid_era_essteamsupplier" Type="mscrm.era_essteamsupplier" Nullable="false" Partner="era_essteamsupplier_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="era_essteamsupplierid" />
         </NavigationProperty>
-        <NavigationProperty Name="duplicaterecordid_era_needsassessmentanimal" Type="mscrm.era_needsassessmentanimal" Nullable="false" Partner="era_needsassessmentanimal_DuplicateMatchingRecord">
-          <ReferentialConstraint Property="_duplicaterecordid_value" ReferencedProperty="era_needsassessmentanimalid" />
-        </NavigationProperty>
         <NavigationProperty Name="baserecordid_era_needsassessmentanimal" Type="mscrm.era_needsassessmentanimal" Nullable="false" Partner="era_needsassessmentanimal_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="era_needsassessmentanimalid" />
+        </NavigationProperty>
+        <NavigationProperty Name="duplicaterecordid_era_needsassessmentanimal" Type="mscrm.era_needsassessmentanimal" Nullable="false" Partner="era_needsassessmentanimal_DuplicateMatchingRecord">
+          <ReferentialConstraint Property="_duplicaterecordid_value" ReferencedProperty="era_needsassessmentanimalid" />
         </NavigationProperty>
         <NavigationProperty Name="duplicaterecordid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_DuplicateMatchingRecord">
           <ReferentialConstraint Property="_duplicaterecordid_value" ReferencedProperty="era_householdmemberid" />
@@ -6384,6 +6578,12 @@
         </NavigationProperty>
         <NavigationProperty Name="baserecordid_era_referralprint" Type="mscrm.era_referralprint" Nullable="false" Partner="era_referralprint_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="era_referralprintid" />
+        </NavigationProperty>
+        <NavigationProperty Name="duplicaterecordid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_DuplicateMatchingRecord">
+          <ReferentialConstraint Property="_duplicaterecordid_value" ReferencedProperty="era_esstaskchangerequestid" />
+        </NavigationProperty>
+        <NavigationProperty Name="baserecordid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_DuplicateBaseRecord">
+          <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="era_esstaskchangerequestid" />
         </NavigationProperty>
         <NavigationProperty Name="baserecordid_goalrollupquery" Type="mscrm.goalrollupquery" Nullable="false" Partner="GoalRollupQuery_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="goalrollupqueryid" />
@@ -6932,6 +7132,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_email" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_Emails" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_email" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_Emails" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_email" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_Emails" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_email" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_Emails" />
         <NavigationProperty Name="Email_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_email_syncerror" />
         <NavigationProperty Name="transactioncurrencyid_email" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_Email" />
         <NavigationProperty Name="regardingobjectid_asyncoperation" Type="mscrm.asyncoperation" Nullable="false" Partner="AsyncOperation_Emails" />
@@ -7317,6 +7518,7 @@
         <NavigationProperty Name="entitlement_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_entitlement_opportunityclose" />
         <NavigationProperty Name="entitlement_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_entitlement_orderclose" />
         <NavigationProperty Name="entitlement_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_entitlement_quoteclose" />
+        <NavigationProperty Name="entitlement_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_entitlement_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="entitlementtemplatechannel" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -7464,6 +7666,7 @@
         <NavigationProperty Name="entitlementtemplate_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_entitlementtemplate_opportunityclose" />
         <NavigationProperty Name="entitlementtemplate_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_entitlementtemplate_orderclose" />
         <NavigationProperty Name="entitlementtemplate_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_entitlementtemplate_quoteclose" />
+        <NavigationProperty Name="entitlementtemplate_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_entitlementtemplate_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="entitydataprovider" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -7936,6 +8139,76 @@
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
         </NavigationProperty>
       </EntityType>
+      <EntityType Name="era_esstaskchangerequest" BaseType="mscrm.crmbaseentity">
+        <Key>
+          <PropertyRef Name="era_esstaskchangerequestid" />
+        </Key>
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="era_esstaskchangerequestid" Type="Edm.Guid" />
+        <Property Name="era_newserviceline" Type="Edm.String" Unicode="false" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="era_newstob" Type="Edm.String" Unicode="false" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_neweventsummary" Type="Edm.String" Unicode="false" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="era_updateesstask" Type="Edm.Boolean" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="_era_supplierinvoice_value" Type="Edm.Guid" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="era_newprojectnumber" Type="Edm.String" Unicode="false" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="_era_esstask_value" Type="Edm.Guid" />
+        <Property Name="era_newresponsiblecenter" Type="Edm.String" Unicode="false" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_esstaskchangerequest_createdby">
+          <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="createdonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_esstaskchangerequest_createdonbehalfby">
+          <ReferentialConstraint Property="_createdonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_esstaskchangerequest_modifiedby">
+          <ReferentialConstraint Property="_modifiedby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_esstaskchangerequest_modifiedonbehalfby">
+          <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owninguser" Type="mscrm.systemuser" Nullable="false" Partner="user_era_esstaskchangerequest">
+          <ReferentialConstraint Property="_owninguser_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningteam" Type="mscrm.team" Nullable="false" Partner="team_era_esstaskchangerequest">
+          <ReferentialConstraint Property="_owningteam_value" ReferencedProperty="teamid" />
+        </NavigationProperty>
+        <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_era_esstaskchangerequest">
+          <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_era_esstaskchangerequest">
+          <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_esstaskchangerequest_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_esstaskchangerequest_DuplicateMatchingRecord" Type="Collection(mscrm.duplicaterecord)" Partner="duplicaterecordid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_esstaskchangerequest_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_esstaskchangerequest_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_esstaskchangerequest_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_esstaskchangerequest_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_esstaskchangerequest_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_esstaskchangerequest_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_era_esstaskchangerequest" />
+        <NavigationProperty Name="era_SupplierInvoice" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_era_esstaskchangerequest_SupplierInvoice">
+          <ReferentialConstraint Property="_era_supplierinvoice_value" ReferencedProperty="era_supplierinvoiceid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_ESSTask" Type="mscrm.era_task" Nullable="false" Partner="era_task_era_esstaskchangerequest_ESSTask">
+          <ReferentialConstraint Property="_era_esstask_value" ReferencedProperty="era_taskid" />
+        </NavigationProperty>
+      </EntityType>
       <EntityType Name="era_essteamarea" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_essteamareaid" />
@@ -8293,12 +8566,12 @@
         <NavigationProperty Name="era_TaskId" Type="mscrm.era_task" Nullable="false" Partner="era_era_task_era_evacuationfileId">
           <ReferentialConstraint Property="_era_taskid_value" ReferencedProperty="era_taskid" />
         </NavigationProperty>
+        <NavigationProperty Name="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="era_ESSFileid" />
         <NavigationProperty Name="era_era_evacuationfile_era_householdmember_EvacuationFileid" Type="Collection(mscrm.era_householdmember)" Partner="era_EvacuationFileid" />
         <NavigationProperty Name="era_era_evacuationfile_era_essfilenote_ESSFileID" Type="Collection(mscrm.era_essfilenote)" Partner="era_ESSFileID" />
         <NavigationProperty Name="era_CurrentNeedsAssessmentid" Type="mscrm.era_needassessment" Nullable="false" Partner="era_era_needassessment_era_evacuationfile_CurrentNeedsAssessmentid">
           <ReferentialConstraint Property="_era_currentneedsassessmentid_value" ReferencedProperty="era_needassessmentid" />
         </NavigationProperty>
-        <NavigationProperty Name="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="era_ESSFileid" />
         <NavigationProperty Name="era_era_evacuationfile_era_animal_ESSFileid" Type="Collection(mscrm.era_animal)" Partner="era_ESSFileid" />
         <NavigationProperty Name="era_era_evacuationfile_era_evacueesupport_ESSFileId" Type="Collection(mscrm.era_evacueesupport)" Partner="era_EvacuationFileId" />
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_era_evacuationfile">
@@ -8647,20 +8920,19 @@
         <Property Name="era_haspetfood" Type="Edm.Int32" />
         <Property Name="_era_jurisdictionid_value" Type="Edm.Guid" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_petcareplans" Type="Edm.String" Unicode="false" />
         <Property Name="era_hasinquiryreferral" Type="Edm.Boolean" />
+        <Property Name="era_totalhouseholdanimals_date" Type="Edm.DateTimeOffset" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="era_postalcode" Type="Edm.String" Unicode="false" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="era_dietaryrequirementdetails" Type="Edm.String" Unicode="false" />
         <Property Name="era_medicationrequirement" Type="Edm.Boolean" />
-        <Property Name="era_canevacueeprovideclothing" Type="Edm.Int32" />
         <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
-        <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
         <Property Name="era_haschildcarereferral" Type="Edm.Boolean" />
+        <Property Name="era_hashealthservicesreferral" Type="Edm.Boolean" />
         <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
         <Property Name="era_registrationlocation" Type="Edm.String" Unicode="false" />
+        <Property Name="era_householdanimalstypecount_date" Type="Edm.DateTimeOffset" />
         <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="era_needassessmentid" Type="Edm.Guid" />
@@ -8668,29 +8940,30 @@
         <Property Name="_era_evacuationfile_value" Type="Edm.Guid" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="era_addressline2" Type="Edm.String" Unicode="false" />
+        <Property Name="era_petcareplans" Type="Edm.String" Unicode="false" />
         <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="era_householdanimalstypecount" Type="Edm.Int32" />
         <Property Name="era_haspetcarereferral" Type="Edm.Boolean" />
+        <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
         <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="era_canevacueeprovidelodging" Type="Edm.Int32" />
-        <Property Name="era_hashealthservicesreferral" Type="Edm.Boolean" />
+        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
         <Property Name="era_haspersonalservicesreferral" Type="Edm.Boolean" />
-        <Property Name="era_totalhouseholdanimals_date" Type="Edm.DateTimeOffset" />
+        <Property Name="era_canevacueeprovideclothing" Type="Edm.Int32" />
         <Property Name="era_addressline1" Type="Edm.String" Unicode="false" />
         <Property Name="era_canevacueeprovidefood" Type="Edm.Int32" />
         <Property Name="era_hasenoughsupply" Type="Edm.Boolean" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
         <Property Name="era_insurancecoverage" Type="Edm.Int32" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="era_householdanimalstypecount_date" Type="Edm.DateTimeOffset" />
-        <Property Name="era_householdanimalstypecount_state" Type="Edm.Int32" />
+        <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="era_needsassessmenttype" Type="Edm.Int32" />
         <Property Name="era_canevacueeprovideincidentals" Type="Edm.Int32" />
         <Property Name="era_externalreferralsdetails" Type="Edm.String" Unicode="false" />
+        <Property Name="era_householdanimalstypecount_state" Type="Edm.Int32" />
+        <Property Name="era_householdanimalstypecount" Type="Edm.Int32" />
         <Property Name="era_evacuationimpacttohousehold" Type="Edm.String" Unicode="false" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="era_householdrecoveryplan" Type="Edm.String" Unicode="false" />
         <Property Name="_era_reviewedbyid_value" Type="Edm.Guid" />
         <Property Name="era_hasfirstaidreferral" Type="Edm.Boolean" />
@@ -8750,65 +9023,65 @@
         <Key>
           <PropertyRef Name="era_needsassessmentanimalid" />
         </Key>
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="era_needsassessmentanimalid" Type="Edm.Guid" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="_era_needsassessment_value" Type="Edm.Guid" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_numberofpets" Type="Edm.Int32" />
-        <Property Name="_era_essfileid_value" Type="Edm.Guid" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_createdby">
-          <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
-        </NavigationProperty>
-        <NavigationProperty Name="createdonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_createdonbehalfby">
-          <ReferentialConstraint Property="_createdonbehalfby_value" ReferencedProperty="systemuserid" />
-        </NavigationProperty>
-        <NavigationProperty Name="modifiedby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_modifiedby">
-          <ReferentialConstraint Property="_modifiedby_value" ReferencedProperty="systemuserid" />
-        </NavigationProperty>
-        <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_modifiedonbehalfby">
-          <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
-        </NavigationProperty>
-        <NavigationProperty Name="owninguser" Type="mscrm.systemuser" Nullable="false" Partner="user_era_needsassessmentanimal">
-          <ReferentialConstraint Property="_owninguser_value" ReferencedProperty="systemuserid" />
-        </NavigationProperty>
-        <NavigationProperty Name="owningteam" Type="mscrm.team" Nullable="false" Partner="team_era_needsassessmentanimal">
-          <ReferentialConstraint Property="_owningteam_value" ReferencedProperty="teamid" />
-        </NavigationProperty>
-        <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_era_needsassessmentanimal">
-          <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
-        </NavigationProperty>
-        <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_era_needsassessmentanimal">
-          <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
-        </NavigationProperty>
-        <NavigationProperty Name="era_needsassessmentanimal_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_era_needsassessmentanimal" />
-        <NavigationProperty Name="era_needsassessmentanimal_DuplicateMatchingRecord" Type="Collection(mscrm.duplicaterecord)" Partner="duplicaterecordid_era_needsassessmentanimal" />
-        <NavigationProperty Name="era_needsassessmentanimal_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_era_needsassessmentanimal" />
-        <NavigationProperty Name="era_needsassessmentanimal_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_era_needsassessmentanimal" />
-        <NavigationProperty Name="era_needsassessmentanimal_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_era_needsassessmentanimal" />
-        <NavigationProperty Name="era_needsassessmentanimal_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_era_needsassessmentanimal" />
-        <NavigationProperty Name="era_needsassessmentanimal_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_era_needsassessmentanimal" />
-        <NavigationProperty Name="era_needsassessmentanimal_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_era_needsassessmentanimal" />
+        <Property Name="_era_needsassessment_value" Type="Edm.Guid" />
+        <Property Name="_era_essfileid_value" Type="Edm.Guid" />
+        <Property Name="era_numberofpets" Type="Edm.Int32" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="era_needsassessmentanimalid" Type="Edm.Guid" />
+        <Property Name="statecode" Type="Edm.Int32" />
         <NavigationProperty Name="era_NeedsAssessment" Type="mscrm.era_needassessment" Nullable="false" Partner="era_era_needassessment_era_needsassessmentanimal_NeedsAssessment">
           <ReferentialConstraint Property="_era_needsassessment_value" ReferencedProperty="era_needassessmentid" />
         </NavigationProperty>
         <NavigationProperty Name="era_ESSFileid" Type="mscrm.era_evacuationfile" Nullable="false" Partner="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid">
           <ReferentialConstraint Property="_era_essfileid_value" ReferencedProperty="era_evacuationfileid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_needsassessmentanimal_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_era_needsassessmentanimal" />
+        <NavigationProperty Name="era_needsassessmentanimal_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_era_needsassessmentanimal" />
+        <NavigationProperty Name="era_needsassessmentanimal_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_era_needsassessmentanimal" />
+        <NavigationProperty Name="era_needsassessmentanimal_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_era_needsassessmentanimal" />
+        <NavigationProperty Name="era_needsassessmentanimal_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_era_needsassessmentanimal" />
+        <NavigationProperty Name="era_needsassessmentanimal_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_era_needsassessmentanimal" />
+        <NavigationProperty Name="era_needsassessmentanimal_DuplicateMatchingRecord" Type="Collection(mscrm.duplicaterecord)" Partner="duplicaterecordid_era_needsassessmentanimal" />
+        <NavigationProperty Name="era_needsassessmentanimal_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_era_needsassessmentanimal" />
+        <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_era_needsassessmentanimal">
+          <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
+        </NavigationProperty>
+        <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_era_needsassessmentanimal">
+          <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningteam" Type="mscrm.team" Nullable="false" Partner="team_era_needsassessmentanimal">
+          <ReferentialConstraint Property="_owningteam_value" ReferencedProperty="teamid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owninguser" Type="mscrm.systemuser" Nullable="false" Partner="user_era_needsassessmentanimal">
+          <ReferentialConstraint Property="_owninguser_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_modifiedonbehalfby">
+          <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_modifiedby">
+          <ReferentialConstraint Property="_modifiedby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="createdonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_createdonbehalfby">
+          <ReferentialConstraint Property="_createdonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_createdby">
+          <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
       </EntityType>
       <EntityType Name="era_provinceterritories" BaseType="mscrm.crmbaseentity">
@@ -9140,6 +9413,7 @@
           <ReferentialConstraint Property="_era_relatedsupplier_value" ReferencedProperty="era_supplierid" />
         </NavigationProperty>
         <NavigationProperty Name="era_suppliercontact_ActivityParties" Type="Collection(mscrm.activityparty)" Partner="partyid_era_suppliercontact" />
+        <NavigationProperty Name="era_suppliercontact_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_era_suppliercontact_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="era_supplierinvoice" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -9281,6 +9555,8 @@
         <NavigationProperty Name="era_EMBCRegion" Type="mscrm.era_embcregion" Nullable="false" Partner="era_era_embcregion_era_supplierinvoice_EMBCRegion">
           <ReferentialConstraint Property="_era_embcregion_value" ReferencedProperty="era_embcregionid" />
         </NavigationProperty>
+        <NavigationProperty Name="era_supplierinvoice_era_esstaskchangerequest_SupplierInvoice" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="era_SupplierInvoice" />
+        <NavigationProperty Name="era_supplierinvoice_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_era_supplierinvoice_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="era_supplierpayments" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -9476,6 +9752,7 @@
         <NavigationProperty Name="era_supplierinvoice_SendPaymenttoSupplier" Type="Collection(mscrm.era_supplierinvoice)" Partner="era_SendPaymenttoSupplier" />
         <NavigationProperty Name="era_era_supplier_era_essteamsupplier_SupplierId" Type="Collection(mscrm.era_essteamsupplier)" Partner="era_SupplierId" />
         <NavigationProperty Name="era_era_supplier_era_evacueesupport_SupplierId" Type="Collection(mscrm.era_evacueesupport)" Partner="era_SupplierId" />
+        <NavigationProperty Name="era_supplier_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_era_supplier_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="era_supportlineitem" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -9754,6 +10031,7 @@
         <NavigationProperty Name="era_era_task_era_evacuationfileId" Type="Collection(mscrm.era_evacuationfile)" Partner="era_TaskId" />
         <NavigationProperty Name="era_era_task_era_supplierinvoice_ESSTask" Type="Collection(mscrm.era_supplierinvoice)" Partner="era_ESSTask" />
         <NavigationProperty Name="era_era_task_era_supplierpayments_ESSTask" Type="Collection(mscrm.era_supplierpayments)" Partner="era_ESSTask" />
+        <NavigationProperty Name="era_task_era_esstaskchangerequest_ESSTask" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="era_ESSTask" />
       </EntityType>
       <EntityType Name="exchangesyncidmapping" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -9888,6 +10166,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_fax" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_Faxes" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_fax" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_Faxes" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_fax" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_Faxes" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_fax" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_Faxes" />
         <NavigationProperty Name="Fax_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_fax" />
         <NavigationProperty Name="stageid_processstage" Type="mscrm.processstage" Nullable="false" Partner="processstage_faxes" />
         <NavigationProperty Name="owningbusinessunit_fax" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_fax_activities" />
@@ -9952,6 +10231,7 @@
         <Property Name="normalizedrating" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="minrating" Type="Edm.Int32" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_Feedback" />
         <NavigationProperty Name="ContactId" Type="mscrm.contact" Nullable="false" Partner="Contact_Feedback">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="contactid" />
         </NavigationProperty>
@@ -11034,6 +11314,7 @@
         <NavigationProperty Name="incident_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_incident_opportunityclose" />
         <NavigationProperty Name="incident_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_incident_orderclose" />
         <NavigationProperty Name="incident_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_incident_quoteclose" />
+        <NavigationProperty Name="incident_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_incident_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="interactionforemail" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -11104,6 +11385,7 @@
         <NavigationProperty Name="interactionforemail_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_new_interactionforemail_opportunityclose" />
         <NavigationProperty Name="interactionforemail_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_new_interactionforemail_orderclose" />
         <NavigationProperty Name="interactionforemail_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_new_interactionforemail_quoteclose" />
+        <NavigationProperty Name="interactionforemail_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_new_interactionforemail_abs_scheduledprocessexecution" />
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_InteractionForEmail">
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
         </NavigationProperty>
@@ -11421,6 +11703,7 @@
         <NavigationProperty Name="sla_invoice_sla" Type="mscrm.sla" Nullable="false" Partner="manualsla_invoice">
           <ReferentialConstraint Property="_slaid_value" ReferencedProperty="slaid" />
         </NavigationProperty>
+        <NavigationProperty Name="invoice_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_invoice_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="kbarticlecomment" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -11757,6 +12040,7 @@
         <NavigationProperty Name="knowledgearticle_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_knowledgearticle_opportunityclose" />
         <NavigationProperty Name="knowledgearticle_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_knowledgearticle_orderclose" />
         <NavigationProperty Name="knowledgearticle_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_knowledgearticle_quoteclose" />
+        <NavigationProperty Name="knowledgearticle_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_knowledgearticle_abs_scheduledprocessexecution" />
         <NavigationProperty Name="knowledgearticle_expiredprocess" Type="Collection(mscrm.expiredprocess)" Partner="knowledgearticleid" />
         <NavigationProperty Name="knowledgearticle_translationprocess" Type="Collection(mscrm.translationprocess)" Partner="knowledgearticleid" />
         <NavigationProperty Name="KnowledgeArticle_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_knowledgearticle_syncerror" />
@@ -11910,6 +12194,7 @@
         <NavigationProperty Name="knowledgebaserecord_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_knowledgebaserecord_opportunityclose" />
         <NavigationProperty Name="knowledgebaserecord_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_knowledgebaserecord_orderclose" />
         <NavigationProperty Name="knowledgebaserecord_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_knowledgebaserecord_quoteclose" />
+        <NavigationProperty Name="knowledgebaserecord_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_knowledgebaserecord_abs_scheduledprocessexecution" />
         <NavigationProperty Name="KnowledgeBaseRecord_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_knowledgebaserecord_syncerror" />
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_KnowledgeBaseRecord">
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
@@ -12296,6 +12581,7 @@
         <NavigationProperty Name="qualifyingopportunityid" Type="mscrm.opportunity" Nullable="false" Partner="lead_qualifying_opportunity">
           <ReferentialConstraint Property="_qualifyingopportunityid_value" ReferencedProperty="opportunityid" />
         </NavigationProperty>
+        <NavigationProperty Name="lead_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_lead_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="leadtoopportunitysalesprocess" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -12398,6 +12684,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_letter" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_Letters" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_letter" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_Letters" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_letter" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_Letters" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_letter" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_Letters" />
         <NavigationProperty Name="letter_actioncard" Type="Collection(mscrm.actioncard)" Partner="regardingobjectid_letter_actioncard" />
         <NavigationProperty Name="letter_principalobjectattributeaccess" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_letter" />
         <NavigationProperty Name="slakpiinstance_letter" Type="Collection(mscrm.slakpiinstance)" Partner="regarding_letter" />
@@ -12739,6 +13026,7 @@
         <NavigationProperty Name="opportunityclose_mailbox_sendermailboxid" Type="Collection(mscrm.opportunityclose)" Partner="sendermailboxid_opportunityclose" />
         <NavigationProperty Name="orderclose_mailbox_sendermailboxid" Type="Collection(mscrm.orderclose)" Partner="sendermailboxid_orderclose" />
         <NavigationProperty Name="quoteclose_mailbox_sendermailboxid" Type="Collection(mscrm.quoteclose)" Partner="sendermailboxid_quoteclose" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_mailbox_sendermailboxid" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="sendermailboxid_abs_scheduledprocessexecution" />
         <NavigationProperty Name="tracelog_Mailbox" Type="Collection(mscrm.tracelog)" Partner="regardingobjectid_mailbox" />
         <NavigationProperty Name="activitypointer_sendermailboxid_mailbox" Type="Collection(mscrm.activitypointer)" Partner="sendermailboxid" />
         <NavigationProperty Name="mailbox_asyncoperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_mailbox" />
@@ -13135,6 +13423,13 @@
         <NavigationProperty Name="regardingobjectid_era_evacueeemailinvite" Type="mscrm.era_evacueeemailinvite" Nullable="false" Partner="era_evacueeemailinvite_MailboxTrackingFolders">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_evacueeemailinviteid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_MailboxTrackingFolders">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_esstaskchangerequestid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_MailboxTrackingFolders">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="abs_scheduledprocessid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_MailboxTrackingFolders" />
         <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_mailboxtrackingfolder_modifiedonbehalfby">
           <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -13614,6 +13909,7 @@
         <NavigationProperty Name="msdyn_postalbum_connections2" Type="Collection(mscrm.connection)" Partner="record2id_msdyn_postalbum" />
         <NavigationProperty Name="msdyn_postalbum_Annotations" Type="Collection(mscrm.annotation)" Partner="objectid_msdyn_postalbum" />
         <NavigationProperty Name="msdyn_postalbum_ServiceAppointments" Type="Collection(mscrm.serviceappointment)" Partner="regardingobjectid_msdyn_postalbum_serviceappointment" />
+        <NavigationProperty Name="msdyn_postalbum_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_msdyn_postalbum_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="msdyn_postconfig" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -14430,6 +14726,7 @@
           <ReferentialConstraint Property="_campaignid_value" ReferencedProperty="campaignid" />
         </NavigationProperty>
         <NavigationProperty Name="CreatedOpportunity_BulkOperationLogs" Type="Collection(mscrm.bulkoperationlog)" Partner="createdobjectid_opportunity" />
+        <NavigationProperty Name="opportunity_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_opportunity_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="opportunityclose" BaseType="mscrm.activitypointer">
         <Key>
@@ -15296,6 +15593,9 @@
         <NavigationProperty Name="owner_era_castest" Type="Collection(mscrm.era_castest)" Partner="ownerid" />
         <NavigationProperty Name="owner_era_referralprint" Type="Collection(mscrm.era_referralprint)" Partner="ownerid" />
         <NavigationProperty Name="owner_era_evacueeemailinvite" Type="Collection(mscrm.era_evacueeemailinvite)" Partner="ownerid" />
+        <NavigationProperty Name="owner_era_esstaskchangerequest" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="ownerid" />
+        <NavigationProperty Name="owner_abs_scheduledprocess" Type="Collection(mscrm.abs_scheduledprocess)" Partner="ownerid" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_owner_ownerid" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="ownerid_abs_scheduledprocessexecution" />
         <NavigationProperty Name="owner_personaldocumenttemplates" Type="Collection(mscrm.personaldocumenttemplate)" Partner="ownerid" />
         <NavigationProperty Name="owner_accounts" Type="Collection(mscrm.account)" Partner="ownerid" />
         <NavigationProperty Name="owner_goalrollupquery" Type="Collection(mscrm.goalrollupquery)" Partner="ownerid" />
@@ -15411,6 +15711,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_phonecall" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_PhoneCalls" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_phonecall" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_PhoneCalls" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_phonecall" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_PhoneCalls" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_phonecall" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_PhoneCalls" />
         <NavigationProperty Name="phonecall_actioncard" Type="Collection(mscrm.actioncard)" Partner="regardingobjectid_phonecall_actioncard" />
         <NavigationProperty Name="transactioncurrencyid_phonecall" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_PhoneCall" />
         <NavigationProperty Name="regardingobjectid_contact_phonecall" Type="mscrm.contact" Nullable="false" Partner="Contact_Phonecalls" />
@@ -16491,6 +16792,13 @@
         <NavigationProperty Name="objectid_era_evacueeemailinvite" Type="mscrm.era_evacueeemailinvite" Nullable="false" Partner="era_evacueeemailinvite_PrincipalObjectAttributeAccesses">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="era_evacueeemailinviteid" />
         </NavigationProperty>
+        <NavigationProperty Name="objectid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_PrincipalObjectAttributeAccesses">
+          <ReferentialConstraint Property="_objectid_value" ReferencedProperty="era_esstaskchangerequestid" />
+        </NavigationProperty>
+        <NavigationProperty Name="objectid_abs_scheduledprocess" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_PrincipalObjectAttributeAccesses">
+          <ReferentialConstraint Property="_objectid_value" ReferencedProperty="abs_scheduledprocessid" />
+        </NavigationProperty>
+        <NavigationProperty Name="objectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_PrincipalObjectAttributeAccesses" />
         <NavigationProperty Name="objectid_letter" Type="mscrm.letter" Nullable="false" Partner="letter_principalobjectattributeaccess" />
         <NavigationProperty Name="objectid_reportcategory" Type="mscrm.reportcategory" Nullable="false" Partner="reportcategory_principalobjectattributeaccess">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="reportcategoryid" />
@@ -16888,6 +17196,13 @@
         <NavigationProperty Name="regardingobjectid_era_evacueeemailinvite" Type="mscrm.era_evacueeemailinvite" Nullable="false" Partner="era_evacueeemailinvite_ProcessSession">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_evacueeemailinviteid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_ProcessSession">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_esstaskchangerequestid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_ProcessSession">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="abs_scheduledprocessid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_ProcessSession" />
         <NavigationProperty Name="regardingobjectid_queue" Type="mscrm.queue" Nullable="false" Partner="Queue_ProcessSessions">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="queueid" />
         </NavigationProperty>
@@ -17732,6 +18047,7 @@
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="incidentid" />
         </NavigationProperty>
         <NavigationProperty Name="objectid_serviceappointment" Type="mscrm.serviceappointment" Nullable="false" Partner="ServiceAppointment_QueueItem" />
+        <NavigationProperty Name="objectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_QueueItems" />
         <NavigationProperty Name="QueueItem_ProcessSessions" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_queueitem" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_queueitembase_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
@@ -18226,6 +18542,7 @@
         <NavigationProperty Name="campaignid" Type="mscrm.campaign" Nullable="false" Partner="campaign_quotes">
           <ReferentialConstraint Property="_campaignid_value" ReferencedProperty="campaignid" />
         </NavigationProperty>
+        <NavigationProperty Name="quote_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_quote_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="ratingmodel" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -18536,6 +18853,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_recurringappointmentmaster" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_RecurringAppointmentMasters" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_recurringappointmentmaster" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_RecurringAppointmentMasters" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_recurringappointmentmaster" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_RecurringAppointmentMasters" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_recurringappointmentmaster" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_RecurringAppointmentMasters" />
         <NavigationProperty Name="RecurringAppointmentMaster_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_recurringappointmentmaster" />
         <NavigationProperty Name="RecurringAppointmentMaster_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_recurringappointmentmaster" />
         <NavigationProperty Name="RecurringAppointmentMaster_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_recurringappointmentmaster" />
@@ -19439,6 +19757,7 @@
         <NavigationProperty Name="campaignid" Type="mscrm.campaign" Nullable="false" Partner="campaign_orders">
           <ReferentialConstraint Property="_campaignid_value" ReferencedProperty="campaignid" />
         </NavigationProperty>
+        <NavigationProperty Name="salesorder_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_salesorder_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="savedquery" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -19918,6 +20237,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_serviceappointment" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_ServiceAppointments" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_serviceappointment" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_ServiceAppointments" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_serviceappointment" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_ServiceAppointments" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_serviceappointment" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_ServiceAppointments" />
       </EntityType>
       <EntityType Name="servicecontractcontacts" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -20072,6 +20392,7 @@
         <NavigationProperty Name="service_opportunityclose" Type="Collection(mscrm.opportunityclose)" Partner="serviceid_opportunityclose" />
         <NavigationProperty Name="service_orderclose" Type="Collection(mscrm.orderclose)" Partner="serviceid_orderclose" />
         <NavigationProperty Name="service_quoteclose" Type="Collection(mscrm.quoteclose)" Partner="serviceid_quoteclose" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_service_serviceid" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="serviceid_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="sharepointdocumentlocation" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -20451,6 +20772,7 @@
         <NavigationProperty Name="site_OpportunityCloses" Type="Collection(mscrm.opportunityclose)" Partner="regardingobjectid_site_opportunityclose" />
         <NavigationProperty Name="site_OrderCloses" Type="Collection(mscrm.orderclose)" Partner="regardingobjectid_site_orderclose" />
         <NavigationProperty Name="site_QuoteCloses" Type="Collection(mscrm.quoteclose)" Partner="regardingobjectid_site_quoteclose" />
+        <NavigationProperty Name="site_abs_scheduledprocessexecutions" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="regardingobjectid_site_abs_scheduledprocessexecution" />
       </EntityType>
       <EntityType Name="slaitem" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -20662,6 +20984,8 @@
         <NavigationProperty Name="manualsla_opportunity" Type="Collection(mscrm.opportunity)" Partner="sla_opportunity_sla" />
         <NavigationProperty Name="sla_opportunity" Type="Collection(mscrm.opportunity)" Partner="slainvokedid_opportunity_sla" />
         <NavigationProperty Name="manualsla_invoice" Type="Collection(mscrm.invoice)" Partner="sla_invoice_sla" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_sla_slaid" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="sla_activitypointer_sla_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_sla_slainvokedid" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="slainvokedid_activitypointer_sla_abs_scheduledprocessexecution" />
         <NavigationProperty Name="workflowid" Type="mscrm.workflow" Nullable="false" Partner="slabase_workflowid">
           <ReferentialConstraint Property="_workflowid_value" ReferencedProperty="workflowid" />
         </NavigationProperty>
@@ -20762,6 +21086,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_socialactivity" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_SocialActivities" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_socialactivity" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_SocialActivities" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_socialactivity" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_SocialActivities" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_socialactivity" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_SocialActivities" />
         <NavigationProperty Name="socialactivity_connections2" Type="Collection(mscrm.connection)" Partner="record2id_socialactivity" />
         <NavigationProperty Name="modifiedonbehalfby_socialactivity" Type="mscrm.systemuser" Nullable="false" Partner="lk_socialactivitybase_modifiedonbehalfby" />
         <NavigationProperty Name="regardingobjectid_contact_socialactivity" Type="mscrm.contact" Nullable="false" Partner="Contact_SocialActivities" />
@@ -21391,6 +21716,13 @@
         <NavigationProperty Name="regardingobjectid_era_evacueeemailinvite" Type="mscrm.era_evacueeemailinvite" Nullable="false" Partner="era_evacueeemailinvite_SyncErrors">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_evacueeemailinviteid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_esstaskchangerequest" Type="mscrm.era_esstaskchangerequest" Nullable="false" Partner="era_esstaskchangerequest_SyncErrors">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_esstaskchangerequestid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_SyncErrors">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="abs_scheduledprocessid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocessexecution" Type="mscrm.abs_scheduledprocessexecution" Nullable="false" Partner="abs_scheduledprocessexecution_SyncErrors" />
         <NavigationProperty Name="regardingobjectid_ExpiredProcess_syncerror" Type="mscrm.expiredprocess" Nullable="false" Partner="ExpiredProcess_SyncErrors">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="businessprocessflowinstanceid" />
         </NavigationProperty>
@@ -22350,11 +22682,10 @@
         <NavigationProperty Name="lk_era_essteamsupplier_modifiedby" Type="Collection(mscrm.era_essteamsupplier)" Partner="modifiedby" />
         <NavigationProperty Name="lk_era_essteamsupplier_modifiedonbehalfby" Type="Collection(mscrm.era_essteamsupplier)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="user_era_essteamsupplier" Type="Collection(mscrm.era_essteamsupplier)" Partner="owninguser" />
-        <NavigationProperty Name="lk_era_needsassessmentanimal_createdby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="createdby" />
-        <NavigationProperty Name="lk_era_needsassessmentanimal_createdonbehalfby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="createdonbehalfby" />
-        <NavigationProperty Name="lk_era_needsassessmentanimal_modifiedby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="modifiedby" />
-        <NavigationProperty Name="lk_era_needsassessmentanimal_modifiedonbehalfby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="user_era_needsassessmentanimal" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="owninguser" />
+        <NavigationProperty Name="lk_era_needsassessmentanimal_modifiedonbehalfby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="modifiedonbehalfby" />
+        <NavigationProperty Name="lk_era_needsassessmentanimal_modifiedby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="modifiedby" />
+        <NavigationProperty Name="lk_era_needsassessmentanimal_createdonbehalfby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="createdonbehalfby" />
         <NavigationProperty Name="lk_era_householdmember_createdby" Type="Collection(mscrm.era_householdmember)" Partner="createdby" />
         <NavigationProperty Name="lk_era_householdmember_createdonbehalfby" Type="Collection(mscrm.era_householdmember)" Partner="createdonbehalfby" />
         <NavigationProperty Name="lk_era_householdmember_modifiedby" Type="Collection(mscrm.era_householdmember)" Partner="modifiedby" />
@@ -22365,6 +22696,7 @@
         <NavigationProperty Name="lk_era_essfilenote_modifiedby" Type="Collection(mscrm.era_essfilenote)" Partner="modifiedby" />
         <NavigationProperty Name="lk_era_essfilenote_modifiedonbehalfby" Type="Collection(mscrm.era_essfilenote)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="user_era_essfilenote" Type="Collection(mscrm.era_essfilenote)" Partner="owninguser" />
+        <NavigationProperty Name="lk_era_needsassessmentanimal_createdby" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="createdby" />
         <NavigationProperty Name="lk_era_animal_createdby" Type="Collection(mscrm.era_animal)" Partner="createdby" />
         <NavigationProperty Name="lk_era_animal_createdonbehalfby" Type="Collection(mscrm.era_animal)" Partner="createdonbehalfby" />
         <NavigationProperty Name="lk_era_animal_modifiedby" Type="Collection(mscrm.era_animal)" Partner="modifiedby" />
@@ -22394,6 +22726,21 @@
         <NavigationProperty Name="lk_era_evacueeemailinvite_modifiedby" Type="Collection(mscrm.era_evacueeemailinvite)" Partner="modifiedby" />
         <NavigationProperty Name="lk_era_evacueeemailinvite_modifiedonbehalfby" Type="Collection(mscrm.era_evacueeemailinvite)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="user_era_evacueeemailinvite" Type="Collection(mscrm.era_evacueeemailinvite)" Partner="owninguser" />
+        <NavigationProperty Name="lk_era_esstaskchangerequest_createdby" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="createdby" />
+        <NavigationProperty Name="lk_era_esstaskchangerequest_createdonbehalfby" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="createdonbehalfby" />
+        <NavigationProperty Name="lk_era_esstaskchangerequest_modifiedby" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="modifiedby" />
+        <NavigationProperty Name="lk_era_esstaskchangerequest_modifiedonbehalfby" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="modifiedonbehalfby" />
+        <NavigationProperty Name="user_era_esstaskchangerequest" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="owninguser" />
+        <NavigationProperty Name="lk_abs_scheduledprocess_createdby" Type="Collection(mscrm.abs_scheduledprocess)" Partner="createdby" />
+        <NavigationProperty Name="lk_abs_scheduledprocess_createdonbehalfby" Type="Collection(mscrm.abs_scheduledprocess)" Partner="createdonbehalfby" />
+        <NavigationProperty Name="lk_abs_scheduledprocess_modifiedby" Type="Collection(mscrm.abs_scheduledprocess)" Partner="modifiedby" />
+        <NavigationProperty Name="lk_abs_scheduledprocess_modifiedonbehalfby" Type="Collection(mscrm.abs_scheduledprocess)" Partner="modifiedonbehalfby" />
+        <NavigationProperty Name="user_abs_scheduledprocess" Type="Collection(mscrm.abs_scheduledprocess)" Partner="owninguser" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_systemuser_createdby" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="createdby_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_systemuser_owninguser" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="owninguser_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_systemuser_modifiedonbehalfby" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="modifiedonbehalfby_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_systemuser_createdonbehalfby" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="createdonbehalfby_abs_scheduledprocessexecution" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_systemuser_modifiedby" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="modifiedby_abs_scheduledprocessexecution" />
         <NavigationProperty Name="lk_slakpiinstancebase_createdonbehalfby" Type="Collection(mscrm.slakpiinstance)" Partner="createdonbehalfby" />
         <NavigationProperty Name="lk_mobileofflineprofileitemassocaition_modifiedonbehalfby" Type="Collection(mscrm.mobileofflineprofileitemassociation)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="lk_userqueryvisualizationbase_modifiedonbehalfby" Type="Collection(mscrm.userqueryvisualization)" Partner="modifiedonbehalfby" />
@@ -23021,6 +23368,7 @@
         <NavigationProperty Name="regardingobjectid_era_supplier_task" Type="mscrm.era_supplier" Nullable="false" Partner="era_supplier_Tasks" />
         <NavigationProperty Name="regardingobjectid_era_suppliercontact_task" Type="mscrm.era_suppliercontact" Nullable="false" Partner="era_suppliercontact_Tasks" />
         <NavigationProperty Name="regardingobjectid_era_supplierinvoice_task" Type="mscrm.era_supplierinvoice" Nullable="false" Partner="era_supplierinvoice_Tasks" />
+        <NavigationProperty Name="regardingobjectid_abs_scheduledprocess_task" Type="mscrm.abs_scheduledprocess" Nullable="false" Partner="abs_scheduledprocess_Tasks" />
         <NavigationProperty Name="task_connections2" Type="Collection(mscrm.connection)" Partner="record2id_task" />
         <NavigationProperty Name="sla_task_sla" Type="mscrm.sla" Nullable="false" Partner="manualsla_task" />
         <NavigationProperty Name="Task_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_task" />
@@ -23198,6 +23546,9 @@
         <NavigationProperty Name="team_era_castest" Type="Collection(mscrm.era_castest)" Partner="owningteam" />
         <NavigationProperty Name="team_era_referralprint" Type="Collection(mscrm.era_referralprint)" Partner="owningteam" />
         <NavigationProperty Name="team_era_evacueeemailinvite" Type="Collection(mscrm.era_evacueeemailinvite)" Partner="owningteam" />
+        <NavigationProperty Name="team_era_esstaskchangerequest" Type="Collection(mscrm.era_esstaskchangerequest)" Partner="owningteam" />
+        <NavigationProperty Name="team_abs_scheduledprocess" Type="Collection(mscrm.abs_scheduledprocess)" Partner="owningteam" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_team_owningteam" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="owningteam_abs_scheduledprocessexecution" />
         <NavigationProperty Name="team_DuplicateRules" Type="Collection(mscrm.duplicaterule)" Partner="owningteam" />
         <NavigationProperty Name="team_Imports" Type="Collection(mscrm.import)" Partner="owningteam" />
         <NavigationProperty Name="OwningTeam_postfollows" Type="Collection(mscrm.postfollow)" Partner="owningteam" />
@@ -23788,6 +24139,7 @@
         <NavigationProperty Name="TransactionCurrency_era_evacueesupport" Type="Collection(mscrm.era_evacueesupport)" Partner="transactioncurrencyid" />
         <NavigationProperty Name="TransactionCurrency_era_esssupportrate" Type="Collection(mscrm.era_esssupportrate)" Partner="transactioncurrencyid" />
         <NavigationProperty Name="TransactionCurrency_era_evacuationfile" Type="Collection(mscrm.era_evacuationfile)" Partner="transactioncurrencyid" />
+        <NavigationProperty Name="abs_scheduledprocessexecution_transactioncurrency_transactioncurrencyid" Type="Collection(mscrm.abs_scheduledprocessexecution)" Partner="transactioncurrencyid_abs_scheduledprocessexecution" />
         <NavigationProperty Name="TransactionCurrency_Email" Type="Collection(mscrm.email)" Partner="transactioncurrencyid_email" />
         <NavigationProperty Name="TransactionCurrency_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_transactioncurrency" />
         <NavigationProperty Name="TransactionCurrency_BusinessUnit" Type="Collection(mscrm.businessunit)" Partner="transactioncurrencyid" />
@@ -24669,6 +25021,7 @@
         <NavigationProperty Name="workflow_phonetocaseprocess" Type="Collection(mscrm.phonetocaseprocess)" Partner="processid" />
         <NavigationProperty Name="workflow_leadtoopportunitysalesprocess" Type="Collection(mscrm.leadtoopportunitysalesprocess)" Partner="processid" />
         <NavigationProperty Name="workflow_opportunitysalesprocess" Type="Collection(mscrm.opportunitysalesprocess)" Partner="processid" />
+        <NavigationProperty Name="abs_workflow_scheduledprocess" Type="Collection(mscrm.abs_scheduledprocess)" Partner="abs_ProcessId" />
         <NavigationProperty Name="slabase_workflowid" Type="Collection(mscrm.sla)" Partner="workflowid" />
         <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_workflow">
           <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
@@ -26263,6 +26616,14 @@
         <Parameter Name="Queue" Type="mscrm.queue" />
         <Parameter Name="PostWorkflowEvent" Type="Edm.Boolean" Nullable="false" />
         <ReturnType Type="mscrm.bulkoperation" Nullable="false" />
+      </Action>
+      <ComplexType Name="era_DEVOnly_DeleteESSFile_CAResponse">
+        <Property Name="Message" Type="Edm.String" Unicode="false" />
+      </ComplexType>
+      <Action Name="era_DEVOnly_DeleteESSFile_CA">
+        <Parameter Name="ESSFileGUIDs" Type="Edm.String" Unicode="false" />
+        <Parameter Name="ESSFileNumbers" Type="Edm.String" Unicode="false" />
+        <ReturnType Type="mscrm.era_DEVOnly_DeleteESSFile_CAResponse" Nullable="false" />
       </Action>
       <ComplexType Name="era_GetCASTransactionProgressResponse">
         <Property Name="Message" Type="Edm.String" Unicode="false" />
@@ -29436,6 +29797,89 @@
       <Term Name="associatednavigationproperty" Type="Edm.String" AppliesTo="PropertyValue" />
       <Term Name="lookuplogicalname" Type="Edm.String" AppliesTo="PropertyValue" />
       <EntityContainer Name="System">
+        <EntitySet Name="abs_scheduledprocesses" EntityType="Microsoft.Dynamics.CRM.abs_scheduledprocess">
+          <NavigationPropertyBinding Path="createdby" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
+          <NavigationPropertyBinding Path="owningteam" Target="teams" />
+          <NavigationPropertyBinding Path="ownerid" Target="owners" />
+          <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_ActivityPointers" Target="activitypointers" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_SyncErrors" Target="syncerrors" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_AsyncOperations" Target="asyncoperations" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_ProcessSession" Target="processsessions" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_BulkDeleteFailures" Target="bulkdeletefailures" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_Appointments" Target="appointments" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_Emails" Target="emails" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_Faxes" Target="faxes" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_Letters" Target="letters" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_PhoneCalls" Target="phonecalls" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_Tasks" Target="tasks" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_RecurringAppointmentMasters" Target="recurringappointmentmasters" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_SocialActivities" Target="socialactivities" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_ServiceAppointments" Target="serviceappointments" />
+          <NavigationPropertyBinding Path="abs_scheduledprocess_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
+          <NavigationPropertyBinding Path="abs_ProcessId" Target="workflows" />
+        </EntitySet>
+        <EntitySet Name="abs_scheduledprocessexecutions" EntityType="Microsoft.Dynamics.CRM.abs_scheduledprocessexecution">
+          <NavigationPropertyBinding Path="regardingobjectid_new_interactionforemail_abs_scheduledprocessexecution" Target="interactionforemails" />
+          <NavigationPropertyBinding Path="regardingobjectid_knowledgebaserecord_abs_scheduledprocessexecution" Target="knowledgebaserecords" />
+          <NavigationPropertyBinding Path="regardingobjectid_lead_abs_scheduledprocessexecution" Target="leads" />
+          <NavigationPropertyBinding Path="regardingobjectid_bookableresourcebooking_abs_scheduledprocessexecution" Target="bookableresourcebookings" />
+          <NavigationPropertyBinding Path="regardingobjectid_bookableresourcebookingheader_abs_scheduledprocessexecution" Target="bookableresourcebookingheaders" />
+          <NavigationPropertyBinding Path="regardingobjectid_bulkoperation_abs_scheduledprocessexecution" Target="bulkoperations" />
+          <NavigationPropertyBinding Path="regardingobjectid_campaign_abs_scheduledprocessexecution" Target="campaigns" />
+          <NavigationPropertyBinding Path="regardingobjectid_campaignactivity_abs_scheduledprocessexecution" Target="campaignactivities" />
+          <NavigationPropertyBinding Path="regardingobjectid_contract_abs_scheduledprocessexecution" Target="contracts" />
+          <NavigationPropertyBinding Path="regardingobjectid_entitlement_abs_scheduledprocessexecution" Target="entitlements" />
+          <NavigationPropertyBinding Path="regardingobjectid_entitlementtemplate_abs_scheduledprocessexecution" Target="entitlementtemplates" />
+          <NavigationPropertyBinding Path="regardingobjectid_incident_abs_scheduledprocessexecution" Target="incidents" />
+          <NavigationPropertyBinding Path="regardingobjectid_site_abs_scheduledprocessexecution" Target="sites" />
+          <NavigationPropertyBinding Path="serviceid_abs_scheduledprocessexecution" Target="services" />
+          <NavigationPropertyBinding Path="regardingobjectid_invoice_abs_scheduledprocessexecution" Target="invoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_opportunity_abs_scheduledprocessexecution" Target="opportunities" />
+          <NavigationPropertyBinding Path="regardingobjectid_quote_abs_scheduledprocessexecution" Target="quotes" />
+          <NavigationPropertyBinding Path="regardingobjectid_salesorder_abs_scheduledprocessexecution" Target="salesorders" />
+          <NavigationPropertyBinding Path="regardingobjectid_msdyn_postalbum_abs_scheduledprocessexecution" Target="msdyn_postalbums" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_supplier_abs_scheduledprocessexecution" Target="era_suppliers" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_abs_scheduledprocessexecution" Target="era_suppliercontacts" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_abs_scheduledprocessexecution" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_abs_scheduledprocessexecution" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="regardingobjectid_account_abs_scheduledprocessexecution" Target="accounts" />
+          <NavigationPropertyBinding Path="createdby_abs_scheduledprocessexecution" Target="systemusers" />
+          <NavigationPropertyBinding Path="regardingobjectid_contact_abs_scheduledprocessexecution" Target="contacts" />
+          <NavigationPropertyBinding Path="sendermailboxid_abs_scheduledprocessexecution" Target="mailboxes" />
+          <NavigationPropertyBinding Path="transactioncurrencyid_abs_scheduledprocessexecution" Target="transactioncurrencies" />
+          <NavigationPropertyBinding Path="ownerid_abs_scheduledprocessexecution" Target="owners" />
+          <NavigationPropertyBinding Path="owninguser_abs_scheduledprocessexecution" Target="systemusers" />
+          <NavigationPropertyBinding Path="sla_activitypointer_sla_abs_scheduledprocessexecution" Target="slas" />
+          <NavigationPropertyBinding Path="owningbusinessunit_abs_scheduledprocessexecution" Target="businessunits" />
+          <NavigationPropertyBinding Path="regardingobjectid_knowledgearticle_abs_scheduledprocessexecution" Target="knowledgearticles" />
+          <NavigationPropertyBinding Path="modifiedonbehalfby_abs_scheduledprocessexecution" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdonbehalfby_abs_scheduledprocessexecution" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedby_abs_scheduledprocessexecution" Target="systemusers" />
+          <NavigationPropertyBinding Path="owningteam_abs_scheduledprocessexecution" Target="teams" />
+          <NavigationPropertyBinding Path="slainvokedid_activitypointer_sla_abs_scheduledprocessexecution" Target="slas" />
+          <NavigationPropertyBinding Path="activityid_abs_scheduledprocessexecution" Target="activitypointers" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_activity_parties" Target="activityparties" />
+          <NavigationPropertyBinding Path="CampaignResponse_abs_scheduledprocessexecutions" Target="campaignresponses" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_ActionCards" Target="actioncards" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_SyncErrors" Target="syncerrors" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_AsyncOperations" Target="asyncoperations" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_ProcessSession" Target="processsessions" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_BulkDeleteFailures" Target="bulkdeletefailures" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_connections1" Target="connections" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_connections2" Target="connections" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_QueueItems" Target="queueitems" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_Annotations" Target="annotations" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_Feedback" Target="feedback" />
+        </EntitySet>
         <EntitySet Name="accountleadscollection" EntityType="Microsoft.Dynamics.CRM.accountleads">
           <NavigationPropertyBinding Path="accountleads_AsyncOperations" Target="asyncoperations" />
           <NavigationPropertyBinding Path="accountleads_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
@@ -29474,6 +29918,7 @@
           <NavigationPropertyBinding Path="quote_customer_accounts" Target="quotes" />
           <NavigationPropertyBinding Path="opportunity_parent_account" Target="opportunities" />
           <NavigationPropertyBinding Path="territoryid" Target="territories" />
+          <NavigationPropertyBinding Path="account_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="ownerid" Target="owners" />
           <NavigationPropertyBinding Path="Account_ActivityPointers" Target="activitypointers" />
           <NavigationPropertyBinding Path="Account_SyncErrors" Target="syncerrors" />
@@ -29537,6 +29982,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_incident_actioncard" Target="incidents" />
           <NavigationPropertyBinding Path="regardingobjectid_serviceappointment_actioncard" Target="serviceappointments" />
           <NavigationPropertyBinding Path="regardingobjectid_opportunity_actioncard" Target="opportunities" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="regardingobjectid_letter_actioncard" Target="letters" />
           <NavigationPropertyBinding Path="regardingobjectid_phonecall_actioncard" Target="phonecalls" />
           <NavigationPropertyBinding Path="regardingobjectid_fax_actioncard" Target="faxes" />
@@ -29592,6 +30038,7 @@
           <NavigationPropertyBinding Path="activityid_quoteclose" Target="quotecloses" />
           <NavigationPropertyBinding Path="partyid_salesorder" Target="salesorders" />
           <NavigationPropertyBinding Path="partyid_era_suppliercontact" Target="era_suppliercontacts" />
+          <NavigationPropertyBinding Path="activityid_abs_scheduledprocessexecution_activityparty" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="ActivityParty_SyncErrors" Target="syncerrors" />
           <NavigationPropertyBinding Path="activityid_recurringappointmentmaster" Target="recurringappointmentmasters" />
           <NavigationPropertyBinding Path="activityid_socialactivity" Target="socialactivities" />
@@ -29643,6 +30090,8 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="activity_pointer_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="regardingobjectid_account" Target="accounts" />
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
           <NavigationPropertyBinding Path="regardingobjectid_contact" Target="contacts" />
@@ -29716,6 +30165,7 @@
           <NavigationPropertyBinding Path="objectid_era_supplier" Target="era_suppliers" />
           <NavigationPropertyBinding Path="objectid_era_suppliercontact" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="objectid_era_needassessment" Target="era_needassessments" />
+          <NavigationPropertyBinding Path="objectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="objectid_account" Target="accounts" />
           <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
           <NavigationPropertyBinding Path="objectid_kbarticle" Target="kbarticles" />
@@ -29828,6 +30278,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_appointment" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_appointment" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_appointment" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_appointment" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="Appointment_QueueItem" Target="queueitems" />
           <NavigationPropertyBinding Path="Appointment_Annotation" Target="annotations" />
           <NavigationPropertyBinding Path="Appointment_SyncErrors" Target="syncerrors" />
@@ -29994,6 +30445,9 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="regardingobjectid_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="regardingobjectid_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="regardingobjectid_report" Target="reports" />
           <NavigationPropertyBinding Path="AsyncOperation_Emails" Target="emails" />
           <NavigationPropertyBinding Path="regardingobjectid_recurringappointmentmaster" Target="recurringappointmentmasters" />
@@ -30117,6 +30571,7 @@
           <NavigationPropertyBinding Path="bookableresourcebookingheader_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="bookableresourcebookingheader_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="bookableresourcebookingheader_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="bookableresourcebookingheader_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="bookableresourcebookings" EntityType="Microsoft.Dynamics.CRM.bookableresourcebooking">
           <NavigationPropertyBinding Path="createdbyname" Target="systemusers" />
@@ -30157,6 +30612,7 @@
           <NavigationPropertyBinding Path="bookableresourcebooking_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="bookableresourcebooking_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="bookableresourcebooking_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="bookableresourcebooking_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="bookableresourcecategories" EntityType="Microsoft.Dynamics.CRM.bookableresourcecategory">
           <NavigationPropertyBinding Path="createdbyname" Target="systemusers" />
@@ -30425,6 +30881,9 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="regardingobjectid_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="regardingobjectid_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="regardingobjectid_customeraddress" Target="customeraddresses" />
           <NavigationPropertyBinding Path="regardingobjectid_annualfiscalcalendar" Target="annualfiscalcalendars" />
           <NavigationPropertyBinding Path="regardingobjectid_fax" Target="faxes" />
@@ -30549,6 +31008,7 @@
           <NavigationPropertyBinding Path="bulkoperation_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="bulkoperation_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="bulkoperation_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="bulkoperation_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="businessunitnewsarticles" EntityType="Microsoft.Dynamics.CRM.businessunitnewsarticle">
           <NavigationPropertyBinding Path="BusinessUnitNewsArticle_BulkDeleteFailures" Target="bulkdeletefailures" />
@@ -30632,6 +31092,9 @@
           <NavigationPropertyBinding Path="business_unit_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="business_unit_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="business_unit_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="business_unit_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="business_unit_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_businessunit_owningbusinessunit" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="BusinessUnit_SyncErrors" Target="syncerrors" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
           <NavigationPropertyBinding Path="BulkDeleteOperation_BusinessUnit" Target="bulkdeleteoperations" />
@@ -30777,6 +31240,7 @@
           <NavigationPropertyBinding Path="campaignactivity_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="campaignactivity_QuoteCloses" Target="quotecloses" />
           <NavigationPropertyBinding Path="campaignactivitysalesliterature_association" Target="salesliteratures" />
+          <NavigationPropertyBinding Path="campaignactivity_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="campaignactivityitems" EntityType="Microsoft.Dynamics.CRM.campaignactivityitem">
           <NavigationPropertyBinding Path="campaignactivityitem_AsyncOperations" Target="asyncoperations" />
@@ -30841,6 +31305,7 @@
           <NavigationPropertyBinding Path="originatingactivityid_opportunityclose_campaignresponse" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="originatingactivityid_orderclose_campaignresponse" Target="ordercloses" />
           <NavigationPropertyBinding Path="originatingactivityid_quoteclose_campaignresponse" Target="quotecloses" />
+          <NavigationPropertyBinding Path="originatingactivityid_abs_scheduledprocessexecution_campaignresponse" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="campaigns" EntityType="Microsoft.Dynamics.CRM.campaign">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -30891,6 +31356,7 @@
           <NavigationPropertyBinding Path="campaign_orders" Target="salesorders" />
           <NavigationPropertyBinding Path="campaign_quotes" Target="quotes" />
           <NavigationPropertyBinding Path="campaignsalesliterature_association" Target="salesliteratures" />
+          <NavigationPropertyBinding Path="campaign_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="categories" EntityType="Microsoft.Dynamics.CRM.category">
           <NavigationPropertyBinding Path="parentcategoryid" Target="categories" />
@@ -31054,6 +31520,8 @@
           <NavigationPropertyBinding Path="record2id_competitor" Target="competitors" />
           <NavigationPropertyBinding Path="record1id_msdyn_postalbum" Target="msdyn_postalbums" />
           <NavigationPropertyBinding Path="record2id_msdyn_postalbum" Target="msdyn_postalbums" />
+          <NavigationPropertyBinding Path="record1id_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
+          <NavigationPropertyBinding Path="record2id_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="record1id_contact" Target="contacts" />
           <NavigationPropertyBinding Path="record2id_socialactivity" Target="socialactivities" />
           <NavigationPropertyBinding Path="record2id_task" Target="tasks" />
@@ -31191,6 +31659,7 @@
           <NavigationPropertyBinding Path="era_contact_era_householdmember_Registrantid" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="era_ReviewedByid" Target="era_essteamusers" />
           <NavigationPropertyBinding Path="era_contact_era_evacueeemailinvite_Registrant" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="contact_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="contact_connections1" Target="connections" />
           <NavigationPropertyBinding Path="Contact_Feedback" Target="feedback" />
           <NavigationPropertyBinding Path="Contact_ProcessSessions" Target="processsessions" />
@@ -31311,6 +31780,7 @@
           <NavigationPropertyBinding Path="contracttemplateid" Target="contracttemplates" />
           <NavigationPropertyBinding Path="billtoaddress" Target="customeraddresses" />
           <NavigationPropertyBinding Path="serviceaddress" Target="customeraddresses" />
+          <NavigationPropertyBinding Path="contract_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="contracttemplates" EntityType="Microsoft.Dynamics.CRM.contracttemplate">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31523,8 +31993,8 @@
           <NavigationPropertyBinding Path="baserecordid_era_essteamarea" Target="era_essteamareas" />
           <NavigationPropertyBinding Path="duplicaterecordid_era_essteamsupplier" Target="era_essteamsuppliers" />
           <NavigationPropertyBinding Path="baserecordid_era_essteamsupplier" Target="era_essteamsuppliers" />
-          <NavigationPropertyBinding Path="duplicaterecordid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="baserecordid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
+          <NavigationPropertyBinding Path="duplicaterecordid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="duplicaterecordid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="baserecordid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="duplicaterecordid_era_evacueesupport" Target="era_evacueesupports" />
@@ -31535,6 +32005,8 @@
           <NavigationPropertyBinding Path="baserecordid_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="duplicaterecordid_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="baserecordid_era_referralprint" Target="era_referralprints" />
+          <NavigationPropertyBinding Path="duplicaterecordid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="baserecordid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
           <NavigationPropertyBinding Path="baserecordid_goalrollupquery" Target="goalrollupqueries" />
           <NavigationPropertyBinding Path="duplicaterecordid_publisher" Target="publishers" />
           <NavigationPropertyBinding Path="baserecordid_transactioncurrency" Target="transactioncurrencies" />
@@ -31701,6 +32173,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_email" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_email" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_email" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_email" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="Email_SyncErrors" Target="syncerrors" />
           <NavigationPropertyBinding Path="transactioncurrencyid_email" Target="transactioncurrencies" />
           <NavigationPropertyBinding Path="regardingobjectid_asyncoperation" Target="asyncoperations" />
@@ -31841,6 +32314,7 @@
           <NavigationPropertyBinding Path="entitlement_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="entitlement_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="entitlement_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="entitlement_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="entitlementtemplatechannels" EntityType="Microsoft.Dynamics.CRM.entitlementtemplatechannel">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31898,6 +32372,7 @@
           <NavigationPropertyBinding Path="entitlementtemplate_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="entitlementtemplate_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="entitlementtemplate_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="entitlementtemplate_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="entitydataproviders" EntityType="Microsoft.Dynamics.CRM.entitydataprovider" />
         <EntitySet Name="equipments" EntityType="Microsoft.Dynamics.CRM.equipment">
@@ -32041,6 +32516,26 @@
           <NavigationPropertyBinding Path="era_SupportTypeId" Target="era_supports" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
         </EntitySet>
+        <EntitySet Name="era_esstaskchangerequests" EntityType="Microsoft.Dynamics.CRM.era_esstaskchangerequest">
+          <NavigationPropertyBinding Path="createdby" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
+          <NavigationPropertyBinding Path="owningteam" Target="teams" />
+          <NavigationPropertyBinding Path="ownerid" Target="owners" />
+          <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_SyncErrors" Target="syncerrors" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_DuplicateMatchingRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_DuplicateBaseRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_AsyncOperations" Target="asyncoperations" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_ProcessSession" Target="processsessions" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_BulkDeleteFailures" Target="bulkdeletefailures" />
+          <NavigationPropertyBinding Path="era_esstaskchangerequest_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+          <NavigationPropertyBinding Path="era_SupplierInvoice" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="era_ESSTask" Target="era_tasks" />
+        </EntitySet>
         <EntitySet Name="era_essteamareas" EntityType="Microsoft.Dynamics.CRM.era_essteamarea">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
           <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
@@ -32148,10 +32643,10 @@
           <NavigationPropertyBinding Path="era_needsassessment_EvacuationFile" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_Registrant" Target="contacts" />
           <NavigationPropertyBinding Path="era_TaskId" Target="era_tasks" />
+          <NavigationPropertyBinding Path="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_householdmember_EvacuationFileid" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_essfilenote_ESSFileID" Target="era_essfilenotes" />
           <NavigationPropertyBinding Path="era_CurrentNeedsAssessmentid" Target="era_needassessments" />
-          <NavigationPropertyBinding Path="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_animal_ESSFileid" Target="era_animals" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_evacueesupport_ESSFileId" Target="era_evacueesupports" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
@@ -32282,24 +32777,24 @@
           <NavigationPropertyBinding Path="era_era_needassessment_era_evacueesupport_NeedsAssessmentID" Target="era_evacueesupports" />
         </EntitySet>
         <EntitySet Name="era_needsassessmentanimals" EntityType="Microsoft.Dynamics.CRM.era_needsassessmentanimal">
-          <NavigationPropertyBinding Path="createdby" Target="systemusers" />
-          <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
-          <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
-          <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
-          <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
-          <NavigationPropertyBinding Path="owningteam" Target="teams" />
-          <NavigationPropertyBinding Path="ownerid" Target="owners" />
-          <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_SyncErrors" Target="syncerrors" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_DuplicateMatchingRecord" Target="duplicaterecords" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_DuplicateBaseRecord" Target="duplicaterecords" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_AsyncOperations" Target="asyncoperations" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_ProcessSession" Target="processsessions" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_BulkDeleteFailures" Target="bulkdeletefailures" />
-          <NavigationPropertyBinding Path="era_needsassessmentanimal_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
           <NavigationPropertyBinding Path="era_NeedsAssessment" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_ESSFileid" Target="era_evacuationfiles" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_BulkDeleteFailures" Target="bulkdeletefailures" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_ProcessSession" Target="processsessions" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_AsyncOperations" Target="asyncoperations" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_DuplicateBaseRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_DuplicateMatchingRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="era_needsassessmentanimal_SyncErrors" Target="syncerrors" />
+          <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
+          <NavigationPropertyBinding Path="ownerid" Target="owners" />
+          <NavigationPropertyBinding Path="owningteam" Target="teams" />
+          <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdby" Target="systemusers" />
         </EntitySet>
         <EntitySet Name="era_provinceterritorieses" EntityType="Microsoft.Dynamics.CRM.era_provinceterritories">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -32413,6 +32908,7 @@
           <NavigationPropertyBinding Path="era_suppliercontact__PrimaryContact" Target="era_suppliers" />
           <NavigationPropertyBinding Path="era_RelatedSupplier" Target="era_suppliers" />
           <NavigationPropertyBinding Path="era_suppliercontact_ActivityParties" Target="activityparties" />
+          <NavigationPropertyBinding Path="era_suppliercontact_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="era_supplierinvoices" EntityType="Microsoft.Dynamics.CRM.era_supplierinvoice">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -32452,6 +32948,8 @@
           <NavigationPropertyBinding Path="era_SendPaymenttoSupplier" Target="era_suppliers" />
           <NavigationPropertyBinding Path="era_ESSTask" Target="era_tasks" />
           <NavigationPropertyBinding Path="era_EMBCRegion" Target="era_embcregions" />
+          <NavigationPropertyBinding Path="era_supplierinvoice_era_esstaskchangerequest_SupplierInvoice" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="era_supplierinvoice_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="era_supplierpaymentses" EntityType="Microsoft.Dynamics.CRM.era_supplierpayments">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -32513,6 +33011,7 @@
           <NavigationPropertyBinding Path="era_supplierinvoice_SendPaymenttoSupplier" Target="era_supplierinvoices" />
           <NavigationPropertyBinding Path="era_era_supplier_era_essteamsupplier_SupplierId" Target="era_essteamsuppliers" />
           <NavigationPropertyBinding Path="era_era_supplier_era_evacueesupport_SupplierId" Target="era_evacueesupports" />
+          <NavigationPropertyBinding Path="era_supplier_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="era_supportlineitems" EntityType="Microsoft.Dynamics.CRM.era_supportlineitem">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -32596,6 +33095,7 @@
           <NavigationPropertyBinding Path="era_era_task_era_evacuationfileId" Target="era_evacuationfiles" />
           <NavigationPropertyBinding Path="era_era_task_era_supplierinvoice_ESSTask" Target="era_supplierinvoices" />
           <NavigationPropertyBinding Path="era_era_task_era_supplierpayments_ESSTask" Target="era_supplierpaymentses" />
+          <NavigationPropertyBinding Path="era_task_era_esstaskchangerequest_ESSTask" Target="era_esstaskchangerequests" />
         </EntitySet>
         <EntitySet Name="exchangesyncidmappings" EntityType="Microsoft.Dynamics.CRM.exchangesyncidmapping">
           <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
@@ -32640,6 +33140,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_fax" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_fax" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_fax" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_fax" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="Fax_BulkDeleteFailures" Target="bulkdeletefailures" />
           <NavigationPropertyBinding Path="stageid_processstage" Target="processstages" />
           <NavigationPropertyBinding Path="owningbusinessunit_fax" Target="businessunits" />
@@ -32671,6 +33172,7 @@
           <NavigationPropertyBinding Path="Fax_AsyncOperations" Target="asyncoperations" />
         </EntitySet>
         <EntitySet Name="feedback" EntityType="Microsoft.Dynamics.CRM.feedback">
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="ContactId" Target="contacts" />
           <NavigationPropertyBinding Path="CreatedOnBehalfByContact" Target="contacts" />
           <NavigationPropertyBinding Path="feedback_principalobjectattributeaccess" Target="principalobjectattributeaccessset" />
@@ -32973,6 +33475,7 @@
           <NavigationPropertyBinding Path="incident_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="incident_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="incident_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="incident_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="interactionforemails" EntityType="Microsoft.Dynamics.CRM.interactionforemail">
           <NavigationPropertyBinding Path="createdbyname" Target="systemusers" />
@@ -32992,6 +33495,7 @@
           <NavigationPropertyBinding Path="interactionforemail_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="interactionforemail_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="interactionforemail_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="interactionforemail_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
         </EntitySet>
         <EntitySet Name="invaliddependencies" EntityType="Microsoft.Dynamics.CRM.invaliddependency" />
@@ -33062,6 +33566,7 @@
           <NavigationPropertyBinding Path="salesorderid" Target="salesorders" />
           <NavigationPropertyBinding Path="slainvokedid_invoice_sla" Target="slas" />
           <NavigationPropertyBinding Path="sla_invoice_sla" Target="slas" />
+          <NavigationPropertyBinding Path="invoice_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="kbarticlecomments" EntityType="Microsoft.Dynamics.CRM.kbarticlecomment">
           <NavigationPropertyBinding Path="KbArticleComment_BulkDeleteFailures" Target="bulkdeletefailures" />
@@ -33154,6 +33659,7 @@
           <NavigationPropertyBinding Path="knowledgearticle_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="knowledgearticle_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="knowledgearticle_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="knowledgearticle_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="knowledgearticle_expiredprocess" Target="expiredprocesses" />
           <NavigationPropertyBinding Path="knowledgearticle_translationprocess" Target="translationprocesses" />
           <NavigationPropertyBinding Path="KnowledgeArticle_SyncErrors" Target="syncerrors" />
@@ -33226,6 +33732,7 @@
           <NavigationPropertyBinding Path="knowledgebaserecord_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="knowledgebaserecord_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="knowledgebaserecord_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="knowledgebaserecord_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="KnowledgeBaseRecord_SyncErrors" Target="syncerrors" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
         </EntitySet>
@@ -33327,6 +33834,7 @@
           <NavigationPropertyBinding Path="leadproduct_association" Target="products" />
           <NavigationPropertyBinding Path="lead_leadtoopportunitysalesprocess" Target="leadtoopportunitysalesprocesses" />
           <NavigationPropertyBinding Path="qualifyingopportunityid" Target="opportunities" />
+          <NavigationPropertyBinding Path="lead_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="leadtoopportunitysalesprocesses" EntityType="Microsoft.Dynamics.CRM.leadtoopportunitysalesprocess">
           <NavigationPropertyBinding Path="createdbyname" Target="systemusers" />
@@ -33370,6 +33878,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_letter" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_letter" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_letter" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_letter" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="letter_actioncard" Target="actioncards" />
           <NavigationPropertyBinding Path="letter_principalobjectattributeaccess" Target="principalobjectattributeaccessset" />
           <NavigationPropertyBinding Path="slakpiinstance_letter" Target="slakpiinstances" />
@@ -33468,6 +33977,7 @@
           <NavigationPropertyBinding Path="opportunityclose_mailbox_sendermailboxid" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="orderclose_mailbox_sendermailboxid" Target="ordercloses" />
           <NavigationPropertyBinding Path="quoteclose_mailbox_sendermailboxid" Target="quotecloses" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_mailbox_sendermailboxid" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="tracelog_Mailbox" Target="tracelogs" />
           <NavigationPropertyBinding Path="activitypointer_sendermailboxid_mailbox" Target="activitypointers" />
           <NavigationPropertyBinding Path="mailbox_asyncoperations" Target="asyncoperations" />
@@ -33605,6 +34115,9 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="regardingobjectid_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="regardingobjectid_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
           <NavigationPropertyBinding Path="ownerid" Target="owners" />
           <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
@@ -33712,6 +34225,7 @@
           <NavigationPropertyBinding Path="msdyn_postalbum_connections2" Target="connections" />
           <NavigationPropertyBinding Path="msdyn_postalbum_Annotations" Target="annotations" />
           <NavigationPropertyBinding Path="msdyn_postalbum_ServiceAppointments" Target="serviceappointments" />
+          <NavigationPropertyBinding Path="msdyn_postalbum_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="msdyn_postconfigs" EntityType="Microsoft.Dynamics.CRM.msdyn_postconfig">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -33922,6 +34436,7 @@
           <NavigationPropertyBinding Path="slainvokedid_opportunity_sla" Target="slas" />
           <NavigationPropertyBinding Path="campaignid" Target="campaigns" />
           <NavigationPropertyBinding Path="CreatedOpportunity_BulkOperationLogs" Target="bulkoperationlogs" />
+          <NavigationPropertyBinding Path="opportunity_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="opportunitycloses" EntityType="Microsoft.Dynamics.CRM.opportunityclose">
           <NavigationPropertyBinding Path="regardingobjectid_new_interactionforemail_opportunityclose" Target="interactionforemails" />
@@ -34211,6 +34726,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_phonecall" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_phonecall" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_phonecall" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_phonecall" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="phonecall_actioncard" Target="actioncards" />
           <NavigationPropertyBinding Path="transactioncurrencyid_phonecall" Target="transactioncurrencies" />
           <NavigationPropertyBinding Path="regardingobjectid_contact_phonecall" Target="contacts" />
@@ -34544,6 +35060,9 @@
           <NavigationPropertyBinding Path="objectid_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="objectid_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="objectid_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="objectid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="objectid_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="objectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="objectid_letter" Target="letters" />
           <NavigationPropertyBinding Path="objectid_reportcategory" Target="reportcategories" />
           <NavigationPropertyBinding Path="objectid_sharepointdocumentlocation" Target="sharepointdocumentlocations" />
@@ -34670,6 +35189,9 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="regardingobjectid_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="regardingobjectid_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="regardingobjectid_queue" Target="queues" />
           <NavigationPropertyBinding Path="canceledby" Target="systemusers" />
           <NavigationPropertyBinding Path="regardingobjectid_contact" Target="contacts" />
@@ -34926,6 +35448,7 @@
           <NavigationPropertyBinding Path="objectid_bulkoperation" Target="bulkoperations" />
           <NavigationPropertyBinding Path="objectid_incident" Target="incidents" />
           <NavigationPropertyBinding Path="objectid_serviceappointment" Target="serviceappointments" />
+          <NavigationPropertyBinding Path="objectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="QueueItem_ProcessSessions" Target="processsessions" />
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
           <NavigationPropertyBinding Path="objectid_appointment" Target="appointments" />
@@ -35095,6 +35618,7 @@
           <NavigationPropertyBinding Path="sla_quote_sla" Target="slas" />
           <NavigationPropertyBinding Path="slainvokedid_quote_sla" Target="slas" />
           <NavigationPropertyBinding Path="campaignid" Target="campaigns" />
+          <NavigationPropertyBinding Path="quote_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="ratingmodels" EntityType="Microsoft.Dynamics.CRM.ratingmodel">
           <NavigationPropertyBinding Path="createdbyname" Target="systemusers" />
@@ -35180,6 +35704,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_recurringappointmentmaster" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_recurringappointmentmaster" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_recurringappointmentmaster" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_recurringappointmentmaster" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="RecurringAppointmentMaster_BulkDeleteFailures" Target="bulkdeletefailures" />
           <NavigationPropertyBinding Path="RecurringAppointmentMaster_AsyncOperations" Target="asyncoperations" />
           <NavigationPropertyBinding Path="RecurringAppointmentMaster_DuplicateBaseRecord" Target="duplicaterecords" />
@@ -35425,6 +35950,7 @@
           <NavigationPropertyBinding Path="sla_salesorder_sla" Target="slas" />
           <NavigationPropertyBinding Path="slainvokedid_salesorder_sla" Target="slas" />
           <NavigationPropertyBinding Path="campaignid" Target="campaigns" />
+          <NavigationPropertyBinding Path="salesorder_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="savedqueries" EntityType="Microsoft.Dynamics.CRM.savedquery">
           <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
@@ -35560,6 +36086,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_serviceappointment" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_serviceappointment" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_serviceappointment" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_serviceappointment" Target="abs_scheduledprocesses" />
         </EntitySet>
         <EntitySet Name="servicecontractcontactscollection" EntityType="Microsoft.Dynamics.CRM.servicecontractcontacts">
           <NavigationPropertyBinding Path="servicecontractcontacts_AsyncOperations" Target="asyncoperations" />
@@ -35610,6 +36137,7 @@
           <NavigationPropertyBinding Path="service_opportunityclose" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="service_orderclose" Target="ordercloses" />
           <NavigationPropertyBinding Path="service_quoteclose" Target="quotecloses" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_service_serviceid" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="sharepointdocumentlocations" EntityType="Microsoft.Dynamics.CRM.sharepointdocumentlocation">
           <NavigationPropertyBinding Path="regardingobjectid_knowledgearticle" Target="knowledgearticles" />
@@ -35706,6 +36234,7 @@
           <NavigationPropertyBinding Path="site_OpportunityCloses" Target="opportunitycloses" />
           <NavigationPropertyBinding Path="site_OrderCloses" Target="ordercloses" />
           <NavigationPropertyBinding Path="site_QuoteCloses" Target="quotecloses" />
+          <NavigationPropertyBinding Path="site_abs_scheduledprocessexecutions" Target="abs_scheduledprocessexecutions" />
         </EntitySet>
         <EntitySet Name="slaitems" EntityType="Microsoft.Dynamics.CRM.slaitem">
           <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
@@ -35777,6 +36306,8 @@
           <NavigationPropertyBinding Path="manualsla_opportunity" Target="opportunities" />
           <NavigationPropertyBinding Path="sla_opportunity" Target="opportunities" />
           <NavigationPropertyBinding Path="manualsla_invoice" Target="invoices" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_sla_slaid" Target="abs_scheduledprocessexecutions" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_sla_slainvokedid" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="workflowid" Target="workflows" />
           <NavigationPropertyBinding Path="manualsla_account" Target="accounts" />
           <NavigationPropertyBinding Path="manualsla_task" Target="tasks" />
@@ -35837,6 +36368,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_socialactivity" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_socialactivity" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_socialactivity" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_socialactivity" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="socialactivity_connections2" Target="connections" />
           <NavigationPropertyBinding Path="modifiedonbehalfby_socialactivity" Target="systemusers" />
           <NavigationPropertyBinding Path="regardingobjectid_contact_socialactivity" Target="contacts" />
@@ -36041,6 +36573,9 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="regardingobjectid_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="regardingobjectid_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocessexecution" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="regardingobjectid_ExpiredProcess_syncerror" Target="expiredprocesses" />
           <NavigationPropertyBinding Path="regardingobjectid_email_syncerror" Target="emails" />
           <NavigationPropertyBinding Path="regardingobjectid_systemuser" Target="systemusers" />
@@ -36662,11 +37197,10 @@
           <NavigationPropertyBinding Path="lk_era_essteamsupplier_modifiedby" Target="era_essteamsuppliers" />
           <NavigationPropertyBinding Path="lk_era_essteamsupplier_modifiedonbehalfby" Target="era_essteamsuppliers" />
           <NavigationPropertyBinding Path="user_era_essteamsupplier" Target="era_essteamsuppliers" />
-          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_createdby" Target="era_needsassessmentanimals" />
-          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_createdonbehalfby" Target="era_needsassessmentanimals" />
-          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_modifiedby" Target="era_needsassessmentanimals" />
-          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_modifiedonbehalfby" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="user_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
+          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_modifiedonbehalfby" Target="era_needsassessmentanimals" />
+          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_modifiedby" Target="era_needsassessmentanimals" />
+          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_createdonbehalfby" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="lk_era_householdmember_createdby" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="lk_era_householdmember_createdonbehalfby" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="lk_era_householdmember_modifiedby" Target="era_householdmembers" />
@@ -36677,6 +37211,7 @@
           <NavigationPropertyBinding Path="lk_era_essfilenote_modifiedby" Target="era_essfilenotes" />
           <NavigationPropertyBinding Path="lk_era_essfilenote_modifiedonbehalfby" Target="era_essfilenotes" />
           <NavigationPropertyBinding Path="user_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="lk_era_needsassessmentanimal_createdby" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="lk_era_animal_createdby" Target="era_animals" />
           <NavigationPropertyBinding Path="lk_era_animal_createdonbehalfby" Target="era_animals" />
           <NavigationPropertyBinding Path="lk_era_animal_modifiedby" Target="era_animals" />
@@ -36706,6 +37241,21 @@
           <NavigationPropertyBinding Path="lk_era_evacueeemailinvite_modifiedby" Target="era_evacueeemailinvites" />
           <NavigationPropertyBinding Path="lk_era_evacueeemailinvite_modifiedonbehalfby" Target="era_evacueeemailinvites" />
           <NavigationPropertyBinding Path="user_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="lk_era_esstaskchangerequest_createdby" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="lk_era_esstaskchangerequest_createdonbehalfby" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="lk_era_esstaskchangerequest_modifiedby" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="lk_era_esstaskchangerequest_modifiedonbehalfby" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="user_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="lk_abs_scheduledprocess_createdby" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="lk_abs_scheduledprocess_createdonbehalfby" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="lk_abs_scheduledprocess_modifiedby" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="lk_abs_scheduledprocess_modifiedonbehalfby" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="user_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_systemuser_createdby" Target="abs_scheduledprocessexecutions" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_systemuser_owninguser" Target="abs_scheduledprocessexecutions" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_systemuser_modifiedonbehalfby" Target="abs_scheduledprocessexecutions" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_systemuser_createdonbehalfby" Target="abs_scheduledprocessexecutions" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_systemuser_modifiedby" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="lk_slakpiinstancebase_createdonbehalfby" Target="slakpiinstances" />
           <NavigationPropertyBinding Path="lk_mobileofflineprofileitemassocaition_modifiedonbehalfby" Target="mobileofflineprofileitemassociations" />
           <NavigationPropertyBinding Path="lk_userqueryvisualizationbase_modifiedonbehalfby" Target="userqueryvisualizations" />
@@ -37291,6 +37841,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_supplier_task" Target="era_suppliers" />
           <NavigationPropertyBinding Path="regardingobjectid_era_suppliercontact_task" Target="era_suppliercontacts" />
           <NavigationPropertyBinding Path="regardingobjectid_era_supplierinvoice_task" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="regardingobjectid_abs_scheduledprocess_task" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="task_connections2" Target="connections" />
           <NavigationPropertyBinding Path="sla_task_sla" Target="slas" />
           <NavigationPropertyBinding Path="Task_DuplicateBaseRecord" Target="duplicaterecords" />
@@ -37407,6 +37958,9 @@
           <NavigationPropertyBinding Path="team_era_castest" Target="era_castests" />
           <NavigationPropertyBinding Path="team_era_referralprint" Target="era_referralprints" />
           <NavigationPropertyBinding Path="team_era_evacueeemailinvite" Target="era_evacueeemailinvites" />
+          <NavigationPropertyBinding Path="team_era_esstaskchangerequest" Target="era_esstaskchangerequests" />
+          <NavigationPropertyBinding Path="team_abs_scheduledprocess" Target="abs_scheduledprocesses" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_team_owningteam" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="team_DuplicateRules" Target="duplicaterules" />
           <NavigationPropertyBinding Path="team_Imports" Target="imports" />
           <NavigationPropertyBinding Path="OwningTeam_postfollows" Target="postfollows" />
@@ -37622,6 +38176,7 @@
           <NavigationPropertyBinding Path="TransactionCurrency_era_evacueesupport" Target="era_evacueesupports" />
           <NavigationPropertyBinding Path="TransactionCurrency_era_esssupportrate" Target="era_esssupportrates" />
           <NavigationPropertyBinding Path="TransactionCurrency_era_evacuationfile" Target="era_evacuationfiles" />
+          <NavigationPropertyBinding Path="abs_scheduledprocessexecution_transactioncurrency_transactioncurrencyid" Target="abs_scheduledprocessexecutions" />
           <NavigationPropertyBinding Path="TransactionCurrency_Email" Target="emails" />
           <NavigationPropertyBinding Path="TransactionCurrency_DuplicateBaseRecord" Target="duplicaterecords" />
           <NavigationPropertyBinding Path="TransactionCurrency_BusinessUnit" Target="businessunits" />
@@ -37849,6 +38404,7 @@
           <NavigationPropertyBinding Path="workflow_phonetocaseprocess" Target="phonetocaseprocesses" />
           <NavigationPropertyBinding Path="workflow_leadtoopportunitysalesprocess" Target="leadtoopportunitysalesprocesses" />
           <NavigationPropertyBinding Path="workflow_opportunitysalesprocess" Target="opportunitysalesprocesses" />
+          <NavigationPropertyBinding Path="abs_workflow_scheduledprocess" Target="abs_scheduledprocesses" />
           <NavigationPropertyBinding Path="slabase_workflowid" Target="slas" />
           <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
           <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
@@ -38010,6 +38566,7 @@
         <ActionImport Name="ConvertQuoteToSalesOrder" Action="Microsoft.Dynamics.CRM.ConvertQuoteToSalesOrder" />
         <ActionImport Name="ConvertSalesOrderToInvoice" Action="Microsoft.Dynamics.CRM.ConvertSalesOrderToInvoice" />
         <ActionImport Name="CreateActivitiesList" Action="Microsoft.Dynamics.CRM.CreateActivitiesList" />
+        <ActionImport Name="era_DEVOnly_DeleteESSFile_CA" Action="Microsoft.Dynamics.CRM.era_DEVOnly_DeleteESSFile_CA" />
         <ActionImport Name="era_GetCASTransactionProgress" Action="Microsoft.Dynamics.CRM.era_GetCASTransactionProgress" />
         <ActionImport Name="era_SubmitUnauthInvoices" Action="Microsoft.Dynamics.CRM.era_SubmitUnauthInvoices" />
         <ActionImport Name="GenerateInvoiceFromOpportunity" Action="Microsoft.Dynamics.CRM.GenerateInvoiceFromOpportunity" />
