@@ -23,7 +23,6 @@ export class EssFileOverviewComponent implements OnInit {
           file: EvacuationFileModel;
         };
         this.essFile = state.file;
-        console.log(this.essFile);
       }
     } else {
       this.essFile = this.essfileDashboardService.essFile;
