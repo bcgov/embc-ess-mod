@@ -376,7 +376,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (string.IsNullOrEmpty(sourceMember))
                 return string.Empty;
             else
-                return sourceMember.Substring(0, 1) + "***" + sourceMember.Substring(sourceMember.Length - 1);
+                return sourceMember.Substring(0, 1) + "****" + sourceMember.Substring(sourceMember.Length - 1);
         }
 
         public static bool ShouldMaskSecretPhrase(ResolutionContext ctx) =>
