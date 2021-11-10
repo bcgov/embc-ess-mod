@@ -7,8 +7,8 @@
 <div class="row row-padding">
   <div class="col-md-5">Created on</div>
   <div class="col-md-7 bold">
-    {{ profileData?.evacuationFileDate | date: 'dd-MMM-yyyy' }} at
-    {{ profileData?.evacuationFileDate | date: 'hh:mm a' }}
+    {{ profileData?.needsAssessment?.createdOn | date: 'dd-MMM-yyyy' }} at
+    {{ profileData?.needsAssessment?.createdOn | date: 'hh:mm a' }}
   </div>
 </div>
 
