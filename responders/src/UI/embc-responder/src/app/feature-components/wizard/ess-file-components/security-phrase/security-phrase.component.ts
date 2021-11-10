@@ -161,13 +161,13 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.stepEssFileService.checkForEdit() && this.securityForm.dirty) {
       this.wizardService.setEditStatus({
-        tabName: 'needs',
+        tabName: 'security-phrase',
         tabUpdateStatus: true
       });
       this.stepEssFileService.updateEditedFormStatus();
     } else {
       this.wizardService.setEditStatus({
-        tabName: 'needs',
+        tabName: 'security-phrase',
         tabUpdateStatus: false
       });
     }
