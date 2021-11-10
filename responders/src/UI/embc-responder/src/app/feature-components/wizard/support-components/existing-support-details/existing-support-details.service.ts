@@ -37,11 +37,16 @@ import {
   Taxi
 } from 'src/app/core/models/support-details.model';
 import { mergeMap } from 'rxjs/operators';
+import {
+  Community,
+  LocationsService
+} from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExistingSupportDetailsService {
   constructor(
     private registrationService: RegistrationsService,
+    private locationService: LocationsService,
     public stepSupportsService: StepSupportsService,
     public datePipe: DatePipe
   ) {}
@@ -165,7 +170,9 @@ export class ExistingSupportDetailsService {
       return {
         hostName: (selectedSupport as LodgingGroupReferral).facilityName,
         hostAddress: (selectedSupport as LodgingGroupReferral).facilityAddress,
-        hostCity: (selectedSupport as LodgingGroupReferral).facilityCity,
+        hostCity: this.parseCommunityString(
+          (selectedSupport as LodgingGroupReferral).facilityCommunityCode
+        ),
         hostPhone: (selectedSupport as LodgingGroupReferral)
           .facilityContactPhone
       };
@@ -252,5 +259,13 @@ export class ExistingSupportDetailsService {
         userTotalAmount: (selectedSupport as ClothingReferral).totalAmount
       };
     }
+  }
+
+  parseCommunityString(communityCode: string): Community {
+    const communities = this.locationService.getCommunityList();
+
+    const community = communities.find((comm) => comm.code === communityCode);
+
+    return community;
   }
 }

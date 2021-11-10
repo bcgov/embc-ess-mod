@@ -19,7 +19,7 @@ export class ViewAssessmentDialogComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.profileData);
+    // console.log(this.profileData);
   }
 
   cancel() {

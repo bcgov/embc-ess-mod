@@ -27,6 +27,10 @@ import {
   Taxi
 } from 'src/app/core/models/support-details.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import {
+  Community,
+  LocationsService
+} from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class ReferralCreationService {
@@ -246,9 +250,7 @@ export class ReferralCreationService {
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
       subCategory: SupportSubCategory.Lodging_Billeting,
       hostAddress: supportDelivery.details.hostAddress,
-      hostCity: supportDelivery.details.hostCity,
-      hostEmail: supportDelivery.details.emailAddress,
-      hostName: supportDelivery.details.hostName,
+      hostCity: supportDelivery.details.hostCity as string,
       hostPhone: supportDelivery.details.hostPhone
     };
     this.billetingReferral = billetingReferral;
@@ -265,11 +267,18 @@ export class ReferralCreationService {
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
       subCategory: SupportSubCategory.Lodging_Group,
       facilityAddress: supportDelivery.details.hostAddress,
-      facilityCity: supportDelivery.details.hostCity,
+      facilityCity: this.parseCommunityName(
+        supportDelivery.details.hostCity as Community
+      ),
+      facilityCommunityCode: this.parseCommunityCode(
+        supportDelivery.details.hostCommunityCode as Community
+      ),
       facilityContactPhone: supportDelivery.details.hostPhone,
       facilityName: supportDelivery.details.hostName
     };
     this.groupReferral = groupReferral;
+
+    console.log(this.groupReferral);
   }
 
   createClothingReferral(
@@ -328,5 +337,13 @@ export class ReferralCreationService {
     } else {
       return parseFloat(numberInput.replace(',', ''));
     }
+  }
+
+  parseCommunityName(community: Community): string {
+    return community.name;
+  }
+
+  parseCommunityCode(community: Community): string {
+    return community.code;
   }
 }
