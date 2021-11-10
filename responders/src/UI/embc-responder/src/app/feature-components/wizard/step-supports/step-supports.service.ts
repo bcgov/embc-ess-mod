@@ -10,10 +10,11 @@ import {
   Referral,
   SupportStatus,
   SupportMethod,
-  SupportCategory
+  SupportCategory,
+  EvacuationFile
 } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
-import { TasksService } from 'src/app/core/api/services';
+import { RegistrationsService, TasksService } from 'src/app/core/api/services';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
@@ -59,7 +60,8 @@ export class StepSupportsService {
     private dialog: MatDialog,
     private referralService: ReferralCreationService,
     private datePipe: DatePipe,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
+    private registrationsService: RegistrationsService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -147,7 +149,6 @@ export class StepSupportsService {
 
   public getCategoryList(): void {
     this.supportCategory = this.evacueeSearchService.supportCategory;
-    console.log(this.supportCategory);
     // this.configService
     //   .configurationGetCodes({ forEnumType: 'SupportCategory' })
     //   .subscribe(
@@ -168,7 +169,6 @@ export class StepSupportsService {
 
   public getSubCategoryList(): void {
     this.supportSubCategory = this.evacueeSearchService.supportSubCategory;
-    console.log(this.supportCategory);
     // this.configService
     //   .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
     //   .subscribe(
@@ -416,5 +416,31 @@ export class StepSupportsService {
     };
     const p = date.split('-');
     return new Date(p[2], months[p[1].toLowerCase()], p[0]);
+  }
+
+  getNeedsAssessmentInfo(
+    fileId: string,
+    needsAssessmentId: string
+  ): Observable<EvacuationFileModel> {
+    return this.registrationsService
+      .registrationsGetFile({
+        fileId,
+        needsAssessmentId
+      })
+      .pipe(
+        map(
+          (file: EvacuationFile): EvacuationFileModel => {
+            return {
+              ...file,
+              evacuatedFromAddress: this.locationService.getAddressModelFromAddress(
+                file.evacuatedFromAddress
+              ),
+              assignedTaskCommunity: this.locationService.mapCommunityFromCode(
+                file?.task?.communityCode
+              )
+            };
+          }
+        )
+      );
   }
 }

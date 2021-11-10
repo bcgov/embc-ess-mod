@@ -302,7 +302,7 @@ namespace EMBC.ESS.Managers.Submissions
             var profileTasks = searchResults.MatchingRegistrantIds.Select(async id =>
             {
                 var profile = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = id })).Items.Single();
-                var files = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { PrimaryRegistrantId = id })).Items;
+                var files = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { LinkedRegistrantId = id })).Items;
                 var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 mappedProfile.RecentEvacuationFiles = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files);
                 profiles.Add(mappedProfile);

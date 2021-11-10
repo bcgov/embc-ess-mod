@@ -55,7 +55,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
-    console.log(this.needsAssessmentForSupport);
   }
 
   back() {
@@ -175,14 +174,22 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   openAssessment(): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: ViewAssessmentDialogComponent,
-        profileData: this.needsAssessmentForSupport
-      },
-      height: '650px',
-      width: '720px'
-    });
+    this.isLoading = !this.isLoading;
+    this.stepSupportsService
+      .getNeedsAssessmentInfo(
+        this.needsAssessmentForSupport.id,
+        this.selectedSupport.needsAssessmentId
+      )
+      .subscribe((response) => {
+        this.dialog.open(DialogComponent, {
+          data: {
+            component: ViewAssessmentDialogComponent,
+            profileData: response
+          },
+          height: '650px',
+          width: '720px'
+        });
+      });
   }
 
   voidReferral(): void {
@@ -236,9 +243,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .afterClosed()
       .subscribe((reason) => {
         if (reason !== undefined && reason !== 'close') {
+          this.displayOverlay(true);
+          console.log(this.isLoading);
           const win = window.open('', '_blank');
           win.document.write('Loading referral document ... ');
-          this.isLoading = !this.isLoading;
           this.existingSupportService
             .reprintSupport(
               this.needsAssessmentForSupport.id,
@@ -250,10 +258,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 const blob = value;
                 const url = window.URL.createObjectURL(blob);
                 win.location.href = url;
-                this.isLoading = !this.isLoading;
+                // this.isLoading = !this.isLoading;
               },
               (error) => {
-                this.isLoading = !this.isLoading;
+                // this.isLoading = !this.isLoading;
                 this.alertService.clearAlert();
                 this.alertService.setAlert(
                   'danger',
@@ -312,5 +320,9 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/details'], {
       state: { action: 'edit' }
     });
+  }
+
+  private displayOverlay(isLoading: boolean): void {
+    this.isLoading = isLoading;
   }
 }

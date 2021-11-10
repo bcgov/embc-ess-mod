@@ -147,8 +147,16 @@ namespace EMBC.Registrants.API.Controllers
         {
             var file = (await messagingClient.Send(new EvacuationFilesQuery { FileId = request.FileId })).Items.SingleOrDefault();
             if (file == null) return NotFound(request.FileId);
-            var inviteId = await messagingClient.Send(new InviteRegistrantCommand { RegistrantId = file.PrimaryRegistrantId, Email = request.Email });
-            return Ok(inviteId);
+            await messagingClient.Send(new InviteRegistrantCommand { RegistrantId = file.PrimaryRegistrantId, Email = request.Email });
+            return Ok();
+        }
+
+        [HttpPost("current/join")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ProcessInvite([FromBody] string token)
+        {
+            await messagingClient.Send(new ProcessRegistrantInviteCommand { LoggedInUserId = currentUserId, InviteId = token });
+            return Ok();
         }
     }
 

@@ -228,6 +228,7 @@ export class SupportDeliveryComponent implements OnInit {
       this.supportDeliveryForm.markAllAsTouched();
     } else {
       this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      console.log(this.stepSupportsService.supportDelivery);
       this.stepSupportsService.editDraft();
       const stateIndicator = { action: 'edit' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
@@ -363,7 +364,10 @@ export class SupportDeliveryComponent implements OnInit {
       ],
       hostCity: [
         this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
-        [this.customValidation.whitespaceValidator()]
+        [Validators.required]
+      ],
+      hostCommunityCode: [
+        this.stepSupportsService?.supportDelivery?.details?.hostCity ?? ''
       ],
       hostPhone: [
         this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
