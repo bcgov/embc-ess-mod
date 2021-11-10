@@ -68,13 +68,6 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         this.questionForm.get('question3').updateValueAndValidity();
       });
 
-    // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
-      () => {
-        this.updateTabStatus();
-      }
-    );
-
     this.questionForm
       .get('question3')
       .valueChanges.pipe(distinctUntilChanged())
@@ -82,13 +75,6 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         this.questionForm.get('question1').updateValueAndValidity();
         this.questionForm.get('question2').updateValueAndValidity();
       });
-
-    // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
-      () => {
-        this.updateTabStatus();
-      }
-    );
   }
 
   /**

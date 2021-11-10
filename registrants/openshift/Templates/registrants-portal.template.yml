@@ -22,35 +22,6 @@ parameters:
   - description: ASPNET runtime environment (Development|Staging|Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
-  - description: BCSC client id
-    name: BCSC_CLIENT_ID
-    required: true
-  - description: BCSC client secret
-    name: BCSC_CLIENT_SECRET
-    required: true
-  - description: BCSC metadata endpoint
-    name: BCSC_METADATA_ENDPOINT
-    required: true
-  - description: Reverse proxy known network
-    name: APP_KNOWN_NETWORK
-    required: false
-  - description: JWT issuer
-    name: JWT_ISSUER
-    required: true
-  - description: JWT audience
-    name: JWT_AUDIENCE
-    required: true
-  - description: JWT signing key
-    name: JWT_SIGNING_KEY
-    required: true
-  - description: JWT encrypting key
-    name: JWT_ENCRYPTING_KEY
-    required: true
-  - description: JWT lifetime since creation in minutes
-    name: JWT_TOKEN_EXPIRY
-    required: true
-  - description: CORS policy list of allowed origins
-    name: CORS_ORIGINS
   - description: ESS backend url
     name: BACKEND_URL
     required: true
@@ -60,6 +31,18 @@ parameters:
   - description: REDIS Service connection string
     name: REDIS_CONNECTIONSTRING
     required: false
+  - description: Oauth/oidc server url
+    name: OAUTH_AUTHORITY
+    required: true
+  - description: Oauth server client id
+    name: OAUTH_API_CLIENTID
+    required: true
+  - description: Oauth server client secret
+    name: OAUTH_API_CLIENTSECRET
+    required: true
+  - description: registrants portal client id
+    name: OAUTH_UI_CLIENTID
+    required: true
 
 objects:
   - kind: ConfigMap
@@ -74,14 +57,12 @@ objects:
       APP_NAME: ${APP_NAME}-registrants-portal
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys/${APP_NAME}-registrants-portal"
-      auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
-      app__knownNetwork: ${APP_KNOWN_NETWORK}
-      app__cors__origins: ${CORS_ORIGINS}
-      auth__jwt__ClaimsIssuer: ${JWT_ISSUER}
-      auth__jwt__audience: ${JWT_AUDIENCE}
-      auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
+      app__knownNetwork: ${KNOWN_NETWORKS}
       backend__url: ${BACKEND_URL}
       backend__allowInvalidServerCertificate: ${BACKEND_ALLOW_INVALID_CERT}
+      auth__introspection__authority: ${OAUTH_AUTHORITY}
+      auth__jwt__authority: ${OAUTH_AUTHORITY}
+      auth__oidc__issuer: ${OAUTH_AUTHORITY}
 
   - kind: Secret
     apiVersion: v1
@@ -93,10 +74,9 @@ objects:
         app: ${APP_NAME}-registrants-portal
         app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
-      auth__bcsc__clientId: ${BCSC_CLIENT_ID}
-      auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
-      auth__jwt__signingKey: ${JWT_SIGNING_KEY}
-      auth__jwt__encryptingKey: ${JWT_ENCRYPTING_KEY}
+      auth__introspection__clientid: ${OAUTH_API_CLIENTID}
+      auth__introspection__clientSecret: ${OAUTH_API_CLIENTSECRET}
+      auth__oidc__clientid: ${OAUTH_UI_CLIENTID}
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
 
   - kind: Service

@@ -21,7 +21,6 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
-using Serilog.Formatting.Compact;
 using Serilog.Formatting.Elasticsearch;
 
 namespace EMBC.Responders.API
@@ -31,10 +30,14 @@ namespace EMBC.Responders.API
         public static int Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-             .Enrich.FromLogContext()
-             .WriteTo.Console(formatter: new RenderedCompactJsonFormatter())
-             .CreateBootstrapLogger();
+               .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+               .Enrich.FromLogContext()
+#if RELEASE
+             .WriteTo.Console(formatter: new ElasticsearchJsonFormatter())
+#else
+               .WriteTo.Console()
+#endif
+               .CreateBootstrapLogger();
 
             try
             {

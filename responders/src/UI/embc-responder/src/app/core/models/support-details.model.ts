@@ -1,4 +1,5 @@
 import { EvacuationFileHouseholdMember } from '../api/models';
+import { Community } from '../services/locations.service';
 import { SupplierListItemModel } from './supplier-list-item.model';
 
 export class SupportDetailsModel {
@@ -31,7 +32,8 @@ export class SupportDeliveryModel {
 export class SupplierDetailsModel {
   hostName?: string;
   hostAddress?: string;
-  hostCity?: string;
+  hostCity?: string | Community;
+  hostCommunityCode?: string | Community;
   hostPhone?: string;
   emailAddress?: string;
 }
