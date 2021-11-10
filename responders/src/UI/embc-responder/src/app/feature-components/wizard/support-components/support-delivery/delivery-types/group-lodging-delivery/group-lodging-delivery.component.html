@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label>City</mat-label>
@@ -73,6 +73,44 @@
         >
           City is required</mat-error
         >
+      </mat-form-field>
+    </div>
+  </div> -->
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input
+          maxlength="100"
+          type="text"
+          [formControlName]="'hostCity'"
+          matInput
+          placeholder="Enter City"
+          [matAutocomplete]="auto"
+          required
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="cityDisplayFn"
+          (optionSelected)="getCommunityCode($event.option.value)"
+        >
+          <mat-option
+            *ngFor="let option of filteredOptions | async"
+            [value]="option"
+          >
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl?.hostCity.invalid &&
+            supportDeliveryFormControl?.hostCity.hasError('required')
+          "
+        >
+          City is required</mat-error
+        >
+        <mat-error *ngIf="validateCity()"> City is invalid</mat-error>
       </mat-form-field>
     </div>
   </div>
