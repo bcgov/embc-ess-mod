@@ -66,7 +66,8 @@ namespace EMBC.Responders.API.Controllers
                 Oidc = new OidcConfiguration
                 {
                     ClientId = configuration.GetValue<string>("oidc:clientId"),
-                    Issuer = configuration.GetValue<string>("oidc:issuer")
+                    Issuer = configuration.GetValue<string>("oidc:issuer"),
+                    PostLogoutRedirectUrl = $"{configuration.GetValue<string>("oidc:bceidLogoutUrl")}?retnow=1&returl={this.HttpContext.Request.Host}"
                 }
             };
 
@@ -175,6 +176,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Issuer { get; set; }
         public string ClientId { get; set; }
+        public string PostLogoutRedirectUrl { get; set; }
     }
 
     public class Code
