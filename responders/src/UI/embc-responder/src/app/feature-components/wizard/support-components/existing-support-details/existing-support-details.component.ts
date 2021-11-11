@@ -189,6 +189,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
           height: '650px',
           width: '720px'
         });
+        this.isLoading = !this.isLoading;
       });
   }
 
@@ -243,7 +244,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .afterClosed()
       .subscribe((reason) => {
         if (reason !== undefined && reason !== 'close') {
-          this.displayOverlay(true);
+          this.isLoading = !this.isLoading;
           console.log(this.isLoading);
           const win = window.open('', '_blank');
           win.document.write('Loading referral document ... ');
@@ -258,10 +259,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 const blob = value;
                 const url = window.URL.createObjectURL(blob);
                 win.location.href = url;
-                // this.isLoading = !this.isLoading;
+                this.isLoading = !this.isLoading;
               },
               (error) => {
-                // this.isLoading = !this.isLoading;
+                this.isLoading = !this.isLoading;
                 this.alertService.clearAlert();
                 this.alertService.setAlert(
                   'danger',
@@ -320,9 +321,5 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/details'], {
       state: { action: 'edit' }
     });
-  }
-
-  private displayOverlay(isLoading: boolean): void {
-    this.isLoading = isLoading;
   }
 }
