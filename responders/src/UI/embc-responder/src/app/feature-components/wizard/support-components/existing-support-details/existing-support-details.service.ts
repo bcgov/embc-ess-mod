@@ -263,9 +263,7 @@ export class ExistingSupportDetailsService {
 
   parseCommunityString(communityCode: string): Community {
     const communities = this.locationService.getCommunityList();
-
     const community = communities.find((comm) => comm.code === communityCode);
-
     return community;
   }
 }

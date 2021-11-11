@@ -51,7 +51,7 @@ export class ReportingComponent implements OnInit {
   }
 
   supportReport(): void {
-    this.isLoading = true;
+    this.isLoading = !this.isLoading;
     this.reportService
       .reportsGetSupportReport(this.reportForm.getRawValue())
       .subscribe(
