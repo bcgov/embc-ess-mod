@@ -40,14 +40,14 @@ namespace EMBC.ESS.Managers.Metadata
 
         public async Task<CountriesQueryResponse> Handle(CountriesQuery _)
         {
-            var countries = await cache.GetOrAdd("metadata:countries", () => metadataRepository.GetCountries(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
+            var countries = await cache.GetOrSet("metadata:countries", () => metadataRepository.GetCountries(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
 
             return new CountriesQueryResponse { Items = mapper.Map<IEnumerable<Country>>(countries) };
         }
 
         public async Task<StateProvincesQueryResponse> Handle(StateProvincesQuery req)
         {
-            var stateProvinces = await cache.GetOrAdd("metadata:state_provinces", () => metadataRepository.GetStateProvinces(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
+            var stateProvinces = await cache.GetOrSet("metadata:state_provinces", () => metadataRepository.GetStateProvinces(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
 
             if (!string.IsNullOrEmpty(req.CountryCode))
             {
@@ -59,7 +59,7 @@ namespace EMBC.ESS.Managers.Metadata
 
         public async Task<CommunitiesQueryResponse> Handle(CommunitiesQuery req)
         {
-            var communities = await cache.GetOrAdd("metadata:communities", () => metadataRepository.GetCommunities(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
+            var communities = await cache.GetOrSet("metadata:communities", () => metadataRepository.GetCommunities(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
 
             if (!string.IsNullOrEmpty(req.CountryCode))
             {
