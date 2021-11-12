@@ -153,7 +153,7 @@ namespace EMBC.Registrants.API.Controllers
 
         [HttpPost("current/join")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> ProcessInvite([FromBody] string token)
+        public async Task<IActionResult> ProcessInvite(string token)
         {
             await messagingClient.Send(new ProcessRegistrantInviteCommand { LoggedInUserId = currentUserId, InviteId = token });
             return Ok();
@@ -225,13 +225,11 @@ namespace EMBC.Registrants.API.Controllers
         public override string DataElementName => "Name";
 
         [Required]
-        public new
-            (string firstName, string lastName) ConflictingValue
+        public new (string firstName, string lastName) ConflictingValue
         { get; set; }
 
         [Required]
-        public new
-            (string firstName, string lastName) OriginalValue
+        public new (string firstName, string lastName) OriginalValue
         { get; set; }
     }
 
