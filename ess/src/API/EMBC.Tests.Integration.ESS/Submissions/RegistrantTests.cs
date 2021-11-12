@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -255,7 +254,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 RequestingUserId = null
             });
 
-            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = TestData.TestPrefix });
+            var dp = services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
+            var encryptedInviteId = dp.Protect(inviteId);
+
+            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = encryptedInviteId, LoggedInUserId = TestData.TestPrefix });
 
             var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, TestData.TestPrefix)).ShouldNotBeNull();
             actualRegistrant.AuthenticatedUser.ShouldBeTrue();
