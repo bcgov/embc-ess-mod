@@ -35,6 +35,7 @@ using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.ESS.Utilities.Transformation;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -56,6 +57,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly IMetadataRepository metadataRepository;
+        private readonly IDataProtectionProvider dataProtectionProvider;
         private readonly EvacuationFileLoader evacuationFileLoader;
         private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
@@ -75,7 +77,8 @@ namespace EMBC.ESS.Managers.Submissions
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator,
             IWebHostEnvironment env,
-            IMetadataRepository metadataRepository)
+            IMetadataRepository metadataRepository,
+            IDataProtectionProvider dataProtectionProvider)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -91,6 +94,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
             this.metadataRepository = metadataRepository;
+            this.dataProtectionProvider = dataProtectionProvider;
             this.env = env;
             this.evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
         }
@@ -582,7 +586,7 @@ namespace EMBC.ESS.Managers.Submissions
             })).InviteId;
 
             var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = inviteId })).Items.Single();
-
+            var dp = dataProtectionProvider.CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
             await SendEmailNotification(
                 SubmissionTemplateType.InviteProfile,
                 email: cmd.Email,
@@ -590,7 +594,7 @@ namespace EMBC.ESS.Managers.Submissions
                 tokens: new[]
                 {
                     KeyValuePair.Create("inviteExpiryDate", invite.ExpiryDate.ToShortDateString()),
-                    KeyValuePair.Create("inviteId", inviteId)
+                    KeyValuePair.Create("inviteId", dp.Protect(inviteId, invite.ExpiryDate))
                 });
 
             return inviteId;
@@ -601,8 +605,10 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.InviteId)) throw new ArgumentNullException(nameof(cmd.InviteId));
             if (string.IsNullOrEmpty(cmd.LoggedInUserId)) throw new ArgumentNullException(nameof(cmd.LoggedInUserId));
 
-            var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = cmd.InviteId })).Items.SingleOrDefault();
-            if (invite == null) throw new NotFoundException($"invite not found", cmd.InviteId);
+            var dp = dataProtectionProvider.CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
+            var inviteId = dp.Unprotect(cmd.InviteId);
+            var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = inviteId })).Items.SingleOrDefault();
+            if (invite == null) throw new NotFoundException($"invite not found", inviteId);
 
             var registrantId = invite.ContactId;
 
