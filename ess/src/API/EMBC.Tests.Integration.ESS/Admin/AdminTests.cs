@@ -27,18 +27,19 @@ namespace EMBC.Tests.Integration.ESS.Admin
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
             var newMember = new TeamMember
             {
                 Email = "email@email.com",
-                FirstName = "first",
-                LastName = "last",
+                FirstName = uniqueSignature + "-first",
+                LastName = uniqueSignature + "-last",
                 IsActive = true,
                 Label = "Volunteer",
                 Role = "Tier1",
                 AgreementSignDate = now,
                 LastSuccessfulLogin = now,
-                ExternalUserId = "extid",
+                ExternalUserId = uniqueSignature + "-extid",
                 Phone = "1234",
                 TeamId = TestData.TeamId,
                 UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
@@ -82,12 +83,13 @@ namespace EMBC.Tests.Integration.ESS.Admin
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
             var newMember = new TeamMember
             {
                 Email = "email@email.com",
-                FirstName = TestData.TestPrefix + "-to-deactivate",
-                LastName = TestData.TestPrefix + "-to-deactivate",
+                FirstName = uniqueSignature + "-to-deactivate",
+                LastName = uniqueSignature + "-to-deactivate",
                 IsActive = true,
                 Label = "Volunteer",
                 Role = "Tier1",
@@ -112,12 +114,33 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteTeamMember()
         {
-            var memberToDelete = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var now = DateTime.UtcNow;
+            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
-            await adminManager.Handle(new DeleteTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberToDelete.Id });
+            var newMember = new TeamMember
+            {
+                Email = "email@email.com",
+                FirstName = uniqueSignature + "-to-deactivate",
+                LastName = uniqueSignature + "-to-deactivate",
+                IsActive = true,
+                Label = "Volunteer",
+                Role = "Tier1",
+                AgreementSignDate = now,
+                LastSuccessfulLogin = now,
+                ExternalUserId = "deactivate-extid",
+                Phone = "1234",
+                TeamId = TestData.TeamId,
+                UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
+            };
 
-            var teamMembers = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToDelete.Id })).TeamMembers;
-            teamMembers.Where(m => m.Id == memberToDelete.Id).ShouldBeEmpty();
+            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = newMember });
+            memberId.ShouldNotBeNull();
+
+            await adminManager.Handle(new DeleteTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
+
+            var teamMembers = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId })).TeamMembers;
+            teamMembers.Where(m => m.Id == memberId).ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -217,7 +240,8 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
-            var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code);
+            var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code).ToList();
+            if (!assignedCommunities.Any(c => c.Code == TestData.ActiveTaskCommunity) && !newCommunities.Any(c => c == TestData.ActiveTaskCommunity)) newCommunities.Add(TestData.ActiveTaskCommunity);
 
             await adminManager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
 
@@ -231,7 +255,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         {
             var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
-            var removedCommunities = team.AssignedCommunities.Take(2);
+            var removedCommunities = team.AssignedCommunities.Where(c => c.Code != TestData.ActiveTaskCommunity).Take(2);
 
             await adminManager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = TestData.TeamId, Communities = removedCommunities.Select(c => c.Code) });
 
@@ -288,7 +312,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task Create_Suppliers_ReturnsSupplierId()
         {
-            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
             Supplier supplier = new Supplier
             {
                 Name = $"{uniqueSignature}-Test Supplier",
@@ -355,11 +379,11 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task Deactivate_Suppliers_ReturnsSupplierId()
         {
-            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = TestData.TeamId, SupplierId = TestData.SupplierAId });
+            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = TestData.TeamId, SupplierId = TestData.SupplierCId });
 
-            results.ShouldBe(TestData.SupplierAId);
+            results.ShouldBe(TestData.SupplierCId);
 
-            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.SingleOrDefault();
+            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.SingleOrDefault();
             updatedSupplier.Status.ShouldBe(SupplierStatus.Inactive);
         }
 

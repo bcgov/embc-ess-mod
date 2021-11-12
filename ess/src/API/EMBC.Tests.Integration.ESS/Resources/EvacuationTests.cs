@@ -245,7 +245,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = TestContactId })).Items;
 
-            foreach (var file in files.OrderByDescending(f => f.CreatedOn).Skip(10))
+            foreach (var file in files.Where(f => f.Id != TestEssFileNumber).OrderByDescending(f => f.CreatedOn).Skip(10))
             {
                 await caseRepository.ManageCase(new DeleteEvacuationFile { Id = file.Id });
             }
@@ -338,7 +338,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var supportToUpdate = (ClothingReferral)fileToUpdateItsSupport.Supports.Where(s => s.Id == createdSupportId).Single();
 
             //Parameters to change in support
-            var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
+            var newUniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
             var randomIndex = new Random().Next(0, fileToUpdateItsSupport.HouseholdMembers.Count());
             var includedHouseholdMembers = fileToUpdateItsSupport.HouseholdMembers.Where((m, i) => i == randomIndex).Select(s => s.Id).ToArray();
@@ -380,12 +380,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private EvacuationFile CreateTestFile(Contact primaryContact)
         {
             var now = DateTime.UtcNow;
-            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
             var file = new EvacuationFile()
             {
                 PrimaryRegistrantId = primaryContact.Id,
                 EvacuationDate = now,
-                TaskId = "0001",
+                TaskId = TestData.ActiveTaskId,
                 SecurityPhrase = "secret123",
                 SecurityPhraseChanged = true,
                 RegistrationLocation = $"{uniqueSignature}_testlocation",
@@ -397,7 +397,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                     {
                         AddressLine1 = $"{uniqueSignature}_3738 Main St",
                         AddressLine2 = "Suite 3",
-                        CommunityCode = "9e6adfaf-9f97-ea11-b813-005056830319",
+                        CommunityCode = TestData.RandomCommunity,
                         PostalCode = "V8V 2W3"
                     },
                     Type = NeedsAssessmentType.Preliminary,
