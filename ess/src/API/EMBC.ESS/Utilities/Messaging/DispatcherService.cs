@@ -78,7 +78,7 @@ namespace EMBC.ESS.Utilities.Messaging
                 };
                 sw.Stop();
 
-                logger.LogInformation(e, "GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds);
+                logger.LogError(e, "GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds);
 
                 return reply;
             }
