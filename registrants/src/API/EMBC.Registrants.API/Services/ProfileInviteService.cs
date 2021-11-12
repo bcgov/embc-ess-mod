@@ -20,7 +20,7 @@ using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.Registrants.API.services
+namespace EMBC.Registrants.API.Services
 {
     public interface IProfileInviteService
     {
@@ -45,9 +45,9 @@ namespace EMBC.Registrants.API.services
                 await messagingClient.Send(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = loggedInUserId });
                 return true;
             }
-            catch (EssApplicationException e)
+            catch (BusinessLogicException e)
             {
-                logger.LogError(e, "Failed to process invite {0} for user {1}: {2}", inviteId, loggedInUserId, e.Message);
+                logger.LogError(e, "Invite {0} for user {1}: {2} error", inviteId, loggedInUserId, e.Message);
                 return false;
             }
         }

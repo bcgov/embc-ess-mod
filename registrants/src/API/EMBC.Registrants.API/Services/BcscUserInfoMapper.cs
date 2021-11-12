@@ -18,7 +18,7 @@ using System;
 using System.Text.Json;
 using EMBC.Registrants.API.Controllers;
 
-namespace EMBC.Registrants.API.SecurityModule
+namespace EMBC.Registrants.API.Services
 {
     public static class BcscTokenKeys
     {
