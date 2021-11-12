@@ -34,6 +34,14 @@ const routes: Routes = [
       import('./feature-components/error-screen/error-screen.module').then(
         (m) => m.ErrorScreenModule
       )
+  },
+  {
+    path: 'invite-error',
+    loadChildren: () =>
+      import('./feature-components/invite-error/invite-error.module').then(
+        (m) => m.InviteErrorModule
+      ),
+    data: { flow: 'verified-registration' }
   }
 ];
 
