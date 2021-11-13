@@ -62,7 +62,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     Country = "CAN",
                     StateProvince = "BC",
                     PostalCode = "v1v 1v1",
-                    Community = "226adfaf-9f97-ea11-b813-005056830319"
+                    Community = TestData.RandomCommunity
                 },
                 MailingAddress = new Address
                 {
@@ -121,7 +121,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     {
                         AddressLine1 = $"addr1",
                         Country = "CAN",
-                        Community = "226adfaf-9f97-ea11-b813-005056830319",
+                        Community = TestData.RandomCommunity,
                         StateProvince = "BC",
                         PostalCode = "v1v 1v1"
                     },
@@ -285,7 +285,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedNoteId.ShouldBe(noteId);
             var actualUpdatedNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
             actualUpdatedNote.Content.ShouldEndWith(updatedNotePostfix);
-
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -301,7 +300,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanQueryFileNoteByFileIdAndNoteId()
         {
             var fileId = TestData.EvacuationFileId;
-            var noteId = "65dea67d-760a-445d-aa78-101564bbf0b7";
+            var notePostfix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{notePostfix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
             var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId, FileId = fileId })).Notes;
 
             notes.ShouldNotBeNull();

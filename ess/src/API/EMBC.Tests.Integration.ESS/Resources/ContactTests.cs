@@ -77,6 +77,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateContact()
         {
+            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
             /* Get Contact */
             var contactQuery = new RegistrantQuery
             {
@@ -86,6 +87,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var baseContact = queryResult.Items.FirstOrDefault();
             baseContact.Id = null;
             baseContact.UserId = TestContactUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
+            baseContact.FirstName += "_" + uniqueSignature;
+            baseContact.LastName += "_" + uniqueSignature;
 
             /* Create Contact */
             SaveContact saveContactCmd = new SaveContact
@@ -112,6 +115,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var country = "CAN";
             var province = "BC";
             var city = TestData.RandomCommunity;
+            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
 
             /* Get Contact */
             var contactQuery = new RegistrantQuery
@@ -124,6 +128,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             baseContact.Id = null;
             baseContact.UserId = TestContactUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
+            baseContact.FirstName += "_" + uniqueSignature;
+            baseContact.LastName += "_" + uniqueSignature;
             baseContact.PrimaryAddress.Country = country;
             baseContact.PrimaryAddress.StateProvince = province;
             baseContact.PrimaryAddress.Community = city;

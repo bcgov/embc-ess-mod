@@ -385,10 +385,18 @@
     class="row row-padding"
   >
     <div class="col-md-4 box-text-color">Supplier Address:</div>
-    <div class="col-md-4 bold">
+    <div
+      *ngIf="billetingReferral?.hostAddress; else noAddress"
+      class="col-md-4 bold"
+    >
       {{ billetingReferral?.hostAddress }}, <br />
       {{ billetingReferral?.hostCity }}
     </div>
+    <ng-template #noAddress>
+      <div class="col-md-4 bold">
+        {{ billetingReferral?.hostCity }}
+      </div>
+    </ng-template>
   </div>
 
   <div
