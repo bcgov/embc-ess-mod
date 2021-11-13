@@ -9,7 +9,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -81,6 +81,21 @@ export class SupportDeliveryComponent implements OnInit {
     if (item) {
       return item.name;
     }
+  }
+
+  /**
+   * Checks if the city value exists in the list
+   */
+  validateSupplier(): boolean {
+    const currentSupplier = this.supportDeliveryForm.get('supplier').value;
+    let invalidSupplier = false;
+    if (currentSupplier !== null && currentSupplier.name === undefined) {
+      invalidSupplier = !invalidSupplier;
+      this.supportDeliveryForm
+        .get('supplier')
+        .setErrors({ invalidSupplier: true });
+    }
+    return invalidSupplier;
   }
 
   /**
@@ -270,6 +285,12 @@ export class SupportDeliveryComponent implements OnInit {
         this.showLoader = !this.showLoader;
         this.stepSupportsService.supplierList = value;
         this.supplierList = value;
+        this.filteredOptions = this.supportDeliveryForm
+          .get('supplier')
+          .valueChanges.pipe(
+            startWith(''),
+            map((input) => this.filter(input))
+          );
       },
       (error) => {
         this.showLoader = !this.showLoader;
