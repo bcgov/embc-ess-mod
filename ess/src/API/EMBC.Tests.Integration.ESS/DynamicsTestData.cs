@@ -123,7 +123,7 @@ namespace EMBC.Tests.Integration.ESS
             this.supplierB = CreateSupplier("B");
             this.supplierC = CreateSupplier("C");
             this.inactiveSupplier = CreateSupplier("inactive");
-            CreateTeamSupplier();
+            CreateTeamSuppliers();
 
             essContext.SaveChanges();
 
@@ -350,7 +350,6 @@ namespace EMBC.Tests.Integration.ESS
                 era_supplierid = Guid.NewGuid(),
                 era_name = testPrefix + "-supplier-" + identifier,
                 era_suppliername = testPrefix + "-supplier-name-" + identifier,
-                era_supplierlegalname = testPrefix + "-supplier-legal-name-" + identifier,
                 era_gstnumber = "R-" + testPrefix + "-" + identifier,
                 era_addressline1 = testPrefix + "-line1",
             };
@@ -359,21 +358,35 @@ namespace EMBC.Tests.Integration.ESS
             return supplier;
         }
 
-        private void CreateTeamSupplier()
+        private void CreateTeamSuppliers()
         {
-            var teamSupplier = new era_essteamsupplier()
+            var teamSupplier1 = new era_essteamsupplier()
             {
                 era_essteamsupplierid = Guid.NewGuid(),
                 era_active = true,
                 era_isprimarysupplier = true
             };
 
-            essContext.AddToera_essteamsuppliers(teamSupplier);
-            essContext.AddLink(supplierA, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), teamSupplier);
-            essContext.SetLink(teamSupplier, nameof(era_essteamsupplier.era_SupplierId), supplierA);
+            essContext.AddToera_essteamsuppliers(teamSupplier1);
+            essContext.AddLink(supplierA, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), teamSupplier1);
+            essContext.SetLink(teamSupplier1, nameof(era_essteamsupplier.era_SupplierId), supplierA);
 
-            essContext.AddLink(team, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier);
-            essContext.SetLink(teamSupplier, nameof(era_essteamsupplier.era_ESSTeamID), team);
+            essContext.AddLink(team, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier1);
+            essContext.SetLink(teamSupplier1, nameof(era_essteamsupplier.era_ESSTeamID), team);
+
+            var teamSupplier2 = new era_essteamsupplier()
+            {
+                era_essteamsupplierid = Guid.NewGuid(),
+                era_active = true,
+                era_isprimarysupplier = true
+            };
+
+            essContext.AddToera_essteamsuppliers(teamSupplier2);
+            essContext.AddLink(supplierC, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), teamSupplier2);
+            essContext.SetLink(teamSupplier2, nameof(era_essteamsupplier.era_SupplierId), supplierC);
+
+            essContext.AddLink(otherTeam, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier2);
+            essContext.SetLink(teamSupplier2, nameof(era_essteamsupplier.era_ESSTeamID), otherTeam);
         }
     }
 }

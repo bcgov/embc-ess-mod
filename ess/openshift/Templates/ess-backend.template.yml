@@ -51,7 +51,10 @@ parameters:
   - description: REDIS Service connection string
     name: REDIS_CONNECTIONSTRING
     required: false
-
+  - description: registrants portal base url
+    name: REGISTRANTS_PORTAL_BASE_URL
+    required: false
+    
 objects:
   - kind: ConfigMap
     apiVersion: v1
@@ -71,6 +74,7 @@ objects:
       notifications__email__smtpserver: ${SMTP_SERVER}
       pdfGenerator__url: https://${APP_NAME}-pdf-generator:2020
       pdfGenerator__allowInvalidServerCertificate: "true"
+      REGISTRANTS_PORTAL_BASE_URL: ${REGISTRANTS_PORTAL_BASE_URL}
 
   - kind: Secret
     apiVersion: v1

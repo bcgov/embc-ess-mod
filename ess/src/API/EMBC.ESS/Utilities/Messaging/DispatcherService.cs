@@ -40,7 +40,7 @@ namespace EMBC.ESS.Utilities.Messaging
             this.logger = logger;
         }
 
-        public async override Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
+        public override async Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
         {
             var sw = Stopwatch.StartNew();
             try
@@ -55,7 +55,7 @@ namespace EMBC.ESS.Utilities.Messaging
                 var reply = new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
-                    Type = replyType.AssemblyQualifiedName ?? string.Empty,
+                    Type = replyType?.AssemblyQualifiedName ?? string.Empty,
                     Content = replyMessage == null
                         ? Value.ForNull()
                         : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
@@ -63,7 +63,7 @@ namespace EMBC.ESS.Utilities.Messaging
                 };
 
                 sw.Stop();
-                logger.LogInformation("GRPC Dispatch request {requestId} {requestType} responded {status} with {replyType} in {elapsed} ms", request.CorrelationId, requestType.FullName, "OK", replyType.FullName, sw.Elapsed.TotalMilliseconds);
+                logger.LogInformation("GRPC Dispatch request {requestId} {requestType} responded {status} with {replyType} in {elapsed} ms", request.CorrelationId, requestType.FullName, "OK", replyType?.FullName, sw.Elapsed.TotalMilliseconds);
                 return reply;
             }
             catch (Exception e)
@@ -78,7 +78,7 @@ namespace EMBC.ESS.Utilities.Messaging
                 };
                 sw.Stop();
 
-                logger.LogInformation(e, "GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds);
+                logger.LogError(e, "GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds);
 
                 return reply;
             }

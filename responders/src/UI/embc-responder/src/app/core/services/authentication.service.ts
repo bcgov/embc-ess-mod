@@ -21,7 +21,7 @@ export class AuthenticationService {
   }
 
   public logout(targetUrl?: string): void {
-    this.oauthService.revokeTokenAndLogout();
+    this.oauthService.logOut();
   }
 
   public getToken(): string {
@@ -30,7 +30,6 @@ export class AuthenticationService {
 
   private async configureOAuthService(): Promise<void> {
     return this.configService.getAuthConfig().then((authConfig) => {
-      // this.oauthService.tokenValidationHandler = new NullValidationHandler();
       this.oauthService.configure(authConfig);
       this.oauthService.setupAutomaticSilentRefresh();
     });
