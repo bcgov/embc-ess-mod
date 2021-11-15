@@ -114,7 +114,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
+            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
 
             var caseQuery = new EvacuationFilesQuery
             {
@@ -143,7 +143,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 member.LastName = $"{newUniqueSignature}_{originalLastName}";
             }
 
-            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = fileToUpdate })).Id;
+            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = fileToUpdate })).Id;
 
             var updatedFile = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
 
@@ -165,7 +165,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var now = DateTime.UtcNow;
             var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
+            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
 
             var caseQuery = new EvacuationFilesQuery
             {
@@ -257,7 +257,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var now = DateTime.UtcNow;
             var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
+            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
             var createdFile = (EvacuationFile)(await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
             var includedHouseholdMembers = createdFile.HouseholdMembers.Select(s => s.Id).ToArray();
             var supports = new Support[]

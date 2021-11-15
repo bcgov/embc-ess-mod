@@ -112,7 +112,7 @@ namespace EMBC.ESS.Managers.Submissions
             file.PrimaryRegistrantId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
             file.NeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).Single().LinkedRegistrantId = file.PrimaryRegistrantId;
 
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
+            var caseId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
             if (contact.Email != null)
             {
@@ -154,7 +154,7 @@ namespace EMBC.ESS.Managers.Submissions
                     throw new BusinessLogicException($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
             }
 
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
+            var caseId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
@@ -199,18 +199,12 @@ namespace EMBC.ESS.Managers.Submissions
             var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
             var file = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
             var member = file.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
+            if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
 
             var memberAlreadyLinked = file.HouseholdMembers.Where(m => m.LinkedRegistrantId == cmd.RegistantId).FirstOrDefault();
             if (memberAlreadyLinked != null) throw new BusinessLogicException($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
 
-            if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
-
-            member.LinkedRegistrantId = cmd.RegistantId;
-            var needsAssessmentMember = file.NeedsAssessment.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
-            if (needsAssessmentMember != null) needsAssessmentMember.LinkedRegistrantId = cmd.RegistantId;
-
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
-
+            var caseId = (await caseRepository.ManageCase(new LinkEvacuationFileRegistrant { FileId = file.Id, RegistrantId = cmd.RegistantId, HouseholdMemberId = cmd.HouseholdMemberId })).Id;
             return caseId;
         }
 

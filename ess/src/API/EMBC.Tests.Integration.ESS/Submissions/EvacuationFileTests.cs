@@ -191,25 +191,30 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
+            var newPrimaryMember = new HouseholdMember
+            {
+                FirstName = registrant.FirstName,
+                LastName = registrant.LastName,
+                Initials = registrant.Initials,
+                Gender = registrant.Gender,
+                DateOfBirth = registrant.DateOfBirth,
+                IsPrimaryRegistrant = true,
+                LinkedRegistrantId = registrant.Id
+            };
+
             if (file.NeedsAssessment.HouseholdMembers.Count() <= 1)
             {
-                var member = new HouseholdMember
-                {
-                    FirstName = registrant.FirstName,
-                    LastName = registrant.LastName,
-                    Initials = registrant.Initials,
-                    Gender = registrant.Gender,
-                    DateOfBirth = registrant.DateOfBirth,
-                    IsPrimaryRegistrant = true,
-                    LinkedRegistrantId = registrant.Id
-                };
-                file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Concat(new[] { member });
+                file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Concat(new[] { newPrimaryMember });
             }
 
             foreach (var member in file.NeedsAssessment.HouseholdMembers)
             {
                 member.IsPrimaryRegistrant = true;
             }
+
+            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
+
+            file.NeedsAssessment.HouseholdMembers = new[] { newPrimaryMember };
 
             Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
         }
