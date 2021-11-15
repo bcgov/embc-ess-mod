@@ -69,42 +69,31 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> Update(EvacuationFile evacuationFile)
         {
-            VerifyEvacuationFileInvariants(evacuationFile);
-
             var currentFile = essContext.era_evacuationfiles
                 .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
             if (currentFile == null) throw new Exception($"Evacuation file {evacuationFile.Id} not found");
 
+            essContext.LoadProperty(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+
+            VerifyEvacuationFileInvariants(evacuationFile, currentFile);
+
+            RemovePets(currentFile);
+            essContext.DetachAll();
+
             var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
             if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
 
-            RemovePets(currentFile);
-            essContext.Detach(currentFile);
             var file = mapper.Map<era_evacuationfile>(evacuationFile);
             file.era_evacuationfileid = currentFile.era_evacuationfileid;
 
             essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
             essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
 
-            foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
-            {
-                if (member.era_householdmemberid.HasValue)
-                {
-                    //update member
-                    essContext.AttachTo(nameof(essContext.era_householdmembers), member);
-                    essContext.UpdateObject(member);
-                    AssignHouseholdMember(file, member);
-                }
-            }
-
             essContext.UpdateObject(file);
             AssignPrimaryRegistrant(file, primaryContact);
             AssignToTask(file, evacuationFile.TaskId);
             AddPets(file);
 
-            await essContext.SaveChangesAsync();
-            essContext.DetachAll();
-            essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
             AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
 
             await essContext.SaveChangesAsync();
@@ -199,7 +188,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             }
         }
 
-        private void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile)
+        private void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile, era_evacuationfile currentFile = null)
         {
             //Check invariants
             if (string.IsNullOrEmpty(evacuationFile.PrimaryRegistrantId))
@@ -224,7 +213,27 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 {
                     throw new Exception($"File {evacuationFile.Id} can not have multiple primary registrant household members");
                 }
+
+                if (currentFile != null && currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid != null &&
+                    currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Any(m => m.era_isprimaryregistrant == true) &&
+                    evacuationFile.NeedsAssessment.HouseholdMembers.Any(m => m.IsPrimaryRegistrant && string.IsNullOrEmpty(m.Id)))
+                {
+                    throw new Exception($"File {evacuationFile.Id} can not have multiple primary registrant household members");
+                }
             }
+        }
+
+        public async Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId)
+        {
+            var member = essContext.era_householdmembers.Where(m => m.era_householdmemberid == Guid.Parse(householdMemberId)).SingleOrDefault();
+            if (member == null) throw new Exception($"Household member with id {householdMemberId} not found");
+            var registrant = essContext.contacts.Where(c => c.contactid == Guid.Parse(registrantId)).SingleOrDefault();
+            if (registrant == null) throw new Exception($"Registrant with id {registrantId} not found");
+
+            essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
+            await essContext.SaveChangesAsync();
+
+            return fileId;
         }
 
         public async Task<string> Delete(string fileId)

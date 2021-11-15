@@ -38,7 +38,8 @@ namespace EMBC.ESS.Resources.Cases
         {
             return cmd.GetType().Name switch
             {
-                nameof(SaveEvacuationFile) => await HandleSaveEvacuationFile((SaveEvacuationFile)cmd),
+                nameof(SubmitEvacuationFileNeedsAssessment) => await HandleSubmitEvacuationFileNeedsAssessment((SubmitEvacuationFileNeedsAssessment)cmd),
+                nameof(LinkEvacuationFileRegistrant) => await HandleLinkEvacuationFileRegistrant((LinkEvacuationFileRegistrant)cmd),
                 nameof(DeleteEvacuationFile) => await HandleDeleteEvacuationFile((DeleteEvacuationFile)cmd),
                 nameof(SaveEvacuationFileNote) => await HandleSaveEvacuationFileNote((SaveEvacuationFileNote)cmd),
                 nameof(SaveEvacuationFileSupportCommand) => await HandleSaveSupportsToEvacuationFileCommand((SaveEvacuationFileSupportCommand)cmd),
@@ -65,7 +66,7 @@ namespace EMBC.ESS.Resources.Cases
             return result;
         }
 
-        private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)
+        private async Task<ManageCaseCommandResult> HandleSubmitEvacuationFileNeedsAssessment(SubmitEvacuationFileNeedsAssessment cmd)
         {
             if (string.IsNullOrEmpty(cmd.EvacuationFile.Id))
             {
@@ -75,6 +76,11 @@ namespace EMBC.ESS.Resources.Cases
             {
                 return new ManageCaseCommandResult { Id = await evacuationRepository.Update(cmd.EvacuationFile) };
             }
+        }
+
+        private async Task<ManageCaseCommandResult> HandleLinkEvacuationFileRegistrant(LinkEvacuationFileRegistrant cmd)
+        {
+            return new ManageCaseCommandResult { Id = await evacuationRepository.LinkRegistrant(cmd.FileId, cmd.RegistrantId, cmd.HouseholdMemberId) };
         }
 
         private async Task<ManageCaseCommandResult> HandleDeleteEvacuationFile(DeleteEvacuationFile cmd)
