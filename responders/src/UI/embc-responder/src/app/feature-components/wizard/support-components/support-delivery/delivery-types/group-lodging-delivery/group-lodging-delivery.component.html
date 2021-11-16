@@ -50,32 +50,18 @@
           matInput
           placeholder="Enter Address"
         />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <!-- <div class="row">
-    <div class="col-md-5">
-      <mat-form-field appearance="outline">
-        <mat-label>City</mat-label>
-        <input
-          formControlName="hostCity"
-          maxlength="100"
-          matInput
-          placeholder="Enter City"
-        />
         <mat-error
           class="custom-mat-error"
           *ngIf="
-            supportDeliveryFormControl?.hostCity.invalid &&
-            supportDeliveryFormControl?.hostCity.hasError('whitespaceError')
+            supportDeliveryFormControl?.hostAddress.invalid &&
+            supportDeliveryFormControl?.hostAddress.hasError('whitespaceError')
           "
         >
-          City is required</mat-error
+          Lodging Facility Address is required</mat-error
         >
       </mat-form-field>
     </div>
-  </div> -->
+  </div>
 
   <div class="row">
     <div class="col-md-5">

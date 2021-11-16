@@ -46,7 +46,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     private evacueeSessionService: EvacueeSessionService,
     private router: Router,
     private wizardService: WizardService,
-    private userService: UserService,
     private essFileService: EssFileService,
     private alertService: AlertService
   ) {}

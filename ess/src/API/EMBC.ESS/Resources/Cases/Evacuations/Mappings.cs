@@ -42,7 +42,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.PrimaryRegistrantId))
                 .ForMember(d => d._era_evacuatedfromid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
-                .ForMember(d => d.era_era_evacuationfile_era_householdmember_EvacuationFileid, opts => opts.MapFrom(s => s.HouseholdMembers))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
                 .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
                 .AfterMap((s, d) =>
