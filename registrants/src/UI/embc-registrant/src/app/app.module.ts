@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { forwardRef, NgModule, Provider } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { ApiModule } from './core/api/api.module';
 import { OAuthModule } from 'angular-oauth2-oidc';
