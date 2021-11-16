@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormCreationService } from '../../core/services/formCreation.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 
 @Component({
@@ -8,14 +7,8 @@ import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.ser
   styleUrls: ['./verified-registration.component.scss']
 })
 export class VerifiedRegistrationComponent implements OnInit {
-  constructor(
-    private formCreationService: FormCreationService,
-    private needsAssessmentService: NeedsAssessmentService
-  ) {
+  constructor(private needsAssessmentService: NeedsAssessmentService) {
     this.needsAssessmentService.clearEvacuationFileNo();
-    // this.formCreationService.clearProfileData();
-    // console.log("this")
-    // this.formCreationService.clearNeedsAssessmentData();
   }
 
   ngOnInit(): void {}

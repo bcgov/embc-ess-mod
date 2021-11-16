@@ -40,8 +40,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./feature-components/invite-error/invite-error.module').then(
         (m) => m.InviteErrorModule
-      ),
-    data: { flow: 'verified-registration' }
+      )
   }
 ];
 

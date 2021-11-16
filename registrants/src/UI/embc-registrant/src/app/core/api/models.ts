@@ -34,6 +34,7 @@ export { NameDataConflict } from './models/name-data-conflict';
 export { ValueTupleOfStringAndString } from './models/value-tuple-of-string-and-string';
 export { AddressDataConflict } from './models/address-data-conflict';
 export { InviteRequest } from './models/invite-request';
+export { InviteToken } from './models/invite-token';
 export { Configuration } from './models/configuration';
 export { OidcOptions } from './models/oidc-options';
 export { Code } from './models/code';

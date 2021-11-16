@@ -1,5 +1,6 @@
+import { LocationStrategy } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-invite-error',
@@ -7,11 +8,20 @@ import { Router } from '@angular/router';
   styleUrls: ['./invite-error.component.scss']
 })
 export class InviteErrorComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private location: LocationStrategy
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // const replaceUrl = this.activatedRoute.snapshot.queryParams['url'];
+    // if (replaceUrl) {
+    //   this.location.replaceState(null, null, replaceUrl, null);
+    // }
+  }
 
   back(): void {
-    this.router.navigate(['']);
+    this.router.navigate(['/registration-method']);
   }
 }

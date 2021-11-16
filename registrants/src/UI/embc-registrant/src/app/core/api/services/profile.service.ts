@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { InviteRequest } from '../models/invite-request';
+import { InviteToken } from '../models/invite-token';
 import { Profile } from '../models/profile';
 import { ProfileDataConflict } from '../models/profile-data-conflict';
 
@@ -297,8 +298,8 @@ export class ProfileService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileProcessInvite$Response(params: {
-    body: string
-  }): Observable<StrictHttpResponse<void>> {
+    body: InviteToken
+  }): Observable<StrictHttpResponse<boolean>> {
 
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileProcessInvitePath, 'post');
     if (params) {
@@ -306,12 +307,12 @@ export class ProfileService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
       })
     );
   }
@@ -323,11 +324,11 @@ export class ProfileService extends BaseService {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileProcessInvite(params: {
-    body: string
-  }): Observable<void> {
+    body: InviteToken
+  }): Observable<boolean> {
 
     return this.profileProcessInvite$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<boolean>) => r.body as boolean)
     );
   }
 
