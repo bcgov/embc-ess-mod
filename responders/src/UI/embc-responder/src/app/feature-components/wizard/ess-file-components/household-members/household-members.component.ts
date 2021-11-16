@@ -102,6 +102,9 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.householdForm
       .get('addMemberIndicator')
       .valueChanges.subscribe(() => this.updateOnVisibility());
+
+    console.log(this.stepEssFileService.householdMembers);
+    console.log(this.stepEssFileService.selectedHouseholdMembers);
   }
 
   /**

@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -25,7 +30,7 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
   templateUrl: './support-delivery.component.html',
   styleUrls: ['./support-delivery.component.scss']
 })
-export class SupportDeliveryComponent implements OnInit {
+export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: FormGroup;
   showTextField = false;
   filteredOptions: Observable<SupplierListItemModel[]>;
@@ -42,7 +47,8 @@ export class SupportDeliveryComponent implements OnInit {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cd: ChangeDetectorRef
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -75,6 +81,10 @@ export class SupportDeliveryComponent implements OnInit {
       );
 
     this.populateExistingIssuedTo();
+  }
+
+  ngAfterViewChecked(): void {
+    this.cd.detectChanges();
   }
 
   displaySupplier(item: SupplierListItemModel) {
@@ -381,7 +391,8 @@ export class SupportDeliveryComponent implements OnInit {
         [this.customValidation.whitespaceValidator()]
       ],
       hostAddress: [
-        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? '',
+        [this.customValidation.whitespaceValidator()]
       ],
       hostCity: [
         this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
