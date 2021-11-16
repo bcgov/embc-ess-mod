@@ -183,19 +183,44 @@ export class WizardAdapterService {
       profile.primaryAddress
     );
 
-    this.stepEssFileService.householdMembers = [
-      {
-        dateOfBirth: profile.personalDetails.dateOfBirth,
-        firstName: profile.personalDetails.firstName,
-        lastName: profile.personalDetails.lastName,
-        gender: profile.personalDetails.gender,
-        initials: profile.personalDetails.initials,
-        sameLastName: true,
-        householdMemberFromDatabase: true,
-        isPrimaryRegistrant: true,
-        type: HouseholdMemberType.Registrant
-      }
-    ];
+    // if (this.evacueeSessionService.essFileNumber) {
+    // this.stepEssFileService.householdMembers = [
+    //   {
+    //     id: profile.id,
+    //     linkedRegistrantId:
+    //     dateOfBirth: profile.personalDetails.dateOfBirth,
+    //     firstName: profile.personalDetails.firstName,
+    //     lastName: profile.personalDetails.lastName,
+    //     gender: profile.personalDetails.gender,
+    //     initials: profile.personalDetails.initials,
+    //     sameLastName: true,
+    //     householdMemberFromDatabase: true,
+    //     isPrimaryRegistrant: true,
+    //     type: HouseholdMemberType.Registrant
+    //   }
+    // ];
+    const mainMember = this.stepEssFileService.householdMembers.find(
+      (member) => member.isPrimaryRegistrant === true
+    );
+    const index = this.stepEssFileService.householdMembers.indexOf(mainMember);
+
+    const updatedMainMember = {
+      dateOfBirth: profile.personalDetails.dateOfBirth,
+      firstName: profile.personalDetails.firstName,
+      lastName: profile.personalDetails.lastName,
+      gender: profile.personalDetails.gender,
+      householdMemberFromDatabase: true,
+      id: profile.id,
+      initials: profile.personalDetails.initials,
+      isHouseHoldMember: false,
+      isPrimaryRegistrant: true,
+      isRestricted: profile.restriction,
+      type: HouseholdMemberType.Registrant,
+      sameLastName: true
+    };
+
+    this.stepEssFileService.householdMembers[index] = updatedMainMember;
+    // }
   }
 
   public stepReviewESSFileFromESSFileRecord(): Observable<boolean> {
