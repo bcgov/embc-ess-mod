@@ -34,7 +34,6 @@ export class EvacueeSearchResultsService {
       })
       .pipe(
         map((searchResult: EvacueeSearchResults) => {
-          console.log(searchResult);
           const registrants = searchResult.registrants;
           const essFiles = searchResult.files;
           for (const registrant of registrants) {

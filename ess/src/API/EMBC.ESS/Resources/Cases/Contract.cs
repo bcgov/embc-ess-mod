@@ -50,9 +50,16 @@ namespace EMBC.ESS.Resources.Cases
         public DateTime LastModified { get; set; }
     }
 
-    public class SaveEvacuationFile : ManageCaseCommand
+    public class SubmitEvacuationFileNeedsAssessment : ManageCaseCommand
     {
         public EvacuationFile EvacuationFile { get; set; }
+    }
+
+    public class LinkEvacuationFileRegistrant : ManageCaseCommand
+    {
+        public string FileId { get; set; }
+        public string RegistrantId { get; set; }
+        public string HouseholdMemberId { get; set; }
     }
 
     public class DeleteEvacuationFile : ManageCaseCommand

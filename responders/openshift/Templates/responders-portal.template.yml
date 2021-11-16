@@ -40,6 +40,9 @@ parameters:
   - description: OIDC client ID
     name: OIDC_CLIENTID
     required: true
+  - description: BCeID logout url
+    name: OIDC_BCEIDLOGOUTURL
+    required: true
   - description: REDIS Service connection string
     name: REDIS_CONNECTIONSTRING
     required: false
@@ -63,6 +66,7 @@ objects:
       JWT__AUDIENCE: ${JWT_AUDIENCE}
       OIDC__ISSUER: ${OIDC_ISSUER}
       OIDC__CLIENTID: ${OIDC_CLIENTID}
+      OIDC__BCEIDLOGOUTURL: ${OIDC_BCEIDLOGOUTURL}
 
   - kind: Secret
     apiVersion: v1

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -31,7 +30,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateNewRegistrantProfile()
         {
-            var newRegistrant = CreateNewTestRegistrantProfile(TestData.TestPrefix);
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
+            var newRegistrant = CreateNewTestRegistrantProfile(uniqueSignature);
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
@@ -51,9 +51,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var currentCommunity = registrant.PrimaryAddress.Community;
-            var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
-                ? "226adfaf-9f97-ea11-b813-005056830319"
-                : "406adfaf-9f97-ea11-b813-005056830319";
+            var newCommunity = currentCommunity == TestData.TeamCommunityId
+                ? TestData.OtherCommunityId
+                : TestData.TeamCommunityId;
 
             string currentCountry = registrant.PrimaryAddress.Country;
             string newCountry;
@@ -105,8 +105,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
-            var identifier = Guid.NewGuid().ToString().Substring(0, 4);
-            var newRegistrant = CreateNewTestRegistrantProfile(TestData.TestPrefix + "-" + identifier);
+            var identifier = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
+            var newRegistrant = CreateNewTestRegistrantProfile(identifier);
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
@@ -227,10 +227,20 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanInviteRegistrant()
         {
+            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
+
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
+            registrant.Id = null;
+            registrant.UserId = null;
+            registrant.AuthenticatedUser = false;
+            registrant.VerifiedUser = false;
+            registrant.FirstName += "_" + uniqueSignature;
+            registrant.LastName += "_" + uniqueSignature;
+
+            var registrantId = await TestHelper.SaveRegistrant(manager, registrant);
             var inviteId = await manager.Handle(new InviteRegistrantCommand
             {
-                RegistrantId = registrant.Id,
+                RegistrantId = registrantId,
                 Email = "test@nowhere.notavailable",
                 RequestingUserId = null
             });
@@ -240,13 +250,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanProcessRegistrantInvite()
         {
-            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            registrant.Id = null;
-            registrant.UserId = null;
-            registrant.AuthenticatedUser = false;
-            registrant.VerifiedUser = false;
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
+            var newRegistrant = CreateNewTestRegistrantProfile(uniqueSignature);
 
-            var registrantId = await TestHelper.SaveRegistrant(manager, registrant);
+            var registrantId = await manager.Handle(new SaveRegistrantCommand { Profile = newRegistrant });
 
             var inviteId = await manager.Handle(new InviteRegistrantCommand
             {
@@ -255,9 +262,12 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 RequestingUserId = null
             });
 
-            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = inviteId, LoggedInUserId = TestData.TestPrefix });
+            var dp = services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
+            var encryptedInviteId = dp.Protect(inviteId);
 
-            var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, TestData.TestPrefix)).ShouldNotBeNull();
+            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = encryptedInviteId, LoggedInUserId = uniqueSignature });
+
+            var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, uniqueSignature)).ShouldNotBeNull();
             actualRegistrant.AuthenticatedUser.ShouldBeTrue();
             actualRegistrant.VerifiedUser.ShouldBeTrue();
         }

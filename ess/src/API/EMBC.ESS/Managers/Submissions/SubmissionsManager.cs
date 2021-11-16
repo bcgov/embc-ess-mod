@@ -18,6 +18,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
@@ -35,7 +36,9 @@ using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.ESS.Utilities.Transformation;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS.Managers.Submissions
@@ -56,6 +59,8 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly IMetadataRepository metadataRepository;
+        private readonly IDataProtectionProvider dataProtectionProvider;
+        private readonly IConfiguration configuration;
         private readonly EvacuationFileLoader evacuationFileLoader;
         private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
@@ -75,7 +80,9 @@ namespace EMBC.ESS.Managers.Submissions
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator,
             IWebHostEnvironment env,
-            IMetadataRepository metadataRepository)
+            IMetadataRepository metadataRepository,
+            IDataProtectionProvider dataProtectionProvider,
+            IConfiguration configuration)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -91,6 +98,8 @@ namespace EMBC.ESS.Managers.Submissions
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
             this.metadataRepository = metadataRepository;
+            this.dataProtectionProvider = dataProtectionProvider;
+            this.configuration = configuration;
             this.env = env;
             this.evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
         }
@@ -103,7 +112,7 @@ namespace EMBC.ESS.Managers.Submissions
             file.PrimaryRegistrantId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
             file.NeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).Single().LinkedRegistrantId = file.PrimaryRegistrantId;
 
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
+            var caseId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
             if (contact.Email != null)
             {
@@ -145,7 +154,7 @@ namespace EMBC.ESS.Managers.Submissions
                     throw new BusinessLogicException($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
             }
 
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
+            var caseId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
@@ -190,18 +199,12 @@ namespace EMBC.ESS.Managers.Submissions
             var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
             var file = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
             var member = file.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
+            if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
 
             var memberAlreadyLinked = file.HouseholdMembers.Where(m => m.LinkedRegistrantId == cmd.RegistantId).FirstOrDefault();
             if (memberAlreadyLinked != null) throw new BusinessLogicException($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
 
-            if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
-
-            member.LinkedRegistrantId = cmd.RegistantId;
-            var needsAssessmentMember = file.NeedsAssessment.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
-            if (needsAssessmentMember != null) needsAssessmentMember.LinkedRegistrantId = cmd.RegistantId;
-
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
-
+            var caseId = (await caseRepository.ManageCase(new LinkEvacuationFileRegistrant { FileId = file.Id, RegistrantId = cmd.RegistantId, HouseholdMemberId = cmd.HouseholdMemberId })).Id;
             return caseId;
         }
 
@@ -302,7 +305,7 @@ namespace EMBC.ESS.Managers.Submissions
             var profileTasks = searchResults.MatchingRegistrantIds.Select(async id =>
             {
                 var profile = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = id })).Items.Single();
-                var files = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { PrimaryRegistrantId = id })).Items;
+                var files = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { LinkedRegistrantId = id })).Items;
                 var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 mappedProfile.RecentEvacuationFiles = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files);
                 profiles.Add(mappedProfile);
@@ -582,7 +585,8 @@ namespace EMBC.ESS.Managers.Submissions
             })).InviteId;
 
             var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = inviteId })).Items.Single();
-
+            var dp = dataProtectionProvider.CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
+            var encryptedInviteId = dp.Protect(inviteId, invite.ExpiryDate);
             await SendEmailNotification(
                 SubmissionTemplateType.InviteProfile,
                 email: cmd.Email,
@@ -590,7 +594,7 @@ namespace EMBC.ESS.Managers.Submissions
                 tokens: new[]
                 {
                     KeyValuePair.Create("inviteExpiryDate", invite.ExpiryDate.ToShortDateString()),
-                    KeyValuePair.Create("inviteId", inviteId)
+                    KeyValuePair.Create("inviteUrl", $"{configuration.GetValue<string>("REGISTRANTS_PORTAL_BASE_URL")}/verified-registration?inviteId={WebUtility.UrlEncode(encryptedInviteId)}")
                 });
 
             return inviteId;
@@ -601,8 +605,10 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.InviteId)) throw new ArgumentNullException(nameof(cmd.InviteId));
             if (string.IsNullOrEmpty(cmd.LoggedInUserId)) throw new ArgumentNullException(nameof(cmd.LoggedInUserId));
 
-            var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = cmd.InviteId })).Items.SingleOrDefault();
-            if (invite == null) throw new NotFoundException($"invite not found", cmd.InviteId);
+            var dp = dataProtectionProvider.CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
+            var inviteId = WebUtility.UrlDecode(dp.Unprotect(cmd.InviteId));
+            var invite = (await contactRepository.QueryContactInvite(new ContactEmailInviteQuery { InviteId = inviteId })).Items.SingleOrDefault();
+            if (invite == null) throw new NotFoundException($"invite not found", inviteId);
 
             var registrantId = invite.ContactId;
 

@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -9,7 +14,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -25,7 +30,7 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
   templateUrl: './support-delivery.component.html',
   styleUrls: ['./support-delivery.component.scss']
 })
-export class SupportDeliveryComponent implements OnInit {
+export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: FormGroup;
   showTextField = false;
   filteredOptions: Observable<SupplierListItemModel[]>;
@@ -42,7 +47,8 @@ export class SupportDeliveryComponent implements OnInit {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cd: ChangeDetectorRef
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -77,10 +83,29 @@ export class SupportDeliveryComponent implements OnInit {
     this.populateExistingIssuedTo();
   }
 
+  ngAfterViewChecked(): void {
+    this.cd.detectChanges();
+  }
+
   displaySupplier(item: SupplierListItemModel) {
     if (item) {
       return item.name;
     }
+  }
+
+  /**
+   * Checks if the city value exists in the list
+   */
+  validateSupplier(): boolean {
+    const currentSupplier = this.supportDeliveryForm.get('supplier').value;
+    let invalidSupplier = false;
+    if (currentSupplier !== null && currentSupplier.name === undefined) {
+      invalidSupplier = !invalidSupplier;
+      this.supportDeliveryForm
+        .get('supplier')
+        .setErrors({ invalidSupplier: true });
+    }
+    return invalidSupplier;
   }
 
   /**
@@ -270,6 +295,12 @@ export class SupportDeliveryComponent implements OnInit {
         this.showLoader = !this.showLoader;
         this.stepSupportsService.supplierList = value;
         this.supplierList = value;
+        this.filteredOptions = this.supportDeliveryForm
+          .get('supplier')
+          .valueChanges.pipe(
+            startWith(''),
+            map((input) => this.filter(input))
+          );
       },
       (error) => {
         this.showLoader = !this.showLoader;
@@ -360,7 +391,8 @@ export class SupportDeliveryComponent implements OnInit {
         [this.customValidation.whitespaceValidator()]
       ],
       hostAddress: [
-        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? '',
+        [this.customValidation.whitespaceValidator()]
       ],
       hostCity: [
         this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',

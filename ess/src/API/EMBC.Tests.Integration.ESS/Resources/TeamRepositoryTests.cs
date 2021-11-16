@@ -81,21 +81,22 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
             var newTeamMember = new TeamMember
             {
                 Id = null,
                 TeamId = teamId,
-                FirstName = "first",
-                LastName = "last",
+                FirstName = uniqueSignature + "-first",
+                LastName = uniqueSignature + "-last",
                 Email = "email@email.com",
                 Phone = "123456",
                 AgreementSignDate = now,
                 LastSuccessfulLogin = now,
                 Label = "Volunteer",
                 Role = "Tier1",
-                ExternalUserId = "extid",
-                UserName = "username",
+                ExternalUserId = uniqueSignature + "-extid",
+                UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}",
                 IsActive = true,
             };
             var newMemberId = await teamRepository.SaveMember(newTeamMember);
@@ -142,7 +143,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteTeamMember()
         {
-            var memberId = await teamRepository.SaveMember(new TeamMember { FirstName = TestData.TestPrefix + "-to-delete", LastName = TestData.TestPrefix + "-to-delete", TeamId = teamId, IsActive = true });
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
+            var memberId = await teamRepository.SaveMember(new TeamMember { FirstName = uniqueSignature + "-to-delete", LastName = uniqueSignature + "-to-delete", TeamId = teamId, IsActive = true });
 
             await teamRepository.DeleteMember(teamId, memberId);
 

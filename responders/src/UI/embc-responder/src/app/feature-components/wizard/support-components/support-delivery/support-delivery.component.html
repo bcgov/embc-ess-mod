@@ -161,6 +161,9 @@
             >
               Supplier is required</mat-error
             >
+            <mat-error *ngIf="validateSupplier()">
+              Supplier is invalid</mat-error
+            >
           </mat-form-field>
         </div>
 

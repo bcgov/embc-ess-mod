@@ -1,5 +1,7 @@
 import {
+  AfterViewChecked,
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -25,7 +27,7 @@ import * as globalConst from '../../../../core/services/global-constants';
   styleUrls: ['./ess-files-results.component.scss']
 })
 export class EssFilesResultsComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() fileResults: Array<EvacuationFileSearchResultModel>;
   matchedFiles = new MatTableDataSource();
@@ -34,7 +36,8 @@ export class EssFilesResultsComponent
   constructor(
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,6 +50,10 @@ export class EssFilesResultsComponent
 
   ngAfterViewInit(): void {
     this.matchedFiles.paginator = this.paginator;
+  }
+
+  ngAfterViewChecked(): void {
+    this.cd.detectChanges();
   }
 
   ngOnInit(): void {}

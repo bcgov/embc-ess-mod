@@ -28,6 +28,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public Mappings()
         {
             Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
+            Func<Note, string> resolveNoteContent = n => n?.Content;
 
             CreateMap<EvacuationFile, era_evacuationfile>(MemberList.None)
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
@@ -41,7 +42,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.PrimaryRegistrantId))
                 .ForMember(d => d._era_evacuatedfromid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
-                .ForMember(d => d.era_era_evacuationfile_era_householdmember_EvacuationFileid, opts => opts.MapFrom(s => s.HouseholdMembers))
+                .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
+                .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
                 .AfterMap((s, d) =>
                 {
                     //set link to primary registrant's household member entity
@@ -70,10 +72,18 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid))
                 .ForMember(d => d.Notes, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_essfilenote_ESSFileID))
                 .ForMember(d => d.Supports, opts => opts.ConvertUsing<SupportConverter, IEnumerable<era_evacueesupport>>(s => s.era_era_evacuationfile_era_evacueesupport_ESSFileId))
+                .ForPath(d => d.NeedsAssessment.HavePetsFood, opts => opts.MapFrom(s => s.era_haspetfood == (int)EraTwoOptions.Yes))
                 .ForPath(d => d.NeedsAssessment.Pets, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_animal_ESSFileid))
+                .ForPath(d => d.NeedsAssessment.Notes, opts => opts.MapFrom(s => new[]
+                    {
+                        string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_householdrecoveryplan) ? null : new Note { Type = NoteType.RecoveryPlan, Content = s.era_CurrentNeedsAssessmentid.era_householdrecoveryplan },
+                        string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_evacuationimpacttohousehold) ? null : new Note { Type = NoteType.EvacuationImpact, Content = s.era_CurrentNeedsAssessmentid.era_evacuationimpacttohousehold },
+                        string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails },
+                        string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
+                    }.Where(n => n != null).ToArray()))
+
                 ;
 
-            Func<Note, string> resolveNoteContent = n => n?.Content;
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
                 .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid()))
                 .ForMember(d => d._era_reviewedbyid_value, opts => opts.MapFrom(s => s.CompletedByTeamMemberId))
@@ -88,11 +98,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_medicationrequirement, opts => opts.MapFrom(s => s.TakeMedication))
                 .ForMember(d => d.era_hasenoughsupply, opts => opts.MapFrom(s => s.HaveMedicalSupplies))
                 .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
-                .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => Lookup(s.HavePetsFood)))
                 .ForMember(d => d.era_householdrecoveryplan, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.RecoveryPlan).FirstOrDefault())))
                 .ForMember(d => d.era_evacuationimpacttohousehold, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.EvacuationImpact).FirstOrDefault())))
                 .ForMember(d => d.era_externalreferralsdetails, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.ExternalReferralServices).FirstOrDefault())))
-                .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
                 .ForMember(d => d.era_haschildcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.ChildCare)))
                 .ForMember(d => d.era_hasfirstaidreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.FirstAid)))
                 .ForMember(d => d.era_hasinquiryreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Inquiry)))
@@ -132,16 +140,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Insurance, opts => opts.MapFrom(s => Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_insurancecoverage).ToString())))
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => s.era_dietaryrequirement))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
-                .ForMember(d => d.HavePetsFood, opts => opts.MapFrom(s => Lookup(s.era_haspetfood)))
+                .ForMember(d => d.HavePetsFood, opts => opts.Ignore())
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_needassessment))
                 .ForMember(d => d.Pets, opts => opts.Ignore())
-                .ForMember(d => d.Notes, opts => opts.MapFrom(s => new[]
-                    {
-                        string.IsNullOrEmpty(s.era_householdrecoveryplan) ? null : new Note { Type = NoteType.RecoveryPlan, Content = s.era_householdrecoveryplan },
-                        string.IsNullOrEmpty(s.era_evacuationimpacttohousehold) ? null : new Note { Type = NoteType.EvacuationImpact, Content = s.era_evacuationimpacttohousehold },
-                        string.IsNullOrEmpty(s.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_externalreferralsdetails },
-                        string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
-                    }.Where(n => n != null).ToArray()))
+                .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(s => s.RecommendedReferralServices, opts => opts.MapFrom(s => new[]
                     {
                         s.era_haschildcarereferral.GetValueOrDefault(false) ? ReferralServices.ChildCare : (ReferralServices?)null,

@@ -49,8 +49,10 @@ export class OverlayLoaderComponent implements OnInit, DoCheck {
    * Detaches the overlay when the event is consumed
    */
   ngDoCheck(): void {
-    if (!this.showLoader && this.overlayRef.hasAttached) {
+    if (!this.showLoader && this.overlayRef.hasAttached()) {
       this.overlayRef.detach();
+    } else if (this.showLoader && !this.overlayRef.hasAttached()) {
+      this.overlayRef.attach(new TemplatePortal(this.loaderRef, this.vcRef));
     }
   }
 }

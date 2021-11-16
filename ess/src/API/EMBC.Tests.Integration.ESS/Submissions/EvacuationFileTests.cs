@@ -62,7 +62,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     Country = "CAN",
                     StateProvince = "BC",
                     PostalCode = "v1v 1v1",
-                    Community = "226adfaf-9f97-ea11-b813-005056830319"
+                    Community = TestData.RandomCommunity
                 },
                 MailingAddress = new Address
                 {
@@ -121,7 +121,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     {
                         AddressLine1 = $"addr1",
                         Country = "CAN",
-                        Community = "226adfaf-9f97-ea11-b813-005056830319",
+                        Community = TestData.RandomCommunity,
                         StateProvince = "BC",
                         PostalCode = "v1v 1v1"
                     },
@@ -191,25 +191,30 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
+            var newPrimaryMember = new HouseholdMember
+            {
+                FirstName = registrant.FirstName,
+                LastName = registrant.LastName,
+                Initials = registrant.Initials,
+                Gender = registrant.Gender,
+                DateOfBirth = registrant.DateOfBirth,
+                IsPrimaryRegistrant = true,
+                LinkedRegistrantId = registrant.Id
+            };
+
             if (file.NeedsAssessment.HouseholdMembers.Count() <= 1)
             {
-                var member = new HouseholdMember
-                {
-                    FirstName = registrant.FirstName,
-                    LastName = registrant.LastName,
-                    Initials = registrant.Initials,
-                    Gender = registrant.Gender,
-                    DateOfBirth = registrant.DateOfBirth,
-                    IsPrimaryRegistrant = true,
-                    LinkedRegistrantId = registrant.Id
-                };
-                file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Concat(new[] { member });
+                file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Concat(new[] { newPrimaryMember });
             }
 
             foreach (var member in file.NeedsAssessment.HouseholdMembers)
             {
                 member.IsPrimaryRegistrant = true;
             }
+
+            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
+
+            file.NeedsAssessment.HouseholdMembers = new[] { newPrimaryMember };
 
             Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
         }
@@ -285,7 +290,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedNoteId.ShouldBe(noteId);
             var actualUpdatedNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
             actualUpdatedNote.Content.ShouldEndWith(updatedNotePostfix);
-
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -301,7 +305,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanQueryFileNoteByFileIdAndNoteId()
         {
             var fileId = TestData.EvacuationFileId;
-            var noteId = "65dea67d-760a-445d-aa78-101564bbf0b7";
+            var notePostfix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{notePostfix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
             var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId, FileId = fileId })).Notes;
 
             notes.ShouldNotBeNull();

@@ -24,7 +24,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
@@ -44,14 +43,22 @@ namespace EMBC.Registrants.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IEvacuationSearchService evacuationSearchService;
+        private readonly IProfileInviteService profileInviteService;
+
         private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-        public ProfileController(IHostEnvironment env, IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
+        public ProfileController(
+            IHostEnvironment env,
+            IMessagingClient messagingClient,
+            IMapper mapper,
+            IEvacuationSearchService evacuationSearchService,
+            IProfileInviteService profileInviteService)
         {
             this.env = env;
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.evacuationSearchService = evacuationSearchService;
+            this.profileInviteService = profileInviteService;
         }
 
         /// <summary>
@@ -153,10 +160,9 @@ namespace EMBC.Registrants.API.Controllers
 
         [HttpPost("current/join")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> ProcessInvite([FromBody] string token)
+        public async Task<ActionResult<bool>> ProcessInvite(InviteToken token)
         {
-            await messagingClient.Send(new ProcessRegistrantInviteCommand { LoggedInUserId = currentUserId, InviteId = token });
-            return Ok();
+            return Ok(await profileInviteService.ProcessInvite(token.Token, currentUserId));
         }
     }
 
@@ -225,13 +231,11 @@ namespace EMBC.Registrants.API.Controllers
         public override string DataElementName => "Name";
 
         [Required]
-        public new
-            (string firstName, string lastName) ConflictingValue
+        public new (string firstName, string lastName) ConflictingValue
         { get; set; }
 
         [Required]
-        public new
-            (string firstName, string lastName) OriginalValue
+        public new (string firstName, string lastName) OriginalValue
         { get; set; }
     }
 
@@ -258,5 +262,11 @@ namespace EMBC.Registrants.API.Controllers
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+    }
+
+    public class InviteToken
+    {
+        [Required]
+        public string Token { get; set; }
     }
 }

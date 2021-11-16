@@ -23,7 +23,6 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using EMBC.Registrants.API.services;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using IdentityModel.AspNetCore.OAuth2Introspection;
