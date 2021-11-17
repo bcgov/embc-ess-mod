@@ -25,14 +25,16 @@ export class AssignedCommunityListDataService {
       {
         type: 'regionalDistrict',
         label: this.defaultDistrict,
-        values: this.locationsService.getRegionalDistricts()
+        values: this.locationsService
+          .getRegionalDistricts()
+          .sort((a, b) => a.localeCompare(b))
       },
       {
         type: 'type',
         label: this.defaultTypes,
-        values: Object.keys(CommunityType).filter((e) =>
-          e === 'Undefined' ? '' : e
-        )
+        values: Object.keys(CommunityType)
+          .filter((e) => (e === 'Undefined' ? '' : e))
+          .sort((a, b) => a.localeCompare(b))
       }
     ],
     loadInputFilter: {
