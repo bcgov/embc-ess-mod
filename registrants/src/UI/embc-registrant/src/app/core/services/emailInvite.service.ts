@@ -7,14 +7,11 @@ export class EmailInviteService {
 
   public async validateInvite(
     isLoggedIn: boolean,
-    inviteGuid: string
+    inviteId: string
   ): Promise<boolean> {
-    console.log('emailInvite');
-
-    //Sample URL: http://localhost:5200/verified-registration?inviteId=d511b078-744e-4c77-9864-7f5b3666acfa
-    if (inviteGuid !== undefined && isLoggedIn) {
+    if (inviteId !== undefined && isLoggedIn) {
       return this.profileService
-        .profileProcessInvite({ body: { token: inviteGuid } })
+        .profileProcessInvite({ body: { token: inviteId } })
         .toPromise();
     }
   }

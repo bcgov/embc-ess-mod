@@ -23,13 +23,13 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Promise<boolean> {
     const queryParams = route.queryParamMap;
-    const inviteGuid: string = queryParams.get('inviteId') ?? undefined;
-    if (inviteGuid !== undefined) {
+    const inviteId: string = queryParams.get('inviteId') ?? undefined;
+    if (inviteId !== undefined) {
       try {
         const loginState: boolean = await this.loginService.login(state.url);
         const resolvedState = await this.emailService.validateInvite(
           loginState,
-          inviteGuid
+          inviteId
         );
         if (resolvedState) {
           return await this.router.navigate(['/verified-registration']);
