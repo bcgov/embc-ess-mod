@@ -56,9 +56,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             foreach (var s in supports)
             {
-                s.From = DateTime.Now;
-                s.To = DateTime.Now.AddDays(3);
-                s.IssuedOn = DateTime.Now;
+                s.From = DateTime.UtcNow;
+                s.To = DateTime.UtcNow.AddDays(3);
+                s.IssuedOn = DateTime.UtcNow;
             }
 
             var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
@@ -107,9 +107,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             foreach (var s in supports)
             {
-                s.From = DateTime.Now;
-                s.To = DateTime.Now.AddDays(3);
-                s.IssuedOn = DateTime.Now;
+                s.From = DateTime.UtcNow;
+                s.To = DateTime.UtcNow.AddDays(3);
+                s.IssuedOn = DateTime.UtcNow;
             }
 
             await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
