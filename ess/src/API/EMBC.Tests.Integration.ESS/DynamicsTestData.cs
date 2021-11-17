@@ -109,8 +109,8 @@ namespace EMBC.Tests.Integration.ESS
             CreateTeamMember(team, Guid.NewGuid(), "-third");
             CreateTeamMember(team, Guid.NewGuid(), "-fourth");
             this.otherTeamMember = CreateTeamMember(otherTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Team.TeamUserRoleOptionSet.Tier1);
-            this.activeTask = CreateTask(activeTaskId, DateTime.Now);
-            CreateTask(inactiveTaskId, DateTime.Now.AddDays(-7));
+            this.activeTask = CreateTask(activeTaskId, DateTime.UtcNow);
+            CreateTask(inactiveTaskId, DateTime.UtcNow.AddDays(-7));
             this.contact = CreateContact();
 
             var file = CreateEvacuationFile(this.contact);
@@ -239,7 +239,7 @@ namespace EMBC.Tests.Integration.ESS
             {
                 era_evacuationfileid = Guid.NewGuid(),
                 era_name = testPrefix + "-file",
-                era_evacuationfiledate = DateTime.Now,
+                era_evacuationfiledate = DateTime.UtcNow,
                 era_securityphrase = EvacuationFileSecurityPhrase
             };
 
@@ -309,8 +309,8 @@ namespace EMBC.Tests.Integration.ESS
             {
                 era_evacueesupportid = Guid.NewGuid(),
                 era_name = $"{testPrefix}-support-{i}",
-                era_validfrom = DateTime.Now.AddDays(-3),
-                era_validto = DateTime.Now.AddDays(3),
+                era_validfrom = DateTime.UtcNow.AddDays(-3),
+                era_validto = DateTime.UtcNow.AddDays(3),
                 era_supporttype = 174360006
             }).ToArray();
 
