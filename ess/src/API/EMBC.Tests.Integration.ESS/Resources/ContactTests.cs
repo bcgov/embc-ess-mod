@@ -175,7 +175,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 ContactId = contact.Id,
                 Email = email,
-                InviteDate = DateTime.Now,
+                InviteDate = DateTime.UtcNow,
                 RequestingUserId = null
             })).InviteId;
 
