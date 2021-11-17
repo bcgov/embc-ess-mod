@@ -80,7 +80,8 @@ export class ReviewSupportComponent implements OnInit {
   checkGroceryMaxRate(support: Support): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
-      (support as FoodGroceriesReferral).numberOfDays;
+      (support as FoodGroceriesReferral).numberOfDays *
+      (support as FoodGroceriesReferral).includedHouseholdMembers.length;
     return maxRate < (support as FoodGroceriesReferral).totalAmount
       ? false
       : true;

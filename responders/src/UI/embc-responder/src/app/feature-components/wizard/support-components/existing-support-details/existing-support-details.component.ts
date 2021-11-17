@@ -99,7 +99,9 @@ export class ExistingSupportDetailsComponent implements OnInit {
   checkGroceryMaxRate(): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
-      (this.selectedSupport as FoodGroceriesReferral).numberOfDays;
+      (this.selectedSupport as FoodGroceriesReferral).numberOfDays *
+      (this.selectedSupport as FoodGroceriesReferral).includedHouseholdMembers
+        .length;
     return maxRate < (this.selectedSupport as FoodGroceriesReferral).totalAmount
       ? false
       : true;
