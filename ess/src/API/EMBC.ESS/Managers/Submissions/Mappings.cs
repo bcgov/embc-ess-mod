@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Managers.Submissions.PrintReferrals;
+using EMBC.ESS.Utilities.Extensions;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -205,10 +206,10 @@ namespace EMBC.ESS.Managers.Submissions
                 .IncludeAllDerived()
                 .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
                 .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.IssuedToPersonName))
-                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToLocalTime().ToString("dd-MMM-yyyy")))
-                .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToLocalTime().ToString("hh:mm tt")))
-                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToLocalTime().ToString("dd-MMM-yyyy")))
-                .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToLocalTime().ToString("hh:mm tt")))
+                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
+                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
                 .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
                 .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.Now.ToString("dd-MMM-yyyy")))
                 .ForMember(d => d.Comments, opts => opts.MapFrom(s => s.SupplierNotes))
