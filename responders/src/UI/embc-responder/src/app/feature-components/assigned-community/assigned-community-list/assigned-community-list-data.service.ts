@@ -25,16 +25,14 @@ export class AssignedCommunityListDataService {
       {
         type: 'regionalDistrict',
         label: this.defaultDistrict,
-        values: this.locationsService
-          .getRegionalDistricts()
-          .sort((a, b) => a.localeCompare(b))
+        values: this.sort(this.locationsService.getRegionalDistricts())
       },
       {
         type: 'type',
         label: this.defaultTypes,
-        values: Object.keys(CommunityType)
-          .filter((e) => (e === 'Undefined' ? '' : e))
-          .sort((a, b) => a.localeCompare(b))
+        values: this.sort(
+          Object.keys(CommunityType).filter((e) => (e === 'Undefined' ? '' : e))
+        )
       }
     ],
     loadInputFilter: {
@@ -119,5 +117,11 @@ export class AssignedCommunityListDataService {
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {
     return { ...finalValue, ...incomingValue };
+  }
+
+  private sort(incomingList: string[]): string[] {
+    if (incomingList !== null && incomingList !== undefined) {
+      return incomingList.sort((a, b) => a.localeCompare(b));
+    }
   }
 }
