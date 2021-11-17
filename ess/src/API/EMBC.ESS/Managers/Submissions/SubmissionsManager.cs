@@ -542,7 +542,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 Content = content,
                 ContentType = contentType,
-                PrintedOn = DateTime.Now
+                PrintedOn = DateTime.UtcNow
             };
         }
 
@@ -580,7 +580,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 ContactId = cmd.RegistrantId,
                 Email = cmd.Email,
-                InviteDate = DateTime.Now,
+                InviteDate = DateTime.UtcNow,
                 RequestingUserId = cmd.RequestingUserId
             })).InviteId;
 
