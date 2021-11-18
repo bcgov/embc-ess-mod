@@ -1,12 +1,13 @@
-﻿<!DOCTYPE html>
-<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Evacuee Registration and Assistance (ERA)</title>
 	<style>
+
 		* {
 			-webkit-box-sizing: border-box;
 			box-sizing: border-box;
@@ -17,12 +18,12 @@
 		body {
 			margin: 0;
 			padding: 0;
-			font-family: 'Myriad Pro', Calibri, Arial, sans-serif;
+			font-family: 'Myriad Pro',Calibri,Arial,sans-serif;
 			color: #494949;
 			background: #bdd3e8;
-			background: -webkit-gradient(linear, left top, left bottom, from(#bdd3e8), to(#ffffff));
-			background: -o-linear-gradient(top, #bdd3e8 0%, #ffffff 100%);
-			background: linear-gradient(to bottom, #bdd3e8 0%, #ffffff 100%);
+			background: -webkit-gradient(linear, left top, left bottom, from(#bdd3e8),to(#ffffff));
+			background: -o-linear-gradient(top, #bdd3e8 0%,#ffffff 100%);
+			background: linear-gradient(to bottom, #bdd3e8 0%,#ffffff 100%);
 		}
 
 		img {
@@ -118,7 +119,7 @@
 
 		@media (min-width: 1024px) {
 			.hero-content {
-				background: url(./img/hands.png) no-repeat top right;
+				background: url(https://ess.gov.bc.ca/img/hands.png) no-repeat top right;
 				padding: 54px 0;
 				height: 320px;
 				display: -webkit-box;
@@ -147,22 +148,26 @@
 			max-width: 800px;
 			text-align: center;
 			margin: 15px auto;
+
+		}
+		.registration-cta h2 {
+			max-width: 900px;
+			text-align: center;
+			margin: auto;
 		}
 
 		.registration-cta-content {
 			max-width: 1222px;
 			width: 100%;
 			margin-bottom: 30px;
+
 			padding: 30px;
-			color: #fff;
-			/* FF3.6-15 */
-			/* Chrome10-25,Safari5.1-6 */
-			background: -webkit-gradient(linear, left top, right top, from(#245079), to(#4b96ae));
-			background: -o-linear-gradient(left, #245079 0%, #4b96ae 100%);
-			background: linear-gradient(to right, #245079 0%, #4b96ae 100%);
-			/* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-			-webkit-box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
-			box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
+			color: #fff; /* FF3.6-15 */ /* Chrome10-25,Safari5.1-6 */
+			background: -webkit-gradient(linear, left top, right top, from(#245079),to(#4b96ae));
+			background: -o-linear-gradient(left, #245079 0%,#4b96ae 100%);
+			background: linear-gradient(to right, #245079 0%,#4b96ae 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			-webkit-box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
+			box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
 		}
 
 		.registration-cta-content {
@@ -176,10 +181,10 @@
 			align-items: flex-start;
 		}
 
-		.cards .cards-content {
-			max-width: 1122px;
-			margin: 0 auto;
-		}
+			.cards .cards-content {
+				max-width: 1122px;
+				margin: 0 auto;
+			}
 
 		.cards-content {
 			-webkit-box-pack: justify;
@@ -193,8 +198,8 @@
 		.card {
 			background: #fff;
 			border: 1px solid #D7D7D7;
-			-webkit-box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
-			box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
+			-webkit-box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
+			box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
 			padding: 20px;
 			width: 100%;
 			margin-bottom: 20px;
@@ -267,20 +272,20 @@
 			margin-bottom: 0;
 		}
 
-		.site-footer-links li {
-			margin-bottom: 16px;
-		}
+			.site-footer-links li {
+				margin-bottom: 16px;
+			}
 
-		.site-footer-links a {
-			font-size: 14px;
-			color: #fff;
-			text-decoration: none;
-			font-weight: 200;
-		}
+			.site-footer-links a {
+				font-size: 14px;
+				color: #fff;
+				text-decoration: none;
+				font-weight: 200;
+			}
 
-		.site-footer-links a:hover {
-			text-decoration: underline;
-		}
+				.site-footer-links a:hover {
+					text-decoration: underline;
+				}
 
 
 
@@ -311,9 +316,9 @@
 				justify-content: space-between;
 			}
 
-			.site-footer-links li {
-				margin-bottom: 0;
-			}
+				.site-footer-links li {
+					margin-bottom: 0;
+				}
 		}
 
 		.btn {
@@ -335,17 +340,17 @@
 			position: relative;
 		}
 
-		.btn--strong:before {
-			content: "";
-			position: absolute;
-			z-index: 400;
-			right: 10px;
-			background: url(./img/right-arrow.svg) no-repeat;
-			display: inline-block;
-			width: 20px;
-			height: 20px;
-			top: 15px;
-		}
+			.btn--strong:before {
+				content: "";
+				position: absolute;
+				z-index: 400;
+				right: 10px;
+				background: url(https://ess.gov.bc.ca/img/right-arrow.svg) no-repeat;
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				top: 15px;
+			}
 
 		@media (min-width: 1024px) {
 			.btn--strong {
@@ -358,53 +363,81 @@
 				position: relative;
 			}
 
-			.btn--strong:before {
-				content: "";
-				vertical-align: center;
-				position: absolute;
-				z-index: 400;
-				right: 15px;
-				background: url(./img/right-arrow.svg) no-repeat;
-				display: inline-block;
-				width: 33px;
-				height: 33px;
-				top: 20px;
-			}
+				.btn--strong:before {
+					content: "";
+					vertical-align: center;
+					position: absolute;
+					z-index: 400;
+					right: 15px;
+					background: url(https://ess.gov.bc.ca/img/right-arrow.svg) no-repeat;
+					display: inline-block;
+					width: 33px;
+					height: 33px;
+					top: 20px;
+				}
 		}
 
 		.btn--strong:hover {
 			background-color: #003366;
 		}
+		.btn--strongline {
+			background-color: #377293;
+			border: 2px solid #ffffff;
+			font-size: 18px;
+			height: 35px;
+			display: inline-block;
+			font-weight: 600;
+			line-height: 35px;
+			max-width: 581px;
+			width: 100%;
+			position: relative;
+			margin-top: 12px;
+		}
 
+
+		@media (min-width: 1024px) {
+			.btn--strongline {
+				font-size: 18px;
+				height: 40px;
+				display: inline-block;
+				line-height: 35px;
+				max-width: 400px;
+				width: 100%;
+				position: relative;
+			}
+
+		}
+
+		.btn--strongline:hover {
+			background-color: #003366;
+		}
 		.btn--white {
 			color: #38598A;
 			background-color: #fff;
-			-webkit-box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
-			box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
+			-webkit-box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
+			box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
 		}
 
-		.btn--white:hover {
-			color: #fff;
-			background-color: #FCBA19;
-		}
+			.btn--white:hover {
+				color: #fff;
+				background-color: #FCBA19;
+			}
 
 		.btn--orange {
 			color: #fff;
 			background-color: #FF6625;
-			-webkit-box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
-			box-shadow: 0px 5px 8px 2px rgba(0, 0, 0, 0.09);
+			-webkit-box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
+			box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.09);
 		}
 
 		.btn--orange:hover {
-			background-color: #FCBA19;
-		}
-
+				background-color: #FCBA19;
+			}
 		.alert--orange {
 			color: #D90000;
 			padding: 8px;
 			font-weight: bold;
 		}
-
 		.btn--user {
 			width: 100%;
 			max-width: 217px;
@@ -413,22 +446,22 @@
 		}
 
 		.link--strong {
-			color: #38598A;
+			color: #1660B5;
 			font-weight: bold;
 		}
 
-		.link--strong:hover {
-			color: #FCBA19;
-		}
+			.link--strong:hover {
+				color: #FCBA19;
+			}
 
 		.link--strongwhite {
 			color: #ffffff;
 			font-weight: bold;
 		}
 
-		.link--strongwhite:hover {
-			color: #FCBA19;
-		}
+			.link--strongwhite:hover {
+				color: #FCBA19;
+			}
 
 		.contact-cta__content {
 			max-width: 1120px;
@@ -438,10 +471,10 @@
 			position: relative;
 		}
 
-		.contact-cta__content p {
-			margin: 0 auto;
-			max-width: 350px;
-		}
+			.contact-cta__content p {
+				margin: 0 auto;
+				max-width: 350px;
+			}
 
 		.contact-cta__icon {
 			max-width: 120px;
@@ -468,7 +501,7 @@
 	<header class="site-header">
 		<div class="container">
 			<div class="site-header-content">
-				<a href="" class="site-logo"><img src="./img/gov_bc_logo.svg" alt="Government of B.C."></a>
+				<a href="" class="site-logo"><img src="https://ess.gov.bc.ca/img/gov_bc_logo.svg" alt="Government of B.C."></a>
 			</div>
 		</div>
 	</header>
@@ -477,16 +510,11 @@
 		<section class="hero">
 			<div class="container">
 				<div class="hero-content">
-					<img class="emergency-support-logo" src="./img/emergency-support-services-logo.svg"
-						alt="Emergency Support Services">
+					<img class="emergency-support-logo" src="https://ess.gov.bc.ca/img/emergency-support-services-logo.svg" alt="Emergency Support Services">
 					<div>
 						<h1>Evacuee Registration &amp; Assistance (ERA)</h1>
-						<p class="lead">The ERA tool is a digital platform to support the delivery of Emergency Support
-							Services (ESS) to British Columbians forced from their homes by fire, flood, or other
-							emergencies.</p>
-						<p class="lead"><a class="link--strong"
-								href="https://www2.gov.bc.ca/gov/content?id=4C2F8BB58C6C45269538AF47574D0A42"
-								target="_blank">Find out more</a> about Provincial Emergency Support Services (ESS)</p>
+						<p class="lead">The ERA tool is a digital platform to support the delivery of Emergency Support Services (ESS) to British Columbians forced from their homes by fire, flood, or other emergencies.</p>
+						<p class="lead"><a class="link--strong" href="https://www2.gov.bc.ca/gov/content?id=4C2F8BB58C6C45269538AF47574D0A42" target="_blank">Find out more</a> about Provincial Emergency Support Services (ESS)</p>
 						<!-- <p class="lead"><a class="link--strong" href="https://www2.gov.bc.ca/gov/content/safety/emergency-preparedness-response-recovery/volunteers/emergency-support-services">Find out more</a> about Provincial Emergency Support Services (ESS)</p> -->
 					</div>
 				</div>
@@ -496,16 +524,11 @@
 		<section class="registration-cta">
 			<div class="container">
 				<div class="registration-cta-content center">
-					<h2>Have you been <strong>instructed</strong> to self-register for <strong>Emergency Support
-							Services</strong>?</h2>
-					<p>If you are on an <strong>evacuation ALERT</strong> or <strong>ORDER</strong>, or if you have been
-						<strong>displaced from your home</strong> due to an emergency <strong>AND</strong> your Local
-						Emergency Program has instructed you to Self-Register, you can do so here.</p>
-					<a class="btn btn--strong" href="https://era-r1.embc.gov.bc.ca/self-registration/step-1"
-						target="_blank">Self-Register Now</a>
-					<p>If you have not been instructed by your Local Emergency Program to Self-Register please follow
-						the instructions on your Evacuation Alert or Order <strong>AND</strong> contact your Local
-						Emergency Program.</p>
+					<h2>Have you been <strong>instructed</strong> to self-register for <strong>Emergency Support Services</strong>?</h2>
+					<p>If you are on an <strong>evacuation ALERT</strong> or <strong>ORDER</strong>, or if you have been <strong>displaced from your home</strong> due to an emergency <strong>AND</strong> your Local Emergency Program has instructed you to Self-Register, you can do so here.</p>
+					<a class="btn btn--strong" href="https://training-era-registrants.apps.silver.devops.gov.bc.ca/" target="_blank">Self-Register Now</a>
+					</br><a class="btn btn--strongline" href="https://training-era-registrants.apps.silver.devops.gov.bc.ca/verified-registration" target="_blank">Already Registered? Log in</a>
+					<p>If you have not been instructed by your Local Emergency Program to Self-Register please follow the instructions on your Evacuation Alert or Order <strong>AND</strong> contact your Local Emergency Program.</p>
 				</div>
 			</div>
 		</section>
@@ -515,41 +538,32 @@
 				<div class="cards-content">
 					<div class="card center">
 						<div class="card__image">
-							<img class="era" src="./img/laptop-user.svg">
+							<img class="era" src="https://ess.gov.bc.ca/img/laptop-user.svg">
 						</div>
 						<h3>What is ERA?</h3>
-						<p>The <strong>Evacuee Registration & Assistance (ERA) tool</strong> is a new digital platform
-							for Emergency Support Services. ERA is designed to increase the efficiency and speed of
-							service delivery for evacuees across the province.</p>
-						<a class="link--strong"
-							href="https://www2.gov.bc.ca/gov/content/safety/emergency-preparedness-response-recovery/volunteers/emergency-support-services">Find
-							out more</a>
+						<p>The <strong>Evacuee Registration & Assistance (ERA) tool</strong> is a new digital platform for Emergency Support Services. ERA is designed to increase the efficiency and speed of service delivery for evacuees across the province.</p>
+						<a class="link--strong" href="https://www2.gov.bc.ca/gov/content/safety/emergency-preparedness-response-recovery/volunteers/emergency-support-services">Find out more</a>
 					</div>
 					<div class="card center card--isblue">
 						<div class="card__image">
-							<img class="evacuee" src="./img/invoice.svg">
+							<img class="evacuee" src="https://ess.gov.bc.ca/img/invoice.svg">
 						</div>
 						<h3>ESS Suppliers</h3>
 						<p>
-							EMBC Suppliers who are registered to provide goods/services to evacuees during an emergency
-							can submit their invoices/receipts by clicking the button below.
+							EMBC Suppliers who are registered to provide goods/services to evacuees during an emergency can submit their invoices/receipts by clicking the button below.
 						</p>
-						<a class="btn btn--white btn--primary btn--user" href="https://era-suppliers.embc.gov.bc.ca"
-							target="_blank">Submit Invoices/Receipts</a></br>
+						<a class="btn btn--white btn--primary btn--user" href="https://era-suppliers.embc.gov.bc.ca" target="_blank">Submit Invoices/Receipts</a></br>
 						<!--<p class="alert--orange">Maintenance In Progress </br> Check back at 2pm</p>-->
-						<a class="link--strongwhite" href="./era/videos/Suppliers/">Watch Training Video</a>
+						<a class="link--strongwhite" href="https://ess.gov.bc.ca/era/videos/Suppliers/">Watch Training Video</a>
 					</div>
 					<div class="card center card--isdark">
 						<div class="card__image">
-							<img class="user" src="./img/users.svg">
+							<img class="user" src="https://ess.gov.bc.ca/img/users.svg">
 						</div>
 						<h3>ERA User Login</h3>
-						<p><strong>ERA Users</strong> who are responding to an active emergency, or who would like to
-							access the ERA Training Environment, choose your login below.</p>
-						<a class="btn btn--white btn--primary btn--user" href="https://era-r1.embc.gov.bc.ca/"
-							target="_blank">ERA User Login</a>
-						<a class="btn btn--orange btn--primary btn--user" href="https://era-r1-training.embc.gov.bc.ca/"
-							target="_blank">ERA User Training Login</a>
+						<p><strong>ERA Users</strong> who are responding to an active emergency, or who would like to access the ERA Training Environment, login below.</p>
+						<a class="btn btn--white btn--primary btn--user" href="./responders.html" target="_blank">ERA User Login</a>
+						<!--<a class="btn btn--orange btn--primary btn--user" href="https://era-r1-training.embc.gov.bc.ca/" target="_blank">ERA User Training Login</a>-->
 					</div>
 				</div>
 			</div>
@@ -557,16 +571,12 @@
 			<section class="contact-cta">
 				<div class="container">
 					<div class="contact-cta__content center">
-						<img class="contact-cta__icon" src="./img/contact.svg" alt="Phone">
+						<img class="contact-cta__icon" src="https://ess.gov.bc.ca/img/contact.svg" alt="Phone">
 						<h3>Contact Us</h3>
-						<p>Visit <a href="https://twitter.com/EmergencyInfoBC" target="_blank">@EmergencyInfoBC</a> or
-							<a href="http://www.emergencyinfobc.gov.bc.ca"
-								target="_blank">www.emergencyinfobc.gov.bc.ca</a> for Evacuation and Reception Centre
-							updates.
-						</p>
+						<p>Visit <a class="link--strong" href="https://twitter.com/EmergencyInfoBC" target="_blank">@EmergencyInfoBC</a> or 
+						<a class="link--strong" href="http://www.emergencyinfobc.gov.bc.ca" target="_blank">www.emergencyinfobc.gov.bc.ca</a> for Evacuation and Reception Centre updates.</p>
 						</br>
-						<p>Send ERA Tool Technical Support inquiries <a
-								href="mailto:essmodernization@gov.bc.ca">here</a>
+						<p>Send ERA Tool Technical Support inquiries <a class="link--strong" href="mailto:essmodernization@gov.bc.ca">here</a>
 						</p>
 						<!-- <p>If you have any questions or need assistance, please contact ERA Support toll free at 1-844-537-7377.</p> -->
 					</div>
@@ -590,8 +600,7 @@
 				<span class="divider">|</span>
 				<li><a href="https://www2.gov.bc.ca/gov/content/home/copyright">Copyright</a></li>
 				<span class="divider">|</span>
-				<li><a href="https://www2.gov.bc.ca/gov/content/home/get-help-with-government-services">Contact Us</a>
-				</li>
+				<li><a href="https://www2.gov.bc.ca/gov/content/home/get-help-with-government-services">Contact Us</a></li>
 				<span class="divider">
 			</ul>
 		</div>
@@ -599,5 +608,4 @@
 
 
 </body>
-
 </html>
