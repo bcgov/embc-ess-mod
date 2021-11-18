@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.ESS", "EMBC.ESS\EMBC.ESS.csproj", "{864497BD-A98C-47CB-8356-39AF743BF0B0}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Tests.Unit.ESS", "EMBC.Tests.Unit.ESS\EMBC.Tests.Unit.ESS.csproj", "{455DC023-1285-456C-B060-CC81D5F4FF1E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.ESS.Utilities.Dynamics", "EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj", "{3B7BB8D6-8ED4-4BFB-AE0A-83265D60A59C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMBC.ESS.Utilties.BceidWS", "EMBC.ESS.Utilties.BceidWS\EMBC.ESS.Utilties.BceidWS.csproj", "{E83A66C1-B0C4-42BA-9526-B199F9C0F2BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{3B7BB8D6-8ED4-4BFB-AE0A-83265D60A59C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B7BB8D6-8ED4-4BFB-AE0A-83265D60A59C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B7BB8D6-8ED4-4BFB-AE0A-83265D60A59C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E83A66C1-B0C4-42BA-9526-B199F9C0F2BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E83A66C1-B0C4-42BA-9526-B199F9C0F2BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E83A66C1-B0C4-42BA-9526-B199F9C0F2BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E83A66C1-B0C4-42BA-9526-B199F9C0F2BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
