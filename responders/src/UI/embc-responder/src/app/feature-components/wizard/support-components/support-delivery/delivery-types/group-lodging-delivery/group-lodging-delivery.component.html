@@ -20,6 +20,7 @@
           maxlength="255"
           matInput
           placeholder="Enter Name"
+          required
         />
         <mat-error
           class="custom-mat-error"
@@ -49,6 +50,7 @@
           maxlength="255"
           matInput
           placeholder="Enter Address"
+          required
         />
         <mat-error
           class="custom-mat-error"
@@ -118,14 +120,14 @@
           placeholder="Telephone"
           [textMask]="{ mask: phoneMask, keepCharPositions: true }"
         />
-        <mat-error
+        <!-- <mat-error
           *ngIf="
             supportDeliveryFormControl.hostPhone.invalid &&
             supportDeliveryFormControl.hostPhone.hasError('whitespaceError')
           "
         >
-          Telephone is required</mat-error
-        >
+          Telephone is required</mat-error 
+        > -->
         <mat-error
           *ngIf="
             supportDeliveryFormControl.hostPhone.invalid &&
