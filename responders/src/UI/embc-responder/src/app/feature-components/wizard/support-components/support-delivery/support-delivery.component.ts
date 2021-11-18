@@ -406,9 +406,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         [
           this.customValidation
             .maskedNumberLengthValidator()
-            .bind(this.customValidation),
-
-          this.customValidation.whitespaceValidator()
+            .bind(this.customValidation)
         ]
       ]
     });
