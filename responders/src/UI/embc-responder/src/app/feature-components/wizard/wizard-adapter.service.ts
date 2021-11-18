@@ -183,44 +183,17 @@ export class WizardAdapterService {
       profile.primaryAddress
     );
 
-    // if (this.evacueeSessionService.essFileNumber) {
-    // this.stepEssFileService.householdMembers = [
-    //   {
-    //     id: profile.id,
-    //     linkedRegistrantId:
-    //     dateOfBirth: profile.personalDetails.dateOfBirth,
-    //     firstName: profile.personalDetails.firstName,
-    //     lastName: profile.personalDetails.lastName,
-    //     gender: profile.personalDetails.gender,
-    //     initials: profile.personalDetails.initials,
-    //     sameLastName: true,
-    //     householdMemberFromDatabase: true,
-    //     isPrimaryRegistrant: true,
-    //     type: HouseholdMemberType.Registrant
-    //   }
-    // ];
     const mainMember = this.stepEssFileService.householdMembers.find(
-      (member) => member.isPrimaryRegistrant === true
+      (member) => member.type === HouseholdMemberType.Registrant
     );
     const index = this.stepEssFileService.householdMembers.indexOf(mainMember);
 
     const updatedMainMember = {
-      dateOfBirth: profile.personalDetails.dateOfBirth,
-      firstName: profile.personalDetails.firstName,
-      lastName: profile.personalDetails.lastName,
+      ...mainMember,
       gender: profile.personalDetails.gender,
-      householdMemberFromDatabase: true,
-      id: profile.id,
-      initials: profile.personalDetails.initials,
-      isHouseHoldMember: false,
-      isPrimaryRegistrant: true,
-      isRestricted: profile.restriction,
-      type: HouseholdMemberType.Registrant,
-      sameLastName: true
+      initials: profile.personalDetails.initials
     };
-
     this.stepEssFileService.householdMembers[index] = updatedMainMember;
-    // }
   }
 
   public stepReviewESSFileFromESSFileRecord(): Observable<boolean> {
