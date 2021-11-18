@@ -100,6 +100,7 @@ namespace EMBC.ESS
             services.AddHealthChecks()
                 .AddCheck("ESS API ready hc", () => HealthCheckResult.Healthy("API ready"), new[] { HealthCheckReadyTag })
                 .AddCheck("ESS API live hc", () => HealthCheckResult.Healthy("API alive"), new[] { HealthCheckAliveTag });
+            services.AddHttpContextAccessor();
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
 
             services
@@ -112,7 +113,7 @@ namespace EMBC.ESS
                 .AddSearchEngine();
 
             services
-                .AddTeamRepository()
+                .AddTeamRepository(configuration)
                 .AddMetadataRepository()
                 .AddContactRepository()
                 .AddCaseRepository()

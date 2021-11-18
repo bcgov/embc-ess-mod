@@ -71,6 +71,7 @@
     <ItemGroup>
         <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj" />
+        <ProjectReference Include="..\EMBC.ESS.Utilties.BceidWS\EMBC.ESS.Utilties.BceidWS.csproj" />
     </ItemGroup>
 
     <ItemGroup>

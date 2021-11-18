@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <TargetFramework>netstandard2.1</TargetFramework>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <Company>Province of British Columbia</Company>
+      <Authors>Quartech Systems Limited</Authors>
+      <Copyright>Copyright 2021 Province of British Columbia</Copyright>
+      <PackageLicenseExpression></PackageLicenseExpression>
+      <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
+      <RepositoryType>GIT</RepositoryType>
+      <AnalysisMode>Default</AnalysisMode>
+      <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.6.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.6.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.6.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.6.*" />
+  </ItemGroup>
+
+</Project>

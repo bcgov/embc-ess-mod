@@ -83,4 +83,25 @@ namespace EMBC.ESS.Resources.Team
         public bool IsActive { get; set; }
         public string ExternalUserId { get; set; }
     }
+
+    public interface IUserRepository
+    {
+        Task<UserQueryResponse> Query(UserQuery query);
+    }
+
+    public class UserQuery
+    {
+        public string ByBceidUserId { get; set; }
+    }
+
+    public class UserQueryResponse
+    {
+        public IEnumerable<User> Items { get; set; } = Array.Empty<User>();
+    }
+
+    public class User
+    {
+        public string Id { get; set; }
+        public string OrgId { get; set; }
+    }
 }
