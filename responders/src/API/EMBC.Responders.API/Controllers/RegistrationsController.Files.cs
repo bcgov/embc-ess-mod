@@ -168,17 +168,16 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> UpdateFileNoteContent(string fileId, string noteId, Note note)
         {
-            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.SingleOrDefault();
-            if (existing_note == null) return NotFound();
-
-            if (!UserCanEditNote(mapper.Map<Note>(existing_note))) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
-
-            existing_note.Content = note.Content;
-
+            note.Id = noteId;
             var cmd = new SaveEvacuationFileNoteCommand
             {
-                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(existing_note),
+                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
                 FileId = fileId
+            };
+
+            cmd.Note.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember
+            {
+                Id = currentUserId
             };
 
             var id = await messagingClient.Send(cmd);
@@ -197,10 +196,10 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> SetFileNoteHiddenStatus(string fileId, string noteId, bool isHidden)
         {
+            if (!UserCanHideNote()) return BadRequest(new ProblemDetails { Detail = "You do not have sufficient permissions to edit a note's hidden status." });
+
             var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.SingleOrDefault();
             if (existing_note == null) return NotFound();
-
-            if (!UserCanHideNote()) return BadRequest(new ProblemDetails { Detail = "You do not have sufficient permissions to edit a note's hidden status." });
 
             existing_note.IsHidden = isHidden;
 

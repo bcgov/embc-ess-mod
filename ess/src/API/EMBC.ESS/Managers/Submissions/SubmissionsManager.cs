@@ -401,25 +401,45 @@ namespace EMBC.ESS.Managers.Submissions
         {
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
 
+            if (!string.IsNullOrEmpty(cmd.Note.Id))
+            {
+                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
+                {
+                    FileId = cmd.FileId,
+                })).Items.Cast<Resources.Cases.EvacuationFile>().SingleOrDefault();
+
+                if (file == null) throw new NotFoundException($"Evacuation File {cmd.FileId} not found", cmd.FileId);
+
+                var noteToUpdate = file.Notes.Where(n => n.Id == cmd.Note.Id).SingleOrDefault();
+
+                if (noteToUpdate == null) throw new NotFoundException($"Evacuation File Note {cmd.Note.Id} not found", cmd.Note.Id);
+
+                if (!noteToUpdate.CreatingTeamMemberId.Equals(cmd.Note.CreatedBy.Id) || noteToUpdate.AddedOn < DateTime.UtcNow.AddHours(-24))
+                    throw new BusinessLogicException($"The note may be edited only by the user who created it withing a 24 hour period.");
+            }
+
             var note = mapper.Map<Resources.Cases.Note>(cmd.Note);
             var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
             return id;
         }
 
-        public async Task<EvacuationFileNotesQueryResponse> Handle(EvacuationFileNotesQuery query)
+        public async Task<string> Handle(SetNoteHiddenStatusCommand cmd)
         {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+            if (string.IsNullOrEmpty(cmd.NoteId)) throw new ArgumentNullException("NoteId is required");
+
             var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
             {
-                FileId = query.FileId,
-            })).Items.Cast<Resources.Cases.EvacuationFile>().FirstOrDefault();
+                FileId = cmd.FileId,
+            })).Items.Cast<Resources.Cases.EvacuationFile>().SingleOrDefault();
+            if (file == null) throw new NotFoundException($"Evacuation File {cmd.FileId} not found", cmd.FileId);
 
-            if (file == null) throw new NotFoundException($"Evacuation File {query.FileId} not found", query.FileId);
+            var note = file.Notes.Where(n => n.Id == cmd.NoteId).SingleOrDefault();
+            if (note == null) throw new NotFoundException($"Evacuation File Note {cmd.NoteId} not found", cmd.NoteId);
 
-            var notes = file.Notes;
-
-            if (!string.IsNullOrEmpty(query.NoteId)) notes = notes.Where(n => n.Id == query.NoteId).ToArray();
-
-            return new EvacuationFileNotesQueryResponse { Notes = mapper.Map<IEnumerable<Shared.Contracts.Submissions.Note>>(notes) };
+            note.IsHidden = cmd.IsHidden;
+            var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
+            return id;
         }
 
         public async Task<TasksSearchQueryResult> Handle(TasksSearchQuery query)

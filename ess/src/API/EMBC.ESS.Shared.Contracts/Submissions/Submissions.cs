@@ -71,6 +71,16 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     }
 
     /// <summary>
+    /// set a file note hidden status
+    /// </summary>
+    public class SetNoteHiddenStatusCommand : Command
+    {
+        public string FileId { get; set; }
+        public string NoteId { get; set; }
+        public bool IsHidden { get; set; }
+    }
+
+    /// <summary>
     /// Link Registrant and Household Member
     /// </summary>
     public class LinkRegistrantCommand : Command

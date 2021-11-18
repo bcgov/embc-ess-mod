@@ -68,19 +68,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool IsCorrect { get; set; }
     }
 
-    public class EvacuationFileNotesQuery : Query<EvacuationFileNotesQueryResponse>
-    {
-        public string FileId { get; set; }
-        public string NoteId { get; set; }
-        public IEnumerable<NoteType> IncludeTypes { get; set; } = new[] { NoteType.General };
-        public IEnumerable<NoteStatus> IncludeStatuses { get; set; } = Array.Empty<NoteStatus>();
-    }
-
-    public class EvacuationFileNotesQueryResponse
-    {
-        public IEnumerable<Note> Notes { get; set; }
-    }
-
     public class EvacueeSearchQuery : Query<EvacueeSearchQueryResponse>
     {
         public string FirstName { get; set; }
