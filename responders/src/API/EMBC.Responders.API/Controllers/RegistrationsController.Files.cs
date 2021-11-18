@@ -198,15 +198,11 @@ namespace EMBC.Responders.API.Controllers
         {
             if (!UserCanHideNote()) return BadRequest(new ProblemDetails { Detail = "You do not have sufficient permissions to edit a note's hidden status." });
 
-            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.SingleOrDefault();
-            if (existing_note == null) return NotFound();
-
-            existing_note.IsHidden = isHidden;
-
-            var cmd = new SaveEvacuationFileNoteCommand
+            var cmd = new ChangeNoteStatusCommand
             {
-                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(existing_note),
-                FileId = fileId
+                NoteId = noteId,
+                FileId = fileId,
+                IsHidden = isHidden
             };
 
             var id = await messagingClient.Send(cmd);
