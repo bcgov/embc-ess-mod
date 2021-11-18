@@ -168,7 +168,7 @@ export class LocationsService {
             }))
           );
           this.setRegionalDistricts(
-            results[0].map((comm) => comm.districtName)
+            Array.from(new Set(results[0].map((comm) => comm.districtName)))
           );
 
           this.setStateProvinceList(
@@ -216,7 +216,9 @@ export class LocationsService {
             type: c.communityType
           }))
         );
-        this.setRegionalDistricts(communities.map((comm) => comm.districtName));
+        this.setRegionalDistricts(
+          Array.from(new Set(communities.map((comm) => comm.districtName)))
+        );
       },
       (error) => {
         this.alertService.clearAlert();

@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { InviteRequest } from '../models/invite-request';
+import { InviteToken } from '../models/invite-token';
 import { Profile } from '../models/profile';
 import { ProfileDataConflict } from '../models/profile-data-conflict';
 
@@ -282,6 +283,52 @@ export class ProfileService extends BaseService {
 
     return this.profileInvite$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation profileProcessInvite
+   */
+  static readonly ProfileProcessInvitePath = '/api/profiles/current/join';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `profileProcessInvite()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  profileProcessInvite$Response(params: {
+    body: InviteToken
+  }): Observable<StrictHttpResponse<boolean>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileProcessInvitePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `profileProcessInvite$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  profileProcessInvite(params: {
+    body: InviteToken
+  }): Observable<boolean> {
+
+    return this.profileProcessInvite$Response(params).pipe(
+      map((r: StrictHttpResponse<boolean>) => r.body as boolean)
     );
   }
 

@@ -574,22 +574,22 @@ export class StepEssFileService {
       canProvideIncidentals: needsIncidentalsDTO
     };
 
-    console.log({
-      primaryRegistrantId: this.evacueeSession.profileId,
+    // console.log({
+    //   primaryRegistrantId: this.evacueeSession.profileId,
 
-      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-        this.evacAddress
-      ),
-      registrationLocation: this.facilityName,
+    //   evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
+    //     this.evacAddress
+    //   ),
+    //   registrationLocation: this.facilityName,
 
-      needsAssessment: needsObject,
-      securityPhrase: this.securityPhrase,
-      securityPhraseEdited: this.editedSecurityPhrase,
-      task: {
-        taskNumber:
-          this.taskNumber ?? this.userService.currentProfile?.taskNumber
-      }
-    });
+    //   needsAssessment: needsObject,
+    //   securityPhrase: this.securityPhrase,
+    //   securityPhraseEdited: this.editedSecurityPhrase,
+    //   task: {
+    //     taskNumber:
+    //       this.taskNumber ?? this.userService.currentProfile?.taskNumber
+    //   }
+    // });
 
     // Map out into DTO object and return
     return {
