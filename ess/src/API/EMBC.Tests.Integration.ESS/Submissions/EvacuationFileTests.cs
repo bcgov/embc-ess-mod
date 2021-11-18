@@ -267,37 +267,50 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanCreateFileNote()
         {
             var fileId = TestData.EvacuationFileId;
-            var notePostfix = Guid.NewGuid().ToString().Substring(0, 4);
-            var note = new Note { Content = $"{TestData.TestPrefix}-note-{notePostfix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteSuffix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{noteSuffix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
             var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
-            var actualNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
-            actualNote.Content.ShouldEndWith(notePostfix);
+            var actualNote = (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes.Where(n => n.Id == noteId).ShouldHaveSingleItem();
+            actualNote.Content.ShouldEndWith(noteSuffix);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateFileNote()
         {
             var fileId = TestData.EvacuationFileId;
-            var notePostfix = Guid.NewGuid().ToString().Substring(0, 4);
-            var note = new Note { Content = $"{TestData.TestPrefix}-note-{notePostfix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteSuffix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{noteSuffix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
             var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
-            var actualNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
+            var actualNote = (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes.Where(n => n.Id == noteId).ShouldHaveSingleItem();
 
-            var updatedNotePostfix = Guid.NewGuid().ToString().Substring(0, 4);
-            actualNote.Content = $"{TestData.TestPrefix}-note-{updatedNotePostfix}";
+            var updatedNoteSuffix = Guid.NewGuid().ToString().Substring(0, 4);
+            actualNote.Content = $"{TestData.TestPrefix}-note-{updatedNoteSuffix}";
             var updatedNoteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = actualNote })).ShouldNotBeNull();
 
             updatedNoteId.ShouldBe(noteId);
-            var actualUpdatedNote = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.ShouldHaveSingleItem();
-            actualUpdatedNote.Content.ShouldEndWith(updatedNotePostfix);
+            var actualUpdatedNote = (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes.Where(n => n.Id == noteId).ShouldHaveSingleItem();
+            actualUpdatedNote.Content.ShouldEndWith(updatedNoteSuffix);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Update_FileNoteNotCreatingMember_ThrowsError()
+        {
+            var fileId = TestData.EvacuationFileId;
+            var noteSuffix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{noteSuffix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
+            var actualNote = (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes.Where(n => n.Id == noteId).ShouldHaveSingleItem();
+
+            var updatedNoteSuffix = Guid.NewGuid().ToString().Substring(0, 4);
+            actualNote.Content = $"{TestData.TestPrefix}-note-{updatedNoteSuffix}";
+            actualNote.CreatedBy = new TeamMember { Id = TestData.OtherTeamMemberId };
+            Should.Throw<Exception>(() => manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = actualNote })).Message.ShouldBe($"The note may be edited only by the user who created it withing a 24 hour period.");
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanQueryFileNoteByFileId()
         {
-            var fileId = TestData.EvacuationFileId;
-            var notes = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId })).Notes;
-
+            var notes = (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes;
             notes.ShouldNotBeNull();
         }
 
@@ -305,12 +318,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanQueryFileNoteByFileIdAndNoteId()
         {
             var fileId = TestData.EvacuationFileId;
-            var notePostfix = Guid.NewGuid().ToString().Substring(0, 4);
-            var note = new Note { Content = $"{TestData.TestPrefix}-note-{notePostfix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
+            var noteSuffix = Guid.NewGuid().ToString().Substring(0, 4);
+            var note = new Note { Content = $"{TestData.TestPrefix}-note-{noteSuffix}", Type = NoteType.General, CreatedBy = new TeamMember { Id = teamUserId } };
             var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
-            var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId, FileId = fileId })).Notes;
-
-            notes.ShouldNotBeNull();
+            (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes.Where(n => n.Id == noteId).ShouldNotBeNull();
         }
     }
 }
