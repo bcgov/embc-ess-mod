@@ -73,7 +73,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// <summary>
     /// set a file note hidden status
     /// </summary>
-    public class SetNoteHiddenStatusCommand : Command
+    public class ChangeNoteStatusCommand : Command
     {
         public string FileId { get; set; }
         public string NoteId { get; set; }

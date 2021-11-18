@@ -423,7 +423,7 @@ namespace EMBC.ESS.Managers.Submissions
             return id;
         }
 
-        public async Task<string> Handle(SetNoteHiddenStatusCommand cmd)
+        public async Task<string> Handle(ChangeNoteStatusCommand cmd)
         {
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.NoteId)) throw new ArgumentNullException("NoteId is required");
