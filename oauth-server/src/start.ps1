@@ -1,1 +1,1 @@
-dotnet watch --project .\OAuthServer\ run
+dotnet run --project .\OAuthServer\

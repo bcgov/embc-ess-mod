@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6</TargetFramework>
         <EnableNETAnalyzers>True</EnableNETAnalyzers>
         <AnalysisLevel>latest</AnalysisLevel>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
@@ -19,7 +19,7 @@
 
     <ItemGroup>
         <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.20" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
     </ItemGroup>
 
 
