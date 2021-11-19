@@ -49,12 +49,14 @@ mat-header-row {
 mat-header-cell {
   color: white;
   font-size: 15px;
+  padding-right: 20px;
+  text-indent: 20px;
 }
 
 .mat-cell {
   font-weight: 700;
-  padding-right: 24px;
-  text-indent:24px;
+  padding-right: 20px;
+  text-indent: 20px;
   overflow-wrap: anywhere;
   word-break: break-all;
 }
@@ -94,6 +96,8 @@ mat-header-cell {
   .mobile-label {
     display: inline-block;
     font-weight: bold;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 
   // Remove the header row altogether
