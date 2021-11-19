@@ -28,7 +28,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
 
   constructor(
     public stepEssFileService: StepEssFileService,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
     private router: Router,
@@ -123,15 +123,13 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * Cancels the change of security phrase and goes back to the previous view
    */
   cancel(): void {
-    if (
-      this.stepEssFileService.securityPhrase ===
-      this.stepEssFileService.originalSecurityPhrase
-    ) {
-      this.editedSecurityPhrase = !this.editedSecurityPhrase;
-      this.stepEssFileService.editedSecurityPhrase = false;
-    } else {
-      this.securityForm.get('securityPhrase').markAllAsTouched();
-    }
+    this.stepEssFileService.securityPhrase = this.stepEssFileService.originalSecurityPhrase;
+    this.securityForm
+      .get('securityPhrase')
+      .setValue(this.stepEssFileService.securityPhrase);
+    this.editedSecurityPhrase = false;
+    this.stepEssFileService.editedSecurityPhrase = false;
+    this.securityFormControl.securityPhrase.disable();
   }
 
   /**
@@ -194,10 +192,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   private formValidation() {
-    if (
-      this.wizardType === 'review-file' ||
-      this.wizardType === 'complete-file'
-    ) {
+    if (this.evacueeSessionService.essFileNumber !== null) {
       if (
         this.stepEssFileService.securityPhrase ===
         this.stepEssFileService.originalSecurityPhrase

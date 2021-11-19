@@ -13,8 +13,7 @@
         <div
           class="col-8"
           *ngIf="
-            wizardType === 'new-ess-file' ||
-              wizardType === 'new-registration' ||
+            evacueeSessionService.essFileNumber === null ||
               editedSecurityPhrase;
             else editEssFile
           "
@@ -93,9 +92,7 @@
 
             <div
               class="row edit-phrase-row"
-              *ngIf="
-                wizardType === 'review-file' || wizardType === 'complete-file'
-              "
+              *ngIf="evacueeSessionService.essFileNumber !== null"
             >
               <button class="btn edit-phrase" (click)="cancel()">Cancel</button>
             </div>
