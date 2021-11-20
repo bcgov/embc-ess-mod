@@ -24,11 +24,12 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   securityForm: FormGroup = null;
   tabUpdateSubscription: Subscription;
   wizardType: string;
+  essFileNumber: string;
   editedSecurityPhrase: boolean;
 
   constructor(
     public stepEssFileService: StepEssFileService,
-    public evacueeSessionService: EvacueeSessionService,
+    private evacueeSessionService: EvacueeSessionService,
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
     private router: Router,
@@ -39,8 +40,9 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     // Set up form validation for verification check
     this.createSecurityPhraseForm();
 
-    // Set up wizard type
+    // Set up wizard type and ESS File number
     this.wizardType = this.evacueeSessionService.getWizardType();
+    this.essFileNumber = this.evacueeSessionService.essFileNumber;
 
     // Setting the edit Security Flag in case the wizard type is set to edit an ESS File
     this.editedPhraseFlag();

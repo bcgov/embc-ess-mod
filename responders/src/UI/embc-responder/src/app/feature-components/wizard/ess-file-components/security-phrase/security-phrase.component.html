@@ -13,8 +13,7 @@
         <div
           class="col-8"
           *ngIf="
-            evacueeSessionService.essFileNumber === null ||
-              editedSecurityPhrase;
+            essFileNumber === null || editedSecurityPhrase;
             else editEssFile
           "
         >
@@ -90,10 +89,7 @@
               </div>
             </div> -->
 
-            <div
-              class="row edit-phrase-row"
-              *ngIf="evacueeSessionService.essFileNumber !== null"
-            >
+            <div class="row edit-phrase-row" *ngIf="essFileNumber !== null">
               <button class="btn edit-phrase" (click)="cancel()">Cancel</button>
             </div>
           </form>
