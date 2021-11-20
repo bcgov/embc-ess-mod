@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using System.Threading;
+using IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -90,7 +93,11 @@ namespace OAuthServer
                 {
                     configuration.GetSection("identityproviders:bcsc").Bind(options);
                     options.SaveTokens = true;
-                    options.GetClaimsFromUserInfoEndpoint = true;
+
+                    // Note: Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectHandler  doesn't handle JWE correctly
+                    // See https://github.com/dotnet/aspnetcore/issues/4650 for more information
+                    // When BCSC user info payload is encrypted, we need to load the user info manually in OnTokenValidated event below
+                    //options.GetClaimsFromUserInfoEndpoint = true;
                     options.UseTokenLifetime = true;
                     options.ResponseType = OpenIdConnectResponseType.Code;
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -111,48 +118,33 @@ namespace OAuthServer
 
                     options.Events = new OpenIdConnectEvents
                     {
-                        //OnTokenResponseReceived = async ctx =>
-                        //{
-                        //    await Task.CompletedTask;
-                        //},
-                        //OnTokenValidated = async ctx =>
-                        //{
-                        //manually fetch claims from userinfo endpoint because the handler throws null reference error
-                        //var oidcConfig = await ctx.Options.ConfigurationManager.GetConfigurationAsync(CancellationToken.None);
-                        //using var client = new HttpClient();
-
-                        //var response = await client.GetUserInfoAsync(new UserInfoRequest
-                        //{
-                        //    Address = oidcConfig.UserInfoEndpoint,
-                        //    Token = ctx.TokenEndpointResponse.AccessToken
-                        //});
-                        //if (response.IsError)
-                        //{
-                        //    ctx.Fail(new Exception(response.Error));
-                        //}
-                        ////ctx.Principal.AddIdentity(new ClaimsIdentity(response.Claims));
-                        //ctx.Principal = new ClaimsPrincipal(new ClaimsIdentity(ctx.Principal.Identity, ctx.Principal.Claims.Concat(response.Claims)));
-                        //},
-                        //OnRemoteFailure = async ctx =>
-                        //{
-                        //    await Task.CompletedTask;
-                        //},
-                        //OnAuthenticationFailed = async ctx =>
-                        //{
-                        //    await Task.CompletedTask;
-                        //},
-                        OnUserInformationReceived = async ctx =>
+                        OnTokenValidated = async ctx =>
                         {
-                            await Task.CompletedTask;
-                            ctx.Principal.AddIdentity(new ClaimsIdentity(new[]
+                            var oidcConfig = await ctx.Options.ConfigurationManager.GetConfigurationAsync(CancellationToken.None);
+
+                            //get the user info claims through the back channel
+                            var response = await ctx.Options.Backchannel.GetUserInfoAsync(new UserInfoRequest
                             {
-                              new Claim("userInfo", ctx.User.RootElement.GetRawText())
-                            }));
-                            //ctx.Success();
+                                Address = oidcConfig.UserInfoEndpoint,
+                                Token = ctx.TokenEndpointResponse.AccessToken
+                            });
+                            if (response.IsError)
+                            {
+                                ctx.Fail(new Exception(response.Error));
+                            }
+                            else
+                            {
+                                ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", response.Raw) }));
+                            }
                         },
-                        //OnTicketReceived = async ctx =>
+                        //this event is called only when options.GetClaimsFromUserInfoEndpoint = true
+                        //OnUserInformationReceived = async ctx =>
                         //{
                         //    await Task.CompletedTask;
+                        //    ctx.Principal.AddIdentity(new ClaimsIdentity(new[]
+                        //    {
+                        //      new Claim("userInfo", ctx.User.RootElement.GetRawText())
+                        //    }));
                         //}
                     };
                 });
@@ -172,6 +164,7 @@ namespace OAuthServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true;
             }
 
             //app.UseHttpsRedirection();
