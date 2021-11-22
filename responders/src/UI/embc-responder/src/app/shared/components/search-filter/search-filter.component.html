@@ -46,9 +46,9 @@
             <mat-option value="">{{ filter?.label.description }}</mat-option>
             <mat-option *ngFor="let val of filter?.values" [value]="val">
               <div *ngIf="val?.description !== undefined; else value">
-                {{ val?.description }}
+                {{ splitWord(val?.description) }}
               </div>
-              <ng-template #value>{{ val }}</ng-template>
+              <ng-template #value>{{ splitWord(val) }}</ng-template>
             </mat-option>
           </mat-select>
         </mat-form-field>

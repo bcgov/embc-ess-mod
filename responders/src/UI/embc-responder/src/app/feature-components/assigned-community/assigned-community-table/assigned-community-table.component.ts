@@ -169,4 +169,8 @@ export class AssignedCommunityTableComponent
     this.selection.toggle(row);
     this.selectedRows.emit(this.selection.selected);
   }
+
+  splitWord(word: string): string {
+    return word.replace(/([A-Z])/g, ' $1').trim();
+  }
 }
