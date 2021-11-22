@@ -51,6 +51,10 @@ export class SearchFilterComponent implements OnInit {
     this.resetTextField();
   }
 
+  splitWord(word: string): string {
+    return word.replace(/([A-Z])/g, ' $1').trim();
+  }
+
   private resetSelects(): void {
     this.matRef.forEach((select: MatSelect) => {
       select.value = '';

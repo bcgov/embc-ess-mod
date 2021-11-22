@@ -32,7 +32,9 @@
           {{ column?.label }}
         </th>
         <td mat-cell *matCellDef="let row; let index = index">
-          <span *ngIf="column?.ref !== 'dateAssigned'">
+          <span
+            *ngIf="column?.ref !== 'dateAssigned' && column?.ref !== 'type'"
+          >
             <span
               *ngIf="!row?.allowSelect && disableRow; else data"
               style="color: #b0b0b0"
@@ -41,6 +43,16 @@
           </span>
           <ng-template #data>
             <span>{{ row[column?.ref] }}</span>
+          </ng-template>
+          <span *ngIf="column?.ref === 'type'">
+            <span
+              *ngIf="!row?.allowSelect && disableRow; else typeData"
+              style="color: #b0b0b0"
+              >{{ splitWord(row[column?.ref]) }}</span
+            >
+          </span>
+          <ng-template #typeData>
+            <span>{{ splitWord(row[column?.ref]) }}</span>
           </ng-template>
           <span *ngIf="column?.ref === 'action' && row.conflict">
             <img
