@@ -246,6 +246,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     if (event.value === 'No') {
       this.showMemberForm = false;
       this.editFlag = false;
+      this.addNewMember = false;
 
       // If "no members", still keep Primary
       this.members = this.stepEssFileService.householdMembers.filter(
@@ -255,10 +256,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
       this.householdForm.get('houseHoldMember').reset();
       this.householdForm.get('addMemberFormIndicator').setValue(false);
+      this.householdForm.get('addMemberIndicator').setValue(false);
     } else {
       this.showMemberForm = true;
-      this.editFlag = true;
       this.householdForm.get('addMemberFormIndicator').setValue(true);
+      this.householdForm.get('addMemberIndicator').setValue(true);
     }
   }
 
