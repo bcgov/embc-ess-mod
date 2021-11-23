@@ -9,7 +9,7 @@
       <mat-form-field appearance="outline">
         <mat-label># of Breakfasts per person</mat-label>
         <mat-select formControlName="noOfBreakfast" required>
-          <mat-option *ngFor="let no of noOfDays | numberArray" [value]="no">
+          <mat-option *ngFor="let no of noOfDays | mealsArray" [value]="no">
             {{ no }}
           </mat-option>
         </mat-select>
@@ -28,7 +28,7 @@
       <mat-form-field appearance="outline">
         <mat-label># of Lunches per person</mat-label>
         <mat-select formControlName="noOfLunches" required>
-          <mat-option *ngFor="let no of noOfDays | numberArray" [value]="no">
+          <mat-option *ngFor="let no of noOfDays | mealsArray" [value]="no">
             {{ no }}
           </mat-option>
         </mat-select>
@@ -47,7 +47,7 @@
       <mat-form-field appearance="outline">
         <mat-label># of Dinners per person</mat-label>
         <mat-select formControlName="noOfDinners" required>
-          <mat-option *ngFor="let no of noOfDays | numberArray" [value]="no">
+          <mat-option *ngFor="let no of noOfDays | mealsArray" [value]="no">
             {{ no }}
           </mat-option>
         </mat-select>
