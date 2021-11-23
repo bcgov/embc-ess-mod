@@ -35,6 +35,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   essFileNumber: string;
   editIndex: number;
   editFlag = false;
+  addNewMember = false;
   showMemberForm = false;
   newMembersColumns: string[] = ['members', 'buttons'];
   editMembersColumns: string[] = ['select', 'members', 'buttons'];
@@ -56,6 +57,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.wizardType = this.evacueeSessionService.getWizardType();
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
+    this.addNewMember = this.stepEssFileService.addMemberIndicator;
 
     // Main form creation
     this.createHouseholdForm();
@@ -82,6 +84,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.stepEssFileService.householdMembers.length === 1
     ) {
       this.showMemberForm = true;
+      this.householdForm.get('addMemberFormIndicator').setValue(true);
       this.householdForm.get('addMemberIndicator').setValue(true);
     }
 
@@ -100,11 +103,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
     // Updates the status of the form according to changes
     this.householdForm
-      .get('addMemberIndicator')
+      .get('addMemberFormIndicator')
       .valueChanges.subscribe(() => this.updateOnVisibility());
 
-    console.log(this.stepEssFileService.householdMembers);
-    console.log(this.stepEssFileService.selectedHouseholdMembers);
+    // this.householdForm
+    //   .get('addMemberIndicator')
+    //   .valueChanges.subscribe(() => this.updateOnVisibility());
   }
 
   /**
@@ -127,7 +131,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   addMembers(): void {
     this.householdService.addMembers(this.householdForm);
     this.showMemberForm = true;
-    this.editFlag = true;
+    this.editFlag = false;
+    this.addNewMember = true;
   }
 
   /**
@@ -147,6 +152,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.editIndex = index;
     this.selection.deselect(member);
     this.showMemberForm = true;
+    this.addNewMember = false;
     this.editFlag = true;
   }
 
@@ -183,6 +189,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
       this.showMemberForm = false;
       this.editFlag = false;
+      this.addNewMember = false;
     } else {
       this.householdForm.get('houseHoldMember').markAllAsTouched();
     }
@@ -247,11 +254,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.memberSource.next(this.members);
 
       this.householdForm.get('houseHoldMember').reset();
-      this.householdForm.get('addMemberIndicator').setValue(false);
+      this.householdForm.get('addMemberFormIndicator').setValue(false);
     } else {
       this.showMemberForm = true;
       this.editFlag = true;
-      this.householdForm.get('addMemberIndicator').setValue(true);
+      this.householdForm.get('addMemberFormIndicator').setValue(true);
     }
   }
 
@@ -383,7 +390,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
             .bind(this.customValidation)
         ]
       ],
-      addMemberIndicator: [false]
+      addMemberIndicator: [this.stepEssFileService.addMemberIndicator ?? false],
+      addMemberFormIndicator: [
+        this.stepEssFileService.addMemberFormIndicator ?? false
+      ]
     });
   }
 
@@ -395,33 +405,36 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   private createHouseholdMemberForm(): FormGroup {
     return this.formBuilder.group({
       firstName: [
-        '',
+        this.stepEssFileService?.tempHouseholdMember?.firstName ?? '',
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('addMemberIndicator').value === true,
+              () =>
+                this.householdForm.get('addMemberFormIndicator').value === true,
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
         ]
       ],
       lastName: [
-        '',
+        this.stepEssFileService?.tempHouseholdMember?.lastName ?? '',
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('addMemberIndicator').value === true,
+              () =>
+                this.householdForm.get('addMemberFormIndicator').value === true,
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
         ]
       ],
       dateOfBirth: [
-        '',
+        this.stepEssFileService?.tempHouseholdMember?.dateOfBirth ?? '',
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('addMemberIndicator').value === true,
+              () =>
+                this.householdForm.get('addMemberFormIndicator').value === true,
               Validators.required
             )
             .bind(this.customValidation),
@@ -429,18 +442,21 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         ]
       ],
       gender: [
-        '',
+        this.stepEssFileService?.tempHouseholdMember?.gender ?? '',
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('addMemberIndicator').value === true,
+              () =>
+                this.householdForm.get('addMemberFormIndicator').value === true,
               Validators.required
             )
             .bind(this.customValidation)
         ]
       ],
-      initials: [''],
-      sameLastName: [''],
+      initials: [this.stepEssFileService?.tempHouseholdMember?.initials ?? ''],
+      sameLastName: [
+        this.stepEssFileService?.tempHouseholdMember?.sameLastName ?? ''
+      ],
       id: ['']
     });
   }
@@ -462,6 +478,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     if (!this.essFileNumber) {
       if (
         this.householdForm.valid &&
+        this.householdForm.get('addMemberIndicator').value === false &&
         !(
           this.householdForm.get('hasHouseholdMembers').value === 'Yes' &&
           this.members.length < 2
@@ -479,7 +496,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         );
       }
     } else if (this.essFileNumber) {
-      if (this.householdForm.valid && this.selection.selected.length >= 1) {
+      if (
+        this.householdForm.valid &&
+        this.householdForm.get('addMemberIndicator').value === false &&
+        this.selection.selected.length >= 1
+      ) {
         this.stepEssFileService.setTabStatus('household-members', 'complete');
       } else if (
         this.stepEssFileService.checkForPartialUpdates(this.householdForm)
@@ -519,8 +540,15 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.stepEssFileService.haveMedicationSupply = this.householdForm.get(
       'medicationSupply'
     ).value;
+    this.stepEssFileService.addMemberFormIndicator = this.householdForm.get(
+      'addMemberFormIndicator'
+    ).value;
     this.stepEssFileService.addMemberIndicator = this.householdForm.get(
       'addMemberIndicator'
+    ).value;
+
+    this.stepEssFileService.tempHouseholdMember = this.householdForm.get(
+      'houseHoldMember'
     ).value;
   }
 }

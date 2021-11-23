@@ -7,9 +7,11 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { Subject } from 'rxjs';
 import {
   EvacuationFile,
+  EvacuationFileHouseholdMember,
   HouseholdMemberType,
   InsuranceOption,
   NeedsAssessment,
+  PersonDetails,
   Pet,
   ReferralServices
 } from 'src/app/core/api/models';
@@ -56,7 +58,9 @@ export class StepEssFileService {
   private haveHouseHoldMembersVal: string;
   private householdMembersVal: HouseholdMemberModel[];
   private selectedHouseholdMembersVal: HouseholdMemberModel[];
+  private tempHouseholdMemberVal: HouseholdMemberModel;
   private addMemberIndicatorVal: boolean;
+  private addMemberFormIndicatorVal: boolean;
 
   private haveSpecialDietVal: string;
   private specialDietDetailsVal: string;
@@ -240,11 +244,26 @@ export class StepEssFileService {
     this.selectedHouseholdMembersVal = selectedHouseholdMembersVal;
   }
 
+  public set tempHouseholdMember(tempHouseHoldMemberVal: HouseholdMemberModel) {
+    this.tempHouseholdMemberVal = tempHouseHoldMemberVal;
+  }
+
+  public get tempHouseholdMember(): HouseholdMemberModel {
+    return this.tempHouseholdMemberVal;
+  }
+
   public get addMemberIndicator(): boolean {
     return this.addMemberIndicatorVal;
   }
   public set addMemberIndicator(addMemberIndicatorVal: boolean) {
     this.addMemberIndicatorVal = addMemberIndicatorVal;
+  }
+
+  public get addMemberFormIndicator(): boolean {
+    return this.addMemberFormIndicatorVal;
+  }
+  public set addMemberFormIndicator(addMemberFormIndicatorVal: boolean) {
+    this.addMemberFormIndicatorVal = addMemberFormIndicatorVal;
   }
 
   public get haveSpecialDiet(): string {
@@ -645,6 +664,7 @@ export class StepEssFileService {
     this.householdMembers = undefined;
     this.selectedHouseholdMembers = undefined;
     this.addMemberIndicator = undefined;
+    this.addMemberFormIndicator = undefined;
 
     this.haveSpecialDiet = undefined;
     this.specialDietDetails = undefined;
