@@ -20,6 +20,7 @@ export class HouseholdMembersService {
    */
   addMembers(householdForm: FormGroup): FormGroup {
     householdForm.get('houseHoldMember').reset();
+    householdForm.get('addMemberFormIndicator').setValue(true);
     householdForm.get('addMemberIndicator').setValue(true);
 
     return householdForm;
@@ -27,6 +28,7 @@ export class HouseholdMembersService {
 
   saveHouseholdMember(householdForm: FormGroup): FormGroup {
     householdForm.get('houseHoldMember').reset();
+    householdForm.get('addMemberFormIndicator').setValue(false);
     householdForm.get('addMemberIndicator').setValue(false);
 
     return householdForm;
@@ -40,7 +42,7 @@ export class HouseholdMembersService {
    */
   editRow(householdForm: FormGroup, element): FormGroup {
     householdForm.get('houseHoldMember').patchValue(element);
-    householdForm.get('addMemberIndicator').setValue(true);
+    householdForm.get('addMemberFormIndicator').setValue(true);
     return householdForm;
   }
 
@@ -48,6 +50,7 @@ export class HouseholdMembersService {
    * Resets the househol Member form and goes back to the main Form
    */
   cancel(householdForm: FormGroup): FormGroup {
+    householdForm.get('addMemberFormIndicator').setValue(false);
     householdForm.get('addMemberIndicator').setValue(false);
     householdForm.get('houseHoldMember').reset();
     return householdForm;
