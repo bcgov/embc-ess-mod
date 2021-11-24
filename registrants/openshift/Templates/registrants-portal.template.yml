@@ -45,13 +45,13 @@ parameters:
     required: true
   - description: banner title text
     name: BANNER_TITLE
-    required: true
+    required: false
   - description: banner sub title text
     name: BANNER_SUBTITLE
-    required: true
+    required: false
   - description: color of environment info banner
     name: BANNER_COLOR
-    required: true    
+    required: false    
 
 objects:
   - kind: ConfigMap
