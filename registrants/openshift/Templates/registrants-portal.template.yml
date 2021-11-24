@@ -43,6 +43,15 @@ parameters:
   - description: registrants portal client id
     name: OAUTH_UI_CLIENTID
     required: true
+  - description: banner title text
+    name: BANNER_TITLE
+    required: false
+  - description: banner sub title text
+    name: BANNER_SUBTITLE
+    required: false
+  - description: color of environment info banner
+    name: BANNER_COLOR
+    required: false    
 
 objects:
   - kind: ConfigMap
@@ -272,6 +281,18 @@ objects:
               kind: ImageStreamTag
               name: registrants-portal-api:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+              
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: ${APP_NAME}-registrants-env
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    data:
+      info.json: |
+        { "envName": "${ENV}",
+        "bannerTitle": "${BANNER_TITLE}",
+        "bannerSubTitle": "${BANNER_SUBTITLE}",
+        "bannerColor": "${BANNER_COLOR}" }
 
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
@@ -322,6 +343,10 @@ objects:
                   value: ${APP_NAME}-registrants-portal-api:8080
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/registrants-portal-ui:${TAG}
               imagePullPolicy: Always
+              volumeMounts:
+                - name: env
+                  mountPath: /site/env
+                  readOnly: true 
               ports:
                 - containerPort: 2015
                   protocol: TCP
@@ -339,6 +364,11 @@ objects:
                 httpGet:
                   path: /
                   port: 2015
+          volumes:
+            - name: env
+              configMap:
+                name: ${APP_NAME}-registrants-env
+                defaultMode: 0755
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
