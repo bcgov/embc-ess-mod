@@ -68,7 +68,7 @@ namespace EMBC.Responders.API.Controllers
                 {
                     ClientId = oidcConfig["clientId"],
                     Issuer = oidcConfig["issuer"],
-                    Scope = oidcConfig.GetValue("scope", "openid profile registrants-portal-api")
+                    Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api")
                 }
             };
 
