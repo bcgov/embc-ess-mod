@@ -2,12 +2,12 @@
 	admin off
 }
 
-:2015 {	
+:2015 {
 	log {
 		level {$LOG_LEVEL}
 	}
 
-	root * /site 
+	root * /site
 
 	header / {
 		# Enable HTTP Strict Transport Security (HSTS) to force clients to always connect via HTTPS (do not use if only testing)
@@ -30,6 +30,6 @@
 		reverse_proxy /api* {$API_URL}
 		try_files {path} {path}/ /index.html?{query}
 	}
-	
+
 	file_server
 }
