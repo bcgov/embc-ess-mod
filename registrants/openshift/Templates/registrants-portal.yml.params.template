@@ -11,3 +11,6 @@ OAUTH_API_CLIENTID=<oauth api scope client id>
 OAUTH_API_CLIENTSECRET=<oauth api scope client secret>
 OAUTH_UI_CLIENTID=<oauth portal ui client id>
 REDIS_CONNECTIONSTRING=<optional Redis connection string>
+BANNER_TITLE=<optional banner title>
+BANNER_SUBTITLE=<optional banner subtitle>
+BANNER_COLOR=<optional banner color>

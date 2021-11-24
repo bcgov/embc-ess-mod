@@ -46,6 +46,15 @@ parameters:
   - description: REDIS Service connection string
     name: REDIS_CONNECTIONSTRING
     required: false
+  - description: banner title text
+    name: BANNER_TITLE
+    required: false
+  - description: banner sub title text
+    name: BANNER_SUBTITLE
+    required: false
+  - description: color of environment info banner
+    name: BANNER_COLOR
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -282,6 +291,18 @@ objects:
               kind: ImageStreamTag
               name: responders-portal-api:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+              
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: ${APP_NAME}-responders-env
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    data:
+      info.json: |
+        { "envName": "${ENV}",
+        "bannerTitle": "${BANNER_TITLE}",
+        "bannerSubTitle": "${BANNER_SUBTITLE}",
+        "bannerColor": "${BANNER_COLOR}" }
 
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
@@ -329,6 +350,10 @@ objects:
                   memory: 32Mi
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/responders-portal-ui:${TAG}
               imagePullPolicy: Always
+              volumeMounts:
+                - name: env
+                  mountPath: /site/env
+                  readOnly: true 
               ports:
                 - containerPort: 2015
                   protocol: TCP
@@ -346,6 +371,11 @@ objects:
                 httpGet:
                   path: /
                   port: 2015
+          volumes:
+            - name: env
+              configMap:
+                name: ${APP_NAME}-responders-env
+                defaultMode: 0755
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
