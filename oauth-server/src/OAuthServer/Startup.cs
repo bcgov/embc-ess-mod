@@ -17,7 +17,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace OAuthServer
@@ -46,7 +45,7 @@ namespace OAuthServer
             }
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("./Data/config.json"));
+            var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configuration.GetValue("IDENTITYSERVER_CONFIG_PATH", "./Data/config.json")));
             var builder = services
                 .AddIdentityServer(options =>
                 {
@@ -92,21 +91,14 @@ namespace OAuthServer
                 .AddOpenIdConnect("bcsc", options =>
                 {
                     configuration.GetSection("identityproviders:bcsc").Bind(options);
-                    options.SaveTokens = true;
 
                     // Note: Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectHandler  doesn't handle JWE correctly
                     // See https://github.com/dotnet/aspnetcore/issues/4650 for more information
                     // When BCSC user info payload is encrypted, we need to load the user info manually in OnTokenValidated event below
                     //options.GetClaimsFromUserInfoEndpoint = true;
-                    options.UseTokenLifetime = true;
                     options.ResponseType = OpenIdConnectResponseType.Code;
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.SignOutScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = "name",
-                        RoleClaimType = "role",
-                    };
 
                     //add required scopes
                     options.Scope.Add("profile");
