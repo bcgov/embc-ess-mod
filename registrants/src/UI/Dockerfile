@@ -12,4 +12,4 @@ COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-registrant/ /site
 ENV API_URL=
 ENV LOG_LEVEL=INFO
-EXPOSE 2015
+EXPOSE 2015 2016

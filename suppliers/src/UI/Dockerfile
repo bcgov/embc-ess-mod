@@ -15,4 +15,4 @@ FROM caddy:alpine as final
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-supplier/ /site
 ENV API_URL=
-EXPOSE 2015
+EXPOSE 2015 2016
