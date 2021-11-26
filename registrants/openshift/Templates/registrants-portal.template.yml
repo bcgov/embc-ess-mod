@@ -355,15 +355,15 @@ objects:
               livenessProbe:
                 httpGet:
                   path: /
-                  port: 2015
+                  port: 2016
               startupProbe:
                 httpGet:
                   path: /
-                  port: 2015
+                  port: 2016
               readinessProbe:
                 httpGet:
                   path: /
-                  port: 2015
+                  port: 2016
           volumes:
             - name: env
               configMap:
