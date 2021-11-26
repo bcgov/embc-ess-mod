@@ -8,6 +8,7 @@ import { UserService } from './core/services/user.service';
 import { AlertService } from './shared/components/alert/alert.service';
 import * as globalConst from './core/services/global-constants';
 import { LoadTeamListService } from './core/services/load-team-list.service';
+import { EnvironmentInformation } from './core/models/environment-information.model';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit {
   public color = '#169BD5';
   public show = true;
   public version: Array<VersionInformation>;
+  public environment: EnvironmentInformation;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -51,6 +53,7 @@ export class AppComponent implements OnInit {
       const location = await this.locationService.loadStaticLocationLists();
       const team = await this.loadTeamListService.loadStaticTeamLists();
       this.getBackendVersionInfo();
+      this.getEnvironmentInfo();
       const nextRoute = decodeURIComponent(
         userProfile.requiredToSignAgreement
           ? 'electronic-agreement'
@@ -72,6 +75,12 @@ export class AppComponent implements OnInit {
   private getBackendVersionInfo(): void {
     this.configService.getVersionInfo().subscribe((version) => {
       this.version = version;
+    });
+  }
+
+  private getEnvironmentInfo(): void {
+    this.configService.getEnvironmentInfo().subscribe((env) => {
+      this.environment = env;
     });
   }
 }

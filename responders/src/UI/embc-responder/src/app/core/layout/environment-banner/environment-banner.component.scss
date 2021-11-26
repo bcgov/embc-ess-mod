@@ -1,0 +1,18 @@
+.main-style {
+    max-width: 100%;
+    padding: 10px 0px;
+    justify-content: space-between;
+    text-align: center;
+    color: white;
+    p {
+        margin: 0px;
+    }
+}
+
+.env-border {
+    border: solid blue;
+    border-width: thin;
+    overflow:hidden;
+    display:block;
+    box-sizing: border-box;
+  }

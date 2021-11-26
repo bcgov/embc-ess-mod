@@ -1,19 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthConfig } from 'angular-oauth2-oidc';
-import { Observable, of, Subscription } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Configuration, VersionInformation } from '../api/models';
 import { ConfigurationService } from '../api/services';
+import { EnvironmentInformation } from '../models/environment-information.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
+  private configurationGetEnvironmentInfoPath = '/env/info.json';
   private config?: Configuration = null;
 
-  constructor(private configurationService: ConfigurationService) {}
+  constructor(
+    private configurationService: ConfigurationService,
+    private http: HttpClient
+  ) {}
 
   public load(): Observable<Configuration> {
     if (this.config != null) {
@@ -55,5 +60,11 @@ export class ConfigService {
    **/
   public getVersionInfo(): Observable<Array<VersionInformation>> {
     return this.configurationService.configurationGetApplicationVersionInfo();
+  }
+
+  public getEnvironmentInfo(): Observable<EnvironmentInformation> {
+    const envUrl = this.configurationGetEnvironmentInfoPath;
+
+    return this.http.get(envUrl);
   }
 }
