@@ -149,6 +149,18 @@ objects:
                   memory: 32Mi
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: 2015
+              startupProbe:
+                httpGet:
+                  path: /
+                  port: 2015
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 2015
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
