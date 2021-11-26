@@ -1,7 +1,4 @@
-import {
-  Component,
-  Input
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EnvironmentInformation } from '../../models/environment-information.model';
 
 @Component({
@@ -13,5 +10,4 @@ export class EnvironmentBannerComponent {
   @Input() environment?: EnvironmentInformation;
 
   constructor() {}
-
 }
