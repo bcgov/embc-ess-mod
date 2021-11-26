@@ -1,3 +1,7 @@
+<app-environment-banner
+  [environment]="environment"
+  *ngIf="environment !== undefined"
+></app-environment-banner>
 <app-header *ngIf="show"></app-header>
 <main class="fill-body">
   <div class="app-error">

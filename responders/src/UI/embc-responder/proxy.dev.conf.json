@@ -4,5 +4,12 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  
+  "/env/info.json": {
+    "target": "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
