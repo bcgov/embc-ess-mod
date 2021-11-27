@@ -16,6 +16,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
 import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { EnvironmentBannerComponent } from './layout/environment-banner/environment-banner.component';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { MatInputModule } from '@angular/material/input';
     DialogComponent,
     EssFileDialogComponent,
     InformationDialogComponent,
-    BcscInviteDialogComponent
+    BcscInviteDialogComponent,
+    EnvironmentBannerComponent
   ],
   exports: [
     CaptchaComponent,
@@ -46,7 +48,8 @@ import { MatInputModule } from '@angular/material/input';
     AlertComponent,
     HeaderComponent,
     FooterComponent,
-    DialogComponent
+    DialogComponent,
+    EnvironmentBannerComponent
   ]
 })
 export class CoreModule {}
