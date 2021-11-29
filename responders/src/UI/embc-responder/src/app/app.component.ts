@@ -47,13 +47,13 @@ export class AppComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
+    this.getEnvironmentInfo();
     try {
       const nextUrl = await this.authenticationService.login();
       const userProfile = await this.userService.loadUserProfile();
       const location = await this.locationService.loadStaticLocationLists();
       const team = await this.loadTeamListService.loadStaticTeamLists();
       this.getBackendVersionInfo();
-      this.getEnvironmentInfo();
       const nextRoute = decodeURIComponent(
         userProfile.requiredToSignAgreement
           ? 'electronic-agreement'

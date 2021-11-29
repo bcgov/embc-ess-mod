@@ -1,8 +1,11 @@
 import { APP_BASE_HREF } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { Observable } from 'rxjs/internal/Observable';
 import { Configuration, OidcOptions } from '../api/models';
 import { ConfigurationService } from '../api/services';
+import { EnvironmentInformation } from '../model/environment-information.model';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -17,9 +20,12 @@ export class ConfigService {
     this.cacheService.set('configuration', v);
   }
 
+  private configurationGetEnvironmentInfoPath = '/env/info.json';
+
   constructor(
     private configurationService: ConfigurationService,
     private cacheService: CacheService,
+    private http: HttpClient,
     @Inject(APP_BASE_HREF) public baseHref: string
   ) {}
 
@@ -49,5 +55,10 @@ export class ConfigService {
         acr_values: 'idp:bcsc'
       }
     };
+  }
+
+  public getEnvironmentInfo(): Observable<EnvironmentInformation> {
+    const envUrl = this.configurationGetEnvironmentInfoPath;
+    return this.http.get(envUrl);
   }
 }
