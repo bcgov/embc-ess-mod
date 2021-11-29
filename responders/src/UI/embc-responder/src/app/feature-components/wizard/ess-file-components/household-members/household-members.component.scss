@@ -112,10 +112,9 @@ mat-row:nth-child(even) {
   display: table-cell;
   vertical-align: middle;
   padding: 0px 0px 20px 0px;
-  overflow-wrap: anywhere;
 
   th {
-    padding-right: 50px;
+    padding-right: 20px;
     font-weight: 400;
   }
 
@@ -132,7 +131,7 @@ mat-row:nth-child(even) {
 .member-name {
   font-size: 18px;
   color: #234075;
-  padding: 20px 0px 0px 0px;
+  padding: 20px 15px 0px 0px;
   font-weight: 700;
 }
 
@@ -216,6 +215,18 @@ mat-row:nth-child(even) {
 
   .mobile-table-members {
     display: block;
+
+    td {
+      padding-right: 10px;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+    }
+    
+  }
+
+  .member-name {
+    overflow-wrap: anywhere;
+    word-break: break-all;
   }
 
   .cell-button {
@@ -225,6 +236,7 @@ mat-row:nth-child(even) {
 
 .button-justify {
   justify-content: end;
+  padding-bottom: 20px;
 }
 
 @media (max-width: 1360px) {
