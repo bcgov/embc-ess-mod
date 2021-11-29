@@ -240,7 +240,10 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="stepEssFileService?.takeMedication">
+            <div
+              class="row"
+              *ngIf="stepEssFileService?.takeMedication === 'Yes'"
+            >
               <div class="col-4">Has Sufficient Medication</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.haveMedicationSupply }}
