@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Metadata
@@ -105,5 +106,29 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
     public class SecurityQuestions
     {
         public string Question { get; set; }
+    }
+
+    public class OutageQuery : Query<OutageQueryResponse>
+    {
+        public PortalType PortalType { get; set; }
+    }
+
+    public enum PortalType
+    {
+        Registrants,
+        Responders,
+        Suppliers
+    }
+
+    public class OutageQueryResponse
+    {
+        public IEnumerable<OutageInformation> Items { get; set; }
+    }
+
+    public class OutageInformation
+    {
+        public string Content { get; set; }
+        public DateTime OutageStartDate { get; set; }
+        public DateTime OutageEndDate { get; set; }
     }
 }

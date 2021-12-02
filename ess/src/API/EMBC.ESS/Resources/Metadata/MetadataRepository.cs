@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,8 @@ namespace EMBC.ESS.Resources.Metadata
         Task<IEnumerable<Community>> GetCommunities();
 
         Task<string[]> GetSecurityQuestions();
+
+        Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query);
     }
 
     public class MetadataRepository : IMetadataRepository
@@ -95,6 +98,16 @@ namespace EMBC.ESS.Resources.Metadata
             string[] options = securityQuestionsOptionSet.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray();
             return await Task.FromResult(options);
         }
+
+        public async Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query)
+        {
+            var outages = essContext.era_portalbanners
+                .Where(pb => pb.era_portal == (int?)query.PortalType &&
+                pb.era_startdisplaydate <= DateTime.UtcNow &&
+                pb.era_enddisplaydate >= DateTime.UtcNow).ToArray();
+
+            return await Task.FromResult(mapper.Map<IEnumerable<OutageInformation>>(outages));
+        }
     }
 
     public class Country
@@ -142,5 +155,24 @@ namespace EMBC.ESS.Resources.Metadata
         RegionalMunicipality = 6,
         ResortMunicipality = 5,
         RuralMunicipalities = 7
+    }
+
+    public class OutageQuery
+    {
+        public PortalType PortalType { get; set; }
+    }
+
+    public enum PortalType
+    {
+        Registrants = 174360000,
+        Responders = 174360001,
+        Suppliers = 174360002
+    }
+
+    public class OutageInformation
+    {
+        public string Content { get; set; }
+        public DateTime OutageStartDate { get; set; }
+        public DateTime OutageEndDate { get; set; }
     }
 }

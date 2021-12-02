@@ -13,6 +13,7 @@ namespace EMBC.Tests.Integration.ESS
         private Random random = new Random();
         private readonly EssContext essContext;
         private readonly string testPrefix;
+        private readonly int testPortal;
 
         private readonly era_essteam team;
         private readonly era_essteam otherTeam;
@@ -32,6 +33,7 @@ namespace EMBC.Tests.Integration.ESS
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.Value.ToString()).ToArray();
 
         public string TestPrefix => testPrefix;
+        public int TestPortal => testPortal;
         public string TeamId => team.era_essteamid.Value.ToString();
         public string OtherTeamId => otherTeam.era_essteamid.Value.ToString();
         public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value?.ToString();
@@ -68,6 +70,7 @@ namespace EMBC.Tests.Integration.ESS
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
+            this.testPortal = 174360001;
 
 #if DEBUG
             this.testPrefix = $"autotest-dev";
@@ -124,12 +127,12 @@ namespace EMBC.Tests.Integration.ESS
             this.supplierC = CreateSupplier("C");
             this.inactiveSupplier = CreateSupplier("inactive");
             CreateTeamSuppliers();
+            CreatePlannedOutage();
 
             essContext.SaveChanges();
 
             essContext.DeactivateObject(this.inactiveSupplier, 2);
             essContext.SaveChanges();
-
             essContext.DetachAll();
 
             this.evacuationfile = essContext.era_evacuationfiles
@@ -387,6 +390,30 @@ namespace EMBC.Tests.Integration.ESS
 
             essContext.AddLink(otherTeam, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier2);
             essContext.SetLink(teamSupplier2, nameof(era_essteamsupplier.era_ESSTeamID), otherTeam);
+        }
+
+        private void CreatePlannedOutage()
+        {
+            var existingOutage = essContext.era_portalbanners
+                .Where(pb => pb.era_portal == testPortal &&
+                pb.era_startdisplaydate <= DateTime.UtcNow &&
+                pb.era_enddisplaydate >= DateTime.UtcNow).FirstOrDefault();
+
+            if (existingOutage != null) return;
+
+            var now = DateTime.UtcNow;
+            var portalBanner = new era_portalbanner
+            {
+                era_portalbannerid = Guid.NewGuid(),
+                era_content = testPrefix + " - test outage",
+                era_name = testPrefix,
+                era_portal = testPortal,
+                era_startdisplaydate = DateTime.UtcNow,
+                era_outagestartdate = now.AddDays(3),
+                era_enddisplaydate = now.AddDays(7),
+            };
+
+            essContext.AddToera_portalbanners(portalBanner);
         }
     }
 }
