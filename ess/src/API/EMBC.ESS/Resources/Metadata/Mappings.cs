@@ -53,6 +53,12 @@ namespace EMBC.ESS.Resources.Metadata
                 .ForMember(j => j.Name, opts => opts.MapFrom(o => o.era_name))
                 .ReverseMap()
                 ;
+
+            CreateMap<era_portalbanner, OutageInformation>()
+                .ForMember(d => d.OutageStartDate, opts => opts.MapFrom(s => s.era_outagestartdate.Value.UtcDateTime))
+                .ForMember(d => d.OutageEndDate, opts => opts.MapFrom(s => s.era_enddisplaydate.Value.UtcDateTime))
+                .ForMember(d => d.Content, opts => opts.MapFrom(s => s.era_content))
+                ;
         }
     }
 }

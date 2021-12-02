@@ -28,6 +28,7 @@ namespace EMBC.ESS.Managers.Metadata
             CreateMap<Shared.Contracts.Metadata.Community, Community>()
                 .ForMember(c => c.DistrictCode, opts => opts.Ignore())
                 .ReverseMap();
+            CreateMap<OutageInformation, Shared.Contracts.Metadata.OutageInformation>();
         }
     }
 }
