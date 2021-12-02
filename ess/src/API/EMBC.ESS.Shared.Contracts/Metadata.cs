@@ -122,7 +122,7 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
 
     public class OutageQueryResponse
     {
-        public IEnumerable<OutageInformation> Items { get; set; }
+        public OutageInformation OutageInfo { get; set; }
     }
 
     public class OutageInformation
