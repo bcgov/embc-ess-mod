@@ -17,6 +17,8 @@ import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-i
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EnvironmentBannerComponent } from './layout/environment-banner/environment-banner.component';
+import { HttpClient } from '@angular/common/http';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   imports: [
@@ -28,7 +30,8 @@ import { EnvironmentBannerComponent } from './layout/environment-banner/environm
     MatMenuModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatInputModule
+    MatInputModule,
+    MarkdownModule.forRoot({ loader: HttpClient })
   ],
   declarations: [
     CaptchaComponent,

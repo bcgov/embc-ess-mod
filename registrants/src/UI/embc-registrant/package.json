@@ -32,6 +32,7 @@
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
     "mygovbc-captcha-widget": "git+https://github.com/bcgov/MyGovBC-CAPTCHA-Widget.git",
+    "ngx-markdown": "^13.0.0",
     "popper.js": "^1.14.7",
     "rxjs": "^6.6.7",
     "tslib": "^2.3.1",
