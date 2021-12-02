@@ -1,24 +1,36 @@
-<app-environment-banner
-  [environment]="environment"
-  *ngIf="environment !== undefined"
-></app-environment-banner>
-<app-header *ngIf="show"></app-header>
-<main class="fill-body">
-  <div class="app-error">
-    <app-alert></app-alert>
-  </div>
+<div
+  class="border"
+  [ngStyle]="
+    environment !== null
+      ? {
+          padding: '0px 5px 5px 5px',
+          'background-color': environment?.bannerColor
+        }
+      : { padding: '0px' }
+  "
+>
+  <app-environment-banner
+    *ngIf="environment !== null"
+    [environment]="environment"
+  ></app-environment-banner>
+  <app-header *ngIf="show"></app-header>
+  <main class="fill-body main-container background">
+    <div class="app-error">
+      <app-alert></app-alert>
+    </div>
 
-  <div *ngIf="!isLoading">
-    <router-outlet></router-outlet>
+    <div *ngIf="!isLoading">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+  <div *ngIf="show" class="footer mt-auto">
+    <app-footer [appVersion]="version"></app-footer>
   </div>
-</main>
-<div *ngIf="show" class="footer mt-auto">
-  <app-footer [appVersion]="version"></app-footer>
+  <app-loader
+    class="spinner"
+    [showLoader]="isLoading"
+    [strokeWidth]="10"
+    [diameter]="50"
+    [color]="color"
+  ></app-loader>
 </div>
-<app-loader
-  class="spinner"
-  [showLoader]="isLoading"
-  [strokeWidth]="10"
-  [diameter]="50"
-  [color]="color"
-></app-loader>
