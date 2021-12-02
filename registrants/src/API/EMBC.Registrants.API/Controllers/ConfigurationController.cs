@@ -61,7 +61,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
-            //TODO - get outage info
+            var outageInfo = (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo;
             var oidcConfig = configuration.GetSection("auth:oidc");
             var config = new Configuration
             {
@@ -70,7 +70,8 @@ namespace EMBC.Responders.API.Controllers
                     ClientId = oidcConfig["clientId"],
                     Issuer = oidcConfig["issuer"],
                     Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api")
-                }
+                },
+                OutageInfo = mapper.Map<OutageInformation>(outageInfo)
             };
 
             return Ok(await Task.FromResult(config));

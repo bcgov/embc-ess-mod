@@ -61,7 +61,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
-            //TODO - get outage info
+            var outageInfo = (await client.Send(new OutageQuery { PortalType = PortalType.Responders })).OutageInfo;
             var config = new Configuration
             {
                 Oidc = new OidcConfiguration
@@ -69,7 +69,8 @@ namespace EMBC.Responders.API.Controllers
                     ClientId = configuration.GetValue<string>("oidc:clientId"),
                     Issuer = configuration.GetValue<string>("oidc:issuer"),
                     PostLogoutRedirectUrl = $"{configuration.GetValue<string>("oidc:bceidLogoutUrl")}?retnow=1&returl={this.HttpContext.Request.Host}"
-                }
+                },
+                OutageInfo = mapper.Map<OutageInformation>(outageInfo)
             };
 
             return Ok(await Task.FromResult(config));
