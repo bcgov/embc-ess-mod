@@ -19,10 +19,11 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetPlannedOutage()
+        public async Task CanGetPlannedOutages()
         {
-            var reply = await metadataRepository.GetPlannedOutage(new OutageQuery { PortalType = (PortalType)TestData.TestPortal, DisplayDate = TestData.OutageDate });
-            reply.ShouldNotBeNull();
+            var reply = await metadataRepository.GetPlannedOutages(new OutageQuery { PortalType = (PortalType)TestData.TestPortal, DisplayDate = TestData.OutageDate });
+
+            reply.ShouldNotBeEmpty();
         }
     }
 }
