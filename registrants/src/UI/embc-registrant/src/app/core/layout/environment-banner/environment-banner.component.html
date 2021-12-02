@@ -3,7 +3,9 @@
   [ngStyle]="{ 'background-color': environment?.bannerColor }"
 >
   <p>
-    {{ environment?.bannerTitle }}
+    <markdown [data]="environment?.bannerTitle"></markdown>
   </p>
-  <p>{{ environment?.bannerSubTitle }}</p>
+  <p>
+    <markdown [data]="environment?.bannerSubTitle"></markdown>
+  </p>
 </div>
