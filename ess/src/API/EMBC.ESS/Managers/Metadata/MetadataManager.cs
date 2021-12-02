@@ -90,7 +90,7 @@ namespace EMBC.ESS.Managers.Metadata
         {
             var outages = await metadataRepository.GetPlannedOutages(new Resources.Metadata.OutageQuery { DisplayDate = DateTime.UtcNow, PortalType = Enum.Parse<Resources.Metadata.PortalType>(query.PortalType.ToString()) });
 
-            return new OutageQueryResponse { OutageInfo = mapper.Map<OutageInformation>(outages.FirstOrDefault()) };
+            return new OutageQueryResponse { OutageInfo = mapper.Map<OutageInformation>(outages.OrderBy(o => o.OutageStartDate).FirstOrDefault()) };
         }
     }
 }
