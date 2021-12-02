@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
-    this.getEnvironmentInfo();
+    this.environment = this.configService.getEnvironmentBanner();
     try {
       const nextUrl = await this.authenticationService.login();
       const userProfile = await this.userService.loadUserProfile();
@@ -75,12 +75,6 @@ export class AppComponent implements OnInit {
   private getBackendVersionInfo(): void {
     this.configService.getVersionInfo().subscribe((version) => {
       this.version = version;
-    });
-  }
-
-  private getEnvironmentInfo(): void {
-    this.configService.getEnvironmentInfo().subscribe((env) => {
-      this.environment = env;
     });
   }
 }
