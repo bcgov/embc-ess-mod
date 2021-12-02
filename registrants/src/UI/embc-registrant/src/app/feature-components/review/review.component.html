@@ -609,9 +609,9 @@
               <span
                 [hidden]="
                   (formCreationService.evacuatedForm$ | async).value
-                    ?.evacuatedFromAddress?.postalCode == '' ||
+                    ?.evacuatedFromAddress?.postalCode === '' ||
                   (formCreationService.evacuatedForm$ | async).value
-                    ?.evacuatedFromAddress?.postalCode == null
+                    ?.evacuatedFromAddress?.postalCode === null
                 "
                 >,&nbsp;</span
               >
@@ -689,7 +689,7 @@
               ?.value.householdMembers
           "
         >
-          <ng-container *ngIf="member.isPrimaryRegistrant == false">
+          <ng-container *ngIf="member.isPrimaryRegistrant === false">
             <div class="row info-detail">
               <div class="col-md-3">First Name:</div>
               <div class="col-md-3">{{ member.firstName }}</div>
