@@ -103,8 +103,8 @@ namespace EMBC.ESS.Resources.Metadata
         {
             var outages = essContext.era_portalbanners
                 .Where(pb => pb.era_portal == (int?)query.PortalType &&
-                pb.era_startdisplaydate <= DateTime.UtcNow &&
-                pb.era_enddisplaydate >= DateTime.UtcNow).ToArray();
+                pb.era_startdisplaydate <= query.DisplayDate &&
+                pb.era_enddisplaydate >= query.DisplayDate).ToArray();
 
             return await Task.FromResult(mapper.Map<IEnumerable<OutageInformation>>(outages));
         }
@@ -159,6 +159,7 @@ namespace EMBC.ESS.Resources.Metadata
 
     public class OutageQuery
     {
+        public DateTime DisplayDate { get; set; }
         public PortalType PortalType { get; set; }
     }
 

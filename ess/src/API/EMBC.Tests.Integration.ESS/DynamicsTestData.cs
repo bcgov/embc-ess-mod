@@ -34,6 +34,7 @@ namespace EMBC.Tests.Integration.ESS
 
         public string TestPrefix => testPrefix;
         public int TestPortal => testPortal;
+        public DateTime OutageDate = DateTime.Parse("12/31/2021");
         public string TeamId => team.era_essteamid.Value.ToString();
         public string OtherTeamId => otherTeam.era_essteamid.Value.ToString();
         public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value?.ToString();
@@ -127,7 +128,6 @@ namespace EMBC.Tests.Integration.ESS
             this.supplierC = CreateSupplier("C");
             this.inactiveSupplier = CreateSupplier("inactive");
             CreateTeamSuppliers();
-            CreatePlannedOutage();
 
             essContext.SaveChanges();
 
@@ -390,30 +390,6 @@ namespace EMBC.Tests.Integration.ESS
 
             essContext.AddLink(otherTeam, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier2);
             essContext.SetLink(teamSupplier2, nameof(era_essteamsupplier.era_ESSTeamID), otherTeam);
-        }
-
-        private void CreatePlannedOutage()
-        {
-            var existingOutage = essContext.era_portalbanners
-                .Where(pb => pb.era_portal == testPortal &&
-                pb.era_startdisplaydate <= DateTime.UtcNow &&
-                pb.era_enddisplaydate >= DateTime.UtcNow).FirstOrDefault();
-
-            if (existingOutage != null) return;
-
-            var now = DateTime.UtcNow;
-            var portalBanner = new era_portalbanner
-            {
-                era_portalbannerid = Guid.NewGuid(),
-                era_content = testPrefix + " - test outage",
-                era_name = testPrefix,
-                era_portal = testPortal,
-                era_startdisplaydate = DateTime.UtcNow,
-                era_outagestartdate = now.AddDays(3),
-                era_enddisplaydate = now.AddDays(7),
-            };
-
-            essContext.AddToera_portalbanners(portalBanner);
         }
     }
 }

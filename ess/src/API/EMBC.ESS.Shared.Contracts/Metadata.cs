@@ -110,6 +110,7 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
 
     public class OutageQuery : Query<OutageQueryResponse>
     {
+        public DateTime DisplayDate { get; set; } = DateTime.UtcNow;
         public PortalType PortalType { get; set; }
     }
 

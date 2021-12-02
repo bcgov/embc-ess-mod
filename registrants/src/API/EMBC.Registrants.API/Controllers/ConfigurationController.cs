@@ -143,6 +143,15 @@ namespace EMBC.Responders.API.Controllers
             var questions = (await client.Send(new SecurityQuestionsQuery())).Items;
             return Ok(questions);
         }
+
+        [HttpGet("outages")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<OutageInformation>>> GetPlannedOutages()
+        {
+            var outages = (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).Items;
+            return Ok(mapper.Map<IEnumerable<OutageInformation>>(outages));
+        }
     }
 
     public class Configuration
@@ -169,6 +178,13 @@ namespace EMBC.Responders.API.Controllers
     {
         public CommunityType CommunityType { get; set; }
         public string DistrictName { get; set; }
+    }
+
+    public class OutageInformation
+    {
+        public string Content { get; set; }
+        public DateTime OutageStartDate { get; set; }
+        public DateTime OutageEndDate { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -248,6 +264,9 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.DistrictName, opts => opts.MapFrom(s => s.DistrictName))
                 .ForMember(d => d.CommunityType, opts => opts.MapFrom(s => s.Type))
                 .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.StateProvinceCode, Type = nameof(StateProvince), ParentCode = new Code { Value = s.CountryCode, Type = nameof(Country) } }))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Metadata.OutageInformation, OutageInformation>()
                 ;
         }
     }

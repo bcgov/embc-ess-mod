@@ -64,7 +64,7 @@ namespace EMBC.Tests.Integration.ESS.Metadata
         {
             var metadataManager = base.services.GetRequiredService<MetadataManager>();
 
-            var reply = await metadataManager.Handle(new OutageQuery { PortalType = (PortalType)TestData.TestPortal });
+            var reply = await metadataManager.Handle(new OutageQuery { PortalType = (PortalType)TestData.TestPortal, DisplayDate = TestData.OutageDate });
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(o => o.OutageEndDate >= DateTime.UtcNow);
