@@ -85,5 +85,12 @@ namespace EMBC.ESS.Managers.Metadata
 
             return new SecurityQuestionsQueryResponse { Items = questions };
         }
+
+        public async Task<OutageQueryResponse> Handle(Shared.Contracts.Metadata.OutageQuery query)
+        {
+            var outages = await metadataRepository.GetPlannedOutages(new Resources.Metadata.OutageQuery { PortalType = Enum.Parse<Resources.Metadata.PortalType>(query.PortalType.ToString()) });
+
+            return new OutageQueryResponse { Items = mapper.Map<IEnumerable<OutageInformation>>(outages) };
+        }
     }
 }

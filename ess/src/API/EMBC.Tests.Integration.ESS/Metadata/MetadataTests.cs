@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using EMBC.ESS.Managers.Metadata;
 using EMBC.ESS.Shared.Contracts.Metadata;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +57,17 @@ namespace EMBC.Tests.Integration.ESS.Metadata
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => !string.IsNullOrEmpty(c));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Query_PlannedOutages_ReturnsOutagesForPortal()
+        {
+            var metadataManager = base.services.GetRequiredService<MetadataManager>();
+
+            var reply = await metadataManager.Handle(new OutageQuery { PortalType = (PortalType)TestData.TestPortal });
+
+            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
+            reply.Items.ShouldAllBe(o => o.OutageEndDate >= DateTime.UtcNow);
         }
     }
 }
