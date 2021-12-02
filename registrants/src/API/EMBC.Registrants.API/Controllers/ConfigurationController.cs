@@ -61,6 +61,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
+            //TODO - get outage info
             var oidcConfig = configuration.GetSection("auth:oidc");
             var config = new Configuration
             {
@@ -148,6 +149,7 @@ namespace EMBC.Responders.API.Controllers
     public class Configuration
     {
         public OidcOptions Oidc { get; set; }
+        public OutageInformation OutageInfo { get; set; }
     }
 
     public class OidcOptions
@@ -169,6 +171,13 @@ namespace EMBC.Responders.API.Controllers
     {
         public CommunityType CommunityType { get; set; }
         public string DistrictName { get; set; }
+    }
+
+    public class OutageInformation
+    {
+        public string Content { get; set; }
+        public DateTime OutageStartDate { get; set; }
+        public DateTime OutageEndDate { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -248,6 +257,9 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.DistrictName, opts => opts.MapFrom(s => s.DistrictName))
                 .ForMember(d => d.CommunityType, opts => opts.MapFrom(s => s.Type))
                 .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.StateProvinceCode, Type = nameof(StateProvince), ParentCode = new Code { Value = s.CountryCode, Type = nameof(Country) } }))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Metadata.OutageInformation, OutageInformation>()
                 ;
         }
     }
