@@ -61,6 +61,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
+            //TODO - get outage info
             var oidcConfig = configuration.GetSection("auth:oidc");
             var config = new Configuration
             {
@@ -143,20 +144,12 @@ namespace EMBC.Responders.API.Controllers
             var questions = (await client.Send(new SecurityQuestionsQuery())).Items;
             return Ok(questions);
         }
-
-        [HttpGet("outages")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<OutageInformation>>> GetPlannedOutages()
-        {
-            var outages = (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).Items;
-            return Ok(mapper.Map<IEnumerable<OutageInformation>>(outages));
-        }
     }
 
     public class Configuration
     {
         public OidcOptions Oidc { get; set; }
+        public OutageInformation OutageInfo { get; set; }
     }
 
     public class OidcOptions

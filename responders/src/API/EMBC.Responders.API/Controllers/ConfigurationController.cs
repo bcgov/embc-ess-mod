@@ -61,6 +61,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
+            //TODO - get outage info
             var config = new Configuration
             {
                 Oidc = new OidcConfiguration
@@ -143,15 +144,6 @@ namespace EMBC.Responders.API.Controllers
             return Ok(questions);
         }
 
-        [HttpGet("outages")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<OutageInformation>>> GetPlannedOutages()
-        {
-            var outages = (await client.Send(new OutageQuery { PortalType = PortalType.Responders })).Items;
-            return Ok(mapper.Map<IEnumerable<OutageInformation>>(outages));
-        }
-
         [HttpGet("version-info")]
         public async Task<ActionResult<IEnumerable<VersionInformation>>> GetApplicationVersionInfo()
         {
@@ -179,6 +171,7 @@ namespace EMBC.Responders.API.Controllers
     public class Configuration
     {
         public OidcConfiguration Oidc { get; set; }
+        public OutageInformation OutageInfo { get; set; }
     }
 
     public class OidcConfiguration

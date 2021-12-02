@@ -34,7 +34,7 @@ namespace EMBC.ESS.Resources.Metadata
 
         Task<string[]> GetSecurityQuestions();
 
-        Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query);
+        Task<OutageInformation> GetPlannedOutage(OutageQuery query);
     }
 
     public class MetadataRepository : IMetadataRepository
@@ -99,14 +99,14 @@ namespace EMBC.ESS.Resources.Metadata
             return await Task.FromResult(options);
         }
 
-        public async Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query)
+        public async Task<OutageInformation> GetPlannedOutage(OutageQuery query)
         {
-            var outages = essContext.era_portalbanners
+            var outage = essContext.era_portalbanners
                 .Where(pb => pb.era_portal == (int?)query.PortalType &&
                 pb.era_startdisplaydate <= query.DisplayDate &&
-                pb.era_enddisplaydate >= query.DisplayDate).ToArray();
+                pb.era_enddisplaydate >= query.DisplayDate).SingleOrDefault();
 
-            return await Task.FromResult(mapper.Map<IEnumerable<OutageInformation>>(outages));
+            return await Task.FromResult(mapper.Map<OutageInformation>(outage));
         }
     }
 
