@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs/internal/Observable';
-import { Configuration, OidcOptions } from '../api/models';
+import { Configuration } from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { EnvironmentInformation } from '../model/environment-information.model';
 import { CacheService } from './cache.service';
@@ -21,6 +21,7 @@ export class ConfigService {
   }
 
   private configurationGetEnvironmentInfoPath = '/env/info.json';
+  private environmentBanner: EnvironmentInformation;
 
   constructor(
     private configurationService: ConfigurationService,
@@ -57,7 +58,34 @@ export class ConfigService {
     };
   }
 
-  public getEnvironmentInfo(): Observable<EnvironmentInformation> {
+  public getEnvironmentBanner(): EnvironmentInformation {
+    return this.environmentBanner
+      ? this.environmentBanner
+      : JSON.parse(this.cacheService.get('environment'))
+      ? JSON.parse(this.cacheService.get('environment'))
+      : this.getEnvironmentInfo();
+  }
+
+  public setEnvironmentBanner(environmentBanner: EnvironmentInformation): void {
+    this.cacheService.set('environment', environmentBanner);
+  }
+
+  private getEnvironmentInfo(): EnvironmentInformation {
+    this.getEnvironment().subscribe(
+      (env) => {
+        this.environmentBanner = env;
+        this.setEnvironmentBanner(env);
+      },
+      (error) => {
+        if (error.status === 404) {
+          this.environmentBanner = null;
+        }
+      }
+    );
+    return this.environmentBanner;
+  }
+
+  private getEnvironment(): Observable<EnvironmentInformation> {
     const envUrl = this.configurationGetEnvironmentInfoPath;
     return this.http.get(envUrl);
   }
