@@ -58,6 +58,12 @@ parameters:
   - description: time warning message will display
     name: TIMEOUT_WARNINGDURATION
     required: false
+  - description: splunk url
+    name: SPLUNK_URL
+    required: false
+  - description: splunk token
+    name: SPLUNK_TOKEN
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -95,6 +101,8 @@ objects:
       auth__introspection__clientSecret: ${OAUTH_API_CLIENTSECRET}
       auth__oidc__clientid: ${OAUTH_UI_CLIENTID}
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
+      SPLUNK_URL: ${SPLUNK_URL}
+      SPLUNK_TOKEN: ${SPLUNK_TOKEN}
 
   - kind: Service
     apiVersion: v1

@@ -7,3 +7,5 @@ REDIS_CONNECTIONSTRING=<optional Redis connection string>
 BCSC_METADATAADDRESS=<bcsc identity provider well known url>
 BCSC_CLIENTID=<bcsc identity provider client id>
 BCSC_CLIENTSECRET=<bcsc identity provider client secret>
+SPLUNK_URL=<optional splunk logging url>
+SPLUNK_URL=<optional splunk token>
