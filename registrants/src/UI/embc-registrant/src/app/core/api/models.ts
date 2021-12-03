@@ -37,6 +37,7 @@ export { InviteRequest } from './models/invite-request';
 export { InviteToken } from './models/invite-token';
 export { Configuration } from './models/configuration';
 export { OidcOptions } from './models/oidc-options';
+export { OutageInformation } from './models/outage-information';
 export { Code } from './models/code';
 export { CommunityCode } from './models/community-code';
 export { CommunityType } from './models/community-type';
