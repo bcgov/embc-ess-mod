@@ -72,6 +72,8 @@ objects:
       auth__introspection__authority: ${OAUTH_AUTHORITY}
       auth__jwt__authority: ${OAUTH_AUTHORITY}
       auth__oidc__issuer: ${OAUTH_AUTHORITY}
+      TIMEOUT__MINUTESUNTILWARNING: ${TIMEOUT_MINUTESUNTILWARNING}
+      TIMEOUT__WARNINGDURATION: ${TIMEOUT_WARNINGDURATION}
 
   - kind: Secret
     apiVersion: v1

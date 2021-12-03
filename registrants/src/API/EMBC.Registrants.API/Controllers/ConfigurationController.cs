@@ -71,7 +71,12 @@ namespace EMBC.Responders.API.Controllers
                     Issuer = oidcConfig["issuer"],
                     Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api")
                 },
-                OutageInfo = mapper.Map<OutageInformation>(outageInfo)
+                OutageInfo = mapper.Map<OutageInformation>(outageInfo),
+                TimeoutInfo = new TimeoutConfiguration
+                {
+                    TimeUntilWarning = configuration.GetValue<int>("timeout:minutesUntilWarning"),
+                    WarningMessageDuration = configuration.GetValue<int>("timeout:warningDuration")
+                }
             };
 
             return Ok(await Task.FromResult(config));
@@ -151,6 +156,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public OidcOptions Oidc { get; set; }
         public OutageInformation OutageInfo { get; set; }
+        public TimeoutConfiguration TimeoutInfo { get; set; }
     }
 
     public class OidcOptions
@@ -179,6 +185,12 @@ namespace EMBC.Responders.API.Controllers
         public string Content { get; set; }
         public DateTime OutageStartDate { get; set; }
         public DateTime OutageEndDate { get; set; }
+    }
+
+    public class TimeoutConfiguration
+    {
+        public int TimeUntilWarning { get; set; }
+        public int WarningMessageDuration { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

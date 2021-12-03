@@ -70,7 +70,12 @@ namespace EMBC.Responders.API.Controllers
                     Issuer = configuration.GetValue<string>("oidc:issuer"),
                     PostLogoutRedirectUrl = $"{configuration.GetValue<string>("oidc:bceidLogoutUrl")}?retnow=1&returl={this.HttpContext.Request.Host}"
                 },
-                OutageInfo = mapper.Map<OutageInformation>(outageInfo)
+                OutageInfo = mapper.Map<OutageInformation>(outageInfo),
+                TimeoutInfo = new TimeoutConfiguration
+                {
+                    TimeUntilWarning = configuration.GetValue<int>("timeout:minutesUntilWarning"),
+                    WarningMessageDuration = configuration.GetValue<int>("timeout:warningDuration")
+                }
             };
 
             return Ok(await Task.FromResult(config));
@@ -173,6 +178,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public OidcConfiguration Oidc { get; set; }
         public OutageInformation OutageInfo { get; set; }
+        public TimeoutConfiguration TimeoutInfo { get; set; }
     }
 
     public class OidcConfiguration
@@ -201,6 +207,12 @@ namespace EMBC.Responders.API.Controllers
         public string Content { get; set; }
         public DateTime OutageStartDate { get; set; }
         public DateTime OutageEndDate { get; set; }
+    }
+
+    public class TimeoutConfiguration
+    {
+        public int TimeUntilWarning { get; set; }
+        public int WarningMessageDuration { get; set; }
     }
 
     public class VersionInformation
