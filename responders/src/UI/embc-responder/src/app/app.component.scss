@@ -10,3 +10,19 @@
   line-height: 4;
   font-size: 25px;
 }
+
+.border {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  overflow: auto;
+}
+
+.main-container {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex-shrink: 0;
+}
+

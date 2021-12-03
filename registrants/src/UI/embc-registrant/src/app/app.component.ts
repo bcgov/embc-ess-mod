@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   public async ngOnInit(): Promise<void> {
-    this.getEnvironmentInfo();
+    this.environment = this.configService.getEnvironmentBanner();
     try {
       await this.bootstrapService.init();
       await this.loginService.tryLogin();
@@ -35,12 +35,5 @@ export class AppComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
-  }
-
-  private getEnvironmentInfo(): void {
-    this.configService.getEnvironmentInfo().subscribe((env) => {
-      this.environment = env;
-      console.log(this.environment);
-    });
   }
 }

@@ -61,6 +61,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
+            var outageInfo = (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo;
             var oidcConfig = configuration.GetSection("auth:oidc");
             var config = new Configuration
             {
@@ -69,6 +70,12 @@ namespace EMBC.Responders.API.Controllers
                     ClientId = oidcConfig["clientId"],
                     Issuer = oidcConfig["issuer"],
                     Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api")
+                },
+                OutageInfo = mapper.Map<OutageInformation>(outageInfo),
+                TimeoutInfo = new TimeoutConfiguration
+                {
+                    SessionTimeoutInMinutes = configuration.GetValue<int>("timeout:minutes", 20),
+                    WarningMessageDuration = configuration.GetValue<int>("timeout:warningDuration", 1)
                 }
             };
 
@@ -148,6 +155,8 @@ namespace EMBC.Responders.API.Controllers
     public class Configuration
     {
         public OidcOptions Oidc { get; set; }
+        public OutageInformation OutageInfo { get; set; }
+        public TimeoutConfiguration TimeoutInfo { get; set; }
     }
 
     public class OidcOptions
@@ -169,6 +178,19 @@ namespace EMBC.Responders.API.Controllers
     {
         public CommunityType CommunityType { get; set; }
         public string DistrictName { get; set; }
+    }
+
+    public class OutageInformation
+    {
+        public string Content { get; set; }
+        public DateTime OutageStartDate { get; set; }
+        public DateTime OutageEndDate { get; set; }
+    }
+
+    public class TimeoutConfiguration
+    {
+        public int SessionTimeoutInMinutes { get; set; }
+        public int WarningMessageDuration { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -248,6 +270,9 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.DistrictName, opts => opts.MapFrom(s => s.DistrictName))
                 .ForMember(d => d.CommunityType, opts => opts.MapFrom(s => s.Type))
                 .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.StateProvinceCode, Type = nameof(StateProvince), ParentCode = new Code { Value = s.CountryCode, Type = nameof(Country) } }))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Metadata.OutageInformation, OutageInformation>()
                 ;
         }
     }

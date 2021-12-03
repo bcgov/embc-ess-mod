@@ -243,7 +243,7 @@ export class SecretForm {
     this.secretPhrase.setValue(secret.secretPhrase);
     this.secretPhrase.setValidators([
       Validators.required,
-      Validators.minLength(8)
+      Validators.minLength(6)
     ]);
   }
 }
