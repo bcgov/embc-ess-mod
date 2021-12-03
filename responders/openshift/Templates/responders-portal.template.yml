@@ -55,6 +55,12 @@ parameters:
   - description: color of environment info banner
     name: BANNER_COLOR
     required: false
+  - description: session timeout
+    name: TIMEOUT_MINUTES
+    required: false
+  - description: time warning message will display
+    name: TIMEOUT_WARNINGDURATION
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -76,6 +82,8 @@ objects:
       OIDC__ISSUER: ${OIDC_ISSUER}
       OIDC__CLIENTID: ${OIDC_CLIENTID}
       OIDC__BCEIDLOGOUTURL: ${OIDC_BCEIDLOGOUTURL}
+      TIMEOUT__MINUTES: ${TIMEOUT_MINUTES}
+      TIMEOUT__WARNINGDURATION: ${TIMEOUT_WARNINGDURATION}
 
   - kind: Secret
     apiVersion: v1
