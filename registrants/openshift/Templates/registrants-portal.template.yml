@@ -51,7 +51,13 @@ parameters:
     required: false
   - description: color of environment info banner
     name: BANNER_COLOR
-    required: false    
+    required: false
+  - description: session timeout
+    name: TIMEOUT_MINUTES
+    required: false
+  - description: time warning message will display
+    name: TIMEOUT_WARNINGDURATION
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -72,7 +78,7 @@ objects:
       auth__introspection__authority: ${OAUTH_AUTHORITY}
       auth__jwt__authority: ${OAUTH_AUTHORITY}
       auth__oidc__issuer: ${OAUTH_AUTHORITY}
-      TIMEOUT__MINUTESUNTILWARNING: ${TIMEOUT_MINUTESUNTILWARNING}
+      TIMEOUT__MINUTES: ${TIMEOUT_MINUTES}
       TIMEOUT__WARNINGDURATION: ${TIMEOUT_WARNINGDURATION}
 
   - kind: Secret

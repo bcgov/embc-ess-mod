@@ -73,8 +73,8 @@ namespace EMBC.Responders.API.Controllers
                 OutageInfo = mapper.Map<OutageInformation>(outageInfo),
                 TimeoutInfo = new TimeoutConfiguration
                 {
-                    TimeUntilWarning = configuration.GetValue<int>("timeout:minutesUntilWarning"),
-                    WarningMessageDuration = configuration.GetValue<int>("timeout:warningDuration")
+                    SessionTimeoutInMinutes = configuration.GetValue<int>("timeout:minutes", 20),
+                    WarningMessageDuration = configuration.GetValue<int>("timeout:warningDuration", 1)
                 }
             };
 
@@ -211,7 +211,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class TimeoutConfiguration
     {
-        public int TimeUntilWarning { get; set; }
+        public int SessionTimeoutInMinutes { get; set; }
         public int WarningMessageDuration { get; set; }
     }
 
