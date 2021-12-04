@@ -54,6 +54,12 @@ parameters:
   - description: registrants portal base url
     name: REGISTRANTS_PORTAL_BASE_URL
     required: false
+  - description: splunk url
+    name: SPLUNK_URL
+    required: false
+  - description: splunk token
+    name: SPLUNK_TOKEN
+    required: false
     
 objects:
   - kind: ConfigMap
@@ -93,6 +99,8 @@ objects:
       Dynamics__ADFS__serviceAccountName: ${DYNAMICS_SERVICE_ACCOUNT_NAME}
       Dynamics__ADFS__serviceAccountPassword: ${DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
+      SPLUNK_URL: ${SPLUNK_URL}
+      SPLUNK_TOKEN: ${SPLUNK_TOKEN}
 
   - kind: Service
     apiVersion: v1

@@ -31,6 +31,12 @@ parameters:
   - description: BCSC identity provider metadata address
     name: BCSC_METADATAADDRESS
     required: false
+  - description: splunk url
+    name: SPLUNK_URL
+    required: false
+  - description: splunk token
+    name: SPLUNK_TOKEN
+    required: false
         
 objects:
   - kind: ConfigMap
@@ -61,6 +67,8 @@ objects:
       identityProviders__bcsc__clientId : "${BCSC_CLIENTID}"
       identityProviders__bcsc__clientSecret : "${BCSC_CLIENTSECRET}"
       identityProviders__bcsc__metadataAddress : "${BCSC_METADATAADDRESS}"
+      SPLUNK_URL: ${SPLUNK_URL}
+      SPLUNK_TOKEN: ${SPLUNK_TOKEN}
 
   - kind: Service
     apiVersion: v1
