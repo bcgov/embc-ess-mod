@@ -15,3 +15,5 @@ OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD=<service account password>
 SMTP_SERVER=<SMTP server address>
 REDIS_CONNECTIONSTRING=<optional Redis connection string>
 REGISTRANTS_PORTAL_BASE_URL=<registrants portal base url>
+SPLUNK_URL=<optional splunk logging url>
+SPLUNK_URL=<optional splunk token>

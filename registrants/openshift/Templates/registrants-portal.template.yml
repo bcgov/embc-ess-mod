@@ -51,7 +51,19 @@ parameters:
     required: false
   - description: color of environment info banner
     name: BANNER_COLOR
-    required: false    
+    required: false
+  - description: session timeout
+    name: TIMEOUT_MINUTES
+    required: false
+  - description: time warning message will display
+    name: TIMEOUT_WARNINGDURATION
+    required: false
+  - description: splunk url
+    name: SPLUNK_URL
+    required: false
+  - description: splunk token
+    name: SPLUNK_TOKEN
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -72,6 +84,8 @@ objects:
       auth__introspection__authority: ${OAUTH_AUTHORITY}
       auth__jwt__authority: ${OAUTH_AUTHORITY}
       auth__oidc__issuer: ${OAUTH_AUTHORITY}
+      TIMEOUT__MINUTES: ${TIMEOUT_MINUTES}
+      TIMEOUT__WARNINGDURATION: ${TIMEOUT_WARNINGDURATION}
 
   - kind: Secret
     apiVersion: v1
@@ -87,6 +101,8 @@ objects:
       auth__introspection__clientSecret: ${OAUTH_API_CLIENTSECRET}
       auth__oidc__clientid: ${OAUTH_UI_CLIENTID}
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
+      SPLUNK_URL: ${SPLUNK_URL}
+      SPLUNK_TOKEN: ${SPLUNK_TOKEN}
 
   - kind: Service
     apiVersion: v1
