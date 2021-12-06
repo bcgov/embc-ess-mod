@@ -56,11 +56,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.checkAddress();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
 
     // Update Value and Validity for referredServiceDetails if referredServices changes
     this.evacDetailsForm
@@ -377,33 +376,26 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.paperESSFile = this.evacDetailsForm.get(
-      'paperESSFile'
-    ).value;
+    this.stepEssFileService.paperESSFile =
+      this.evacDetailsForm.get('paperESSFile').value;
     this.stepEssFileService.evacuatedFromPrimary = this.evacDetailsForm.get(
       'evacuatedFromPrimary'
     ).value;
-    this.stepEssFileService.evacAddress = this.evacDetailsForm.get(
-      'evacAddress'
-    ).value;
-    this.stepEssFileService.facilityName = this.evacDetailsForm.get(
-      'facilityName'
-    ).value;
-    this.stepEssFileService.insurance = this.evacDetailsForm.get(
-      'insurance'
-    ).value;
-    this.stepEssFileService.evacuationImpact = this.evacDetailsForm.get(
-      'householdAffected'
-    ).value;
+    this.stepEssFileService.evacAddress =
+      this.evacDetailsForm.get('evacAddress').value;
+    this.stepEssFileService.facilityName =
+      this.evacDetailsForm.get('facilityName').value;
+    this.stepEssFileService.insurance =
+      this.evacDetailsForm.get('insurance').value;
+    this.stepEssFileService.evacuationImpact =
+      this.evacDetailsForm.get('householdAffected').value;
     this.stepEssFileService.householdRecoveryPlan = this.evacDetailsForm.get(
       'emergencySupportServices'
     ).value;
-    this.stepEssFileService.referredServices = this.evacDetailsForm.get(
-      'referredServices'
-    ).value;
+    this.stepEssFileService.referredServices =
+      this.evacDetailsForm.get('referredServices').value;
     this.stepEssFileService.referredServiceDetails = this.selection.selected;
-    this.stepEssFileService.evacuationExternalReferrals = this.evacDetailsForm.get(
-      'externalServices'
-    ).value;
+    this.stepEssFileService.evacuationExternalReferrals =
+      this.evacDetailsForm.get('externalServices').value;
   }
 }

@@ -122,7 +122,8 @@ export class StepEvacueeProfileService {
   public set isMailingAddressSameAsPrimaryAddress(
     isMailingAddressSameAsPrimaryAddressVal: string
   ) {
-    this.isMailingAddressSameAsPrimaryAddressVal = isMailingAddressSameAsPrimaryAddressVal;
+    this.isMailingAddressSameAsPrimaryAddressVal =
+      isMailingAddressSameAsPrimaryAddressVal;
   }
 
   public get mailingAddressDetails(): AddressModel {

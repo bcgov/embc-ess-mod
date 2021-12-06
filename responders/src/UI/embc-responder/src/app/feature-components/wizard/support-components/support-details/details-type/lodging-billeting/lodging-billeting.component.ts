@@ -15,7 +15,8 @@ import { AbstractControl, FormGroup } from '@angular/forms';
   styleUrls: ['./lodging-billeting.component.scss']
 })
 export class LodgingBilletingComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterViewInit
+{
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfDays: number;
   referralForm: FormGroup;

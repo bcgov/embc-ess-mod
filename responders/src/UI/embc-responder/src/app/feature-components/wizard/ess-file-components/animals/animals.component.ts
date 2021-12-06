@@ -52,11 +52,10 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.pets = this.animalsForm.get('pets').value;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
 
     // Update Value and Validity for pets form if hasPets changes
     this.animalsForm.get('hasPets').valueChanges.subscribe(() => {
@@ -340,14 +339,11 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   private saveFormData() {
     this.stepEssFileService.havePets = this.animalsForm.get('hasPets').value;
     this.stepEssFileService.petsList = this.animalsForm.get('pets').value;
-    this.stepEssFileService.havePetsFood = this.animalsForm.get(
-      'hasPetsFood'
-    ).value;
-    this.stepEssFileService.petCarePlans = this.animalsForm.get(
-      'petCareDetails'
-    ).value;
-    this.stepEssFileService.addPetIndicator = this.animalsForm.get(
-      'addPetIndicator'
-    ).value;
+    this.stepEssFileService.havePetsFood =
+      this.animalsForm.get('hasPetsFood').value;
+    this.stepEssFileService.petCarePlans =
+      this.animalsForm.get('petCareDetails').value;
+    this.stepEssFileService.addPetIndicator =
+      this.animalsForm.get('addPetIndicator').value;
   }
 }

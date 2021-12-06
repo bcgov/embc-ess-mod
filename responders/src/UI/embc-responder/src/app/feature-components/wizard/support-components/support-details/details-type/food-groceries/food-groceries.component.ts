@@ -16,7 +16,8 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   styleUrls: ['./food-groceries.component.scss']
 })
 export class FoodGroceriesComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterViewInit
+{
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfDays: number;
   @Input() noOfHouseholdMembers: number;

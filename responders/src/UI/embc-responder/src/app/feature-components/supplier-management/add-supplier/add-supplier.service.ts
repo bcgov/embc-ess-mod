@@ -126,9 +126,10 @@ export class AddSupplierService {
         this.supplierAddress
       ),
       contact: this.contact,
-      gstNumber: this.supplierManagementService.convertSupplierGSTNumbertoString(
-        this.supplierGstNumber
-      ),
+      gstNumber:
+        this.supplierManagementService.convertSupplierGSTNumbertoString(
+          this.supplierGstNumber
+        ),
       legalName: this.supplierLegalName,
       name: this.supplierName,
       status: SupplierStatus.Active

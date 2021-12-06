@@ -34,11 +34,10 @@ export class RestrictionComponent implements OnInit, OnDestroy {
     this.editFlag = this.evacueeSessionService.getEditWizardFlag();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   createRestrictionForm(): void {
@@ -80,9 +79,8 @@ export class RestrictionComponent implements OnInit, OnDestroy {
     if (this.restrictionForm.valid) {
       this.stepEvacueeProfileService.setTabStatus('restriction', 'complete');
     }
-    this.stepEvacueeProfileService.restrictedAccess = this.restrictionForm.get(
-      'restrictedAccess'
-    ).value;
+    this.stepEvacueeProfileService.restrictedAccess =
+      this.restrictionForm.get('restrictedAccess').value;
   }
 
   /**

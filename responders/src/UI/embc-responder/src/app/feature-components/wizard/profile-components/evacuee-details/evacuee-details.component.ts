@@ -63,11 +63,10 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     //this.checkForFormChanges();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   createEvacueeDetailsForm(): void {
@@ -165,7 +164,8 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
         'incomplete'
       );
     }
-    this.stepEvacueeProfileService.personalDetails = this.evacueeDetailsForm.getRawValue();
+    this.stepEvacueeProfileService.personalDetails =
+      this.evacueeDetailsForm.getRawValue();
   }
 
   /**
