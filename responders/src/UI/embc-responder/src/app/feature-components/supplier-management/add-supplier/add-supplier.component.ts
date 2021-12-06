@@ -80,9 +80,10 @@ export class AddSupplierComponent implements OnInit {
     supplierGstNumber: GstNumberModel
   ): void {
     this.showLoader = !this.showLoader;
-    const gstNumber: string = this.supplierManagementService.convertSupplierGSTNumbertoString(
-      supplierGstNumber
-    );
+    const gstNumber: string =
+      this.supplierManagementService.convertSupplierGSTNumbertoString(
+        supplierGstNumber
+      );
     this.supplierService.checkSupplierExists(legalName, gstNumber).subscribe(
       (value) => {
         this.showLoader = !this.showLoader;
@@ -140,12 +141,10 @@ export class AddSupplierComponent implements OnInit {
    * Saves the data from the form and save it into the addSUpplier service
    */
   private saveDataForm() {
-    this.addSupplierService.supplierLegalName = this.addForm.get(
-      'supplierLegalName'
-    ).value;
-    this.addSupplierService.supplierName = this.addForm.get(
-      'supplierName'
-    ).value;
+    this.addSupplierService.supplierLegalName =
+      this.addForm.get('supplierLegalName').value;
+    this.addSupplierService.supplierName =
+      this.addForm.get('supplierName').value;
 
     const gstNumber: GstNumberModel = {
       part1: this.addForm.get('gstNumber.part1').value,

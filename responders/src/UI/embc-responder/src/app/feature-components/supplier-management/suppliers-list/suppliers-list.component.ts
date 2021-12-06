@@ -54,8 +54,10 @@ export class SuppliersListComponent implements OnInit {
   ngOnInit(): void {
     this.addSupplierService.clearAddedSupplier();
     this.filtersToLoad = this.listSupplierDataService.filtersToLoad;
-    this.primarySuppliersColumns = this.listSupplierDataService.primarySupplierColumns;
-    this.mutualAidSuppliersColumns = this.listSupplierDataService.mutualAidSupplierColumns;
+    this.primarySuppliersColumns =
+      this.listSupplierDataService.primarySupplierColumns;
+    this.mutualAidSuppliersColumns =
+      this.listSupplierDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService.currentProfile.role;
 
     this.getPrimarySuppliersList();

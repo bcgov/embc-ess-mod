@@ -76,12 +76,11 @@ export class AssignedCommunityListDataService {
   public getCommunitiesToAddList(): Observable<TeamCommunityModel[]> {
     return this.assignedCommunityListService.getAllAssignedCommunityList().pipe(
       map((allList: TeamCommunityModel[]) => {
-        const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(
-          (values) => {
+        const conflictMap: TeamCommunityModel[] =
+          this.mergedCommunityList().map((values) => {
             const conflicts = allList.find((x) => x.code === values.code);
             return this.mergeData(values, conflicts);
-          }
-        );
+          });
 
         const addMap: TeamCommunityModel[] = conflictMap.map((values) => {
           const existing = this.getTeamCommunityList().find(

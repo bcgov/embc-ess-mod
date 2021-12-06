@@ -80,15 +80,19 @@ export class WizardAdapterService {
   public stepCreateProfileFromSearch() {
     this.stepEvacueeProfileService.personalDetails = {
       ...this.stepEvacueeProfileService.personalDetails,
-      firstName: this.evacueeSearchService.evacueeSearchContext
-        ?.evacueeSearchParameters.firstName,
-      lastName: this.evacueeSearchService.evacueeSearchContext
-        ?.evacueeSearchParameters.lastName,
-      dateOfBirth: this.evacueeSearchService.evacueeSearchContext
-        ?.evacueeSearchParameters.dateOfBirth
+      firstName:
+        this.evacueeSearchService.evacueeSearchContext?.evacueeSearchParameters
+          .firstName,
+      lastName:
+        this.evacueeSearchService.evacueeSearchContext?.evacueeSearchParameters
+          .lastName,
+      dateOfBirth:
+        this.evacueeSearchService.evacueeSearchContext?.evacueeSearchParameters
+          .dateOfBirth
     };
 
-    this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+    this.stepEvacueeProfileService.profileTabs =
+      this.wizardDataService.createNewProfileSteps();
   }
 
   public stepCreateProfileForMembers() {
@@ -99,7 +103,8 @@ export class WizardAdapterService {
       dateOfBirth: this.evacueeSessionService.memberRegistration.dateOfBirth,
       gender: this.evacueeSessionService.memberRegistration.gender
     };
-    this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+    this.stepEvacueeProfileService.profileTabs =
+      this.wizardDataService.createNewProfileSteps();
     this.stepEvacueeProfileService.setMemberProfileTabStatus();
   }
 
@@ -114,7 +119,8 @@ export class WizardAdapterService {
             registrantProfileModel
           );
 
-          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewEditProfileSteps();
+          this.stepEvacueeProfileService.profileTabs =
+            this.wizardDataService.createNewEditProfileSteps();
           this.stepEvacueeProfileService.setEditProfileTabStatus();
 
           obs.next(true);
@@ -153,12 +159,12 @@ export class WizardAdapterService {
    * Set initial values for Create ESS File (stepEssFileService), from a full Evacuee Profile record
    */
   public stepCreateEssFileFromProfileRecord(profile: RegistrantProfileModel) {
-    this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+    this.stepEssFileService.essTabs =
+      this.wizardDataService.createNewESSFileSteps();
 
     this.evacueeSessionService.profileId = profile.id;
-    this.stepEssFileService.primaryAddress = this.wizardService.setAddressObjectForForm(
-      profile.primaryAddress
-    );
+    this.stepEssFileService.primaryAddress =
+      this.wizardService.setAddressObjectForForm(profile.primaryAddress);
 
     this.stepEssFileService.householdMembers = [
       {
@@ -179,9 +185,8 @@ export class WizardAdapterService {
     profile: RegistrantProfileModel
   ) {
     this.evacueeSessionService.profileId = profile.id;
-    this.stepEssFileService.primaryAddress = this.wizardService.setAddressObjectForForm(
-      profile.primaryAddress
-    );
+    this.stepEssFileService.primaryAddress =
+      this.wizardService.setAddressObjectForForm(profile.primaryAddress);
 
     const mainMember = this.stepEssFileService.householdMembers.find(
       (member) => member.type === HouseholdMemberType.Registrant
@@ -203,7 +208,8 @@ export class WizardAdapterService {
         .subscribe(
           (evacuationFileModel) => {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
-            this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+            this.stepEssFileService.essTabs =
+              this.wizardDataService.createNewESSFileSteps();
             this.stepEssFileService.setReviewEssFileTabStatus();
             this.stepEssFileService.selectedHouseholdMembers = [];
             obs.next(true);
@@ -224,7 +230,8 @@ export class WizardAdapterService {
         .subscribe(
           (evacuationFileModel) => {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
-            this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+            this.stepEssFileService.essTabs =
+              this.wizardDataService.createNewESSFileSteps();
             this.stepEssFileService.setCompleteEssFileTabStatus();
             this.stepEssFileService.selectedHouseholdMembers = [];
             obs.next(true);

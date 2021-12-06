@@ -123,8 +123,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   populateExistingIssuedTo() {
-    const allMembers: EvacuationFileHouseholdMember[] = this.stepSupportsService
-      ?.evacFile?.needsAssessment?.householdMembers;
+    const allMembers: EvacuationFileHouseholdMember[] =
+      this.stepSupportsService?.evacFile?.needsAssessment?.householdMembers;
 
     if (this.editFlag) {
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
@@ -221,7 +221,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
    */
   backToDetails() {
     if (!this.editFlag) {
-      this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      this.stepSupportsService.supportDelivery =
+        this.supportDeliveryForm.getRawValue();
       console.log(this.stepSupportsService.supportDelivery);
       this.router.navigate(['/ess-wizard/add-supports/details']);
     } else {
@@ -238,7 +239,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     if (!this.supportDeliveryForm.valid) {
       this.supportDeliveryForm.markAllAsTouched();
     } else {
-      this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      this.stepSupportsService.supportDelivery =
+        this.supportDeliveryForm.getRawValue();
       console.log(this.stepSupportsService.supportDelivery);
       this.stepSupportsService.saveAsDraft();
       const stateIndicator = { action: 'save' };
@@ -252,7 +254,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     if (!this.supportDeliveryForm.valid) {
       this.supportDeliveryForm.markAllAsTouched();
     } else {
-      this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      this.stepSupportsService.supportDelivery =
+        this.supportDeliveryForm.getRawValue();
       console.log(this.stepSupportsService.supportDelivery);
       this.stepSupportsService.editDraft();
       const stateIndicator = { action: 'edit' };

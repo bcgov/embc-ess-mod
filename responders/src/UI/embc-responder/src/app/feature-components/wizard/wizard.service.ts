@@ -20,9 +20,8 @@ export class WizardService {
   public editStatus: BehaviorSubject<TabStatusManager[]> = new BehaviorSubject<
     TabStatusManager[]
   >([]);
-  public editStatus$: Observable<
-    TabStatusManager[]
-  > = this.editStatus.asObservable();
+  public editStatus$: Observable<TabStatusManager[]> =
+    this.editStatus.asObservable();
   private sideMenuItems: Array<WizardSidenavModel>;
   private profileObjectReference: RegistrantProfileModel;
   private fileObjectReference: EvacuationFileModel;
@@ -151,8 +150,9 @@ export class WizardService {
         type === 'personalDetails') ||
       type === 'contactDetails'
     ) {
-      const initialValue = (this
-        .profileObjectReference as RegistrantProfileModel)[type];
+      const initialValue = (
+        this.profileObjectReference as RegistrantProfileModel
+      )[type];
       return Object.keys(initialValue).some((key) => {
         const formValue = form[key].value === '' ? null : form[key].value;
         return formValue !== initialValue[key];
@@ -162,8 +162,9 @@ export class WizardService {
       this.profileObjectReference !== undefined &&
       type === 'restriction'
     ) {
-      const initialValue = (this
-        .profileObjectReference as RegistrantProfileModel).restriction;
+      const initialValue = (
+        this.profileObjectReference as RegistrantProfileModel
+      ).restriction;
       return initialValue !== form.restrictedAccess.value;
     } else if (
       (this.profileObjectReference !== null &&
@@ -171,8 +172,9 @@ export class WizardService {
         type === 'primaryAddress') ||
       type === 'mailingAddress'
     ) {
-      const initialValue = (this
-        .profileObjectReference as RegistrantProfileModel)[type];
+      const initialValue = (
+        this.profileObjectReference as RegistrantProfileModel
+      )[type];
       let addressFormValue = null;
       if (type === 'primaryAddress') {
         addressFormValue = form.address.value;
@@ -186,8 +188,9 @@ export class WizardService {
       this.profileObjectReference !== undefined &&
       type === 'securityQuestions'
     ) {
-      const initialValue = (this
-        .profileObjectReference as RegistrantProfileModel)[type];
+      const initialValue = (
+        this.profileObjectReference as RegistrantProfileModel
+      )[type];
       return this.compareSecurityQuestion(initialValue, form);
     } else if (
       this.fileObjectReference !== null &&
