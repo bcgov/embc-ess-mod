@@ -69,7 +69,8 @@ namespace EMBC.Responders.API.Controllers
                 {
                     ClientId = oidcConfig["clientId"],
                     Issuer = oidcConfig["issuer"],
-                    Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api")
+                    Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api"),
+                    Idp = oidcConfig.GetValue("idp", "bcsc")
                 },
                 OutageInfo = mapper.Map<OutageInformation>(outageInfo),
                 TimeoutInfo = new TimeoutConfiguration
@@ -164,6 +165,7 @@ namespace EMBC.Responders.API.Controllers
         public string Issuer { get; set; }
         public string Scope { get; set; }
         public string ClientId { get; set; }
+        public string Idp { get; set; }
     }
 
     public class Code
