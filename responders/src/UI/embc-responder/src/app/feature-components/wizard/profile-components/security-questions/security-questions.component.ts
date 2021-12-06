@@ -54,11 +54,10 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
       });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
 
     this.questionForm
       .get('question2')

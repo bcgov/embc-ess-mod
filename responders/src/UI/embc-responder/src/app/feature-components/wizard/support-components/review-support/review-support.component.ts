@@ -240,12 +240,14 @@ export class ReviewSupportComponent implements OnInit {
    * @returns the Full LAST NAME, First Name of the given household member ID
    */
   getMemberFullName(memberId: string): string {
-    const lastName = this.stepSupportsService.evacFile.needsAssessment.householdMembers.find(
-      (member) => member.id === memberId
-    ).lastName;
-    const firstName = this.stepSupportsService.evacFile.needsAssessment.householdMembers.find(
-      (member) => member.id === memberId
-    ).firstName;
+    const lastName =
+      this.stepSupportsService.evacFile.needsAssessment.householdMembers.find(
+        (member) => member.id === memberId
+      ).lastName;
+    const firstName =
+      this.stepSupportsService.evacFile.needsAssessment.householdMembers.find(
+        (member) => member.id === memberId
+      ).firstName;
 
     return lastName.toUpperCase() + ', ' + firstName;
   }

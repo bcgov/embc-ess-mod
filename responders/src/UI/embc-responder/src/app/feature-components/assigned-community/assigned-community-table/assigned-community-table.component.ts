@@ -25,7 +25,8 @@ import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
   encapsulation: ViewEncapsulation.None
 })
 export class AssignedCommunityTableComponent
-  implements AfterViewInit, OnChanges {
+  implements AfterViewInit, OnChanges
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];

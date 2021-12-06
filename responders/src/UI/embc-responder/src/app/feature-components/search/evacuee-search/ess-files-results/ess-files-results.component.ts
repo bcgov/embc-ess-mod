@@ -27,7 +27,8 @@ import * as globalConst from '../../../../core/services/global-constants';
   styleUrls: ['./ess-files-results.component.scss']
 })
 export class EssFilesResultsComponent
-  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+  implements OnInit, OnChanges, AfterViewInit, AfterViewChecked
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() fileResults: Array<EvacuationFileSearchResultModel>;
   matchedFiles = new MatTableDataSource();

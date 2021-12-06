@@ -54,7 +54,8 @@ export class AssignedCommunityListComponent implements OnInit {
     );
 
     this.filtersToLoad = this.assignedCommunityListDataService.filtersToLoad;
-    this.displayedColumns = this.assignedCommunityListDataService.displayedColumns;
+    this.displayedColumns =
+      this.assignedCommunityListDataService.displayedColumns;
   }
 
   /**

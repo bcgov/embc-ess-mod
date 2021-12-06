@@ -69,7 +69,8 @@ export class SupplierDetailComponent implements OnInit {
           this.detailsType = params.type;
         }
       }
-      this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();
+      this.selectedSupplier =
+        this.supplierListDataService.getSelectedSupplier();
     }
   }
 
@@ -216,9 +217,8 @@ export class SupplierDetailComponent implements OnInit {
     this.searchESSTeamLoader = !this.searchESSTeamLoader;
     this.supplierService.getMutualAidByCommunity(community.code).subscribe(
       (results) => {
-        this.essTeamsListResult = this.supplierListDataService.filterEssTeams(
-          results
-        );
+        this.essTeamsListResult =
+          this.supplierListDataService.filterEssTeams(results);
         if (this.essTeamsListResult.length === 0) {
           this.noneResults = true;
         }

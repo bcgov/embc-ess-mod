@@ -39,7 +39,8 @@ export class SupplierReviewComponent {
         }
       }
     } else {
-      this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();
+      this.selectedSupplier =
+        this.supplierListDataService.getSelectedSupplier();
     }
   }
 
