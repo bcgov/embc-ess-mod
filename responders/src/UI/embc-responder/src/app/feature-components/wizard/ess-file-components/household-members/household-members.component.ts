@@ -95,11 +95,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     }
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
 
     // Updates the status of the form according to changes
     this.householdForm
@@ -530,27 +529,21 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.stepEssFileService.householdMembers = this.members;
     this.stepEssFileService.selectedHouseholdMembers = this.selection.selected;
 
-    this.stepEssFileService.haveSpecialDiet = this.householdForm.get(
-      'hasSpecialDiet'
-    ).value;
-    this.stepEssFileService.specialDietDetails = this.householdForm.get(
-      'specialDietDetails'
-    ).value;
-    this.stepEssFileService.takeMedication = this.householdForm.get(
-      'hasMedication'
-    ).value;
-    this.stepEssFileService.haveMedicationSupply = this.householdForm.get(
-      'medicationSupply'
-    ).value;
+    this.stepEssFileService.haveSpecialDiet =
+      this.householdForm.get('hasSpecialDiet').value;
+    this.stepEssFileService.specialDietDetails =
+      this.householdForm.get('specialDietDetails').value;
+    this.stepEssFileService.takeMedication =
+      this.householdForm.get('hasMedication').value;
+    this.stepEssFileService.haveMedicationSupply =
+      this.householdForm.get('medicationSupply').value;
     this.stepEssFileService.addMemberFormIndicator = this.householdForm.get(
       'addMemberFormIndicator'
     ).value;
-    this.stepEssFileService.addMemberIndicator = this.householdForm.get(
-      'addMemberIndicator'
-    ).value;
+    this.stepEssFileService.addMemberIndicator =
+      this.householdForm.get('addMemberIndicator').value;
 
-    this.stepEssFileService.tempHouseholdMember = this.householdForm.get(
-      'houseHoldMember'
-    ).value;
+    this.stepEssFileService.tempHouseholdMember =
+      this.householdForm.get('houseHoldMember').value;
   }
 }

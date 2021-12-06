@@ -28,19 +28,18 @@ export class EssFileService {
         fileId
       })
       .pipe(
-        map(
-          (file: EvacuationFile): EvacuationFileModel => {
-            return {
-              ...file,
-              evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
+        map((file: EvacuationFile): EvacuationFileModel => {
+          return {
+            ...file,
+            evacuatedFromAddress:
+              this.locationsService.getAddressModelFromAddress(
                 file.evacuatedFromAddress
               ),
-              assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
-                file?.task?.communityCode
-              )
-            };
-          }
-        )
+            assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
+              file?.task?.communityCode
+            )
+          };
+        })
       );
   }
 

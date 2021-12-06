@@ -11,7 +11,7 @@
       <button
         class="button-s"
         mat-stroked-button
-        [disabled]="communitiesToDeleteList?.length == 0"
+        [disabled]="communitiesToDeleteList?.length === 0"
         (click)="deleteCommunities()"
       >
         Remove Communities

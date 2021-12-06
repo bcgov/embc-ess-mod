@@ -86,11 +86,10 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     )?.name;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   /**

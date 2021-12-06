@@ -29,7 +29,8 @@ import { StepSupportsService } from '../../../step-supports/step-supports.servic
   styleUrls: ['./supports-table.component.scss']
 })
 export class SupportsTableComponent
-  implements OnInit, AfterViewInit, OnChanges {
+  implements OnInit, AfterViewInit, OnChanges
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() supportList: Support[];

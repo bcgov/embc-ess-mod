@@ -51,11 +51,10 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     this.formValidation();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   /**
@@ -125,7 +124,8 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * Cancels the change of security phrase and goes back to the previous view
    */
   cancel(): void {
-    this.stepEssFileService.securityPhrase = this.stepEssFileService.originalSecurityPhrase;
+    this.stepEssFileService.securityPhrase =
+      this.stepEssFileService.originalSecurityPhrase;
     this.securityForm
       .get('securityPhrase')
       .setValue(this.stepEssFileService.securityPhrase);

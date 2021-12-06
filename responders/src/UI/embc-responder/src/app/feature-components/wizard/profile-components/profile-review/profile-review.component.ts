@@ -55,14 +55,18 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       typeof this.stepEvacueeProfileService.primaryAddressDetails?.community ===
       'string'
         ? this.stepEvacueeProfileService.primaryAddressDetails?.community
-        : (this.stepEvacueeProfileService.primaryAddressDetails
-            ?.community as Community)?.name;
+        : (
+            this.stepEvacueeProfileService.primaryAddressDetails
+              ?.community as Community
+          )?.name;
     this.mailingCommunity =
       typeof this.stepEvacueeProfileService.mailingAddressDetails?.community ===
       'string'
         ? this.stepEvacueeProfileService.mailingAddressDetails?.community
-        : (this.stepEvacueeProfileService.mailingAddressDetails
-            ?.community as Community)?.name;
+        : (
+            this.stepEvacueeProfileService.mailingAddressDetails
+              ?.community as Community
+          )?.name;
     this.verifiedProfileGroup = this.formBuilder.group({
       verifiedProfile: [
         this.stepEvacueeProfileService.verifiedProfile,
@@ -78,11 +82,10 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         : this.stepEvacueeProfileService.savedQuestions;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate?.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEvacueeProfileService.nextTabUpdate?.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   get verifiedProfileControl(): { [key: string]: AbstractControl } {
@@ -261,9 +264,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       this.stepEvacueeProfileService.setTabStatus('review', 'complete');
     }
 
-    this.stepEvacueeProfileService.verifiedProfile = this.verifiedProfileGroup.get(
-      'verifiedProfile'
-    ).value;
+    this.stepEvacueeProfileService.verifiedProfile =
+      this.verifiedProfileGroup.get('verifiedProfile').value;
   }
 
   /**

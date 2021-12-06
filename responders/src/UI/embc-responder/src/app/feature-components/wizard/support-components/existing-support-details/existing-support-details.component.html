@@ -184,7 +184,7 @@
   </div>
 
   <!--Groceries-->
-  <div *ngIf="selectedSupport?.subCategory == 'Food_Groceries'">
+  <div *ngIf="selectedSupport?.subCategory === 'Food_Groceries'">
     <div class="row row-padding">
       <div class="col-md-4 box-text-color"># of Days for Meals:</div>
       <div class="col-md-4 bold">{{ groceryReferral?.numberOfDays }}</div>

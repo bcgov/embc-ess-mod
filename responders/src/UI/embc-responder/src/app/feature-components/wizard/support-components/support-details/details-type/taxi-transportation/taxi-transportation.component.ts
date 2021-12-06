@@ -15,7 +15,8 @@ import { AbstractControl, FormGroup } from '@angular/forms';
   styleUrls: ['./taxi-transportation.component.scss']
 })
 export class TaxiTransportationComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterViewInit
+{
   @Input() supportDetailsForm: FormGroup;
   referralForm: FormGroup;
 

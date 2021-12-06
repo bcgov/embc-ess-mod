@@ -24,7 +24,8 @@ import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.servic
   styleUrls: ['./profile-results.component.scss']
 })
 export class ProfileResultsComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterViewInit
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() registrantResults: Array<RegistrantProfileSearchResultModel>;
   matchedRegistrants = new MatTableDataSource();
