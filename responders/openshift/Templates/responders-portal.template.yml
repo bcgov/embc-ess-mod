@@ -61,6 +61,12 @@ parameters:
   - description: time warning message will display
     name: TIMEOUT_WARNINGDURATION
     required: false
+  - description: splunk url
+    name: SPLUNK_URL
+    required: false
+  - description: splunk token
+    name: SPLUNK_TOKEN
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -96,6 +102,8 @@ objects:
         app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
+      SPLUNK_URL: ${SPLUNK_URL}
+      SPLUNK_TOKEN: ${SPLUNK_TOKEN}
 
   - kind: Service
     apiVersion: v1

@@ -14,3 +14,7 @@ REDIS_CONNECTIONSTRING=<optional Redis connection string>
 BANNER_TITLE=<optional banner title>
 BANNER_SUBTITLE=<optional banner subtitle>
 BANNER_COLOR=<optional banner color>
+TIMEOUT_MINUTES=<optional session timeout>
+TIMEOUT_WARNINGDURATION=<optional timeout warning duration>
+SPLUNK_URL=<optional splunk logging url>
+SPLUNK_URL=<optional splunk token>
