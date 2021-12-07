@@ -178,7 +178,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
 
   ngOnDestroy(): void {
     // trigger all observables to complete
-    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.next(null);
     this.ngUnsubscribe.complete();
   }
 
