@@ -111,6 +111,7 @@
               class="button-p button-width"
               mat-button
               (click)="evacueeReport()"
+              [disabled]="!reportForm.valid || isLoading"
             >
               <img
                 class="img-align"
@@ -133,6 +134,7 @@
               class="button-p button-width"
               mat-button
               (click)="supportReport()"
+              [disabled]="!reportForm.valid || isLoading"
             >
               <img
                 class="img-align"
