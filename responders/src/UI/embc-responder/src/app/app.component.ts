@@ -9,6 +9,8 @@ import { AlertService } from './shared/components/alert/alert.service';
 import * as globalConst from './core/services/global-constants';
 import { LoadTeamListService } from './core/services/load-team-list.service';
 import { EnvironmentInformation } from './core/models/environment-information.model';
+import { OutageInformation } from './core/api/models';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +23,9 @@ export class AppComponent implements OnInit {
   public show = true;
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
+  public outageInfo: OutageInformation;
+  public showOutageBanner = false;
+  public showOutageComponent = false;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -37,13 +42,19 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.configService.load().subscribe(
-      (result) => result,
-      (error) => {
+    this.configService.load().subscribe({
+      next: (result) => {
+        // result;
+        console.log(result);
+        this.outageInfo = null;
+        // this.outageInfo = result.outageInfo;
+        this.displayOutageInfo();
+      },
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.systemError);
       }
-    );
+    });
   }
 
   public async ngOnInit(): Promise<void> {
@@ -72,9 +83,27 @@ export class AppComponent implements OnInit {
     }
   }
 
+  public closeOutageBanner() {
+    this.showOutageBanner = false;
+  }
+
   private getBackendVersionInfo(): void {
     this.configService.getVersionInfo().subscribe((version) => {
       this.version = version;
     });
+  }
+
+  private displayOutageInfo(): void {
+    if (this.outageInfo !== null) {
+      const now = new Date();
+      const outageStart = new Date(this.outageInfo.outageStartDate);
+      const outageEnd = new Date(this.outageInfo.outageEndDate);
+
+      if (moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)) {
+        this.showOutageComponent = true;
+      } else if (moment(outageStart).isAfter(now)) {
+        this.showOutageBanner = true;
+      }
+    }
   }
 }

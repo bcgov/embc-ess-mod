@@ -1,0 +1,31 @@
+<div class="container outage-container">
+  <div class="title-header">
+    <p class="title">System Unavailble</p>
+  </div>
+  <div class="outage-info">
+    <div>
+      <p class="subtitle">
+        This system is currently undergoing planned maintenance.
+      </p>
+      <p class="dynamic-text" *ngIf="description !== null">
+        {{ description }}
+        <b
+          >from {{ startDate | date: 'MMM dd' }} at
+          {{ startDate | date: 'shortTime' }} to
+          {{ endDate | date: 'MMM dd' }} at
+          {{ endDate | date: 'shortTime' }}
+          PST
+        </b>
+      </p>
+    </div>
+
+    <div>
+      <p class="subtitle">
+        This system is currently unavailable or undergoing routine maintenance.
+      </p>
+    </div>
+
+    <p class="description">Please check back later.</p>
+    <p class="description">Thank you for understanding.</p>
+  </div>
+</div>

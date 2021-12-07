@@ -1,7 +1,7 @@
 <div
   class="border"
   [ngStyle]="
-    environment !== null
+    environment !== {}
       ? {
           padding: '0px 5px 5px 5px',
           'background-color': environment?.bannerColor
@@ -9,23 +9,61 @@
       : { padding: '0px' }
   "
 >
+  <div class="row outage-banner" *ngIf="showOutageBanner">
+    <div class="col-md-11">
+      <p class="dynamic-text">
+        {{ outageInfo?.content }}
+        <b
+          >from {{ outageInfo?.outageStartDate | date: 'MMM dd' }} at
+          {{ outageInfo?.outageStartDate | date: 'shortTime' }} to
+          {{ outageInfo?.outageEndDate | date: 'MMM dd' }} at
+          {{ outageInfo?.outageEndDate | date: 'shortTime' }}
+          PST
+        </b>
+      </p>
+    </div>
+    <div class="col-md-1">
+      <button
+        class="close-image close-button-style"
+        mat-icon-button
+        aria-label="Close"
+        (click)="closeOutageBanner()"
+      >
+        <img src="/assets/images/close.svg" height="20" width="20" />
+        <img src="/assets/images/close_onhover.svg" height="20" width="20" />
+      </button>
+    </div>
+  </div>
+
   <app-environment-banner
-    *ngIf="environment !== null"
+    *ngIf="environment !== {}"
     [environment]="environment"
   ></app-environment-banner>
+
   <app-header *ngIf="show"></app-header>
+
   <main class="fill-body main-container background">
     <div class="app-error">
       <app-alert></app-alert>
     </div>
 
-    <div *ngIf="!isLoading">
+    <div *ngIf="!isLoading && showOutageComponent">
+      <app-outage
+        [description]="outageInfo?.content"
+        [startDate]="outageInfo?.outageStartDate"
+        [endDate]="outageInfo?.outageEndDate"
+      ></app-outage>
+    </div>
+
+    <div *ngIf="!isLoading && !showOutageComponent">
       <router-outlet></router-outlet>
     </div>
   </main>
+
   <div *ngIf="show" class="footer mt-auto">
     <app-footer [appVersion]="version"></app-footer>
   </div>
+
   <app-loader
     class="spinner"
     [showLoader]="isLoading"
