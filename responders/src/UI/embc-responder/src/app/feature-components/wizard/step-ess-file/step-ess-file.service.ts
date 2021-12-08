@@ -353,7 +353,8 @@ export class StepEssFileService {
   public set canRegistrantProvideIncidentals(
     canRegistrantProvideIncidentalsVal: string
   ) {
-    this.canRegistrantProvideIncidentalsVal = canRegistrantProvideIncidentalsVal;
+    this.canRegistrantProvideIncidentalsVal =
+      canRegistrantProvideIncidentalsVal;
   }
 
   public get canRegistrantProvideLodging(): string {
@@ -371,7 +372,8 @@ export class StepEssFileService {
   public set canRegistrantProvideTransportation(
     canRegistrantProvideTransportationVal: string
   ) {
-    this.canRegistrantProvideTransportationVal = canRegistrantProvideTransportationVal;
+    this.canRegistrantProvideTransportationVal =
+      canRegistrantProvideTransportationVal;
   }
 
   // Security Phrase tab

@@ -22,7 +22,8 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   styleUrls: ['./group-lodging-delivery.component.scss']
 })
 export class GroupLodgingDeliveryComponent
-  implements OnInit, OnChanges, AfterViewChecked {
+  implements OnInit, OnChanges, AfterViewChecked
+{
   @Input() supportDeliveryForm: FormGroup;
   filteredOptions: Observable<Community[]>;
   detailsForm: FormGroup;

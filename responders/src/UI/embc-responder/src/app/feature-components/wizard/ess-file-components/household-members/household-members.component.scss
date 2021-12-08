@@ -101,6 +101,7 @@ mat-row:nth-child(even) {
 .cell-member-details {
   flex: 0 0 80%;
   display: block;
+  padding-top:20px;
 }
 
 .cell-button {
@@ -115,6 +116,7 @@ mat-row:nth-child(even) {
 
   th {
     padding-right: 20px;
+    text-indent: 20px;
     font-weight: 400;
   }
 
@@ -129,9 +131,9 @@ mat-row:nth-child(even) {
 }
 
 .member-name {
+  display: contents;
   font-size: 18px;
   color: #234075;
-  padding: 20px 15px 0px 0px;
   font-weight: 700;
 }
 
@@ -218,6 +220,7 @@ mat-row:nth-child(even) {
 
     td {
       padding-right: 10px;
+      text-indent: 10px;
       overflow-wrap: anywhere;
       word-break: break-all;
     }

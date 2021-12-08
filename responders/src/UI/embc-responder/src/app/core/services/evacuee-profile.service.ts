@@ -39,19 +39,17 @@ export class EvacueeProfileService {
         registrantId: profileId
       })
       .pipe(
-        map(
-          (profile: RegistrantProfile): RegistrantProfileModel => {
-            return {
-              ...profile,
-              primaryAddress: this.locationsService.getAddressModelFromAddress(
-                profile.primaryAddress
-              ),
-              mailingAddress: this.locationsService.getAddressModelFromAddress(
-                profile.mailingAddress
-              )
-            };
-          }
-        )
+        map((profile: RegistrantProfile): RegistrantProfileModel => {
+          return {
+            ...profile,
+            primaryAddress: this.locationsService.getAddressModelFromAddress(
+              profile.primaryAddress
+            ),
+            mailingAddress: this.locationsService.getAddressModelFromAddress(
+              profile.mailingAddress
+            )
+          };
+        })
       );
   }
 
@@ -141,9 +139,10 @@ export class EvacueeProfileService {
             response.forEach((item) => {
               const evacFileSummary: EvacuationFileSummaryModel = {
                 ...item,
-                evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
-                  item.evacuatedFromAddress
-                )
+                evacuatedFromAddress:
+                  this.locationsService.getAddressModelFromAddress(
+                    item.evacuatedFromAddress
+                  )
               };
               evacFileSummaryModelArray.push(evacFileSummary);
             });
@@ -164,9 +163,10 @@ export class EvacueeProfileService {
     memberId: string,
     essFileId: string
   ): Observable<void> {
-    const profile$ = this.registrationsService.registrationsCreateRegistrantProfile(
-      { body: regProfile }
-    );
+    const profile$ =
+      this.registrationsService.registrationsCreateRegistrantProfile({
+        body: regProfile
+      });
     const $result = profile$.pipe(
       mergeMap((regResult) =>
         this.linkMemberProfile({
@@ -197,7 +197,8 @@ export class EvacueeProfileService {
     lastName: string,
     dateOfBirth: string
   ): Observable<Array<EvacuationFileSearchResultModel>> {
-    const evacFileSearchResultsModelArray: Array<EvacuationFileSearchResultModel> = [];
+    const evacFileSearchResultsModelArray: Array<EvacuationFileSearchResultModel> =
+      [];
     return this.registrationsService
       .registrationsSearchMatchingEvacuationFiles({
         firstName,
@@ -212,9 +213,10 @@ export class EvacueeProfileService {
             response.forEach((item) => {
               const evacFileSearchResult: EvacuationFileSearchResultModel = {
                 ...item,
-                evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
-                  item.evacuatedFrom
-                )
+                evacuatedFromAddress:
+                  this.locationsService.getAddressModelFromAddress(
+                    item.evacuatedFrom
+                  )
               };
               evacFileSearchResultsModelArray.push(evacFileSearchResult);
             });

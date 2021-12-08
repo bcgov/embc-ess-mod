@@ -55,9 +55,10 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
         .getSecurityQuestions(this.evacueeSessionService.profileId)
         .subscribe(
           (results) => {
-            this.securityQuestions = this.profileSecurityQuestionsService.shuffleSecurityQuestions(
-              results?.questions
-            );
+            this.securityQuestions =
+              this.profileSecurityQuestionsService.shuffleSecurityQuestions(
+                results?.questions
+              );
           },
           (error) => {
             this.alertService.clearAlert();

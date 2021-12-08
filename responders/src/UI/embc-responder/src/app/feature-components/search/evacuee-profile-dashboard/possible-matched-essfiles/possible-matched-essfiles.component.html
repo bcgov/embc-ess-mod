@@ -73,7 +73,7 @@
           </div>
         </mat-panel-title>
         <mat-panel-description class="description-align essFile-parent">
-          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex != index">
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex !== index">
             <img src="/assets/images/add-expand.svg" height="20" width="20" />
             <img
               src="/assets/images/add-expand-hover.svg"
@@ -81,7 +81,7 @@
               width="20"
             />
           </a>
-          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex == index">
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex === index">
             <img src="/assets/images/collapse.svg" height="20" width="20" />
             <img
               src="/assets/images/collapse-hover.svg"
