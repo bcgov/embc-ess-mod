@@ -60,7 +60,8 @@ export class AddCommunityComponent implements OnInit {
       this.addCommunityService.getAddedCommunities().length > 0
     ) {
       this.existingSelection = this.addCommunityService.getAddedCommunities();
-      this.selectedCommunitiesList = this.addCommunityService.getAddedCommunities();
+      this.selectedCommunitiesList =
+        this.addCommunityService.getAddedCommunities();
     }
 
     this.filtersToLoad = this.addCommunityService.filtersToLoad;

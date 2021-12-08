@@ -101,11 +101,10 @@ export class ExistingSupportDetailsService {
     needsAssessmentForSupport: EvacuationFileModel
   ) {
     console.log(selectedSupport);
-    const members: Array<EvacuationFileHouseholdMember> = selectedSupport.includedHouseholdMembers.map(
-      (id) => {
+    const members: Array<EvacuationFileHouseholdMember> =
+      selectedSupport.includedHouseholdMembers.map((id) => {
         return this.mapMember(id, needsAssessmentForSupport);
-      }
-    );
+      });
 
     const milliseconds = moment(
       this.datePipe.transform(selectedSupport.to, 'yyyy-MM-dd')

@@ -85,8 +85,8 @@ export class EditSupplierComponent implements OnInit {
    */
   next(): void {
     this.saveDataForm();
-    const updatedSupplier: SupplierModel = this.editSupplierService
-      .editedSupplier;
+    const updatedSupplier: SupplierModel =
+      this.editSupplierService.editedSupplier;
     this.router.navigate(
       ['/responder-access/supplier-management/review-supplier'],
       {
@@ -205,20 +205,15 @@ export class EditSupplierComponent implements OnInit {
   }
 
   private saveDataForm(): void {
-    this.editSupplierService.editedSupplier.name = this.editForm.get(
-      'supplierName'
-    ).value;
-    this.editSupplierService.editedSupplier.legalName = this.editForm.get(
-      'supplierLegalName'
-    ).value;
-    this.editSupplierService.editedSupplier.supplierGstNumber = this.editForm.get(
-      'gstNumber'
-    ).value;
-    this.editSupplierService.editedSupplier.address = this.editForm.get(
-      'address'
-    ).value;
-    this.editSupplierService.editedSupplier.contact = this.editForm.get(
-      'contact'
-    ).value;
+    this.editSupplierService.editedSupplier.name =
+      this.editForm.get('supplierName').value;
+    this.editSupplierService.editedSupplier.legalName =
+      this.editForm.get('supplierLegalName').value;
+    this.editSupplierService.editedSupplier.supplierGstNumber =
+      this.editForm.get('gstNumber').value;
+    this.editSupplierService.editedSupplier.address =
+      this.editForm.get('address').value;
+    this.editSupplierService.editedSupplier.contact =
+      this.editForm.get('contact').value;
   }
 }

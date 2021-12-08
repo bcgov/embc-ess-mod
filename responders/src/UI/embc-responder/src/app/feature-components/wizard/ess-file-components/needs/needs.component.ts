@@ -33,11 +33,10 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.createNeedsForm();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   /**
@@ -133,11 +132,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
       'canEvacueeProvideClothing'
     ).value;
-    this.stepEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
-      'canEvacueeProvideTransportation'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
-      'canEvacueeProvideIncidentals'
-    ).value;
+    this.stepEssFileService.canRegistrantProvideTransportation =
+      this.needsForm.get('canEvacueeProvideTransportation').value;
+    this.stepEssFileService.canRegistrantProvideIncidentals =
+      this.needsForm.get('canEvacueeProvideIncidentals').value;
   }
 }

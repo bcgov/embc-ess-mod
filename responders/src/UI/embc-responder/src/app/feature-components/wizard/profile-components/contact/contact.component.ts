@@ -106,11 +106,10 @@ export class ContactComponent implements OnInit, OnDestroy {
       });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   createContactForm(): void {
@@ -266,11 +265,9 @@ export class ContactComponent implements OnInit, OnDestroy {
    */
   private saveFormUpdates(): void {
     this.stepEvacueeProfileService.contactDetails = this.contactInfoForm.value;
-    this.stepEvacueeProfileService.showContact = this.contactInfoForm.get(
-      'showContacts'
-    ).value;
-    this.stepEvacueeProfileService.confirmEmail = this.contactInfoForm.get(
-      'confirmEmail'
-    ).value;
+    this.stepEvacueeProfileService.showContact =
+      this.contactInfoForm.get('showContacts').value;
+    this.stepEvacueeProfileService.confirmEmail =
+      this.contactInfoForm.get('confirmEmail').value;
   }
 }

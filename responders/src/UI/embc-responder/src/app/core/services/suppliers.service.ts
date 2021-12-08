@@ -155,21 +155,20 @@ export class SupplierService {
    */
   getSupplierById(supplierId: string): Observable<SupplierModel> {
     return this.suppliersService.suppliersGetSupplierById({ supplierId }).pipe(
-      map(
-        (supplier: Supplier): SupplierModel => {
-          const supplierModel = {
-            ...supplier,
-            supplierGstNumber: this.supplierManagementService.convertSupplierGSTNumberToFormModel(
+      map((supplier: Supplier): SupplierModel => {
+        const supplierModel = {
+          ...supplier,
+          supplierGstNumber:
+            this.supplierManagementService.convertSupplierGSTNumberToFormModel(
               supplier.gstNumber
             ),
-            address: this.locationServices.getAddressModelFromAddress(
-              supplier.address
-            )
-          };
+          address: this.locationServices.getAddressModelFromAddress(
+            supplier.address
+          )
+        };
 
-          return supplierModel;
-        }
-      )
+        return supplierModel;
+      })
     );
   }
 

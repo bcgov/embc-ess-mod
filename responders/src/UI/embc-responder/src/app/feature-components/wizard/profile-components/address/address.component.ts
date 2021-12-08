@@ -106,11 +106,10 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
     });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
-      () => {
+    this.tabUpdateSubscription =
+      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
-      }
-    );
+      });
   }
 
   ngAfterViewChecked(): void {
@@ -184,10 +183,11 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * @param event radio change event
    */
   public primaryAddressChange(event: MatRadioChange): void {
-    this.primaryAddressForm = this.addressService.setDefaultPrimaryAddressValues(
-      this.primaryAddressForm,
-      event
-    );
+    this.primaryAddressForm =
+      this.addressService.setDefaultPrimaryAddressValues(
+        this.primaryAddressForm,
+        event
+      );
   }
 
   /**
@@ -196,10 +196,11 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * @param event radio change event
    */
   public mailingAddressChange(event: MatRadioChange): void {
-    this.primaryAddressForm = this.addressService.setDefaultMailingAddressValues(
-      this.primaryAddressForm,
-      event
-    );
+    this.primaryAddressForm =
+      this.addressService.setDefaultMailingAddressValues(
+        this.primaryAddressForm,
+        event
+      );
   }
 
   /**
@@ -488,20 +489,15 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * Persists the form values to the service
    */
   private saveFormUpdates(): void {
-    this.stepEvacueeProfileService.primaryAddressDetails = this.primaryAddressForm.get(
-      'address'
-    ).value;
-    this.stepEvacueeProfileService.mailingAddressDetails = this.primaryAddressForm.get(
-      'mailingAddress'
-    ).value;
-    this.stepEvacueeProfileService.isBcAddress = this.primaryAddressForm.get(
-      'isBcAddress'
-    ).value;
-    this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress = this.primaryAddressForm.get(
-      'isNewMailingAddress'
-    ).value;
-    this.stepEvacueeProfileService.isBcMailingAddress = this.primaryAddressForm.get(
-      'isBcMailingAddress'
-    ).value;
+    this.stepEvacueeProfileService.primaryAddressDetails =
+      this.primaryAddressForm.get('address').value;
+    this.stepEvacueeProfileService.mailingAddressDetails =
+      this.primaryAddressForm.get('mailingAddress').value;
+    this.stepEvacueeProfileService.isBcAddress =
+      this.primaryAddressForm.get('isBcAddress').value;
+    this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress =
+      this.primaryAddressForm.get('isNewMailingAddress').value;
+    this.stepEvacueeProfileService.isBcMailingAddress =
+      this.primaryAddressForm.get('isBcMailingAddress').value;
   }
 }

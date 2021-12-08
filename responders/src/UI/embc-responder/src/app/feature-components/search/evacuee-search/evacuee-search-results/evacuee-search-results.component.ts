@@ -43,7 +43,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForEvacuee(
-      (this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext)
+      (this.evacueeSearchContext =
+        this.evacueeSearchService.evacueeSearchContext)
     );
   }
 

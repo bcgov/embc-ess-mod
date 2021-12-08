@@ -16,7 +16,8 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   styleUrls: ['./other-transportation.component.scss']
 })
 export class OtherTransportationComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterViewInit
+{
   @Input() supportDetailsForm: FormGroup;
   referralForm: FormGroup;
 

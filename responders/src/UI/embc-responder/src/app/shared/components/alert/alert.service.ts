@@ -42,6 +42,6 @@ export class AlertService {
   }
 
   clearAlert(): void {
-    this.alertSubject.next();
+    this.alertSubject.next(null);
   }
 }

@@ -38,12 +38,10 @@ export class StepSupportsService {
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
   private currentNeedsAssessmentVal: NeedsAssessment;
-  private existingSupportListVal: BehaviorSubject<
-    Support[]
-  > = new BehaviorSubject<Support[]>([]);
-  private existingSupportListVal$: Observable<
-    Support[]
-  > = this.existingSupportListVal.asObservable();
+  private existingSupportListVal: BehaviorSubject<Support[]> =
+    new BehaviorSubject<Support[]>([]);
+  private existingSupportListVal$: Observable<Support[]> =
+    this.existingSupportListVal.asObservable();
   private supportTypeToAddVal: Code;
   private evacFileVal: EvacuationFileModel;
   private supplierListVal: SupplierListItemModel[];
@@ -428,19 +426,18 @@ export class StepSupportsService {
         needsAssessmentId
       })
       .pipe(
-        map(
-          (file: EvacuationFile): EvacuationFileModel => {
-            return {
-              ...file,
-              evacuatedFromAddress: this.locationService.getAddressModelFromAddress(
+        map((file: EvacuationFile): EvacuationFileModel => {
+          return {
+            ...file,
+            evacuatedFromAddress:
+              this.locationService.getAddressModelFromAddress(
                 file.evacuatedFromAddress
               ),
-              assignedTaskCommunity: this.locationService.mapCommunityFromCode(
-                file?.task?.communityCode
-              )
-            };
-          }
-        )
+            assignedTaskCommunity: this.locationService.mapCommunityFromCode(
+              file?.task?.communityCode
+            )
+          };
+        })
       );
   }
 }

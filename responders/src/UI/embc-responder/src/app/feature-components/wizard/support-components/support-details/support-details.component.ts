@@ -198,9 +198,8 @@ export class SupportDetailsComponent implements OnInit {
    * @returns true/false
    */
   exists(member: EvacuationFileHouseholdMember) {
-    const existingList: EvacuationFileHouseholdMember[] = this.supportDetailsForm.get(
-      'members'
-    ).value;
+    const existingList: EvacuationFileHouseholdMember[] =
+      this.supportDetailsForm.get('members').value;
     return existingList.findIndex((value) => value.id === member.id) > -1;
   }
 
@@ -260,7 +259,8 @@ export class SupportDetailsComponent implements OnInit {
     if (!this.supportDetailsForm.valid) {
       this.supportDetailsForm.markAllAsTouched();
     } else {
-      this.stepSupportsService.supportDetails = this.supportDetailsForm.getRawValue();
+      this.stepSupportsService.supportDetails =
+        this.supportDetailsForm.getRawValue();
       if (!this.editFlag) {
         this.router.navigate(['/ess-wizard/add-supports/delivery']);
       } else {

@@ -16,7 +16,8 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   styleUrls: ['./lodging-hotel-motel.component.scss']
 })
 export class LodgingHotelMotelComponent
-  implements OnInit, OnChanges, AfterViewInit {
+  implements OnInit, OnChanges, AfterViewInit
+{
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfDays: number;
   referralForm: FormGroup;
