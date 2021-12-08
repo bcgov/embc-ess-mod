@@ -15,7 +15,7 @@ import { EnvironmentInformation } from './core/model/environment-information.mod
 export class AppComponent implements OnInit {
   public isLoading = true;
   public color = '#169BD5';
-  public environment: EnvironmentInformation;
+  public environment: EnvironmentInformation = {};
 
   constructor(
     private alertService: AlertService,

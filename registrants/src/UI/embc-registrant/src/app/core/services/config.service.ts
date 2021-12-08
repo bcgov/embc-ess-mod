@@ -78,7 +78,7 @@ export class ConfigService {
       },
       (error) => {
         if (error.status === 404) {
-          this.environmentBanner = null;
+          this.environmentBanner = {};
         }
       }
     );
