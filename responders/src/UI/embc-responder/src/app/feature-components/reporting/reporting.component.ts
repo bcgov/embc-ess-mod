@@ -21,7 +21,7 @@ export class ReportingComponent implements OnInit {
   // showLoader = false;
   color = '#FFFFFF';
   isLoading = false;
-  city: Community[] = [];
+  cityFrom: Community[] = [];
   cityTo: Community[] = [];
   filteredOptionsEvacFrom: Observable<Community[]>;
   filteredOptionsEvacTo: Observable<Community[]>;
@@ -35,14 +35,14 @@ export class ReportingComponent implements OnInit {
 
   ngOnInit(): void {
     this.createReportingForm();
-    this.city = this.locationService.getCommunityList();
+    this.cityFrom = this.locationService.getCommunityList();
     this.cityTo = this.locationService.getCommunityList();
 
     this.filteredOptionsEvacFrom = this.reportForm
       .get('evacuatedFrom')
       .valueChanges.pipe(
         startWith(''),
-        map((value) => (value ? this.filter(value) : this.city.slice()))
+        map((value) => (value ? this.filter(value) : this.cityFrom.slice()))
       );
 
     this.filteredOptionsEvacTo = this.reportForm
@@ -57,8 +57,8 @@ export class ReportingComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.reportService
       .reportsGetEvacueeReport(this.reportForm.getRawValue())
-      .subscribe(
-        (reportResponse) => {
+      .subscribe({
+        next: (reportResponse) => {
           // Downloading a csv document:
           const blob = new Blob([reportResponse], { type: 'text/csv' });
           const url = window.URL.createObjectURL(blob);
@@ -70,21 +70,20 @@ export class ReportingComponent implements OnInit {
           document.body.removeChild(anchor);
           this.isLoading = !this.isLoading;
         },
-        (error) => {
+        error: (error) => {
           this.isLoading = !this.isLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeReportError);
         }
-      );
+      });
   }
 
   supportReport(): void {
     this.isLoading = !this.isLoading;
-    console.log(this.getDataFromForm());
     this.reportService
-      .reportsGetSupportReport(this.reportForm.getRawValue())
-      .subscribe(
-        (reportResponse) => {
+      .reportsGetSupportReport(this.getDataFromForm())
+      .subscribe({
+        next: (reportResponse) => {
           // Downloading a csv document:
           const blob = new Blob([reportResponse], { type: 'text/csv' });
           const url = window.URL.createObjectURL(blob);
@@ -96,12 +95,12 @@ export class ReportingComponent implements OnInit {
           document.body.removeChild(anchor);
           this.isLoading = !this.isLoading;
         },
-        (error) => {
+        error: (error) => {
           this.isLoading = !this.isLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeReportError);
         }
-      );
+      });
   }
 
   /**
@@ -142,7 +141,7 @@ export class ReportingComponent implements OnInit {
   validateEvacuatedFrom(): boolean {
     const currentCity = this.reportForm.get('evacuatedFrom').value;
     let invalidCity = false;
-    if (currentCity !== null && currentCity.name === undefined) {
+    if (currentCity !== '' && currentCity.name === undefined) {
       invalidCity = !invalidCity;
       this.reportForm.get('evacuatedFrom').setErrors({ invalidCity: true });
     }
@@ -155,7 +154,7 @@ export class ReportingComponent implements OnInit {
   validateEvacuatedTo(): boolean {
     const currentCity = this.reportForm.get('evacuatedTo').value;
     let invalidCity = false;
-    if (currentCity !== null && currentCity.name === undefined) {
+    if (currentCity !== '' && currentCity.name === undefined) {
       invalidCity = !invalidCity;
       this.reportForm.get('evacuatedTo').setErrors({ invalidCity: true });
     }
@@ -170,7 +169,7 @@ export class ReportingComponent implements OnInit {
   private filter(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.city.filter((option) =>
+      return this.cityFrom.filter((option) =>
         option.name.toLowerCase().includes(filterValue)
       );
     }
