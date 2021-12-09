@@ -413,11 +413,11 @@ namespace EMBC.Responders.API.Controllers
         [Description("Error On Printed Referral")]
         ErrorOnPrintedReferral,
 
-        [Description("Printed Error")]
-        PrintedError,
+        [Description("Printer Error")]
+        PrinterError,
 
-        [Description("Evacuee Lost Referral")]
-        EvacueeLostReferral
+        [Description("Evacuee Lost the Referral")]
+        EvacueeLostTheReferral
     }
 
     public class ReferralPrintRequestResponse
