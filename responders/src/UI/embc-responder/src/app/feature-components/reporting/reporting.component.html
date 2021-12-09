@@ -48,11 +48,28 @@
               <mat-form-field appearance="outline">
                 <mat-label>Evacuated From</mat-label>
                 <input
-                  formControlName="evacuatedFrom"
                   maxlength="100"
+                  type="text"
+                  [formControlName]="'evacuatedFrom'"
                   matInput
                   placeholder="Evacuated From"
+                  [matAutocomplete]="auto"
                 />
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  [displayWith]="cityDisplayFrom"
+                  (optionSelected)="getEvacuatedFrom($event.option.value)"
+                >
+                  <mat-option
+                    *ngFor="let option of filteredOptionsEvacFrom | async"
+                    [value]="option"
+                  >
+                    {{ option.name }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="validateEvacuatedFrom()">
+                  City is invalid</mat-error
+                >
               </mat-form-field>
             </div>
           </div>
@@ -62,11 +79,28 @@
               <mat-form-field appearance="outline">
                 <mat-label>Evacuated To</mat-label>
                 <input
-                  formControlName="evacuatedTo"
                   maxlength="100"
+                  type="text"
+                  formControlName="evacuatedTo"
                   matInput
                   placeholder="Evacuated To"
+                  [matAutocomplete]="autoTo"
                 />
+                <mat-autocomplete
+                  #autoTo="matAutocomplete"
+                  [displayWith]="cityDisplayTo"
+                  (optionSelected)="getEvacuatedTo($event.option.value)"
+                >
+                  <mat-option
+                    *ngFor="let option of filteredOptionsEvacTo | async"
+                    [value]="option"
+                  >
+                    {{ option.name }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="validateEvacuatedTo()">
+                  City is invalid</mat-error
+                >
               </mat-form-field>
             </div>
           </div>
@@ -77,6 +111,7 @@
               class="button-p button-width"
               mat-button
               (click)="evacueeReport()"
+              [disabled]="!reportForm.valid || isLoading"
             >
               <img
                 class="img-align"
@@ -99,6 +134,7 @@
               class="button-p button-width"
               mat-button
               (click)="supportReport()"
+              [disabled]="!reportForm.valid || isLoading"
             >
               <img
                 class="img-align"
