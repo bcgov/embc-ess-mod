@@ -11,6 +11,7 @@ using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace OAuthServer
     public class Startup
     {
         private const string HealthCheckReadyTag = "ready";
+        private const string HealthCheckAliveTag = "alive";
 
         public Startup(IConfiguration configuration)
         {
@@ -177,7 +179,9 @@ namespace OAuthServer
                     };
                 });
 
-            services.AddHealthChecks().AddCheck("OAuth Server ", () => HealthCheckResult.Healthy("OK"), new[] { HealthCheckReadyTag });
+            services.AddHealthChecks()
+                .AddCheck("Responders API ready hc", () => HealthCheckResult.Healthy("API ready"), new[] { HealthCheckReadyTag })
+                .AddCheck("Responders API live hc", () => HealthCheckResult.Healthy("API alive"), new[] { HealthCheckAliveTag });
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
@@ -205,6 +209,9 @@ namespace OAuthServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
+                endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
             });
         }
     }

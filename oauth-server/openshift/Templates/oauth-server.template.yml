@@ -193,21 +193,18 @@ objects:
                   readonly: true
                 - mountPath: /dpkeys
                   name: dp
-              # livenessProbe:
-              #   httpGet:
-              #     scheme: HTTP
-              #     path: /
-              #     port: 8080
-              # startupProbe:
-              #   httpGet:
-              #     scheme: HTTP
-              #     path: /
-              #     port: 8080
-              # readinessProbe:
-              #   httpGet:
-              #     scheme: HTTP
-              #     path: /
-              #     port: 8080
+              livenessProbe:
+                httpGet:
+                  path: /hc/live
+                  port: 8080
+              startupProbe:
+                httpGet:
+                  path: /hc/startup
+                  port: 8080
+              readinessProbe:
+                httpGet:
+                  path: /hc/ready
+                  port: 8080
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
