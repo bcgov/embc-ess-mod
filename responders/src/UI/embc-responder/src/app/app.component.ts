@@ -9,6 +9,7 @@ import { AlertService } from './shared/components/alert/alert.service';
 import * as globalConst from './core/services/global-constants';
 import { LoadTeamListService } from './core/services/load-team-list.service';
 import { EnvironmentInformation } from './core/models/environment-information.model';
+import { TimeoutService } from './core/services/timeout.service';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
   public show = true;
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
+  timedOut = false;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -29,7 +31,8 @@ export class AppComponent implements OnInit {
     private configService: ConfigService,
     private alertService: AlertService,
     private locationService: LocationsService,
-    private loadTeamListService: LoadTeamListService
+    private loadTeamListService: LoadTeamListService,
+    private timeOut: TimeoutService
   ) {
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
@@ -44,6 +47,8 @@ export class AppComponent implements OnInit {
         this.alertService.setAlert('danger', globalConst.systemError);
       }
     );
+
+    this.timeOut.init(1, 1);
   }
 
   public async ngOnInit(): Promise<void> {

@@ -3,6 +3,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('AppComponent', () => {
   beforeEach(
@@ -11,7 +13,9 @@ describe('AppComponent', () => {
         imports: [
           RouterTestingModule,
           HttpClientTestingModule,
-          OAuthModule.forRoot()
+          OAuthModule.forRoot(),
+          NgIdleKeepaliveModule.forRoot(),
+          MatDialogModule
         ],
         declarations: [AppComponent]
       }).compileComponents();

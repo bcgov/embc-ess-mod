@@ -32,6 +32,7 @@ import { VoidReferralDialogComponent } from './components/dialog-components/void
 import { ReprintReferralDialogComponent } from './components/dialog-components/reprint-referral-dialog/reprint-referral-dialog.component';
 import { ProcessSupportsDialogComponent } from './components/dialog-components/process-supports-dialog/process-supports-dialog.component';
 import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
+import { TimeOutDialogComponent } from './components/dialog-components/time-out-dialog/time-out-dialog.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-i
     VoidReferralDialogComponent,
     ReprintReferralDialogComponent,
     ProcessSupportsDialogComponent,
-    BcscInviteDialogComponent
+    BcscInviteDialogComponent,
+    TimeOutDialogComponent
   ],
   imports: [
     CommonModule,
@@ -97,7 +99,8 @@ import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-i
     ViewAssessmentDialogComponent,
     VoidReferralDialogComponent,
     ReprintReferralDialogComponent,
-    BcscInviteDialogComponent
+    BcscInviteDialogComponent,
+    TimeOutDialogComponent
   ]
 })
 export class SharedModule {}
