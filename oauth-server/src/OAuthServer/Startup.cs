@@ -184,8 +184,8 @@ namespace OAuthServer
                 });
 
             services.AddHealthChecks()
-                .AddCheck("Oauth Server ready hc", () => HealthCheckResult.Healthy("API ready"), new[] { HealthCheckReadyTag })
-                .AddCheck("Oauth Server live hc", () => HealthCheckResult.Healthy("API alive"), new[] { HealthCheckAliveTag });
+                .AddCheck("Oauth Server ready hc", () => HealthCheckResult.Healthy("Service ready"), new[] { HealthCheckReadyTag })
+                .AddCheck("Oauth Server live hc", () => HealthCheckResult.Healthy("Service alive"), new[] { HealthCheckAliveTag });
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
@@ -220,6 +220,7 @@ namespace OAuthServer
                 };
             });
 
+            app.UseForwardedHeaders();
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthentication();

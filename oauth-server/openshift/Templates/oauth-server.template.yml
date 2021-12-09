@@ -201,6 +201,8 @@ objects:
                 httpGet:
                   path: /hc/startup
                   port: 8080
+                initialDelaySeconds: 20
+                timeoutSeconds: 5
               readinessProbe:
                 httpGet:
                   path: /hc/ready
