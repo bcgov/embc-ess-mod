@@ -14,7 +14,6 @@ import { map, filter } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ReportsService extends BaseService {
-  [x: string]: any;
   constructor(
     config: ApiConfiguration,
     http: HttpClient
