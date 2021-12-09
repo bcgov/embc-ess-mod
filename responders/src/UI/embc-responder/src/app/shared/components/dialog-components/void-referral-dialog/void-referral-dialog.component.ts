@@ -5,7 +5,9 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { Code } from 'src/app/core/api/models';
 import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
+import { StepSupportsService } from 'src/app/feature-components/wizard/step-supports/step-supports.service';
 
 @Component({
   selector: 'app-void-referral-dialog',
@@ -16,12 +18,16 @@ export class VoidReferralDialogComponent implements OnInit {
   @Input() profileData: string;
   @Output() outputEvent = new EventEmitter<string>();
   voidForm: FormGroup;
-  reasons = SupportVoidReason;
+  reasons: Code[] = [];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private stepSupportService: StepSupportsService
+  ) {}
 
   ngOnInit(): void {
     this.voidReasonForm();
+    this.reasons = this.stepSupportService.voidReasons;
   }
 
   voidReasonForm(): void {
@@ -53,15 +59,5 @@ export class VoidReferralDialogComponent implements OnInit {
         this.outputEvent.emit(this.voidForm.get('reason').value);
       }
     }
-  }
-
-  /**
-   * Splits the reasons into words with spaces to be displayed to the user
-   *
-   * @param reasonOption options to choose for reasons for reprinting
-   * @returns the same reason for reprinting with spaces between words.
-   */
-  splitString(reasonOption: string): string {
-    return reasonOption.split(/(?=[A-Z])/).join(' ');
   }
 }

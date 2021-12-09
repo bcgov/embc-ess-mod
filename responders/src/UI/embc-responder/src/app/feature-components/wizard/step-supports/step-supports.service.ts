@@ -14,7 +14,11 @@ import {
   EvacuationFile
 } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
-import { RegistrationsService, TasksService } from 'src/app/core/api/services';
+import {
+  ConfigurationService,
+  RegistrationsService,
+  TasksService
+} from 'src/app/core/api/services';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
@@ -32,11 +36,14 @@ import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { DatePipe } from '@angular/common';
 import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
+  private reprintReasonsVal: Code[] = [];
+  private voidReasonsVal: Code[] = [];
   private currentNeedsAssessmentVal: NeedsAssessment;
   private existingSupportListVal: BehaviorSubject<Support[]> =
     new BehaviorSubject<Support[]>([]);
@@ -59,7 +66,9 @@ export class StepSupportsService {
     private referralService: ReferralCreationService,
     private datePipe: DatePipe,
     private evacueeSearchService: EvacueeSearchService,
-    private registrationsService: RegistrationsService
+    private registrationsService: RegistrationsService,
+    private configService: ConfigurationService,
+    private alertService: AlertService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -100,6 +109,32 @@ export class StepSupportsService {
 
   get supportSubCategory() {
     return this.supportSubCategoryVal;
+  }
+
+  set reprintReasons(reprintReasonsVal: Code[]) {
+    this.reprintReasonsVal = reprintReasonsVal;
+    this.cacheService.set('reprintReasons', JSON.stringify(reprintReasonsVal));
+  }
+
+  get reprintReasons() {
+    return this.reprintReasonsVal.length > 0
+      ? this.reprintReasonsVal
+      : JSON.parse(this.cacheService.get('reprintReasons'))
+      ? JSON.parse(this.cacheService.get('reprintReasons'))
+      : this.getReprintReasons();
+  }
+
+  set voidReasons(voidReasonsVal: Code[]) {
+    this.voidReasonsVal = voidReasonsVal;
+    this.cacheService.set('voidReasons', JSON.stringify(voidReasonsVal));
+  }
+
+  get voidReasons() {
+    return this.voidReasonsVal.length > 0
+      ? this.voidReasonsVal
+      : JSON.parse(this.cacheService.get('voidReasons'))
+      ? JSON.parse(this.cacheService.get('voidReasons'))
+      : this.getVoidReasons();
   }
 
   set currentNeedsAssessment(currentNeedsAssessmentVal: NeedsAssessment) {
@@ -213,7 +248,7 @@ export class StepSupportsService {
   }
 
   public getEvacFile(essFileNumber: string): Observable<EvacuationFileModel> {
-    return this.essFileService.getFileFromId(essFileNumber); //'100963'
+    return this.essFileService.getFileFromId(essFileNumber);
   }
 
   public getSupplierList(): Observable<Array<SupplierListItemModel>> {
@@ -339,7 +374,7 @@ export class StepSupportsService {
     }
   }
 
-  getRateSheetContent(): DialogContent {
+  public getRateSheetContent(): DialogContent {
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
       return globalConst.mealRateSheet;
     } else if (
@@ -376,7 +411,7 @@ export class StepSupportsService {
    * @param time the time to add to the ISOString
    * @returns a ISOString with a valid Date format
    */
-  convertDateTimeToString(date: string, time: string): string {
+  public convertDateTimeToString(date: string, time: string): string {
     const dateToDate = new Date(date);
     const hours = +time.split(':', 1).pop();
     const minutes = +time.split(':', 2).pop();
@@ -393,7 +428,7 @@ export class StepSupportsService {
    * @param date the date object
    * @returns a valid date format for datepicker
    */
-  convertStringToDate(date: any): Date {
+  public convertStringToDate(date: any): Date {
     if (typeof date === 'object') {
       date = this.datePipe.transform(date, 'dd-MMM-yyyy');
     }
@@ -416,7 +451,7 @@ export class StepSupportsService {
     return new Date(p[2], months[p[1].toLowerCase()], p[0]);
   }
 
-  getNeedsAssessmentInfo(
+  public getNeedsAssessmentInfo(
     fileId: string,
     needsAssessmentId: string
   ): Observable<EvacuationFileModel> {
@@ -439,5 +474,39 @@ export class StepSupportsService {
           };
         })
       );
+  }
+
+  public getReprintReasons(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportReprintReason' })
+      .subscribe({
+        next: (reprintingReasons: Code[]) => {
+          this.reprintReasons = reprintingReasons;
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      });
+  }
+
+  public getVoidReasons(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportVoidReason' })
+      .subscribe({
+        next: (voidingReasons: Code[]) => {
+          this.voidReasons = voidingReasons;
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      });
   }
 }

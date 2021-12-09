@@ -5,7 +5,8 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { SupportReprintReason } from 'src/app/core/api/models';
+import { Code, SupportReprintReason } from 'src/app/core/api/models';
+import { StepSupportsService } from 'src/app/feature-components/wizard/step-supports/step-supports.service';
 
 @Component({
   selector: 'app-reprint-referral-dialog',
@@ -16,12 +17,16 @@ export class ReprintReferralDialogComponent implements OnInit {
   @Input() profileData: string;
   @Output() outputEvent = new EventEmitter<string>();
   reprintForm: FormGroup;
-  reasons = SupportReprintReason;
+  reasons: Code[] = [];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private stepSupportService: StepSupportsService
+  ) {}
 
   ngOnInit(): void {
     this.reprintReasonForm();
+    this.reasons = this.stepSupportService.reprintReasons;
   }
 
   reprintReasonForm(): void {
@@ -53,15 +58,5 @@ export class ReprintReferralDialogComponent implements OnInit {
         this.outputEvent.emit(this.reprintForm.get('reason').value);
       }
     }
-  }
-
-  /**
-   * Splits the reasons into words with spaces to be displayed to the user
-   *
-   * @param reasonOption options to choose for reasons for reprinting
-   * @returns the same reason for reprinting with spaces between words.
-   */
-  splitString(reasonOption: string): string {
-    return reasonOption.split(/(?=[A-Z])/).join(' ');
   }
 }

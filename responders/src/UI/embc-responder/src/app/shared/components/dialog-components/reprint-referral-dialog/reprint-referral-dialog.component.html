@@ -23,8 +23,8 @@
       <mat-form-field appearance="outline">
         <mat-label>Reason for reprint</mat-label>
         <mat-select formControlName="reason" required>
-          <mat-option *ngFor="let gen of reasons | enumToArray" [value]="gen">
-            {{ splitString(gen) }}
+          <mat-option *ngFor="let reason of reasons" [value]="reason?.value">
+            {{ reason?.description }}
           </mat-option>
         </mat-select>
         <mat-error

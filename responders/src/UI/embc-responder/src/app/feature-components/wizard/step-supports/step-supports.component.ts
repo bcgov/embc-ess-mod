@@ -45,5 +45,7 @@ export class StepSupportsComponent implements OnInit {
         );
       }
     );
+    this.stepSupportsService.getReprintReasons();
+    this.stepSupportsService.getVoidReasons();
   }
 }
