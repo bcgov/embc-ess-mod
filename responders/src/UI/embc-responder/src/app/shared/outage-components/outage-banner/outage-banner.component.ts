@@ -11,10 +11,9 @@ export class OutageBannerComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>(true);
   outageInfo: OutageInformation;
 
-  constructor(public outageService: OutageService) { }
+  constructor(public outageService: OutageService) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   public closeOutageBanner() {
     this.closeEvent.emit(false);

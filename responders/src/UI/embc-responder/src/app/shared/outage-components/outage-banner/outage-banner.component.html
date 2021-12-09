@@ -18,7 +18,7 @@
         }}
         at
         {{
-          (outageService.outageInfo$ | async).outageEndDate | date: 'shortTime'
+          (outageService.outageInfo$ | async)?.outageEndDate | date: 'shortTime'
         }}
         PST
       </b>

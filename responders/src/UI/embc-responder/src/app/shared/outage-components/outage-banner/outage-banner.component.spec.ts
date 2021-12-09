@@ -8,9 +8,8 @@ describe('OutageBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OutageBannerComponent ]
-    })
-    .compileComponents();
+      declarations: [OutageBannerComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

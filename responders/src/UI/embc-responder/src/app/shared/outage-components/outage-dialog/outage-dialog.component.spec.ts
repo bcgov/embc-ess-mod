@@ -8,9 +8,8 @@ describe('OutageDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OutageDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [OutageDialogComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

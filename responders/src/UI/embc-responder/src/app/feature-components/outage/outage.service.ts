@@ -8,10 +8,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OutageService {
-  outageInfo: BehaviorSubject<OutageInformation> = new BehaviorSubject<OutageInformation>(
-    null
-  );
-  public outageInfo$: Observable<OutageInformation> = this.outageInfo.asObservable();
+  outageInfo: BehaviorSubject<OutageInformation> =
+    new BehaviorSubject<OutageInformation>(null);
+  public outageInfo$: Observable<OutageInformation> =
+    this.outageInfo.asObservable();
 
   public getOutageInfo(): Observable<OutageInformation> {
     return this.outageInfo$;

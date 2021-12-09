@@ -8,9 +8,8 @@ describe('OutageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OutageComponent ]
-    })
-    .compileComponents();
+      declarations: [OutageComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {
