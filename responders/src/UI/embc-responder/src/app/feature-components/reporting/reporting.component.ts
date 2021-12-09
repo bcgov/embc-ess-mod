@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReportsService } from 'src/app/core/api/services';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-reporting',
@@ -35,7 +36,8 @@ export class ReportingComponent implements OnInit {
           const blob = new Blob([reportResponse], { type: 'text/csv' });
           const url = window.URL.createObjectURL(blob);
           const anchor = document.createElement('a');
-          anchor.download = 'evacueeReport.csv';
+          anchor.download =
+            'Referral_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
           anchor.href = url;
           document.body.appendChild(anchor);
           anchor.click();
@@ -60,7 +62,8 @@ export class ReportingComponent implements OnInit {
           const blob = new Blob([reportResponse], { type: 'text/csv' });
           const url = window.URL.createObjectURL(blob);
           const anchor = document.createElement('a');
-          anchor.download = 'supportReport.csv';
+          anchor.download =
+            'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
           anchor.href = url;
           document.body.appendChild(anchor);
           anchor.click();
