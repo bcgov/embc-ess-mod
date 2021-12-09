@@ -57,7 +57,7 @@ export class ReportingComponent implements OnInit {
   evacueeReport(): void {
     this.isLoading = !this.isLoading;
     this.reportService
-      .reportsGetEvacueeReport(this.reportForm.getRawValue())
+      .reportsGetEvacueeReport(this.getDataFromForm())
       .subscribe({
         next: (reportResponse) => {
           // Downloading a csv document:
