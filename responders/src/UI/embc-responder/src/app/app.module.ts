@@ -10,6 +10,8 @@ import { ApiModule } from './core/api/api.module';
 import { ErrorHandlingModule } from './shared/error-handling/error-handing.module';
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
+import { OutageModule } from './feature-components/outage/outage.module';
+import { OutageService } from './feature-components/outage/outage.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +30,8 @@ import { DatePipe } from '@angular/common';
     }),
     ApiModule.forRoot({ rootUrl: '' }),
     ErrorHandlingModule.forRoot(),
-    SharedModule
+    SharedModule,
+    OutageModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

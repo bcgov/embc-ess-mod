@@ -11,7 +11,7 @@
   font-size: 25px;
 }
 
-.border {
+.main-border {
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -24,31 +24,6 @@
 
 .footer {
   flex-shrink: 0;
-}
-
-.outage-banner {
-  background-color: #F2F2F2;
-  text-align: center;
-}
-
-.dynamic-text {
-  color: red;
-  padding: 20px 0px 10px 100px;
-}
-.close-image img:last-child {
-  display: none;
-}
-
-.close-image:hover img:last-child {
-  display: inline;
-}
-
-.close-image:hover img:first-child {
-  display: none;
-}
-
-.close-button-style {
-  float: right;
 }
 
 

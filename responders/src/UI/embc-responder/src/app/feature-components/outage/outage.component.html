@@ -7,13 +7,28 @@
       <p class="subtitle">
         This system is currently undergoing planned maintenance.
       </p>
-      <p class="dynamic-text" *ngIf="description !== null">
-        {{ description }}
+      <p class="dynamic-text">
+        {{ outageInfo?.content }}
         <b
-          >from {{ startDate | date: 'MMM dd' }} at
-          {{ startDate | date: 'shortTime' }} to
-          {{ endDate | date: 'MMM dd' }} at
-          {{ endDate | date: 'shortTime' }}
+          >from
+          {{
+            (outageService.outageInfo$ | async)?.outageStartDate
+              | date: 'MMM dd'
+          }}
+          at
+          {{
+            (outageService.outageInfo$ | async)?.outageStartDate
+              | date: 'shortTime'
+          }}
+          to
+          {{
+            (outageService.outageInfo$ | async)?.outageEndDate | date: 'MMM dd'
+          }}
+          at
+          {{
+            (outageService.outageInfo$ | async)?.outageEndDate
+              | date: 'shortTime'
+          }}
           PST
         </b>
       </p>

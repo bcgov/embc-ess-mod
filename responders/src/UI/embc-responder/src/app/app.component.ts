@@ -9,8 +9,8 @@ import { AlertService } from './shared/components/alert/alert.service';
 import * as globalConst from './core/services/global-constants';
 import { LoadTeamListService } from './core/services/load-team-list.service';
 import { EnvironmentInformation } from './core/models/environment-information.model';
+import { OutageService } from './feature-components/outage/outage.service';
 import { OutageInformation } from './core/api/models';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -23,9 +23,13 @@ export class AppComponent implements OnInit {
   public show = true;
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
-  public outageInfo: OutageInformation;
   public showOutageBanner = false;
-  public showOutageComponent = false;
+
+  outageInfoDummy: OutageInformation = {
+    content: 'Outage Test',
+    outageEndDate: '2021-01-10T16:00:00.000Z',
+    outageStartDate: '2021-12-07T16:00:00.000Z'
+  };
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -34,7 +38,8 @@ export class AppComponent implements OnInit {
     private configService: ConfigService,
     private alertService: AlertService,
     private locationService: LocationsService,
-    private loadTeamListService: LoadTeamListService
+    private loadTeamListService: LoadTeamListService,
+    private outageService: OutageService
   ) {
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
@@ -44,11 +49,8 @@ export class AppComponent implements OnInit {
 
     this.configService.load().subscribe({
       next: (result) => {
-        // result;
-        console.log(result);
-        this.outageInfo = null;
-        // this.outageInfo = result.outageInfo;
-        this.displayOutageInfo();
+        // this.outageService.setOutageInfo(result.outageInfo);
+        this.outageService.setOutageInfo(this.outageInfoDummy);
       },
       error: (error) => {
         this.alertService.clearAlert();
@@ -59,51 +61,45 @@ export class AppComponent implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     this.environment = this.configService.getEnvironmentBanner();
-    try {
-      const nextUrl = await this.authenticationService.login();
-      const userProfile = await this.userService.loadUserProfile();
-      const location = await this.locationService.loadStaticLocationLists();
-      const team = await this.loadTeamListService.loadStaticTeamLists();
-      this.getBackendVersionInfo();
-      const nextRoute = decodeURIComponent(
-        userProfile.requiredToSignAgreement
-          ? 'electronic-agreement'
-          : nextUrl || 'responder-access'
-      );
-      await this.router.navigate([nextRoute]);
-    } catch (error) {
-      this.alertService.clearAlert();
-      if (error.status === 403) {
-        this.alertService.setAlert('danger', globalConst.accessError);
-      } else {
-        this.alertService.setAlert('danger', globalConst.systemError);
-      }
-    } finally {
+    const hola = await this.outageService.displayOutageInfo();
+    console.log(hola);
+    if (this.outageService.displayOutageInfo()) {
       this.isLoading = false;
+      this.router.navigate(['/outage']);
+    } else {
+      try {
+        const nextUrl = await this.authenticationService.login();
+        const userProfile = await this.userService.loadUserProfile();
+        const location = await this.locationService.loadStaticLocationLists();
+        const team = await this.loadTeamListService.loadStaticTeamLists();
+        this.getBackendVersionInfo();
+        this.showOutageBanner = this.outageService.displayOutageBanner();
+        const nextRoute = decodeURIComponent(
+          userProfile.requiredToSignAgreement
+            ? 'electronic-agreement'
+            : nextUrl || 'responder-access'
+        );
+        await this.router.navigate([nextRoute]);
+      } catch (error) {
+        this.alertService.clearAlert();
+        if (error.status === 403) {
+          this.alertService.setAlert('danger', globalConst.accessError);
+        } else {
+          this.alertService.setAlert('danger', globalConst.systemError);
+        }
+      } finally {
+        this.isLoading = false;
+      }
     }
   }
 
-  public closeOutageBanner() {
-    this.showOutageBanner = false;
+  public closeOutageBanner($event: boolean): void {
+    this.showOutageBanner = $event;
   }
 
   private getBackendVersionInfo(): void {
     this.configService.getVersionInfo().subscribe((version) => {
       this.version = version;
     });
-  }
-
-  private displayOutageInfo(): void {
-    if (this.outageInfo !== null) {
-      const now = new Date();
-      const outageStart = new Date(this.outageInfo.outageStartDate);
-      const outageEnd = new Date(this.outageInfo.outageEndDate);
-
-      if (moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)) {
-        this.showOutageComponent = true;
-      } else if (moment(outageStart).isAfter(now)) {
-        this.showOutageBanner = true;
-      }
-    }
   }
 }

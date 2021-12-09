@@ -37,8 +37,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
       this.reviewAction = params.action;
     }
     this.addedCommunityList = this.addCommunityService.getAddedCommunities();
-    this.deleteCommunityList =
-      this.assignedCommunityDataService.getCommunitiesToDelete();
+    this.deleteCommunityList = this.assignedCommunityDataService.getCommunitiesToDelete();
   }
 
   /**
