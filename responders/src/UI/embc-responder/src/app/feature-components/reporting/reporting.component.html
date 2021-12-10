@@ -54,6 +54,7 @@
                   matInput
                   placeholder="Evacuated From"
                   [matAutocomplete]="auto"
+                  (change)="getEvacuatedFromBlank()"
                 />
                 <mat-autocomplete
                   #auto="matAutocomplete"
@@ -85,6 +86,7 @@
                   matInput
                   placeholder="Evacuated To"
                   [matAutocomplete]="autoTo"
+                  (change)="getEvacuatedToBlank()"
                 />
                 <mat-autocomplete
                   #autoTo="matAutocomplete"

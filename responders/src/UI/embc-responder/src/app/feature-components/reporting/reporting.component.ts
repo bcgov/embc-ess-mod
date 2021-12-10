@@ -133,9 +133,21 @@ export class ReportingComponent implements OnInit {
     this.reportForm.get('evacuatedFromCommCode').setValue(community.code);
   }
 
+  getEvacuatedFromBlank() {
+    if (this.reportForm.get('evacuatedFrom').value === '') {
+      this.reportForm.get('evacuatedFromCommCode').setValue('');
+    }
+  }
+
   getEvacuatedTo(community: Community) {
     this.reportForm.get('evacuatedTo').setValue(community);
     this.reportForm.get('evacuatedToCommCode').setValue(community.code);
+  }
+
+  getEvacuatedToBlank() {
+    if (this.reportForm.get('evacuatedTo').value === '') {
+      this.reportForm.get('evacuatedToCommCode').setValue('');
+    }
   }
 
   /**
