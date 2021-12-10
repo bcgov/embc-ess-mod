@@ -44,7 +44,6 @@ export class AppComponent implements OnInit {
       }
     });
 
-
     this.timeOut.init(1, 1);
     // this.configService.load().subscribe({
     //   next: (result) => {
