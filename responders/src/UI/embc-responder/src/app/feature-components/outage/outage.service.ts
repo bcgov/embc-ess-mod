@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { OutageInformation } from 'src/app/core/api/models/outage-information';
 import * as moment from 'moment';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { map, Observable, of, tap } from 'rxjs';
+import { OutageDialogComponent } from 'src/app/shared/outage-components/outage-dialog/outage-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,8 @@ export class OutageService {
   //   this.outageInfo.asObservable();
 
   private outageInfoVal: OutageInformation;
+
+  constructor(private dialog: MatDialog) {}
 
   public get outageInfo(): OutageInformation {
     return this.outageInfoVal;
@@ -41,5 +43,14 @@ export class OutageService {
       return moment(outageStart).isAfter(now);
     }
     return false;
+  }
+
+  public openOutageDialog(): void {
+    this.dialog.open(OutageDialogComponent, {
+      data: { message: this.outageInfo, time: 5 },
+      maxHeight: '100%',
+      width: '556px',
+      maxWidth: '100%'
+    });
   }
 }

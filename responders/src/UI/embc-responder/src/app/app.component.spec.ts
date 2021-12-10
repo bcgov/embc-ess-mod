@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('AppComponent', () => {
   beforeEach(
@@ -11,6 +12,7 @@ describe('AppComponent', () => {
         imports: [
           RouterTestingModule,
           HttpClientTestingModule,
+          MatDialogModule,
           OAuthModule.forRoot()
         ],
         declarations: [AppComponent]
