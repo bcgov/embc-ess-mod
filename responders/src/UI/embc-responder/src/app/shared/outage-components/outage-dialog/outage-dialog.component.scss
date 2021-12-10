@@ -1,0 +1,26 @@
+.outage-title {
+    color: red;
+    font-size: 21px;
+}
+
+.close-image img:last-child {
+    display: none;
+  }
+  
+  .close-image:hover img:last-child {
+    display: inline;
+  }
+  
+  .close-image:hover img:first-child {
+    display: none;
+  }
+  
+  .close-button-style {
+    background-color: white;
+    float: right;
+  }
+
+  .close-bttn {
+    width: 40%;
+    margin-bottom: 20px;
+  }
