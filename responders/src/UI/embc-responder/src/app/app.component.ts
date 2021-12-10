@@ -43,7 +43,8 @@ export class AppComponent implements OnInit {
         this.show = !e.url.startsWith('/ess-wizard', 0);
       }
     });
-    
+
+
     this.timeOut.init(1, 1);
     // this.configService.load().subscribe({
     //   next: (result) => {
