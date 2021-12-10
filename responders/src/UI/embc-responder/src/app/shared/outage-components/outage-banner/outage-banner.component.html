@@ -1,0 +1,29 @@
+<div class="row outage-banner">
+  <div class="col-md-11">
+    <p class="dynamic-text">
+      {{ outageInfo?.content }}
+      <b
+        >from
+        {{ outageInfo?.outageStartDate | date: 'MMM dd' }}
+        at
+        {{ outageInfo?.outageStartDate | date: 'shortTime' }}
+        to
+        {{ outageInfo?.outageEndDate | date: 'MMM dd' }}
+        at
+        {{ outageInfo?.outageEndDate | date: 'shortTime' }}
+        PST
+      </b>
+    </p>
+  </div>
+  <div class="col-md-1">
+    <button
+      class="close-image close-button-style"
+      mat-icon-button
+      aria-label="Close"
+      (click)="closeOutageBanner()"
+    >
+      <img src="/assets/images/close.svg" height="20" width="20" />
+      <img src="/assets/images/close_onhover.svg" height="20" width="20" />
+    </button>
+  </div>
+</div>

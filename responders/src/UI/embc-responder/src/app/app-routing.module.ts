@@ -29,6 +29,13 @@ const routes: Routes = [
     canDeactivate: [WizardDeactivateGuard]
   },
   {
+    path: 'outage',
+    loadChildren: () =>
+      import('./feature-components/outage/outage.module').then(
+        (m) => m.OutageModule
+      )
+  },
+  {
     path: 'access-denied',
     component: AccessDeniedComponent
   }
