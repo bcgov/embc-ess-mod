@@ -51,8 +51,12 @@ export class AppComponent implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     this.environment = this.configService.getEnvironmentBanner();
-    const configuration = await this.configService.load();
-    this.outageService.outageInfo = configuration.outageInfo;
+    try {
+      const configuration = await this.configService.load();
+      this.outageService.outageInfo = configuration.outageInfo;
+    } catch (error) {
+      this.router.navigate(['/outage']);
+    }
 
     if (this.outageService.displayOutageInfo()) {
       this.isLoading = false;

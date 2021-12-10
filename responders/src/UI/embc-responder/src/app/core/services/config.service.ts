@@ -24,6 +24,10 @@ export class ConfigService {
   ) {}
 
   public async load(): Promise<Configuration> {
+    if (this.config !== null) {
+      return this.config;
+    }
+
     return this.configurationService
       .configurationGetConfiguration()
       .pipe(
@@ -33,10 +37,6 @@ export class ConfigService {
       )
       .toPromise();
   }
-
-  // if (this.config != null) {
-  //   return of(this.config);
-  // }
 
   public async getAuthConfig(): Promise<AuthConfig> {
     return await this.load().then((c) => ({
