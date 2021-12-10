@@ -25,12 +25,6 @@ export class AppComponent implements OnInit {
   public environment: EnvironmentInformation;
   public showOutageBanner = false;
 
-  outageInfoDummy: OutageInformation = {
-    content: 'Outage Test',
-    outageEndDate: '2021-01-10T16:00:00.000Z',
-    outageStartDate: '2021-12-07T16:00:00.000Z'
-  };
-
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
@@ -47,22 +41,19 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.configService.load().subscribe({
-      next: (result) => {
-        // this.outageService.setOutageInfo(result.outageInfo);
-        this.outageService.setOutageInfo(this.outageInfoDummy);
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.systemError);
-      }
-    });
+    // this.configService.load().subscribe({
+    //   next: (result) => {
+    //     // this.outageService.setOutageInfo(result.outageInfo);
+    //     this.outageService.setOutageInfo(result.outageInfo);
+    //   }
+    // });
   }
 
   public async ngOnInit(): Promise<void> {
     this.environment = this.configService.getEnvironmentBanner();
-    const hola = await this.outageService.displayOutageInfo();
-    console.log(hola);
+    const configuration = await this.configService.load();
+    this.outageService.outageInfo = configuration.outageInfo;
+
     if (this.outageService.displayOutageInfo()) {
       this.isLoading = false;
       this.router.navigate(['/outage']);

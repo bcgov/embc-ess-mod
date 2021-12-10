@@ -9,7 +9,9 @@ import { OutageService } from './outage.service';
 })
 export class OutageComponent implements OnInit {
   public outageInfo: OutageInformation;
-  constructor(public outageService: OutageService) {}
+  constructor(private outageService: OutageService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.outageInfo = this.outageService.outageInfo;
+  }
 }

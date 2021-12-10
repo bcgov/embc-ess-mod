@@ -23,33 +23,33 @@ export class ConfigService {
     private cacheService: CacheService
   ) {}
 
-  public load(): Observable<Configuration> {
-    if (this.config != null) {
-      return of(this.config);
-    }
-    return this.configurationService.configurationGetConfiguration().pipe(
-      tap((c) => {
-        this.config = { ...c };
-      })
-    );
-  }
-
-  public async getAuthConfig(): Promise<AuthConfig> {
-    return await this.load()
+  public async load(): Promise<Configuration> {
+    return this.configurationService
+      .configurationGetConfiguration()
       .pipe(
-        map((c) => ({
-          issuer: c.oidc.issuer,
-          clientId: c.oidc.clientId,
-          redirectUri: window.location.origin + '/',
-          responseType: 'code',
-          scope: 'openid profile email offline_access',
-          showDebugInformation: !environment.production,
-          postLogoutRedirectUri: c.oidc.postLogoutRedirectUrl,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          customQueryParams: { kc_idp_hint: 'bceid' }
-        }))
+        tap((c) => {
+          this.config = { ...c };
+        })
       )
       .toPromise();
+  }
+
+  // if (this.config != null) {
+  //   return of(this.config);
+  // }
+
+  public async getAuthConfig(): Promise<AuthConfig> {
+    return await this.load().then((c) => ({
+      issuer: c.oidc.issuer,
+      clientId: c.oidc.clientId,
+      redirectUri: window.location.origin + '/',
+      responseType: 'code',
+      scope: 'openid profile email offline_access',
+      showDebugInformation: !environment.production,
+      postLogoutRedirectUri: c.oidc.postLogoutRedirectUrl,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      customQueryParams: { kc_idp_hint: 'bceid' }
+    }));
   }
 
   public isConfigured(): boolean {

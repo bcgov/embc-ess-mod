@@ -2,55 +2,43 @@ import { Injectable } from '@angular/core';
 import { OutageInformation } from 'src/app/core/api/models/outage-information';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OutageService {
-  outageInfo: BehaviorSubject<OutageInformation> =
-    new BehaviorSubject<OutageInformation>(null);
-  public outageInfo$: Observable<OutageInformation> =
-    this.outageInfo.asObservable();
+  // outageInfo: BehaviorSubject<OutageInformation> =
+  //   new BehaviorSubject<OutageInformation>(null);
+  // public outageInfo$: Observable<OutageInformation> =
+  //   this.outageInfo.asObservable();
 
-  public getOutageInfo(): Observable<OutageInformation> {
-    return this.outageInfo$;
+  private outageInfoVal: OutageInformation;
+
+  public get outageInfo(): OutageInformation {
+    return this.outageInfoVal;
   }
-
-  public setOutageInfo(outage: OutageInformation): void {
-    this.outageInfo.next(outage);
+  public set outageInfo(value: OutageInformation) {
+    this.outageInfoVal = value;
   }
 
   public displayOutageInfo(): boolean {
-    this.outageInfo$.subscribe((outage) => {
-      if (outage !== null) {
-        const now = new Date();
-        const outageStart = new Date(outage.outageStartDate);
-        const outageEnd = new Date(outage.outageEndDate);
-
-        console.log(outageStart);
-        console.log(outageEnd);
-
-        if (
-          moment(outageStart).isBefore(now) &&
-          moment(outageEnd).isAfter(now)
-        ) {
-          return true;
-        }
-      }
-      return false;
-    });
+    if (this.outageInfo !== null) {
+      const now = new Date();
+      const outageStart = new Date(this.outageInfoVal?.outageStartDate);
+      const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
+      return (
+        moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)
+      );
+    }
     return false;
   }
 
   public displayOutageBanner(): boolean {
-    if (this.outageInfo.getValue() !== null) {
+    if (this.outageInfo !== null) {
       const now = new Date();
-      const outageStart = new Date(this.outageInfo.getValue().outageStartDate);
-
-      if (moment(outageStart).isAfter(now)) {
-        return true;
-      }
+      const outageStart = new Date(this.outageInfo.outageStartDate);
+      return moment(outageStart).isAfter(now);
     }
     return false;
   }

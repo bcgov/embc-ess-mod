@@ -1,25 +1,16 @@
 <div class="row outage-banner">
   <div class="col-md-11">
     <p class="dynamic-text">
-      {{ (outageService.outageInfo$ | async)?.content }}
+      {{ outageInfo?.content }}
       <b
         >from
-        {{
-          (outageService.outageInfo$ | async)?.outageStartDate | date: 'MMM dd'
-        }}
+        {{ outageInfo?.outageStartDate | date: 'MMM dd' }}
         at
-        {{
-          (outageService.outageInfo$ | async)?.outageStartDate
-            | date: 'shortTime'
-        }}
+        {{ outageInfo?.outageStartDate | date: 'shortTime' }}
         to
-        {{
-          (outageService.outageInfo$ | async)?.outageEndDate | date: 'MMM dd'
-        }}
+        {{ outageInfo?.outageEndDate | date: 'MMM dd' }}
         at
-        {{
-          (outageService.outageInfo$ | async)?.outageEndDate | date: 'shortTime'
-        }}
+        {{ outageInfo?.outageEndDate | date: 'shortTime' }}
         PST
       </b>
     </p>
