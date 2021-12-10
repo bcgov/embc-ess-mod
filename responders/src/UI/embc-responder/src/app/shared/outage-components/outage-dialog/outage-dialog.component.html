@@ -1,0 +1,43 @@
+<div class="row justify-content-between">
+  <div class="col-md-10">
+    <h1 class="outage-title">Scheduled System Maintenance Starting Soon</h1>
+  </div>
+  <div class="col-md-2">
+    <button
+      class="close-image close-button-style"
+      mat-icon-button
+      aria-label="Close"
+      (click)="close()"
+    >
+      <img src="/assets/images/close.svg" height="20" width="20" />
+      <img src="/assets/images/close_onhover.svg" height="20" width="20" />
+    </button>
+  </div>
+</div>
+
+<div mat-dialog-content>
+  <p>
+    The Evacuee Registration & Assistance (ERA) tool will be down for scheduled
+    maintenance starting in <b>{{ data.time }} minutes.</b>
+  </p>
+  <p>
+    <b
+      >From
+      {{ data.message?.outageStartDate | date: 'MMM dd' }}
+      at
+      {{ data.message?.outageStartDate | date: 'shortTime' }}
+      to
+      {{ data.message?.outageEndDate | date: 'MMM dd' }}
+      at
+      {{ data.message?.outageEndDate | date: 'shortTime' }}
+      PST</b
+    >
+  </p>
+  <p class="error-message">
+    Please complete your current entry and log out/ exit.
+  </p>
+</div>
+
+<div mat-dialog-actions>
+  <button class="button-s close-bttn" (click)="close()">Close</button>
+</div>

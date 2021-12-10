@@ -1,14 +1,20 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading;
+using System.Threading.Tasks;
 using IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,12 +24,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
+using Serilog;
+using Serilog.Events;
 
 namespace OAuthServer
 {
     public class Startup
     {
         private const string HealthCheckReadyTag = "ready";
+        private const string HealthCheckAliveTag = "alive";
 
         public Startup(IConfiguration configuration)
         {
@@ -90,12 +99,14 @@ namespace OAuthServer
             services.AddAuthentication()
                 .AddOpenIdConnect("bcsc", options =>
                 {
-                    configuration.GetSection("identityproviders:bcsc").Bind(options);
-
                     // Note: Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectHandler  doesn't handle JWE correctly
                     // See https://github.com/dotnet/aspnetcore/issues/4650 for more information
                     // When BCSC user info payload is encrypted, we need to load the user info manually in OnTokenValidated event below
-                    //options.GetClaimsFromUserInfoEndpoint = true;
+                    // IdentityModel.Client also doesn't support JWT userinfo responses, so the following code takes care of this manually
+                    options.GetClaimsFromUserInfoEndpoint = false;
+
+                    configuration.GetSection("identityproviders:bcsc").Bind(options);
+
                     options.ResponseType = OpenIdConnectResponseType.Code;
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.SignOutScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -114,34 +125,67 @@ namespace OAuthServer
                         {
                             var oidcConfig = await ctx.Options.ConfigurationManager.GetConfigurationAsync(CancellationToken.None);
 
-                            //get the user info claims through the back channel
-                            var response = await ctx.Options.Backchannel.GetUserInfoAsync(new UserInfoRequest
+                            //set token validation parameters
+                            var validationParameters = ctx.Options.TokenValidationParameters.Clone();
+                            validationParameters.IssuerSigningKeys = oidcConfig.JsonWebKeySet.GetSigningKeys();
+                            validationParameters.ValidateLifetime = false;
+                            validationParameters.ValidateIssuer = false;
+                            var userInfoRequest = new UserInfoRequest
                             {
                                 Address = oidcConfig.UserInfoEndpoint,
                                 Token = ctx.TokenEndpointResponse.AccessToken
-                            });
-                            if (response.IsError)
+                            };
+                            //set the userinfo response to be JWT
+                            userInfoRequest.Headers.Accept.Clear();
+                            userInfoRequest.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/jwt"));
+
+                            //request userinfo claims through the backchannel
+                            var response = await ctx.Options.Backchannel.GetUserInfoAsync(userInfoRequest, CancellationToken.None);
+                            if (response.IsError && response.HttpStatusCode == HttpStatusCode.OK)
                             {
-                                ctx.Fail(new Exception(response.Error));
+                                //handle encrypted userinfo response...
+                                if (response.HttpResponse.Content?.Headers?.ContentType?.MediaType == "application/jwt")
+                                {
+                                    var handler = new JwtSecurityTokenHandler();
+                                    if (handler.CanReadToken(response.Raw))
+                                    {
+                                        handler.ValidateToken(response.Raw, validationParameters, out var token);
+                                        var jwe = token as JwtSecurityToken;
+                                        ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", jwe.Payload.SerializeToJson()) }));
+                                    }
+                                }
+                                else
+                                {
+                                    //...or fail
+                                    ctx.Fail(response.Error);
+                                }
+                            }
+                            else if (response.IsError)
+                            {
+                                //handle for all other failures
+                                ctx.Fail(response.Error);
                             }
                             else
                             {
-                                ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", response.Raw) }));
+                                //handle non encrypted userinfo response
+                                ctx.Principal.AddIdentity(new ClaimsIdentity(new[] { new Claim("userInfo", response.Json.GetRawText()) }));
                             }
                         },
-                        //this event is called only when options.GetClaimsFromUserInfoEndpoint = true
-                        //OnUserInformationReceived = async ctx =>
-                        //{
-                        //    await Task.CompletedTask;
-                        //    ctx.Principal.AddIdentity(new ClaimsIdentity(new[]
-                        //    {
-                        //      new Claim("userInfo", ctx.User.RootElement.GetRawText())
-                        //    }));
-                        //}
+                        OnUserInformationReceived = async ctx =>
+                        {
+                            //handle userinfo claim mapping when options.GetClaimsFromUserInfoEndpoint = true
+                            await Task.CompletedTask;
+                            ctx.Principal.AddIdentity(new ClaimsIdentity(new[]
+                            {
+                              new Claim("userInfo", ctx.User.RootElement.GetRawText())
+                            }));
+                        }
                     };
                 });
 
-            services.AddHealthChecks().AddCheck("OAuth Server ", () => HealthCheckResult.Healthy("OK"), new[] { HealthCheckReadyTag });
+            services.AddHealthChecks()
+                .AddCheck("Oauth Server ready hc", () => HealthCheckResult.Healthy("Service ready"), new[] { HealthCheckReadyTag })
+                .AddCheck("Oauth Server live hc", () => HealthCheckResult.Healthy("Service alive"), new[] { HealthCheckAliveTag });
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
@@ -161,6 +205,22 @@ namespace OAuthServer
 
             //app.UseHttpsRedirection();
 
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.GetLevel = ExcludeHealthChecks;
+                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+                {
+                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
+                    diagCtx.Set("Host", httpCtx.Request.Host);
+                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
+                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
+                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
+                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
+                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+                };
+            });
+
+            app.UseForwardedHeaders();
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthentication();
@@ -169,7 +229,20 @@ namespace OAuthServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
+                endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
             });
         }
+
+        //inspired by https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-excluding-health-check-endpoints-from-serilog-request-logging/
+        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
+        ex != null
+            ? LogEventLevel.Error
+            : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
+                ? LogEventLevel.Error
+                : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
+                    ? LogEventLevel.Verbose
+                    : LogEventLevel.Information;
     }
 }

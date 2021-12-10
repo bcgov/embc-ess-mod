@@ -15,7 +15,8 @@ describe('AppComponent', () => {
           HttpClientTestingModule,
           OAuthModule.forRoot(),
           NgIdleKeepaliveModule.forRoot(),
-          MatDialogModule
+          MatDialogModule,
+          OAuthModule.forRoot()
         ],
         declarations: [AppComponent]
       }).compileComponents();
