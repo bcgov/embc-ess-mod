@@ -10,6 +10,8 @@ import * as globalConst from './core/services/global-constants';
 import { LoadTeamListService } from './core/services/load-team-list.service';
 import { EnvironmentInformation } from './core/models/environment-information.model';
 import { TimeoutService } from './core/services/timeout.service';
+import { OutageService } from './feature-components/outage/outage.service';
+import { OutageInformation } from './core/api/models';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +25,7 @@ export class AppComponent implements OnInit {
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
   timedOut = false;
+  public showOutageBanner = false;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -33,6 +36,7 @@ export class AppComponent implements OnInit {
     private locationService: LocationsService,
     private loadTeamListService: LoadTeamListService,
     private timeOut: TimeoutService
+    private outageService: OutageService
   ) {
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
@@ -40,41 +44,57 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.configService.load().subscribe(
-      (result) => result,
-      (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.systemError);
-      }
-    );
 
     this.timeOut.init(1, 1);
+    // this.configService.load().subscribe({
+    //   next: (result) => {
+    //     // this.outageService.setOutageInfo(result.outageInfo);
+    //     this.outageService.setOutageInfo(result.outageInfo);
+    //   }
+    // });
   }
 
   public async ngOnInit(): Promise<void> {
     this.environment = this.configService.getEnvironmentBanner();
     try {
-      const nextUrl = await this.authenticationService.login();
-      const userProfile = await this.userService.loadUserProfile();
-      const location = await this.locationService.loadStaticLocationLists();
-      const team = await this.loadTeamListService.loadStaticTeamLists();
-      this.getBackendVersionInfo();
-      const nextRoute = decodeURIComponent(
-        userProfile.requiredToSignAgreement
-          ? 'electronic-agreement'
-          : nextUrl || 'responder-access'
-      );
-      await this.router.navigate([nextRoute]);
+      const configuration = await this.configService.load();
+      this.outageService.outageInfo = configuration.outageInfo;
     } catch (error) {
-      this.alertService.clearAlert();
-      if (error.status === 403) {
-        this.alertService.setAlert('danger', globalConst.accessError);
-      } else {
-        this.alertService.setAlert('danger', globalConst.systemError);
-      }
-    } finally {
-      this.isLoading = false;
+      this.router.navigate(['/outage']);
     }
+
+    if (this.outageService.displayOutageInfo()) {
+      this.isLoading = false;
+      this.router.navigate(['/outage']);
+    } else {
+      try {
+        const nextUrl = await this.authenticationService.login();
+        const userProfile = await this.userService.loadUserProfile();
+        const location = await this.locationService.loadStaticLocationLists();
+        const team = await this.loadTeamListService.loadStaticTeamLists();
+        this.getBackendVersionInfo();
+        this.showOutageBanner = this.outageService.displayOutageBanner();
+        const nextRoute = decodeURIComponent(
+          userProfile.requiredToSignAgreement
+            ? 'electronic-agreement'
+            : nextUrl || 'responder-access'
+        );
+        await this.router.navigate([nextRoute]);
+      } catch (error) {
+        this.alertService.clearAlert();
+        if (error.status === 403) {
+          this.alertService.setAlert('danger', globalConst.accessError);
+        } else {
+          this.alertService.setAlert('danger', globalConst.systemError);
+        }
+      } finally {
+        this.isLoading = false;
+      }
+    }
+  }
+
+  public closeOutageBanner($event: boolean): void {
+    this.showOutageBanner = $event;
   }
 
   private getBackendVersionInfo(): void {

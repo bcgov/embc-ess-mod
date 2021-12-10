@@ -83,8 +83,8 @@ namespace EMBC.ESS.Resources.Reports
             if (!string.IsNullOrEmpty(query.EvacuatedFrom)) filesQuery = filesQuery.Where(f => f._era_evacuatedfromid_value == Guid.Parse(query.EvacuatedFrom));
 
             var files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync()).ToArray();
-            if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId.era_name == query.TaskNumber).ToArray();
-            if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo)).ToArray();
+            if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase)).ToArray();
+            if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo)).ToArray();
 
             return files;
         }

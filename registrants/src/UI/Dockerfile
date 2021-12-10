@@ -1,11 +1,11 @@
-FROM trion/ng-cli-karma:12.2.11 AS ng-builder
+FROM trion/ng-cli-karma AS ng-builder
 WORKDIR /src
 COPY ./embc-registrant/package*.json ./
-RUN npm install
+RUN npm install --ignore-scripts
 COPY ./embc-registrant/ .
 RUN npm run lint
 RUN npm run test -- --no-watch --no-progress
-RUN npm run build -- --prod
+RUN npm run build -- --configuration production
 
 FROM caddy:alpine as final
 COPY Caddyfile /etc/caddy/Caddyfile

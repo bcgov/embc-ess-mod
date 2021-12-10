@@ -1,5 +1,7 @@
 export { Configuration } from './models/configuration';
 export { OidcConfiguration } from './models/oidc-configuration';
+export { OutageInformation } from './models/outage-information';
+export { TimeoutConfiguration } from './models/timeout-configuration';
 export { ProblemDetails } from './models/problem-details';
 export { Code } from './models/code';
 export { CommunityCode } from './models/community-code';

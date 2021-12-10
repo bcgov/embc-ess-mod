@@ -29,6 +29,8 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_supplier supplierB;
         private readonly era_supplier supplierC;
         private readonly era_supplier inactiveSupplier;
+        private readonly era_country canada;
+        private readonly era_provinceterritories bc;
 
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.Value.ToString()).ToArray();
 
@@ -68,6 +70,8 @@ namespace EMBC.Tests.Integration.ESS
         {
             this.essContext = essContext;
             jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid.Value).ToArray();
+            canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").SingleOrDefault();
+            bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").SingleOrDefault();
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
@@ -355,9 +359,14 @@ namespace EMBC.Tests.Integration.ESS
                 era_suppliername = testPrefix + "-supplier-name-" + identifier,
                 era_gstnumber = "R-" + testPrefix + "-" + identifier,
                 era_addressline1 = testPrefix + "-line1",
+                era_addressline2 = testPrefix + "-line2",
+                era_postalcode = "v2v 2v2",
             };
 
             essContext.AddToera_suppliers(supplier);
+            essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCity), jurisdictions.Skip(random.Next(jurisdictions.Length - 1)).First());
+            essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCountry), canada);
+            essContext.SetLink(supplier, nameof(era_supplier.era_RelatedProvinceState), bc);
             return supplier;
         }
 

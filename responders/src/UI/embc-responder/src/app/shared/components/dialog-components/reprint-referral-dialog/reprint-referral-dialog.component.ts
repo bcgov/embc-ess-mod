@@ -62,11 +62,6 @@ export class ReprintReferralDialogComponent implements OnInit {
    * @returns the same reason for reprinting with spaces between words.
    */
   splitString(reasonOption: string): string {
-    const stringArray: string[] = reasonOption.split(/(?=[A-Z])/);
-    let result = '';
-    stringArray.forEach((word) => {
-      result += word + ' ';
-    });
-    return result;
+    return reasonOption.split(/(?=[A-Z])/).join(' ');
   }
 }
