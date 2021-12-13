@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MatDialogModule } from '@angular/material/dialog';
 
 describe('AppComponent', () => {
@@ -12,6 +13,8 @@ describe('AppComponent', () => {
         imports: [
           RouterTestingModule,
           HttpClientTestingModule,
+          OAuthModule.forRoot(),
+          NgIdleKeepaliveModule.forRoot(),
           MatDialogModule,
           OAuthModule.forRoot()
         ],
