@@ -26,7 +26,7 @@ namespace EMBC.ESS.Utilities.Dynamics
     {
         public static IServiceCollection AddDynamics(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
+            services.Configure<DynamicsOptions>(opts => configuration.GetSection("Dynamics").Bind(opts));
             services.AddHttpClient("adfs_token", (sp, c) =>
             {
                 var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;

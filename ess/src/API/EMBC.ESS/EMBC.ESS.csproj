@@ -45,7 +45,6 @@
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="Handlebars.Net" Version="2.0.9" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
-        <PackageReference Include="IdentityModel" Version="5.2.0" />
         <PackageReference Include="MailKit" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />
@@ -73,6 +72,7 @@
         <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilties.BceidWS\EMBC.ESS.Utilties.BceidWS.csproj" />
+        <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />        
     </ItemGroup>
 
     <ItemGroup>
