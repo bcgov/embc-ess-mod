@@ -11,7 +11,7 @@ import { LoadTeamListService } from './core/services/load-team-list.service';
 import { EnvironmentInformation } from './core/models/environment-information.model';
 import { TimeoutService } from './core/services/timeout.service';
 import { OutageService } from './feature-components/outage/outage.service';
-import { OutageInformation } from './core/api/models';
+import { TimeoutConfiguration } from './core/api/models/timeout-configuration';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +24,8 @@ export class AppComponent implements OnInit {
   public show = true;
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
-  timedOut = false;
   public showOutageBanner = false;
+  public timeoutInfo: TimeoutConfiguration;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     private alertService: AlertService,
     private locationService: LocationsService,
     private loadTeamListService: LoadTeamListService,
-    private timeOut: TimeoutService,
+    private timeOutService: TimeoutService,
     private outageService: OutageService
   ) {
     this.router.events.subscribe((e) => {
@@ -43,14 +43,6 @@ export class AppComponent implements OnInit {
         this.show = !e.url.startsWith('/ess-wizard', 0);
       }
     });
-
-    this.timeOut.init(1, 1);
-    // this.configService.load().subscribe({
-    //   next: (result) => {
-    //     // this.outageService.setOutageInfo(result.outageInfo);
-    //     this.outageService.setOutageInfo(result.outageInfo);
-    //   }
-    // });
   }
 
   public async ngOnInit(): Promise<void> {
@@ -58,6 +50,7 @@ export class AppComponent implements OnInit {
     try {
       const configuration = await this.configService.load();
       this.outageService.outageInfo = configuration.outageInfo;
+      this.timeoutInfo = configuration.timeoutInfo;
     } catch (error) {
       this.router.navigate(['/outage']);
     }
@@ -66,6 +59,10 @@ export class AppComponent implements OnInit {
       this.isLoading = false;
       this.router.navigate(['/outage']);
     } else {
+      this.timeOutService.init(
+        this.timeoutInfo.sessionTimeoutInMinutes,
+        this.timeoutInfo.warningMessageDuration
+      );
       try {
         const nextUrl = await this.authenticationService.login();
         const userProfile = await this.userService.loadUserProfile();
