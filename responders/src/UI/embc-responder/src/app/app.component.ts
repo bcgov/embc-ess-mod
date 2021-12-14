@@ -15,7 +15,6 @@ import { TimeoutConfiguration } from './core/api/models/timeout-configuration';
 import { OutageInformation } from './core/api/models';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
