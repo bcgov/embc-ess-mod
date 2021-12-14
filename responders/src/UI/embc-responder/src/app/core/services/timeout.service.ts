@@ -13,10 +13,10 @@ export class TimeoutService {
   timedOut = false;
 
   constructor(
-    private idle: Idle,
-    private dialog: MatDialog,
-    private authenticationService: AuthenticationService,
-    private userService: UserService
+    public idle: Idle,
+    public dialog: MatDialog,
+    public authenticationService: AuthenticationService,
+    public userService: UserService
   ) {}
 
   init(idleTime: number, timeOutDuration: number) {
@@ -26,12 +26,10 @@ export class TimeoutService {
     this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
     this.idle.onIdleStart.subscribe(() => {
-      console.log("You've gone idle!");
       this.openTimeOutModal();
     });
 
     this.idle.onTimeout.subscribe(() => {
-      console.log('Timed out!');
       this.timedOut = true;
       this.dialog.closeAll();
       this.userService.clearAppStorage();
