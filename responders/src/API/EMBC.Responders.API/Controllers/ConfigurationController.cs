@@ -150,6 +150,15 @@ namespace EMBC.Responders.API.Controllers
             return Ok(questions);
         }
 
+        [HttpGet("outage-info")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<OutageInformation>> GetOutageInfo()
+        {
+            var outageInfo = (await client.Send(new OutageQuery { PortalType = PortalType.Responders })).OutageInfo;
+            return Ok(mapper.Map<OutageInformation>(outageInfo));
+        }
+
         [HttpGet("version-info")]
         public async Task<ActionResult<IEnumerable<VersionInformation>>> GetApplicationVersionInfo()
         {

@@ -1,7 +1,7 @@
 <div
-  class="border"
+  class="main-border"
   [ngStyle]="
-    environment !== null
+    environment !== {} && environment !== undefined
       ? {
           padding: '0px 5px 5px 5px',
           'background-color': environment?.bannerColor
@@ -9,23 +9,39 @@
       : { padding: '0px' }
   "
 >
+  <app-outage-banner
+    *ngIf="showOutageBanner"
+    (closeEvent)="closeOutageBanner($event)"
+  ></app-outage-banner>
+
   <app-environment-banner
-    *ngIf="environment !== null"
-    [environment]="environment"
+    *ngIf="environment !== {} && environment !== undefined"
   ></app-environment-banner>
+
   <app-header *ngIf="show"></app-header>
+
   <main class="fill-body main-container background">
     <div class="app-error">
       <app-alert></app-alert>
     </div>
 
+    <!-- <div *ngIf="!isLoading && showOutageComponent">
+      <app-outage
+        [description]="outageInfo?.content"
+        [startDate]="outageInfo?.outageStartDate"
+        [endDate]="outageInfo?.outageEndDate"
+      ></app-outage>
+    </div> -->
+
     <div *ngIf="!isLoading">
       <router-outlet></router-outlet>
     </div>
   </main>
+
   <div *ngIf="show" class="footer mt-auto">
     <app-footer [appVersion]="version"></app-footer>
   </div>
+
   <app-loader
     class="spinner"
     [showLoader]="isLoading"

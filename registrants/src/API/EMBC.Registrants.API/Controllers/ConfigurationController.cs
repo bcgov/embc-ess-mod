@@ -69,7 +69,8 @@ namespace EMBC.Responders.API.Controllers
                 {
                     ClientId = oidcConfig["clientId"],
                     Issuer = oidcConfig["issuer"],
-                    Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api")
+                    Scope = oidcConfig.GetValue("scope", "openid offline_access registrants-portal-api"),
+                    Idp = oidcConfig.GetValue("idp", "bcsc")
                 },
                 OutageInfo = mapper.Map<OutageInformation>(outageInfo),
                 TimeoutInfo = new TimeoutConfiguration
@@ -150,6 +151,15 @@ namespace EMBC.Responders.API.Controllers
             var questions = (await client.Send(new SecurityQuestionsQuery())).Items;
             return Ok(questions);
         }
+
+        [HttpGet("outage-info")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<OutageInformation>> GetOutageInfo()
+        {
+            var outageInfo = (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo;
+            return Ok(mapper.Map<OutageInformation>(outageInfo));
+        }
     }
 
     public class Configuration
@@ -164,6 +174,7 @@ namespace EMBC.Responders.API.Controllers
         public string Issuer { get; set; }
         public string Scope { get; set; }
         public string ClientId { get; set; }
+        public string Idp { get; set; }
     }
 
     public class Code

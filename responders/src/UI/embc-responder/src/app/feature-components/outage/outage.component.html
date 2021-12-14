@@ -1,0 +1,35 @@
+<div class="container outage-container">
+  <div class="title-header">
+    <p class="title">System Unavailble</p>
+  </div>
+  <div class="outage-info">
+    <div>
+      <p class="subtitle">
+        This system is currently undergoing planned maintenance.
+      </p>
+      <p class="dynamic-text">
+        {{ outageInfo?.content }}
+        <b
+          >from
+          {{ outageInfo?.outageStartDate | date: 'MMM dd' }}
+          at
+          {{ outageInfo?.outageStartDate | date: 'shortTime' }}
+          to
+          {{ outageInfo?.outageEndDate | date: 'MMM dd' }}
+          at
+          {{ outageInfo?.outageEndDate | date: 'shortTime' }}
+          PST
+        </b>
+      </p>
+    </div>
+
+    <div>
+      <p class="subtitle">
+        This system is currently unavailable or undergoing routine maintenance.
+      </p>
+    </div>
+
+    <p class="description">Please check back later.</p>
+    <p class="description">Thank you for understanding.</p>
+  </div>
+</div>

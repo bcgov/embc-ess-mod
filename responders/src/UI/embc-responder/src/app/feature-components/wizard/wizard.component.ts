@@ -11,6 +11,8 @@ import * as globalConst from '../../core/services/global-constants';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { WizardAdapterService } from './wizard-adapter.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { EnvironmentBannerService } from 'src/app/core/layout/environment-banner/environment-banner.service';
+import { EnvironmentInformation } from 'src/app/core/models/environment-information.model';
 
 @Component({
   selector: 'app-wizard',
@@ -20,6 +22,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 export class WizardComponent implements OnInit, OnDestroy {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
   scrollSubscription: Subscription;
+  environment: EnvironmentInformation;
 
   constructor(
     private router: Router,
@@ -29,7 +32,8 @@ export class WizardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private wizardAdapterService: WizardAdapterService,
-    private evacueeSessionService: EvacueeSessionService
+    private evacueeSessionService: EvacueeSessionService,
+    private envBannerService: EnvironmentBannerService
   ) {
     const params = this.route.snapshot.queryParams;
     if (params && params.type) {
@@ -39,6 +43,7 @@ export class WizardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.environment = this.envBannerService.getEnvironmentBanner();
     this.loadDefaultStep();
     this.cd.detectChanges();
 

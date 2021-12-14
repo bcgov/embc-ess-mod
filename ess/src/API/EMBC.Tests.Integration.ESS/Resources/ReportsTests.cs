@@ -24,7 +24,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var res = await reportsManager.Handle(new EvacueeReportQuery
             {
-                //TaskNumber = "UNIT-TEST-ACTIVE-TASK",
+                TaskNumber = TestData.ActiveTaskId,
                 //FileId = "101010",
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
@@ -40,7 +40,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var res = await reportsManager.Handle(new SupportReportQuery
             {
-                //TaskNumber = "UNIT-TEST-ACTIVE-TASK",
+                TaskNumber = TestData.ActiveTaskId,
                 //FileId = "101010",
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
