@@ -12,6 +12,7 @@ import { EnvironmentInformation } from './core/models/environment-information.mo
 import { TimeoutService } from './core/services/timeout.service';
 import { OutageService } from './feature-components/outage/outage.service';
 import { OutageInformation } from './core/api/models';
+import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 
 @Component({
   selector: 'app-root',
@@ -28,10 +29,11 @@ export class AppComponent implements OnInit {
   public showOutageBanner = false;
 
   constructor(
+    public envBannerService: EnvironmentBannerService,
+    private configService: ConfigService,
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private router: Router,
-    private configService: ConfigService,
     private alertService: AlertService,
     private locationService: LocationsService,
     private loadTeamListService: LoadTeamListService,
@@ -54,8 +56,8 @@ export class AppComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
-    this.environment = this.configService.getEnvironmentBanner();
     try {
+      this.environment = await this.envBannerService.getEnvironmentBanner();
       const configuration = await this.configService.load();
       this.outageService.outageInfo = configuration.outageInfo;
     } catch (error) {
