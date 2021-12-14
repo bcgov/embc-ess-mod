@@ -32,6 +32,7 @@ import { VoidReferralDialogComponent } from './components/dialog-components/void
 import { ReprintReferralDialogComponent } from './components/dialog-components/reprint-referral-dialog/reprint-referral-dialog.component';
 import { ProcessSupportsDialogComponent } from './components/dialog-components/process-supports-dialog/process-supports-dialog.component';
 import { BcscInviteDialogComponent } from './components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
+import { TimeOutDialogComponent } from './components/dialog-components/time-out-dialog/time-out-dialog.component';
 import { OutageDialogComponent } from './outage-components/outage-dialog/outage-dialog.component';
 import { OutageBannerComponent } from './outage-components/outage-banner/outage-banner.component';
 
@@ -64,6 +65,7 @@ import { OutageBannerComponent } from './outage-components/outage-banner/outage-
     ReprintReferralDialogComponent,
     ProcessSupportsDialogComponent,
     BcscInviteDialogComponent,
+    TimeOutDialogComponent,
     OutageBannerComponent,
     OutageDialogComponent
   ],
@@ -102,6 +104,7 @@ import { OutageBannerComponent } from './outage-components/outage-banner/outage-
     VoidReferralDialogComponent,
     ReprintReferralDialogComponent,
     BcscInviteDialogComponent,
+    TimeOutDialogComponent,
     OutageBannerComponent,
     OutageDialogComponent
   ]

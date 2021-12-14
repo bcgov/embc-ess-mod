@@ -9,6 +9,7 @@ import { AlertService } from './shared/components/alert/alert.service';
 import * as globalConst from './core/services/global-constants';
 import { LoadTeamListService } from './core/services/load-team-list.service';
 import { EnvironmentInformation } from './core/models/environment-information.model';
+import { TimeoutService } from './core/services/timeout.service';
 import { OutageService } from './feature-components/outage/outage.service';
 import { OutageInformation } from './core/api/models';
 
@@ -23,6 +24,7 @@ export class AppComponent implements OnInit {
   public show = true;
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
+  timedOut = false;
   public showOutageBanner = false;
 
   constructor(
@@ -33,6 +35,7 @@ export class AppComponent implements OnInit {
     private alertService: AlertService,
     private locationService: LocationsService,
     private loadTeamListService: LoadTeamListService,
+    private timeOut: TimeoutService,
     private outageService: OutageService
   ) {
     this.router.events.subscribe((e) => {
@@ -41,6 +44,7 @@ export class AppComponent implements OnInit {
       }
     });
 
+    this.timeOut.init(1, 1);
     // this.configService.load().subscribe({
     //   next: (result) => {
     //     // this.outageService.setOutageInfo(result.outageInfo);

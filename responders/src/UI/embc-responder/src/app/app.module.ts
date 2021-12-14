@@ -10,6 +10,7 @@ import { ApiModule } from './core/api/api.module';
 import { ErrorHandlingModule } from './shared/error-handling/error-handing.module';
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { DatePipe } from '@angular/common';
       }
     }),
     ApiModule.forRoot({ rootUrl: '' }),
+    NgIdleKeepaliveModule.forRoot(),
     ErrorHandlingModule.forRoot(),
     SharedModule
   ],
