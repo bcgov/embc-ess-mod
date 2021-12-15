@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     try {
-      this.environment = await this.envBannerService.getEnvironmentBanner();
+      this.environment = this.envBannerService.getEnvironmentBanner();
       const configuration = await this.configService.load();
       this.outageService.outageInfo = configuration.outageInfo;
       this.timeoutInfo = configuration.timeoutInfo;
