@@ -8,7 +8,7 @@ import { CacheService } from '../../services/cache.service';
   providedIn: 'root'
 })
 export class EnvironmentBannerService {
-  private environmentBanner: EnvironmentInformation;
+  public environmentBanner: EnvironmentInformation;
   private configurationGetEnvironmentInfoPath = '/env/info.json';
 
   constructor(private http: HttpClient, private cacheService: CacheService) {}
