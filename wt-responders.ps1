@@ -1,1 +1,1 @@
-wt -M  -d .\ --title responders `; sp -d .\responders\src\UI\embc-responder\ `; sp -d .\responders\src\API\ `; mf left `; sp -d .\ess\src\API\
+wt -M  -d .\ --title responders `; sp -d .\responders\src\UI\embc-responder\ `; sp -d .\responders\src\API\ `; mf left `; sp -d .\ess\src\API\EMBC.ESS
