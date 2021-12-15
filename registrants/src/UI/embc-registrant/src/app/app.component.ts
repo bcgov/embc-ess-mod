@@ -25,8 +25,8 @@ export class AppComponent implements OnInit {
   ) {}
 
   public async ngOnInit(): Promise<void> {
-    this.environment = this.configService.getEnvironmentBanner();
     try {
+      this.environment = await this.configService.getEnvironmentBanner();
       await this.bootstrapService.init();
       await this.loginService.tryLogin();
     } catch (error) {
