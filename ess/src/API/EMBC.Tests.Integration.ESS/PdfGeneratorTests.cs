@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,16 +14,26 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class PdfGeneratorTests : WebAppTestBase
+    public class PdfGeneratorTests : IClassFixture<WebApplicationFactory<Startup>>
     {
-        public PdfGeneratorTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+#if RELEASE
+        protected const string RequiresDynamics = "Integration tests that requires Dynamics connection via VPN";
+#else
+        protected const string RequiresDynamics = null;
+        private readonly ITestOutputHelper output;
+        private readonly WebApplicationFactory<Startup> webApplicationFactory;
+#endif
+
+        public PdfGeneratorTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
+            this.output = output;
+            this.webApplicationFactory = webApplicationFactory;
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGeneratePdfFromHtml()
         {
-            var pdfGenerator = services.GetRequiredService<IPdfGenerator>();
+            var pdfGenerator = webApplicationFactory.Services.GetRequiredService<IPdfGenerator>();
 
             var pdf = await pdfGenerator.Generate($"<h1>pdf genrated on {DateTime.Now}</h1>");
 
@@ -48,11 +59,15 @@ namespace EMBC.Tests.Integration.ESS
 </body>
 </html>";
 
-            var generator = services.GetRequiredService<IPdfGenerator>();
+            var generator = webApplicationFactory.Services.GetRequiredService<IPdfGenerator>();
 
-            await Enumerable.Range(0, 100).ForEachAsync(10, async i =>
+            await Enumerable.Range(0, 100).ForEachAsync(5, async i =>
             {
-                await Should.NotThrowAsync(generator.Generate(template()));
+                var sw = Stopwatch.StartNew();
+                //await Should.NotThrowAsync(generator.Generate(template()));
+                await generator.Generate(template());
+                sw.Stop();
+                output.WriteLine("pdf {0} generated in {1}ms", i, sw.ElapsedMilliseconds);
             });
         }
     }
