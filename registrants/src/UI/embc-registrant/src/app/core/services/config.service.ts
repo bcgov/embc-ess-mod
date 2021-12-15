@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs/internal/Observable';
+import { tap } from 'rxjs/internal/operators/tap';
 import { Configuration } from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { EnvironmentInformation } from '../model/environment-information.model';
@@ -70,19 +71,14 @@ export class ConfigService {
     this.cacheService.set('environment', environmentBanner);
   }
 
-  private getEnvironmentInfo(): EnvironmentInformation {
-    this.getEnvironment().subscribe(
-      (env) => {
-        this.environmentBanner = env;
-        this.setEnvironmentBanner(env);
-      },
-      (error) => {
-        if (error.status === 404) {
-          this.environmentBanner = null;
-        }
-      }
-    );
-    return this.environmentBanner;
+  private async getEnvironmentInfo(): Promise<EnvironmentInformation> {
+    return this.getEnvironment()
+      .pipe(
+        tap((env) => {
+          this.environmentBanner = env;
+        })
+      )
+      .toPromise();
   }
 
   private getEnvironment(): Observable<EnvironmentInformation> {

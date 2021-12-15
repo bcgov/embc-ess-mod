@@ -29,11 +29,13 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
     public class EvacuationRepository : IEvacuationRepository
     {
         private readonly EssContext essContext;
+        private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
 
-        public EvacuationRepository(EssContext essContext, IMapper mapper)
+        public EvacuationRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.essContext = essContext;
+            this.essContext = essContextFactory.Create();
+            this.essContextFactory = essContextFactory;
             this.mapper = mapper;
         }
 
@@ -309,19 +311,15 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         private static async Task<IEnumerable<era_evacuationfile>> ParallelLoadEvacuationFilesAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
         {
-            var readCtx = ctx.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
-
             //load files' properties
-            await files.Select(file => ParallelLoadEvacuationFileAsync(readCtx, file)).ToArray().ForEachAsync(10, t => t);
+            await files.Select(file => ParallelLoadEvacuationFileAsync(ctx, file)).ToArray().ForEachAsync(10, t => t);
 
             return files.ToArray();
         }
 
         public async Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query)
         {
-            var readCtx = essContext.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
+            var readCtx = essContextFactory.CreateReadOnly();
 
             //get all matching files
             var files = (await QueryHouseholdMemberFiles(readCtx, query)).Concat(await QueryEvacuationFiles(readCtx, query)).Concat(await QueryNeedsAssessments(readCtx, query));
@@ -338,7 +336,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .Where(f => f.statecode == (int)EntityState.Active && f._era_currentneedsassessmentid_value.HasValue)
                 .Distinct(new LambdaComparer<era_evacuationfile>((f1, f2) => f1.era_evacuationfileid == f2.era_evacuationfileid, f => f.era_evacuationfileid.GetHashCode()));
 
-            return (await ParallelLoadEvacuationFilesAsync(essContext, files)).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase)).ToArray();
+            return (await ParallelLoadEvacuationFilesAsync(readCtx, files)).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase)).ToArray();
         }
 
         private static async Task<IEnumerable<era_evacuationfile>> QueryHouseholdMemberFiles(EssContext ctx, EvacuationFilesQuery query)

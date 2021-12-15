@@ -18,51 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Microsoft.Extensions.Logging;
 using Microsoft.OData;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
-    public class EssContext : Microsoft.Dynamics.CRM.System
-    {
-        private readonly Uri serviceRoot;
-        private readonly Uri endpointUrl;
-        private readonly ISecurityTokenProvider tokenProvider;
-        private readonly ILogger<EssContext> logger;
-
-        public EssContext(Uri serviceRoot, Uri endpointUrl, ISecurityTokenProvider tokenProvider, ILogger<EssContext> logger) : base(serviceRoot)
-        {
-            this.serviceRoot = serviceRoot;
-            this.endpointUrl = endpointUrl;
-            this.tokenProvider = tokenProvider;
-            this.logger = logger;
-            this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
-            this.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
-
-            Func<Uri, Uri> formatUri = requestUri => requestUri.IsAbsoluteUri
-                    ? new Uri(endpointUrl, (endpointUrl.AbsolutePath == "/" ? string.Empty : endpointUrl.AbsolutePath) + requestUri.AbsolutePath + requestUri.Query)
-                    : new Uri(endpointUrl, (endpointUrl.AbsolutePath == "/" ? string.Empty : endpointUrl.AbsolutePath) + serviceRoot.AbsolutePath + requestUri.ToString());
-
-            BuildingRequest += (sender, args) =>
-            {
-                args.Headers.Add("Authorization", $"Bearer {this.tokenProvider.AcquireToken().GetAwaiter().GetResult()}");
-                args.RequestUri = formatUri(args.RequestUri);
-            };
-
-            Configurations.RequestPipeline.OnEntryStarting((arg) =>
-            {
-                // do not send reference properties and null values to Dynamics
-                arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
-            });
-        }
-
-        public EssContext Clone()
-        {
-            return new EssContext(serviceRoot, endpointUrl, this.tokenProvider, logger);
-        }
-    }
-
     public static class EssContextEx
     {
         public static DataServiceQuerySingle<T> GetSingleEntityByKey<T>(this DataServiceQuery<T> source, IDictionary<string, object> alternateKeys)
@@ -123,27 +83,6 @@ namespace EMBC.ESS.Utilities.Dynamics
             if (state >= 0) stateProp.SetValue(entity, state);
 
             context.UpdateObject(entity);
-        }
-    }
-
-    public static class EssContextLookupHelpers
-    {
-        public static era_provinceterritories LookupStateProvinceByCode(this EssContext context, string code)
-        {
-            if (string.IsNullOrEmpty(code)) return null;
-            return context.era_provinceterritorieses.Where(p => p.era_code == code).FirstOrDefault();
-        }
-
-        public static era_country LookupCountryByCode(this EssContext context, string code)
-        {
-            if (string.IsNullOrEmpty(code)) return null;
-            return context.era_countries.Where(p => p.era_countrycode == code).FirstOrDefault();
-        }
-
-        public static era_jurisdiction LookupJurisdictionByCode(this EssContext context, string code)
-        {
-            if (string.IsNullOrEmpty(code) || !Guid.TryParse(code, out var parsedCode)) return null;
-            return context.era_jurisdictions.Where(p => p.era_jurisdictionid == parsedCode).FirstOrDefault();
         }
     }
 }

@@ -28,11 +28,13 @@ namespace EMBC.ESS.Resources.Contacts
     public class ContactRepository : IContactRepository
     {
         private readonly EssContext essContext;
+        private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
 
-        public ContactRepository(EssContext essContext, IMapper mapper)
+        public ContactRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.essContext = essContext;
+            this.essContext = essContextFactory.Create();
+            this.essContextFactory = essContextFactory;
             this.mapper = mapper;
         }
 
@@ -130,8 +132,7 @@ namespace EMBC.ESS.Resources.Contacts
 
         private async Task<ContactQueryResult> Handle(RegistrantQuery query)
         {
-            var readCtx = essContext.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
+            var readCtx = essContextFactory.CreateReadOnly();
 
             IQueryable<contact> contactQuery = readCtx.contacts
                   .Expand(c => c.era_City)

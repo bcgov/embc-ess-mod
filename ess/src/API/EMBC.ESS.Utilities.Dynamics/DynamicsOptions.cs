@@ -14,18 +14,20 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
+
 namespace EMBC.ESS.Utilities.Dynamics
 {
     public class DynamicsOptions
     {
-        public string DynamicsApiEndpoint { get; set; }
-        public string DynamicsApiBaseUri { get; set; }
+        public Uri DynamicsApiEndpoint { get; set; }
+        public Uri DynamicsApiBaseUri { get; set; }
         public AdfsOptions Adfs { get; set; }
     }
 
     public class AdfsOptions
     {
-        public string OAuth2TokenEndpoint { get; set; }
+        public Uri OAuth2TokenEndpoint { get; set; }
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string ServiceAccountDomain { get; set; }
