@@ -13,6 +13,7 @@ import { Code } from '../models/code';
 import { CommunityCode } from '../models/community-code';
 import { CommunityType } from '../models/community-type';
 import { Configuration } from '../models/configuration';
+import { OutageInformation } from '../models/outage-information';
 
 @Injectable({
   providedIn: 'root',
@@ -319,6 +320,49 @@ export class ConfigurationService extends BaseService {
 
     return this.configurationGetSecurityQuestions$Response(params).pipe(
       map((r: StrictHttpResponse<Array<string>>) => r.body as Array<string>)
+    );
+  }
+
+  /**
+   * Path part for operation configurationGetOutageInfo
+   */
+  static readonly ConfigurationGetOutageInfoPath = '/api/Configuration/outage-info';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `configurationGetOutageInfo()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  configurationGetOutageInfo$Response(params?: {
+  }): Observable<StrictHttpResponse<OutageInformation>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetOutageInfoPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<OutageInformation>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `configurationGetOutageInfo$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  configurationGetOutageInfo(params?: {
+  }): Observable<OutageInformation> {
+
+    return this.configurationGetOutageInfo$Response(params).pipe(
+      map((r: StrictHttpResponse<OutageInformation>) => r.body as OutageInformation)
     );
   }
 
