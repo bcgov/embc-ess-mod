@@ -17,20 +17,17 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Resources.Cases
 {
     public class CaseRepository : ICaseRepository
     {
         private readonly IEvacuationRepository evacuationRepository;
-        private readonly EssContext essContext;
         private readonly IMapper mapper;
 
-        public CaseRepository(IEvacuationRepository evacuationRepository, EssContext essContext, IMapper mapper)
+        public CaseRepository(IEvacuationRepository evacuationRepository, IMapper mapper)
         {
             this.evacuationRepository = evacuationRepository;
-            this.essContext = essContext;
             this.mapper = mapper;
         }
 

@@ -28,23 +28,20 @@ namespace EMBC.ESS.Resources.Reports
 {
     public class ReportRepository : IReportRepository
     {
-        private readonly EssContext essContext;
+        private readonly EssContext readCtx;
         private readonly IMapper mapper;
 
-        public ReportRepository(EssContext essContext, IMapper mapper)
+        public ReportRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.essContext = essContext;
+            this.readCtx = essContextFactory.CreateReadOnly();
             this.mapper = mapper;
         }
 
         public async Task<EvacueeQueryResult> QueryEvacuee(ReportQuery query)
         {
-            var readCtx = essContext.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
-
             var files = (await QueryEvacuationFiles(readCtx, query)).Concat(await QueryTasks(readCtx, query));
 
-            var results = (await ParallelLoadEvacueesAsync(essContext, files)).Select(e => mapper.Map<Evacuee>(e)).ToArray();
+            var results = (await ParallelLoadEvacueesAsync(readCtx, files)).Select(e => mapper.Map<Evacuee>(e)).ToArray();
 
             return new EvacueeQueryResult
             {
@@ -54,12 +51,9 @@ namespace EMBC.ESS.Resources.Reports
 
         public async Task<SupportQueryResult> QuerySupport(ReportQuery query)
         {
-            var readCtx = essContext.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
-
             var files = (await QueryEvacuationFiles(readCtx, query)).Concat(await QueryTasks(readCtx, query));
 
-            var results = (await ParallelLoadSupportsAsync(essContext, files)).Select(e => mapper.Map<Support>(e)).ToArray();
+            var results = (await ParallelLoadSupportsAsync(readCtx, files)).Select(e => mapper.Map<Support>(e)).ToArray();
 
             return new SupportQueryResult
             {
@@ -118,11 +112,8 @@ namespace EMBC.ESS.Resources.Reports
 
         private static async Task<IEnumerable<era_householdmember>> ParallelLoadEvacueesAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
         {
-            var readCtx = ctx.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
-
             //load files' properties
-            await files.Select(file => ParallelLoadEvacueeAsync(readCtx, file)).ToArray().ForEachAsync(10, t => t);
+            await files.Select(file => ParallelLoadEvacueeAsync(ctx, file)).ToArray().ForEachAsync(10, t => t);
 
             var members = new List<era_householdmember>();
 
@@ -174,11 +165,8 @@ namespace EMBC.ESS.Resources.Reports
 
         private static async Task<IEnumerable<era_evacueesupport>> ParallelLoadSupportsAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
         {
-            var readCtx = ctx.Clone();
-            readCtx.MergeOption = MergeOption.NoTracking;
-
             //load files' properties
-            await files.Select(file => ParallelLoadSupportAsync(readCtx, file)).ToArray().ForEachAsync(10, t => t);
+            await files.Select(file => ParallelLoadSupportAsync(ctx, file)).ToArray().ForEachAsync(10, t => t);
 
             var supports = new List<era_evacueesupport>();
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Company>Province of British Columbia</Company>
@@ -44,17 +44,17 @@
         <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="Handlebars.Net" Version="2.0.9" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
-        <PackageReference Include="MailKit" Version="2.15.0" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="5.0.11" />
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
+        <PackageReference Include="MailKit" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />
         <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
         <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
-        <PackageReference Include="Serilog.Exceptions" Version="7.1.0" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.0.0" />
         <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="8.4.1" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
-        <PackageReference Include="Serilog.Sinks.Splunk" Version="3.6.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+        <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -72,6 +72,7 @@
         <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilties.BceidWS\EMBC.ESS.Utilties.BceidWS.csproj" />
+        <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />        
     </ItemGroup>
 
     <ItemGroup>
