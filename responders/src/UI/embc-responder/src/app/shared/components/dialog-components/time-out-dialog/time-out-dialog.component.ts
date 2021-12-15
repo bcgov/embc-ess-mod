@@ -17,11 +17,10 @@ export class TimeOutDialogComponent implements OnInit {
   ngOnInit(): void {
     this.countdown = this.profileData;
     this.idle.onIdleEnd.subscribe(() => {
-      console.log('No longer idle.');
       this.outputEvent.emit('close');
     });
     this.idle.onTimeoutWarning.subscribe((countdown) => {
-      console.log('You will time out in ' + countdown + ' seconds!');
+      //console.log('You will time out in ' + countdown + ' seconds!');
       this.countdown = countdown;
     });
   }

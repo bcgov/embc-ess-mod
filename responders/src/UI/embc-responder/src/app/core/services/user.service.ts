@@ -76,6 +76,11 @@ export class UserService {
     this.cacheService.remove('communityList');
     this.cacheService.remove('supportCategory');
     this.cacheService.remove('supportSubCategory');
+    this.clearLocalStorage();
+  }
+
+  public clearLocalStorage(): void {
+    localStorage.clear();
   }
 }
 
