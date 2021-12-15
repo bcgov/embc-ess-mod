@@ -27,7 +27,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         EssContext CreateReadOnly();
     }
 
-    public class EssContextFactory : IEssContextFactory
+    internal class EssContextFactory : IEssContextFactory
     {
         private readonly IODataClientFactory odataClientFactory;
         private readonly DynamicsOptions dynamicsOptions;

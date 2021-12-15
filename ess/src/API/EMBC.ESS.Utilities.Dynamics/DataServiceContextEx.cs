@@ -23,7 +23,7 @@ using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
-    public static class EssContextEx
+    public static class DataServiceContextEx
     {
         public static DataServiceQuerySingle<T> GetSingleEntityByKey<T>(this DataServiceQuery<T> source, IDictionary<string, object> alternateKeys)
         {
@@ -31,7 +31,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             return new DataServiceQuerySingle<T>(source.Context, source.GetKeyPath(keys));
         }
 
-        public static void DetachAll(this EssContext context)
+        public static void DetachAll(this DataServiceContext context)
         {
             foreach (var descriptor in context.EntityTracker.Entities)
             {
@@ -52,7 +52,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         /// <param name="entity">the entity to attach</param>
         /// <param name="entityKeyGetter"> a function to resolve the entity id</param>
         /// <returns>a tracked entity - either existing or newly attached</returns>
-        public static TEntity AttachOrGetTracked<TEntity>(this EssContext context, string entitySetName, TEntity entity, Func<TEntity, Guid?> entityKeyGetter)
+        public static TEntity AttachOrGetTracked<TEntity>(this DataServiceContext context, string entitySetName, TEntity entity, Func<TEntity, Guid?> entityKeyGetter)
             where TEntity : crmbaseentity
         {
             var currentEntityKey = entityKeyGetter(entity);
@@ -66,18 +66,21 @@ namespace EMBC.ESS.Utilities.Dynamics
             return matchedEntity ?? entity;
         }
 
-        public static void ActivateObject(this EssContext context, object entity, int activeStatusValue = -1) =>
-            ModifyEntityStatus(context, entity, (int)EntityState.Active, activeStatusValue);
+        public static void ActivateObject<TEntity>(this DataServiceContext context, TEntity entity, int activeStatusValue = -1)
+             where TEntity : crmbaseentity => ModifyEntityStatus(context, entity, (int)EntityState.Active, activeStatusValue);
 
-        public static void DeactivateObject(this EssContext context, object entity, int inactiveStatusValue = -1) =>
-            ModifyEntityStatus(context, entity, (int)EntityState.Inactive, inactiveStatusValue);
+        public static void DeactivateObject<TEntity>(this DataServiceContext context, TEntity entity, int inactiveStatusValue = -1)
+             where TEntity : crmbaseentity => ModifyEntityStatus(context, entity, (int)EntityState.Inactive, inactiveStatusValue);
 
-        private static void ModifyEntityStatus(this EssContext context, object entity, int state, int status)
+        private static void ModifyEntityStatus<TEntity>(this DataServiceContext context, TEntity entity, int state, int status)
+             where TEntity : crmbaseentity
         {
             var entityType = entity.GetType();
-            if (!typeof(crmbaseentity).IsAssignableFrom(entityType)) throw new InvalidOperationException($"entity {entityType.FullName} is not a valid {typeof(crmbaseentity).FullName}");
-            var statusProp = entity.GetType().GetProperty("statuscode");
-            var stateProp = entity.GetType().GetProperty("statecode");
+            var statusProp = entityType.GetProperty("statuscode");
+            var stateProp = entityType.GetProperty("statecode");
+
+            if (statusProp == null) throw new Exception($"statuscode property not found in type {entityType.FullName}");
+            if (stateProp == null) throw new Exception($"stateProp property not found in type {entityType.FullName}");
 
             statusProp.SetValue(entity, status);
             if (state >= 0) stateProp.SetValue(entity, state);
