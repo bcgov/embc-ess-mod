@@ -60,7 +60,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             var response = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
-                Address = options.Adfs.OAuth2TokenEndpoint,
+                Address = options.Adfs.OAuth2TokenEndpoint.AbsoluteUri,
                 ClientId = options.Adfs.ClientId,
                 ClientSecret = options.Adfs.ClientSecret,
                 Resource = { options.Adfs.ResourceName },

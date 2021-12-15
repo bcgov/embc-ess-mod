@@ -9,22 +9,19 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-
     public class DynamicsWebAppFixture : WebApplicationFactory<Startup>
     {
         public DynamicsTestData TestData { get; }
 
-
         public DynamicsWebAppFixture()
         {
-            this.TestData = new DynamicsTestData(Services.CreateScope().ServiceProvider.GetRequiredService<EssContext>().Clone());
+            this.TestData = new DynamicsTestData(Services.CreateScope().ServiceProvider.GetRequiredService<IEssContextFactory>().Create());
         }
     }
 
     [CollectionDefinition("DynamicsFixture")]
     public class WebAppTestCollection : ICollectionFixture<DynamicsWebAppFixture>
     {
-
     }
 
     [Collection("DynamicsFixture")]
@@ -45,10 +42,8 @@ namespace EMBC.Tests.Integration.ESS
 
         public WebAppTestBase(ITestOutputHelper output, DynamicsWebAppFixture fixture)
         {
-
             loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
             this.fixture = fixture;
         }
     }
-
 }

@@ -15,24 +15,18 @@
 // -------------------------------------------------------------------------
 
 using System;
+using Microsoft.Extensions.DependencyInjection;
+using Polly;
 
-namespace EMBC.ESS.Utilities.Dynamics
+namespace EMBC.Utilities.Extensions
 {
-    public class DynamicsOptions
+    public static class HttpClientEx
     {
-        public Uri DynamicsApiEndpoint { get; set; }
-        public Uri DynamicsApiBaseUri { get; set; }
-        public AdfsOptions Adfs { get; set; }
-    }
+        public static IHttpClientBuilder AddErrorHandling(this IHttpClientBuilder httpClientBuilder)
+        {
+            httpClientBuilder.AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(2, TimeSpan.FromMinutes(1)));
 
-    public class AdfsOptions
-    {
-        public Uri OAuth2TokenEndpoint { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-        public string ServiceAccountDomain { get; set; }
-        public string ServiceAccountName { get; set; }
-        public string ServiceAccountPassword { get; set; }
-        public string ResourceName { get; set; }
+            return httpClientBuilder;
+        }
     }
 }

@@ -14,11 +14,14 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
+using System.Linq;
+using System.Net.Http.Headers;
+using EMBC.Utilities.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OData.Client;
+using Microsoft.OData.Extensions.Client;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
@@ -27,19 +30,37 @@ namespace EMBC.ESS.Utilities.Dynamics
         public static IServiceCollection AddDynamics(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<DynamicsOptions>(opts => configuration.GetSection("Dynamics").Bind(opts));
-            services.AddHttpClient("adfs_token", (sp, c) =>
-            {
-                var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
-                c.BaseAddress = new Uri(options.Adfs.OAuth2TokenEndpoint);
-            });
+
+            services
+                .AddHttpClient("adfs_token")
+                .AddErrorHandling();
+
             services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
-            services.AddScoped(sp =>
-            {
-                var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
-                var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
-                var logger = sp.GetRequiredService<ILogger<EssContext>>();
-                return new EssContext(new Uri(options.DynamicsApiBaseUri), new Uri(options.DynamicsApiEndpoint), tokenProvider, logger);
-            });
+
+            services
+                .AddODataClient("dynamics")
+                .ConfigureODataClient(client =>
+                {
+                    client.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
+                    client.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
+                    client.Configurations.RequestPipeline.OnEntryStarting((arg) =>
+                    {
+                        // do not send reference properties and null values to Dynamics
+                        arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
+                    });
+                })
+                .AddHttpClient()
+                .ConfigureHttpClient((sp, c) =>
+                {
+                    var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
+                    var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
+                    c.BaseAddress = options.DynamicsApiEndpoint;
+                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
+                })
+                .AddErrorHandling();
+
+            services.AddTransient<IEssContextFactory, EssContextFactory>();
+            services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
 
             return services;
         }
