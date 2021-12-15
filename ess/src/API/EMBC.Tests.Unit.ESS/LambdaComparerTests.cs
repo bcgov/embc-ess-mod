@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities;
 using Shouldly;
 using Xunit;
 
