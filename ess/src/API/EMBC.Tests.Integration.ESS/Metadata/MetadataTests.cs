@@ -9,16 +9,16 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Metadata
 {
-    public class MetadataTests : WebAppTestBase
+    public class MetadataTests : DynamicsWebAppTestBase
     {
         public MetadataTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetCountries()
         {
-            var metadataManager = base.services.GetRequiredService<MetadataManager>();
+            var metadataManager = base.Services.GetRequiredService<MetadataManager>();
 
             var reply = await metadataManager.Handle(new CountriesQuery());
 
@@ -26,10 +26,10 @@ namespace EMBC.Tests.Integration.ESS.Metadata
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetStateProvinces()
         {
-            var metadataManager = base.services.GetRequiredService<MetadataManager>();
+            var metadataManager = base.Services.GetRequiredService<MetadataManager>();
 
             var reply = await metadataManager.Handle(new StateProvincesQuery());
 
@@ -37,10 +37,10 @@ namespace EMBC.Tests.Integration.ESS.Metadata
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetCommunities()
         {
-            var metadataManager = base.services.GetRequiredService<MetadataManager>();
+            var metadataManager = base.Services.GetRequiredService<MetadataManager>();
 
             var reply = await metadataManager.Handle(new CommunitiesQuery());
 
@@ -48,10 +48,10 @@ namespace EMBC.Tests.Integration.ESS.Metadata
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetSecurityQuestions()
         {
-            var metadataManager = base.services.GetRequiredService<MetadataManager>();
+            var metadataManager = base.Services.GetRequiredService<MetadataManager>();
 
             var reply = await metadataManager.Handle(new SecurityQuestionsQuery());
 

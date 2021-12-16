@@ -1,43 +1,60 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Utilities.Dynamics;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class DynamicsConnectivityTests : IClassFixture<WebApplicationFactory<Startup>>
+    public class DynamicsConnectivityTests : WebAppTestBase
     {
-        private readonly ITestOutputHelper output;
-        private readonly WebApplicationFactory<Startup> webApplicationFactory;
-
-#if RELEASE
-        protected const string RequiresDynamics = "Integration tests that requires Dynamics connection via VPN";
-#else
-        protected const string RequiresDynamics = null;
-#endif
-
-        public DynamicsConnectivityTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
+        public DynamicsConnectivityTests(ITestOutputHelper output, WebAppTestFixture<Startup> fixture) : base(output, fixture)
         {
-            this.output = output;
-            this.webApplicationFactory = webApplicationFactory;
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task GetSecurityToken()
         {
-            var tokenProvider = webApplicationFactory.Services.GetRequiredService<ISecurityTokenProvider>();
-            output.WriteLine("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
+            var tokenProvider = Services.GetRequiredService<ISecurityTokenProvider>();
+            var logger = Services.GetRequiredService<ILogger<DynamicsConnectivityTests>>();
+            logger.LogInformation("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanConnectToDynamics()
         {
-            var context = webApplicationFactory.Services.GetRequiredService<EssContext>();
+            var context = Services.GetRequiredService<EssContext>();
             //await Should.NotThrowAsync(async () => await context.era_countries.GetAllPagesAsync());
             await context.era_countries.GetAllPagesAsync();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanTriggerCricuitBreaker()
+        {
+            var context = Services.GetRequiredService<EssContext>();
+            var logger = Services.GetRequiredService<ILogger<DynamicsConnectivityTests>>();
+
+            var call = async () =>
+            {
+                try
+                {
+                    await context.era_countries.GetAllPagesAsync();
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    return e;
+                }
+            };
+
+            for (int i = 0; i < 5; i++)
+            {
+                var exception = await call();
+                logger.LogInformation(exception.GetType().Name);
+            }
         }
     }
 }

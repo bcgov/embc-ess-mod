@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class ESSTaskTests : WebAppTestBase
+    public class ESSTaskTests : DynamicsWebAppTestBase
     {
         private readonly ITaskRepository taskRepository;
 
@@ -24,10 +24,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         public ESSTaskTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            taskRepository = services.GetRequiredService<ITaskRepository>();
+            taskRepository = Services.GetRequiredService<ITaskRepository>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async System.Threading.Tasks.Task CanGetActiveTask()
         {
             // Active Task
@@ -42,7 +42,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             esstask.Id.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async System.Threading.Tasks.Task CanGetExpiredTask()
         {
             // Expired Task

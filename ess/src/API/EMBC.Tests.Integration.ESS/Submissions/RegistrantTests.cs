@@ -12,11 +12,11 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Submissions
 {
-    public class RegistrantTests : WebAppTestBase
+    public class RegistrantTests : DynamicsWebAppTestBase
     {
         private readonly SubmissionsManager manager;
 
-        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => await TestHelper.GetRegistrantByUserId(manager, userId);
+        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
         private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId);
 
@@ -24,10 +24,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         public RegistrantTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            manager = services.GetRequiredService<SubmissionsManager>();
+            manager = Services.GetRequiredService<SubmissionsManager>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateNewRegistrantProfile()
         {
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
@@ -46,7 +46,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             actualRegistrant.MailingAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateProfile()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -102,7 +102,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedRegistrant.PrimaryAddress.PostalCode.ShouldBe(newPostalCode);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
             var identifier = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
@@ -114,17 +114,17 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var registrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
 
-            var file = (await GetEvacuationFileById(TestData.EvacuationFileId)).FirstOrDefault();
-            var member = file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.FirstName != $"{TestData.TestPrefix}-member-no-registrant-first").FirstOrDefault();
+            var file = (await GetEvacuationFileById(TestData.EvacuationFileId)).First();
+            var member = file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.FirstName != $"{TestData.TestPrefix}-member-no-registrant-first").First();
 
             var fileId = await manager.Handle(new LinkRegistrantCommand { FileId = file.Id, RegistantId = registrant.Id, HouseholdMemberId = member.Id });
             fileId.ShouldBe(file.Id);
 
-            var updatedFile = (await GetEvacuationFileById(TestData.EvacuationFileId)).FirstOrDefault();
-            updatedFile.NeedsAssessment.HouseholdMembers.Where(m => m.Id == member.Id).SingleOrDefault().LinkedRegistrantId.ShouldBe(registrant.Id);
+            var updatedFile = (await GetEvacuationFileById(TestData.EvacuationFileId)).First();
+            updatedFile.NeedsAssessment.HouseholdMembers.Where(m => m.Id == member.Id).Single().LinkedRegistrantId.ShouldBe(registrant.Id);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanDeleteProfileAddressLinks()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -134,8 +134,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             }
 
-            string newProvince = null;
-            string newCommunity = null;
+            string? newProvince = null;
+            string? newCommunity = null;
             registrant.PrimaryAddress.StateProvince = newProvince;
             registrant.PrimaryAddress.Community = newCommunity;
 
@@ -148,7 +148,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateRegistrantVerified()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -163,7 +163,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedRegistrant.VerifiedUser.ShouldBe(newStatus);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanVerifySecurityQuestions()
         {
             var expectedNumberOfCorrectAnswers = 3;
@@ -186,7 +186,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanPartlyVerifySecurityQuestions()
         {
             var expectedNumberOfCorrectAnswers = 2;
@@ -210,7 +210,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanReprintSupport()
         {
             var printRequestId = await manager.Handle(new ReprintSupportCommand
@@ -224,7 +224,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             printRequestId.ShouldNotBeNullOrEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanInviteRegistrant()
         {
             var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
@@ -247,7 +247,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             inviteId.ShouldNotBeNullOrEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanProcessRegistrantInvite()
         {
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
@@ -262,7 +262,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 RequestingUserId = null
             });
 
-            var dp = services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
+            var dp = Services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
             var encryptedInviteId = dp.Protect(inviteId);
 
             await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = encryptedInviteId, LoggedInUserId = uniqueSignature });

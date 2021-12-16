@@ -9,16 +9,16 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class MetadataTests : WebAppTestBase
+    public class MetadataTests : DynamicsWebAppTestBase
     {
         private readonly IMetadataRepository metadataRepository;
 
         public MetadataTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            metadataRepository = services.GetRequiredService<IMetadataRepository>();
+            metadataRepository = Services.GetRequiredService<IMetadataRepository>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetPlannedOutages()
         {
             var reply = await metadataRepository.GetPlannedOutages(new OutageQuery { PortalType = (PortalType)TestData.TestPortal, DisplayDate = TestData.OutageDate });

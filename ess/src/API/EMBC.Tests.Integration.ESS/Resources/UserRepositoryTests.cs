@@ -7,16 +7,16 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class UserRepositoryTests : WebAppTestBase
+    public class UserRepositoryTests : DynamicsWebAppTestBase
     {
         private readonly IUserRepository userRepository;
 
         public UserRepositoryTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            userRepository = services.GetRequiredService<IUserRepository>();
+            userRepository = Services.GetRequiredService<IUserRepository>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetBusinessBceidInformationByUserId()
         {
             var userIdToSearch = "ess.developerA1";
@@ -30,7 +30,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             user.OrgId.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetBasicBceidInformationByUserId()
         {
             var userIdToSearch = "embc-rp";
