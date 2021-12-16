@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace EMBC.ESS.Utilities.Extensions
+namespace EMBC.Utilities
 {
     public class LambdaComparer<T> : EqualityComparer<T>
     {

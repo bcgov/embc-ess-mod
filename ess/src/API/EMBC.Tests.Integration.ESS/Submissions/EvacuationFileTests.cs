@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -13,25 +11,25 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Submissions
 {
-    public class EvacuationFileTests : WebAppTestBase
+    public class EvacuationFileTests : DynamicsWebAppTestBase
     {
         private readonly SubmissionsManager manager;
         private readonly RegistrantProfile registrant;
         private string teamUserId => TestData.Tier4TeamMemberId;
 
-        private async Task<RegistrantProfile> GetTestRegistrant() => await TestHelper.GetRegistrantByUserId(manager, TestData.ContactUserId);
+        private async Task<RegistrantProfile?> GetTestRegistrant() => await TestHelper.GetRegistrantByUserId(manager, TestData.ContactUserId);
 
-        private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => (await TestHelper.GetEvacuationFileById(manager, fileId)).SingleOrDefault();
+        private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => (await TestHelper.GetEvacuationFileById(manager, fileId)).ShouldHaveSingleItem();
 
         private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(registrant);
 
         public EvacuationFileTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            manager = services.GetRequiredService<SubmissionsManager>();
-            registrant = GetTestRegistrant().GetAwaiter().GetResult();
+            manager = Services.GetRequiredService<SubmissionsManager>();
+            registrant = GetTestRegistrant().GetAwaiter().GetResult().ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSubmitAnonymousRegistration()
         {
             var textContextIdentifier = Guid.NewGuid().ToString().Substring(0, 4);
@@ -139,7 +137,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSubmitNewEvacuation()
         {
             var file = CreateNewTestEvacuationFile(registrant);
@@ -168,7 +166,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             }
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public void Create_EvacuationFileNoPrimaryRegistrant_ThrowsError()
         {
             var file = CreateNewTestEvacuationFile(registrant);
@@ -183,7 +181,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe("File  must have a single primary registrant household member");
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Update_EvacuationFileMultiplePrimaryRegistrants_ThrowsError()
         {
             var now = DateTime.UtcNow;
@@ -219,7 +217,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Update_EvacuationFileTask_ThrowsError()
         {
             var fileWithTask = await GetEvacuationFileById(TestData.EvacuationFileId);
@@ -232,7 +230,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask })).Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
@@ -254,7 +252,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedFile.EvacuationDate.ShouldBe(now);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanVerifySecurityPhrase()
         {
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
@@ -263,7 +261,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             response.IsCorrect.ShouldBeTrue();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateFileNote()
         {
             var fileId = TestData.EvacuationFileId;
@@ -274,7 +272,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             actualNote.Content.ShouldEndWith(noteSuffix);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateFileNote()
         {
             var fileId = TestData.EvacuationFileId;
@@ -292,7 +290,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             actualUpdatedNote.Content.ShouldEndWith(updatedNoteSuffix);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Update_FileNoteNotCreatingMember_ThrowsError()
         {
             var fileId = TestData.EvacuationFileId;
@@ -307,14 +305,14 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             Should.Throw<Exception>(() => manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = actualNote })).Message.ShouldBe($"The note may be edited only by the user who created it withing a 24 hour period.");
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryFileNoteByFileId()
         {
             var notes = (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes;
             notes.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryFileNoteByFileIdAndNoteId()
         {
             var fileId = TestData.EvacuationFileId;

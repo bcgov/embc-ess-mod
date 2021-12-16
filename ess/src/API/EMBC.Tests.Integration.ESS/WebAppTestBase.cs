@@ -1,49 +1,38 @@
 ﻿using System;
 using EMBC.ESS;
-using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class DynamicsWebAppFixture : WebApplicationFactory<Startup>
-    {
-        public DynamicsTestData TestData { get; }
-
-        public DynamicsWebAppFixture()
-        {
-            this.TestData = new DynamicsTestData(Services.CreateScope().ServiceProvider.GetRequiredService<IEssContextFactory>().Create());
-        }
-    }
-
-    [CollectionDefinition("DynamicsFixture")]
-    public class WebAppTestCollection : ICollectionFixture<DynamicsWebAppFixture>
+    public class WebAppTestFixture<TStartup> : WebApplicationFactory<TStartup>
+        where TStartup : class
     {
     }
 
-    [Collection("DynamicsFixture")]
-    public class WebAppTestBase
+    public abstract class WebAppTestBase : IClassFixture<WebAppTestFixture<Startup>>
     {
 #if RELEASE
-        protected const string RequiresDynamics = "Integration tests that requires Dynamics connection via VPN";
+        protected const string RequiresVpnConnectivity = "Integration test that requires a VPN connection";
 #else
-        protected const string RequiresDynamics = null;
+        protected const string RequiresVpnConnectivity = null;
 #endif
 
-        private readonly LoggerFactory loggerFactory;
-        private readonly DynamicsWebAppFixture fixture;
+        public IServiceProvider Services { get; }
 
-        public IServiceProvider services => new Lazy<IServiceProvider>(() => this.fixture.Services.CreateScope().ServiceProvider).Value;
-        public ILogger testLogger => loggerFactory.CreateLogger("SUT");
-        public DynamicsTestData TestData => fixture.TestData;
-
-        public WebAppTestBase(ITestOutputHelper output, DynamicsWebAppFixture fixture)
+        public WebAppTestBase(ITestOutputHelper output, WebAppTestFixture<Startup> fixture)
         {
-            loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
-            this.fixture = fixture;
+            var factory = fixture.WithWebHostBuilder(builder =>
+           {
+               builder.UseSerilog((ctx, cfg) =>
+               {
+                   cfg.WriteTo.TestOutput(output);
+               });
+           });
+            this.Services = factory.Server.Services.CreateScope().ServiceProvider;
         }
     }
 }

@@ -114,7 +114,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             };
         }
 
-        public static async Task<RegistrantProfile> GetRegistrantByUserId(SubmissionsManager manager, string userId) =>
+        public static async Task<RegistrantProfile?> GetRegistrantByUserId(SubmissionsManager manager, string userId) =>
             (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
 
         public static async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(SubmissionsManager manager, string fileId) =>

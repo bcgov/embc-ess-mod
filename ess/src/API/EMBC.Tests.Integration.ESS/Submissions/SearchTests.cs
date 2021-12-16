@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -12,18 +10,18 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Submissions
 {
-    public class SearchTests : WebAppTestBase
+    public class SearchTests : DynamicsWebAppTestBase
     {
         private readonly SubmissionsManager manager;
 
-        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => await TestHelper.GetRegistrantByUserId(manager, userId);
+        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
         public SearchTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            manager = services.GetRequiredService<SubmissionsManager>();
+            manager = Services.GetRequiredService<SubmissionsManager>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchRegistrantsByUserId()
         {
             var userId = TestData.ContactUserId;
@@ -33,7 +31,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             profile.UserId.ShouldBe(userId);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchRegistrantsByNonExistentValues()
         {
             (await manager.Handle(new RegistrantsQuery
@@ -42,7 +40,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             })).Items.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacuationFilesByRegistrantUserName()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -52,7 +50,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacuationFilesByLinkedRegistrantId()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -65,7 +63,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             files.ShouldAllBe(f => f.HouseholdMembers.Any(h => h.LinkedRegistrantId == registrant.Id));
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacuationFilesByBCServicesCardId()
         {
             var statuses = new[] { EvacuationFileStatus.Active, EvacuationFileStatus.Pending };
@@ -75,7 +73,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             files.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacueesByName()
         {
             var firstName = TestData.ContactFirstName;
@@ -96,7 +94,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 m.DateOfBirth == dateOfBirth));
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Search_EvacuationFiles_IncludeRegistrantProfilesOnly()
         {
             var firstName = TestData.ContactFirstName;
@@ -109,7 +107,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             searchResults.Profiles.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Search_EvacuationFiles_IncludeEvacuationFilesOnly()
         {
             var firstName = $"{TestData.TestPrefix}-member-no-registrant-first";
@@ -122,7 +120,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             searchResults.Profiles.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Search_EvacuationFiles_IncludeBoth()
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = TestData.ContactFirstName, LastName = TestData.ContactLastName, DateOfBirth = TestData.ContactDateOfBirth, IncludeRestrictedAccess = true });

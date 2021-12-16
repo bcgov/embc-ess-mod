@@ -28,7 +28,7 @@ namespace EMBC.ESS.Utilities.Cache
         Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiration = null);
     }
 
-    public class Cache : ICache
+    internal class Cache : ICache
     {
         private readonly IDistributedCache cache;
 

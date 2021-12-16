@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class EvacuationTests : WebAppTestBase
+    public class EvacuationTests : DynamicsWebAppTestBase
     {
         private readonly ICaseRepository caseRepository;
 
@@ -27,10 +27,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         public EvacuationTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            caseRepository = services.GetRequiredService<ICaseRepository>();
+            caseRepository = Services.GetRequiredService<ICaseRepository>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetEvacuationFilesByFileId()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -44,7 +44,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.Id.ShouldBe(TestEssFileNumber);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetEvacuationFilesByFileIdAndRelatedNeedsAssessmentId()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -60,7 +60,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.NeedsAssessment.Id.ShouldBe(TestNeedsAssessmentId);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetNoEvacuationFilesByRelatedNeedsAssessmentIdOnly()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -71,7 +71,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             queryResult.Items.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetNoEvacuationFilessByFileIdAndRegistrant()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -83,7 +83,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             queryResult.Items.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetEvacuationFilesByPrimaryRegistrantUserid()
         {
             var primaryContactId = TestContactId;
@@ -97,7 +97,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContactId);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetEvacuationFilessByLinkedRegistrantId()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -109,7 +109,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == TestContactId));
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateEvacuationFile()
         {
             var primaryContact = await GetContactByUserId(TestContactUserId);
@@ -123,7 +123,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             (await caseRepository.QueryCase(caseQuery)).Items.ShouldHaveSingleItem();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateEvacuationFile()
         {
             var fileToUpdate = (await caseRepository.QueryCase(new EvacuationFilesQuery
@@ -159,7 +159,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(fileToUpdate.NeedsAssessment.HouseholdMembers.Count());
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanMapEvacuationFile()
         {
             var now = DateTime.UtcNow;
@@ -240,7 +240,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanDeleteEvacuationFiles()
         {
             var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = TestContactId })).Items;
@@ -251,7 +251,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateSupports()
         {
             var now = DateTime.UtcNow;
@@ -308,7 +308,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateSupports()
         {
             var now = DateTime.UtcNow;
@@ -375,7 +375,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         private async Task<Contact> GetContactByUserId(string userId) =>
-            (await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
+            (await Services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
 
         private EvacuationFile CreateTestFile(Contact primaryContact)
         {

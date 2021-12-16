@@ -7,16 +7,16 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class DistributedCacheTests : WebAppTestBase
+    public class DistributedCacheTests : DynamicsWebAppTestBase
     {
         public DistributedCacheTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSetAndGetItems()
         {
-            var cache = services.GetRequiredService<IDistributedCache>();
+            var cache = Services.GetRequiredService<IDistributedCache>();
 
             var key = "test_key";
             var value = "test_value";

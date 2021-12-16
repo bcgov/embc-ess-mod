@@ -28,7 +28,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         Task<string> AcquireToken();
     }
 
-    public class CachedADFSSecurityTokenProvider : ISecurityTokenProvider
+    internal class CachedADFSSecurityTokenProvider : ISecurityTokenProvider
     {
         private readonly string cacheKey = $"{nameof(CachedADFSSecurityTokenProvider)}_token";
         private readonly ISecurityTokenProvider internalSecurityProvider;
@@ -43,7 +43,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         public async Task<string> AcquireToken() => await cache.GetOrSet(cacheKey, () => internalSecurityProvider.AcquireToken(), DateTimeOffset.UtcNow.AddMinutes(1));
     }
 
-    public class ADFSSecurityTokenProvider : ISecurityTokenProvider
+    internal class ADFSSecurityTokenProvider : ISecurityTokenProvider
     {
         private readonly DynamicsOptions options;
         private readonly IHttpClientFactory httpClientFactory;

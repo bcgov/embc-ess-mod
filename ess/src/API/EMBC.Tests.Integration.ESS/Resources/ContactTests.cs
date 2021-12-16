@@ -9,7 +9,7 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class ContactTests : WebAppTestBase
+    public class ContactTests : DynamicsWebAppTestBase
     {
         private readonly IContactRepository contactRepository;
 
@@ -18,10 +18,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         public ContactTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            contactRepository = services.GetRequiredService<IContactRepository>();
+            contactRepository = Services.GetRequiredService<IContactRepository>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetContact()
         {
             var contactQuery = new RegistrantQuery
@@ -37,7 +37,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             contact.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateContact()
         {
             /* Get Contact */
@@ -46,7 +46,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 UserId = TestContactUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
-            var contact = queryResult.Items.FirstOrDefault();
+            var contact = queryResult.Items.First();
 
             var newCommunity = TestData.RandomCommunity;
             var currentCity = contact.PrimaryAddress.Community;
@@ -69,12 +69,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 ContactId = updatedContactId
             };
             var updatedQueryResult = await contactRepository.QueryContact(updatedContactQuery);
-            var updatedContact = updatedQueryResult.Items.FirstOrDefault();
+            var updatedContact = updatedQueryResult.Items.First();
 
             updatedContact.PrimaryAddress.Community.ShouldBe(newCommunity);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateContact()
         {
             var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
@@ -84,7 +84,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 UserId = TestContactUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
-            var baseContact = queryResult.Items.FirstOrDefault();
+            var baseContact = queryResult.Items.First();
             baseContact.Id = null;
             baseContact.UserId = TestContactUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
             baseContact.FirstName += "_" + uniqueSignature;
@@ -109,7 +109,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newContact.ShouldNotBeNull().Id.ShouldBe(newContactId);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateContactWithAddressLookupValues()
         {
             var country = "CAN";
@@ -164,7 +164,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newContact.MailingAddress.Community.ShouldBe(city);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateEmailInvite()
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = TestContactUserId })).Items.Single();

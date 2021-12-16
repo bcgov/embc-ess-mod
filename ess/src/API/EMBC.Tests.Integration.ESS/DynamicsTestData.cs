@@ -32,35 +32,35 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_country canada;
         private readonly era_provinceterritories bc;
 
-        public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.Value.ToString()).ToArray();
+        public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
         public string TestPrefix => testPrefix;
         public int TestPortal => testPortal;
         public DateTime OutageDate = DateTime.Parse("12/31/2021");
-        public string TeamId => team.era_essteamid.Value.ToString();
-        public string OtherTeamId => otherTeam.era_essteamid.Value.ToString();
-        public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value?.ToString();
-        public string OtherCommunityId => jurisdictions.LastOrDefault()?.era_jurisdictionid?.ToString();
-        public string Tier4TeamMemberId => tier4TeamMember.era_essteamuserid.Value.ToString();
-        public string OtherTeamMemberId => otherTeamMember.era_essteamuserid.Value.ToString();
+        public string TeamId => team.era_essteamid.GetValueOrDefault().ToString();
+        public string OtherTeamId => otherTeam.era_essteamid.GetValueOrDefault().ToString();
+        public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.First()._era_jurisdictionid_value.GetValueOrDefault().ToString();
+        public string OtherCommunityId => jurisdictions.Last().era_jurisdictionid.GetValueOrDefault().ToString();
+        public string Tier4TeamMemberId => tier4TeamMember.era_essteamuserid.GetValueOrDefault().ToString();
+        public string OtherTeamMemberId => otherTeamMember.era_essteamuserid.GetValueOrDefault().ToString();
         public string ActiveTaskId => activeTaskId;
-        public string ActiveTaskCommunity => activeTask._era_jurisdictionid_value?.ToString();
+        public string ActiveTaskCommunity => activeTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string InactiveTaskId => inactiveTaskId;
-        public string ContactId => contact.contactid.Value.ToString();
+        public string ContactId => contact.contactid.GetValueOrDefault().ToString();
         public string ContactUserId => contact.era_bcservicescardid;
         public string ContactFirstName => contact.firstname;
         public string ContactLastName => contact.lastname;
-        public string ContactDateOfBirth => $"{contact.birthdate.Value.Month:D2}/{contact.birthdate.Value.Day:D2}/{contact.birthdate.Value.Year:D4}";
+        public string ContactDateOfBirth => $"{contact.birthdate.GetValueOrDefault().Month:D2}/{contact.birthdate.GetValueOrDefault().Day:D2}/{contact.birthdate.GetValueOrDefault().Year:D4}";
         public string EvacuationFileId => evacuationfile.era_name;
-        public string CurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.Value.ToString();
+        public string CurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
         public string EvacuationFileSecurityPhrase => testPrefix + "-securityphrase";
-        public string SupplierAId => supplierA.era_supplierid.Value.ToString();
+        public string SupplierAId => supplierA.era_supplierid.GetValueOrDefault().ToString();
         public string SupplierAName => supplierA.era_suppliername;
         public string SupplierALegalName => supplierA.era_name;
         public string SupplierAGST => supplierA.era_gstnumber;
-        public string SupplierBId => supplierB.era_supplierid.Value.ToString();
-        public string SupplierCId => supplierC.era_supplierid.Value.ToString();
-        public string InactiveSupplierId => inactiveSupplier.era_supplierid.Value.ToString();
+        public string SupplierBId => supplierB.era_supplierid.GetValueOrDefault().ToString();
+        public string SupplierCId => supplierC.era_supplierid.GetValueOrDefault().ToString();
+        public string InactiveSupplierId => inactiveSupplier.era_supplierid.GetValueOrDefault().ToString();
         public string InactiveSupplierName => inactiveSupplier.era_suppliername;
         public string InactiveSupplierLegalName => inactiveSupplier.era_name;
         public string InactiveSupplierGST => inactiveSupplier.era_gstnumber;
@@ -69,9 +69,9 @@ namespace EMBC.Tests.Integration.ESS
         public DynamicsTestData(EssContext essContext)
         {
             this.essContext = essContext;
-            jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid.Value).ToArray();
-            canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").SingleOrDefault();
-            bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").SingleOrDefault();
+            jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid).ToArray();
+            canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").Single();
+            bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
@@ -87,22 +87,22 @@ namespace EMBC.Tests.Integration.ESS
             {
                 essContext.LoadProperty(existingTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
                 this.team = existingTeam;
-                var otherTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team-other").FirstOrDefault();
+                var otherTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team-other").First();
                 essContext.LoadProperty(otherTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
                 this.otherTeam = otherTeam;
-                this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).FirstOrDefault();
-                this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").FirstOrDefault();
-                this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").FirstOrDefault();
-                this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").FirstOrDefault();
-                this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").FirstOrDefault();
-                this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").FirstOrDefault();
-                this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").FirstOrDefault();
-                this.inactiveSupplier = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-inactive").FirstOrDefault();
+                this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).First();
+                this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").First();
+                this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").First();
+                this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").First();
+                this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").First();
+                this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").First();
+                this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").First();
+                this.inactiveSupplier = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-inactive").First();
 
                 this.evacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
-                .Where(f => f.era_name == testPrefix + "-file").FirstOrDefault();
+                .Where(f => f.era_name == testPrefix + "-file").First();
 
                 essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
 
@@ -166,7 +166,7 @@ namespace EMBC.Tests.Integration.ESS
                 assignedCommunities.Add(this.team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value);
             }
 
-            var jurisdictionsToAssign = jurisdictions.Where(j => !assignedCommunities.Contains(j.era_jurisdictionid.Value)).Take(1).ToArray();
+            var jurisdictionsToAssign = jurisdictions.Where(j => !assignedCommunities.Contains(j.era_jurisdictionid.GetValueOrDefault())).Take(1).ToArray();
             foreach (var jurisdiction in jurisdictionsToAssign)
             {
                 var teamArea = new era_essteamarea { era_essteamareaid = Guid.NewGuid() };
