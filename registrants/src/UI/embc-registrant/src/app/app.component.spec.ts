@@ -7,6 +7,8 @@ import { BootstrapService } from './core/services/bootstrap.service';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { APP_BASE_HREF } from '@angular/common';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({ selector: 'app-header', template: '' })
 class HeaderStubComponent {}
@@ -30,7 +32,9 @@ describe('AppComponent', () => {
         imports: [
           HttpClientTestingModule,
           RouterTestingModule,
-          OAuthModule.forRoot()
+          OAuthModule.forRoot(),
+          NgIdleKeepaliveModule.forRoot(),
+          MatDialogModule
         ],
         declarations: [
           AppComponent,
@@ -53,6 +57,7 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     app = fixture.componentInstance;
     component = TestBed.inject(AppComponent);
+    fixture.detectChanges();
   });
 
   it('should create the app', () => {

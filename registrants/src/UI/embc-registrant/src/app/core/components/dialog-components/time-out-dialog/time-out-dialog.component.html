@@ -1,16 +1,16 @@
-<div class="row row-padding">
-  <div class="col-md-12 heading p-align">Session Expiring!</div>
+<div class="row row-padding p-align">
+  <div class="col-md-12 heading">Session Expiring!</div>
 </div>
 
-<div class="row row-padding">
-  <div class="col-md-12 p-align">
+<div class="row row-padding p-align">
+  <div class="col-md-12">
     <p>Due to inactivity you will be logged out in</p>
     <p class="time-color bold">{{ countdown * 1000 | date: 'mm:ss' }}</p>
   </div>
 </div>
 
-<div class="row row-padding">
-  <div class="col-md-12 p-align">
+<div class="row row-padding p-align">
+  <div class="col-md-12">
     <p>If you are logged out you will loose any unsaved work.</p>
     <p class="bold">Do you want to stay signed in?</p>
   </div>
@@ -18,7 +18,7 @@
 
 <div class="row row-padding">
   <div class="col-md-12 p-align">
-    <button class="button-p button-width" mat-button (click)="close()">
+    <button class="button-width" mat-button (click)="close()">
       YES, KEEP ME SIGNED IN
     </button>
   </div>

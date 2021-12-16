@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
+import { TimeoutConfiguration } from '../api/models';
 import { TimeOutDialogComponent } from '../components/dialog-components/time-out-dialog/time-out-dialog.component';
 import { DialogComponent } from '../components/dialog/dialog.component';
 import { CacheService } from './cache.service';
@@ -11,6 +12,7 @@ import { LoginService } from './login.service';
 })
 export class TimeoutService {
   timedOut = false;
+  public timeOutInfoVal: TimeoutConfiguration;
 
   constructor(
     public idle: Idle,
@@ -45,7 +47,7 @@ export class TimeoutService {
         initDialog: 1 * 60,
         idle: this.idle
       },
-      width: '530px'
+      width: '560px'
     });
   }
 
@@ -58,5 +60,12 @@ export class TimeoutService {
     await this.loginService.logout();
     this.cacheService.clear();
     localStorage.clear();
+  }
+
+  public get timeOutInfo(): TimeoutConfiguration {
+    return this.timeOutInfoVal;
+  }
+  public set timeOutInfo(value: TimeoutConfiguration) {
+    this.timeOutInfoVal = value;
   }
 }

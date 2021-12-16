@@ -51,44 +51,69 @@ describe('VerifiedRegistrationComponent', () => {
     app = fixture.componentInstance;
     component = TestBed.inject(VerifiedRegistrationComponent);
     timeoutService = TestBed.inject(TimeoutService);
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    timeoutService.timeOutInfoVal = {
+      sessionTimeoutInMinutes: 1,
+      warningMessageDuration: 1
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
     expect(app).toBeTruthy();
   });
 
   it('should initiate time out service', () => {
+    timeoutService.timeOutInfoVal = {
+      sessionTimeoutInMinutes: 1,
+      warningMessageDuration: 1
+    };
     fixture.detectChanges();
-    timeoutService.init(1, 1);
+    component.ngOnInit();
     expect(timeoutService.getState()).toEqual('Started');
   });
 
   it('should have an active session', () => {
+    timeoutService.timeOutInfoVal = {
+      sessionTimeoutInMinutes: 1,
+      warningMessageDuration: 1
+    };
     fixture.detectChanges();
-    timeoutService.init(1, 1);
+    component.ngOnInit();
     expect(timeoutService.getTimeOut()).toEqual(false);
   });
 
   it('should set idle time', () => {
+    timeoutService.timeOutInfoVal = {
+      sessionTimeoutInMinutes: 1,
+      warningMessageDuration: 1
+    };
     fixture.detectChanges();
     const idle = timeoutService.idle;
-    timeoutService.init(1, 1);
+    component.ngOnInit();
     expect(idle.getIdle()).toEqual(60);
   });
 
   it('should set timeout time', () => {
+    timeoutService.timeOutInfoVal = {
+      sessionTimeoutInMinutes: 1,
+      warningMessageDuration: 1
+    };
     fixture.detectChanges();
     const idle = timeoutService.idle;
-    timeoutService.init(1, 1);
+    component.ngOnInit();
     expect(idle.getTimeout()).toEqual(60);
   });
 
   it('should not be idle', fakeAsync(() => {
+    timeoutService.timeOutInfoVal = {
+      sessionTimeoutInMinutes: 1 / 60,
+      warningMessageDuration: 1 / 60
+    };
     fixture.detectChanges();
     const idle = timeoutService.idle;
     const expiry: MockExpiry = TestBed.inject(MockExpiry);
-    timeoutService.init(1 / 60, 1 / 60);
+    component.ngOnInit();
 
     expiry.mockNow = new Date();
     idle.watch();
@@ -98,10 +123,14 @@ describe('VerifiedRegistrationComponent', () => {
   }));
 
   it('should be idle', fakeAsync(() => {
+    timeoutService.timeOutInfoVal = {
+      sessionTimeoutInMinutes: 1 / 60,
+      warningMessageDuration: 1 / 60
+    };
     fixture.detectChanges();
     const idle = timeoutService.idle;
     const expiry: MockExpiry = TestBed.inject(MockExpiry);
-    timeoutService.init(1 / 60, 1 / 60);
+    component.ngOnInit();
 
     idle.watch();
     expiry.mockNow = new Date(expiry.now().getTime() + idle.getIdle() * 1000);
