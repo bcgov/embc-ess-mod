@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { EnvironmentBannerComponent } from './layout/environment-banner/environment-banner.component';
 import { HttpClient } from '@angular/common/http';
 import { MarkdownModule } from 'ngx-markdown';
+import { TimeOutDialogComponent } from './components/dialog-components/time-out-dialog/time-out-dialog.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { MarkdownModule } from 'ngx-markdown';
     EssFileDialogComponent,
     InformationDialogComponent,
     BcscInviteDialogComponent,
-    EnvironmentBannerComponent
+    EnvironmentBannerComponent,
+    TimeOutDialogComponent
   ],
   exports: [
     CaptchaComponent,
@@ -52,7 +54,8 @@ import { MarkdownModule } from 'ngx-markdown';
     HeaderComponent,
     FooterComponent,
     DialogComponent,
-    EnvironmentBannerComponent
+    EnvironmentBannerComponent,
+    TimeOutDialogComponent
   ]
 })
 export class CoreModule {}
