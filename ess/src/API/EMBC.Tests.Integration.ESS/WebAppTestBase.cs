@@ -16,7 +16,7 @@ namespace EMBC.Tests.Integration.ESS
     public abstract class WebAppTestBase : IClassFixture<WebAppTestFixture<Startup>>
     {
 #if RELEASE
-        protected const string RequiresNetworkConnectivity = "Integration test that requires a VPN connection";
+        protected const string RequiresVpnConnectivity = "Integration test that requires a VPN connection";
 #else
         protected const string RequiresVpnConnectivity = null;
 #endif
