@@ -3,7 +3,7 @@
     <p class="title">System Unavailble</p>
   </div>
   <div class="outage-info">
-    <div>
+    <div *ngIf="outageInfo !== null; else unplanned">
       <p class="subtitle">
         This system is currently undergoing planned maintenance.
       </p>
@@ -23,11 +23,11 @@
       </p>
     </div>
 
-    <div>
+    <ng-template #unplanned>
       <p class="subtitle">
         This system is currently unavailable or undergoing routine maintenance.
       </p>
-    </div>
+    </ng-template>
 
     <p class="description">Please check back later.</p>
     <p class="description">Thank you for understanding.</p>
