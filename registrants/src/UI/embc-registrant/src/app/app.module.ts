@@ -9,6 +9,7 @@ import { CoreModule } from './core/core.module';
 import { ApiModule } from './core/api/api.module';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,6 +21,7 @@ import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
     ReactiveFormsModule,
     CoreModule,
     ApiModule.forRoot({ rootUrl: '.' }),
+    NgIdleKeepaliveModule.forRoot(),
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
