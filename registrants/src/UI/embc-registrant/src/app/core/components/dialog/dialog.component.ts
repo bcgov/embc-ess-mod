@@ -40,6 +40,10 @@ export class DialogComponent implements OnInit, OnDestroy {
       this.componentRef.instance.initDialog = this.data.initDialog;
     }
 
+    if (this.data.idle !== undefined) {
+      this.componentRef.instance.idle = this.data.idle;
+    }
+
     this.componentRef.instance.outputEvent.subscribe((value) => {
       this.buttonAction(value);
     });

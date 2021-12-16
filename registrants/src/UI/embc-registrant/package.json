@@ -31,7 +31,9 @@
     "angular2-text-mask": "^9.0.0",
     "moment": "^2.29.1",
     "mygovbc-captcha-widget": "git+https://github.com/bcgov/MyGovBC-CAPTCHA-Widget.git",
-    "ngx-markdown": "^13.0.0"
+    "ngx-markdown": "^13.0.0",
+    "@ng-idle/core": "^11.1.0",
+    "@ng-idle/keepalive": "^11.0.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.0.0",
@@ -49,10 +51,9 @@
     "jasmine-core": "~3.10.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "karma-coverage-istanbul-reporter": "~3.0.2",
+    "karma-coverage": "^2.1.0",
     "typescript": "~4.4.3",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "8.3.0",

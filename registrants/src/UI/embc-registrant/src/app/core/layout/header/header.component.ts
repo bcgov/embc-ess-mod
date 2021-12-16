@@ -28,5 +28,6 @@ export class HeaderComponent implements OnInit {
   public async signOut(): Promise<void> {
     await this.loginService.logout();
     this.cacheService.clear();
+    localStorage.clear();
   }
 }
