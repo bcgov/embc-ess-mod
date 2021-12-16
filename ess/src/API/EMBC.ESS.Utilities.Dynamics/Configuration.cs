@@ -54,7 +54,6 @@ namespace EMBC.ESS.Utilities.Dynamics
                 {
                     var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
                     var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
-                    c.BaseAddress = options.DynamicsApiEndpoint;
                     c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
                 })
                 .AddErrorHandling();

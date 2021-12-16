@@ -22,6 +22,17 @@ namespace EMBC.ESS.Utilities.Dynamics
     {
         public EssContext(Uri serviceRoot) : base(serviceRoot)
         {
+            BuildingRequest += (s, args) =>
+            {
+                args.RequestUri = CreateRequestUri(args.RequestUri);
+            };
         }
+
+        public Uri EndpointUrl { get; internal set; }
+
+        private Uri CreateRequestUri(Uri requestUri) =>
+            requestUri.IsAbsoluteUri
+                  ? new Uri(EndpointUrl, (EndpointUrl.AbsolutePath == "/" ? string.Empty : EndpointUrl.AbsolutePath) + requestUri.AbsolutePath + requestUri.Query)
+                  : new Uri(EndpointUrl, (EndpointUrl.AbsolutePath == "/" ? string.Empty : EndpointUrl.AbsolutePath) + BaseUri.AbsolutePath + requestUri.ToString());
     }
 }
