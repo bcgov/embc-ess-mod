@@ -1,0 +1,21 @@
+﻿[
+  {
+    "sub": "BCSCSUB1234",
+    "userName": "BCSC1234",
+    "password": "123456",
+    "aud": "bcsc.aud",
+    "birthdate": "2001-09-03",
+    "address": {
+      "street_address": "416-1216 VELVET VALE",
+      "country": "CA",
+      "formatted": "416-1216 VELVET VALE\nMAPLE RIDGE, BC  V2W 3M5",
+      "locality": "MAPLE RIDGE",
+      "region": "BC",
+      "postal_code": "V2W 3M5"
+    },
+    "iss": "https://idtest.gov.bc.ca/oauth2/",
+    "given_name": "BCSC",
+    "display_name": "BCSC TEST",
+    "family_name": "TEST"
+  }
+]

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
+using StackExchange.Redis;
 
 namespace OAuthServer
 {
@@ -47,14 +49,31 @@ namespace OAuthServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            var dpBuilder = services.AddDataProtection();
-            var keyRingPath = configuration.GetValue<string>("KEY_RING_PATH");
-            if (!string.IsNullOrWhiteSpace(keyRingPath))
+            var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
+            var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
+            var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name);
+            if (!string.IsNullOrEmpty(redisConnectionString))
             {
-                //configure data protection folder for key sharing
-                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
+                Log.Information("Configuring {0} to use Redis cache", applicationName);
+                services.AddStackExchangeRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                });
+                services.AddDataProtection()
+                    .SetApplicationName(applicationName)
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "data-protection-keys");
             }
+            else
+            {
+                Log.Warning("Configuring {0} to use in-memory cache", applicationName);
+                services.AddDistributedMemoryCache();
+                var dpBuilder = services.AddDataProtection()
+                    .SetApplicationName(applicationName);
+
+                if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
+            }
+
+            services.AddControllers();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configuration.GetValue("IDENTITYSERVER_CONFIG_FILE", "./Data/config.json")));
@@ -94,7 +113,7 @@ namespace OAuthServer
             }
 
             //store the oidc key in the key ring persistent volume
-            var keyPath = Path.Combine(new DirectoryInfo(keyRingPath ?? "./Data").FullName, "oidc_key.jwk");
+            var keyPath = Path.Combine(new DirectoryInfo(dataProtectionPath ?? "./Data").FullName, "oidc_key.jwk");
 
             //add key as signing key
             builder.AddDeveloperSigningCredential(filename: keyPath);
@@ -104,7 +123,6 @@ namespace OAuthServer
             encryptionKey.Use = "enc";
             builder.AddValidationKey(new SecurityKeyInfo { Key = encryptionKey });
 
-            services.AddOidcStateDataFormatterCache();
             services.AddDistributedMemoryCache();
             services.AddResponseCompression();
 
