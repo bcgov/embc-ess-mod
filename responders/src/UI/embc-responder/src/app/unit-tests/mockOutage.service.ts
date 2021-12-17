@@ -10,4 +10,8 @@ export class MockOutageService extends OutageService {
   public getOutageInformation(): OutageInformation {
     return this.outageInformation;
   }
+
+  public displayOutageInfoInit(): boolean {
+    return this.outageInformation !== null;
+  }
 }
