@@ -67,6 +67,23 @@
         "https://training-era-registrants.apps.silver.devops.gov.bc.ca",
         "https://era-registrants.apps.silver.devops.gov.bc.ca"
       ]
+    },
+    {
+      "ClientId": "test-client",
+      "ClientSecrets": [
+        {
+          "Value": "EjuRF+sIxWuqxAgN+XgG157CmIANcfYcpv09mI2dg70="
+        }
+      ],
+      "AccessTokenType": "Reference",
+      "AllowedGrantTypes": [
+        "password"
+      ],
+      "AllowedScopes": [
+        "openid",
+        "offline_access",
+        "registrants-portal-api"
+      ]
     }
   ]
 }

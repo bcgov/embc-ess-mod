@@ -17,15 +17,27 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
+using Polly.Extensions.Http;
 
 namespace EMBC.Utilities.Extensions
 {
     public static class HttpClientEx
     {
-        public static IHttpClientBuilder AddErrorHandling(this IHttpClientBuilder httpClientBuilder)
+        public static IHttpClientBuilder AddCircuitBreaker(
+            this IHttpClientBuilder httpClientBuilder,
+            Action<IServiceProvider, Exception> onBreak,
+            Action<IServiceProvider> onReset,
+            int numberOfErrors = 2,
+            int secondsToWait = 10)
         {
-            httpClientBuilder.AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(2, TimeSpan.FromMinutes(1)));
-
+            httpClientBuilder.AddPolicyHandler(
+                (services, request) => HttpPolicyExtensions
+                    .HandleTransientHttpError()
+                    .CircuitBreakerAsync(
+                        numberOfErrors,
+                        TimeSpan.FromSeconds(secondsToWait),
+                        (r, timespan, ctx) => onBreak(services, r.Exception),
+                        ctx => onReset(services)));
             return httpClientBuilder;
         }
     }

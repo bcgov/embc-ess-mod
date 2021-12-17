@@ -19,6 +19,7 @@ using System.Net.Http.Headers;
 using EMBC.Utilities.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
@@ -33,7 +34,15 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             services
                 .AddHttpClient("adfs_token")
-                .AddErrorHandling();
+                .AddCircuitBreaker((sp, e) =>
+                {
+                    var logger = sp.GetRequiredService<ILogger>();
+                    logger.LogError(e, "adfs_token break");
+                }, sp =>
+                {
+                    var logger = sp.GetRequiredService<ILogger>();
+                    logger.LogInformation("adfs_token reset");
+                });
 
             services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
 
@@ -56,7 +65,15 @@ namespace EMBC.ESS.Utilities.Dynamics
                     var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                     c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
                 })
-                .AddErrorHandling();
+                .AddCircuitBreaker((sp, e) =>
+                {
+                    var logger = sp.GetRequiredService<ILogger>();
+                    logger.LogError(e, "dynamics break");
+                }, sp =>
+                {
+                    var logger = sp.GetRequiredService<ILogger>();
+                    logger.LogInformation("dynamics reset");
+                });
 
             services.AddTransient<IEssContextFactory, EssContextFactory>();
             services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
