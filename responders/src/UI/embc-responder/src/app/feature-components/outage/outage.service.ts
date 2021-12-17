@@ -94,7 +94,7 @@ export class OutageService {
       console.log(now);
       console.log(outageStart);
       const duration = moment.duration(outageStart.diff(now));
-      if (duration.asMinutes() === 5) {
+      if (duration.asMinutes() <= 5 && duration.asMinutes() > 0) {
         this.dialog.open(OutageDialogComponent, {
           data: { message: this.outageInfo, time: 5 },
           maxHeight: '100%',
