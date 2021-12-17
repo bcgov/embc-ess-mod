@@ -1,0 +1,31 @@
+name: ci-load-test
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    paths:
+      - "load-test/src/**"
+      - ".github/workflows/ci-load-test.yml"
+
+env:
+  IMAGE_NAME: load-test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+        working-directory: ./load-test/src/
+      - run: npm ci
+      - run: npm run build --if-present
