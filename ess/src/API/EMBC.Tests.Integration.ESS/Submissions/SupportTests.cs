@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Dynamics;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -15,11 +13,11 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Submissions
 {
-    public class SupportTests : WebAppTestBase
+    public class SupportTests : DynamicsWebAppTestBase
     {
         private readonly SubmissionsManager manager;
 
-        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => await TestHelper.GetRegistrantByUserId(manager, userId);
+        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
         private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId);
 
@@ -27,10 +25,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         public SupportTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            manager = services.GetRequiredService<SubmissionsManager>();
+            manager = Services.GetRequiredService<SubmissionsManager>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanProcessSupports()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -81,7 +79,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             }
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanVoidSupport()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -116,7 +114,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
-            var support = fileWithSupports.Supports.FirstOrDefault();
+            var support = fileWithSupports.Supports.First();
 
             await manager.Handle(new VoidSupportCommand
             {
@@ -131,7 +129,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedSupport.Status.ShouldBe(SupportStatus.Void);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQuerySupplierList()
         {
             var taskId = TestData.ActiveTaskId;
@@ -139,10 +137,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             list.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryPrintRequest()
         {
-            var dynamicsContext = services.GetRequiredService<EssContext>();
+            var dynamicsContext = Services.GetRequiredService<EssContext>();
             var testPrintRequest = dynamicsContext.era_referralprints
                 .Where(pr => pr.statecode == (int)EntityState.Active && pr._era_requestinguserid_value != null)
                 .OrderByDescending(pr => pr.createdon)
@@ -153,7 +151,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var response = await manager.Handle(new PrintRequestQuery
             {
                 PrintRequestId = testPrintRequest.era_referralprintid.ToString(),
-                RequestingUserId = testPrintRequest._era_requestinguserid_value.Value.ToString()
+                RequestingUserId = testPrintRequest._era_requestinguserid_value?.ToString()
             });
             await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", response.Content);
         }

@@ -10,16 +10,16 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class ReportsTests : WebAppTestBase
+    public class ReportsTests : DynamicsWebAppTestBase
     {
         private readonly ReportsManager reportsManager;
 
         public ReportsTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            reportsManager = services.GetRequiredService<ReportsManager>();
+            reportsManager = Services.GetRequiredService<ReportsManager>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetEvacueeReport()
         {
             var res = await reportsManager.Handle(new EvacueeReportQuery
@@ -35,7 +35,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             res.ContentType.ShouldBe("text/csv");
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetSupportReport()
         {
             var res = await reportsManager.Handle(new SupportReportQuery

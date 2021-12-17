@@ -12,23 +12,23 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class TeamRepositoryTests : WebAppTestBase
+    public class TeamRepositoryTests : DynamicsWebAppTestBase
     {
         private readonly ITeamRepository teamRepository;
         private string teamId => TestData.TeamId;
 
         public TeamRepositoryTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            teamRepository = services.GetRequiredService<ITeamRepository>();
+            teamRepository = Services.GetRequiredService<ITeamRepository>();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryAllTeams()
         {
             (await teamRepository.QueryTeams(new TeamQuery())).Items.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryTeamById()
         {
             var team = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
@@ -38,7 +38,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             team.AssignedCommunities.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryTeamByAssignedCommunity()
         {
             var originalTeam = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
@@ -49,10 +49,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
             team.AssignedCommunities.Where(c => c.Code == communityCode).ShouldHaveSingleItem();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSaveTeam()
         {
-            var metaDataRepository = services.GetRequiredService<IMetadataRepository>();
+            var metaDataRepository = Services.GetRequiredService<IMetadataRepository>();
             var unavailableCommunities = (await teamRepository.QueryTeams(new TeamQuery())).Items.SelectMany(t => t.AssignedCommunities).Select(c => c.Code).ToArray();
             var allCommunities = (await metaDataRepository.GetCommunities()).Select(c => c.Code).ToArray();
             var availableCommunities = allCommunities.Where(c => !unavailableCommunities.Any(uc => uc == c)).ToArray();
@@ -68,7 +68,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ToArray().ShouldBe(team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ToArray());
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetTeamMembers()
         {
             var members = await teamRepository.GetMembers(teamId);
@@ -76,7 +76,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             members.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanAddTeamMember()
         {
             var now = DateTime.UtcNow;
@@ -120,7 +120,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newMember.AgreementSignDate.ShouldNotBeNull().Date.ShouldBe(newTeamMember.AgreementSignDate.Value.Date);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateTeamMember()
         {
             var members = await teamRepository.GetMembers(teamId);
@@ -140,7 +140,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedMember.AgreementSignDate.ShouldNotBeNull().ShouldBe(now.Date);
         }
 
-        [Fact(Skip = RequiresDynamics)]
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanDeleteTeamMember()
         {
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);

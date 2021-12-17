@@ -19,14 +19,14 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
 
-namespace EMBC.ESS.Utilities.CsvConverter
+namespace EMBC.Utilities.Csv
 {
     public static class CsvConverter
     {
         private static void CreateHeader<T>(IEnumerable<T> list, TextWriter sw, string quoteIdentifier = "")
         {
-            PropertyInfo[] properties = typeof(T).GetProperties();
-            for (int i = 0; i < properties.Length - 1; i++)
+            var properties = typeof(T).GetProperties();
+            for (var i = 0; i < properties.Length - 1; i++)
             {
                 var attr = properties[i].GetCustomAttribute<DisplayAttribute>();
                 sw.Write(Quote(attr != null ? attr.Name : properties[i].Name, quoteIdentifier) + ",");
@@ -40,8 +40,8 @@ namespace EMBC.ESS.Utilities.CsvConverter
         {
             foreach (var item in list)
             {
-                PropertyInfo[] properties = typeof(T).GetProperties();
-                for (int i = 0; i < properties.Length - 1; i++)
+                var properties = typeof(T).GetProperties();
+                for (var i = 0; i < properties.Length - 1; i++)
                 {
                     var prop = properties[i];
                     sw.Write(Quote(prop.GetValue(item), quoteIdentifier) + ",");
@@ -89,17 +89,17 @@ namespace EMBC.ESS.Utilities.CsvConverter
 
         private static void AddHeaderObj(StringWriter sw, object headerObj)
         {
-            PropertyInfo[] properties = headerObj.GetType().GetProperties();
+            var properties = headerObj.GetType().GetProperties();
 
             // Add Search header
             sw.Write("Search Parameters");
             sw.Write(sw.NewLine);
 
-            for (int i = 0; i < properties.Length; i++)
+            for (var i = 0; i < properties.Length; i++)
             {
                 var attr = properties[i].GetCustomAttribute<DisplayAttribute>();
-                string propName = attr != null ? attr.Name : properties[i].Name;
-                object propValue = properties[i].GetValue(headerObj, null);
+                var propName = attr != null ? attr.Name : properties[i].Name;
+                var propValue = properties[i].GetValue(headerObj, null);
                 sw.Write(propName + ":" + ",");
                 sw.Write(propValue != null ? propValue.ToString() : string.Empty);
                 sw.Write(sw.NewLine);

@@ -22,7 +22,7 @@ using AutoMapper;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Reports;
 using EMBC.ESS.Shared.Contracts.Reports;
-using EMBC.ESS.Utilities.CsvConverter;
+using EMBC.Utilities.Csv;
 
 namespace EMBC.ESS.Managers.Reports
 {
