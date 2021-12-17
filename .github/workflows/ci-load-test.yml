@@ -1,0 +1,39 @@
+name: ci-load-test
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    paths:
+      - "load-test/src/**"
+      - ".github/workflows/ci-load-test.yml"
+
+env:
+  IMAGE_NAME: load-test
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: load-test/src/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./load-test/src
+        run: |
+          npm ci
+      
+      - name: Run Webpack
+        working-directory: ./load-test/src
+        run: |
+          npm run build
