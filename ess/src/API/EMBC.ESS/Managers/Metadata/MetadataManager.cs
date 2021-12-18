@@ -29,7 +29,7 @@ namespace EMBC.ESS.Managers.Metadata
         private readonly ICache cache;
         private readonly IMapper mapper;
         private readonly Resources.Metadata.IMetadataRepository metadataRepository;
-        private static readonly TimeSpan cacheEntryLifetime = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan cacheEntryLifetime = TimeSpan.FromMinutes(30);
 
         public MetadataManager(ICache cache, IMapper mapper, Resources.Metadata.IMetadataRepository metadataRepository)
         {
@@ -80,14 +80,20 @@ namespace EMBC.ESS.Managers.Metadata
 
         public async Task<SecurityQuestionsQueryResponse> Handle(SecurityQuestionsQuery _)
         {
-            var questions = await metadataRepository.GetSecurityQuestions();
+            var questions = await cache.GetOrSet("metadata:securityquestions", () => metadataRepository.GetSecurityQuestions(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
 
             return new SecurityQuestionsQueryResponse { Items = questions };
         }
 
-        public async Task<OutageQueryResponse> Handle(Shared.Contracts.Metadata.OutageQuery query)
+        public async Task<OutageQueryResponse> Handle(OutageQuery query)
         {
-            var outages = await metadataRepository.GetPlannedOutages(new Resources.Metadata.OutageQuery { DisplayDate = DateTime.UtcNow, PortalType = Enum.Parse<Resources.Metadata.PortalType>(query.PortalType.ToString()) });
+            var outages = await cache.GetOrSet("metadata:outage",
+                () => metadataRepository.GetPlannedOutages(new Resources.Metadata.OutageQuery
+                {
+                    DisplayDate = DateTime.UtcNow,
+                    PortalType = Enum.Parse<Resources.Metadata.PortalType>(query.PortalType.ToString())
+                }),
+                DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(1)));
 
             return new OutageQueryResponse { OutageInfo = mapper.Map<OutageInformation>(outages.OrderBy(o => o.OutageStartDate).FirstOrDefault()) };
         }
