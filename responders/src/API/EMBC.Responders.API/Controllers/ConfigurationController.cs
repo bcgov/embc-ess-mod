@@ -246,41 +246,26 @@ namespace EMBC.Responders.API.Controllers
         [Description("Village")]
         Village,
 
-        [Description("District")]
-        District,
+        [Description("District to First Nations Community")]
+        DistrictFirstNations,
 
         [Description("District Municipality")]
         DistrictMunicipality,
 
-        [Description("Township")]
-        Township,
-
-        [Description("Indian GovernmentDistrict")]
+        [Description("Indian Government District")]
         IndianGovernmentDistrict,
 
-        [Description("Island Municipality")]
+        [Description("Island Municipality to Indian Reserve")]
         IslandMunicipality,
 
-        [Description("Island Trust")]
+        [Description("Island Trust to Urban Community")]
         IslandTrust,
-
-        [Description("Mountain Resort Municipality")]
-        MountainResortMunicipality,
-
-        [Description("Municipality District")]
-        MunicipalityDistrict,
-
-        [Description("Regional District")]
-        RegionalDistrict,
-
-        [Description("Regional Municipality")]
-        RegionalMunicipality,
 
         [Description("Resort Municipality")]
         ResortMunicipality,
 
-        [Description("Rural Municipalities")]
-        RuralMunicipalities
+        [Description("Community")]
+        Community,
     }
 
     public class ConfigurationMapping : Profile
