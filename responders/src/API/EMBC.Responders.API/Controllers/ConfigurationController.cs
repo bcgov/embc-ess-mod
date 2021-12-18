@@ -252,7 +252,7 @@ namespace EMBC.Responders.API.Controllers
         [Description("District Municipality")]
         DistrictMunicipality,
 
-        [Description("Indian GovernmentDistrict")]
+        [Description("Indian Government District")]
         IndianGovernmentDistrict,
 
         [Description("Island Municipality to Indian Reserve")]
