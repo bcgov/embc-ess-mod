@@ -59,8 +59,7 @@ namespace EMBC.ESS.Managers.Metadata
 
         public async Task<CommunitiesQueryResponse> Handle(CommunitiesQuery req)
         {
-            //var communities = await cache.GetOrSet("metadata:communities", () => metadataRepository.GetCommunities(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
-            var communities = await metadataRepository.GetCommunities();
+            var communities = await cache.GetOrSet("metadata:communities", () => metadataRepository.GetCommunities(), DateTimeOffset.UtcNow.Add(cacheEntryLifetime));
             if (!string.IsNullOrEmpty(req.CountryCode))
             {
                 communities = communities.Where(c => c.CountryCode == req.CountryCode);
