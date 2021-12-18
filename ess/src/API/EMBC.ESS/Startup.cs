@@ -124,7 +124,7 @@ namespace EMBC.ESS
 
             services
                 .AddDynamics(configuration)
-                .AddCache()
+                .AddCache(applicationName)
                 .AddTransformator()
                 .AddNotificationSenders(configuration)
                 .AddPdfGenerator(configuration);

@@ -42,9 +42,9 @@ namespace EMBC.ESS.Resources.Metadata
         private readonly EssContext essContext;
         private readonly IMapper mapper;
 
-        public MetadataRepository(EssContext essContext, IMapper mapper)
+        public MetadataRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.essContext = essContext;
+            this.essContext = essContextFactory.CreateReadOnly();
             this.mapper = mapper;
         }
 
@@ -68,8 +68,6 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            await Task.CompletedTask;
-
             var jurisdictions = await essContext.era_jurisdictions
                 .Expand(j => j.era_RelatedProvinceState)
                 .Expand(j => j.era_RegionalDistrict)
@@ -86,15 +84,15 @@ namespace EMBC.ESS.Resources.Metadata
 
             foreach (var community in communities)
             {
-                community.CountryCode = stateProvinces.FirstOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
+                community.CountryCode = stateProvinces.SingleOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
             }
             return communities;
         }
 
         public async Task<string[]> GetSecurityQuestions()
         {
-            IEnumerable<OptionSetMetadataBase> optionSetDefinitions = essContext.GlobalOptionSetDefinitions.GetAllPages();
-            OptionSetMetadata securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name.Equals("era_registrantsecretquestions")).FirstOrDefault();
+            var optionSetDefinitions = await essContext.GlobalOptionSetDefinitions.GetAllPagesAsync();
+            var securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name.Equals("era_registrantsecretquestions")).SingleOrDefault();
             string[] options = securityQuestionsOptionSet.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray();
             return await Task.FromResult(options);
         }
