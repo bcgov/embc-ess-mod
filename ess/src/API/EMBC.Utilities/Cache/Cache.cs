@@ -18,8 +18,6 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
-using Polly;
-using Polly.Caching.Distributed;
 
 namespace EMBC.ESS.Utilities.Cache
 {
@@ -40,8 +38,15 @@ namespace EMBC.ESS.Utilities.Cache
         public async Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiration = null)
         {
             var entryOptions = new DistributedCacheEntryOptions { AbsoluteExpiration = expiration };
-            var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), entryOptions.AsTtlStrategy());
-            return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), new Context(key)));
+            //var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), entryOptions.AsTtlStrategy());
+            //return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), new Context(key)));
+            var val = Deserialize<T>(await cache.GetAsync(key));
+            if (val == null)
+            {
+                val = await getter();
+                await cache.SetAsync(key, Serialize(val), entryOptions);
+            }
+            return val;
         }
 
         private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
