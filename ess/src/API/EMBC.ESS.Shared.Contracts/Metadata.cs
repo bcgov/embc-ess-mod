@@ -78,20 +78,15 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
     {
         Undefined,
         City,
-        Town,
         Village,
-        District,
-        DistrictMunicipality,
-        Township,
-        IndianGovernmentDistrict,
-        IslandMunicipality,
-        IslandTrust,
-        MountainResortMunicipality,
-        MunicipalityDistrict,
-        RegionalDistrict,
-        RegionalMunicipality,
+        Town,
         ResortMunicipality,
-        RuralMunicipalities
+        IslandTrust,
+        DistrictFirstNations,
+        IslandMunicipality,
+        Community,
+        DistrictMunicipality,
+        IndianGovernmentDistrict,
     }
 
     public class SecurityQuestionsQuery : Query<SecurityQuestionsQueryResponse>
