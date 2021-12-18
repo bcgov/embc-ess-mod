@@ -22,7 +22,6 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
-using Serilog.Formatting.Elasticsearch;
 
 namespace EMBC.ESS
 {
@@ -31,13 +30,9 @@ namespace EMBC.ESS
         public static int Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-#if RELEASE
-             .WriteTo.Console(formatter: new ElasticsearchJsonFormatter())
-#else
+             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+             .Enrich.FromLogContext()
              .WriteTo.Console()
-#endif
              .CreateBootstrapLogger();
 
             try
@@ -66,25 +61,20 @@ namespace EMBC.ESS
                         .Enrich.WithProcessName()
                         .Enrich.FromLogContext()
                         .Enrich.WithExceptionDetails()
+                        .WriteTo.Console()
                         ;
 
-                    if (hostingContext.HostingEnvironment.IsDevelopment())
-                    {
-                        loggerConfiguration.WriteTo.Console();
-                    }
-                    else
+                    if (!hostingContext.HostingEnvironment.IsDevelopment())
                     {
                         var splunkUrl = hostingContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
                         var splunkToken = hostingContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
                         if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
                         {
-                            loggerConfiguration.WriteTo.Console(formatter: new ElasticsearchJsonFormatter());
-                            Log.Warning($"Splunk logging sink is not configured properly, check SPLUNK_TOKEN and SPLUNK_URL env vars");
+                            Log.Warning($"Logs will NOT be forwarded to Splunk: check SPLUNK_TOKEN and SPLUNK_URL env vars");
                         }
                         else
                         {
                             loggerConfiguration
-                                .WriteTo.Console(formatter: new ElasticsearchJsonFormatter())
                                 .WriteTo.EventCollector(
                                     splunkHost: splunkUrl,
                                     eventCollectorToken: splunkToken,
@@ -93,6 +83,7 @@ namespace EMBC.ESS
                                         ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                                     },
                                     renderTemplate: false);
+                            Log.Information($"Logs will be forwarded to Splunk");
                         }
                     }
                 })
