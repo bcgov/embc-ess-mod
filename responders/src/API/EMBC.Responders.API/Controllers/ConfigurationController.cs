@@ -246,8 +246,8 @@ namespace EMBC.Responders.API.Controllers
         [Description("Village")]
         Village,
 
-        [Description("District to First Nations Community")]
-        DistrictFirstNations,
+        [Description("First Nations Community")]
+        FirstNationsCommunity,
 
         [Description("District Municipality")]
         DistrictMunicipality,
@@ -255,11 +255,11 @@ namespace EMBC.Responders.API.Controllers
         [Description("Indian Government District")]
         IndianGovernmentDistrict,
 
-        [Description("Island Municipality to Indian Reserve")]
-        IslandMunicipality,
+        [Description("Indian Reserve")]
+        IndianReserve,
 
-        [Description("Island Trust to Urban Community")]
-        IslandTrust,
+        [Description("Urban Community")]
+        UrbanCommunity,
 
         [Description("Resort Municipality")]
         ResortMunicipality,
