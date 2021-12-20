@@ -30,8 +30,13 @@ export class AppComponent implements OnInit {
       await this.bootstrapService.init();
       await this.loginService.tryLogin();
     } catch (error) {
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.systemError);
+      this.isLoading = false;
+      if (error.status === 400 && error.status === 404) {
+        this.environment = null;
+      } else {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.systemError);
+      }
     } finally {
       this.isLoading = false;
     }
