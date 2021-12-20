@@ -238,7 +238,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
 
   memberProfileDialog() {
     this.router
-      .navigate(['responder-access/search/evacuee-profile-dashboard'])
+      .navigate(['responder-access/search/essfile-dashboard'])
       .then(() =>
         this.stepEvacueeProfileService.openModal(
           globalConst.memberProfileCreateMessage
