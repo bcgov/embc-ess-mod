@@ -249,9 +249,11 @@ export class ReferralCreationService {
       category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
       subCategory: SupportSubCategory.Lodging_Billeting,
+      hostName: supportDelivery.details.hostName,
       hostAddress: supportDelivery.details.hostAddress,
       hostCity: supportDelivery.details.hostCity as string,
-      hostPhone: supportDelivery.details.hostPhone
+      hostPhone: supportDelivery.details.hostPhone,
+      hostEmail: supportDelivery.details.emailAddress
     };
     this.billetingReferral = billetingReferral;
   }
