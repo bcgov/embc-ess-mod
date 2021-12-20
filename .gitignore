@@ -4,6 +4,8 @@
 *.env
 # Openshift parameter files
 /openshift/**/*.params
+/openshift/**/*.json
 **/openshift/templates/*.params
+**/openshift/templates/*.json
 # Angular local environment files
 **/environment.local.ts
