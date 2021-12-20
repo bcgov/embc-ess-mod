@@ -16,6 +16,9 @@ import * as globalConst from '../services/globalConstants';
   providedIn: 'root'
 })
 export class ConfigService {
+  public environmentBanner: EnvironmentInformation;
+  private configurationGetEnvironmentInfoPath = '/env/info.json';
+
   private get configuration(): Configuration {
     return JSON.parse(this.cacheService.get('configuration'));
   }
@@ -23,9 +26,6 @@ export class ConfigService {
   private set configuration(v: Configuration) {
     this.cacheService.set('configuration', v);
   }
-
-  private configurationGetEnvironmentInfoPath = '/env/info.json';
-  private environmentBanner: EnvironmentInformation;
 
   constructor(
     private configurationService: ConfigurationService,
@@ -95,8 +95,12 @@ export class ConfigService {
         this.setEnvironmentBanner(env);
       },
       error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.systemError);
+        if (error.status === 400 && error.status === 404) {
+          this.environmentBanner = null;
+        } else {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.systemError);
+        }
       }
     });
     return environment;
