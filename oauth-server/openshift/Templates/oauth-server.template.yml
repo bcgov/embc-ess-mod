@@ -1,5 +1,5 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: oauth-server-template
 
@@ -50,17 +50,6 @@ objects:
       APP_NAME: ${APP_NAME}-oauth-server
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
-
-  - kind: ConfigMap
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-oauth-server-test-users
-      namespace: ${NAMESPACE_PREFIX}-${ENV}
-      labels:
-        app: ${APP_NAME}
-    data:
-      test-users.json: |
-        []
 
   - kind: Secret
     apiVersion: v1
@@ -184,8 +173,6 @@ objects:
                   value: "/ssl/tls.crt"
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__KeyPath"
                   value: "/ssl/tls.key"
-                - name: "IDENTITYSERVER_TESTUSERS_FILE"
-                  value: "/data/test-users.json"
               envFrom:
                 - configMapRef:
                     name: ${APP_NAME}-oauth-server-config
@@ -199,8 +186,6 @@ objects:
                   readonly: true
                 - mountPath: /dpkeys
                   name: dp
-                - mountPath: /data/
-                  name: test-users
               livenessProbe:
                 httpGet:
                   path: /hc/live
@@ -227,9 +212,6 @@ objects:
             - name: dp
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-oauth-server-data-protection
-            - name: test-users
-              configMap:
-                name: ${APP_NAME}-oauth-server-test-users
       test: false
       triggers:
         - type: ConfigChange

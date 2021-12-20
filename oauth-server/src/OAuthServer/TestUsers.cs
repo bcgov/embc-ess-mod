@@ -20,9 +20,9 @@ namespace OAuthServer
         public static IServiceCollection AddTestUsers(this IServiceCollection services, IConfiguration configuration)
         {
             var testUsersFile = configuration.GetValue("IDENTITYSERVER_TESTUSERS_FILE", string.Empty);
-            if (!string.IsNullOrEmpty(testUsersFile))
+            if (!string.IsNullOrEmpty(testUsersFile) && File.Exists(testUsersFile))
             {
-                var testUsers = JsonConvert.DeserializeObject<BcscTestUser[]>(File.ReadAllText(testUsersFile), new JsonSerializerSettings { ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor });
+                var testUsers = JsonConvert.DeserializeObject<BcscTestUser[]>(File.ReadAllText(testUsersFile));
                 if (testUsers.Any())
                 {
                     services.AddSingleton<IResourceOwnerPasswordValidator>(sp =>
