@@ -10,7 +10,7 @@
   "
 >
   <app-outage-banner
-    *ngIf="showOutageBanner"
+    *ngIf="outageService.getShowOutageBanner() | async"
     (closeEvent)="closeOutageBanner($event)"
   ></app-outage-banner>
 

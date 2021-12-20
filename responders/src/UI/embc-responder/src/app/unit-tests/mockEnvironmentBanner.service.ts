@@ -7,6 +7,11 @@ import { EnvironmentBannerService } from '../core/layout/environment-banner/envi
 })
 export class MockEnvironmentBannerService extends EnvironmentBannerService {
   public environmentBanner: EnvironmentInformation;
+
+  public loadEnvironmentBanner(): Promise<EnvironmentInformation> {
+    return Promise.resolve(this.environmentBanner);
+  }
+
   public getEnvironmentBanner(): EnvironmentInformation {
     return this.environmentBanner;
   }

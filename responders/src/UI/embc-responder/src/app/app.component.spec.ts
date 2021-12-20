@@ -11,10 +11,15 @@ import { MockExpiry } from './unit-tests/mockExpiry.service';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { MockEnvironmentBannerService } from './unit-tests/mockEnvironmentBanner.service';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import { of, Subscription } from 'rxjs';
+import { OutageService } from './feature-components/outage/outage.service';
+import { MockOutageService } from './unit-tests/mockOutage.service';
 
 @Component({ selector: 'app-environment-banner', template: '' })
 class EnvironmentBannerStubComponent {}
+
+@Component({ selector: 'app-outage-banner', template: '' })
+class OutageBannerStubComponent {}
 
 describe('AppComponent', () => {
   let component;
@@ -22,6 +27,8 @@ describe('AppComponent', () => {
   let bannerService;
   let fixture;
   let app;
+  let outageService;
+  const mockOutageSubscription: Subscription = of(true).subscribe();
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
@@ -33,7 +40,11 @@ describe('AppComponent', () => {
           MatDialogModule,
           OAuthModule.forRoot()
         ],
-        declarations: [AppComponent, EnvironmentBannerStubComponent],
+        declarations: [
+          AppComponent,
+          EnvironmentBannerStubComponent,
+          OutageBannerStubComponent
+        ],
         schemas: [NO_ERRORS_SCHEMA],
         providers: [
           AppComponent,
@@ -44,6 +55,10 @@ describe('AppComponent', () => {
           {
             provide: EnvironmentBannerService,
             useClass: MockEnvironmentBannerService
+          },
+          {
+            provide: OutageService,
+            useClass: MockOutageService
           }
         ]
       }).compileComponents();
@@ -56,10 +71,16 @@ describe('AppComponent', () => {
     component = TestBed.inject(AppComponent);
     timeoutService = TestBed.inject(TimeoutService);
     bannerService = TestBed.inject(EnvironmentBannerService);
+    outageService = TestBed.inject(OutageService);
   });
+
+  // afterEach(() => {
+  //   fixture.destroy();
+  // });
 
   it('should create the app', () => {
     fixture.detectChanges();
+    component.ngOnInit();
     expect(app).toBeTruthy();
   });
 
@@ -117,54 +138,68 @@ describe('AppComponent', () => {
     idle.stop();
   }));
 
-  it('should have environment name', () => {
-    bannerService.environmentBanner = {
-      envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
-      bannerColor: '#097d8c'
-    };
-    fixture.detectChanges();
-    component.ngOnInit();
-    expect(component.environment.envName).toContain(
-      bannerService.getEnvironmentBanner().envName
-    );
-  });
+  it(
+    'should have environment name',
+    waitForAsync(() => {
+      bannerService.environmentBanner = {
+        envName: 'dev',
+        bannerTitle:
+          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+        bannerSubTitle:
+          'All information entered here will be treated as **dev** data.',
+        bannerColor: '#097d8c'
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment.envName).toContain(
+          bannerService.getEnvironmentBanner().envName
+        );
+      });
+    })
+  );
 
-  it('should have environment banner subtitle', () => {
-    bannerService.environmentBanner = {
-      envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
-      bannerColor: '#097d8c'
-    };
-    fixture.detectChanges();
-    component.ngOnInit();
+  it(
+    'should have environment banner subtitle',
+    waitForAsync(() => {
+      bannerService.environmentBanner = {
+        envName: 'dev',
+        bannerTitle:
+          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+        bannerSubTitle:
+          'All information entered here will be treated as **dev** data.',
+        bannerColor: '#097d8c'
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment.bannerSubTitle).toContain(
+          bannerService.getEnvironmentBanner().bannerSubTitle
+        );
+      });
+    })
+  );
 
-    expect(component.environment.bannerSubTitle).toContain(
-      bannerService.getEnvironmentBanner().bannerSubTitle
-    );
-  });
-
-  it('should have environment banner title', () => {
-    bannerService.environmentBanner = {
-      envName: 'dev',
-      bannerTitle:
-        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-      bannerSubTitle:
-        'All information entered here will be treated as **dev** data.',
-      bannerColor: '#097d8c'
-    };
-    fixture.detectChanges();
-    component.ngOnInit();
-    expect(component.environment.bannerTitle).toContain(
-      bannerService.getEnvironmentBanner().bannerTitle
-    );
-  });
+  it(
+    'should have environment banner title',
+    waitForAsync(() => {
+      bannerService.environmentBanner = {
+        envName: 'dev',
+        bannerTitle:
+          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+        bannerSubTitle:
+          'All information entered here will be treated as **dev** data.',
+        bannerColor: '#097d8c'
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment.bannerTitle).toContain(
+          bannerService.getEnvironmentBanner().bannerTitle
+        );
+      });
+    })
+  );
 
   it('should display environment banner', () => {
     bannerService.environmentBanner = {
@@ -189,12 +224,77 @@ describe('AppComponent', () => {
     expect(envBannerElem).toEqual(null);
   });
 
-  // it('should not display environment banner if environment value is {}', () => {
-  //   bannerService.environmentBanner = {};
+  // it('should not display environment banner if environment value is null', () => {
+  //   bannerService.environmentBanner = {
+  //     envName: null,
+  //     bannerTitle: null,
+  //     bannerSubTitle: null,
+  //     bannerColor: null
+  //   };
   //   fixture.detectChanges();
   //   const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
   //   const envBannerElem = nativeElem.querySelector('app-environment-banner');
-  //   console.log(nativeElem)
+  //   console.log(nativeElem);
   //   expect(envBannerElem).toEqual(null);
   // });
+
+  // it('should display outage Info', () => {
+  //   outageService.outageInformation = {
+  //     content: 'Outage testing in Responders portal',
+  //     outageStartDate: '2021-12-15T21:00:00Z',
+  //     outageEndDate: '2021-12-16T21:00:00Z'
+  //   };
+  //   fixture.detectChanges();
+  //   component.ngOnInit();
+  //   console.log(component);
+  //   expect(component.outageInformation.content).toContain(
+  //     outageService.getOutageInformation().content
+  //   );
+  // });
+
+  // it('should have an outage start date', () => {
+  //   outageService.outageInformation = {
+  //     content: 'Outage testing in Responders portal',
+  //     outageStartDate: '2021-12-15T21:00:00Z',
+  //     outageEndDate: '2021-12-16T21:00:00Z'
+  //   };
+  //   fixture.detectChanges();
+  //   component.ngOnInit();
+  //   expect(component.outageInformation.outageStartDate).toContain(
+  //     outageService.getOutageInformation().outageStartDate
+  //   );
+  // });
+
+  // it('should have an outage end date', () => {
+  //   outageService.outageInformation = {
+  //     content: 'Outage testing in Responders portal',
+  //     outageStartDate: '2021-12-15T21:00:00Z',
+  //     outageEndDate: '2021-12-16T21:00:00Z'
+  //   };
+  //   fixture.detectChanges();
+  //   component.ngOnInit();
+  //   expect(component.outageService.outageInformation.outageEndDate).toContain(
+  //     outageService.getOutageInformation().outageEndDate
+  //   );
+  // });
+
+  it('should display outage banner', () => {
+    outageService.outageInformation = {
+      content: 'Outage testing in Responders portal',
+      outageStartDate: '2021-12-15T21:00:00Z',
+      outageEndDate: '2021-12-16T21:00:00Z'
+    };
+    fixture.detectChanges();
+    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+    const outageBannerElem = nativeElem.querySelector('app-outage-banner');
+    expect(outageBannerElem).toBeDefined();
+  });
+
+  it('should not display outage banner if the outageInformation value is null', () => {
+    outageService.outageInformation = null;
+    fixture.detectChanges();
+    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+    const outageBannerElem = nativeElem.querySelector('app-outage-banner');
+    expect(outageBannerElem).toEqual(null);
+  });
 });
