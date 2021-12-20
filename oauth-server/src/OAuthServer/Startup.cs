@@ -1,18 +1,15 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.Models;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -104,13 +101,7 @@ namespace OAuthServer
                 .AddInMemoryApiResources(config.ApiResources)
                 .AddInMemoryCaching();
 
-            //load test users into IdentityServer
-            var testUsersFile = configuration.GetValue("IDENTITYSERVER_TESTUSERS_FILE", string.Empty);
-            if (!string.IsNullOrEmpty(testUsersFile))
-            {
-                var testUsers = JsonConvert.DeserializeObject<BcscTestUser[]>(File.ReadAllText(testUsersFile), new JsonSerializerSettings { ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor });
-                builder.AddTestUsers(testUsers.Select(u => u.ConvertToTestUser()).ToList());
-            }
+            services.AddTestUsers(configuration);
 
             //store the oidc key in the key ring persistent volume
             var keyPath = Path.Combine(new DirectoryInfo(dataProtectionPath ?? "./Data").FullName, "oidc_key.jwk");
@@ -273,50 +264,5 @@ namespace OAuthServer
                 : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
                     ? LogEventLevel.Verbose
                     : LogEventLevel.Information;
-    }
-
-    public class BcscTestUser
-    {
-        public string sub { get; set; }
-        public string userName { get; set; }
-        public string password { get; set; }
-        public string aud { get; set; }
-        public string birthdate { get; set; }
-        public BcscTestUserAddress address { get; set; }
-        public string iss { get; set; }
-        public string given_name { get; set; }
-        public string display_name { get; set; }
-        public string family_name { get; set; }
-
-        public TestUser ConvertToTestUser()
-        {
-            return new TestUser
-            {
-                Username = userName,
-                Password = password,
-                SubjectId = sub,
-                IsActive = true,
-                Claims =
-                {
-                    new Claim("display_name", display_name),
-                    new Claim(JwtClaimTypes.GivenName, given_name),
-                    new Claim(JwtClaimTypes.FamilyName, family_name),
-                    new Claim(JwtClaimTypes.Email, string.Empty),
-                    new Claim("birthdate", birthdate),
-                    new Claim("aud", aud),
-                    new Claim(JwtClaimTypes.Address, JsonConvert.SerializeObject(address), IdentityServerConstants.ClaimValueTypes.Json)
-                }
-            };
-        }
-    }
-
-    public class BcscTestUserAddress
-    {
-        public string street_address { get; set; }
-        public string country { get; set; }
-        public string formatted { get; set; }
-        public string locality { get; set; }
-        public string region { get; set; }
-        public string postal_code { get; set; }
     }
 }
