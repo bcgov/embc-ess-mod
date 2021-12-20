@@ -6,7 +6,8 @@
       "launchBrowser": false,
       "applicationUrl": "https://localhost:8020",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "IDENTITYSERVER_TESTUSERS_FILE": "./Data/test_users.json"
       }
     }
   }
