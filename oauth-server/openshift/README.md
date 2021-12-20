@@ -26,9 +26,9 @@ To configure the server in OpenShift:
 1. mount the file as a configmap:
 
 ```shell
-oc create configmap oauth-server-config --from-file .\config.json
-oc set volume dc/oauth-server --add --configmap-name oauth-server-config --mount-path /data
-oc set env dc/oauth-server IDENTITYSERVER_CONFIG_FILE=/data/config.json
+oc create configmap oauth-server-config-file --from-file .\config.json
+oc set volume dc/oauth-server --add --configmap-name oauth-server-config-file --mount-path /config
+oc set env dc/oauth-server IDENTITYSERVER_CONFIG_FILE=/config/config.json
 ```
 ## Configuring test users
 
