@@ -29,3 +29,17 @@ oc process -f .\oauth-server.template.yml --param-file .\oauth-server.yml.<app n
 4. to update an existing environment, modify the templates and params, then execute the same command.
 
 **Note: executing `oc apply` WILL trigger deployment, to test the changes add `--dry-run` at the end of the command**
+
+## Configuring test users
+
+Oauth server supports a special test-client configuration to allow automated tools like load test generators, security scanners, to obtain a token programmatically using 'resource owner password' OIDC flow.
+
+The test client is configured only for non production environments and requires a pre provisioned client id/secret to authenticate.
+
+The following commands will create a config map from a file, attach it as a volume to the pods, and set the env var that tells the server where to find the test users data file. [this file](https://github.com/bcgov/embc-ess-mod/blob/master/oauth-server/src/OAuthServer/Data/test_users.json) is an example of a test users data file.
+
+```cmd
+oc create configmap oauth-server-test-users --from-file .\test-users.json
+oc set volume dc/oauth-server --add --configmap-name oauth-server-test-users --mount-path /data
+oc set env dc/oauth-server IDENTITYSERVER_TESTUSERS_FILE=/data/test-users.json
+```
