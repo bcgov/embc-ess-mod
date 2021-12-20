@@ -1,5 +1,5 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: registrants-portal-template
 
@@ -219,6 +219,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
+      revisionHistoryLimit: 2
       selector:
         deploymentconfig: ${APP_NAME}-registrants-portal-api
       strategy:
@@ -320,6 +321,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
+      revisionHistoryLimit: 2
       selector:
         deploymentconfig: ${APP_NAME}-registrants-portal-ui
       strategy:

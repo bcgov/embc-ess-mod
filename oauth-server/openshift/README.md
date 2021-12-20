@@ -26,9 +26,9 @@ To configure the server in OpenShift:
 1. mount the file as a configmap:
 
 ```shell
-oc create configmap oauth-server-config --from-file .\config.json
-oc set volume dc/oauth-server --add --configmap-name oauth-server-config --mount-path /data
-oc set env dc/oauth-server IDENTITYSERVER_CONFIG_FILE=/data/config.json
+oc -n b5e079-dev create configmap oauth-server-config-file --from-file .\config.json
+oc -n b5e079-dev set volume dc/oauth-server --add --configmap-name oauth-server-config-file --mount-path /data
+oc -n b5e079-dev set env dc/oauth-server IDENTITYSERVER_CONFIG_FILE=/data/config.json
 ```
 ## Configuring test users
 
@@ -39,7 +39,7 @@ The test client is configured only for non production environments and requires 
 The following commands will create a config map from a file, attach it as a volume to the pods, and set the env var that tells the server where to find the test users data file. [this file](https://github.com/bcgov/embc-ess-mod/blob/master/oauth-server/src/OAuthServer/Data/test_users.json) is an example of a test users data file.
 
 ```cmd
-oc create configmap oauth-server-test-users --from-file .\test-users.json
-oc set volume dc/oauth-server --add --configmap-name oauth-server-test-users --mount-path /data
-oc set env dc/oauth-server IDENTITYSERVER_TESTUSERS_FILE=/data/test-users.json
+oc -n b5e079-dev create configmap oauth-server-test-users --from-file .\test-users.json
+oc -n b5e079-dev set volume dc/oauth-server --add --configmap-name oauth-server-test-users --mount-path /data
+oc -n b5e079-dev set env dc/oauth-server IDENTITYSERVER_TESTUSERS_FILE=/data/test-users.json
 ```
