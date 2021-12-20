@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { EnvironmentInformation } from 'src/app/core/models/environment-information.model';
-import { EnvironmentBannerService } from '../core/layout/environment-banner/environment-banner.service';
+import { EnvironmentInformation } from '../core/model/environment-information.model';
+import { ConfigService } from '../core/services/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MockEnvironmentBannerService extends EnvironmentBannerService {
+export class MockEnvironmentBannerService extends ConfigService {
   public environmentBanner: EnvironmentInformation;
 
   public loadEnvironmentBanner(): Promise<EnvironmentInformation> {

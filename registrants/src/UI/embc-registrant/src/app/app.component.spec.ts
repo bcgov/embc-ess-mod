@@ -9,6 +9,8 @@ import { APP_BASE_HREF } from '@angular/common';
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MockEnvironmentBannerService } from './unit-tests/mockEnvironmentBanner.service';
+import { ConfigService } from './core/services/config.service';
 
 @Component({ selector: 'app-header', template: '' })
 class HeaderStubComponent {}
@@ -25,6 +27,7 @@ describe('AppComponent', () => {
   let app: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
+  let bannerService;
 
   beforeEach(
     waitForAsync(() => {
@@ -39,15 +42,19 @@ describe('AppComponent', () => {
         declarations: [
           AppComponent,
           HeaderStubComponent,
-          FooterStubComponent,
-          EnvironmentBannerStubComponent
+          FooterStubComponent
+          // EnvironmentBannerStubComponent
         ],
         schemas: [NO_ERRORS_SCHEMA],
         providers: [
           AppComponent,
           { provides: LoginService, useValue: loginService },
           { provides: BootstrapService, useValue: bootstrapService },
-          { provide: APP_BASE_HREF, useValue: '/' }
+          { provide: APP_BASE_HREF, useValue: '/' },
+          {
+            provide: ConfigService,
+            useClass: MockEnvironmentBannerService
+          }
         ]
       }).compileComponents();
     })
@@ -57,6 +64,7 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     app = fixture.componentInstance;
     component = TestBed.inject(AppComponent);
+    bannerService = TestBed.inject(ConfigService);
     fixture.detectChanges();
   });
 
@@ -75,4 +83,121 @@ describe('AppComponent', () => {
     const footerElem = nativeElem.querySelector('app-FOOTER');
     expect(footerElem).toBeDefined();
   });
+
+  it(
+    'should have environment name',
+    waitForAsync(() => {
+      bannerService.environmentBanner = {
+        envName: 'dev',
+        bannerTitle:
+          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+        bannerSubTitle:
+          'All information entered here will be treated as **dev** data.',
+        bannerColor: '#097d8c'
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment.envName).toContain(
+          bannerService.getEnvironmentBanner().envName
+        );
+      });
+    })
+  );
+
+  it(
+    'should have environment banner subtitle',
+    waitForAsync(() => {
+      bannerService.environmentBanner = {
+        envName: 'dev',
+        bannerTitle:
+          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+        bannerSubTitle:
+          'All information entered here will be treated as **dev** data.',
+        bannerColor: '#097d8c'
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment.bannerSubTitle).toContain(
+          bannerService.getEnvironmentBanner().bannerSubTitle
+        );
+      });
+    })
+  );
+
+  it(
+    'should have environment banner title',
+    waitForAsync(() => {
+      bannerService.environmentBanner = {
+        envName: 'dev',
+        bannerTitle:
+          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+        bannerSubTitle:
+          'All information entered here will be treated as **dev** data.',
+        bannerColor: '#097d8c'
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment.bannerTitle).toContain(
+          bannerService.getEnvironmentBanner().bannerTitle
+        );
+      });
+    })
+  );
+
+  it(
+    'should not display environment banner if environment value is undefined',
+    waitForAsync(() => {
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment).toBeUndefined();
+      });
+    })
+  );
+
+  it(
+    'should not display environment banner if environment value is null',
+    waitForAsync(() => {
+      bannerService.environmentBanner = null;
+      fixture.detectChanges();
+      component.ngOnInit();
+      fixture.whenStable().then(() => {
+        expect(component.environment).toBeNull();
+      });
+    })
+  );
+
+  it('should display environment banner', () => {
+    bannerService.environmentBanner = {
+      envName: 'dev',
+      bannerTitle:
+        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle:
+        'All information entered here will be treated as **dev** data.',
+      bannerColor: '#097d8c'
+    };
+    fixture.detectChanges();
+    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+    const envBannerElem = nativeElem.querySelector('app-environment-banner');
+    expect(envBannerElem).toBeDefined();
+  });
+
+  // it(
+  //   'should not display environment banner if its null',
+  //   waitForAsync(() => {
+  //     bannerService.environmentBanner = null;
+  //     fixture.detectChanges();
+  //     component.ngOnInit();
+  //     fixture.whenStable().then(() => {
+  //       const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+  //       const envBannerElem = nativeElem.querySelector(
+  //         'app-environment-banner'
+  //       );
+  //       expect(envBannerElem).toBeNull();
+  //     });
+  //   })
+  // );
 });
