@@ -73,7 +73,12 @@ namespace OAuthServer
             services.AddControllers();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configuration.GetValue("IDENTITYSERVER_CONFIG_FILE", "./Data/config.json")));
+            var configFile = configuration.GetValue("IDENTITYSERVER_CONFIG_FILE", (string)null);
+            if (string.IsNullOrEmpty(configFile) || !File.Exists(configFile))
+            {
+                throw new Exception($"Config file not found: check env var IDENTITYSERVER_CONFIG_FILE={configFile}");
+            }
+            var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile));
 
             //add IdentityServer
             var builder = services
