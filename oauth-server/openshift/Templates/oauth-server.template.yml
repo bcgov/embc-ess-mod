@@ -135,17 +135,17 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
+      revisionHistoryLimit: 2
       selector:
         deploymentconfig: ${APP_NAME}-oauth-server
       strategy:
         type: Rolling
-        activeDeadlineSeconds: 21600
         resources:
           limits:
             cpu: 15m
             memory: 64Mi
           requests:
-            cpu: 10m
+            cpu: 5m
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
@@ -163,10 +163,10 @@ objects:
             - name: oauth-server
               resources:
                 limits:
-                  cpu: 75m
+                  cpu: 50m
                   memory: 256Mi
                 requests:
-                  cpu: 25m
+                  cpu: 10m
                   memory: 64Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
