@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthConfig } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs';
