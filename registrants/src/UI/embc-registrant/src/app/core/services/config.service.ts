@@ -2,12 +2,15 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { lastValueFrom } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { tap } from 'rxjs/internal/operators/tap';
 import { Configuration } from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { EnvironmentInformation } from '../model/environment-information.model';
+import { AlertService } from './alert.service';
 import { CacheService } from './cache.service';
+import * as globalConst from '../services/globalConstants';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +31,7 @@ export class ConfigService {
     private configurationService: ConfigurationService,
     private cacheService: CacheService,
     private http: HttpClient,
+    private alertService: AlertService,
     @Inject(APP_BASE_HREF) public baseHref: string
   ) {}
 
@@ -59,6 +63,17 @@ export class ConfigService {
     };
   }
 
+  public async loadEnvironmentBanner(): Promise<EnvironmentInformation> {
+    const callEnv$ = this.getEnvironment().pipe(
+      tap((env) => {
+        this.setEnvironmentBanner(env);
+      })
+    );
+
+    const envResult = await lastValueFrom(callEnv$);
+    return envResult;
+  }
+
   public getEnvironmentBanner(): EnvironmentInformation {
     return this.environmentBanner
       ? this.environmentBanner
@@ -68,17 +83,23 @@ export class ConfigService {
   }
 
   public setEnvironmentBanner(environmentBanner: EnvironmentInformation): void {
+    this.environmentBanner = environmentBanner;
     this.cacheService.set('environment', environmentBanner);
   }
 
-  private async getEnvironmentInfo(): Promise<EnvironmentInformation> {
-    return this.getEnvironment()
-      .pipe(
-        tap((env) => {
-          this.environmentBanner = env;
-        })
-      )
-      .toPromise();
+  private getEnvironmentInfo(): EnvironmentInformation {
+    let environment: EnvironmentInformation = {};
+    this.getEnvironment().subscribe({
+      next: (env) => {
+        environment = env;
+        this.setEnvironmentBanner(env);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.systemError);
+      }
+    });
+    return environment;
   }
 
   private getEnvironment(): Observable<EnvironmentInformation> {

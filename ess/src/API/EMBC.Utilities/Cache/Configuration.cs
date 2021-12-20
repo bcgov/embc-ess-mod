@@ -14,15 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Utilities.Cache
 {
     public static class Configuration
     {
-        public static IServiceCollection AddCache(this IServiceCollection services)
+        public static IServiceCollection AddCache(this IServiceCollection services, string environmentName)
         {
-            services.AddTransient<ICache, Cache>();
+            services.AddTransient<ICache>(sp => new Cache(sp.GetRequiredService<IDistributedCache>(), keyPrefix: environmentName));
             return services;
         }
     }

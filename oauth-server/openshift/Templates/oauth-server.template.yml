@@ -1,5 +1,5 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: oauth-server-template
 
@@ -45,8 +45,7 @@ objects:
       name: ${APP_NAME}-oauth-server-config
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}
-        # app.kubernetes.io/part-of: ${APP_NAME}
+        app: ${APP_NAME}        
     data:
       APP_NAME: ${APP_NAME}-oauth-server
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
@@ -60,9 +59,8 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-oauth-server
-        # app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
-      # REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
+      REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
       ConnectionStrings__DefaultConnection: "Data Source=/dpkeys/IdentityServer.db;"
       identityProviders__bcsc__clientId : "${BCSC_CLIENTID}"
       identityProviders__bcsc__clientSecret : "${BCSC_CLIENTSECRET}"
@@ -75,7 +73,6 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-oauth-server
-        # app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-oauth-server
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       annotations:
@@ -95,7 +92,6 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-oauth-server
-        # app.kubernetes.io/part-of: ${APP_NAME}
       annotations:
         haproxy.router.openshift.io/hsts_header: max-age=31536000;includeSubDomains;preload
         haproxy.router.openshift.io/balance: leastconn
@@ -120,7 +116,6 @@ objects:
       name: ${APP_NAME}-oauth-server
       labels:
         app: ${APP_NAME}-oauth-server
-        # app.kubernetes.io/part-of: ${APP_NAME}
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       podSelector:
@@ -136,22 +131,21 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-oauth-server
-        # app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-oauth-server
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
+      revisionHistoryLimit: 2
       selector:
         deploymentconfig: ${APP_NAME}-oauth-server
       strategy:
         type: Rolling
-        activeDeadlineSeconds: 21600
         resources:
           limits:
             cpu: 15m
             memory: 64Mi
           requests:
-            cpu: 10m
+            cpu: 5m
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
@@ -163,17 +157,16 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-oauth-server
-            # app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-oauth-server
         spec:
           containers:
             - name: oauth-server
               resources:
                 limits:
-                  cpu: 75m
+                  cpu: 50m
                   memory: 256Mi
                 requests:
-                  cpu: 25m
+                  cpu: 10m
                   memory: 64Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
@@ -239,7 +232,6 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}
-        # app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       accessModes:
         - "ReadWriteMany"

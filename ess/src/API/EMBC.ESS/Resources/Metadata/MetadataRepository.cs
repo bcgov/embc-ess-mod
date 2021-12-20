@@ -42,9 +42,9 @@ namespace EMBC.ESS.Resources.Metadata
         private readonly EssContext essContext;
         private readonly IMapper mapper;
 
-        public MetadataRepository(EssContext essContext, IMapper mapper)
+        public MetadataRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.essContext = essContext;
+            this.essContext = essContextFactory.CreateReadOnly();
             this.mapper = mapper;
         }
 
@@ -68,8 +68,6 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            await Task.CompletedTask;
-
             var jurisdictions = await essContext.era_jurisdictions
                 .Expand(j => j.era_RelatedProvinceState)
                 .Expand(j => j.era_RegionalDistrict)
@@ -86,15 +84,15 @@ namespace EMBC.ESS.Resources.Metadata
 
             foreach (var community in communities)
             {
-                community.CountryCode = stateProvinces.FirstOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
+                community.CountryCode = stateProvinces.SingleOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
             }
             return communities;
         }
 
         public async Task<string[]> GetSecurityQuestions()
         {
-            IEnumerable<OptionSetMetadataBase> optionSetDefinitions = essContext.GlobalOptionSetDefinitions.GetAllPages();
-            OptionSetMetadata securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name.Equals("era_registrantsecretquestions")).FirstOrDefault();
+            var optionSetDefinitions = await essContext.GlobalOptionSetDefinitions.GetAllPagesAsync();
+            var securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name.Equals("era_registrantsecretquestions")).SingleOrDefault();
             string[] options = securityQuestionsOptionSet.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray();
             return await Task.FromResult(options);
         }
@@ -141,20 +139,15 @@ namespace EMBC.ESS.Resources.Metadata
     {
         Undefined = -1,
         City = 1,
-        Town = 4,
         Village = 2,
-        District = 12,
-        DistrictMunicipality = 100000014,
-        Township = 3,
-        IndianGovernmentDistrict = 100000015,
-        IslandMunicipality = 13,
-        IslandTrust = 10,
-        MountainResortMunicipality = 8,
-        MunicipalityDistrict = 9,
-        RegionalDistrict = 14,
-        RegionalMunicipality = 6,
+        Town = 4,
         ResortMunicipality = 5,
-        RuralMunicipalities = 7
+        UrbanCommunity = 10,
+        FirstNationsCommunity = 12,
+        IndianReserve = 13,
+        Community = 16,
+        DistrictMunicipality = 100000014,
+        IndianGovernmentDistrict = 100000015,
     }
 
     public class OutageQuery

@@ -1,0 +1,21 @@
+﻿[
+  {
+    "sub": "EVAC00012",
+    "userName": "EVAC00012",
+    "password": "98912",
+    "aud": "bcsc.aud",
+    "birthdate": "2000-06-14",
+    "address": {
+      "street_address": "212-1794 WINDY VALE",
+      "country": "CA",
+      "formatted": "212-1794 WINDY VALE\nPOWELL RIVER, BC  V8A 5W4",
+      "locality": "POWELL RIVER",
+      "region": "BC",
+      "postal_code": "V8A 5W4"
+    },
+    "iss": "https://idtest.gov.bc.ca/oauth2/",
+    "given_name": "BCSC",
+    "display_name": "BCSC TEST",
+    "family_name": "TEST"
+  }
+]

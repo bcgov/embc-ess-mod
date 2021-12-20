@@ -31,17 +31,21 @@ namespace EMBC.ESS.Utilities.Cache
     internal class Cache : ICache
     {
         private readonly IDistributedCache cache;
+        private readonly string keyPrefix;
 
-        public Cache(IDistributedCache cache)
+        private string keyGen(string key) => $"{keyPrefix}:{key}";
+
+        public Cache(IDistributedCache cache, string keyPrefix)
         {
             this.cache = cache;
+            this.keyPrefix = keyPrefix;
         }
 
         public async Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiration = null)
         {
             var entryOptions = new DistributedCacheEntryOptions { AbsoluteExpiration = expiration };
             var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), entryOptions.AsTtlStrategy());
-            return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), new Context(key)));
+            return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), new Context(keyGen(key))));
         }
 
         private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
