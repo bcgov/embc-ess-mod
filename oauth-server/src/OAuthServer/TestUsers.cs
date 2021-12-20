@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 
 namespace OAuthServer
 {
-    public static class TestClientConfiguration
+    public static class TestUsersConfiguration
     {
         public static IServiceCollection AddTestUsers(this IServiceCollection services, IConfiguration configuration)
         {
@@ -28,8 +28,8 @@ namespace OAuthServer
                     services.AddSingleton<IResourceOwnerPasswordValidator>(sp =>
                     {
                         var env = sp.GetRequiredService<IWebHostEnvironment>();
-                        if (env.IsProduction()) return new TestClientResourceOwnerPasswordValidator(Array.Empty<BcscTestUser>());
-                        return new TestClientResourceOwnerPasswordValidator(testUsers);
+                        if (env.IsProduction()) return new TestUsersResourceOwnerPasswordValidator(Array.Empty<BcscTestUser>());
+                        return new TestUsersResourceOwnerPasswordValidator(testUsers);
                     });
                 }
             }
@@ -37,11 +37,11 @@ namespace OAuthServer
         }
     }
 
-    public class TestClientResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
+    public class TestUsersResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
         private readonly BcscTestUser[] testUsers;
 
-        public TestClientResourceOwnerPasswordValidator(BcscTestUser[] testUsers)
+        public TestUsersResourceOwnerPasswordValidator(BcscTestUser[] testUsers)
         {
             this.testUsers = testUsers;
         }
