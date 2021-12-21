@@ -5,11 +5,11 @@ export enum CommunityType {
   City = 'City',
   Town = 'Town',
   Village = 'Village',
-  DistrictFirstNations = 'DistrictFirstNations',
+  FirstNationsCommunity = 'FirstNationsCommunity',
   DistrictMunicipality = 'DistrictMunicipality',
   IndianGovernmentDistrict = 'IndianGovernmentDistrict',
-  IslandMunicipality = 'IslandMunicipality',
-  IslandTrust = 'IslandTrust',
+  IndianReserve = 'IndianReserve',
+  UrbanCommunity = 'UrbanCommunity',
   ResortMunicipality = 'ResortMunicipality',
   Community = 'Community'
 }
