@@ -8,7 +8,7 @@ export function generateEvacuationFile(registrantDetails: PersonDetails, communi
         evacuatedFromAddress: generateAddress(communities),
         isRestricted: faker.datatype.boolean(),
         needsAssessment: generateNeedsAssessment(registrantDetails),
-        secretPhrase: "loadtest",
+        secretPhrase: "autotest-load",
         secretPhraseEdited: true
     };
 }

@@ -26,7 +26,9 @@
     "start": "webpack",
     "build": "webpack",
     "pretestReg": "webpack",
-    "testReg": "k6 run ./dist/registrant-portal-test.js",
+    "pretestResponder": "webpack",
+    "testRegistrant": "k6 run ./dist/registrant-portal-test.js",
+    "testResponder": "k6 run ./dist/responder-portal-test.js",
     "gen-reg-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/registrants/api --ignoreUnusedModels false"
   }
 }
