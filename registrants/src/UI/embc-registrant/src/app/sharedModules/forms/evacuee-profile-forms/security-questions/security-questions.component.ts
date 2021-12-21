@@ -31,7 +31,7 @@ export default class SecurityQuestionsComponent implements OnInit {
   constructor(
     @Inject('formBuilder') formBuilder: FormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService,
-    private securityQuesService: SecurityQuestionsService,
+    private securityQuesService: SecurityQuestionsService
   ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
