@@ -14,8 +14,6 @@ import { MatInputModule } from '@angular/material/input';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { MatSelectModule } from '@angular/material/select';
 import { SecurityQuestionsService } from '../../../../core/services/security-questions.service';
-import { AlertService } from 'src/app/core/services/alert.service';
-import * as globalConst from '../../../../core/services/globalConstants';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -33,8 +31,7 @@ export default class SecurityQuestionsComponent implements OnInit {
   constructor(
     @Inject('formBuilder') formBuilder: FormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService,
-    private securityQuesService: SecurityQuestionsService,
-    private alertService: AlertService
+    private securityQuesService: SecurityQuestionsService
   ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
