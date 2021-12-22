@@ -5,16 +5,11 @@ export enum CommunityType {
   City = 'City',
   Town = 'Town',
   Village = 'Village',
-  District = 'District',
+  FirstNationsCommunity = 'FirstNationsCommunity',
   DistrictMunicipality = 'DistrictMunicipality',
-  Township = 'Township',
   IndianGovernmentDistrict = 'IndianGovernmentDistrict',
-  IslandMunicipality = 'IslandMunicipality',
-  IslandTrust = 'IslandTrust',
-  MountainResortMunicipality = 'MountainResortMunicipality',
-  MunicipalityDistrict = 'MunicipalityDistrict',
-  RegionalDistrict = 'RegionalDistrict',
-  RegionalMunicipality = 'RegionalMunicipality',
+  IndianReserve = 'IndianReserve',
+  UrbanCommunity = 'UrbanCommunity',
   ResortMunicipality = 'ResortMunicipality',
-  RuralMunicipalities = 'RuralMunicipalities'
+  Community = 'Community'
 }
