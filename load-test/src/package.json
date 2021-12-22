@@ -25,7 +25,7 @@
   "scripts": {
     "start": "webpack",
     "build": "webpack",
-    "pretestReg": "webpack",
+    "pretestRegistrant": "webpack",
     "pretestResponder": "webpack",
     "testRegistrant": "k6 run ./dist/registrant-portal-test.js",
     "testResponder": "k6 run ./dist/responder-portal-test.js",

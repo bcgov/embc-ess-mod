@@ -22,7 +22,6 @@ const urls = {
   //Registered
   start_page: `${baseUrl}/registration-method`,
   auth_token: `https://dev-era-auth.apps.silver.devops.gov.bc.ca/connect/token`,
-  auth_token_keycloak: `https://dev.oidc.gov.bc.ca/auth/realms/udb1ycga/protocol/openid-connect/token`,
   dashboard: `${baseUrl}/verified-registration/dashboard/current`,
   current_user_exists: `${baseUrl}/api/profiles/current/exists`,
   current_evacuations: `${baseUrl}/api/Evacuations/current`,
@@ -52,11 +51,11 @@ export const options: Options = {
 };
 
 const getAuthToken = () => {
-  const payload = "grant_type=password&username=EVAC00006&password=6606&scope=openid%20registrants-portal-api";
+  const payload = "grant_type=password&username=EVAC00012&password=98912&scope=openid%20registrants-portal-api";
   const params = {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": "Basic dGVzdC1jbGllbnQ6S1AzSEdUTVFRUDZYS1hVWg==",
+      "Authorization": "Basic ZGV2LXRlc3QtY2xpZW50OktQM0hHVE1RUVA2WEtYVVo=",
     }
   };
 
@@ -66,10 +65,7 @@ const getAuthToken = () => {
   if (response.status !== 200) {
     console.log(JSON.stringify(response));
   }
-  // console.log(JSON.stringify(response));
-  // console.log(JSON.parse(JSON.stringify(response)).body);
   return response.json();
-  // return JSON.parse(JSON.stringify(response)).body;
 }
 
 const getStartPage = () => {
