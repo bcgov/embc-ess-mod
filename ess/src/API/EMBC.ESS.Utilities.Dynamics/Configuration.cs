@@ -38,7 +38,8 @@ namespace EMBC.ESS.Utilities.Dynamics
                 {
                     var logger = sp.GetRequiredService<ILogger>();
                     logger.LogError(e, "adfs_token break");
-                }, sp =>
+                },
+                sp =>
                 {
                     var logger = sp.GetRequiredService<ILogger>();
                     logger.LogInformation("adfs_token reset");
@@ -69,7 +70,8 @@ namespace EMBC.ESS.Utilities.Dynamics
                 {
                     var logger = sp.GetRequiredService<ILogger>();
                     logger.LogError(e, "dynamics break");
-                }, sp =>
+                },
+                sp =>
                 {
                     var logger = sp.GetRequiredService<ILogger>();
                     logger.LogInformation("dynamics reset");

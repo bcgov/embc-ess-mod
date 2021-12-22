@@ -1,48 +1,61 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Company>Province of British Columbia</Company>
-    <Authors>Quartech Systems Limited</Authors>
-    <Copyright>Copyright 2021 Province of British Columbia</Copyright>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
-    <RepositoryType>GIT</RepositoryType>
-    <AnalysisMode>Default</AnalysisMode>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <Company>Province of British Columbia</Company>
+        <Authors>Quartech Systems Limited</Authors>
+        <Copyright>Copyright 2021 Province of British Columbia</Copyright>
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
+        <RepositoryType>GIT</RepositoryType>
+        <AnalysisMode>Default</AnalysisMode>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Connected Services\Dynamics\DynamicsCsdl.xml" />
-  </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Connected Services\Dynamics\DynamicsCsdl.xml" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="5.2.0" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.*" />
-    <PackageReference Include="Microsoft.OData.Client" Version="7.9.4" />
-    <PackageReference Include="Microsoft.OData.Core" Version="7.9.4" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.9.4" />
-    <PackageReference Include="Microsoft.OData.Extensions.Client" Version="1.0.6" />
-    <PackageReference Include="Microsoft.Spatial" Version="7.9.4" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.*" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Connected Services\Dynamics\DynamicsCsdl.xml" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Connected Services\Dynamics\DynamicsCsdl.xml" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="IdentityModel" Version="5.2.0" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.*" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.*" />
+        <PackageReference Include="Microsoft.OData.Client" Version="7.9.4" />
+        <PackageReference Include="Microsoft.OData.Core" Version="7.9.4" />
+        <PackageReference Include="Microsoft.OData.Edm" Version="7.9.4" />
+        <PackageReference Include="Microsoft.OData.Extensions.Client" Version="1.0.6" />
+        <PackageReference Include="Microsoft.Spatial" Version="7.9.4" />
+        <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+        <PackageReference Include="System.Text.Json" Version="6.0.*" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <WCFMetadata Include="Connected Services" />
+    </ItemGroup>
 </Project>
