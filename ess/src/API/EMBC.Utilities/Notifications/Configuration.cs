@@ -25,7 +25,7 @@ namespace EMBC.ESS.Utilities.Notifications
     {
         public static IServiceCollection AddNotificationSenders(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<EmailChannelOptions>(configuration.GetSection("notifications:email"));
+            services.Configure<EmailChannelOptions>(opts => configuration.GetSection("notifications:email").Bind(opts));
             services.AddTransient<Email>();
 
             // runtime channel resolver

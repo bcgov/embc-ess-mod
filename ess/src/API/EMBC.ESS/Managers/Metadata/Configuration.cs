@@ -14,7 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.ESS.Utilities.Messaging;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Managers.Metadata

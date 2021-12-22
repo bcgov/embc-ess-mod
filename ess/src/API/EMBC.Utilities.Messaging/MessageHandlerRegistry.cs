@@ -21,7 +21,7 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace EMBC.ESS.Utilities.Messaging
+namespace EMBC.Utilities.Messaging
 {
     public class MessageHandlerRegistry
     {

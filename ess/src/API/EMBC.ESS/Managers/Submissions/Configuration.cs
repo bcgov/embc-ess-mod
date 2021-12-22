@@ -16,7 +16,7 @@
 
 using System;
 using EMBC.ESS.Managers.Submissions.PrintReferrals;
-using EMBC.ESS.Utilities.Messaging;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Managers.Submissions
