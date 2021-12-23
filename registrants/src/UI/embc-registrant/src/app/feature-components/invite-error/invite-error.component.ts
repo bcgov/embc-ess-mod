@@ -8,18 +8,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./invite-error.component.scss']
 })
 export class InviteErrorComponent implements OnInit {
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private location: LocationStrategy
-  ) {}
+  constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    // const replaceUrl = this.activatedRoute.snapshot.queryParams['url'];
-    // if (replaceUrl) {
-    //   this.location.replaceState(null, null, replaceUrl, null);
-    // }
-  }
+  ngOnInit(): void {}
 
   back(): void {
     this.router.navigate(['/registration-method']);
