@@ -40,6 +40,7 @@ export class ProfileComponent
   profileHeading: string;
   parentPageName = 'create-profile';
   showLoader = false;
+  isSubmitted = false;
 
   constructor(
     private router: Router,
@@ -216,6 +217,7 @@ export class ProfileComponent
 
   submitFile(): void {
     this.showLoader = !this.showLoader;
+    this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
     this.profileService
       .upsertProfile(this.profileDataService.createProfileDTO())
@@ -226,6 +228,7 @@ export class ProfileComponent
         },
         (error) => {
           this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', globalConst.saveProfileError);
         }
       );

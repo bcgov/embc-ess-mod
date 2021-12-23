@@ -95,6 +95,7 @@
 
       <button
         class="button-p save-button"
+        [disabled]="isSubmitted"
         mat-stroked-button
         type="button"
         (click)="goForward(profileStepper, true, 'review')"
