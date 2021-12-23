@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ProfileService } from '../api/services';
 
 @Injectable({ providedIn: 'root' })
 export class EmailInviteService {
   constructor(private profileService: ProfileService) {}
 
-  public async validateInvite(
-    isLoggedIn: boolean,
-    inviteId: string
-  ): Promise<boolean> {
-    if (inviteId !== undefined && isLoggedIn) {
-      return this.profileService
-        .profileProcessInvite({ body: { token: inviteId } })
-        .toPromise();
-    }
+  public validateInvite(inviteId: string): Observable<boolean> {
+    return this.profileService.profileProcessInvite({
+      body: { token: inviteId }
+    });
   }
 }

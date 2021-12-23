@@ -7,8 +7,6 @@ const routes: Routes = [
   {
     path: '',
     component: VerifiedRegistrationComponent,
-    canActivate: [AllowNavigationGuard],
-    runGuardsAndResolvers: 'always',
     children: [
       {
         path: 'conflicts',
@@ -16,7 +14,8 @@ const routes: Routes = [
           import(
             '../../sharedModules/components/conflict-management/conflict-management.module'
           ).then((m) => m.ConflictManagementModule),
-        data: { flow: 'verified-registration' }
+        data: { flow: 'verified-registration' },
+        canActivate: [AllowNavigationGuard]
       },
       {
         path: 'collection-notice',
