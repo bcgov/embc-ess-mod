@@ -77,7 +77,7 @@ namespace EMBC.Tests.Integration.ESS
             this.inactiveTaskId = testPrefix + "-inactive-task";
             this.testPortal = 174360001;
 
-#if RELEASE
+#if DEBUG
             this.testPrefix = $"autotest-dev";
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
