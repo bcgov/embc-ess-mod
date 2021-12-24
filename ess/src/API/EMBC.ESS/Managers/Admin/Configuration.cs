@@ -14,18 +14,18 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Managers.Admin
 {
-    public static class Configuration
+    public class Configuration : IComponentConfigurtion
     {
-        public static IServiceCollection AddAdminManager(this IServiceCollection services)
+        public void Configure(ConfigurationServices configurationServices)
         {
-            services.AddTransient<AdminManager>();
-            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(AdminManager)));
-            return services;
+            configurationServices.Services.AddTransient<AdminManager>();
+            configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(AdminManager)));
         }
     }
 }

@@ -14,20 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Messaging;
-using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
-namespace EMBC.ESS.Managers.Reports
+namespace EMBC.Utilities.Hosting
 {
-    public class Configuration : IComponentConfigurtion
+    public class Program
     {
-        public void Configure(ConfigurationServices configurationServices)
+        public static async Task<int> Main(string[] args)
         {
-            var services = configurationServices.Services;
-
-            services.AddTransient<ReportsManager>();
-            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(ReportsManager)));
+            var host = new Host();
+            return await host.Run();
         }
     }
 }

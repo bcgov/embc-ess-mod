@@ -17,21 +17,31 @@
 using System;
 using System.Net.Http;
 using EMBC.PDFGenerator;
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
 {
-    public static class Configuration
+    public class Configuration : IComponentConfigurtion
     {
-        public static IServiceCollection AddPdfGenerator(this IServiceCollection services, IConfiguration configuration)
+        public void Configure(ConfigurationServices configurationServices)
         {
-            var pdfGeneratorUrl = configuration.GetValue<Uri>("pdfGenerator:url");
-            if (pdfGeneratorUrl == null) throw new Exception("PdfGenerator url is not configured");
-            var allowInvalidServerCertificates = configuration.GetValue("pdfGenerator:allowInvalidServerCertificate", false);
+            configurationServices.Services.AddGrpc(opts =>
+            {
+                opts.EnableDetailedErrors = true;
+            });
+            var pdfGeneratorUrl = configurationServices.Configuration.GetValue<Uri>("pdfGenerator:url");
+            if (pdfGeneratorUrl == null)
+            {
+                configurationServices.Logger.LogWarning("PdfGenerator:url env var is not set, PdfGenerator will not be available");
+                return;
+            }
+            var allowInvalidServerCertificates = configurationServices.Configuration.GetValue("pdfGenerator:allowInvalidServerCertificate", false);
 
-            var httpClientBuilder = services.AddGrpcClient<Generator.GeneratorClient>(opts =>
+            var httpClientBuilder = configurationServices.Services.AddGrpcClient<Generator.GeneratorClient>(opts =>
             {
                 opts.Address = pdfGeneratorUrl;
             });
@@ -46,8 +56,7 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                     };
                 });
             }
-            services.TryAddTransient<IPdfGenerator, PdfGenerator>();
-            return services;
+            configurationServices.Services.TryAddTransient<IPdfGenerator, PdfGenerator>();
         }
     }
 }

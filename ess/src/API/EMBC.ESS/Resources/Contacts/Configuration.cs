@@ -14,16 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Resources.Contacts
 {
-    public static class Configuration
+    public class Configuration : IComponentConfigurtion
     {
-        public static IServiceCollection AddContactRepository(this IServiceCollection services)
+        public void Configure(ConfigurationServices configurationServices)
         {
-            services.AddTransient<IContactRepository, ContactRepository>();
-            return services;
+            configurationServices.Services.AddTransient<IContactRepository, ContactRepository>();
         }
     }
 }

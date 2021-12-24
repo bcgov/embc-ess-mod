@@ -14,17 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Resources.Print
 {
-    public static class Configuration
+    public class Configuration : IComponentConfigurtion
     {
-        public static IServiceCollection AddPrint(this IServiceCollection services)
+        public void Configure(ConfigurationServices configurationServices)
         {
-            services.AddTransient<IPrintRequestsRepository, PrintRequestsRepository>();
-
-            return services;
+            configurationServices.Services.AddTransient<IPrintRequestsRepository, PrintRequestsRepository>();
         }
     }
 }

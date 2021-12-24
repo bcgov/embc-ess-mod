@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EMBC.ESS;
 using Xunit;
 
 namespace EMBC.Tests.Unit.ESS
@@ -13,7 +12,7 @@ namespace EMBC.Tests.Unit.ESS
         {
             mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.AddMaps(typeof(Startup));
+                cfg.AddMaps("EMBC.ESS");
             });
         }
 

@@ -1,12 +1,11 @@
-﻿using EMBC.ESS;
-using EMBC.ESS.Utilities.Dynamics;
+﻿using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class DynamicsWebAppFixture : WebAppTestFixture<Startup>
+    public class DynamicsWebAppFixture : WebAppTestFixture
     {
         public DynamicsTestData TestData { get; }
 

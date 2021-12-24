@@ -16,16 +16,19 @@
 
 using System.ServiceModel;
 using BCeIDService;
-using Microsoft.Extensions.Configuration;
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace EMBC.ESS.Resources.Team
 {
-    public static class Configuration
+    public class Configuration : IComponentConfigurtion
     {
-        public static IServiceCollection AddTeamRepository(this IServiceCollection services, IConfiguration configuration)
+        public void Configure(ConfigurationServices configurationServices)
         {
+            var services = configurationServices.Services;
+            var configuration = configurationServices.Configuration;
+
             services.Configure<BCeIDWebServiceOptions>(configuration.GetSection("bceidWebService"));
             services.AddTransient<IBCeIDServiceSecurityContextProvider, BCeIDServiceSecurityContextProvider>();
             services.AddScoped<BCeIDServiceSoap>(sp =>
@@ -48,7 +51,6 @@ namespace EMBC.ESS.Resources.Team
             });
             services.AddTransient<ITeamRepository, TeamRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            return services;
         }
     }
 }

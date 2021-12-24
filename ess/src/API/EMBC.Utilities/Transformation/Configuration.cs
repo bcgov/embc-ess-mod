@@ -14,16 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Utilities.Transformation
 {
-    public static class Configuration
+    public class Configuration : IComponentConfigurtion
     {
-        public static IServiceCollection AddTransformator(this IServiceCollection services)
+        public void Configure(ConfigurationServices configurationServices)
         {
-            services.AddTransient<ITransformator, HbsTransformator>();
-            return services;
+            configurationServices.Services.AddTransient<ITransformator, HbsTransformator>();
         }
     }
 }

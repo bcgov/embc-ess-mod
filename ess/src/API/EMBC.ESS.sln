@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities", "EMBC.Util
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Messaging", "EMBC.Utilities.Messaging\EMBC.Utilities.Messaging.csproj", "{63A67000-8498-4698-B115-1AEC7C409718}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMBC.Utilities.PdfGenerator", "EMBC.Utilities.PdfGenerator\EMBC.Utilities.PdfGenerator.csproj", "{0C90507C-DE99-47F8-BDC5-4153B61A1DA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.PdfGenerator", "EMBC.Utilities.PdfGenerator\EMBC.Utilities.PdfGenerator.csproj", "{0C90507C-DE99-47F8-BDC5-4153B61A1DA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMBC.Utilities.Hosting", "EMBC.Utilities.Hosting\EMBC.Utilities.Hosting.csproj", "{518CBA05-C425-4190-82F7-84E8915A1C5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{0C90507C-DE99-47F8-BDC5-4153B61A1DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C90507C-DE99-47F8-BDC5-4153B61A1DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C90507C-DE99-47F8-BDC5-4153B61A1DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{518CBA05-C425-4190-82F7-84E8915A1C5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{518CBA05-C425-4190-82F7-84E8915A1C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{518CBA05-C425-4190-82F7-84E8915A1C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{518CBA05-C425-4190-82F7-84E8915A1C5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

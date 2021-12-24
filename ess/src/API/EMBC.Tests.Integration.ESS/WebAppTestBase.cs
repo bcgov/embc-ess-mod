@@ -1,19 +1,49 @@
 ﻿using System;
-using EMBC.ESS;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using EMBC.Utilities.Configuration;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class WebAppTestFixture<TStartup> : WebApplicationFactory<TStartup>
-        where TStartup : class
+    public class WebAppTestFixture : WebApplicationFactory<WebAppTestFixture>
     {
+        protected override IHostBuilder? CreateHostBuilder()
+        {
+            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "EMBC.*.dll", SearchOption.TopDirectoryOnly)
+                .Select(assembly => Assembly.LoadFrom(assembly))
+                .ToArray();
+
+            return Host.CreateDefaultBuilder()
+             .ConfigureWebHostDefaults(webBuilder =>
+             {
+                 webBuilder.ConfigureServices((ctx, services) =>
+                 {
+                     //ConfigureServices(services, ctx.Configuration, ctx.HostingEnvironment);
+                     services.AddHttpContextAccessor();
+                     services.AddDataProtection();
+                     services.AddDistributedMemoryCache();
+                     services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, assemblies);
+                     Configurer.Discover(services, ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(Configurer)), assemblies);
+                 })
+                 .Configure((WebHostBuilderContext ctx, IApplicationBuilder app) =>
+                 {
+                     //Configure(app, ctx.Configuration, ctx.HostingEnvironment);
+                 });
+             }).UseEnvironment(Environments.Development);
+        }
     }
 
-    public abstract class WebAppTestBase : IClassFixture<WebAppTestFixture<Startup>>
+    public abstract class WebAppTestBase : IClassFixture<WebAppTestFixture>
     {
 #if RELEASE
         protected const string RequiresVpnConnectivity = "Integration test that requires a VPN connection";
@@ -23,14 +53,11 @@ namespace EMBC.Tests.Integration.ESS
 
         public IServiceProvider Services { get; }
 
-        public WebAppTestBase(ITestOutputHelper output, WebAppTestFixture<Startup> fixture)
+        public WebAppTestBase(ITestOutputHelper output, WebAppTestFixture fixture)
         {
             var factory = fixture.WithWebHostBuilder(builder =>
            {
-               builder.UseSerilog((ctx, cfg) =>
-               {
-                   cfg.WriteTo.TestOutput(output);
-               });
+               builder.UseSerilog((ctx, cfg) => { cfg.WriteTo.TestOutput(output); });
            });
             this.Services = factory.Server.Services.CreateScope().ServiceProvider;
         }

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.PdfGenerator;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +15,7 @@ namespace EMBC.Tests.Integration.ESS
 {
     public class PdfGeneratorTests : WebAppTestBase
     {
-        public PdfGeneratorTests(ITestOutputHelper output, WebAppTestFixture<Startup> fixture) : base(output, fixture)
+        public PdfGeneratorTests(ITestOutputHelper output, WebAppTestFixture fixture) : base(output, fixture)
         {
         }
 

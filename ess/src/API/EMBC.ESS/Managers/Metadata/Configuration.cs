@@ -14,18 +14,20 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Managers.Metadata
 {
-    public static class Configuration
+    public class Configuration : IComponentConfigurtion
     {
-        public static IServiceCollection AddMetadataManager(this IServiceCollection services)
+        public void Configure(ConfigurationServices configurationServices)
         {
+            var services = configurationServices.Services;
+
             services.AddTransient<MetadataManager>();
             services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(MetadataManager)));
-            return services;
         }
     }
 }

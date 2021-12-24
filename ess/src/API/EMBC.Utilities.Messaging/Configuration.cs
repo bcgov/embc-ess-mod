@@ -14,32 +14,21 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using EMBC.ESS.Utilities.NotificationSender.Channels;
 using EMBC.Utilities.Configuration;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Utilities.Notifications
+namespace EMBC.Utilities.Messaging
 {
     public class Configuration : IComponentConfigurtion
     {
         public void Configure(ConfigurationServices configurationServices)
         {
-            var services = configurationServices.Services;
-            var configuration = configurationServices.Configuration;
-
-            services.Configure<EmailChannelOptions>(opts => configuration.GetSection("notifications:email").Bind(opts));
-            services.AddTransient<Email>();
-
-            // runtime channel resolver
-            services.AddTransient<Func<Type, INotificationChannel>>(sp => (type) => type.Name switch
+            configurationServices.Services.AddGrpc(opts =>
             {
-                nameof(EmailNotification) => sp.GetRequiredService<Email>(),
-                _ => throw new NotSupportedException($"{type} is not a configured notification channel")
+                opts.EnableDetailedErrors = true;
             });
-
-            services.AddTransient<INotificationSender, NotificationSender>();
+            configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
+            configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
         }
     }
 }
