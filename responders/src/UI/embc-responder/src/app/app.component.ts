@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
   public show = true;
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
-  // public showOutageBanner = false;
   public timeoutInfo: TimeoutConfiguration;
   public pollingInterval: Subscription;
 
