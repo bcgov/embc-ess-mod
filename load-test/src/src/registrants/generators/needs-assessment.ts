@@ -6,7 +6,7 @@ import { generatePet } from './pet';
 
 export function generateNeedsAssessment(registrantDetails: PersonDetails): NeedsAssessment {
     let householdMembers: Array<HouseholdMember> = [];
-    let member_count = getRandomInt(8);
+    let member_count = getRandomInt(0,8);
 
     //include primary registrant
     householdMembers.push(generateHouseholdMember(registrantDetails));
@@ -16,7 +16,7 @@ export function generateNeedsAssessment(registrantDetails: PersonDetails): Needs
     }
 
     let pets: Array<Pet> = [];
-    let pet_count = getRandomInt(6);
+    let pet_count = getRandomInt(1,6);
 
     let petTypes: string[] = ["dog", "cat", "hamster", "bird", "rabbit", "fish"];
     for (let i = 0; i < pet_count; ++i) {

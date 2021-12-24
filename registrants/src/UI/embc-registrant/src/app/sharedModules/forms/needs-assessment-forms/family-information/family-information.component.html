@@ -253,7 +253,10 @@
             >
           </mat-radio-group>
         </div>
-        <div class="col-md-4">
+        <div
+          *ngIf="householdFormControl?.haveMedication?.value"
+          class="col-md-4"
+        >
           <div class="services-info">
             <p>
               Please ensure you have an adequate supply of medication for the

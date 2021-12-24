@@ -5,7 +5,14 @@ import { OutageDialogComponent } from 'src/app/shared/outage-components/outage-d
 import { MatDialog } from '@angular/material/dialog';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject, share, switchMap, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  share,
+  Subject,
+  switchMap,
+  takeUntil,
+  timer
+} from 'rxjs';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
 import { Router } from '@angular/router';
@@ -22,6 +29,7 @@ export class OutageService {
 
   private outageInfoVal: OutageInformation;
   private closeBannerbyUserVal = false;
+  private stopPolling = new Subject();
 
   constructor(
     private dialog: MatDialog,
@@ -70,6 +78,7 @@ export class OutageService {
       const outageStart = new Date(this.outageInfoVal?.outageStartDate);
       const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
       if (moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)) {
+        this.stopPolling.next(true);
         this.router.navigate(['/outage']);
       }
     } else if (this.outageInfo === null && this.router.url === '/outage') {
@@ -91,8 +100,6 @@ export class OutageService {
     if (this.outageInfo !== null) {
       const now = moment();
       const outageStart = moment(this.outageInfo.outageStartDate);
-      console.log(now);
-      console.log(outageStart);
       const duration = moment.duration(outageStart.diff(now));
       if (duration.asMinutes() <= 5 && duration.asMinutes() > 0) {
         this.dialog.open(OutageDialogComponent, {
@@ -109,11 +116,12 @@ export class OutageService {
     timer(1000, 300000)
       .pipe(
         switchMap(() => this.getOutageConfig()),
-        share()
+        share(),
+        takeUntil(this.stopPolling)
       )
       .subscribe({
         next: (response) => {
-          console.log(response);
+          // console.log(response);
           this.outageInfo = response;
           this.displayOutageBanner();
           this.routeOutageInfo();

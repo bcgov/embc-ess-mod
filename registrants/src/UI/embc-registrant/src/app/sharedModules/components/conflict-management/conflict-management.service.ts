@@ -16,12 +16,9 @@ export class ConflictManagementService {
   constructor(private cacheService: CacheService) {}
 
   public getHasVisitedConflictPage(): boolean {
-    if (this.hasVisitedConflictPage === null || undefined) {
-      this.hasVisitedConflictPage = JSON.parse(
-        this.cacheService.get('hasVisitedConflictPage')
-      );
-    }
-    return this.hasVisitedConflictPage;
+    return this.hasVisitedConflictPage
+      ? this.hasVisitedConflictPage
+      : JSON.parse(this.cacheService.get('hasVisitedConflictPage'));
   }
   public setHasVisitedConflictPage(hasVisitedConflictPage: boolean): void {
     this.hasVisitedConflictPage = hasVisitedConflictPage;
@@ -37,10 +34,7 @@ export class ConflictManagementService {
   }
 
   public getCount(): number {
-    if (this.count === null || this.count === undefined) {
-      this.count = JSON.parse(this.cacheService.get('count'));
-    }
-    return this.count;
+    return this.count ? this.count : JSON.parse(this.cacheService.get('count'));
   }
 
   public setCount(count: number): void {

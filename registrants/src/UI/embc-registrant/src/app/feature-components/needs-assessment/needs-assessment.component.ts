@@ -236,6 +236,7 @@ export class NeedsAssessmentComponent
 
   submitVerified(): void {
     this.showLoader = !this.showLoader;
+    this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
     this.evacuationFileDataService.updateRestriction().subscribe(
       (updated) => {
