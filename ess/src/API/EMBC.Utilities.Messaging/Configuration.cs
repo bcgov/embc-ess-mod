@@ -14,16 +14,27 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Utilities.Transformation
+namespace EMBC.Utilities.Messaging
 {
-    public static class Configuration
+    public class Configuration : IConfigureComponentServices, IHaveGrpcServices
     {
-        public static IServiceCollection AddTransformator(this IServiceCollection services)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            services.AddTransient<ITransformator, HbsTransformator>();
-            return services;
+            configurationServices.Services.AddGrpc(opts =>
+            {
+                opts.EnableDetailedErrors = true;
+            });
+            configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
+            configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
+        }
+
+        public Type[] GetGrpcServiceTypes()
+        {
+            return new[] { typeof(DispatcherService) };
         }
     }
 }

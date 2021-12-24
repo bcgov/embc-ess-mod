@@ -14,19 +14,20 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using EMBC.ESS.Utilities.Messaging;
+using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Managers.Reports
 {
-    public static class Configuration
+    public class Configuration : IConfigureComponentServices
     {
-        public static IServiceCollection AddReportsManager(this IServiceCollection services)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
+            var services = configurationServices.Services;
+
             services.AddTransient<ReportsManager>();
             services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(ReportsManager)));
-            return services;
         }
     }
 }

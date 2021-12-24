@@ -16,30 +16,31 @@
 
 using System;
 using EMBC.ESS.Managers.Submissions.PrintReferrals;
-using EMBC.ESS.Utilities.Messaging;
+using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Managers.Submissions
 {
-    public static class Configuration
+    public class Configuration : IConfigureComponentServices
     {
-        public static IServiceCollection AddSubmissionManager(this IServiceCollection services)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
+            var services = configurationServices.Services;
+
             services.AddTransient<SubmissionsManager>();
             services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(SubmissionsManager)));
             services.AddTransient<EmailTemplateProvider>();
             services.AddTransient<IPrintReferralService, PrintReferralService>();
             services.AddTransient<ITemplateProviderResolver>(sp =>
-           {
-               Func<NotificationChannelType, ITemplateProvider> resolverFunc = (type) => type switch
-               {
-                   NotificationChannelType.Email => sp.GetRequiredService<EmailTemplateProvider>(),
-                   _ => throw new NotImplementedException($"No template provider was registered for {type}")
-               };
-               return new TemplateProviderResolver(resolverFunc);
-           });
-
-            return services;
+            {
+                Func<NotificationChannelType, ITemplateProvider> resolverFunc = (type) => type switch
+                {
+                    NotificationChannelType.Email => sp.GetRequiredService<EmailTemplateProvider>(),
+                    _ => throw new NotImplementedException($"No template provider was registered for {type}")
+                };
+                return new TemplateProviderResolver(resolverFunc);
+            });
         }
     }
 }

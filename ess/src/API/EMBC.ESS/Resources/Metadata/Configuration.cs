@@ -14,16 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Resources.Metadata
 {
-    public static class Configuration
+    public class Configuration : IConfigureComponentServices
     {
-        public static IServiceCollection AddMetadataRepository(this IServiceCollection services)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            services.AddTransient<IMetadataRepository, MetadataRepository>();
-            return services;
+            configurationServices.Services.AddTransient<IMetadataRepository, MetadataRepository>();
         }
     }
 }

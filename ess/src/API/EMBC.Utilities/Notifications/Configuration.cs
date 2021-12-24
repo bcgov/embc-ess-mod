@@ -16,16 +16,20 @@
 
 using System;
 using EMBC.ESS.Utilities.NotificationSender.Channels;
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Utilities.Notifications
 {
-    public static class Configuration
+    public class Configuration : IConfigureComponentServices
     {
-        public static IServiceCollection AddNotificationSenders(this IServiceCollection services, IConfiguration configuration)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            services.Configure<EmailChannelOptions>(configuration.GetSection("notifications:email"));
+            var services = configurationServices.Services;
+            var configuration = configurationServices.Configuration;
+
+            services.Configure<EmailChannelOptions>(opts => configuration.GetSection("notifications:email").Bind(opts));
             services.AddTransient<Email>();
 
             // runtime channel resolver
@@ -36,8 +40,6 @@ namespace EMBC.ESS.Utilities.Notifications
             });
 
             services.AddTransient<INotificationSender, NotificationSender>();
-
-            return services;
         }
     }
 }

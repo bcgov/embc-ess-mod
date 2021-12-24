@@ -15,18 +15,17 @@
 // -------------------------------------------------------------------------
 
 using EMBC.ESS.Resources.Cases.Evacuations;
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Resources.Cases
 {
-    public static class Configuration
+    public class Configuration : IConfigureComponentServices
     {
-        public static IServiceCollection AddCaseRepository(this IServiceCollection services)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            services.AddTransient<ICaseRepository, CaseRepository>();
-            services.AddTransient<IEvacuationRepository, EvacuationRepository>();
-
-            return services;
+            configurationServices.Services.AddTransient<ICaseRepository, CaseRepository>();
+            configurationServices.Services.AddTransient<IEvacuationRepository, EvacuationRepository>();
         }
     }
 }

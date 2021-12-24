@@ -1,1 +1,0 @@
-dotnet watch --project .\EMBC.Responders.API\ run
