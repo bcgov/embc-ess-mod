@@ -22,7 +22,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -56,9 +55,13 @@ namespace EMBC.Utilities.Hosting
                .WriteTo.Console(outputTemplate: logOutputTemplate)
                .CreateBootstrapLogger();
 
+            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "EMBC.*.dll", SearchOption.TopDirectoryOnly)
+                .Select(assembly => Assembly.LoadFrom(assembly))
+                .ToArray();
+
             try
             {
-                await CreateHost().RunAsync();
+                await CreateHost(assemblies).RunAsync();
                 Log.Information("Stopped");
                 return 0;
             }
@@ -69,23 +72,23 @@ namespace EMBC.Utilities.Hosting
             }
         }
 
-        public virtual IHost CreateHost() =>
+        protected virtual IHost CreateHost(params Assembly[] assemblies) =>
              Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
                 .UseSerilog(ConfigureSerilog)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureServices((ctx, services) =>
                     {
-                        ConfigureServices(services, ctx.Configuration, ctx.HostingEnvironment);
+                        ConfigureServices(services, ctx.Configuration, ctx.HostingEnvironment, assemblies);
                     })
                     .Configure((WebHostBuilderContext ctx, IApplicationBuilder app) =>
                     {
-                        Configure(app, ctx.Configuration, ctx.HostingEnvironment);
+                        Configure(app, ctx.Configuration, ctx.HostingEnvironment, assemblies);
                     });
                 })
                 .Build();
 
-        public virtual void ConfigureSerilog(HostBuilderContext hostBuilderContext, LoggerConfiguration loggerConfiguration)
+        protected virtual void ConfigureSerilog(HostBuilderContext hostBuilderContext, LoggerConfiguration loggerConfiguration)
         {
             loggerConfiguration
                 .ReadFrom.Configuration(hostBuilderContext.Configuration)
@@ -118,13 +121,9 @@ namespace EMBC.Utilities.Hosting
             }
         }
 
-        public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment)
+        protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment, params Assembly[] assemblies)
         {
             var logger = new SerilogLoggerFactory(Log.Logger).CreateLogger<Host>();
-
-            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "EMBC.*.dll", SearchOption.TopDirectoryOnly)
-                .Select(assembly => Assembly.LoadFrom(assembly))
-                .ToArray();
 
             var appName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name ?? null!);
 
@@ -156,11 +155,13 @@ namespace EMBC.Utilities.Hosting
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, assemblies);
-            Configurer.Discover(services, configuration, hostEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(Configurer)), assemblies);
+            Configurer.ConfigureComponentServices(services, configuration, hostEnvironment, logger, assemblies);
         }
 
-        public virtual void Configure(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env)
+        protected virtual void Configure(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, params Assembly[] assemblies)
         {
+            var logger = app.ApplicationServices.GetRequiredService<ILogger<Host>>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -186,11 +187,19 @@ namespace EMBC.Utilities.Hosting
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<DispatcherService>();
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
+
+                var grpcServices = assemblies.SelectMany(a => a.CreateInstancesOf<IHaveGrpcServices>()).SelectMany(p => p.GetGrpcServiceTypes()).ToArray();
+                foreach (var service in grpcServices)
+                {
+                    logger.LogInformation("Registering gRPC service {0}", service.FullName);
+                    endpoints.GetType().GetMethod(nameof(GrpcEndpointRouteBuilderExtensions.MapGrpcService))?.MakeGenericMethod(service).Invoke(endpoints, Array.Empty<object>());
+                }
             });
+
+            Configurer.ConfigureComponentPipeline(app, configuration, env, logger, assemblies);
         }
 
         private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>

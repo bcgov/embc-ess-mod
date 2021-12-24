@@ -14,14 +14,15 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Utilities.Messaging
 {
-    public class Configuration : IComponentConfigurtion
+    public class Configuration : IConfigureComponentServices, IHaveGrpcServices
     {
-        public void Configure(ConfigurationServices configurationServices)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
             configurationServices.Services.AddGrpc(opts =>
             {
@@ -29,6 +30,11 @@ namespace EMBC.Utilities.Messaging
             });
             configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
             configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
+        }
+
+        public Type[] GetGrpcServiceTypes()
+        {
+            return new[] { typeof(DispatcherService) };
         }
     }
 }

@@ -33,11 +33,11 @@ namespace EMBC.Tests.Integration.ESS
                      services.AddDataProtection();
                      services.AddDistributedMemoryCache();
                      services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, assemblies);
-                     Configurer.Discover(services, ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(Configurer)), assemblies);
+                     Configurer.ConfigureComponentServices(services, ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
                  })
                  .Configure((WebHostBuilderContext ctx, IApplicationBuilder app) =>
                  {
-                     //Configure(app, ctx.Configuration, ctx.HostingEnvironment);
+                     Configurer.ConfigureComponentPipeline(app, ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
                  });
              }).UseEnvironment(Environments.Development);
         }

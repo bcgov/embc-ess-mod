@@ -20,9 +20,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Resources.Cases
 {
-    public class Configuration : IComponentConfigurtion
+    public class Configuration : IConfigureComponentServices
     {
-        public void Configure(ConfigurationServices configurationServices)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
             configurationServices.Services.AddTransient<ICaseRepository, CaseRepository>();
             configurationServices.Services.AddTransient<IEvacuationRepository, EvacuationRepository>();

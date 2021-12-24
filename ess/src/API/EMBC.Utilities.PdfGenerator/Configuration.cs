@@ -25,9 +25,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
 {
-    public class Configuration : IComponentConfigurtion
+    public class Configuration : IConfigureComponentServices
     {
-        public void Configure(ConfigurationServices configurationServices)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
             configurationServices.Services.AddGrpc(opts =>
             {

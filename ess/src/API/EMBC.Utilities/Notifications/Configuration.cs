@@ -22,9 +22,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Utilities.Notifications
 {
-    public class Configuration : IComponentConfigurtion
+    public class Configuration : IConfigureComponentServices
     {
-        public void Configure(ConfigurationServices configurationServices)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
             var services = configurationServices.Services;
             var configuration = configurationServices.Configuration;

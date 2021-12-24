@@ -48,11 +48,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj" />
-      <ProjectReference Include="..\EMBC.ESS.Utilties.BceidWS\EMBC.ESS.Utilties.BceidWS.csproj" />
       <ProjectReference Include="..\EMBC.ESS\EMBC.ESS.csproj" />
-      <ProjectReference Include="..\EMBC.Utilities.Messaging\EMBC.Utilities.Messaging.csproj" />
-      <ProjectReference Include="..\EMBC.Utilities.PdfGenerator\EMBC.Utilities.PdfGenerator.csproj" />
       <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
     </ItemGroup>
 

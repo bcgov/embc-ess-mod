@@ -20,9 +20,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Utilities.Cache
 {
-    public class Configuration : IComponentConfigurtion
+    public class Configuration : IConfigureComponentServices
     {
-        public void Configure(ConfigurationServices configurationServices)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
             configurationServices.Services.AddTransient<ICache>(sp => new Cache(sp.GetRequiredService<IDistributedCache>(), keyPrefix: configurationServices.Environment.ApplicationName));
         }
