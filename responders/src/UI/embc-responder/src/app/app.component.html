@@ -25,14 +25,6 @@
       <app-alert></app-alert>
     </div>
 
-    <!-- <div *ngIf="!isLoading && showOutageComponent">
-      <app-outage
-        [description]="outageInfo?.content"
-        [startDate]="outageInfo?.outageStartDate"
-        [endDate]="outageInfo?.outageEndDate"
-      ></app-outage>
-    </div> -->
-
     <div *ngIf="!isLoading">
       <router-outlet></router-outlet>
     </div>

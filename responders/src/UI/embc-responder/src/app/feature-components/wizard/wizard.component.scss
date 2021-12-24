@@ -7,6 +7,12 @@
   padding-top: 15px;
 }
 
+.div-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .wizard-content {
   background-color: white;
 }
@@ -16,7 +22,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  position: absolute;
+  height: 100% !important;
 }
 
 .logo {
@@ -52,7 +58,7 @@
 }
 
 .active-side-item {
-  background-color:#169BD5 !important; 
+  background-color: #169bd5 !important;
   color: white !important;
   height: 100% !important;
 
@@ -101,7 +107,7 @@ a:not(.btn):focus {
 }
 
 .a-mat-button:disabled {
-  color: #234075 !important
+  color: #234075 !important;
 }
 
 .outer-div {
