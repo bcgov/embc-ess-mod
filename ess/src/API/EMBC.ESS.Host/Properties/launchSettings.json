@@ -5,7 +5,8 @@
       "launchBrowser": false,
       "applicationUrl": "https://localhost:2020",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }

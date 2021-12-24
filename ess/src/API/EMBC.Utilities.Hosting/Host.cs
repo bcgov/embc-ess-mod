@@ -192,10 +192,11 @@ namespace EMBC.Utilities.Hosting
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
 
                 var grpcServices = assemblies.SelectMany(a => a.CreateInstancesOf<IHaveGrpcServices>()).SelectMany(p => p.GetGrpcServiceTypes()).ToArray();
+                var grpcRegistrationMethodInfo = typeof(GrpcEndpointRouteBuilderExtensions).GetMethod(nameof(GrpcEndpointRouteBuilderExtensions.MapGrpcService)) ?? null!;
                 foreach (var service in grpcServices)
                 {
                     logger.LogInformation("Registering gRPC service {0}", service.FullName);
-                    endpoints.GetType().GetMethod(nameof(GrpcEndpointRouteBuilderExtensions.MapGrpcService))?.MakeGenericMethod(service).Invoke(endpoints, Array.Empty<object>());
+                    grpcRegistrationMethodInfo.MakeGenericMethod(service).Invoke(null, new[] { endpoints });
                 }
             });
 
