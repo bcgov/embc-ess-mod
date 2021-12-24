@@ -16,6 +16,7 @@
 
 using System.ServiceModel;
 using BCeIDService;
+using EMBC.ESS.Utilities.BceidWS;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

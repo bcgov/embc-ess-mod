@@ -15,10 +15,11 @@
 // -------------------------------------------------------------------------
 
 using System;
+using BCeIDService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-namespace BCeIDService
+namespace EMBC.ESS.Utilities.BceidWS
 {
     public interface IBCeIDServiceSecurityContextProvider
     {

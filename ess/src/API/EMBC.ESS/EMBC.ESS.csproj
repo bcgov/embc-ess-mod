@@ -44,8 +44,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
+        <ProjectReference Include="..\EMBC.ESS.Utilities.BceidWS\EMBC.ESS.Utilities.BceidWS.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj" />
-        <ProjectReference Include="..\EMBC.ESS.Utilties.BceidWS\EMBC.ESS.Utilties.BceidWS.csproj" />
         <ProjectReference Include="..\EMBC.Utilities.Messaging\EMBC.Utilities.Messaging.csproj" />
         <ProjectReference Include="..\EMBC.Utilities.PdfGenerator\EMBC.Utilities.PdfGenerator.csproj" />
         <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />

@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "EMBC.Utilities.Hosting": {
+    "EMBC.ESS.Host": {
       "commandName": "Project",
       "launchBrowser": false,
       "applicationUrl": "https://localhost:2020",
