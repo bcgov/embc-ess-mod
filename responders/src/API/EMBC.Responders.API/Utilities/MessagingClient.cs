@@ -16,8 +16,8 @@
 
 using System;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Shared.Contracts;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.Responders.API

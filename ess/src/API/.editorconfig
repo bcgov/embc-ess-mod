@@ -234,6 +234,9 @@ dotnet_diagnostic.SA1512.severity = suggestion
 # CS0649: Field 'RegistrationManager.logger' is never assigned to, and will always have its default value null
 dotnet_diagnostic.CS0649.severity = warning
 
+# SA1314: Type parameter names should begin with T
+dotnet_diagnostic.SA1314.severity = suggestion
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion

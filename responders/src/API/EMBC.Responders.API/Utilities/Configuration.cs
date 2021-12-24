@@ -16,7 +16,7 @@
 
 using System;
 using System.Net.Http;
-using EMBC.ESS;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 

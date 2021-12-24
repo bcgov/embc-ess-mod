@@ -25,7 +25,7 @@ using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.ESS.Utilities.Messaging
+namespace EMBC.Utilities.Messaging
 {
     public class DispatcherService : Dispatcher.DispatcherBase
     {

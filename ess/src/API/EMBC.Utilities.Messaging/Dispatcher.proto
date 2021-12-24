@@ -2,7 +2,7 @@
 
 import "google/protobuf/struct.proto";
 
-package EMBC.ESS;
+package EMBC.Utilities.Messaging;
 
 message RequestEnvelope {
     string CorrelationId = 1;

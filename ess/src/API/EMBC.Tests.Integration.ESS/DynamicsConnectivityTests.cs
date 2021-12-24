@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,7 @@ namespace EMBC.Tests.Integration.ESS
 {
     public class DynamicsConnectivityTests : WebAppTestBase
     {
-        public DynamicsConnectivityTests(ITestOutputHelper output, WebAppTestFixture<Startup> fixture) : base(output, fixture)
+        public DynamicsConnectivityTests(ITestOutputHelper output, WebAppTestFixture fixture) : base(output, fixture)
         {
         }
 

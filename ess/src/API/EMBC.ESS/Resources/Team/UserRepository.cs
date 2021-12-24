@@ -17,6 +17,7 @@
 using System;
 using System.Threading.Tasks;
 using BCeIDService;
+using EMBC.ESS.Utilities.BceidWS;
 
 namespace EMBC.ESS.Resources.Team
 {

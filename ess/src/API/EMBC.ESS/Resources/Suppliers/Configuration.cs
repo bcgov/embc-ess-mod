@@ -14,16 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Resources.Suppliers
 {
-    public static class Configuration
+    public class Configuration : IConfigureComponentServices
     {
-        public static IServiceCollection AddSupplierRepository(this IServiceCollection services)
+        public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            services.AddTransient<ISupplierRepository, SupplierRepository>();
-            return services;
+            configurationServices.Services.AddTransient<ISupplierRepository, SupplierRepository>();
         }
     }
 }

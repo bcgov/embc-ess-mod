@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts.Team;
@@ -21,7 +20,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
         {
             var mapper = new MapperConfiguration(cfg =>
             {
-                cfg.AddMaps(typeof(Startup));
+                cfg.AddMaps("EMBC.ESS");
             }).CreateMapper();
 
             teamRepository = new TestTeamRepository();
