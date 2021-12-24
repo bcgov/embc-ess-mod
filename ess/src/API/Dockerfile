@@ -24,7 +24,7 @@ COPY . .
 RUN dotnet test -c Release
 
 FROM build AS publish
-RUN dotnet publish "EMBC.ESS/EMBC.ESS.Host.csproj" -c Release -o /app/publish
+RUN dotnet publish "EMBC.ESS.Host/EMBC.ESS.Host.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
