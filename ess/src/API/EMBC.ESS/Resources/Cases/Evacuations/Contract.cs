@@ -30,8 +30,6 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId);
 
-        Task<string> Delete(string fileId);
-
         Task<string> CreateNote(string fileId, Note note);
 
         Task<string> UpdateNote(string fileId, Note note);

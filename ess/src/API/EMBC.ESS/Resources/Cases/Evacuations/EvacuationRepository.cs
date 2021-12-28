@@ -239,23 +239,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return fileId;
         }
 
-        public async Task<string> Delete(string fileId)
-        {
-            var evacuationFile = essContext.era_evacuationfiles
-                .Where(ef => ef.era_name == fileId)
-                .ToArray()
-                .SingleOrDefault();
-
-            if (evacuationFile != null)
-            {
-                essContext.DeactivateObject(evacuationFile, (int)EvacuationFileStatus.Inactive);
-                await essContext.SaveChangesAsync();
-            }
-            essContext.DetachAll();
-
-            return fileId;
-        }
-
         private EvacuationFile MapEvacuationFile(era_evacuationfile file, bool maskSecurityPhrase = true) =>
             mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 

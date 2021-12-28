@@ -27,7 +27,8 @@ namespace EMBC.ESS.Resources.Cases
         Task<CaseQueryResult> QueryCase(CaseQuery query);
     }
 
-    public abstract class ManageCaseCommand { }
+    public abstract class ManageCaseCommand
+    { }
 
     public class ManageCaseCommandResult
     {
@@ -60,11 +61,6 @@ namespace EMBC.ESS.Resources.Cases
         public string FileId { get; set; }
         public string RegistrantId { get; set; }
         public string HouseholdMemberId { get; set; }
-    }
-
-    public class DeleteEvacuationFile : ManageCaseCommand
-    {
-        public string Id { get; set; }
     }
 
     public class EvacuationFilesQuery : CaseQuery
