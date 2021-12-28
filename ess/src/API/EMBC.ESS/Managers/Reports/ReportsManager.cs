@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Reports;
-using EMBC.ESS.Shared.Contracts.Reports;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Csv;
 
 namespace EMBC.ESS.Managers.Reports

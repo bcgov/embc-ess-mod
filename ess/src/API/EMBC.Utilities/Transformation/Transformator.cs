@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using HandlebarsDotNet;
 
-namespace EMBC.ESS.Utilities.Transformation
+namespace EMBC.Utilities.Transformation
 {
     public interface ITransformator
     {

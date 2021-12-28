@@ -23,7 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.ESS.Utilities.PdfGenerator
+namespace EMBC.Utilities.PdfGenerator
 {
     public class Configuration : IConfigureComponentServices
     {

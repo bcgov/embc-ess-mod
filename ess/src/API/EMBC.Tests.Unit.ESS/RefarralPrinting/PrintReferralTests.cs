@@ -8,7 +8,7 @@ using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using Shouldly;
 using Xunit;
 
-namespace EMBC.Tests.Unit.ESS.Prints
+namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 {
     public class PrintReferralTests
     {

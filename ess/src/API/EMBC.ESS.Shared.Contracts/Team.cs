@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EMBC.ESS.Shared.Contracts.Team
+namespace EMBC.ESS.Shared.Contracts
 {
     public class TeamMembersQuery : Query<TeamMembersQueryResponse>
     {

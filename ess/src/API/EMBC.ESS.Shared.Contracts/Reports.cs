@@ -14,7 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-namespace EMBC.ESS.Shared.Contracts.Reports
+namespace EMBC.ESS.Shared.Contracts
 {
     public class EvacueeReportQuery : Query<ReportQueryResult>
     {

@@ -17,9 +17,9 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Managers.Submissions.Notifications
 {
     public class EmailTemplate : Template
     {
@@ -41,22 +41,22 @@ namespace EMBC.ESS.Managers.Submissions
 
         private EmailTemplate GetRegisterNewTemplate()
         {
-            string emailSubject = "Registration completed successfully";
-            string emailBody = LoadTemplate("RegisterNewTemplate");
+            var emailSubject = "Registration completed successfully";
+            var emailBody = LoadTemplate("RegisterNewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
         private EmailTemplate GetNewTemplate()
         {
-            string emailSubject = "Registration completed successfully";
-            string emailBody = LoadTemplate("NewTemplate");
+            var emailSubject = "Registration completed successfully";
+            var emailBody = LoadTemplate("NewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
         private EmailTemplate GetAnonymousnewTemplate()
         {
-            string emailSubject = "Registration completed successfully";
-            string emailBody = LoadTemplate("AnonymousNewTemplate");
+            var emailSubject = "Registration completed successfully";
+            var emailBody = LoadTemplate("AnonymousNewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 

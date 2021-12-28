@@ -17,7 +17,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace EMBC.ESS.Utilities.Extensions
+namespace EMBC.Utilities.Extensions
 {
     public static class AssemblyEx
     {
@@ -27,7 +27,7 @@ namespace EMBC.ESS.Utilities.Extensions
             {
                 using (var reader = new StreamReader(stream))
                 {
-                    string template = reader.ReadToEnd();
+                    var template = reader.ReadToEnd();
                     return template;
                 }
             }

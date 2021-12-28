@@ -18,7 +18,7 @@ using System;
 using System.Threading.Tasks;
 using EMBC.PDFGenerator;
 
-namespace EMBC.ESS.Utilities.PdfGenerator
+namespace EMBC.Utilities.PdfGenerator
 {
     public interface IPdfGenerator
     {

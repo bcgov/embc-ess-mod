@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 using HandlebarsDotNet;
 
 namespace EMBC.ESS.Managers.Submissions.PrintReferrals

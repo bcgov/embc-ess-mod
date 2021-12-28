@@ -16,6 +16,7 @@
 
 using AutoMapper;
 using EMBC.ESS.Resources.Metadata;
+using EMBC.ESS.Shared.Contracts;
 
 namespace EMBC.ESS.Managers.Metadata
 {
@@ -23,12 +24,12 @@ namespace EMBC.ESS.Managers.Metadata
     {
         public Mappings()
         {
-            CreateMap<Shared.Contracts.Metadata.Country, Country>().ReverseMap();
-            CreateMap<Shared.Contracts.Metadata.StateProvince, StateProvince>().ReverseMap();
-            CreateMap<Shared.Contracts.Metadata.Community, Community>()
+            CreateMap<Shared.Contracts.Country, Country>().ReverseMap();
+            CreateMap<Shared.Contracts.StateProvince, StateProvince>().ReverseMap();
+            CreateMap<Shared.Contracts.Community, Community>()
                 .ForMember(c => c.DistrictCode, opts => opts.Ignore())
                 .ReverseMap();
-            CreateMap<OutageInformation, Shared.Contracts.Metadata.OutageInformation>();
+            CreateMap<OutageInformation, Shared.Contracts.OutageInformation>();
         }
     }
 }

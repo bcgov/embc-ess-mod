@@ -16,7 +16,7 @@
 
 using System;
 
-namespace EMBC.ESS.Utilities.Extensions
+namespace EMBC.Utilities.Extensions
 {
     public static class DateTimeEx
     {

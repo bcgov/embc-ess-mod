@@ -18,7 +18,7 @@ using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Utilities.Cache
+namespace EMBC.Utilities.Cache
 {
     public class Configuration : IConfigureComponentServices
     {

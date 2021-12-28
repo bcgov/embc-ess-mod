@@ -1,5 +1,5 @@
 ﻿using System;
-using EMBC.ESS.Utilities.Security;
+using EMBC.Utilities.Extensions;
 using Shouldly;
 using Xunit;
 
