@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using EMBC.ESS.Managers.Submissions.Notifications;
 using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Messaging;

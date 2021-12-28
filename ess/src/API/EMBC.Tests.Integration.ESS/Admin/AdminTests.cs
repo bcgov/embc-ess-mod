@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Metadata;
-using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Metadata;
+using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -397,7 +397,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
                 testSupplier.Team.Id = null;
                 testSupplier.Team.Name = null;
 
-                testSupplier.SharedWithTeams = Array.Empty<Team>();
+                testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Suppliers.Team>();
 
                 await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
                 var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();

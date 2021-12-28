@@ -22,6 +22,9 @@ using AutoMapper;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts;
+using EMBC.ESS.Shared.Contracts.Profile;
+using EMBC.ESS.Shared.Contracts.Suppliers;
+using EMBC.ESS.Shared.Contracts.Team;
 
 namespace EMBC.ESS.Managers.Admin
 {
@@ -44,7 +47,7 @@ namespace EMBC.ESS.Managers.Admin
         {
             var teams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId, AssignedCommunityCode = cmd.CommunityCode })).Items;
 
-            return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<Shared.Contracts.Team>>(teams) };
+            return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Team.Team>>(teams) };
         }
 
         public async Task<TeamMembersQueryResponse> Handle(TeamMembersQuery cmd)
@@ -52,7 +55,7 @@ namespace EMBC.ESS.Managers.Admin
             var teamMemberStatuses = cmd.IncludeActiveUsersOnly ? activeOnlyStatus : null;
             var members = await teamRepository.GetMembers(cmd.TeamId, cmd.UserName, cmd.MemberId, teamMemberStatuses);
 
-            return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<Shared.Contracts.TeamMember>>(members) };
+            return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<Shared.Contracts.Team.TeamMember>>(members) };
         }
 
         public async Task<string> Handle(SaveTeamMemberCommand cmd)
@@ -169,7 +172,7 @@ namespace EMBC.ESS.Managers.Admin
                     ActiveOnly = false
                 })).Items;
 
-                var res = mapper.Map<IEnumerable<Shared.Contracts.Supplier>>(suppliers);
+                var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
                 return new SuppliersQueryResult { Items = res };
             }
             else if (!string.IsNullOrEmpty(query.SupplierId) || !string.IsNullOrEmpty(query.LegalName) || !string.IsNullOrEmpty(query.GSTNumber))
@@ -181,7 +184,7 @@ namespace EMBC.ESS.Managers.Admin
                     GSTNumber = query.GSTNumber,
                 })).Items;
 
-                var res = mapper.Map<IEnumerable<Shared.Contracts.Supplier>>(suppliers);
+                var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
                 return new SuppliersQueryResult { Items = res };
             }
             else

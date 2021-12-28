@@ -46,7 +46,7 @@ namespace EMBC.Utilities.Hosting
         private const string HealthCheckAliveTag = "alive";
         private const string logOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext} {Message:lj}{NewLine}{Exception}";
 
-        public async Task<int> Run(params string[] args)
+        public async Task<int> Run()
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
@@ -61,7 +61,7 @@ namespace EMBC.Utilities.Hosting
 
             try
             {
-                await CreateHost(assemblies, args).RunAsync();
+                await CreateHost(assemblies).RunAsync();
                 Log.Information("Stopped");
                 return 0;
             }
@@ -72,8 +72,8 @@ namespace EMBC.Utilities.Hosting
             }
         }
 
-        protected virtual IHost CreateHost(Assembly[] assemblies, params string[] args) =>
-             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+        protected virtual IHost CreateHost(params Assembly[] assemblies) =>
+             Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
                 .UseSerilog(ConfigureSerilog)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

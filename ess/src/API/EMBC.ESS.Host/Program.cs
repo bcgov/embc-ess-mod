@@ -1,4 +1,4 @@
 ﻿using EMBC.Utilities.Hosting;
 
 var host = new Host();
-return await host.Run(args);
+return await host.Run();

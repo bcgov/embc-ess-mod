@@ -16,7 +16,7 @@
 
 using System;
 
-namespace EMBC.ESS.Shared.Contracts
+namespace EMBC.ESS.Shared.Contracts.Profile
 {
     public class LogInUserCommand : Query<LogInUserResponse>
     {

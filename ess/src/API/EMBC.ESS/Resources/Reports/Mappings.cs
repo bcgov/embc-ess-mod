@@ -17,7 +17,7 @@
 using System;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using EMBC.Utilities.Extensions;
+using EMBC.ESS.Utilities.Extensions;
 
 namespace EMBC.ESS.Resources.Reports
 {

@@ -21,7 +21,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Polly;
 using Polly.Caching.Distributed;
 
-namespace EMBC.Utilities.Cache
+namespace EMBC.ESS.Utilities.Cache
 {
     public interface ICache
     {
@@ -48,7 +48,7 @@ namespace EMBC.Utilities.Cache
             return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), new Context(keyGen(key))));
         }
 
-        private static T Deserialize<T>(byte[] data) => data == null ? default : JsonSerializer.Deserialize<T>(data);
+        private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
 
         private static byte[] Serialize<T>(T obj) => obj == null ? Array.Empty<byte>() : JsonSerializer.SerializeToUtf8Bytes(obj);
     }

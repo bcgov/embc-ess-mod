@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts;
-using EMBC.Utilities.Cache;
+using EMBC.ESS.Shared.Contracts.Metadata;
+using EMBC.ESS.Utilities.Cache;
 
 namespace EMBC.ESS.Managers.Metadata
 {

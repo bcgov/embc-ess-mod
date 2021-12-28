@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Cases.Evacuations
+namespace EMBC.ESS.Resources.Cases
 {
     public interface IEvacuationRepository
     {

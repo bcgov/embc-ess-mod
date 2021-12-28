@@ -15,12 +15,12 @@
 // -------------------------------------------------------------------------
 
 using System;
+using EMBC.ESS.Utilities.NotificationSender.Channels;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Notifications.Channels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.Utilities.Notifications
+namespace EMBC.ESS.Utilities.Notifications
 {
     public class Configuration : IConfigureComponentServices
     {

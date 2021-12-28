@@ -19,7 +19,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EMBC.Utilities.Extensions
+namespace EMBC.ESS.Utilities.Security
 {
     public static class SecurityEx
     {

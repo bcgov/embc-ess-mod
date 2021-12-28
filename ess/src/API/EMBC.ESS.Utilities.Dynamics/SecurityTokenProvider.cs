@@ -17,7 +17,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EMBC.Utilities.Cache;
+using EMBC.ESS.Utilities.Cache;
 using IdentityModel.Client;
 using Microsoft.Extensions.Options;
 

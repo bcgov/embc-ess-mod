@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts;
 
 namespace EMBC.ESS.Managers.Admin
 {
@@ -23,45 +22,45 @@ namespace EMBC.ESS.Managers.Admin
     {
         public MappingProfile()
         {
-            CreateMap<TeamMember, Resources.Team.TeamMember>()
+            CreateMap<Shared.Contracts.Team.TeamMember, Resources.Team.TeamMember>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Team, Resources.Team.Team>()
+            CreateMap<Shared.Contracts.Team.Team, Resources.Team.Team>()
                 .ReverseMap()
                 ;
 
-            CreateMap<AssignedCommunity, Resources.Team.AssignedCommunity>()
+            CreateMap<Shared.Contracts.Team.AssignedCommunity, Resources.Team.AssignedCommunity>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Resources.Team.TeamMember, UserProfile>()
+            CreateMap<Resources.Team.TeamMember, Shared.Contracts.Profile.UserProfile>()
                 .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
                 .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue))
                 ;
 
-            CreateMap<Resources.Suppliers.Supplier, Supplier>()
+            CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Suppliers.Supplier>()
                 ;
 
-            CreateMap<Supplier, Resources.Suppliers.Supplier>()
+            CreateMap<Shared.Contracts.Suppliers.Supplier, Resources.Suppliers.Supplier>()
                 ;
 
-            CreateMap<Resources.Suppliers.SupplierContact, SupplierContact>()
+            CreateMap<Resources.Suppliers.SupplierContact, Shared.Contracts.Suppliers.SupplierContact>()
                 ;
 
-            CreateMap<SupplierContact, Resources.Suppliers.SupplierContact>()
+            CreateMap<Shared.Contracts.Suppliers.SupplierContact, Resources.Suppliers.SupplierContact>()
                 ;
 
-            CreateMap<Resources.Suppliers.Team, Team>()
+            CreateMap<Resources.Suppliers.Team, Shared.Contracts.Suppliers.Team>()
                 ;
 
-            CreateMap<Team, Resources.Suppliers.Team>()
+            CreateMap<Shared.Contracts.Suppliers.Team, Resources.Suppliers.Team>()
                 ;
 
-            CreateMap<Resources.Suppliers.Address, Address>()
+            CreateMap<Resources.Suppliers.Address, Shared.Contracts.Suppliers.Address>()
                 ;
 
-            CreateMap<Address, Resources.Suppliers.Address>()
+            CreateMap<Shared.Contracts.Suppliers.Address, Resources.Suppliers.Address>()
                 ;
         }
     }

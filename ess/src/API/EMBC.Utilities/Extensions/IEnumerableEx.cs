@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EMBC.Utilities.Extensions
+namespace EMBC.ESS.Utilities.Extensions
 {
     public static class IEnumerableEx
     {

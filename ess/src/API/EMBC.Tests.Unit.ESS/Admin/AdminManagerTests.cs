@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Resources.Team;
-using EMBC.ESS.Shared.Contracts;
+using EMBC.ESS.Shared.Contracts.Team;
 using Shouldly;
 using Xunit;
 

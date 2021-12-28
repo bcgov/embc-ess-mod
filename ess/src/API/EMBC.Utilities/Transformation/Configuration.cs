@@ -17,7 +17,7 @@
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.Utilities.Transformation
+namespace EMBC.ESS.Utilities.Transformation
 {
     public class Configuration : IConfigureComponentServices
     {

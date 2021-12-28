@@ -21,8 +21,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.ESS.Utilities.Extensions;
 using EMBC.Utilities;
-using EMBC.Utilities.Extensions;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Cases.Evacuations

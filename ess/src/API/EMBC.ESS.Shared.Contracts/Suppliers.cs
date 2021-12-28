@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EMBC.ESS.Shared.Contracts
+namespace EMBC.ESS.Shared.Contracts.Suppliers
 {
     public class SuppliersQuery : Query<SuppliersQueryResult>
     {
