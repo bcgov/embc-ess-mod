@@ -17,6 +17,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Resources.Cases.Evacuations;
 
 namespace EMBC.ESS.Resources.Cases
 {

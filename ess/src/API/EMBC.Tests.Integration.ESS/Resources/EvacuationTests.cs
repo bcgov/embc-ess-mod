@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Resources.Contacts;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
