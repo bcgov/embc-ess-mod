@@ -95,7 +95,7 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
 
     public class SecurityQuestionsQueryResponse
     {
-        public string[] Items { get; set; }
+        public IEnumerable<string> Items { get; set; }
     }
 
     public class SecurityQuestions

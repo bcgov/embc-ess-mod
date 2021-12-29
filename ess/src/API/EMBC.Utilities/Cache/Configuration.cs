@@ -17,6 +17,9 @@
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using Polly.Caching;
+using Polly.Caching.Distributed;
 
 namespace EMBC.ESS.Utilities.Cache
 {
@@ -24,7 +27,12 @@ namespace EMBC.ESS.Utilities.Cache
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            configurationServices.Services.AddTransient<ICache>(sp => new Cache(sp.GetRequiredService<IDistributedCache>(), keyPrefix: configurationServices.Environment.ApplicationName));
+            configurationServices.Services.AddSingleton<ICache>(sp =>
+            {
+                var cache = sp.GetRequiredService<IDistributedCache>();
+                var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), new ContextualTtl());
+                return new Cache(cache, policy, keyPrefix: configurationServices.Environment.ApplicationName);
+            });
         }
     }
 }

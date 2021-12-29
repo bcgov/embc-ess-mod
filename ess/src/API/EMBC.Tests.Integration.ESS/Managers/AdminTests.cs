@@ -232,8 +232,8 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanAssignCommunitiesToTeam()
         {
-            var metadataManager = Services.GetRequiredService<AdminManager>();
-            var communities = (await metadataManager.Handle(new CommunitiesQuery())).Items;
+            var manager = Services.GetRequiredService<AdminManager>();
+            var communities = (await manager.Handle(new CommunitiesQuery())).Items;
 
             var assignedCommunities = (await adminManager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 
@@ -468,9 +468,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetCountries()
         {
-            var metadataManager = Services.GetRequiredService<AdminManager>();
+            var manager = Services.GetRequiredService<AdminManager>();
 
-            var reply = await metadataManager.Handle(new CountriesQuery());
+            var reply = await manager.Handle(new CountriesQuery());
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null);
@@ -479,9 +479,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetStateProvinces()
         {
-            var metadataManager = Services.GetRequiredService<AdminManager>();
+            var manager = Services.GetRequiredService<AdminManager>();
 
-            var reply = await metadataManager.Handle(new StateProvincesQuery());
+            var reply = await manager.Handle(new StateProvincesQuery());
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
@@ -490,9 +490,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetCommunities()
         {
-            var metadataManager = Services.GetRequiredService<AdminManager>();
+            var manager = Services.GetRequiredService<AdminManager>();
 
-            var reply = await metadataManager.Handle(new CommunitiesQuery());
+            var reply = await manager.Handle(new CommunitiesQuery());
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
@@ -501,9 +501,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetSecurityQuestions()
         {
-            var metadataManager = Services.GetRequiredService<AdminManager>();
+            var manager = Services.GetRequiredService<AdminManager>();
 
-            var reply = await metadataManager.Handle(new SecurityQuestionsQuery());
+            var reply = await manager.Handle(new SecurityQuestionsQuery());
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => !string.IsNullOrEmpty(c));

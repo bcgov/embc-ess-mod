@@ -19,33 +19,54 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Polly;
-using Polly.Caching.Distributed;
+using Polly.Caching;
 
 namespace EMBC.ESS.Utilities.Cache
 {
     public interface ICache
     {
-        Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiration = null);
+        Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
+
+        Task<T> Get<T>(string key);
+
+        Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
     }
 
     internal class Cache : ICache
     {
         private readonly IDistributedCache cache;
         private readonly string keyPrefix;
+        private readonly IAsyncPolicy<byte[]> policy;
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
-        public Cache(IDistributedCache cache, string keyPrefix)
+        public Cache(IDistributedCache cache, IAsyncPolicy<byte[]> policy, string keyPrefix)
         {
             this.cache = cache;
             this.keyPrefix = keyPrefix;
+            this.policy = policy;
         }
 
-        public async Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiration = null)
+        public async Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
         {
-            var entryOptions = new DistributedCacheEntryOptions { AbsoluteExpiration = expiration };
-            var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), entryOptions.AsTtlStrategy());
-            return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), new Context(keyGen(key))));
+            return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
+        }
+
+        public async Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
+        {
+            await cache.SetAsync(keyGen(key), Serialize(await getter()), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration });
+        }
+
+        public async Task<T> Get<T>(string key)
+        {
+            return Deserialize<T>(await cache.GetAsync(keyGen(key)));
+        }
+
+        private Context CreateContext(string key, TimeSpan? expiration)
+        {
+            var context = new Context(keyGen(key));
+            if (expiration.HasValue) context[ContextualTtl.TimeSpanKey] = expiration;
+            return context;
         }
 
         private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);

@@ -40,7 +40,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             this.cache = cache;
         }
 
-        public async Task<string> AcquireToken() => await cache.GetOrSet(cacheKey, () => internalSecurityProvider.AcquireToken(), DateTimeOffset.UtcNow.AddMinutes(1));
+        public async Task<string> AcquireToken() => await cache.GetOrSet(cacheKey, () => internalSecurityProvider.AcquireToken(), TimeSpan.FromMinutes(2));
     }
 
     internal class ADFSSecurityTokenProvider : ISecurityTokenProvider
