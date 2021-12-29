@@ -60,13 +60,13 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public string SupplierId { get; set; }
     }
 
-    public class AddSupplierSharedWithTeamCommand : Command
+    public class ShareSupplierWithTeamCommand : Command
     {
         public string TeamId { get; set; }
         public string SupplierId { get; set; }
     }
 
-    public class RemoveSupplierSharedWithTeamCommand : Command
+    public class UnshareSupplierWithTeamCommand : Command
     {
         public string TeamId { get; set; }
         public string SupplierId { get; set; }

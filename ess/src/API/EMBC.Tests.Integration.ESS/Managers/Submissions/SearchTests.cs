@@ -8,7 +8,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.ESS.Submissions
+namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 {
     public class SearchTests : DynamicsWebAppTestBase
     {

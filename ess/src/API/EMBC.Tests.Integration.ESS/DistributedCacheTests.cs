@@ -7,9 +7,9 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
-    public class DistributedCacheTests : DynamicsWebAppTestBase
+    public class DistributedCacheTests : WebAppTestBase
     {
-        public DistributedCacheTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+        public DistributedCacheTests(ITestOutputHelper output, WebAppTestFixture fixture) : base(output, fixture)
         {
         }
 

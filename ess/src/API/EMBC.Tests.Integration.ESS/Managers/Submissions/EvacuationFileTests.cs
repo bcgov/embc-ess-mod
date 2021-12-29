@@ -9,7 +9,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.ESS.Submissions
+namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 {
     public class EvacuationFileTests : DynamicsWebAppTestBase
     {
@@ -33,7 +33,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanSubmitAnonymousRegistration()
         {
             var textContextIdentifier = Guid.NewGuid().ToString().Substring(0, 4);
-            List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            var securityQuestions = new List<SecurityQuestion>();
             securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
             securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
             securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
@@ -185,7 +185,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task Update_EvacuationFileMultiplePrimaryRegistrants_ThrowsError()
         {
             var now = DateTime.UtcNow;
-            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
+            now = new DateTime(now.Ticks - now.Ticks % TimeSpan.TicksPerSecond, now.Kind);
 
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
@@ -234,7 +234,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
-            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
+            now = new DateTime(now.Ticks - now.Ticks % TimeSpan.TicksPerSecond, now.Kind);
 
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
