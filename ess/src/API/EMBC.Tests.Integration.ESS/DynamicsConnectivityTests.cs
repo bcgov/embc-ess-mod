@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Polly.CircuitBreaker;
 using Polly.Timeout;
 using Shouldly;
@@ -23,15 +22,13 @@ namespace EMBC.Tests.Integration.ESS
         public async Task GetSecurityToken()
         {
             var tokenProvider = Services.GetRequiredService<ISecurityTokenProvider>();
-            var logger = Services.GetRequiredService<ILogger<DynamicsConnectivityTests>>();
-            logger.LogInformation("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
+            output.WriteLine("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanConnectToDynamics()
         {
             var context = Services.GetRequiredService<EssContext>();
-            //await Should.NotThrowAsync(async () => await context.era_countries.GetAllPagesAsync());
             await context.era_countries.GetAllPagesAsync();
         }
 
@@ -53,7 +50,7 @@ namespace EMBC.Tests.Integration.ESS
                 }
                 finally
                 {
-                    //Thread.Sleep(TimeSpan.FromSeconds(Random.Shared.Next(1, 5)));
+                    //System.Threading.Thread.Sleep(TimeSpan.FromSeconds(Random.Shared.Next(1, 5)));
                 }
             };
 

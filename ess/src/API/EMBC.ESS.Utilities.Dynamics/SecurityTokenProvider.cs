@@ -60,12 +60,12 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             var response = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
-                Address = options.Adfs.OAuth2TokenEndpoint.AbsoluteUri,
-                ClientId = options.Adfs.ClientId,
-                ClientSecret = options.Adfs.ClientSecret,
-                Resource = { options.Adfs.ResourceName },
-                UserName = $"{options.Adfs.ServiceAccountDomain}\\{options.Adfs.ServiceAccountName}",
-                Password = options.Adfs.ServiceAccountPassword,
+                Address = options.Adfs?.OAuth2TokenEndpoint?.AbsoluteUri,
+                ClientId = options.Adfs?.ClientId,
+                ClientSecret = options.Adfs?.ClientSecret,
+                Resource = { options.Adfs?.ResourceName },
+                UserName = $"{options.Adfs?.ServiceAccountDomain}\\{options.Adfs?.ServiceAccountName}",
+                Password = options.Adfs?.ServiceAccountPassword,
                 Scope = "openid",
             });
 

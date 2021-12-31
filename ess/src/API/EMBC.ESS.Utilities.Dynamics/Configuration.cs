@@ -15,15 +15,14 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Resiliency;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
 
 namespace EMBC.ESS.Utilities.Dynamics
@@ -35,21 +34,17 @@ namespace EMBC.ESS.Utilities.Dynamics
             var services = configurationServices.Services;
             var configuration = configurationServices.Configuration;
 
+            var options = configuration.GetSection("Dynamics").Get<DynamicsOptions>();
+
             services.Configure<DynamicsOptions>(opts => configuration.GetSection("Dynamics").Bind(opts));
 
             services
                 .AddHttpClient("adfs_token")
-                .AddCircuitBreaker((sp, e, t) =>
+                .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
-                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("adfs_token");
-                    logger.LogError(e, "adfs_token break");
-                },
-                sp =>
-                {
-                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("adfs_token");
-                    logger.LogInformation("adfs_token reset");
-                })
-                ;
+                    new HttpClientCircuitBreakerPolicy { NumberOfErrors = 1, ResetDuration = TimeSpan.FromSeconds(15), OnBreak = (sp, t, e) => { OnBreak("adfs_token", sp, t, e); }, OnReset = sp => { OnReset("adfs_token", sp); } },
+                    new HttpClientTimeoutPolicy { Timeout = TimeSpan.FromSeconds(options.Adfs.TimeoutInSeconds), OnTimeout = (sp, t, e) => { OnTimeout("adfs_token", sp, t, e); } }
+                });
 
             services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
 
@@ -63,52 +58,55 @@ namespace EMBC.ESS.Utilities.Dynamics
                     var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                     c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
                 })
-
-                .AddCircuitBreaker((sp, e, t) =>
+                .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
-                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("dynamics");
-                    logger.LogError("dynamics break at {1}: {0}", e.GetType().FullName, t);
-                }, sp =>
-                {
-                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("dynamics");
-                    logger.LogInformation("dynamics reset");
-                }, 1, 5, 120);
+                    new HttpClientRetryPolicy
+                    {
+                        NumberOfRetries = options.NumberOfRetries,
+                        WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
+                        OnRetry = (sp, t, e) => { OnRetry("dynamics", sp, t, e); }
+                    },
+                    new HttpClientCircuitBreakerPolicy
+                    {
+                        NumberOfErrors = options.CircuitBreakerNumberOfErrors,
+                        ResetDuration = TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
+                        OnBreak = (sp, t, e) => { OnBreak("dynamics", sp, t, e); },
+                        OnReset = sp => { OnReset("dynamics", sp); }
+                    },
+                    new HttpClientTimeoutPolicy
+                    {
+                        Timeout = TimeSpan.FromSeconds(options.TimeoutInSeconds),
+                        OnTimeout = (sp, t, e) => { OnTimeout("dynamics", sp, t, e); }
+                    }
+                })
+                ;
 
             services.AddScoped<IEssContextFactory, EssContextFactory>();
             services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
         }
-    }
 
-    public class DynamicsODataClientHandler : IODataClientHandler
-    {
-        private readonly DynamicsOptions options;
-
-        public DynamicsODataClientHandler(IOptions<DynamicsOptions> options)
+        private static void OnBreak(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
-            this.options = options.Value;
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogError("BREAK: {0} on {1}", exception.GetType().FullName, time);
         }
 
-        public void OnClientCreated(ClientCreatedArgs args)
+        private static void OnReset(string source, IServiceProvider sp)
         {
-            var client = args.ODataClient;
-            client.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
-            client.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
-            client.Configurations.RequestPipeline.OnEntryStarting((arg) =>
-            {
-                // do not send reference properties and null values to Dynamics
-                arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
-            });
-            client.BuildingRequest += Client_BuildingRequest;
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogInformation("RESET {0}", source);
         }
 
-        private void Client_BuildingRequest(object sender, BuildingRequestEventArgs e)
+        private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
-            e.RequestUri = RewriteRequestUri((DataServiceContext)sender, options.DynamicsApiEndpoint, e.RequestUri);
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogError("RETRY: {0} on {1}", exception.GetType().FullName, time);
         }
 
-        private static Uri RewriteRequestUri(DataServiceContext ctx, Uri endpointUri, Uri requestUri) =>
-           requestUri.IsAbsoluteUri
-                 ? new Uri(endpointUri, (endpointUri.AbsolutePath == "/" ? string.Empty : endpointUri.AbsolutePath) + requestUri.AbsolutePath + requestUri.Query)
-                 : new Uri(endpointUri, (endpointUri.AbsolutePath == "/" ? string.Empty : endpointUri.AbsolutePath) + ctx.BaseUri.AbsolutePath + requestUri.ToString());
+        private static void OnTimeout(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        {
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogError("TIMEOUT: {0} on {1}", exception.GetType().FullName, time);
+        }
     }
 }
