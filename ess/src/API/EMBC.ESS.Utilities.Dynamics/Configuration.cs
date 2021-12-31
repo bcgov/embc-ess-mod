@@ -40,6 +40,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             services
                 .AddHttpClient("adfs_token")
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
                     new HttpClientCircuitBreakerPolicy
@@ -66,6 +67,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                 .AddODataClient("dynamics")
                 .AddODataClientHandler<DynamicsODataClientHandler>()
                 .AddHttpClient()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .ConfigureHttpClient((sp, c) =>
                 {
                     var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
