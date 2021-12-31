@@ -49,6 +49,10 @@ namespace EMBC.ESS.Utilities.Dynamics
                         OnBreak = (sp, t, e) => { OnBreak("adfs_token", sp, t, e); },
                         OnReset = sp => { OnReset("adfs_token", sp); }
                     },
+                    new HttpClientBulkheadIsolationPolicy
+                    {
+                        MaxParallelization = 1
+                    },
                     new HttpClientTimeoutPolicy
                     {
                         Timeout = TimeSpan.FromSeconds(options.Adfs.TimeoutInSeconds),
@@ -70,6 +74,13 @@ namespace EMBC.ESS.Utilities.Dynamics
                 })
                 .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
+                    new HttpClientCircuitBreakerPolicy
+                    {
+                        NumberOfErrors = options.CircuitBreakerNumberOfErrors,
+                        ResetDuration = TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
+                        OnBreak = (sp, t, e) => { OnBreak("dynamics", sp, t, e); },
+                        OnReset = sp => { OnReset("dynamics", sp); }
+                    },
                     new HttpClientRetryPolicy
                     {
                         NumberOfRetries = options.NumberOfRetries,
@@ -80,13 +91,6 @@ namespace EMBC.ESS.Utilities.Dynamics
                     {
                         Timeout = TimeSpan.FromSeconds(options.TimeoutInSeconds),
                         OnTimeout = (sp, t, e) => { OnTimeout("dynamics", sp, t, e); }
-                    },
-                    new HttpClientCircuitBreakerPolicy
-                    {
-                        NumberOfErrors = options.CircuitBreakerNumberOfErrors,
-                        ResetDuration = TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
-                        OnBreak = (sp, t, e) => { OnBreak("dynamics", sp, t, e); },
-                        OnReset = sp => { OnReset("dynamics", sp); }
                     }
                 })
                 ;
@@ -110,13 +114,13 @@ namespace EMBC.ESS.Utilities.Dynamics
         private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogError("RETRY: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+            logger.LogWarning("RETRY: {0} {1}: {2}", time, exception?.GetType().FullName, exception?.Message);
         }
 
         private static void OnTimeout(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogError("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+            logger.LogWarning("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
         }
     }
 }
