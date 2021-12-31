@@ -15,29 +15,45 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
+using Polly.Timeout;
 
 namespace EMBC.Utilities.Extensions
 {
     public static class HttpClientEx
     {
+        private const string spKey = "_serviceProvider";
+
         public static IHttpClientBuilder AddCircuitBreaker(
             this IHttpClientBuilder httpClientBuilder,
-            Action<IServiceProvider, Exception> onBreak,
+            Action<IServiceProvider, Exception, TimeSpan> onBreak,
             Action<IServiceProvider> onReset,
-            int numberOfErrors = 2,
-            int secondsToWait = 10)
+            int numberOfErrorsBeforeBreak = 1,
+            int breakDurationInSeconds = 10,
+            int timeoutInSecond = 30)
         {
-            httpClientBuilder.AddPolicyHandler(
-                (services, request) => HttpPolicyExtensions
-                    .HandleTransientHttpError()
-                    .CircuitBreakerAsync(
-                        numberOfErrors,
-                        TimeSpan.FromSeconds(secondsToWait),
-                        (r, timespan, ctx) => onBreak(services, r.Exception),
-                        ctx => onReset(services)));
+            //create and pin the stateful policy composition
+            var policy = HttpPolicyExtensions.HandleTransientHttpError()
+                .Or<TimeoutRejectedException>() //handle timeout policy exceptions
+                .CircuitBreakerAsync(
+                    numberOfErrorsBeforeBreak,
+                    TimeSpan.FromSeconds(breakDurationInSeconds),
+                    (r, timespan, ctx) => onBreak((IServiceProvider)ctx[spKey], r.Exception, timespan),
+                    ctx => onReset((IServiceProvider)ctx[spKey]))
+                .WrapAsync(Policy.TimeoutAsync<HttpResponseMessage>(timeoutInSecond));
+
+            httpClientBuilder
+                .AddPolicyHandler((sp, request) =>
+                {
+                    var context = request.GetPolicyExecutionContext() ?? new Context();
+                    context[spKey] = sp;
+                    request.SetPolicyExecutionContext(context);
+                    return policy;
+                });
+
             return httpClientBuilder;
         }
     }

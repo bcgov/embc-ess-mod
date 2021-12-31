@@ -45,7 +45,6 @@ namespace EMBC.ESS.Utilities.Dynamics
         private EssContext Create(MergeOption mergeOption)
         {
             var ctx = odataClientFactory.CreateClient<EssContext>(dynamicsOptions.DynamicsApiBaseUri, "dynamics");
-            ctx.EndpointUrl = dynamicsOptions.DynamicsApiEndpoint;
             ctx.MergeOption = mergeOption;
             return ctx;
         }

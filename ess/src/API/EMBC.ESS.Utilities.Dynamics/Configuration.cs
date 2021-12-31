@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Net.Http.Headers;
 using EMBC.Utilities.Configuration;
@@ -38,31 +39,23 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             services
                 .AddHttpClient("adfs_token")
-                .AddCircuitBreaker((sp, e) =>
+                .AddCircuitBreaker((sp, e, t) =>
                 {
-                    var logger = sp.GetRequiredService<ILogger>();
+                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("adfs_token");
                     logger.LogError(e, "adfs_token break");
                 },
                 sp =>
                 {
-                    var logger = sp.GetRequiredService<ILogger>();
+                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("adfs_token");
                     logger.LogInformation("adfs_token reset");
-                });
+                })
+                ;
 
             services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
 
             services
                 .AddODataClient("dynamics")
-                .ConfigureODataClient(client =>
-                {
-                    client.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
-                    client.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
-                    client.Configurations.RequestPipeline.OnEntryStarting((arg) =>
-                    {
-                        // do not send reference properties and null values to Dynamics
-                        arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
-                    });
-                })
+                .AddODataClientHandler<DynamicsODataClientHandler>()
                 .AddHttpClient()
                 .ConfigureHttpClient((sp, c) =>
                 {
@@ -70,19 +63,52 @@ namespace EMBC.ESS.Utilities.Dynamics
                     var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                     c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
                 })
-                .AddCircuitBreaker((sp, e) =>
-                {
-                    var logger = sp.GetRequiredService<ILogger>();
-                    logger.LogError(e, "dynamics break");
-                },
-                sp =>
-                {
-                    var logger = sp.GetRequiredService<ILogger>();
-                    logger.LogInformation("dynamics reset");
-                });
 
-            services.AddTransient<IEssContextFactory, EssContextFactory>();
+                .AddCircuitBreaker((sp, e, t) =>
+                {
+                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("dynamics");
+                    logger.LogError("dynamics break at {1}: {0}", e.GetType().FullName, t);
+                }, sp =>
+                {
+                    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger("dynamics");
+                    logger.LogInformation("dynamics reset");
+                }, 1, 5, 120);
+
+            services.AddScoped<IEssContextFactory, EssContextFactory>();
             services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
         }
+    }
+
+    public class DynamicsODataClientHandler : IODataClientHandler
+    {
+        private readonly DynamicsOptions options;
+
+        public DynamicsODataClientHandler(IOptions<DynamicsOptions> options)
+        {
+            this.options = options.Value;
+        }
+
+        public void OnClientCreated(ClientCreatedArgs args)
+        {
+            var client = args.ODataClient;
+            client.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
+            client.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
+            client.Configurations.RequestPipeline.OnEntryStarting((arg) =>
+            {
+                // do not send reference properties and null values to Dynamics
+                arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
+            });
+            client.BuildingRequest += Client_BuildingRequest;
+        }
+
+        private void Client_BuildingRequest(object sender, BuildingRequestEventArgs e)
+        {
+            e.RequestUri = RewriteRequestUri((DataServiceContext)sender, options.DynamicsApiEndpoint, e.RequestUri);
+        }
+
+        private static Uri RewriteRequestUri(DataServiceContext ctx, Uri endpointUri, Uri requestUri) =>
+           requestUri.IsAbsoluteUri
+                 ? new Uri(endpointUri, (endpointUri.AbsolutePath == "/" ? string.Empty : endpointUri.AbsolutePath) + requestUri.AbsolutePath + requestUri.Query)
+                 : new Uri(endpointUri, (endpointUri.AbsolutePath == "/" ? string.Empty : endpointUri.AbsolutePath) + ctx.BaseUri.AbsolutePath + requestUri.ToString());
     }
 }

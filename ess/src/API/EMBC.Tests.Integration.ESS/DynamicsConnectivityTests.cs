@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Polly.CircuitBreaker;
+using Polly.Timeout;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -31,29 +36,39 @@ namespace EMBC.Tests.Integration.ESS
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanTriggerCricuitBreaker()
+        public void CanTriggerCricuitBreaker()
         {
-            var context = Services.GetRequiredService<EssContext>();
-            var logger = Services.GetRequiredService<ILogger<DynamicsConnectivityTests>>();
-
-            var call = async () =>
+            var essContextFactory = Services.GetRequiredService<IEssContextFactory>();
+            var call = () =>
             {
                 try
                 {
-                    await context.era_countries.GetAllPagesAsync();
+                    var context = essContextFactory.Create();
+                    context.era_countries.ToArray();
                     return null;
                 }
                 catch (Exception e)
                 {
-                    return e;
+                    return e.InnerException ?? e;
+                }
+                finally
+                {
+                    //Thread.Sleep(TimeSpan.FromSeconds(Random.Shared.Next(1, 5)));
                 }
             };
 
-            for (int i = 0; i < 5; i++)
+            var sw = Stopwatch.StartNew();
+
+            var results = Enumerable.Range(1, 10).Select(i => new { i, sw.Elapsed, exeption = call() }).ToArray();
+            sw.Stop();
+
+            foreach (var r in results)
             {
-                var exception = await call();
-                logger.LogInformation(exception.GetType().Name);
+                output.WriteLine("{0} {1}: {2}", r.i, r.Elapsed, r.exeption?.GetType().Name);
             }
+            results.Length.ShouldBe(10);
+            results.First().exeption?.GetType().ShouldBe(typeof(TimeoutRejectedException));
+            results.Skip(1).ShouldAllBe(r => r.exeption != null && r.exeption.GetType().Equals(typeof(BrokenCircuitException)));
         }
     }
 }
