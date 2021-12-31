@@ -42,8 +42,18 @@ namespace EMBC.ESS.Utilities.Dynamics
                 .AddHttpClient("adfs_token")
                 .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
-                    new HttpClientCircuitBreakerPolicy { NumberOfErrors = 1, ResetDuration = TimeSpan.FromSeconds(15), OnBreak = (sp, t, e) => { OnBreak("adfs_token", sp, t, e); }, OnReset = sp => { OnReset("adfs_token", sp); } },
-                    new HttpClientTimeoutPolicy { Timeout = TimeSpan.FromSeconds(options.Adfs.TimeoutInSeconds), OnTimeout = (sp, t, e) => { OnTimeout("adfs_token", sp, t, e); } }
+                    new HttpClientCircuitBreakerPolicy
+                    {
+                        NumberOfErrors = options.Adfs.CircuitBreakerNumberOfErrors,
+                        ResetDuration = TimeSpan.FromSeconds(options.Adfs.CircuitBreakerResetInSeconds),
+                        OnBreak = (sp, t, e) => { OnBreak("adfs_token", sp, t, e); },
+                        OnReset = sp => { OnReset("adfs_token", sp); }
+                    },
+                    new HttpClientTimeoutPolicy
+                    {
+                        Timeout = TimeSpan.FromSeconds(options.Adfs.TimeoutInSeconds),
+                        OnTimeout = (sp, t, e) => { OnTimeout("adfs_token", sp, t, e); }
+                    }
                 });
 
             services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
@@ -66,17 +76,17 @@ namespace EMBC.ESS.Utilities.Dynamics
                         WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
                         OnRetry = (sp, t, e) => { OnRetry("dynamics", sp, t, e); }
                     },
+                    new HttpClientTimeoutPolicy
+                    {
+                        Timeout = TimeSpan.FromSeconds(options.TimeoutInSeconds),
+                        OnTimeout = (sp, t, e) => { OnTimeout("dynamics", sp, t, e); }
+                    },
                     new HttpClientCircuitBreakerPolicy
                     {
                         NumberOfErrors = options.CircuitBreakerNumberOfErrors,
                         ResetDuration = TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
                         OnBreak = (sp, t, e) => { OnBreak("dynamics", sp, t, e); },
                         OnReset = sp => { OnReset("dynamics", sp); }
-                    },
-                    new HttpClientTimeoutPolicy
-                    {
-                        Timeout = TimeSpan.FromSeconds(options.TimeoutInSeconds),
-                        OnTimeout = (sp, t, e) => { OnTimeout("dynamics", sp, t, e); }
                     }
                 })
                 ;
@@ -88,25 +98,25 @@ namespace EMBC.ESS.Utilities.Dynamics
         private static void OnBreak(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogError("BREAK: {0} on {1}", exception.GetType().FullName, time);
+            logger.LogError("BREAK: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
         }
 
         private static void OnReset(string source, IServiceProvider sp)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogInformation("RESET {0}", source);
+            logger.LogInformation("RESET");
         }
 
         private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogError("RETRY: {0} on {1}", exception.GetType().FullName, time);
+            logger.LogError("RETRY: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
         }
 
         private static void OnTimeout(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogError("TIMEOUT: {0} on {1}", exception.GetType().FullName, time);
+            logger.LogError("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
         }
     }
 }
