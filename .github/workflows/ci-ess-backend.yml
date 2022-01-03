@@ -18,5 +18,4 @@ jobs:
 
       - name: Build image
         working-directory: ./ess/src/API
-        run: DOCKER_BUILDKIT=1 \
-          docker build --progress=plain . --file Dockerfile --tag $IMAGE_NAME
+        run: DOCKER_BUILDKIT=1 docker build --progress=plain . --file Dockerfile --tag $IMAGE_NAME
