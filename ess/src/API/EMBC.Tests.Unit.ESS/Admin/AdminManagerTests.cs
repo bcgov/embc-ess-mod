@@ -24,7 +24,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
             }).CreateMapper();
 
             teamRepository = new TestTeamRepository();
-            adminManager = new AdminManager(teamRepository, null, mapper, null, null);
+            adminManager = new AdminManager(teamRepository, null, mapper, null, null, null);
         }
 
         [Fact]
