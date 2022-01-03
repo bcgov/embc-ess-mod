@@ -99,18 +99,23 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             services.AddScoped<IEssContextFactory, EssContextFactory>();
             services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
+            services.AddTransient<IEssContextStateReporter, EssContextStateReporter>();
         }
 
         private static void OnBreak(string source, IServiceProvider sp, TimeSpan time, Exception exception)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
             logger.LogError("BREAK: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+            var reporter = sp.GetRequiredService<IEssContextStateReporter>();
+            reporter.ReportBroken($"{source}: {exception.Message}").GetAwaiter().GetResult();
         }
 
         private static void OnReset(string source, IServiceProvider sp)
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
             logger.LogInformation("RESET");
+            var reporter = sp.GetRequiredService<IEssContextStateReporter>();
+            reporter.ReportFixed().GetAwaiter().GetResult();
         }
 
         private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
