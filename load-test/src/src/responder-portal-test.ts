@@ -3,8 +3,7 @@ import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 
-//const baseUrl = 'https://dev1-embc-responders.apps.silver.devops.gov.bc.ca';
-const baseUrl = 'http://localhost:6200';
+const baseUrl = 'https://dev1-embc-responders.apps.silver.devops.gov.bc.ca';
 const urls = {
   //Metadata
   config: `${baseUrl}/api/Configuration`,
@@ -24,8 +23,8 @@ const submissionTime = new Trend('submission_time');
 const loadTime = new Trend('load_time');
 
 export const options: Options = {
-  vus: 5,
-  duration: '15m',
+  vus: 1,
+  duration: '8s',
   thresholds: {
     'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
     'failed form fetches': ['rate<0.01'],
