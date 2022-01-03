@@ -123,7 +123,7 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
     public class OutageInformation
     {
         public string Content { get; set; }
-        public DateTime OutageStartDate { get; set; }
-        public DateTime OutageEndDate { get; set; }
+        public DateTime? OutageStartDate { get; set; }
+        public DateTime? OutageEndDate { get; set; }
     }
 }

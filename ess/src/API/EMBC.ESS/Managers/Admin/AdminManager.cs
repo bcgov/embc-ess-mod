@@ -28,6 +28,7 @@ using EMBC.ESS.Shared.Contracts.Profile;
 using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.ESS.Utilities.Cache;
+using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Managers.Admin
 {
@@ -38,6 +39,7 @@ namespace EMBC.ESS.Managers.Admin
         private readonly IMapper mapper;
         private readonly ICache cache;
         private readonly IMetadataRepository metadataRepository;
+        private readonly IEssContextStateReporter essContextStatusReporter;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
         private static TeamMemberStatus[] activeAndInactiveStatus = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive };
         private static TimeSpan cacheEntryLifetime = TimeSpan.FromHours(6);
@@ -47,13 +49,15 @@ namespace EMBC.ESS.Managers.Admin
             ISupplierRepository supplierRepository,
             IMapper mapper,
             ICache cache,
-            IMetadataRepository metadataRepository)
+            IMetadataRepository metadataRepository,
+            IEssContextStateReporter essContextStatusReporter)
         {
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.mapper = mapper;
             this.cache = cache;
             this.metadataRepository = metadataRepository;
+            this.essContextStatusReporter = essContextStatusReporter;
         }
 
         public async Task<TeamsQueryResponse> Handle(TeamsQuery cmd)
@@ -366,9 +370,20 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<OutageQueryResponse> Handle(Shared.Contracts.Metadata.OutageQuery query)
         {
-            var outages = await cache.GetOrSet("metadata:outage", () => GetPlannedOutages(query.PortalType), TimeSpan.FromMinutes(1));
+            var unplannedOutage = (await essContextStatusReporter.IsBroken())
+                ? new Shared.Contracts.Metadata.OutageInformation { Content = "Unplanned outage detected" }
+                : null;
 
-            return new OutageQueryResponse { OutageInfo = outages.OrderBy(o => o.OutageStartDate).FirstOrDefault() };
+            if (unplannedOutage == null)
+            {
+                var plannedOutages = await cache.GetOrSet("metadata:outage", () => GetPlannedOutages(query.PortalType), TimeSpan.FromMinutes(1));
+
+                return new OutageQueryResponse { OutageInfo = plannedOutages.OrderBy(o => o.OutageStartDate).FirstOrDefault() };
+            }
+            else
+            {
+                return new OutageQueryResponse { OutageInfo = unplannedOutage };
+            }
         }
 
         private async Task<IEnumerable<Shared.Contracts.Metadata.OutageInformation>> GetPlannedOutages(Shared.Contracts.Metadata.PortalType portalType) =>
