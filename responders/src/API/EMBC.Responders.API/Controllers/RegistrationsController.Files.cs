@@ -23,6 +23,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -559,10 +560,10 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.ReviewingTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.ReviewingTeamMemberDisplayName, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.DisplayName))
-                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact).SingleOrDefault().Content))
-                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals).SingleOrDefault().Content))
-                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans).SingleOrDefault().Content))
-                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan).SingleOrDefault().Content))
+                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact, n => n.Content)))
+                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals, n => n.Content)))
+                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans, n => n.Content)))
+                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan, n => n.Content)))
                 ;
 
             CreateMap<EvacuationFileHouseholdMember, HouseholdMember>()

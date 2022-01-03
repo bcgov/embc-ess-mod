@@ -221,7 +221,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
 
-            var reply = await messagingClient.Send(new AddSupplierSharedWithTeamCommand
+            var reply = await messagingClient.Send(new ShareSupplierWithTeamCommand
             {
                 SupplierId = supplierId,
                 TeamId = sharedTeamId
@@ -242,7 +242,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
 
-            var reply = await messagingClient.Send(new RemoveSupplierSharedWithTeamCommand
+            var reply = await messagingClient.Send(new UnshareSupplierWithTeamCommand
             {
                 SupplierId = supplierId,
                 TeamId = sharedTeamId

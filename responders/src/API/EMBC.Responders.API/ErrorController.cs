@@ -33,7 +33,7 @@ namespace EMBC.Responders.API
             if (hostEnvironment.IsProduction()) throw new InvalidOperationException("This shouldn't be invoked in production environments.");
 
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            return Problem(detail: context.Error.ToString(), title: context.Error.Message);
+            return Problem(detail: context?.Error.ToString(), title: context?.Error.Message);
         }
 
         [Route("/error")]

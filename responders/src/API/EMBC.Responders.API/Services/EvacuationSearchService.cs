@@ -91,7 +91,7 @@ namespace EMBC.Responders.API.Services
         private static EvacuationFileStatus[] tier1FileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired };
         private static EvacuationFileStatus[] tier2andAboveFileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired, EvacuationFileStatus.Completed };
 
-        private ClaimsPrincipal User => httpContext.HttpContext.User;
+        private ClaimsPrincipal User => httpContext?.HttpContext?.User;
 
         public EvacuationSearchService(IMessagingClient messagingClient, IMapper mapper, IHttpContextAccessor httpContext)
         {
