@@ -2,6 +2,6 @@
 /* eslint-disable */
 export interface OutageInformation {
   content?: null | string;
-  outageEndDate?: string;
-  outageStartDate?: string;
+  outageEndDate?: null | string;
+  outageStartDate?: null | string;
 }

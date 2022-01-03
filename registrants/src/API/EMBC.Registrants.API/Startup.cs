@@ -69,7 +69,7 @@ namespace EMBC.Registrants.API
         {
             var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
             var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
-            var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name);
+            var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name) ?? null!;
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 Log.Information("Configuring {0} to use Redis cache", applicationName);
@@ -98,7 +98,7 @@ namespace EMBC.Registrants.API
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardLimit = 2;
-                var configvalue = configuration.GetValue("app:knownNetwork", string.Empty)?.Split('/');
+                var configvalue = configuration.GetValue("app:knownNetwork", string.Empty).Split('/');
                 if (configvalue.Length == 2)
                 {
                     var knownNetwork = new IPNetwork(IPAddress.Parse(configvalue[0]), int.Parse(configvalue[1]));
@@ -187,7 +187,7 @@ namespace EMBC.Registrants.API
                      {
                          await Task.CompletedTask;
                          var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<OAuth2IntrospectionEvents>>();
-                         var userInfo = ctx.Principal.FindFirst("userInfo");
+                         var userInfo = ctx.Principal?.FindFirst("userInfo");
                          logger.LogDebug("{0}", userInfo);
                      },
                      OnAuthenticationFailed = async ctx =>
@@ -230,13 +230,13 @@ namespace EMBC.Registrants.API
                 opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
-                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
-                    diagCtx.Set("Host", httpCtx.Request.Host);
-                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
-                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
-                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
-                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
-                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+                    diagCtx.Set("User", httpCtx?.User.Identity?.Name);
+                    diagCtx.Set("Host", httpCtx?.Request.Host);
+                    diagCtx.Set("UserAgent", httpCtx?.Request.Headers["User-Agent"].ToString());
+                    diagCtx.Set("RemoteIP", httpCtx?.Connection?.RemoteIpAddress?.ToString());
+                    diagCtx.Set("ConnectionId", httpCtx?.Connection.Id);
+                    diagCtx.Set("Forwarded", httpCtx?.Request?.Headers["Forwarded"].ToString());
+                    diagCtx.Set("ContentLength", httpCtx?.Response?.ContentLength);
                 };
             });
 

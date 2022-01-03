@@ -141,7 +141,7 @@ namespace EMBC.Registrants.API.Controllers
         private Profile GetUserFromPrincipal()
         {
             if (!User.HasClaim(c => c.Type.Equals("userInfo", System.StringComparison.OrdinalIgnoreCase))) return null;
-            var userProfile = BcscUserInfoMapper.MapBcscUserInfoToProfile(User.Identity.Name, JsonDocument.Parse(User.FindFirstValue("userInfo")));
+            var userProfile = BcscUserInfoMapper.MapBcscUserInfoToProfile(User.Identity?.Name, JsonDocument.Parse(User.FindFirstValue("userInfo")));
             return userProfile;
         }
 

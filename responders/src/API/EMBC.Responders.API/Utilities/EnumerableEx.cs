@@ -16,21 +16,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 
-namespace EMBC.Registrants.API.Utils
+namespace EMBC.Responders.API.Utilities
 {
-    public static class EnumDescriptionHelper
+    public static class EnumerableEx
     {
-        public static IEnumerable<(string value, string description)> GetEnumDescriptions(Type enumType) =>
-           Enum.GetNames(enumType).Select(e => (e, GetEnumDescription(enumType, e)));
+        public static TProperty SingleOrDefaultProperty<TEntity, TProperty>(this IEnumerable<TEntity> collection, Expression<Func<TEntity, TProperty>> propertyExpression) => collection.SingleOrDefaultProperty(t => true, propertyExpression);
 
-        public static IEnumerable<(TEnum value, string description)> GetEnumDescriptions<TEnum>()
-            where TEnum : struct =>
-           Enum.GetNames(typeof(TEnum)).Select(e => (Enum.Parse<TEnum>(e), GetEnumDescription(typeof(TEnum), e)));
-
-        private static string GetEnumDescription(Type enumType, string value) =>
-            (enumType.GetField(value)?.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[])?.FirstOrDefault()?.Description;
+        public static TProperty SingleOrDefaultProperty<TEntity, TProperty>(this IEnumerable<TEntity> collection, Func<TEntity, bool> predicate, Expression<Func<TEntity, TProperty>> propertyExpression)
+        {
+            var entity = collection.SingleOrDefault(predicate);
+            return entity == null ? default : propertyExpression.Compile().Invoke(entity);
+        }
     }
 }

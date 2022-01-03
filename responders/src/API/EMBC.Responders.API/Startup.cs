@@ -64,7 +64,7 @@ namespace EMBC.Responders.API
         {
             var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
             var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
-            var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name);
+            var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name) ?? null!;
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 Log.Information("Configuring {0} to use Redis cache", applicationName);
@@ -89,7 +89,7 @@ namespace EMBC.Responders.API
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardLimit = 2;
-                var configvalue = configuration.GetValue("app:knownNetwork", string.Empty)?.Split('/');
+                var configvalue = configuration.GetValue("app:knownNetwork", string.Empty).Split('/');
                 if (configvalue.Length == 2)
                 {
                     var knownNetwork = new IPNetwork(IPAddress.Parse(configvalue[0]), int.Parse(configvalue[1]));
@@ -137,7 +137,7 @@ namespace EMBC.Responders.API
 
                          var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
                          c.Principal = await userService.GetPrincipal(c.Principal);
-                         logger.LogDebug("Token validated for {0}", c.Principal.Identity.Name);
+                         logger.LogDebug("Token validated for {0}", c.Principal?.Identity?.Name);
                      }
                  };
                  options.Validate();
@@ -151,7 +151,7 @@ namespace EMBC.Responders.API
                         .RequireClaim("user_role")
                         .RequireClaim("user_team");
                 });
-                options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme);
+                options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddDistributedMemoryCache();
@@ -187,10 +187,10 @@ namespace EMBC.Responders.API
                     diagCtx.Set("User", httpCtx.User.Identity?.Name);
                     diagCtx.Set("Host", httpCtx.Request.Host);
                     diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
-                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
-                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
-                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
-                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+                    diagCtx.Set("RemoteIP", httpCtx.Connection?.RemoteIpAddress?.ToString());
+                    diagCtx.Set("ConnectionId", httpCtx?.Connection?.Id);
+                    diagCtx.Set("Forwarded", httpCtx?.Request.Headers["Forwarded"].ToString());
+                    diagCtx.Set("ContentLength", httpCtx?.Response.ContentLength);
                 };
             });
 
