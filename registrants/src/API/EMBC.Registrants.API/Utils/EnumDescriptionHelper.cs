@@ -31,8 +31,6 @@ namespace EMBC.Registrants.API.Utils
            Enum.GetNames(typeof(TEnum)).Select(e => (Enum.Parse<TEnum>(e), GetEnumDescription(typeof(TEnum), e)));
 
         private static string GetEnumDescription(Type enumType, string value) =>
-            (enumType.GetField(value.ToString())
-                .GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[])
-                .FirstOrDefault().Description;
+            (enumType.GetField(value)?.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[])?.FirstOrDefault()?.Description;
     }
 }

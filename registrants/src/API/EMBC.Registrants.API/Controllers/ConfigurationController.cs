@@ -194,8 +194,8 @@ namespace EMBC.Responders.API.Controllers
     public class OutageInformation
     {
         public string Content { get; set; }
-        public DateTime OutageStartDate { get; set; }
-        public DateTime OutageEndDate { get; set; }
+        public DateTime? OutageStartDate { get; set; }
+        public DateTime? OutageEndDate { get; set; }
     }
 
     public class TimeoutConfiguration

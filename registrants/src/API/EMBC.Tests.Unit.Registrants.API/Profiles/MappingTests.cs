@@ -35,12 +35,12 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.ShouldNotBeNull();
 
             profile.Id.ShouldBe(registrantProfile.UserId);
-            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer);
-            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer);
-            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer);
-            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question);
-            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question);
-            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question);
+            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer);
+            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer);
+            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer);
+            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question);
+            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question);
+            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question);
             profile.RestrictedAccess.ShouldBe(registrantProfile.RestrictedAccess);
 
             profile.PersonalDetails.DateOfBirth.ShouldBe(registrantProfile.DateOfBirth);
@@ -80,12 +80,12 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             registrantProfile.UserId.ShouldBe(profile.Id);
             //registrantProfile.SecretPhrase.ShouldBe(profile.SecretPhrase);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question);
+            registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer);
+            registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer);
+            registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer);
+            registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question);
+            registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question);
+            registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question);
             registrantProfile.RestrictedAccess.ShouldBe(profile.RestrictedAccess);
 
             registrantProfile.FirstName.ShouldBe(profile.PersonalDetails.FirstName);
