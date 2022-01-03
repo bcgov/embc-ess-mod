@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,7 +29,6 @@ namespace EMBC.Tests.Integration.ESS
              {
                  webBuilder.ConfigureServices((ctx, services) =>
                  {
-                     //ConfigureServices(services, ctx.Configuration, ctx.HostingEnvironment);
                      services.AddHttpContextAccessor();
                      services.AddDataProtection();
                      services.AddDistributedMemoryCache();
@@ -50,6 +50,7 @@ namespace EMBC.Tests.Integration.ESS
 #else
         protected const string RequiresVpnConnectivity = null;
 #endif
+        protected readonly ITestOutputHelper output;
 
         public IServiceProvider Services { get; }
 
@@ -57,9 +58,16 @@ namespace EMBC.Tests.Integration.ESS
         {
             var factory = fixture.WithWebHostBuilder(builder =>
            {
-               builder.UseSerilog((ctx, cfg) => { cfg.WriteTo.TestOutput(output); });
+               builder.UseSerilog((ctx, cfg) =>
+               {
+                   cfg
+                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
+                    .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
+                    .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
+               });
            });
             this.Services = factory.Server.Services.CreateScope().ServiceProvider;
+            this.output = output;
         }
     }
 }

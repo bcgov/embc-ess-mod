@@ -17,6 +17,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Resources.Cases.Evacuations;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -37,7 +38,6 @@ namespace EMBC.ESS.Resources.Cases
             {
                 nameof(SubmitEvacuationFileNeedsAssessment) => await HandleSubmitEvacuationFileNeedsAssessment((SubmitEvacuationFileNeedsAssessment)cmd),
                 nameof(LinkEvacuationFileRegistrant) => await HandleLinkEvacuationFileRegistrant((LinkEvacuationFileRegistrant)cmd),
-                nameof(DeleteEvacuationFile) => await HandleDeleteEvacuationFile((DeleteEvacuationFile)cmd),
                 nameof(SaveEvacuationFileNote) => await HandleSaveEvacuationFileNote((SaveEvacuationFileNote)cmd),
                 nameof(SaveEvacuationFileSupportCommand) => await HandleSaveSupportsToEvacuationFileCommand((SaveEvacuationFileSupportCommand)cmd),
                 nameof(VoidEvacuationFileSupportCommand) => await HandleVoidEvacuationFileSupportCommand((VoidEvacuationFileSupportCommand)cmd),
@@ -78,11 +78,6 @@ namespace EMBC.ESS.Resources.Cases
         private async Task<ManageCaseCommandResult> HandleLinkEvacuationFileRegistrant(LinkEvacuationFileRegistrant cmd)
         {
             return new ManageCaseCommandResult { Id = await evacuationRepository.LinkRegistrant(cmd.FileId, cmd.RegistrantId, cmd.HouseholdMemberId) };
-        }
-
-        private async Task<ManageCaseCommandResult> HandleDeleteEvacuationFile(DeleteEvacuationFile cmd)
-        {
-            return new ManageCaseCommandResult { Id = await evacuationRepository.Delete(cmd.Id) };
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFileNote(SaveEvacuationFileNote cmd)

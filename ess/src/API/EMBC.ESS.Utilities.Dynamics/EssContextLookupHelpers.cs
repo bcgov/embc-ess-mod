@@ -22,19 +22,19 @@ namespace EMBC.ESS.Utilities.Dynamics
 {
     public static class EssContextLookupHelpers
     {
-        public static era_provinceterritories LookupStateProvinceByCode(this EssContext context, string code)
+        public static era_provinceterritories? LookupStateProvinceByCode(this EssContext context, string code)
         {
             if (string.IsNullOrEmpty(code)) return null;
             return context.era_provinceterritorieses.Where(p => p.era_code == code).FirstOrDefault();
         }
 
-        public static era_country LookupCountryByCode(this EssContext context, string code)
+        public static era_country? LookupCountryByCode(this EssContext context, string code)
         {
             if (string.IsNullOrEmpty(code)) return null;
             return context.era_countries.Where(p => p.era_countrycode == code).FirstOrDefault();
         }
 
-        public static era_jurisdiction LookupJurisdictionByCode(this EssContext context, string code)
+        public static era_jurisdiction? LookupJurisdictionByCode(this EssContext context, string code)
         {
             if (string.IsNullOrEmpty(code) || !Guid.TryParse(code, out var parsedCode)) return null;
             return context.era_jurisdictions.Where(p => p.era_jurisdictionid == parsedCode).FirstOrDefault();

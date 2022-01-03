@@ -1,4 +1,6 @@
 ﻿using EMBC.Utilities.Hosting;
 
-var host = new Host();
-return await host.Run();
+var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.ESS";
+
+var host = new Host(appName);
+return await host.Run(assembliesPrefix: "EMBC");

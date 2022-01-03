@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Cache;
 using IdentityModel.Client;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace EMBC.ESS.Utilities.Dynamics
@@ -34,28 +35,31 @@ namespace EMBC.ESS.Utilities.Dynamics
         private readonly ISecurityTokenProvider internalSecurityProvider;
         private readonly ICache cache;
 
-        public CachedADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsOptions> options, ICache cache)
+        public CachedADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsOptions> options, ICache cache, ILoggerFactory loggerFactory)
         {
-            internalSecurityProvider = new ADFSSecurityTokenProvider(httpClientFactory, options);
+            internalSecurityProvider = new ADFSSecurityTokenProvider(httpClientFactory, options, loggerFactory.CreateLogger<ADFSSecurityTokenProvider>());
             this.cache = cache;
         }
 
-        public async Task<string> AcquireToken() => await cache.GetOrSet(cacheKey, () => internalSecurityProvider.AcquireToken(), DateTimeOffset.UtcNow.AddMinutes(1));
+        public async Task<string> AcquireToken() => await cache.GetOrSet(cacheKey, () => internalSecurityProvider.AcquireToken(), TimeSpan.FromMinutes(2));
     }
 
     internal class ADFSSecurityTokenProvider : ISecurityTokenProvider
     {
         private readonly DynamicsOptions options;
         private readonly IHttpClientFactory httpClientFactory;
+        private readonly ILogger<ADFSSecurityTokenProvider> logger;
 
-        public ADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsOptions> options)
+        public ADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsOptions> options, ILogger<ADFSSecurityTokenProvider> logger)
         {
             this.options = options.Value;
             this.httpClientFactory = httpClientFactory;
+            this.logger = logger;
         }
 
         public async Task<string> AcquireToken()
         {
+            logger.LogDebug("Aquiring ADFS token from {0}", options.Adfs.OAuth2TokenEndpoint.AbsoluteUri);
             using var httpClient = httpClientFactory.CreateClient("adfs_token");
 
             var response = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
@@ -71,6 +75,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             if (response.IsError) throw new Exception(response.Error);
 
+            logger.LogInformation("ADFS token aquired from {0}", options.Adfs.OAuth2TokenEndpoint.AbsoluteUri);
             return response.AccessToken;
         }
     }

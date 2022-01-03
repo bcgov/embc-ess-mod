@@ -19,33 +19,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts;
+using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.ESS.Shared.Contracts.Profile;
 using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Utilities.Cache;
 
 namespace EMBC.ESS.Managers.Admin
 {
     public class AdminManager
     {
-        private readonly Resources.Team.ITeamRepository teamRepository;
+        private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly IMapper mapper;
+        private readonly ICache cache;
+        private readonly IMetadataRepository metadataRepository;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
         private static TeamMemberStatus[] activeAndInactiveStatus = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive };
+        private static TimeSpan cacheEntryLifetime = TimeSpan.FromHours(6);
 
-        public AdminManager(Resources.Team.ITeamRepository teamRepository, ISupplierRepository supplierRepository, IMapper mapper)
+        public AdminManager(
+            ITeamRepository teamRepository,
+            ISupplierRepository supplierRepository,
+            IMapper mapper,
+            ICache cache,
+            IMetadataRepository metadataRepository)
         {
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.mapper = mapper;
+            this.cache = cache;
+            this.metadataRepository = metadataRepository;
         }
 
         public async Task<TeamsQueryResponse> Handle(TeamsQuery cmd)
         {
-            var teams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId, AssignedCommunityCode = cmd.CommunityCode })).Items;
+            var teams = (await teamRepository.QueryTeams(new TeamQuery { Id = cmd.TeamId, AssignedCommunityCode = cmd.CommunityCode })).Items;
 
             return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Team.Team>>(teams) };
         }
@@ -107,7 +120,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(AssignCommunitiesToTeamCommand cmd)
         {
-            var allTeams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery())).Items;
+            var allTeams = (await teamRepository.QueryTeams(new TeamQuery())).Items;
             var team = allTeams.SingleOrDefault(t => t.Id == cmd.TeamId);
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
 
@@ -125,7 +138,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(UnassignCommunitiesFromTeamCommand cmd)
         {
-            var team = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId })).Items.SingleOrDefault();
+            var team = (await teamRepository.QueryTeams(new TeamQuery { Id = cmd.TeamId })).Items.SingleOrDefault();
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
 
             team.AssignedCommunities = team.AssignedCommunities.Where(c => !cmd.Communities.Contains(c.Code));
@@ -209,7 +222,7 @@ namespace EMBC.ESS.Managers.Admin
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
 
-            if (supplier.Team != null && supplier.Team.Id != null) supplier.Team.Id = null;
+            supplier.Team.Id = null;
             supplier.SharedWithTeams = Array.Empty<Resources.Suppliers.Team>();
             var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
 
@@ -260,7 +273,7 @@ namespace EMBC.ESS.Managers.Admin
             return res.SupplierId;
         }
 
-        public async Task<string> Handle(AddSupplierSharedWithTeamCommand cmd)
+        public async Task<string> Handle(ShareSupplierWithTeamCommand cmd)
         {
             var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
             {
@@ -277,7 +290,7 @@ namespace EMBC.ESS.Managers.Admin
             return res.SupplierId;
         }
 
-        public async Task<string> Handle(RemoveSupplierSharedWithTeamCommand cmd)
+        public async Task<string> Handle(UnshareSupplierWithTeamCommand cmd)
         {
             var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
             {
@@ -292,5 +305,92 @@ namespace EMBC.ESS.Managers.Admin
 
             return res.SupplierId;
         }
+
+        public async Task<CountriesQueryResponse> Handle(CountriesQuery _)
+        {
+            var countries = await cache.GetOrSet("metadata:countries", GetCountries, cacheEntryLifetime);
+
+            return new CountriesQueryResponse { Items = countries };
+        }
+
+        private async Task<IEnumerable<Shared.Contracts.Metadata.Country>> GetCountries() =>
+            mapper.Map<IEnumerable<Shared.Contracts.Metadata.Country>>(await metadataRepository.GetCountries());
+
+        public async Task<StateProvincesQueryResponse> Handle(StateProvincesQuery req)
+        {
+            var stateProvinces = await cache.GetOrSet("metadata:stateprovinces", GetStateProvinces, cacheEntryLifetime);
+
+            if (!string.IsNullOrEmpty(req.CountryCode))
+            {
+                stateProvinces = stateProvinces.Where(sp => sp.CountryCode == req.CountryCode);
+            }
+
+            return new StateProvincesQueryResponse { Items = stateProvinces };
+        }
+
+        private async Task<IEnumerable<Shared.Contracts.Metadata.StateProvince>> GetStateProvinces() =>
+            mapper.Map<IEnumerable<Shared.Contracts.Metadata.StateProvince>>(await metadataRepository.GetStateProvinces());
+
+        public async Task<CommunitiesQueryResponse> Handle(CommunitiesQuery req)
+        {
+            var communities = await cache.GetOrSet("metadata:communities", GetCommunities, cacheEntryLifetime);
+            if (!string.IsNullOrEmpty(req.CountryCode))
+            {
+                communities = communities.Where(c => c.CountryCode == req.CountryCode);
+            }
+            if (!string.IsNullOrEmpty(req.StateProvinceCode))
+            {
+                communities = communities.Where(c => c.StateProvinceCode == req.StateProvinceCode);
+            }
+
+            if (req.Types != null && req.Types.Any())
+            {
+                var types = req.Types.Select(t => t.ToString()).ToArray();
+                communities = communities.Where(c => types.Any(t => t == c.Type.ToString()));
+            }
+
+            return new CommunitiesQueryResponse { Items = communities };
+        }
+
+        private async Task<IEnumerable<Shared.Contracts.Metadata.Community>> GetCommunities() =>
+            mapper.Map<IEnumerable<Shared.Contracts.Metadata.Community>>(await metadataRepository.GetCommunities());
+
+        public async Task<SecurityQuestionsQueryResponse> Handle(SecurityQuestionsQuery _)
+        {
+            var questions = await cache.GetOrSet("metadata:securityquestions", GetSecyurityQuestions, cacheEntryLifetime);
+
+            return new SecurityQuestionsQueryResponse { Items = questions };
+        }
+
+        private async Task<IEnumerable<string>> GetSecyurityQuestions() => await metadataRepository.GetSecurityQuestions();
+
+        public async Task<OutageQueryResponse> Handle(Shared.Contracts.Metadata.OutageQuery query)
+        {
+            var outages = await cache.GetOrSet("metadata:outage", () => GetPlannedOutages(query.PortalType), TimeSpan.FromMinutes(1));
+
+            return new OutageQueryResponse { OutageInfo = outages.OrderBy(o => o.OutageStartDate).FirstOrDefault() };
+        }
+
+        private async Task<IEnumerable<Shared.Contracts.Metadata.OutageInformation>> GetPlannedOutages(Shared.Contracts.Metadata.PortalType portalType) =>
+            mapper.Map<IEnumerable<Shared.Contracts.Metadata.OutageInformation>>(await metadataRepository.GetPlannedOutages(new Resources.Metadata.OutageQuery
+            {
+                DisplayDate = DateTime.UtcNow,
+                PortalType = Enum.Parse<Resources.Metadata.PortalType>(portalType.ToString())
+            }));
+
+        public async Task Handle(RefreshMetadataCacheCommand cmd)
+        {
+            var cacheDuration = cmd.CacheDuration;
+            await cache.Set("metadata:countries", GetCountries, cacheDuration);
+            await cache.Set("metadata:stateprovinces", GetStateProvinces, cacheDuration);
+            await cache.Set("metadata:communities", GetCommunities, cacheDuration);
+            await cache.Set("metadata:securityquestions", GetSecyurityQuestions, cacheDuration);
+            await cache.Set("metadata:outage", GetSecyurityQuestions, cacheDuration);
+        }
+    }
+
+    public class RefreshMetadataCacheCommand
+    {
+        public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(6);
     }
 }

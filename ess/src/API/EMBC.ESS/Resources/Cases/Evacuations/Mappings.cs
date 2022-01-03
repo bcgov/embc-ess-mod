@@ -363,12 +363,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Member = 174360001
     }
 
-    public enum EvacuationFileStatus
-    {
-        Active = 1,
-        Inactive = 2
-    }
-
     public class SecurityPhraseConverter : IValueConverter<string, string>
     {
         public string Convert(string sourceMember, ResolutionContext context)

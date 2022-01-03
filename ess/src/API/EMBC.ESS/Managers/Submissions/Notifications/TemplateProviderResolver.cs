@@ -17,7 +17,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Managers.Submissions.Notifications
 {
     public interface ITemplateProviderResolver
     {

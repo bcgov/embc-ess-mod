@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Admin;
-using EMBC.ESS.Managers.Metadata;
 using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
@@ -11,7 +10,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.ESS.Admin
+namespace EMBC.Tests.Integration.ESS.Managers
 {
     public class AdminTests : DynamicsWebAppTestBase
     {
@@ -26,7 +25,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         public async Task CanCreateMember()
         {
             var now = DateTime.UtcNow;
-            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+            now = new DateTime(now.Ticks - now.Ticks % TimeSpan.TicksPerSecond, DateTimeKind.Unspecified);
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
             var newMember = new TeamMember
@@ -82,7 +81,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         public async Task CanDeactivateTeamMember()
         {
             var now = DateTime.UtcNow;
-            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+            now = new DateTime(now.Ticks - now.Ticks % TimeSpan.TicksPerSecond, DateTimeKind.Unspecified);
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
             var newMember = new TeamMember
@@ -115,7 +114,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         public async Task CanDeleteTeamMember()
         {
             var now = DateTime.UtcNow;
-            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+            now = new DateTime(now.Ticks - now.Ticks % TimeSpan.TicksPerSecond, DateTimeKind.Unspecified);
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
 
             var newMember = new TeamMember
@@ -233,8 +232,8 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanAssignCommunitiesToTeam()
         {
-            var metadataManager = Services.GetRequiredService<MetadataManager>();
-            var communities = (await metadataManager.Handle(new CommunitiesQuery())).Items;
+            var manager = Services.GetRequiredService<AdminManager>();
+            var communities = (await manager.Handle(new CommunitiesQuery())).Items;
 
             var assignedCommunities = (await adminManager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 
@@ -313,7 +312,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         public async Task Create_Suppliers_ReturnsSupplierId()
         {
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
-            Supplier supplier = new Supplier
+            var supplier = new Supplier
             {
                 Name = $"{uniqueSignature}-Test Supplier",
                 LegalName = $"{uniqueSignature}-Test Supplier Ltd.",
@@ -436,7 +435,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
                 updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldBe(null);
             }
 
-            await adminManager.Handle(new AddSupplierSharedWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
+            await adminManager.Handle(new ShareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
 
             var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
@@ -459,11 +458,55 @@ namespace EMBC.Tests.Integration.ESS.Admin
                 updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldNotBe(null);
             }
 
-            await adminManager.Handle(new RemoveSupplierSharedWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
+            await adminManager.Handle(new UnshareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
 
             var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
             twiceUpdatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldBe(null);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanGetCountries()
+        {
+            var manager = Services.GetRequiredService<AdminManager>();
+
+            var reply = await manager.Handle(new CountriesQuery());
+
+            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
+            reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanGetStateProvinces()
+        {
+            var manager = Services.GetRequiredService<AdminManager>();
+
+            var reply = await manager.Handle(new StateProvincesQuery());
+
+            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
+            reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanGetCommunities()
+        {
+            var manager = Services.GetRequiredService<AdminManager>();
+
+            var reply = await manager.Handle(new CommunitiesQuery());
+
+            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
+            reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanGetSecurityQuestions()
+        {
+            var manager = Services.GetRequiredService<AdminManager>();
+
+            var reply = await manager.Handle(new SecurityQuestionsQuery());
+
+            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
+            reply.Items.ShouldAllBe(c => !string.IsNullOrEmpty(c));
         }
     }
 }

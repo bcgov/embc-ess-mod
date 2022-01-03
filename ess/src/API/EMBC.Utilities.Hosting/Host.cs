@@ -40,13 +40,35 @@ using StackExchange.Redis;
 
 namespace EMBC.Utilities.Hosting
 {
+    /// <summary>
+    /// A generic web host that support api, gRPC self discovered endpoints.
+    /// The host will:
+    /// - configure distributed cache (in memory or redis)
+    /// - configure data protection (on disk or redis)
+    /// - Serilog console and Splunk (if configured)
+    /// - health check endpoints
+    /// - AutoMapper helper services
+    /// - default routing and controllers
+    /// - discover and invoke IConfigureComponentServices, IConfigureComponentPipeline, IHaveGrpcServices implementations in dependant assemblies
+    /// </summary>
     public class Host
     {
         private const string HealthCheckReadyTag = "ready";
         private const string HealthCheckAliveTag = "alive";
-        private const string logOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext} {Message:lj}{NewLine}{Exception}";
+        private const string logOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}";
+        private readonly string appName;
 
-        public async Task<int> Run()
+        public Host(string appName)
+        {
+            this.appName = appName;
+        }
+
+        /// <summary>
+        /// Build and run the host
+        /// </summary>
+        /// <param name="assembliesPrefix">a prefix to detect which assemblies to scan for configuration dependencies</param>
+        /// <returns>awaitable Task that returns the status code of the host on exit</returns>
+        public async Task<int> Run(string? assembliesPrefix = null)
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
@@ -55,7 +77,12 @@ namespace EMBC.Utilities.Hosting
                .WriteTo.Console(outputTemplate: logOutputTemplate)
                .CreateBootstrapLogger();
 
-            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "EMBC.*.dll", SearchOption.TopDirectoryOnly)
+            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "*.dll", SearchOption.TopDirectoryOnly)
+                .Where(assembly =>
+                {
+                    var assemblyName = Path.GetFileName(assembly);
+                    return !assemblyName.StartsWith("System.") && !assemblyName.StartsWith("Microsoft.") && (string.IsNullOrEmpty(assembliesPrefix) || assemblyName.StartsWith(assembliesPrefix));
+                })
                 .Select(assembly => Assembly.LoadFrom(assembly))
                 .ToArray();
 
@@ -125,7 +152,7 @@ namespace EMBC.Utilities.Hosting
         {
             var logger = new SerilogLoggerFactory(Log.Logger).CreateLogger<Host>();
 
-            var appName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name ?? null!);
+            logger.LogInformation("Starting service configuration of {appName}", appName);
 
             var redisConnectionString = configuration.GetValue("REDIS_CONNECTIONSTRING", string.Empty);
             if (!string.IsNullOrEmpty(redisConnectionString))
@@ -162,6 +189,8 @@ namespace EMBC.Utilities.Hosting
         {
             var logger = app.ApplicationServices.GetRequiredService<ILogger<Host>>();
 
+            logger.LogInformation("Starting configuration of {appName}", appName);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -171,6 +200,7 @@ namespace EMBC.Utilities.Hosting
                 opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
+                    diagCtx.Set("App", appName);
                     diagCtx.Set("User", httpCtx.User.Identity?.Name);
                     diagCtx.Set("Host", httpCtx.Request.Host);
                     diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());

@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Cases
+namespace EMBC.ESS.Resources.Cases.Evacuations
 {
     public interface IEvacuationRepository
     {
@@ -29,8 +29,6 @@ namespace EMBC.ESS.Resources.Cases
         Task<string> Update(EvacuationFile evacuationFile);
 
         Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId);
-
-        Task<string> Delete(string fileId);
 
         Task<string> CreateNote(string fileId, Note note);
 

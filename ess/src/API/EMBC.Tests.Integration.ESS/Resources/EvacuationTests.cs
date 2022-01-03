@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Resources.Contacts;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -237,17 +236,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 pet.Quantity.ShouldBe(originalPet.Quantity);
                 pet.Type.ShouldBe(originalPet.Type);
                 pet.Id.ShouldNotBeNullOrEmpty();
-            }
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanDeleteEvacuationFiles()
-        {
-            var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = TestContactId })).Items;
-
-            foreach (var file in files.Where(f => f.Id != TestEssFileNumber).OrderByDescending(f => f.CreatedOn).Skip(10))
-            {
-                await caseRepository.ManageCase(new DeleteEvacuationFile { Id = file.Id });
             }
         }
 

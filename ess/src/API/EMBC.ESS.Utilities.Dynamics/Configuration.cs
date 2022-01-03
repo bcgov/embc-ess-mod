@@ -14,15 +14,15 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System.Linq;
+using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Resiliency;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
 
 namespace EMBC.ESS.Utilities.Dynamics
@@ -34,55 +34,95 @@ namespace EMBC.ESS.Utilities.Dynamics
             var services = configurationServices.Services;
             var configuration = configurationServices.Configuration;
 
+            var options = configuration.GetSection("Dynamics").Get<DynamicsOptions>();
+
             services.Configure<DynamicsOptions>(opts => configuration.GetSection("Dynamics").Bind(opts));
 
             services
                 .AddHttpClient("adfs_token")
-                .AddCircuitBreaker((sp, e) =>
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
-                    var logger = sp.GetRequiredService<ILogger>();
-                    logger.LogError(e, "adfs_token break");
-                },
-                sp =>
-                {
-                    var logger = sp.GetRequiredService<ILogger>();
-                    logger.LogInformation("adfs_token reset");
+                    new HttpClientCircuitBreakerPolicy
+                    {
+                        NumberOfErrors = options.Adfs.CircuitBreakerNumberOfErrors,
+                        ResetDuration = TimeSpan.FromSeconds(options.Adfs.CircuitBreakerResetInSeconds),
+                        OnBreak = (sp, t, e) => { OnBreak("adfs_token", sp, t, e); },
+                        OnReset = sp => { OnReset("adfs_token", sp); }
+                    },
+                    new HttpClientBulkheadIsolationPolicy
+                    {
+                        MaxParallelization = 1
+                    },
+                    new HttpClientTimeoutPolicy
+                    {
+                        Timeout = TimeSpan.FromSeconds(options.Adfs.TimeoutInSeconds),
+                        OnTimeout = (sp, t, e) => { OnTimeout("adfs_token", sp, t, e); }
+                    }
                 });
 
             services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
 
             services
                 .AddODataClient("dynamics")
-                .ConfigureODataClient(client =>
-                {
-                    client.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
-                    client.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
-                    client.Configurations.RequestPipeline.OnEntryStarting((arg) =>
-                    {
-                        // do not send reference properties and null values to Dynamics
-                        arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
-                    });
-                })
+                .AddODataClientHandler<DynamicsODataClientHandler>()
                 .AddHttpClient()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
                 .ConfigureHttpClient((sp, c) =>
                 {
                     var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
                     var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                     c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
                 })
-                .AddCircuitBreaker((sp, e) =>
+                .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
-                    var logger = sp.GetRequiredService<ILogger>();
-                    logger.LogError(e, "dynamics break");
-                },
-                sp =>
-                {
-                    var logger = sp.GetRequiredService<ILogger>();
-                    logger.LogInformation("dynamics reset");
-                });
+                    new HttpClientCircuitBreakerPolicy
+                    {
+                        NumberOfErrors = options.CircuitBreakerNumberOfErrors,
+                        ResetDuration = TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
+                        OnBreak = (sp, t, e) => { OnBreak("dynamics", sp, t, e); },
+                        OnReset = sp => { OnReset("dynamics", sp); }
+                    },
+                    new HttpClientRetryPolicy
+                    {
+                        NumberOfRetries = options.NumberOfRetries,
+                        WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
+                        OnRetry = (sp, t, e) => { OnRetry("dynamics", sp, t, e); }
+                    },
+                    new HttpClientTimeoutPolicy
+                    {
+                        Timeout = TimeSpan.FromSeconds(options.TimeoutInSeconds),
+                        OnTimeout = (sp, t, e) => { OnTimeout("dynamics", sp, t, e); }
+                    }
+                })
+                ;
 
-            services.AddTransient<IEssContextFactory, EssContextFactory>();
+            services.AddScoped<IEssContextFactory, EssContextFactory>();
             services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
+        }
+
+        private static void OnBreak(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        {
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogError("BREAK: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+        }
+
+        private static void OnReset(string source, IServiceProvider sp)
+        {
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogInformation("RESET");
+        }
+
+        private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        {
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogWarning("RETRY: {0} {1}: {2}", time, exception?.GetType().FullName, exception?.Message);
+        }
+
+        private static void OnTimeout(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        {
+            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            logger.LogWarning("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
         }
     }
 }

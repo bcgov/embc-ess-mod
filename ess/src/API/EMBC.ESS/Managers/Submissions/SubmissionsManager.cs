@@ -22,6 +22,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
+using EMBC.ESS.Managers.Submissions.Notifications;
 using EMBC.ESS.Managers.Submissions.PrintReferrals;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
@@ -106,7 +107,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
         {
-            var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
+            var file = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(cmd.File);
             var contact = mapper.Map<Contact>(cmd.SubmitterProfile);
 
             file.PrimaryRegistrantId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
@@ -128,7 +129,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
-            var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
+            var file = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(cmd.File);
 
             var query = new RegistrantQuery();
             if (Guid.TryParse(file.PrimaryRegistrantId, out var _))
@@ -148,7 +149,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (!string.IsNullOrEmpty(file.Id))
             {
                 var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = file.Id })).Items.SingleOrDefault();
-                var existingFile = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
+                var existingFile = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(caseRecord);
 
                 if (!string.IsNullOrEmpty(existingFile.TaskId) && !existingFile.TaskId.Equals(file.TaskId))
                     throw new BusinessLogicException($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
@@ -197,7 +198,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.HouseholdMemberId)) throw new ArgumentNullException("HouseholdMemberId is required");
 
             var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
-            var file = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
+            var file = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(caseRecord);
             var member = file.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
             if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
 
@@ -267,8 +268,8 @@ namespace EMBC.ESS.Managers.Submissions
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
                 LinkedRegistrantId = query.LinkedRegistrantId,
                 NeedsAssessmentId = query.NeedsAssessmentId,
-                IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.EvacuationFileStatus>(s.ToString())).ToArray()
-            })).Items.Cast<Resources.Cases.EvacuationFile>();
+                IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.Evacuations.EvacuationFileStatus>(s.ToString())).ToArray()
+            })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>();
 
             var files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
 
@@ -385,7 +386,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 FileId = query.FileId,
                 MaskSecurityPhrase = false
-            })).Items.Cast<Resources.Cases.EvacuationFile>().FirstOrDefault();
+            })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().FirstOrDefault();
 
             if (file == null) throw new NotFoundException($"Evacuation File {query.FileId} not found", query.FileId);
 
@@ -406,7 +407,7 @@ namespace EMBC.ESS.Managers.Submissions
                 var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
                 {
                     FileId = cmd.FileId,
-                })).Items.Cast<Resources.Cases.EvacuationFile>().SingleOrDefault();
+                })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault();
 
                 if (file == null) throw new NotFoundException($"Evacuation File {cmd.FileId} not found", cmd.FileId);
 
@@ -418,7 +419,7 @@ namespace EMBC.ESS.Managers.Submissions
                     throw new BusinessLogicException($"The note may be edited only by the user who created it withing a 24 hour period.");
             }
 
-            var note = mapper.Map<Resources.Cases.Note>(cmd.Note);
+            var note = mapper.Map<Resources.Cases.Evacuations.Note>(cmd.Note);
             var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
             return id;
         }
@@ -431,7 +432,7 @@ namespace EMBC.ESS.Managers.Submissions
             var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
             {
                 FileId = cmd.FileId,
-            })).Items.Cast<Resources.Cases.EvacuationFile>().SingleOrDefault();
+            })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault();
             if (file == null) throw new NotFoundException($"Evacuation File {cmd.FileId} not found", cmd.FileId);
 
             var note = file.Notes.Where(n => n.Id == cmd.NoteId).SingleOrDefault();
@@ -465,7 +466,7 @@ namespace EMBC.ESS.Managers.Submissions
             var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Cases.Support>>(cmd.supports)
+                Supports = mapper.Map<IEnumerable<Resources.Cases.Evacuations.Support>>(cmd.supports)
             })).Id.Split(';');
 
             var referralPrintId = await printingRepository.Manage(new SavePrintRequest
@@ -494,7 +495,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 FileId = cmd.FileId,
                 SupportId = cmd.SupportId,
-                VoidReason = Enum.Parse<Resources.Cases.SupportVoidReason>(cmd.VoidReason.ToString())
+                VoidReason = Enum.Parse<Resources.Cases.Evacuations.SupportVoidReason>(cmd.VoidReason.ToString())
             })).Id;
             return id;
         }
@@ -525,7 +526,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
             //load the file
-            var file = mapper.Map<Shared.Contracts.Submissions.EvacuationFile>((await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = printRequest.FileId })).Items.Cast<Resources.Cases.EvacuationFile>().SingleOrDefault());
+            var file = mapper.Map<Shared.Contracts.Submissions.EvacuationFile>((await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = printRequest.FileId })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault());
             if (file == null) throw new NotFoundException($"Evacuation file {printRequest.FileId} not found", printRequest.Id);
             await evacuationFileLoader.Load(file);
 

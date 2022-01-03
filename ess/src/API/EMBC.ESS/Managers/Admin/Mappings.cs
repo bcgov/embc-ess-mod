@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using AutoMapper;
+using EMBC.ESS.Resources.Metadata;
 
 namespace EMBC.ESS.Managers.Admin
 {
@@ -62,6 +63,13 @@ namespace EMBC.ESS.Managers.Admin
 
             CreateMap<Shared.Contracts.Suppliers.Address, Resources.Suppliers.Address>()
                 ;
+
+            CreateMap<Shared.Contracts.Metadata.Country, Country>().ReverseMap();
+            CreateMap<Shared.Contracts.Metadata.StateProvince, StateProvince>().ReverseMap();
+            CreateMap<Shared.Contracts.Metadata.Community, Community>()
+                .ForMember(c => c.DistrictCode, opts => opts.Ignore())
+                .ReverseMap();
+            CreateMap<OutageInformation, Shared.Contracts.Metadata.OutageInformation>();
         }
     }
 }

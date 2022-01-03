@@ -10,7 +10,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.ESS.Submissions
+namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 {
     public class RegistrantTests : DynamicsWebAppTestBase
     {
@@ -55,7 +55,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 ? TestData.OtherCommunityId
                 : TestData.TeamCommunityId;
 
-            string currentCountry = registrant.PrimaryAddress.Country;
+            var currentCountry = registrant.PrimaryAddress.Country;
             string newCountry;
             string newProvince;
             string newCity;
@@ -81,11 +81,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrant.PrimaryAddress.City = newCity;
             registrant.PrimaryAddress.PostalCode = newPostalCode;
 
-            string newEmail = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
+            var newEmail = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
             registrant.Email = newEmail;
 
             var currentPhone = registrant.Phone;
-            string newPhone = currentPhone == "7789877897" ? "6045557777" : "7789998888";
+            var newPhone = currentPhone == "7789877897" ? "6045557777" : "7789998888";
             registrant.Phone = newPhone;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
@@ -157,7 +157,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus });
 
-            var updatedRegistrant = (await GetRegistrantByUserId(TestData.ContactUserId));
+            var updatedRegistrant = await GetRegistrantByUserId(TestData.ContactUserId);
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.VerifiedUser.ShouldBe(newStatus);
@@ -169,7 +169,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var expectedNumberOfCorrectAnswers = 3;
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
 
-            List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            var securityQuestions = new List<SecurityQuestion>();
             securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerChanged = true });
             securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerChanged = true });
             securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerChanged = true });
@@ -192,7 +192,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var expectedNumberOfCorrectAnswers = 2;
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
 
-            List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            var securityQuestions = new List<SecurityQuestion>();
             securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerChanged = true });
             securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerChanged = true });
             securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerChanged = true });

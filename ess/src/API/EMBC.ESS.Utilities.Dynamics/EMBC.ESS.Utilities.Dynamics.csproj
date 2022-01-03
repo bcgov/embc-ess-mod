@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Company>Province of British Columbia</Company>
         <Authors>Quartech Systems Limited</Authors>
@@ -31,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="IdentityModel" Version="5.2.0" />
+        <PackageReference Include="IdentityModel" Version="6.0.0" />
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.*" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.*" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.*" />

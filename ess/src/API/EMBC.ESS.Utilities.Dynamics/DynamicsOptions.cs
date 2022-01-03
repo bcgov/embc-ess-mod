@@ -20,19 +20,27 @@ namespace EMBC.ESS.Utilities.Dynamics
 {
     public class DynamicsOptions
     {
-        public Uri DynamicsApiEndpoint { get; set; }
-        public Uri DynamicsApiBaseUri { get; set; }
-        public AdfsOptions Adfs { get; set; }
+        public Uri DynamicsApiEndpoint { get; set; } = null!;
+        public Uri DynamicsApiBaseUri { get; set; } = null!;
+        public int TimeoutInSeconds { get; set; } = 29;
+        public int CircuitBreakerNumberOfErrors { get; set; } = 5;
+        public int CircuitBreakerResetInSeconds { get; set; } = 5;
+        public AdfsOptions Adfs { get; set; } = new AdfsOptions();
+        public int NumberOfRetries { get; set; } = 3;
+        public int RetryWaitTimeInSeconds { get; set; } = 5;
     }
 
     public class AdfsOptions
     {
-        public Uri OAuth2TokenEndpoint { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-        public string ServiceAccountDomain { get; set; }
-        public string ServiceAccountName { get; set; }
-        public string ServiceAccountPassword { get; set; }
-        public string ResourceName { get; set; }
+        public Uri OAuth2TokenEndpoint { get; set; } = null!;
+        public string ClientId { get; set; } = string.Empty;
+        public string ClientSecret { get; set; } = string.Empty;
+        public string ServiceAccountDomain { get; set; } = string.Empty;
+        public string ServiceAccountName { get; set; } = string.Empty;
+        public string ServiceAccountPassword { get; set; } = string.Empty;
+        public string ResourceName { get; set; } = string.Empty;
+        public int TimeoutInSeconds { get; set; } = 5;
+        public int CircuitBreakerNumberOfErrors { get; set; } = 2;
+        public int CircuitBreakerResetInSeconds { get; set; } = 5;
     }
 }
