@@ -41,6 +41,13 @@ const routes: Routes = [
       import('./feature-components/invite-error/invite-error.module').then(
         (m) => m.InviteErrorModule
       )
+  },
+  {
+    path: 'outage',
+    loadChildren: () =>
+      import('./feature-components/outage/outage.module').then(
+        (m) => m.OutageModule
+      )
   }
 ];
 
