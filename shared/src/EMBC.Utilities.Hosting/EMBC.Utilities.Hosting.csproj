@@ -22,11 +22,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+        <AdditionalFiles Include="../stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig" />
+        <EditorConfigFiles Include="../.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 
     <ItemGroup>
