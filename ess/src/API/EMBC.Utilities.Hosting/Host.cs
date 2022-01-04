@@ -49,8 +49,7 @@ namespace EMBC.Utilities.Hosting
     /// - health check endpoints
     /// - AutoMapper helper services
     /// - default routing and controllers
-    /// - discover and invoke IConfigureComponentServices, IConfigureComponentPipeline, IHaveGrpcServices implementations in dependant assemblies
-    /// testing symlink changes, now with /J
+    /// - discover and invoke IConfigureComponentServices, IConfigureComponentPipeline, IHaveGrpcServices implementations in dependant assemblies    
     /// </summary>
     public class Host
     {
