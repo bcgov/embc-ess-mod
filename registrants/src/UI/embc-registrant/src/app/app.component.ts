@@ -6,6 +6,7 @@ import { BootstrapService } from './core/services/bootstrap.service';
 import { LoginService } from './core/services/login.service';
 import { ConfigService } from './core/services/config.service';
 import { EnvironmentInformation } from './core/model/environment-information.model';
+import { OutageService } from './feature-components/outage/outage.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit {
     private alertService: AlertService,
     private bootstrapService: BootstrapService,
     private loginService: LoginService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    public outageService: OutageService
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -40,5 +42,12 @@ export class AppComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+
+    this.outageService.outagePolling();
+  }
+
+  public closeOutageBanner($event: boolean): void {
+    this.outageService.setShowOutageBanner($event);
+    this.outageService.closeBannerbyUser = !$event;
   }
 }

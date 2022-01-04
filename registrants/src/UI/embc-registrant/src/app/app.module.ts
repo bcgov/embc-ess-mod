@@ -10,9 +10,11 @@ import { ApiModule } from './core/api/api.module';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { OutageBannerComponent } from './sharedModules/outage-components/outage-banner/outage-banner.component';
+import { OutageDialogComponent } from './sharedModules/outage-components/outage-dialog/outage-dialog.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, OutageBannerComponent, OutageDialogComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
