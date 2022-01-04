@@ -16,15 +16,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="./Dispatcher.proto" GrpcServices="Server" />
+        <Protobuf Include="Dispatcher.proto" GrpcServices="Server" />
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="../stylecop.json" Link="stylecop.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <EditorConfigFiles Include="../.editorconfig" Link=".editorconfig" />
+        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
     <ItemGroup>
