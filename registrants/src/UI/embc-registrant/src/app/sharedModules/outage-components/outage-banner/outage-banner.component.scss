@@ -1,0 +1,24 @@
+.outage-banner {
+  background-color: #f2f2f2;
+  text-align: center;
+}
+
+.dynamic-text {
+  color: red;
+  padding: 20px 0px 10px 100px;
+}
+.close-image img:last-child {
+  display: none;
+}
+
+.close-image:hover img:last-child {
+  display: inline;
+}
+
+.close-image:hover img:first-child {
+  display: none;
+}
+
+.close-button-style {
+  float: right;
+}

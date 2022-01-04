@@ -9,6 +9,11 @@
       : { padding: '0px' }
   "
 >
+  <app-outage-banner
+    *ngIf="outageService.getShowOutageBanner() | async"
+    (closeEvent)="closeOutageBanner($event)"
+  ></app-outage-banner>
+
   <app-environment-banner
     [environment]="environment"
     *ngIf="environment !== null && environment !== undefined"
