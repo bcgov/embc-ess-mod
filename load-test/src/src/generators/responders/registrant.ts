@@ -10,7 +10,7 @@ export function generateRegistrant(registrantDetails: PersonDetails,communities:
         personalDetails: registrantDetails,
         contactDetails: {
             email: faker.internet.email(),
-            phone: faker.phone.phoneNumber(),
+            phone: faker.phone.phoneNumber("###-###-####"),
         },
         primaryAddress: generateAddress(communities),
         mailingAddress: generateAddress(communities),

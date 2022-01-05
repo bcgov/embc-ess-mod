@@ -2,9 +2,11 @@ import { sleep } from 'k6';
 import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
-import { generateRegistrant } from './generators/responders/registration';
+import { generateRegistrant } from './generators/responders/registrant';
 import { generatePersonDetails } from './generators/responders/person-details';
 import { generateEvacuationFile } from './generators/responders/evacuation-file';
+import { generateSupports } from './generators/responders/supports';
+import { generateNote } from './generators/responders/notes';
 
 const baseUrl = 'https://dev1-embc-responders.apps.silver.devops.gov.bc.ca';
 const TASK_ID = 'UNIT-TEST-ACTIVE-TASK';
@@ -28,27 +30,28 @@ const urls = {
   task_search: `${baseUrl}/api/Tasks/${TASK_ID}`,
   registrations_search: `${baseUrl}/api/Registrations`,
   ess_wizard: `${baseUrl}/ess-wizard/evacuee-profile/collection-notice`,
-  submit_registrant: `${baseUrl}/api/Registrations/registrants`,
-  submit_file: `${baseUrl}/api/Registrations/files`,
+  registrant: `${baseUrl}/api/Registrations/registrants`,
+  file: `${baseUrl}/api/Registrations/files`,
+  task_suppliers: `${baseUrl}/api/Tasks/${TASK_ID}/suppliers`,
 };
 
 const loginFailRate = new Rate('failed to login');
 const formFailRate = new Rate('failed form fetches');
 const submitFailRate = new Rate('failed form submits');
 const submissionTime = new Trend('submission_time');
+const printRequestTime = new Trend('print_request_time');
 const loadTime = new Trend('load_time');
 
 export const options: Options = {
   vus: 1,
-  duration: '8s',
+  duration: '90s',
   thresholds: {
     'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
     'failed form fetches': ['rate<0.01'],
     'failed login': ['rate<0.01'],
-    // 'http_req_duration{type:submit}': ['p(100)<4000'], // threshold on submit requests only (in ms)
-    'submission_time': ['p(100)<5000'], // threshold on submit requests only (in ms)
-    'load_time': ['p(100)<4000'], // threshold on submit requests only (in ms)
-    //'http_req_duration': ['p(95)<400'] //Only 5% or less are permitted to have a request duration longer than 400ms
+    'submission_time': ['p(100)<10000'], // 10s - threshold on submit requests only (in ms)
+    'print_request_time': ['p(100)<90000'], // 90s - threshold on print requests only (in ms)
+    'load_time': ['p(100)<6000'], // 6s - threshold on submit requests only (in ms)
   }
 };
 
@@ -67,10 +70,7 @@ const getAuthToken = () => {
   if (response.status !== 200) {
     console.log(JSON.stringify(response));
   }
-  // console.log(JSON.stringify(response));
-  // console.log(JSON.parse(JSON.stringify(response)).body);
   return response.json();
-  // return JSON.parse(JSON.stringify(response)).body;
 }
 
 const getStartPage = () => {
@@ -228,7 +228,7 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   const registration = generateRegistrant(registrant, communities, security_questions);
   const payload = JSON.stringify(registration);
 
-  const response = http.post(urls.submit_registrant, payload, params);
+  const response = http.post(urls.registrant, payload, params);
   submissionTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
@@ -238,7 +238,22 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   return response.json();
 }
 
-const submitEvacuaitonFile = (token: any, registrantId: any, registrant: any, communities: any) => {
+const getRegistrant = (token: any, regRes: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const response = http.get(`${urls.registrant}/${regRes.id}`, params);
+  formFailRate.add(response.status !== 200);
+  loadTime.add(response.timings.waiting);
+  return response.json();
+}
+
+const submitEvacuationFile = (token: any, registrantId: any, registrant: any, communities: any) => {
   const params = {
     headers: {
       "accept": "application/json",
@@ -250,7 +265,99 @@ const submitEvacuaitonFile = (token: any, registrantId: any, registrant: any, co
   const evacuationFile = generateEvacuationFile(registrantId.id, registrant, communities, TASK_ID);
   const payload = JSON.stringify(evacuationFile);
 
-  const response = http.post(urls.submit_file, payload, params);
+  const response = http.post(urls.file, payload, params);
+  submissionTime.add(response.timings.waiting);
+  submitFailRate.add(response.status !== 200);
+  if (response.status !== 200) {
+    console.log(payload);
+  }
+
+  return response.json();
+}
+
+const getEvacuationFile = (token: any, fileRes: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const response = http.get(`${urls.file}/${fileRes.id}`, params);
+  formFailRate.add(response.status !== 200);
+  loadTime.add(response.timings.waiting);
+  return response.json();
+}
+
+const getTaskSuppliers = (token: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const response = http.get(urls.task_suppliers, params);
+  formFailRate.add(response.status !== 200);
+  loadTime.add(response.timings.waiting);
+  return response.json();
+}
+
+const submitSupports = (token: any, file: any, suppliers: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const supports = generateSupports(file, suppliers);
+  const payload = JSON.stringify(supports);
+
+  const response = http.post(`${urls.file}/${file.id}/supports?includeSummaryInPrintRequest=true`, payload, params);
+  submissionTime.add(response.timings.waiting);
+  submitFailRate.add(response.status !== 200);
+  if (response.status !== 200) {
+    console.log("error submitting supports");
+    console.log(payload);
+  }
+
+  return response.json();
+}
+
+const submitPrintRequest = (token: any, file: any, printRequest: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    },
+    timeout: 120000 //default timeout of 60s was often failing, so increase to 120s
+  };
+
+  const response = http.get(`${urls.file}/${file.id}/supports/print/${printRequest.printRequestId}`, params);
+  printRequestTime.add(response.timings.waiting);
+  submitFailRate.add(response.status !== 200);
+
+  // return response.html();
+}
+
+const submitFileNote = (token: any, file: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const note = generateNote();
+  const payload = JSON.stringify(note);
+
+  const response = http.post(`${urls.file}/${file.id}/notes`, payload, params);
   submissionTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
@@ -261,11 +368,9 @@ const submitEvacuaitonFile = (token: any, registrantId: any, registrant: any, co
 }
 
 export default () => {
-  const REGISTRANT = generatePersonDetails();
-
+  const registrant = generatePersonDetails();
   getStartPage();
   let token = getAuthToken();
-  console.log("got auth token");
   sleep(1);
 
   getDashboard();
@@ -280,20 +385,26 @@ export default () => {
 
   getTaskSearchPage(token);
   searchTasks(token);
-  console.log("did task search");
-
   sleep(1);
 
-  searchRegistrations(token, REGISTRANT);
-  console.log("did reg search");
-
+  searchRegistrations(token, registrant);
   getNewEvacueeWizard(token);
   let security_questions = getSecurityQuestions();
+  sleep(1);
 
-  let registrantId = submitRegistrant(token, REGISTRANT, communities, security_questions);
-  console.log("created registrant");
+  let registrantId = submitRegistrant(token, registrant, communities, security_questions);
+  getRegistrant(token, registrantId);
+  sleep(1);
 
-  let fileId = submitEvacuaitonFile(token, registrantId, REGISTRANT, communities);
-  console.log("created file");
+  let fileId = submitEvacuationFile(token, registrantId, registrant, communities);
+  let file = getEvacuationFile(token, fileId);
+  let suppliers = getTaskSuppliers(token);
+  let printRequest = submitSupports(token, file, suppliers);
+  sleep(1);
 
+  submitPrintRequest(token, file, printRequest);
+  sleep(1);
+
+  submitFileNote(token, file);
+  sleep(1);
 };
