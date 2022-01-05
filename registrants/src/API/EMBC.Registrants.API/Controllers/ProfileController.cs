@@ -36,7 +36,6 @@ namespace EMBC.Registrants.API.Controllers
 {
     [Route("api/profiles")]
     [ApiController]
-    [Authorize]
     public class ProfileController : ControllerBase
     {
         private readonly IHostEnvironment env;
@@ -68,7 +67,6 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = currentUserId;
@@ -88,7 +86,6 @@ namespace EMBC.Registrants.API.Controllers
         /// <returns>true if existing user, false if a new user</returns>
         [HttpGet("current/exists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize]
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
             var userId = currentUserId;
@@ -105,7 +102,6 @@ namespace EMBC.Registrants.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
             profile.Id = currentUserId;
@@ -124,7 +120,6 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current/conflicts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
         {
             var userId = currentUserId;

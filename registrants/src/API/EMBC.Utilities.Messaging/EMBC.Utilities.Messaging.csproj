@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Nullable>disable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Company>Province of British Columbia</Company>
         <Authors>Quartech Systems Limited</Authors>
@@ -12,12 +13,10 @@
         <RepositoryType>GIT</RepositoryType>
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Remove="appsettings.Development.json" />
-      <Content Remove="appsettings.json" />
+        <Protobuf Include="Dispatcher.proto" GrpcServices="Server" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,16 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-        <PackageReference Include="Grpc.AspNetCore.Server" Version="2.41.0" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />
-        <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-        <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
-        <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
-        <PackageReference Include="Serilog.Exceptions" Version="8.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-        <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -82,7 +82,6 @@ namespace EMBC.Registrants.API.Controllers
         /// <returns>List of EvacuationFile</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
             var userId = currentUserId;
@@ -98,7 +97,6 @@ namespace EMBC.Registrants.API.Controllers
         /// <returns>List of EvacuationFile</returns>
         [HttpGet("past")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetPastEvacuations()
         {
             var userId = currentUserId;
@@ -117,7 +115,6 @@ namespace EMBC.Registrants.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<RegistrationResult>> UpsertEvacuationFile(EvacuationFile evacuationFile)
         {
             if (evacuationFile == null)

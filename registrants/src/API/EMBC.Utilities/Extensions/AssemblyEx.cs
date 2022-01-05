@@ -14,10 +14,23 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using EMBC.Utilities.Hosting;
+using System.IO;
+using System.Reflection;
 
-var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.ESS.Registrants";
-
-var host = new Host(appName);
-return await host.Run(assembliesPrefix: "EMBC");
+namespace EMBC.ESS.Utilities.Extensions
+{
+    public static class AssemblyEx
+    {
+        public static string GetManifestResourceString(this Assembly assembly, string manifestName)
+        {
+            using (var stream = assembly.GetManifestResourceStream(manifestName))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    string template = reader.ReadToEnd();
+                    return template;
+                }
+            }
+        }
+    }
+}

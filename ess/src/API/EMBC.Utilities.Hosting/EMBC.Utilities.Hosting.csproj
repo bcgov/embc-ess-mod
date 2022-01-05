@@ -10,7 +10,6 @@
         <PackageLicenseExpression></PackageLicenseExpression>
         <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
         <RepositoryType>GIT</RepositoryType>
-        <UserSecretsId>0d3cba7f-28c0-495e-a236-85cae997fa6f</UserSecretsId>
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <Nullable>enable</Nullable>
