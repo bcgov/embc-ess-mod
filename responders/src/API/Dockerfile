@@ -9,6 +9,10 @@ ARG GITHUB_NUGET_USERNAME
 ARG GITHUB_NUGET_PAT
 WORKDIR /src
 COPY ["EMBC.Responders.API/EMBC.Responders.API.csproj", "EMBC.Responders.API/"]
+COPY ["EMBC.ESS.Shared.Contracts/EMBC.ESS.Shared.Contracts.csproj", "EMBC.ESS.Shared.Contracts/"]
+COPY ["EMBC.Utilities.Messaging/EMBC.Utilities.Messaging.csproj", "EMBC.Utilities.Messaging/"]
+COPY ["EMBC.Utilities.Hosting/EMBC.Utilities.Hosting.csproj", "EMBC.Utilities.Hosting/"]
+COPY ["EMBC.Utilities/EMBC.Utilities.csproj", "EMBC.Utilities/"]
 COPY ["EMBC.Tests.Unit.Responders.API/EMBC.Tests.Unit.Responders.API.csproj", "EMBC.Tests.Unit.Responders.API/"]
 COPY ["EMBC.Responders.sln", "stylecop.json", ".editorconfig", "./"]
 

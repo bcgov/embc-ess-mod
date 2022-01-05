@@ -15,9 +15,26 @@
 // -------------------------------------------------------------------------
 
 using System;
-using EMBC.Utilities.Hosting;
+using EMBC.Utilities.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.ESS.Responders";
+namespace EMBC.Utilities.Messaging
+{
+    public class Configuration : IConfigureComponentServices, IHaveGrpcServices
+    {
+        public void ConfigureServices(ConfigurationServices configurationServices)
+        {
+            configurationServices.Services.AddGrpc(opts =>
+            {
+                opts.EnableDetailedErrors = true;
+            });
+            configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
+            configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
+        }
 
-var host = new Host(appName);
-return await host.Run(assembliesPrefix: "EMBC");
+        public Type[] GetGrpcServiceTypes()
+        {
+            return new[] { typeof(DispatcherService) };
+        }
+    }
+}

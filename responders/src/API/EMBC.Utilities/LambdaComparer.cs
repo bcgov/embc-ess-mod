@@ -15,9 +15,24 @@
 // -------------------------------------------------------------------------
 
 using System;
-using EMBC.Utilities.Hosting;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
-var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.ESS.Responders";
+namespace EMBC.Utilities
+{
+    public class LambdaComparer<T> : EqualityComparer<T>
+    {
+        private readonly Func<T, T, bool> comparerFunc;
+        private readonly Func<T, int> hashFunc;
 
-var host = new Host(appName);
-return await host.Run(assembliesPrefix: "EMBC");
+        public LambdaComparer(Func<T, T, bool> comparerFunc, Func<T, int> hashFunc)
+        {
+            this.comparerFunc = comparerFunc;
+            this.hashFunc = hashFunc;
+        }
+
+        public override bool Equals([AllowNull] T x, [AllowNull] T y) => comparerFunc(x, y);
+
+        public override int GetHashCode([DisallowNull] T obj) => hashFunc(obj);
+    }
+}

@@ -14,10 +14,28 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using EMBC.Utilities.Hosting;
+namespace EMBC.ESS.Shared.Contracts.Reports
+{
+    public class EvacueeReportQuery : Query<ReportQueryResult>
+    {
+        public string TaskNumber { get; set; }
+        public string FileId { get; set; }
+        public string EvacuatedFrom { get; set; }
+        public string EvacuatedTo { get; set; }
+        public bool IncludePersonalInfo { get; set; }
+    }
 
-var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.ESS.Responders";
+    public class SupportReportQuery : Query<ReportQueryResult>
+    {
+        public string TaskNumber { get; set; }
+        public string FileId { get; set; }
+        public string EvacuatedFrom { get; set; }
+        public string EvacuatedTo { get; set; }
+    }
 
-var host = new Host(appName);
-return await host.Run(assembliesPrefix: "EMBC");
+    public class ReportQueryResult
+    {
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
+    }
+}

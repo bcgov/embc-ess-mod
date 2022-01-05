@@ -1,0 +1,26 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package EMBC.Utilities.Messaging;
+
+message RequestEnvelope {
+    string CorrelationId = 1;
+    string Type = 10;
+    google.protobuf.Value Content = 11;
+}
+
+message ReplyEnvelope {
+    string CorrelationId = 1;
+    string Type = 10;
+    google.protobuf.Value Content = 11;
+    bool Empty = 12;
+    bool Error = 30;
+    string ErrorType = 31;
+    string ErrorMessage = 32;
+    string ErrorDetails = 33;
+}
+
+service Dispatcher {
+    rpc Dispatch (RequestEnvelope) returns (ReplyEnvelope);
+}
