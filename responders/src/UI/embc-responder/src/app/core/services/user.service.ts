@@ -31,12 +31,17 @@ export class UserService {
             MemberRole[response.role]
           );
           const taskNumber =
-            this.cacheService.get('loggedInTask') === null || undefined
+            this.cacheService.get('loggedInTaskNumber') === null || undefined
               ? null
-              : this.cacheService.get('loggedInTask');
+              : this.cacheService.get('loggedInTaskNumber');
+          const taskStatus =
+            this.cacheService.get('loggedInTaskStatus') === null || undefined
+              ? null
+              : this.cacheService.get('loggedInTaskStatus');
           this.currentProfileVal = {
             ...response,
             taskNumber,
+            taskStatus,
             claims: [...userClaims]
           };
           return this.currentProfileVal;
@@ -58,13 +63,19 @@ export class UserService {
     );
   }
 
-  public updateTaskNumber(taskNumber: string): void {
-    this.cacheService.set('loggedInTask', taskNumber);
-    this.currentProfileVal = { ...this.currentProfileVal, taskNumber };
+  public updateTaskNumber(taskNumber: string, taskStatus: string): void {
+    this.cacheService.set('loggedInTaskNumber', taskNumber);
+    this.cacheService.set('loggedInTaskStatus', taskStatus);
+    this.currentProfileVal = {
+      ...this.currentProfileVal,
+      taskNumber,
+      taskStatus
+    };
   }
 
   public clearAppStorage(): void {
-    this.cacheService.remove('loggedInTask');
+    this.cacheService.remove('loggedInTaskNumber');
+    this.cacheService.remove('loggedInTaskStatus');
     this.cacheService.remove('memberRoles');
     this.cacheService.remove('memberLabels');
     this.cacheService.remove('allTeamCommunityList');
@@ -86,5 +97,6 @@ export class UserService {
 
 export interface LoggedInUserProfile extends UserProfile {
   taskNumber?: string;
+  taskStatus?: string;
   claims: ClaimModel[];
 }
