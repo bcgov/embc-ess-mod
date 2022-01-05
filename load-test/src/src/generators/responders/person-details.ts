@@ -1,5 +1,5 @@
 import * as faker from 'faker/locale/en_CA';
-import { PersonDetails } from '../api/models';
+import { PersonDetails } from '../../api/responders/models';
 
 export function generatePersonDetails(): PersonDetails {
     let genders = ['Female', 'Male', 'X'];

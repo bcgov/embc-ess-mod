@@ -1,4 +1,4 @@
-import { HouseholdMember, PersonDetails } from '../api/models';
+import { HouseholdMember, PersonDetails } from '../../api/registrants/models';
 import { generatePersonDetails } from './person-details';
 
 export function generateHouseholdMember(primaryRegistrant?: PersonDetails): HouseholdMember {

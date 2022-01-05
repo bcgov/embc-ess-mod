@@ -1,4 +1,4 @@
-import { Pet } from '../api/models';
+import { Pet } from '../../api/registrants/models';
 import { getRandomInt } from '../../utilities';
 
 export function generatePet(type: string): Pet {

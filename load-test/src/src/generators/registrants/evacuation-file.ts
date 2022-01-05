@@ -1,5 +1,5 @@
 import * as faker from 'faker/locale/en_CA';
-import { CommunityCode, EvacuationFile, PersonDetails } from '../api/models';
+import { CommunityCode, EvacuationFile, PersonDetails } from '../../api/registrants/models';
 import { generateAddress } from './address';
 import { generateNeedsAssessment } from './needs-assessment';
 

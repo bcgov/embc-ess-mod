@@ -29,6 +29,7 @@
     "pretestResponder": "webpack",
     "testRegistrant": "k6 run ./dist/registrant-portal-test.js",
     "testResponder": "k6 run ./dist/responder-portal-test.js",
-    "gen-reg-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/registrants/api --ignoreUnusedModels false"
+    "gen-registrants-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/registrants/api --ignoreUnusedModels false",
+    "gen-responders-api": "ng-openapi-gen -i https://dev1-embc-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/responders/api --ignoreUnusedModels false"
   }
 }

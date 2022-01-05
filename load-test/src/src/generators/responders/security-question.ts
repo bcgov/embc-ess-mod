@@ -1,5 +1,5 @@
 import * as faker from 'faker/locale/en_CA';
-import { SecurityQuestion } from '../api/models/security-question';
+import { SecurityQuestion } from '../../api/responders/models';
 
 export function generateSecurityQuestions(questions: string[]): Array<SecurityQuestion> {
     return [{

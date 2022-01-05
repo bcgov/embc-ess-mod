@@ -1,11 +1,11 @@
 import * as faker from 'faker/locale/en_CA';
-import { PersonDetails, NeedsAssessment, HouseholdMember, InsuranceOption, NeedsAssessmentType, Pet } from '../api/models';
+import { PersonDetails, NeedsAssessment, InsuranceOption, NeedsAssessmentType, Pet, EvacuationFileHouseholdMember } from '../../api/responders/models';
 import { getRandomInt } from '../../utilities';
 import { generateHouseholdMember } from './household-member';
 import { generatePet } from './pet';
 
 export function generateNeedsAssessment(registrantDetails: PersonDetails): NeedsAssessment {
-    let householdMembers: Array<HouseholdMember> = [];
+    let householdMembers: Array<EvacuationFileHouseholdMember> = [];
     let member_count = getRandomInt(0,8);
 
     //include primary registrant
@@ -25,14 +25,14 @@ export function generateNeedsAssessment(registrantDetails: PersonDetails): Needs
 
     return {
         id: null,
-        canEvacueeProvideClothing: faker.datatype.boolean(),
-        canEvacueeProvideFood: faker.datatype.boolean(),
-        canEvacueeProvideIncidentals: faker.datatype.boolean(),
-        canEvacueeProvideLodging: faker.datatype.boolean(),
-        canEvacueeProvideTransportation: faker.datatype.boolean(),
+        canProvideClothing: faker.datatype.boolean(),
+        canProvideFood: faker.datatype.boolean(),
+        canProvideIncidentals: faker.datatype.boolean(),
+        canProvideLodging: faker.datatype.boolean(),
+        canProvideTransportation: faker.datatype.boolean(),
         householdMembers: householdMembers,
-        hasPetsFood: faker.datatype.boolean(),
-        haveMedication: faker.datatype.boolean(),
+        havePetsFood: faker.datatype.boolean(),
+        haveMedicalSupplies: faker.datatype.boolean(),
         haveSpecialDiet: faker.datatype.boolean(),
         specialDietDetails: "test",
         insurance: InsuranceOption.No,
