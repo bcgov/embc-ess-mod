@@ -40,7 +40,7 @@ export class TaskDetailsComponent implements OnInit {
    * search
    */
   signInTask(): void {
-    this.userService.updateTaskNumber(this.taskNumber);
+    this.userService.updateTaskNumber(this.taskNumber, this.taskStatus);
     this.router.navigate(['/responder-access/search/evacuee']);
   }
 }
