@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.ESS.Utilities.Extensions;
 using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Contacts
@@ -53,12 +53,12 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.address2_postalcode, opts => opts.MapFrom(s => s.MailingAddress.PostalCode))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
                 .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
-                    s.MailingAddress.Country == s.PrimaryAddress.Country &&
-                    s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
-                    s.MailingAddress.Community == s.PrimaryAddress.Community &&
-                    s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
-                    s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
-                    s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
+                    s.MailingAddress.Country.Equals(s.PrimaryAddress.Country, StringComparison.OrdinalIgnoreCase) &&
+                    s.MailingAddress.StateProvince.Equals(s.PrimaryAddress.StateProvince, StringComparison.OrdinalIgnoreCase) &&
+                    s.MailingAddress.Community.Equals(s.PrimaryAddress.Community, StringComparison.OrdinalIgnoreCase) &&
+                    s.MailingAddress.PostalCode.Equals(s.PrimaryAddress.PostalCode, StringComparison.OrdinalIgnoreCase) &&
+                    s.MailingAddress.AddressLine1.Equals(s.PrimaryAddress.AddressLine1, StringComparison.OrdinalIgnoreCase) &&
+                    s.MailingAddress.AddressLine2.Equals(s.PrimaryAddress.AddressLine2, StringComparison.OrdinalIgnoreCase)))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email ?? string.Empty))
@@ -67,12 +67,12 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.era_initial, opts => opts.MapFrom(s => s.Initials))
                 .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
-                .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question))
-                .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question))
-                .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question))
+                .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 1 && !q.AnswerIsMasked, q => q.Answer)))
+                .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 2 && !q.AnswerIsMasked, q => q.Answer)))
+                .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 3 && !q.AnswerIsMasked, q => q.Answer)))
+                .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 1 && !q.AnswerIsMasked, q => q.Question)))
+                .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 2 && !q.AnswerIsMasked, q => q.Question)))
+                .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 3 && !q.AnswerIsMasked, q => q.Question)))
                 ;
 
             CreateMap<contact, Contact>()
@@ -146,7 +146,7 @@ namespace EMBC.ESS.Resources.Contacts
         public IEnumerable<SecurityQuestion> Convert(contact sourceMember, ResolutionContext context)
         {
             string mask = (string)(context.Options.Items.ContainsKey("MaskSecurityAnswers") ? context.Options.Items["MaskSecurityAnswers"] : "true");
-            bool maskSecurityAnswers = mask.ToLower().Equals("true");
+            bool maskSecurityAnswers = mask.Equals("true", StringComparison.OrdinalIgnoreCase);
             List<SecurityQuestion> ret = new List<SecurityQuestion>();
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext1) && !string.IsNullOrEmpty(sourceMember.era_securityquestion1answer))
                 ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = MaskAnswer(sourceMember.era_securityquestion1answer, maskSecurityAnswers), AnswerIsMasked = maskSecurityAnswers });
@@ -167,7 +167,7 @@ namespace EMBC.ESS.Resources.Contacts
             if (string.IsNullOrEmpty(answer))
                 return string.Empty;
             else
-                return answer.Substring(0, 1) + "***" + answer.Substring(answer.Length - 1);
+                return answer.Substring(0, 1) + "*****" + answer.Substring(answer.Length - 1);
         }
     }
 }

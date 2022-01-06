@@ -203,8 +203,13 @@ namespace EMBC.Responders.API.Controllers
     public class SecurityQuestion
     {
         public int Id { get; set; }
+
+        [Required]
         public string Question { get; set; }
+
+        [Required]
         public string Answer { get; set; }
+
         public bool AnswerChanged { get; set; }
     }
 
@@ -215,7 +220,8 @@ namespace EMBC.Responders.API.Controllers
 
     public class VerifySecurityQuestionsRequest
     {
-        public IEnumerable<SecurityQuestion> Answers { get; set; }
+        [Required]
+        public IEnumerable<SecurityQuestion> Answers { get; set; } = Array.Empty<SecurityQuestion>();
     }
 
     public class VerifySecurityQuestionsResponse
@@ -232,6 +238,7 @@ namespace EMBC.Responders.API.Controllers
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
 
+        [Required]
         public bool Restriction { get; set; }
 
         [Required]
@@ -243,9 +250,14 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public Address PrimaryAddress { get; set; }
 
+        [Required]
         public Address MailingAddress { get; set; }
+
         public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
+
+        [Required]
         public SecurityQuestion[] SecurityQuestions { get; set; }
+
         public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
     }
