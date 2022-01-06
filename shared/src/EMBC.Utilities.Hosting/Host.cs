@@ -51,6 +51,7 @@ namespace EMBC.Utilities.Hosting
     /// - AutoMapper helper services
     /// - default routing and controllers
     /// - discover and invoke IConfigureComponentServices, IConfigureComponentPipeline, IHaveGrpcServices implementations in dependant assemblies
+    /// changes in linux shared lib
     /// </summary>
     public class Host
     {
