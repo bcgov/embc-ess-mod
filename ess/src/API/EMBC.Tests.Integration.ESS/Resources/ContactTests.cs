@@ -86,9 +86,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var baseContact = queryResult.Items.First();
             baseContact.Id = null;
-            baseContact.UserId = TestContactUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
-            baseContact.FirstName += "_" + uniqueSignature;
-            baseContact.LastName += "_" + uniqueSignature;
+            baseContact.UserId = $"{TestData.TestPrefix}-{uniqueSignature}-{TestContactUserId}";
+            baseContact.FirstName = $"{TestData.TestPrefix}-{uniqueSignature}-first";
+            baseContact.LastName += $"{TestData.TestPrefix}-{uniqueSignature}-last";
 
             /* Create Contact */
             SaveContact saveContactCmd = new SaveContact
@@ -103,10 +103,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 ContactId = newContactId
             };
-            var newQueryResult = await contactRepository.QueryContact(newContactQuery);
-            var newContact = newQueryResult.Items.FirstOrDefault();
-
-            newContact.ShouldNotBeNull().Id.ShouldBe(newContactId);
+            (await contactRepository.QueryContact(newContactQuery)).Items.ShouldHaveSingleItem().Id.ShouldBe(newContactId);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
@@ -186,6 +183,69 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var savedInvite = invites.ShouldHaveSingleItem();
             savedInvite.ContactId.ShouldBe(contact.Id);
             savedInvite.InviteId.ShouldBe(inviteId);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanUpdateSecurityQuestionsWhenChanged()
+        {
+            /* Get Contact */
+            var contactQuery = new RegistrantQuery
+            {
+                UserId = TestContactUserId
+            };
+            var queryResult = await contactRepository.QueryContact(contactQuery);
+            var contact = queryResult.Items.First();
+
+            //var currentSecurityQuestions = contact.SecurityQuestions.ToArray();
+
+            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
+            contact.SecurityQuestions = new[]
+            {
+                new SecurityQuestion{ Id = 1, Question = "question1", Answer = $"answer1-{uniqueSignature}", AnswerIsMasked = false },
+                new SecurityQuestion{ Id = 2, Question = "question2", Answer = $"answer2-{uniqueSignature}", AnswerIsMasked = false },
+                new SecurityQuestion{ Id = 3, Question = "question3", Answer = $"answer3-{uniqueSignature}", AnswerIsMasked = false },
+            };
+
+            /* Update Contact */
+            var updatedContactId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
+
+            /* Get Updated Contact */
+            var updatedContact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = updatedContactId })).Items.ShouldHaveSingleItem();
+            updatedContact.SecurityQuestions.Count().ShouldBe(contact.SecurityQuestions.Count());
+            foreach (var securityQuestion in updatedContact.SecurityQuestions)
+            {
+                var modifiedSecurityQuestion = contact.SecurityQuestions.Single(sq => sq.Id == securityQuestion.Id);
+                securityQuestion.Question.ShouldBe(modifiedSecurityQuestion.Question);
+                var answer = securityQuestion.Answer;
+                securityQuestion.Answer.ShouldBe(answer.Substring(0, 1) + "*****" + answer.Substring(answer.Length - 1));
+            }
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanCreateContactWithNoSecurityQuestions()
+        {
+            /* Get Contact */
+            var contactQuery = new RegistrantQuery
+            {
+                UserId = TestContactUserId
+            };
+            var queryResult = await contactRepository.QueryContact(contactQuery);
+
+            var baseContact = queryResult.Items.First();
+
+            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
+            baseContact.Id = null;
+            baseContact.UserId = null;
+            baseContact.FirstName = $"{this.TestData.TestPrefix}-{uniqueSignature}-first";
+            baseContact.LastName += $"{this.TestData.TestPrefix}-{uniqueSignature}-last";
+            baseContact.SecurityQuestions = Array.Empty<SecurityQuestion>();
+
+            /* Update Contact */
+            var updatedContactId = (await contactRepository.ManageContact(new SaveContact { Contact = baseContact })).ContactId;
+
+            /* Get Updated Contact */
+            var updatedContact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = updatedContactId })).Items.ShouldHaveSingleItem();
+            updatedContact.SecurityQuestions.Count().ShouldBe(0);
         }
     }
 }
