@@ -20,10 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="..\.editorconfig" Link=".editorconfig" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Handlebars.Net" Version="2.0.10" />
         <PackageReference Include="MailKit" Version="3.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

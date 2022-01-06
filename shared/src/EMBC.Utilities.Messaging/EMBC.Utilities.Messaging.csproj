@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Dispatcher.proto" GrpcServices="Server" />
+        <Protobuf Include="./Dispatcher.proto" GrpcServices="Server" />
     </ItemGroup>
 
     <ItemGroup>
