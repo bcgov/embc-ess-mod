@@ -17,6 +17,10 @@ export class HeaderComponent implements OnInit {
       ? `Logged in to task #${this.profile.taskNumber}`
       : `Not logged in to a task`;
   }
+
+  public get taskStatus(): string {
+    return this.profile.taskStatus;
+  }
   public get teamName(): string {
     return this.profile.teamName;
   }

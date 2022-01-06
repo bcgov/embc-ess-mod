@@ -31,12 +31,12 @@ export class WizardActivateGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const loggedInTask = this.cacheService.get('loggedInTask');
+    const loggedInTaskNumber = this.cacheService.get('loggedInTaskNumber');
     const wizardType = this.evacueeSessionService.getWizardType();
     const registrantProfileId = this.evacueeSessionService.profileId;
 
     if (wizardType === WizardType.NewRegistration) {
-      if (this.isNewRegistrationAllowed(loggedInTask)) {
+      if (this.isNewRegistrationAllowed(loggedInTaskNumber)) {
         this.evacueeSessionService.profileId = null;
         this.evacueeSessionService.essFileNumber = null;
         this.wizardAdapterService.stepCreateProfileFromSearch();
@@ -82,10 +82,10 @@ export class WizardActivateGuard implements CanActivate {
     }
   }
 
-  private isNewRegistrationAllowed(loggedInTask: string): boolean {
+  private isNewRegistrationAllowed(loggedInTaskNumber: string): boolean {
     return (
-      loggedInTask !== null &&
-      loggedInTask !== undefined &&
+      loggedInTaskNumber !== null &&
+      loggedInTaskNumber !== undefined &&
       this.evacueeSearchService?.evacueeSearchContext
         ?.evacueeSearchParameters !== null &&
       this.evacueeSearchService?.evacueeSearchContext

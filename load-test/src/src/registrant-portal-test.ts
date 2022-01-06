@@ -3,8 +3,8 @@ import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 
-import { generateAnonymousRegistration } from './registrants/generators/registration';
-import { generateEvacuationFile } from './registrants/generators/evacuation-file';
+import { generateAnonymousRegistration } from './generators/registrants/registration';
+import { generateEvacuationFile } from './generators/registrants/evacuation-file';
 
 const baseUrl = 'https://dev1-era-registrants.apps.silver.devops.gov.bc.ca';
 const urls = {
@@ -183,9 +183,7 @@ export default () => {
   getProvinces();
   getCountries();
   let security_questions = getSecurityQuestions();
-
   sleep(2);
-
   submitAnonymousRegistration(communities, security_questions);
   /* ---------- */
 
