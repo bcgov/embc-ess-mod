@@ -18,4 +18,4 @@ jobs:
 
       - name: Build image
         working-directory: ./registrants/src/API
-        run: tar -czh . | docker build --tag $IMAGE_NAME
+        run: tar -czh . | docker build --tag $IMAGE_NAME -
