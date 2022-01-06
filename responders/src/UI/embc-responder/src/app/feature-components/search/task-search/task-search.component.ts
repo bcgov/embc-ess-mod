@@ -56,13 +56,13 @@ export class TaskSearchComponent implements OnInit {
     this.isSubmitted = !this.isSubmitted;
     this.taskSearchService
       .searchTask(this.taskSearchForm.get('taskNumber').value)
-      .subscribe(
-        (result) => {
+      .subscribe({
+        next: (result) => {
           this.router.navigate(['/responder-access/search/task-details'], {
             state: { essTask: result }
           });
         },
-        (error) => {
+        error: (error) => {
           if (error?.status && error?.status === 404) {
             this.router.navigate(['/responder-access/search/task-details'], {
               state: {
@@ -79,6 +79,6 @@ export class TaskSearchComponent implements OnInit {
             this.alertService.setAlert('danger', globalConst.taskSearchError);
           }
         }
-      );
+      });
   }
 }
