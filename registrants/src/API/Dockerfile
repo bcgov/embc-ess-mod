@@ -16,7 +16,7 @@ COPY ["EMBC.Utilities/EMBC.Utilities.csproj", "EMBC.Utilities/"]
 COPY ["EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj", "EMBC.Tests.Unit.Registrants.API/"]
 COPY ["EMBC.Registrants.sln", "stylecop.json", ".editorconfig", "./"]
 
-RUN dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username "${GITHUB_NUGET_USERNAME}" --password "${GITHUB_NUGET_PAT}" --store-password-in-clear-text
+# RUN dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username "${GITHUB_NUGET_USERNAME}" --password "${GITHUB_NUGET_PAT}" --store-password-in-clear-text
 
 RUN dotnet restore .
 COPY . .
