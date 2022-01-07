@@ -1,12 +1,25 @@
 <div class="container container-frame">
   <div class="content-container">
+    <ng-container *ngIf="showDataEntryComponent">
+      <app-data-entry
+        (showDataEntryComponent)="changeDataEntryComponent($event)"
+        (showIDPhotoComponent)="changeVerifyIdComponent($event)"
+      ></app-data-entry>
+    </ng-container>
+
     <ng-container *ngIf="showPhotoIDComponent">
       <app-evacuee-id-verify
         (showIDPhotoComponent)="changeVerifyIdComponent($event)"
       ></app-evacuee-id-verify>
     </ng-container>
 
-    <ng-container *ngIf="!showPhotoIDComponent && !showResultsComponent">
+    <ng-container
+      *ngIf="
+        !showDataEntryComponent &&
+        !showResultsComponent &&
+        !showPhotoIDComponent
+      "
+    >
       <app-evacuee-name-search
         (showResultsComponent)="changeResultsComponent($event)"
       ></app-evacuee-name-search>

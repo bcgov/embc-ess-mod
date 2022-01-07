@@ -11,6 +11,7 @@ import * as globalConst from '../../../core/services/global-constants';
 })
 export class EvacueeSearchService {
   private searchContext: EvacueeSearchContextModel;
+  private paperBasedVal: boolean;
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
 
@@ -32,6 +33,13 @@ export class EvacueeSearchService {
       ...searchContext
     };
     this.cacheService.set('evacueeSearchContext', this.searchContext);
+  }
+
+  public get paperBased(): boolean {
+    return this.paperBasedVal;
+  }
+  public set paperBased(value: boolean) {
+    this.paperBasedVal = value;
   }
 
   get supportCategory(): Code[] {
@@ -63,20 +71,20 @@ export class EvacueeSearchService {
   public getCategoryList(): void {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportCategory' })
-      .subscribe(
-        (categories: Code[]) => {
+      .subscribe({
+        next: (categories: Code[]) => {
           this.supportCategory = categories.filter(
             (category) => category.description !== null
           );
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.supportCategoryListError
           );
         }
-      );
+      });
   }
 
   public getSubCategoryList(): void {
@@ -96,5 +104,10 @@ export class EvacueeSearchService {
           );
         }
       );
+  }
+
+  public clearEvacueeSearch(): void {
+    this.evacueeSearchContext = undefined;
+    this.paperBased = undefined;
   }
 }

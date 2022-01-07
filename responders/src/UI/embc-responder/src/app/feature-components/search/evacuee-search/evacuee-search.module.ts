@@ -12,6 +12,7 @@ import { EvacueeSearchResultsComponent } from './evacuee-search-results/evacuee-
 import { EssFilesResultsComponent } from './ess-files-results/ess-files-results.component';
 import { ProfileResultsComponent } from './profile-results/profile-results.component';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+import { DataEntryComponent } from './data-entry/data-entry.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
     EvacueeNameSearchComponent,
     EvacueeSearchResultsComponent,
     EssFilesResultsComponent,
-    ProfileResultsComponent
+    ProfileResultsComponent,
+    DataEntryComponent
   ],
   imports: [
     CommonModule,

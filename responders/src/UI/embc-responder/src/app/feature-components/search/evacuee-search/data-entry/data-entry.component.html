@@ -1,0 +1,77 @@
+<div class="row heading-container container-frame">
+  <div class="col-md-12">
+    <span class="page-heading">Evacuee Search & Registration</span>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-md-8">
+    <mat-card>
+      <p class="heading">
+        Are you doing <b>data entry</b> for a paper ESS File?
+      </p>
+
+      <form [formGroup]="dataEntryForm">
+        <mat-radio-group
+          aria-labelledby="paperBased-radio-group-label"
+          formControlName="paperBased"
+          class="primary-radio-group"
+          required
+        >
+          <mat-radio-button
+            class="primary-radio-button"
+            [value]="true"
+            [checked]="paperBased"
+          >
+            <span class="highlight">Yes</span>
+          </mat-radio-button>
+          <mat-radio-button
+            class="primary-radio-button"
+            [value]="false"
+            [disabled]="paperBased"
+          >
+            <span class="highlight">No</span>
+          </mat-radio-button>
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              dataEntryFormControl?.paperBased?.touched &&
+              dataEntryFormControl?.paperBased?.invalid &&
+              dataEntryFormControl?.paperBased?.hasError('required')
+            "
+          >
+            A selected option is required</mat-error
+          >
+        </mat-radio-group>
+      </form>
+
+      <br />
+      <div class="row">
+        <div class="col-md-4">
+          <button
+            class="button-p submit"
+            type="button"
+            mat-button
+            (click)="next()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </mat-card>
+    <br />
+  </div>
+  <div class="col-md-3">
+    <mat-card class="tips-card">
+      <div>
+        <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+        <span class="tips-heading"><b>Tips: </b>Data Entry</span>
+      </div>
+      <p class="tips-info">
+        If you have signed in to an expired task number you will only be able to
+        do data entry for a paper ESS File.
+      </p>
+      <br />
+    </mat-card>
+  </div>
+</div>
