@@ -267,41 +267,42 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class EvacuationFile
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
+        public string? PaperFileNumber { get; set; }
 
         [Required]
-        public string PrimaryRegistrantId { get; set; }
+        public string PrimaryRegistrantId { get; set; } = null!;
 
-        public string PrimaryRegistrantFirstName { get; set; }
-        public string PrimaryRegistrantLastName { get; set; }
-
-        [Required]
-        public Address EvacuatedFromAddress { get; set; }
+        public string PrimaryRegistrantFirstName { get; set; } = null!;
+        public string PrimaryRegistrantLastName { get; set; } = null!;
 
         [Required]
-        public string RegistrationLocation { get; set; }
+        public Address EvacuatedFromAddress { get; set; } = null!;
 
         [Required]
-        public NeedsAssessment NeedsAssessment { get; set; }
+        public string RegistrationLocation { get; set; } = null!;
 
-        public IEnumerable<Note> Notes { get; set; }
+        [Required]
+        public NeedsAssessment NeedsAssessment { get; set; } = null!;
+
+        public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
         public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
 
-        public string SecurityPhrase { get; set; }
-        public bool SecurityPhraseEdited { get; set; }
+        public string? SecurityPhrase { get; set; }
+        public bool? SecurityPhraseEdited { get; set; } = false;
 
         public bool? IsRestricted { get; set; }
         public EvacuationFileStatus? Status { get; set; }
         public DateTime? EvacuationFileDate { get; set; }
-        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
+        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
 
         [Required]
-        public EvacuationFileTask Task { get; set; }
+        public EvacuationFileTask Task { get; set; } = null!;
     }
 
     public class EvacuationFileSummary
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
         public EvacuationFileStatus Status { get; set; }
         public EvacuationFileTask Task { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -313,9 +314,9 @@ namespace EMBC.Responders.API.Controllers
     public class EvacuationFileTask
     {
         [Required]
-        public string TaskNumber { get; set; }
+        public string TaskNumber { get; set; } = null!;
 
-        public string CommunityCode { get; set; }
+        public string CommunityCode { get; set; } = null!;
         public DateTime From { get; set; }
         public DateTime To { get; set; }
     }
@@ -325,26 +326,27 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class NeedsAssessment
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
-        public string ReviewingTeamMemberId { get; set; }
-        public string ReviewingTeamMemberDisplayName { get; set; }
+        public string ReviewingTeamMemberId { get; set; } = null!;
+        public string ReviewingTeamMemberDisplayName { get; set; } = null!;
 
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public string EvacuationImpact { get; set; }
-        public string EvacuationExternalReferrals { get; set; }
-        public string PetCarePlans { get; set; }
-        public string HouseHoldRecoveryPlan { get; set; }
-        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
+        public string? EvacuationImpact { get; set; }
+        public string? EvacuationExternalReferrals { get; set; }
+        public string? PetCarePlans { get; set; }
+        public string? HouseHoldRecoveryPlan { get; set; }
+
+        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; } = Array.Empty<ReferralServices>();
 
         [Required]
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
 
         public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
+        public string? SpecialDietDetails { get; set; }
         public bool TakeMedication { get; set; }
         public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
@@ -354,7 +356,7 @@ namespace EMBC.Responders.API.Controllers
         public bool? CanProvideClothing { get; set; }
         public bool? CanProvideTransportation { get; set; }
         public bool? CanProvideIncidentals { get; set; }
-        public NeedsAssessmentType Type { get; set; }
+        public NeedsAssessmentType? Type { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -383,11 +385,14 @@ namespace EMBC.Responders.API.Controllers
     public class Note
     {
         public string Id { get; set; }
-        public string Content { get; set; }
+
+        [Required]
+        public string Content { get; set; } = null!;
+
         public DateTime AddedOn { get; set; }
-        public string CreatingTeamMemberId { get; set; }
-        public string MemberName { get; set; }
-        public string TeamName { get; set; }
+        public string CreatingTeamMemberId { get; set; } = null!;
+        public string MemberName { get; set; } = null!;
+        public string TeamName { get; set; } = null!;
         public bool IsEditable { get; set; }
         public bool IsHidden { get; set; }
     }
@@ -416,8 +421,11 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class Pet
     {
-        public string Type { get; set; }
-        public string Quantity { get; set; }
+        [Required]
+        public string Type { get; set; } = null!;
+
+        [Required]
+        public string Quantity { get; set; } = null;
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -444,7 +452,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class EvacuationFileNotesResult
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
     }
 
     public class EvacuationFileHouseholdMember
@@ -466,11 +474,12 @@ namespace EMBC.Responders.API.Controllers
 
     public class GetSecurityPhraseResponse
     {
-        public string SecurityPhrase { get; set; }
+        public string SecurityPhrase { get; set; } = null!;
     }
 
     public class VerifySecurityPhraseRequest
     {
+        [Required]
         public string Answer { get; set; }
     }
 
@@ -507,7 +516,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class RegistrantLinkRequest
     {
+        [Required]
         public string RegistantId { get; set; }
+
+        [Required]
         public string HouseholdMemberId { get; set; }
     }
 
