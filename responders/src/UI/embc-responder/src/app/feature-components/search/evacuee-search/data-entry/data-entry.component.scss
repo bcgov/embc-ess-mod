@@ -1,0 +1,95 @@
+.heading {
+    color: #234075;
+    font-size: 21px;
+    line-height: 30px;
+}
+
+.primary-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+}
+
+.primary-radio-button {
+    margin: 5px;
+}
+
+:host ::ng-deep .mat-radio-label {
+    white-space: normal;
+}
+
+.highlight {
+    font-weight: 700;
+    color: #234075;
+}
+
+.submit {
+    width: 100%;
+    font-size: 16px;
+}
+
+.tips-info {
+    color: white;
+    padding: 8px;
+    margin-top: 20px;
+}
+
+.title-p {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.adjacent-p {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.tips-heading {
+    color: white;
+    font-size: 21px;
+    margin-left: 5px;
+}
+
+.tips-card {
+    background-color: rgba(35, 64, 117, 1);
+}
+
+mat-card {
+    border: none !important;
+}
+
+.mat-expansion-panel-header, mat-expansion-panel-header.mat-expanded {
+    height: 104px;
+}
+
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover {
+    background: rgba(35, 64, 117, 1);
+}
+
+.mat-expansion-panel-header-description {
+    flex-grow: 0;
+    margin-top: 6px;
+}
+
+.tip-icon {
+    font-weight: 700;
+    font-style: normal;
+    font-size: 21px;
+    color: rgb(255, 255, 255);
+}
+
+.list-info {
+    margin-left: 15px;
+}
+
+@media (max-width: 1051px) {
+    .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .col-md-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
