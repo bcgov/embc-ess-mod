@@ -172,7 +172,6 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
-            if (cmd.Profile.SecurityQuestions.Count() > 3) throw new BusinessLogicException($"Registrant can have a max of 3 Security Questions");
             var contact = mapper.Map<Contact>(cmd.Profile);
             var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
 

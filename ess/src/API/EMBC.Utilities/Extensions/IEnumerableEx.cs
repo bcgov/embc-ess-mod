@@ -18,6 +18,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace EMBC.ESS.Utilities.Extensions
@@ -37,6 +38,14 @@ namespace EMBC.ESS.Utilities.Extensions
                             }
                         });
             await Task.WhenAll(tasks);
+        }
+
+        public static TProperty SingleOrDefaultProperty<TEntity, TProperty>(this IEnumerable<TEntity> source, Expression<Func<TEntity, TProperty>> propertyExpression) => source.SingleOrDefaultProperty(t => true, propertyExpression);
+
+        public static TProperty SingleOrDefaultProperty<TEntity, TProperty>(this IEnumerable<TEntity> source, Func<TEntity, bool> predicate, Expression<Func<TEntity, TProperty>> propertyExpression)
+        {
+            var entity = source.SingleOrDefault(predicate);
+            return entity == null ? default : propertyExpression.Compile().Invoke(entity);
         }
     }
 }
