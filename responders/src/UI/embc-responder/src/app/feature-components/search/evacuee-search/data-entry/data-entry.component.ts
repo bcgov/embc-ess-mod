@@ -17,7 +17,7 @@ export class DataEntryComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
 
   dataEntryForm: FormGroup;
-  paperBased: boolean;
+  isPaperBased: boolean;
   constructor(
     private builder: FormBuilder,
     private evacueeSearchService: EvacueeSearchService
@@ -25,9 +25,9 @@ export class DataEntryComponent implements OnInit {
 
   ngOnInit(): void {
     this.constructDataEntryForm();
-    this.paperBased = this.evacueeSearchService.paperBased;
+    this.isPaperBased = this.evacueeSearchService?.paperBased;
 
-    if (this.paperBased) {
+    if (this.isPaperBased) {
       this.dataEntryForm.get('paperBased').setValue(true);
     }
   }

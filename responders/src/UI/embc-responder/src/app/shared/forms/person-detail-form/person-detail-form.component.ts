@@ -36,7 +36,7 @@ export class PersonDetailFormComponent implements OnInit {
       this.cacheService.get('evacueeSearchContext')
     );
     this.primaryApplicantLastName =
-      mainApplicantData?.evacueeSearchParameters.lastName;
+      mainApplicantData?.evacueeSearchParameters?.lastName;
     this.sameLastNameEditForm();
   }
 
