@@ -5,6 +5,7 @@ on:
     types: [opened, reopened, edited, synchronize]
     paths:
       - "registrants/src/API/**"
+      - "shared/src/**"
       - ".github/workflows/ci-registrants-portal-api.yml"
 
 env:
@@ -18,4 +19,4 @@ jobs:
 
       - name: Build image
         working-directory: ./registrants/src/API
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg GITHUB_NUGET_USERNAME=github --build-arg GITHUB_NUGET_PAT=${{ secrets.GITHUB_TOKEN }}
+        run: tar -czh . | docker build --tag $IMAGE_NAME -

@@ -5,8 +5,6 @@ ENV ASPNETCORE_URLS=http://*:8080
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ARG GITHUB_NUGET_USERNAME
-ARG GITHUB_NUGET_PAT
 WORKDIR /src
 COPY ["EMBC.Responders.API/EMBC.Responders.API.csproj", "EMBC.Responders.API/"]
 COPY ["EMBC.ESS.Shared.Contracts/EMBC.ESS.Shared.Contracts.csproj", "EMBC.ESS.Shared.Contracts/"]

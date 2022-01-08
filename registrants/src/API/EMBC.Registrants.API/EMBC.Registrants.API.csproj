@@ -31,7 +31,6 @@
     <ItemGroup>
         <PackageReference Include="Automapper" Version="10.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-        <PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.*" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
         <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
@@ -50,6 +49,10 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>
