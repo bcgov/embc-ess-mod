@@ -337,6 +337,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             var savedFile = await GetEvacuationFileById(fileId);
             savedFile.PaperFileNumber.ShouldBe(file.PaperFileNumber);
+        }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Update_EvacuationFilePets_DoesNotCreateDuplicatePets()
