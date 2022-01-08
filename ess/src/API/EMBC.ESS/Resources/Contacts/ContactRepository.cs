@@ -70,6 +70,7 @@ namespace EMBC.ESS.Resources.Contacts
 
         private async Task<ContactCommandResult> Handle(SaveContact cmd)
         {
+            if (cmd.Contact.SecurityQuestions.Count() > 3) throw new Exception($"Registrant can have a max of 3 Security Questions");
             var contact = mapper.Map<contact>(cmd.Contact);
             var existingContact = contact.contactid.HasValue
                 ? essContext.contacts

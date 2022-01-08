@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { TaskSearchService } from '../task-search/task-search.service';
 import { EvacueeSearchService } from './evacuee-search.service';
+import * as globalConst from '../../../core/services/global-constants';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-evacuee-search',
@@ -8,12 +12,16 @@ import { EvacueeSearchService } from './evacuee-search.service';
   styleUrls: ['./evacuee-search.component.scss']
 })
 export class EvacueeSearchComponent implements OnInit {
-  showPhotoIDComponent = true;
+  showDataEntryComponent = true;
+  showPhotoIDComponent = false;
   showResultsComponent = false;
 
   constructor(
+    private userService: UserService,
     private evacueeSessionService: EvacueeSessionService,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
+    private taskSearchService: TaskSearchService,
+    private alertService: AlertService
   ) {
     this.evacueeSearchService.getCategoryList();
     this.evacueeSearchService.getSubCategoryList();
@@ -21,6 +29,15 @@ export class EvacueeSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.evacueeSessionService.clearEvacueeSession();
+    this.evacueeSearchService.clearEvacueeSearch();
+    this.checkTaskStatus(this.userService?.currentProfile?.taskNumber);
+  }
+
+  /**
+   * Receives the emitted event from data-entry child and changes the component to show
+   */
+  changeDataEntryComponent(value: boolean): void {
+    this.showDataEntryComponent = value;
   }
 
   /**
@@ -40,5 +57,19 @@ export class EvacueeSearchComponent implements OnInit {
   allowNewSearch($event: boolean): void {
     this.showPhotoIDComponent = $event;
     this.showResultsComponent = !$event;
+  }
+
+  private checkTaskStatus(taskNumber: string): void {
+    this.taskSearchService.searchTask(taskNumber).subscribe({
+      next: (result) => {
+        this.userService.updateTaskNumber(result.id, result.status);
+        this.evacueeSearchService.paperBased =
+          result.status === 'Expired' ? true : false;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.taskSearchError);
+      }
+    });
   }
 }

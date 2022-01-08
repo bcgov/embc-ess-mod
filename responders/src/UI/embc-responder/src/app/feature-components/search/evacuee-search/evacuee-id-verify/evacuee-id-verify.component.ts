@@ -18,6 +18,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
 
   idVerifyForm: FormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
+  paperBased: boolean;
 
   tipsPanel1State = false;
   tipsPanel2State = false;
@@ -32,6 +33,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
    */
   ngOnInit(): void {
     this.constructIdVerifyForm();
+    this.paperBased = this.evacueeSearchService.paperBased;
   }
 
   /**

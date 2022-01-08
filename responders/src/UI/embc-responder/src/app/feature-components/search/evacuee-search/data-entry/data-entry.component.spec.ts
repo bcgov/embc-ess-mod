@@ -2,27 +2,29 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MaterialModule } from 'src/app/material.module';
 
-import { EvacueeNameSearchComponent } from './evacuee-name-search.component';
+import { DataEntryComponent } from './data-entry.component';
 
-describe('EvacueeNameSearchComponent', () => {
-  let component: EvacueeNameSearchComponent;
-  let fixture: ComponentFixture<EvacueeNameSearchComponent>;
+describe('DataEntryComponent', () => {
+  let component: DataEntryComponent;
+  let fixture: ComponentFixture<DataEntryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacueeNameSearchComponent],
       imports: [
-        ReactiveFormsModule,
         HttpClientTestingModule,
-        RouterTestingModule
+        RouterTestingModule,
+        ReactiveFormsModule,
+        MaterialModule
       ],
+      declarations: [DataEntryComponent],
       providers: [FormBuilder]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EvacueeNameSearchComponent);
+    fixture = TestBed.createComponent(DataEntryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
