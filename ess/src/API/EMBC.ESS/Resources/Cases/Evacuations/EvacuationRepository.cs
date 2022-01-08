@@ -77,11 +77,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (currentFile == null) throw new Exception($"Evacuation file {evacuationFile.Id} not found");
 
             essContext.LoadProperty(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-
+            essContext.LoadProperty(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
             VerifyEvacuationFileInvariants(evacuationFile, currentFile);
 
-            RemovePets(currentFile);
             essContext.DetachAll();
+            RemovePets(currentFile);
 
             var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
             if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
@@ -183,11 +183,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         private void RemovePets(era_evacuationfile file)
         {
-            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
             foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
             {
+                essContext.AttachTo(nameof(essContext.era_animals), pet);
                 essContext.DeleteObject(pet);
-                essContext.DeleteLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), pet);
             }
         }
 

@@ -337,6 +337,25 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             var savedFile = await GetEvacuationFileById(fileId);
             savedFile.PaperFileNumber.ShouldBe(file.PaperFileNumber);
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task Update_EvacuationFilePets_DoesNotCreateDuplicatePets()
+        {
+            var file = await GetEvacuationFileById(TestData.EvacuationFileId);
+
+            file.NeedsAssessment.Pets = new[]
+                {
+                    new Pet{ Type = $"{TestData.TestPrefix}-dog", Quantity = "2" }
+                };
+
+            file.Id.ShouldNotBeNullOrEmpty();
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+
+            fileId.ShouldNotBeNullOrEmpty();
+            var updatedFile = await GetEvacuationFileById(fileId);
+            var pet = updatedFile.NeedsAssessment.Pets.ShouldHaveSingleItem();
+            pet.Type.ShouldBe($"{TestData.TestPrefix}-dog");
+            pet.Quantity.ShouldBe("2");
         }
     }
 }
