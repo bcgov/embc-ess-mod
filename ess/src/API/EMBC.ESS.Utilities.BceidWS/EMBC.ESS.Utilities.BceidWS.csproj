@@ -14,7 +14,7 @@
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
@@ -22,7 +22,7 @@
     <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.*" />
@@ -30,7 +30,7 @@
         <PackageReference Include="System.ServiceModel.Http" Version="4.9.0" />
         <PackageReference Include="System.ServiceModel.NetTcp" Version="4.9.0" />
         <PackageReference Include="System.ServiceModel.Security" Version="4.9.0" />
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

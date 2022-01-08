@@ -12,6 +12,7 @@ on:
       - v*
     paths:
       - "ess/src/API/**"
+      - "shared/src/**"
       - ".github/workflows/cd-ess-backend.yml"
 
 env:
@@ -34,7 +35,7 @@ jobs:
 
       - name: Build image
         working-directory: ./ess/src/API
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
+        run: tar -czh . | docker build --tag $IMAGE_NAME --cache-from=$IMAGE_ID -
 
       - name: Push image
         run: |

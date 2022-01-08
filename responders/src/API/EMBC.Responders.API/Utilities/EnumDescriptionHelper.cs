@@ -23,10 +23,10 @@ namespace EMBC.Responders.API.Utilities
 {
     public static class EnumDescriptionHelper
     {
-        public static IEnumerable<(string value, string description)> GetEnumDescriptions(Type enumType) =>
+        public static IEnumerable<(string Value, string Description)> GetEnumDescriptions(Type enumType) =>
            Enum.GetNames(enumType).Select(e => (e, GetEnumDescription(enumType, e)));
 
-        public static IEnumerable<(TEnum value, string description)> GetEnumDescriptions<TEnum>()
+        public static IEnumerable<(TEnum Value, string Description)> GetEnumDescriptions<TEnum>()
             where TEnum : struct =>
            Enum.GetNames(typeof(TEnum)).Select(e => (Enum.Parse<TEnum>(e), GetEnumDescription(typeof(TEnum), e)));
 

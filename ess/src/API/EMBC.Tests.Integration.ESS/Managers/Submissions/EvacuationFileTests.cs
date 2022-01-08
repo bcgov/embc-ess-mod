@@ -321,5 +321,22 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             var noteId = (await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note })).ShouldNotBeNull();
             (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes.Where(n => n.Id == noteId).ShouldNotBeNull();
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task SubmitNewPaperEvacuationFile_Success()
+        {
+            var file = CreateNewTestEvacuationFile(registrant);
+
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
+            file.PaperFileNumber = $"{TestData.TestPrefix}-{Guid.NewGuid().ToString().Substring(0, 4)}";
+            file.SecurityPhrase = null!;
+
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            fileId.ShouldNotBeNull();
+
+            var savedFile = await GetEvacuationFileById(fileId);
+            savedFile.PaperFileNumber.ShouldBe(file.PaperFileNumber);
+        }
     }
 }

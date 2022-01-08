@@ -14,22 +14,19 @@
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <Product>EMBC ESS</Product>
         <PackageProjectUrl>https://github.com/bcgov/embc-ess-mod</PackageProjectUrl>
-        <AssemblyVersion>1.0.71.0</AssemblyVersion>
-        <FileVersion>1.0.71.0</FileVersion>
-        <Version>1.0.71</Version>
         <AnalysisMode>Default</AnalysisMode>
     </PropertyGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+      <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig" />
+      <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
