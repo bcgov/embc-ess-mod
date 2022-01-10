@@ -17,11 +17,8 @@ export class EvacueeSearchComponent implements OnInit {
   showResultsComponent = false;
 
   constructor(
-    private userService: UserService,
     private evacueeSessionService: EvacueeSessionService,
-    private evacueeSearchService: EvacueeSearchService,
-    private taskSearchService: TaskSearchService,
-    private alertService: AlertService
+    private evacueeSearchService: EvacueeSearchService
   ) {
     this.evacueeSearchService.getCategoryList();
     this.evacueeSearchService.getSubCategoryList();
@@ -30,7 +27,7 @@ export class EvacueeSearchComponent implements OnInit {
   ngOnInit(): void {
     this.evacueeSessionService.clearEvacueeSession();
     this.evacueeSearchService.clearEvacueeSearch();
-    this.checkTaskStatus(this.userService?.currentProfile?.taskNumber);
+    this.evacueeSearchService.checkTaskStatus();
   }
 
   /**
@@ -57,19 +54,5 @@ export class EvacueeSearchComponent implements OnInit {
   allowNewSearch($event: boolean): void {
     this.showPhotoIDComponent = $event;
     this.showResultsComponent = !$event;
-  }
-
-  private checkTaskStatus(taskNumber: string): void {
-    this.taskSearchService.searchTask(taskNumber).subscribe({
-      next: (result) => {
-        this.userService.updateTaskNumber(result.id, result.status);
-        this.evacueeSearchService.paperBased =
-          result.status === 'Expired' ? true : false;
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.taskSearchError);
-      }
-    });
   }
 }

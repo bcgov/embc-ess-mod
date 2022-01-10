@@ -3,8 +3,10 @@ import { Code } from 'src/app/core/api/models';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { TaskSearchService } from '../task-search/task-search.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,9 @@ export class EvacueeSearchService {
   constructor(
     private cacheService: CacheService,
     private configService: ConfigurationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private taskSearchService: TaskSearchService,
+    private userService: UserService
   ) {}
 
   public get evacueeSearchContext(): EvacueeSearchContextModel {
@@ -36,10 +40,15 @@ export class EvacueeSearchService {
   }
 
   public get paperBased(): boolean {
-    return this.paperBasedVal;
+    return this.paperBasedVal !== undefined
+      ? this.paperBasedVal
+      : JSON.parse(this.cacheService.get('paperBased'))
+      ? JSON.parse(this.cacheService.get('paperBased'))
+      : this.checkTaskStatus();
   }
   public set paperBased(value: boolean) {
     this.paperBasedVal = value;
+    this.cacheService.set('paperBased', value);
   }
 
   get supportCategory(): Code[] {
@@ -106,8 +115,23 @@ export class EvacueeSearchService {
       );
   }
 
+  public checkTaskStatus(): void {
+    const taskNumber = this.userService?.currentProfile?.taskNumber;
+    this.taskSearchService.searchTask(taskNumber).subscribe({
+      next: (result) => {
+        this.userService.updateTaskNumber(result.id, result.status);
+        this.paperBased = result.status === 'Expired' ? true : false;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.taskSearchError);
+      }
+    });
+  }
+
   public clearEvacueeSearch(): void {
     this.evacueeSearchContext = undefined;
     this.paperBased = undefined;
+    this.cacheService.remove('paperBased');
   }
 }
