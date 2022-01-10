@@ -170,7 +170,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var inviteId = (await contactRepository.ManageContactInvite(new CreateNewContactEmailInvite
             {
-                ContactId = contact.Id,
+                ContactId = contact.Id ?? null!,
                 Email = email,
                 InviteDate = DateTime.UtcNow,
                 RequestingUserId = null
