@@ -86,9 +86,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                         string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails },
                         string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
                     }.Where(n => n != null).ToArray()))
-                .ConvertUsing((s, d, ctx) => string.IsNullOrEmpty(s.era_paperbasedessfile)
-                    ? ctx.Mapper.Map<EvacuationFile>(s)
-                    : ctx.Mapper.Map<PaperEvacuationFile>(s))
+             //.ConvertUsing((s, d, ctx) => string.IsNullOrEmpty(s.era_paperbasedessfile)
+             //    ? ctx.Mapper.Map<EvacuationFile>(s)
+             //    : ctx.Mapper.Map<PaperEvacuationFile>(s))
              ;
 
             CreateMap<era_evacuationfile, PaperEvacuationFile>()
