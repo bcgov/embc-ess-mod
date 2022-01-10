@@ -72,24 +72,30 @@
     <br />
 
     <div class="row">
-      <button
-        *ngIf="
-          hasPermission('canDeleteTeamMembers') && teamMember?.role !== 'Tier4'
-        "
-        class="button-s button-float button-margin"
-        mat-button
-        (click)="deleteUser()"
-      >
-        Delete User
-      </button>
-      <button
-        *ngIf="isEditAllowed(teamMember)"
-        class="button-p button-float"
-        mat-button
-        (click)="editUser()"
-      >
-        Edit User Details
-      </button>
+      <div class="col-md-1">
+        <button
+          *ngIf="
+            hasPermission('canDeleteTeamMembers') &&
+            teamMember?.role !== 'Tier4'
+          "
+          class="button-s"
+          mat-button
+          (click)="deleteUser()"
+        >
+          Delete User
+        </button>
+      </div>
+
+      <div class="col-md-1">
+        <button
+          *ngIf="isEditAllowed(teamMember)"
+          class="button-p"
+          mat-button
+          (click)="editUser()"
+        >
+          Edit User Details
+        </button>
+      </div>
     </div>
   </div>
 </mat-card>
