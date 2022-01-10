@@ -44,7 +44,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId, string needsAssessmentId = null)
+        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId, string? needsAssessmentId = null)
         {
             var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
 
