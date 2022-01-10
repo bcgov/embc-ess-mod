@@ -45,6 +45,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
                 .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
+                .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ExternalReference))
                 .AfterMap((s, d) =>
                 {
                     //set link to primary registrant's household member entity
@@ -52,10 +53,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     if (primaryHouseholdMember != null)
                         primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
                 });
-
-            CreateMap<PaperEvacuationFile, era_evacuationfile>(MemberList.None)
-                .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.PaperFileNumber))
-                ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
@@ -86,46 +83,39 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                         string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails },
                         string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
                     }.Where(n => n != null).ToArray()))
-             //.ConvertUsing((s, d, ctx) => string.IsNullOrEmpty(s.era_paperbasedessfile)
-             //    ? ctx.Mapper.Map<EvacuationFile>(s)
-             //    : ctx.Mapper.Map<PaperEvacuationFile>(s))
-             ;
-
-            CreateMap<era_evacuationfile, PaperEvacuationFile>()
-                .IncludeBase<era_evacuationfile, EvacuationFile>()
-                .ForMember(d => d.PaperFileNumber, opts => opts.MapFrom(s => s.era_paperbasedessfile))
+                .ForMember(d => d.ExternalReference, opts => opts.MapFrom(s => s.era_paperbasedessfile))
                 ;
 
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
-                .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid()))
-                .ForMember(d => d._era_reviewedbyid_value, opts => opts.MapFrom(s => s.CompletedByTeamMemberId))
-                .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
-                .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanProvideFood)))
-                .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => Lookup(s.CanProvideClothing)))
-                .ForMember(d => d.era_canevacueeprovideincidentals, opts => opts.MapFrom(s => Lookup(s.CanProvideIncidentals)))
-                .ForMember(d => d.era_canevacueeprovidelodging, opts => opts.MapFrom(s => Lookup(s.CanProvideLodging)))
-                .ForMember(d => d.era_canevacueeprovidetransportation, opts => opts.MapFrom(s => Lookup(s.CanProvideTransportation)))
-                .ForMember(d => d.era_dietaryrequirement, opts => opts.MapFrom(s => s.HaveSpecialDiet))
-                .ForMember(d => d.era_dietaryrequirementdetails, opts => opts.MapFrom(s => s.SpecialDietDetails))
-                .ForMember(d => d.era_medicationrequirement, opts => opts.MapFrom(s => s.TakeMedication))
-                .ForMember(d => d.era_hasenoughsupply, opts => opts.MapFrom(s => s.HaveMedicalSupplies))
-                .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
-                .ForMember(d => d.era_householdrecoveryplan, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.RecoveryPlan).FirstOrDefault())))
-                .ForMember(d => d.era_evacuationimpacttohousehold, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.EvacuationImpact).FirstOrDefault())))
-                .ForMember(d => d.era_externalreferralsdetails, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.ExternalReferralServices).FirstOrDefault())))
-                .ForMember(d => d.era_haschildcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.ChildCare)))
-                .ForMember(d => d.era_hasfirstaidreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.FirstAid)))
-                .ForMember(d => d.era_hasinquiryreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Inquiry)))
-                .ForMember(d => d.era_haspersonalservicesreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Personal)))
-                .ForMember(d => d.era_haspetcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.PetCare)))
-                .ForMember(d => d.era_hashealthservicesreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Health)))
-                .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFrom.AddressLine1))
-                .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFrom.AddressLine2))
-                .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFrom.PostalCode))
-                .ForMember(d => d._era_jurisdictionid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
-                .ForMember(d => d.era_era_householdmember_era_needassessment, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
-                ;
+                  .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid()))
+                  .ForMember(d => d._era_reviewedbyid_value, opts => opts.MapFrom(s => s.CompletedByTeamMemberId))
+                  .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
+                  .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanProvideFood)))
+                  .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => Lookup(s.CanProvideClothing)))
+                  .ForMember(d => d.era_canevacueeprovideincidentals, opts => opts.MapFrom(s => Lookup(s.CanProvideIncidentals)))
+                  .ForMember(d => d.era_canevacueeprovidelodging, opts => opts.MapFrom(s => Lookup(s.CanProvideLodging)))
+                  .ForMember(d => d.era_canevacueeprovidetransportation, opts => opts.MapFrom(s => Lookup(s.CanProvideTransportation)))
+                  .ForMember(d => d.era_dietaryrequirement, opts => opts.MapFrom(s => s.HaveSpecialDiet))
+                  .ForMember(d => d.era_dietaryrequirementdetails, opts => opts.MapFrom(s => s.SpecialDietDetails))
+                  .ForMember(d => d.era_medicationrequirement, opts => opts.MapFrom(s => s.TakeMedication))
+                  .ForMember(d => d.era_hasenoughsupply, opts => opts.MapFrom(s => s.HaveMedicalSupplies))
+                  .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
+                  .ForMember(d => d.era_householdrecoveryplan, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.RecoveryPlan).FirstOrDefault())))
+                  .ForMember(d => d.era_evacuationimpacttohousehold, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.EvacuationImpact).FirstOrDefault())))
+                  .ForMember(d => d.era_externalreferralsdetails, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.ExternalReferralServices).FirstOrDefault())))
+                  .ForMember(d => d.era_haschildcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.ChildCare)))
+                  .ForMember(d => d.era_hasfirstaidreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.FirstAid)))
+                  .ForMember(d => d.era_hasinquiryreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Inquiry)))
+                  .ForMember(d => d.era_haspersonalservicesreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Personal)))
+                  .ForMember(d => d.era_haspetcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.PetCare)))
+                  .ForMember(d => d.era_hashealthservicesreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Health)))
+                  .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFrom.AddressLine1))
+                  .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFrom.AddressLine2))
+                  .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFrom.PostalCode))
+                  .ForMember(d => d._era_jurisdictionid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
+                  .ForMember(d => d.era_era_householdmember_era_needassessment, opts => opts.MapFrom(s => s.HouseholdMembers))
+                  .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
+                  ;
 
             CreateMap<era_needassessment, EvacuationAddress>(MemberList.None)
                   .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))

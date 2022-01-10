@@ -32,7 +32,8 @@ namespace EMBC.ESS.Resources.Contacts
         Task<ContactInviteQueryResult> QueryContactInvite(ContactInviteQuery query);
     }
 
-    public abstract class ContactCommand { }
+    public abstract class ContactCommand
+    { }
 
     public class ContactCommandResult
     {
@@ -67,14 +68,16 @@ namespace EMBC.ESS.Resources.Contacts
     {
     }
 
-    public abstract class ContactInviteCommand { }
+    public abstract class ContactInviteCommand
+    { }
 
     public class ContactInviteCommandResult
     {
         public string InviteId { get; set; }
     }
 
-    public abstract class ContactInviteQuery { }
+    public abstract class ContactInviteQuery
+    { }
 
     public class ContactInviteQueryResult
     {
@@ -84,12 +87,12 @@ namespace EMBC.ESS.Resources.Contacts
     public class CreateNewContactEmailInvite : ContactInviteCommand
     {
         [Required]
-        public string ContactId { get; set; }
+        public string ContactId { get; set; } = null!;
 
         [Required]
         public string Email { get; set; }
 
-        public string RequestingUserId { get; set; }
+        public string? RequestingUserId { get; set; }
 
         [Required]
         public DateTime InviteDate { get; set; }
@@ -111,7 +114,7 @@ namespace EMBC.ESS.Resources.Contacts
 
     public class Contact
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedByUserId { get; set; }
         public string CreatedByDisplayName { get; set; }
@@ -132,7 +135,7 @@ namespace EMBC.ESS.Resources.Contacts
         public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
     }
 
     public class Address

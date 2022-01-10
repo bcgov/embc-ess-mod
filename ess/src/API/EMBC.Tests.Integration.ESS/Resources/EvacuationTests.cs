@@ -371,7 +371,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
             var file = new EvacuationFile()
             {
-                PrimaryRegistrantId = primaryContact.Id,
+                PrimaryRegistrantId = primaryContact.Id ?? null!,
                 EvacuationDate = now,
                 TaskId = TestData.ActiveTaskId,
                 SecurityPhrase = "secret123",

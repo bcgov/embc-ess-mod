@@ -41,6 +41,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
     public class EvacuationFile : Case
     {
+        public string? ExternalReference { get; set; }
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }
         public EvacuationAddress EvacuatedFrom { get => NeedsAssessment?.EvacuatedFrom; }
@@ -56,11 +57,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
         public IEnumerable<Note> Notes { get; set; }
         public IEnumerable<Support> Supports { get; set; }
-    }
-
-    public class PaperEvacuationFile : EvacuationFile
-    {
-        public string PaperFileNumber { get; set; }
     }
 
     public class EvacuationAddress
@@ -107,7 +103,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
-        public string LinkedRegistrantId { get; set; }
+        public string? LinkedRegistrantId { get; set; }
         public bool? HasAccessRestriction { get; set; }
         public bool? IsVerifiedRegistrant { get; set; }
         public bool? IsAuthenticatedRegistrant { get; set; }
