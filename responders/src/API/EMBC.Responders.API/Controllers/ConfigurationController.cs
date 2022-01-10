@@ -106,7 +106,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("codes/communities")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string? stateProvinceId, [FromQuery] string? countryId, [FromQuery] CommunityType[]? types)
         {
             var items = (await client.Send(new CommunitiesQuery()
             {
@@ -121,7 +121,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("codes/stateprovinces")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetStateProvinces([FromQuery] string countryId)
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetStateProvinces([FromQuery] string? countryId)
         {
             var items = (await client.Send(new StateProvincesQuery()
             {
