@@ -46,7 +46,7 @@ namespace EMBC.ESS.Resources.Team
 
     public class Team
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public string Name { get; set; }
         public IEnumerable<AssignedCommunity> AssignedCommunities { get; set; }
     }
@@ -59,7 +59,7 @@ namespace EMBC.ESS.Resources.Team
 
     public class TeamMember
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         public string TeamId { get; set; }
         public string TeamName { get; set; }
