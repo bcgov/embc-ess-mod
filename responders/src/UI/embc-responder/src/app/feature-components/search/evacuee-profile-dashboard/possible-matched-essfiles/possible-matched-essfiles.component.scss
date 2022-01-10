@@ -62,15 +62,15 @@ mat-expansion-panel {
 }
 
 .info-image img:last-child {
-display: none;
+  display: none;
 }
 
 .info-image:hover img:last-child {
-display: inline;
+  display: inline;
 }
 
 .info-image:hover img:first-child {
-display: none;
+  display: none;
 }
 
 .button-div {
@@ -86,4 +86,14 @@ display: none;
 .loader-align {
   text-align: center;
   padding-top: 20px;
+}
+
+.info-box {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.data-card {
+  padding-left: 0px;
+  padding-right: 0px;
 }

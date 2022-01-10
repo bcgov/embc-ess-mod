@@ -1,18 +1,19 @@
 <div *ngFor="let registrantResult of matchedRegistrants$ | async">
   <mat-card
+    class="result-card"
     [ngClass]="{
       'outer-card': !registrantResult?.isRestricted,
       'restricted-card': registrantResult?.isRestricted
     }"
   >
     <div class="row result-heading-background">
-      <div class="col-md-9">
+      <div class="col-md-8">
         <a class="result-heading" (click)="openProfile(registrantResult)"
           ><b>{{ registrantResult?.lastName | uppercase }},</b>
           {{ registrantResult?.firstName }}</a
         >
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="row">
           <div class="col-md-12 metaData-align">
             <p>
@@ -32,7 +33,7 @@
       </div>
     </div>
     <br />
-    <div class="row">
+    <div class="row search-data">
       <div class="col-md-5">
         <div class="row">
           <div class="col-md-1">
@@ -44,37 +45,6 @@
           </div>
           <div class="col-md-10">
             <p class="p-custom section-heading">Physical Address</p>
-            <!-- <p class="p-custom">
-              <b>{{ registrantResult?.primaryAddress?.addressLine1 }}</b>
-            </p>
-            <p
-              *ngIf="registrantResult?.primaryAddress?.addressLine2 !== null"
-              class="p-custom"
-            >
-              <b>{{ registrantResult?.primaryAddress?.addressLine2 }},</b>
-            </p>
-            <p class="p-custom">
-              <b
-                ><span *ngIf="registrantResult?.primaryAddress?.city !== null"
-                  >{{ registrantResult?.primaryAddress?.city }},</span
-                >
-                <span
-                  *ngIf="
-                    registrantResult?.primaryAddress?.communityCode !== null
-                  "
-                  >{{ communityName(registrantResult?.primaryAddress) }},</span
-                >
-                {{ registrantResult?.primaryAddress?.stateProvinceCode }},
-                <span
-                  *ngIf="registrantResult?.primaryAddress?.postalCode !== null"
-                >
-                  {{ registrantResult?.primaryAddress?.postalCode }}</span
-                >
-              </b>
-            </p>
-            <p class="p-custom">
-              <b>{{ registrantResult?.primaryAddress?.country?.name }}</b>
-            </p> -->
             <p
               class="p-custom"
               [innerHTML]="registrantResult?.primaryAddress | maskFullAddress"
@@ -102,8 +72,6 @@
                   >ESS File # {{ files?.id }} -
                   {{ communityName(files?.evacuatedFrom) }}</b
                 >
-                <!--{{ files?.evacuatedFrom?.city }}-->
-                <!-- {{ communityName(files?.evacuatedFrom) }} -->
               </p>
               <p
                 *ngIf="files?.status === 'Pending'"
@@ -137,7 +105,10 @@
         </div>
       </div>
     </div>
-    <div *ngIf="registrantResult?.isRestricted" class="row restricted-div">
+    <div
+      *ngIf="registrantResult?.isRestricted"
+      class="row restricted-div search-data"
+    >
       <span class="restricted-text">RESTRICTED FILE</span>
     </div>
   </mat-card>

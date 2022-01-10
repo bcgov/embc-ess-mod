@@ -1,68 +1,80 @@
 .result-heading-background {
-    background-color: rgba(242, 242, 242, 1);
-    padding-top: 18px;
-    padding-bottom: 7px;
+  background-color: rgba(242, 242, 242, 1);
+  padding-top: 18px;
+  padding-bottom: 7px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .result-heading {
-    font-size: 35px;
-    color: #1595CD;
-    text-decoration: none;
-    cursor: pointer;
+  font-size: 35px;
+  color: #1595cd;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.search-data {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.result-card {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .result-heading:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .outer-card {
-    padding-top: 0px;
-    border: 1px solid rgb(187, 187, 187);
-    border-bottom: 0px !important;
+  padding-top: 0px;
+  border: 1px solid rgb(187, 187, 187);
+  border-bottom: 0px !important;
 }
 
 .restricted-card {
-    padding-top: 0px;
-    padding-bottom: 0px;
-    border: 1px solid rgba(201, 0, 0, 1);
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: 1px solid rgba(201, 0, 0, 1);
 }
 
 .restricted-text {
-    text-align: center;
-    background-color: rgba(201, 0, 0, 1);
-    width: 100%;
-    color: white;
+  text-align: center;
+  background-color: rgba(201, 0, 0, 1);
+  width: 100%;
+  color: white;
 }
 
 .restricted-div {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .p-custom {
-    margin-bottom: 0px !important;
-    font-size: 15px;
+  margin-bottom: 0px !important;
+  font-size: 15px;
 }
 
 .metaData-align {
-    text-align: right;
+  text-align: right;
 }
 
 .section-heading {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .file-active {
-    color: #1595CD;
+  color: #1595cd;
 }
 
 .file-pending {
-    color: #F28200;
+  color: #f28200;
 }
 
 .file-complete {
-    color: #3C9D0F;
+  color: #3c9d0f;
 }
 
 .file-expired {
-    color: #696969;
+  color: #696969;
 }
