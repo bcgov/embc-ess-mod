@@ -51,7 +51,7 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>list of suppliers for the user's team</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SupplierListItem>>> GetSuppliers(string legalName, string gstNumber)
+        public async Task<ActionResult<IEnumerable<SupplierListItem>>> GetSuppliers(string? legalName, string? gstNumber)
         {
             var query = new SuppliersQuery();
             if (!string.IsNullOrEmpty(legalName) && !string.IsNullOrEmpty(gstNumber))

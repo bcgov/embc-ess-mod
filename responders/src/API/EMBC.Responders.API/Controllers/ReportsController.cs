@@ -15,12 +15,9 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Reports;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
@@ -39,7 +36,7 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpGet("evacuee")]
-        public async Task<IActionResult> GetEvacueeReport(string taskNumber, string fileId, string evacuatedFrom, string evacuatedTo)
+        public async Task<IActionResult> GetEvacueeReport(string? taskNumber, string? fileId, string? evacuatedFrom, string? evacuatedTo)
         {
             var userRole = Enum.Parse<MemberRole>(currentUserRole);
             var includePersonalInfo = userRole == MemberRole.Tier3 || userRole == MemberRole.Tier4;
@@ -49,7 +46,7 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpGet("support")]
-        public async Task<IActionResult> GetSupportReport(string taskNumber, string fileId, string evacuatedFrom, string evacuatedTo)
+        public async Task<IActionResult> GetSupportReport(string? taskNumber, string? fileId, string? evacuatedFrom, string? evacuatedTo)
         {
             var result = await messagingClient.Send(new SupportReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo });
 
