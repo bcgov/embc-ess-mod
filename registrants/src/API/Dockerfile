@@ -5,14 +5,11 @@ ENV ASPNETCORE_URLS=http://*:8080
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ARG GITHUB_NUGET_USERNAME
-ARG GITHUB_NUGET_PAT
 WORKDIR /src
 COPY ["EMBC.Registrants.API/EMBC.Registrants.API.csproj", "EMBC.Registrants.API/"]
+COPY ["EMBC.ESS.Shared.Contracts/EMBC.ESS.Shared.Contracts.csproj", "EMBC.ESS.Shared.Contracts/"]
 COPY ["EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj", "EMBC.Tests.Unit.Registrants.API/"]
 COPY ["EMBC.Registrants.sln", "stylecop.json", ".editorconfig", "./"]
-
-RUN dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username "${GITHUB_NUGET_USERNAME}" --password "${GITHUB_NUGET_PAT}" --store-password-in-clear-text
 
 RUN dotnet restore .
 COPY . .

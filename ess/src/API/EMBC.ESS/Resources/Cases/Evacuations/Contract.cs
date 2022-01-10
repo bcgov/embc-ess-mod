@@ -58,6 +58,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public IEnumerable<Support> Supports { get; set; }
     }
 
+    public class PaperEvacuationFile : EvacuationFile
+    {
+        public string PaperFileNumber { get; set; }
+    }
+
     public class EvacuationAddress
     {
         public string AddressLine1 { get; set; }

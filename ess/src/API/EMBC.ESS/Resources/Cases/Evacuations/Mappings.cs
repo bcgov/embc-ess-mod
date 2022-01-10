@@ -31,6 +31,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             Func<Note, string> resolveNoteContent = n => n?.Content;
 
             CreateMap<EvacuationFile, era_evacuationfile>(MemberList.None)
+                .IncludeAllDerived()
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_paperbasedessfile, opts => opts.Ignore())
                 .ForMember(d => d.era_essfilestatus, opts => opts.Ignore())
@@ -51,6 +52,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     if (primaryHouseholdMember != null)
                         primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
                 });
+
+            CreateMap<PaperEvacuationFile, era_evacuationfile>(MemberList.None)
+                .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.PaperFileNumber))
+                ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
@@ -81,7 +86,14 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                         string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails },
                         string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
                     }.Where(n => n != null).ToArray()))
+                .ConvertUsing((s, d, ctx) => string.IsNullOrEmpty(s.era_paperbasedessfile)
+                    ? ctx.Mapper.Map<EvacuationFile>(s)
+                    : ctx.Mapper.Map<PaperEvacuationFile>(s))
+             ;
 
+            CreateMap<era_evacuationfile, PaperEvacuationFile>()
+                .IncludeBase<era_evacuationfile, EvacuationFile>()
+                .ForMember(d => d.PaperFileNumber, opts => opts.MapFrom(s => s.era_paperbasedessfile))
                 ;
 
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)

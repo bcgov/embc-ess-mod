@@ -31,7 +31,7 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

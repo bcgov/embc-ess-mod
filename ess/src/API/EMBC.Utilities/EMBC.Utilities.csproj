@@ -14,7 +14,7 @@
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
@@ -22,6 +22,7 @@
     <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
+
 
     <ItemGroup>
         <PackageReference Include="Handlebars.Net" Version="2.0.10" />
@@ -39,7 +40,7 @@
         <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
         <PackageReference Include="System.Text.Json" Version="6.0.*" />
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

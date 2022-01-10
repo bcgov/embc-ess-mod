@@ -5,6 +5,7 @@ on:
     types: [opened, reopened, edited, synchronize]
     paths:
       - "ess/src/API/**"
+      - "shared/src/**"
       - ".github/workflows/ci-ess-backend.yml"
 
 env:
@@ -18,4 +19,4 @@ jobs:
 
       - name: Build image
         working-directory: ./ess/src/API
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: tar -czh . | docker build --tag $IMAGE_NAME -

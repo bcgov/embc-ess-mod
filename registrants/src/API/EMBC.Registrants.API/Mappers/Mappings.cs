@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using AutoMapper;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers

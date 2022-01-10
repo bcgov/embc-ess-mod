@@ -132,6 +132,7 @@ namespace EMBC.ESS.Managers.Submissions
             var file = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(cmd.File);
 
             var query = new RegistrantQuery();
+            //TODO: replace this with an explicit property for userid
             if (Guid.TryParse(file.PrimaryRegistrantId, out var _))
             {
                 query.ContactId = file.PrimaryRegistrantId;

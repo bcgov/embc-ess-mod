@@ -22,6 +22,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class EvacuationFile
     {
         public string Id { get; set; }
+        public string PaperFileNumber { get; set; }
         public IncidentTask RelatedTask { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public DateTime CreatedOn { get; set; }
