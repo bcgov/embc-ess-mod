@@ -24,6 +24,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact contact;
         private readonly era_task activeTask;
+        private readonly era_task inactiveTask;
         private readonly era_evacuationfile evacuationfile;
         private readonly era_supplier supplierA;
         private readonly era_supplier supplierB;
@@ -72,66 +73,67 @@ namespace EMBC.Tests.Integration.ESS
             jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid).ToArray();
             canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").Single();
             bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
+#if DEBUG
+            this.testPrefix = $"autotest-dev";
+#else
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
+#endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
             this.testPortal = 174360001;
 
-#if DEBUG
-            this.testPrefix = $"autotest-dev";
-            this.activeTaskId = testPrefix + "-active-task";
-            this.inactiveTaskId = testPrefix + "-inactive-task";
-
-            var existingTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team").FirstOrDefault();
+            var existingTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team").SingleOrDefault();
             if (existingTeam != null)
             {
                 essContext.LoadProperty(existingTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
                 this.team = existingTeam;
-                var otherTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team-other").First();
+
+                this.CreateTeamMember(team, Guid.NewGuid(), "-second");
+                CreateTeamMember(team, Guid.NewGuid(), "-third");
+                CreateTeamMember(team, Guid.NewGuid(), "-fourth");
+            }
+            else
+            {
+                this.team = CreateTeam(Guid.NewGuid());
+            }
+            var otherTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team-other").SingleOrDefault();
+            if (otherTeam != null)
+            {
                 essContext.LoadProperty(otherTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
                 this.otherTeam = otherTeam;
-                this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).First();
-                this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").First();
-                this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").First();
-                this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").First();
-                this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").First();
-                this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").First();
-                this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").First();
-                this.inactiveSupplier = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-inactive").First();
+            }
+            else
+            {
+                this.otherTeam = CreateTeam(Guid.NewGuid(), "-other");
+            }
+            this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(activeTaskId, DateTime.UtcNow);
+            this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(inactiveTaskId, DateTime.UtcNow.AddDays(-7));
 
-                this.evacuationfile = essContext.era_evacuationfiles
+            this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").SingleOrDefault()
+                ?? CreateTeamMember(team, Guid.NewGuid());
+            this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").SingleOrDefault()
+                ?? CreateTeamMember(this.otherTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Team.TeamUserRoleOptionSet.Tier1);
+            this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").SingleOrDefault() ?? CreateContact();
+            this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").SingleOrDefault() ?? CreateSupplier("A", this.team);
+            this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").SingleOrDefault() ?? CreateSupplier("B", this.team);
+            this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").SingleOrDefault() ?? CreateSupplier("C", this.otherTeam);
+            this.inactiveSupplier = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-inactive").SingleOrDefault() ?? CreateSupplier("inactive", null);
+
+            var evacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
-                .Where(f => f.era_name == testPrefix + "-file").First();
+                .Where(f => f.era_name == testPrefix + "-file").SingleOrDefault();
 
-                essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
-
-                return;
+            if (evacuationfile != null)
+            {
+                essContext.LoadProperty(evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
             }
-#endif
-
-            this.team = CreateTeam(Guid.NewGuid());
-            this.otherTeam = CreateTeam(Guid.NewGuid(), "-other");
-            this.tier4TeamMember = CreateTeamMember(team, Guid.NewGuid());
-            this.CreateTeamMember(team, Guid.NewGuid(), "-second");
-            CreateTeamMember(team, Guid.NewGuid(), "-third");
-            CreateTeamMember(team, Guid.NewGuid(), "-fourth");
-            this.otherTeamMember = CreateTeamMember(otherTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Team.TeamUserRoleOptionSet.Tier1);
-            this.activeTask = CreateTask(activeTaskId, DateTime.UtcNow);
-            CreateTask(inactiveTaskId, DateTime.UtcNow.AddDays(-7));
-            this.contact = CreateContact();
-
-            var file = CreateEvacuationFile(this.contact);
-
-            var supports = CreateEvacueeSupports(file);
-
-            CreateReferralPrint(file, this.tier4TeamMember, supports);
-
-            this.supplierA = CreateSupplier("A");
-            this.supplierB = CreateSupplier("B");
-            this.supplierC = CreateSupplier("C");
-            this.inactiveSupplier = CreateSupplier("inactive");
-            CreateTeamSuppliers();
+            else
+            {
+                evacuationfile = CreateEvacuationFile(this.contact);
+                var supports = CreateEvacueeSupports(evacuationfile);
+                CreateReferralPrint(evacuationfile, this.tier4TeamMember, supports);
+            }
 
             essContext.SaveChanges();
 
@@ -142,7 +144,7 @@ namespace EMBC.Tests.Integration.ESS
             this.evacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
-                .Where(f => f.era_evacuationfileid == file.era_evacuationfileid).Single();
+                .Where(f => f.era_evacuationfileid == evacuationfile.era_evacuationfileid).Single();
 
             essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
 
@@ -350,7 +352,7 @@ namespace EMBC.Tests.Integration.ESS
             return referralPrint;
         }
 
-        private era_supplier CreateSupplier(string identifier)
+        private era_supplier CreateSupplier(string identifier, era_essteam? assignedTeam)
         {
             var supplier = new era_supplier()
             {
@@ -367,38 +369,28 @@ namespace EMBC.Tests.Integration.ESS
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCity), jurisdictions.Skip(random.Next(jurisdictions.Length - 1)).First());
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCountry), canada);
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedProvinceState), bc);
+
+            if (assignedTeam != null) AssignSupplierToTeam(supplier, team);
+
             return supplier;
         }
 
-        private void CreateTeamSuppliers()
+        private void AssignSupplierToTeam(era_supplier supplier, era_essteam team)
         {
-            var teamSupplier1 = new era_essteamsupplier()
+            var ts = new era_essteamsupplier()
             {
                 era_essteamsupplierid = Guid.NewGuid(),
                 era_active = true,
                 era_isprimarysupplier = true
             };
 
-            essContext.AddToera_essteamsuppliers(teamSupplier1);
-            essContext.AddLink(supplierA, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), teamSupplier1);
-            essContext.SetLink(teamSupplier1, nameof(era_essteamsupplier.era_SupplierId), supplierA);
+            essContext.AddToera_essteamsuppliers(ts);
 
-            essContext.AddLink(team, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier1);
-            essContext.SetLink(teamSupplier1, nameof(era_essteamsupplier.era_ESSTeamID), team);
+            essContext.AddLink(supplier, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), ts);
+            essContext.SetLink(ts, nameof(era_essteamsupplier.era_SupplierId), supplier);
 
-            var teamSupplier2 = new era_essteamsupplier()
-            {
-                era_essteamsupplierid = Guid.NewGuid(),
-                era_active = true,
-                era_isprimarysupplier = true
-            };
-
-            essContext.AddToera_essteamsuppliers(teamSupplier2);
-            essContext.AddLink(supplierC, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), teamSupplier2);
-            essContext.SetLink(teamSupplier2, nameof(era_essteamsupplier.era_SupplierId), supplierC);
-
-            essContext.AddLink(otherTeam, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier2);
-            essContext.SetLink(teamSupplier2, nameof(era_essteamsupplier.era_ESSTeamID), otherTeam);
+            essContext.AddLink(team, nameof(era_essteam.era_essteam_essteamsupplier_ESSTeamID), ts);
+            essContext.SetLink(ts, nameof(era_essteamsupplier.era_ESSTeamID), team);
         }
     }
 }
