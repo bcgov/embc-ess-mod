@@ -22,7 +22,7 @@
 </div>
 
 <div class="row status-row-margin">
-  <div class="verified-column">
+  <div class="col-md-4">
     <img
       *ngIf="!evacueeProfile?.verifiedUser"
       src="/assets/images/unverified.svg"
@@ -46,22 +46,22 @@
       <img src="/assets/images/info.svg" height="32" width="32" />
       <img src="/assets/images/info-on-hover.svg" height="32" width="32"
     /></a>
-  </div>
 
-  <button
-    *ngIf="!evacueeProfile?.verifiedUser"
-    class="button-p verify-button"
-    (click)="verifyEvacuee()"
-    mat-button
-  >
-    Verify
-  </button>
+    <button
+      *ngIf="!evacueeProfile?.verifiedUser"
+      class="button-p verify-button"
+      (click)="verifyEvacuee()"
+      mat-button
+    >
+      Verify
+    </button>
+  </div>
 
   <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-4">
     <img src="/assets/images/unlock.svg" height="31" width="34" />
     <span class="status">Restriction Status:</span>
     <span
@@ -77,7 +77,7 @@
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <img src="/assets/images/calendar.svg" height="31" width="34" />
     <span class="status"
       >Created:
@@ -110,14 +110,14 @@
   <div class="col-md-12">
     <div class="row">
       <div class="col-md-8">
-        <mat-card class="overview-card">
-          <div class="row card-heading-outer">
+        <mat-card class="overview-card data-card">
+          <div class="row card-heading-outer info-box">
             <div class="col-md-12">
               <p class="margins card-heading">Profile Overview</p>
             </div>
           </div>
           <div
-            class="row services-card"
+            class="row services-card info-box"
             *ngIf="!evacueeProfile?.authenticatedUser"
           >
             <div class="col-md-8">
