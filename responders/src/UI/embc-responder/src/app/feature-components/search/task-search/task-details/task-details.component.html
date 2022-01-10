@@ -12,9 +12,6 @@
       >
         <ng-container *ngTemplateOutlet="activeTask"></ng-container>
       </div>
-      <!-- <div *ngIf="essTask?.status === 'Expired'">
-        <ng-container *ngTemplateOutlet="expiredTask"></ng-container>
-      </div> -->
       <div *ngIf="essTask?.status === 'Invalid'">
         <ng-container *ngTemplateOutlet="invalidTask"></ng-container>
       </div>
@@ -93,41 +90,6 @@
     </div>
   </mat-card>
 </ng-template>
-<!-- <ng-template #expiredTask>
-  <mat-card>
-    <p class="heading">Sign in to a Task Number</p>
-    <p>The task number entered is <b>expired</b>.</p>
-    <p>
-      Please contact your supervisor or Local Government to have the task number
-      extended if required.
-    </p>
-
-    <div class="row">
-      <div class="col-md-2 task-details">Task Number:</div>
-      <div class="col-md-6 task-details">
-        <b>{{ essTask.id }} - {{ essTask.communityName }}</b>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-2 task-details">Task Status:</div>
-      <div class="col-md-4 status-expired">{{ essTask.status }}</div>
-    </div>
-    <br />
-    <div class="row">
-      <div class="col-md-4">
-        <button
-          class="button-p submit"
-          type="button"
-          mat-button
-          (click)="searchTask()"
-        >
-          Go Back & Search Again
-        </button>
-      </div>
-    </div>
-  </mat-card>
-</ng-template> -->
 <ng-template #invalidTask>
   <mat-card>
     <p class="heading">Sign in to a Task Number</p>
