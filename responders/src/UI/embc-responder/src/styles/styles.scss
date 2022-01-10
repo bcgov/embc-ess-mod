@@ -2,12 +2,8 @@
 
 @use '@angular/material' as mat;
 @import './fonts';
-$bcgov-font-path: '~@bcgov/bootstrap-theme/dist/fonts/';
-@import '~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme';
 @import './defaults.scss';
 @import './variables';
-
-@import '~@bcgov/bootstrap-theme/dist/scss/common';
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
@@ -449,3 +445,4 @@ mat-form-field {
 .primary {
   color: #234075;
 }
+

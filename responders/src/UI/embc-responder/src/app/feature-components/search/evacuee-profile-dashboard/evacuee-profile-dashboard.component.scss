@@ -66,8 +66,8 @@
 }
 
 .info-test {
-    @extend .info-image;
-    margin-left: 10px;
+  @extend .info-image;
+  margin-left: 10px;
 }
 
 .info-test :hover {
@@ -87,48 +87,49 @@
 }
 
 .content-row {
-    background-color: white;
-    padding-top: 20px;
-    padding-bottom: 20px;
+  background-color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .overview-card {
-    box-shadow: none !important;
-    border: 1px solid rgb(221, 221, 221);
-    padding-top: 0px !important;
+  box-shadow: none !important;
+  border: 1px solid rgb(221, 221, 221);
+  padding-top: 0px !important;
 }
 
 .card-heading-outer {
-    background-color: rgb(35, 64, 117)
+  background-color: rgb(35, 64, 117);
 }
 
 .card-heading {
-    color: white;
-    font-size: 23px;
-    line-height: 60px;
+  color: white;
+  font-size: 23px;
+  line-height: 60px;
 }
 
 .services-card {
-    background-color: rgb(242, 242, 242);
-    padding: 20px;
+  background-color: rgb(242, 242, 242);
+  padding: 20px;
 }
 
 .services-heading {
-    font-size: 21px;
+  font-size: 21px;
 }
 
 .button-div {
-    padding-top: 40px;
+  padding-top: 40px;
 }
 
 .invite-button {
-    height: 45px !important;
-    width: 40%;
-    margin-right: 10px;
+  height: 45px !important;
+  width: 40%;
+  margin-right: 10px;
 }
 
 .dotted-hr {
-    border: 0.7px solid rgb(242, 242, 242);
+  border: 0.7px solid rgb(242, 242, 242);
+  opacity: unset;
 }
 
 .section-padding {
@@ -172,7 +173,7 @@
 }
 
 .evacuee-info-row {
-    padding: 30px
+  padding: 30px;
 }
 
 .divider {
@@ -183,13 +184,22 @@
   width: 40%;
 }
 
-@media(max-width: 864px) {
+@media (max-width: 864px) {
   .divider {
-      display: none;
+    display: none;
   }
 }
 
 .email-success {
-  color: #3C9D0F;
+  color: #3c9d0f;
 }
 
+.info-box {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.data-card {
+  padding-left: 0px;
+  padding-right: 0px;
+}

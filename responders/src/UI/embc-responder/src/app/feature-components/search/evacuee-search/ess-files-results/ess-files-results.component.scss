@@ -1,88 +1,100 @@
 .result-heading-background {
-    background-color: rgba(242, 242, 242, 1);
-    padding-top: 18px;
-    padding-bottom: 7px;
+  background-color: rgba(242, 242, 242, 1);
+  padding-top: 18px;
+  padding-bottom: 7px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.result-card {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.search-data {
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .file-active {
-    color: #1595CD;
+  color: #1595cd;
 }
 
 .file-pending {
-    color: #F28200;
+  color: #f28200;
 }
 
 .file-complete {
-    color: #3C9D0F;
+  color: #3c9d0f;
 }
 
 .file-expired {
-    color: #696969;
+  color: #696969;
 }
 
 .result-subHeading {
-    font-size: 21px;
+  font-size: 21px;
 }
 
 .outer-card {
-    padding-top: 0px;
-    border: 1px solid rgb(187, 187, 187);
-    border-bottom: 0px !important;
+  padding-top: 0px;
+  border: 1px solid rgb(187, 187, 187);
+  border-bottom: 0px !important;
 }
 
 .restricted-card {
-    padding-top: 0px;
-    padding-bottom: 0px;
-    border: 1px solid rgba(201, 0, 0, 1);
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: 1px solid rgba(201, 0, 0, 1);
 }
 
 .restricted-text {
-    text-align: center;
-    background-color: rgba(201, 0, 0, 1);
-    width: 100%;
-    color: white;
+  text-align: center;
+  background-color: rgba(201, 0, 0, 1);
+  width: 100%;
+  color: white;
 }
 
 .restricted-div {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .status-align {
-    padding-left: 11px;
+  padding-left: 11px;
 }
 
 .p-custom {
-    margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 .metaData-align {
-    text-align: right;
+  text-align: right;
 }
 
 .member-type {
-    color: #696969;
+  color: #696969;
 }
 
 .member-match {
-    margin-bottom: 0px !important;
-    font-weight: bold;
-    margin-left: 7px;
+  margin-bottom: 0px !important;
+  font-weight: bold;
+  margin-left: 7px;
 }
 
 .section-heading {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .members-margin {
-    margin-left: 7px;
+  margin-left: 7px;
 }
 
 .highlight {
-    font-size: 35px;
-    text-decoration: none;
-    cursor: pointer;
+  font-size: 35px;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .highlight:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
