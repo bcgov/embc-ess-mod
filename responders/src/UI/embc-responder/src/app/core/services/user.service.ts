@@ -34,14 +34,9 @@ export class UserService {
             this.cacheService.get('loggedInTaskNumber') === null || undefined
               ? null
               : this.cacheService.get('loggedInTaskNumber');
-          const taskStatus =
-            this.cacheService.get('loggedInTaskStatus') === null || undefined
-              ? null
-              : this.cacheService.get('loggedInTaskStatus');
           this.currentProfileVal = {
             ...response,
             taskNumber,
-            taskStatus,
             claims: [...userClaims]
           };
           return this.currentProfileVal;
@@ -65,7 +60,6 @@ export class UserService {
 
   public updateTaskNumber(taskNumber: string, taskStatus: string): void {
     this.cacheService.set('loggedInTaskNumber', taskNumber);
-    this.cacheService.set('loggedInTaskStatus', taskStatus);
     this.currentProfileVal = {
       ...this.currentProfileVal,
       taskNumber,
@@ -75,7 +69,6 @@ export class UserService {
 
   public clearAppStorage(): void {
     this.cacheService.remove('loggedInTaskNumber');
-    this.cacheService.remove('loggedInTaskStatus');
     this.cacheService.remove('memberRoles');
     this.cacheService.remove('memberLabels');
     this.cacheService.remove('allTeamCommunityList');
