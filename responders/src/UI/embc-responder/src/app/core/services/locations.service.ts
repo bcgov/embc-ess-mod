@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { Address, Code, CommunityType } from '../api/models';
@@ -145,42 +145,43 @@ export class LocationsService {
     }
   }
 
-  public async loadStaticLocationLists(): Promise<void> {
-    const community = this.configService.configurationGetCommunities();
-    const province = this.configService.configurationGetStateProvinces();
-    const country = this.configService.configurationGetCountries();
+  public loadStaticLocationLists(): Observable<void> {
+    const community: Observable<Array<CommunityCode>> =
+      this.configService.configurationGetCommunities();
+    const province: Observable<Array<CommunityCode>> =
+      this.configService.configurationGetStateProvinces();
+    const country: Observable<Array<CommunityCode>> =
+      this.configService.configurationGetCountries();
 
-    return forkJoin([community, province, country])
-      .pipe(
-        map((results) => {
-          this.setCountriesList(
-            [...results[2]].map((c) => ({ code: c.value, name: c.description }))
-          );
+    return forkJoin([community, province, country]).pipe(
+      map((results) => {
+        this.setCountriesList(
+          [...results[2]].map((c) => ({ code: c.value, name: c.description }))
+        );
 
-          this.setCommunityList(
-            [...results[0]].map((c) => ({
-              code: c.value,
-              name: c.description,
-              districtName: c.districtName,
-              stateProvinceCode: c.parentCode.value,
-              countryCode: c.parentCode.parentCode.value,
-              type: c.communityType
-            }))
-          );
-          this.setRegionalDistricts(
-            Array.from(new Set(results[0].map((comm) => comm.districtName)))
-          );
+        this.setCommunityList(
+          [...results[0]].map((c) => ({
+            code: c.value,
+            name: c.description,
+            districtName: c.districtName,
+            stateProvinceCode: c.parentCode.value,
+            countryCode: c.parentCode.parentCode.value,
+            type: c.communityType
+          }))
+        );
+        this.setRegionalDistricts(
+          Array.from(new Set(results[0].map((comm) => comm.districtName)))
+        );
 
-          this.setStateProvinceList(
-            [...results[1]].map((sp) => ({
-              code: sp.value,
-              name: sp.description,
-              countryCode: sp.parentCode.value
-            }))
-          );
-        })
-      )
-      .toPromise();
+        this.setStateProvinceList(
+          [...results[1]].map((sp) => ({
+            code: sp.value,
+            name: sp.description,
+            countryCode: sp.parentCode.value
+          }))
+        );
+      })
+    );
   }
 
   private setCommunityList(communityList: Community[]): void {

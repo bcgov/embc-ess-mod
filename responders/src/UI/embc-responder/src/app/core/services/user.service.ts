@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { MemberRole } from '../api/models';
 import { UserProfile } from '../api/models/user-profile';
@@ -23,7 +24,7 @@ export class UserService {
   ) {}
 
   public async loadUserProfile(): Promise<UserProfile> {
-    return await this.profileService
+    const profile$ = await this.profileService
       .profileGetCurrentUserProfile()
       .pipe(
         tap((response) => {
@@ -41,8 +42,9 @@ export class UserService {
           };
           return this.currentProfileVal;
         })
-      )
-      .toPromise();
+      );
+
+    return lastValueFrom(profile$);
   }
 
   public get currentProfile(): LoggedInUserProfile {

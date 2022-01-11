@@ -14,6 +14,7 @@ import { OutageService } from './feature-components/outage/outage.service';
 import { TimeoutConfiguration } from './core/api/models/timeout-configuration';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { Subscription } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -70,8 +71,12 @@ export class AppComponent implements OnInit {
       try {
         const nextUrl = await this.authenticationService.login();
         const userProfile = await this.userService.loadUserProfile();
-        const location = await this.locationService.loadStaticLocationLists();
-        const team = await this.loadTeamListService.loadStaticTeamLists();
+        const location = await lastValueFrom(
+          this.locationService.loadStaticLocationLists()
+        );
+        const team = await lastValueFrom(
+          this.loadTeamListService.loadStaticTeamLists()
+        );
         this.getBackendVersionInfo();
         this.outageService.displayOutageBanner();
         const nextRoute = decodeURIComponent(

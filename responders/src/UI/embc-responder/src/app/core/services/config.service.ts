@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthConfig } from 'angular-oauth2-oidc';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Configuration, VersionInformation } from '../api/models';
@@ -19,14 +19,15 @@ export class ConfigService {
       return this.config;
     }
 
-    return this.configurationService
+    const config$ = this.configurationService
       .configurationGetConfiguration()
       .pipe(
-        tap((c) => {
+        tap((c: Configuration) => {
           this.config = { ...c };
         })
-      )
-      .toPromise();
+      );
+
+    return lastValueFrom(config$);
   }
 
   public async getAuthConfig(): Promise<AuthConfig> {
