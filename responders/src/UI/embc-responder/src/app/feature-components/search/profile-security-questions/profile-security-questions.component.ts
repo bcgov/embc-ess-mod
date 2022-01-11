@@ -53,21 +53,21 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     } else {
       this.profileSecurityQuestionsService
         .getSecurityQuestions(this.evacueeSessionService.profileId)
-        .subscribe(
-          (results) => {
+        .subscribe({
+          next: (results) => {
             this.securityQuestions =
               this.profileSecurityQuestionsService.shuffleSecurityQuestions(
                 results?.questions
               );
           },
-          (error) => {
+          error: (error) => {
             this.alertService.clearAlert();
             this.alertService.setAlert(
               'danger',
               globalConst.securityQuestionsError
             );
           }
-        );
+        });
     }
   }
 
@@ -100,8 +100,8 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     };
     this.profileSecurityQuestionsService
       .verifySecurityQuestions(this.evacueeSessionService.profileId, body)
-      .subscribe(
-        (results) => {
+      .subscribe({
+        next: (results) => {
           this.securityQuestionResult = results.numberOfCorrectAnswers;
           this.showLoader = !this.showLoader;
 
@@ -151,14 +151,14 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
             }
           }
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.verifySecurityQuestionError
           );
         }
-      );
+      });
   }
 
   /**

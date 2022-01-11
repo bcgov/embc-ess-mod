@@ -42,7 +42,6 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    
     if (changes.evacueeProfile) {
       if (this.evacueeProfile !== undefined) {
         this.getEssfilesMatches(
@@ -85,26 +84,29 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   }
 
   linkToESSFile(fileId: string) {
-    this.essFileService.getFileFromId(fileId).subscribe((essFile) => {
-      const householdMemberId = this.getRegistrantIdToLink(essFile.householdMembers);
-      this.evacueeSessionService.essFileNumber = essFile.id;
-      this.evacueeSessionService.fileLinkFlag = 'Y';
-      this.evacueeSessionService.securityPhraseOpenedFrom =
-      'responder-access/search/evacuee-profile-dashboard';
-      this.evacueeSessionService.fileLinkMetaData = {
-      fileId,
-      linkRequest: {
-        householdMemberId,
-        registantId: this.evacueeProfile.id
+    this.essFileService.getFileFromId(fileId).subscribe({
+      next: (essFile) => {
+        const householdMemberId = this.getRegistrantIdToLink(
+          essFile.householdMembers
+        );
+        this.evacueeSessionService.essFileNumber = essFile.id;
+        this.evacueeSessionService.fileLinkFlag = 'Y';
+        this.evacueeSessionService.securityPhraseOpenedFrom =
+          'responder-access/search/evacuee-profile-dashboard';
+        this.evacueeSessionService.fileLinkMetaData = {
+          fileId,
+          linkRequest: {
+            householdMemberId,
+            registantId: this.evacueeProfile.id
+          }
+        };
+        this.router.navigate(['responder-access/search/security-phrase']);
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.linkProfileError);
       }
-    };
-    this.router.navigate(['responder-access/search/security-phrase']);
-    },
-    (error) => {
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.linkProfileError);
     });
-    
   }
 
   /**
@@ -122,12 +124,12 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
     this.isLoading = !this.isLoading;
     this.evacueeProfileService
       .getFileMatches(firstName, lastName, dateOfBirth)
-      .subscribe(
-        (essFileArray) => {
+      .subscribe({
+        next: (essFileArray) => {
           this.essFiles = essFileArray;
           this.isLoading = !this.isLoading;
         },
-        (error) => {
+        error: (error) => {
           this.isLoading = !this.isLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert(
@@ -135,17 +137,20 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
             globalConst.getPossibleEssfileMatchError
           );
         }
-      );
+      });
   }
 
-  private getRegistrantIdToLink(householdMembers: Array<EvacuationFileHouseholdMember>): string {
-    
+  private getRegistrantIdToLink(
+    householdMembers: Array<EvacuationFileHouseholdMember>
+  ): string {
     for (const member of householdMembers) {
-      if (member.firstName === this.evacueeProfile.personalDetails.firstName && 
+      if (
+        member.firstName === this.evacueeProfile.personalDetails.firstName &&
         member.lastName === this.evacueeProfile.personalDetails.lastName &&
-        member.dateOfBirth === this.evacueeProfile.personalDetails.dateOfBirth) {
-          return member.id;
-        }
+        member.dateOfBirth === this.evacueeProfile.personalDetails.dateOfBirth
+      ) {
+        return member.id;
+      }
     }
     return null;
   }

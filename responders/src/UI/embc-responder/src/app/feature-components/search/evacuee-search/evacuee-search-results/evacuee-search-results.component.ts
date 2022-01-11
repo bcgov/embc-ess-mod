@@ -78,8 +78,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.evacueeSearchResultsService
       .searchForEvacuee(evacueeSearchContext.evacueeSearchParameters)
-      .subscribe(
-        (results) => {
+      .subscribe({
+        next: (results) => {
           this.isLoading = !this.isLoading;
           this.fileResults = results.files.sort(
             (a, b) =>
@@ -92,12 +92,12 @@ export class EvacueeSearchResultsComponent implements OnInit {
               new Date(a.modifiedOn).valueOf()
           );
         },
-        (error) => {
+        error: (error) => {
           this.isLoading = !this.isLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeSearchError);
         }
-      );
+      });
   }
 
   openWizard(): void {

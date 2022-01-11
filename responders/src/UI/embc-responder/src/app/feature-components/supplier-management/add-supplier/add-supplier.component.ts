@@ -84,8 +84,8 @@ export class AddSupplierComponent implements OnInit {
       this.supplierManagementService.convertSupplierGSTNumbertoString(
         supplierGstNumber
       );
-    this.supplierService.checkSupplierExists(legalName, gstNumber).subscribe(
-      (value) => {
+    this.supplierService.checkSupplierExists(legalName, gstNumber).subscribe({
+      next: (value) => {
         this.showLoader = !this.showLoader;
         if (value.length === 0) {
           this.router.navigate([
@@ -98,12 +98,12 @@ export class AddSupplierComponent implements OnInit {
           ]);
         }
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.supplierCheckerror);
       }
-    );
+    });
   }
 
   /**
