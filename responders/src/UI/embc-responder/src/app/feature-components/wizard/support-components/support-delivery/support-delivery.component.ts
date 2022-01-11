@@ -293,8 +293,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
    */
   refreshList() {
     this.showLoader = !this.showLoader;
-    this.stepSupportsService.getSupplierList().subscribe(
-      (value) => {
+    this.stepSupportsService.getSupplierList().subscribe({
+      next: (value) => {
         this.showLoader = !this.showLoader;
         this.stepSupportsService.supplierList = value;
         this.supplierList = value;
@@ -305,12 +305,12 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             map((input) => this.filter(input))
           );
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.supplierRefresherror);
       }
-    );
+    });
   }
 
   /**

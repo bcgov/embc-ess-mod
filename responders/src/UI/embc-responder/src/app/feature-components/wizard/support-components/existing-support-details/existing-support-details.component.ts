@@ -61,27 +61,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/view']);
   }
 
-  // getNeedsAssessment() {
-  //   this.isLoading = !this.isLoading;
-  //   this.stepSupportsService
-  //     .getEvacFile(this.evacueeSessionService.essFileNumber) //this.selectedSupport?.needsAssessmentId
-  //     .subscribe(
-  //       (value) => {
-  //         this.isLoading = !this.isLoading;
-  //         this.needsAssessmentForSupport = value;
-  //         console.log(value);
-  //       },
-  //       (error) => {
-  //         this.isLoading = !this.isLoading;
-  //         this.alertService.clearAlert();
-  //         this.alertService.setAlert(
-  //           'danger',
-  //           globalConst.supportNeedsAssessmentError
-  //         );
-  //       }
-  //     );
-  // }
-
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
       const category = this.stepSupportsService.supportCategory.find(
@@ -244,35 +223,37 @@ export class ExistingSupportDetailsComponent implements OnInit {
         width: '720px'
       })
       .afterClosed()
-      .subscribe((reason) => {
-        if (reason !== undefined && reason !== 'close') {
-          this.isLoading = !this.isLoading;
-          console.log(this.isLoading);
-          const win = window.open('', '_blank');
-          win.document.write('Loading referral document ... ');
-          this.existingSupportService
-            .reprintSupport(
-              this.needsAssessmentForSupport.id,
-              this.selectedSupport.id,
-              reason
-            )
-            .subscribe(
-              (value) => {
-                const blob = value;
-                const url = window.URL.createObjectURL(blob);
-                win.location.href = url;
-                this.isLoading = !this.isLoading;
-              },
-              (error) => {
-                this.isLoading = !this.isLoading;
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.reprintReferralError
-                );
-                win.document.write(globalConst.reprintReferralError);
-              }
-            );
+      .subscribe({
+        next: (reason) => {
+          if (reason !== undefined && reason !== 'close') {
+            this.isLoading = !this.isLoading;
+            console.log(this.isLoading);
+            const win = window.open('', '_blank');
+            win.document.write('Loading referral document ... ');
+            this.existingSupportService
+              .reprintSupport(
+                this.needsAssessmentForSupport.id,
+                this.selectedSupport.id,
+                reason
+              )
+              .subscribe({
+                next: (value) => {
+                  const blob = value;
+                  const url = window.URL.createObjectURL(blob);
+                  win.location.href = url;
+                  this.isLoading = !this.isLoading;
+                },
+                error: (error) => {
+                  this.isLoading = !this.isLoading;
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.reprintReferralError
+                  );
+                  win.document.write(globalConst.reprintReferralError);
+                }
+              });
+          }
         }
       });
   }

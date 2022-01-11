@@ -33,17 +33,17 @@ export class StepSupportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stepSupportsService.getSupplierList().subscribe(
-      (value) => {
+    this.stepSupportsService.getSupplierList().subscribe({
+      next: (value) => {
         this.stepSupportsService.supplierList = value;
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',
           globalConst.mainSuppliersListError
         );
       }
-    );
+    });
   }
 }

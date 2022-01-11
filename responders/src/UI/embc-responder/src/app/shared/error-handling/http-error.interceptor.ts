@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { throwError, Observable, of, from } from 'rxjs';
+import { throwError, Observable, of } from 'rxjs';
 import { catchError, delay, mergeMap, retryWhen } from 'rxjs/operators';
 import { AlertService } from '../components/alert/alert.service';
 import { ErrorDialogService } from './error-dialog/error-dialog.service';
@@ -27,12 +27,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       this.delayedRetry(2000, 2),
       catchError((error: HttpErrorResponse) => {
-        // if (error.status === 403) {
-        //   //return from(this.router.navigate(['access-denied']));
-        //   this.alertService.setAlert('danger','Access Denied')
-        // } else {
-        return throwError(error);
-        //}
+        return throwError(() => new Error(error.message));
       })
     ) as Observable<HttpEvent<any>>;
   }
@@ -47,7 +42,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         retryWhen((errors) =>
           errors.pipe(
             delay(delayMs),
-            mergeMap((error) => (retries-- > 0 ? of(error) : throwError(error)))
+            mergeMap((error) =>
+              retries-- > 0 ? of(error) : throwError(() => new Error(error))
+            )
           )
         )
       );

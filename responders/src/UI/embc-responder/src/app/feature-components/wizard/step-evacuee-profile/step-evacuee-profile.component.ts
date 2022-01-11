@@ -40,15 +40,15 @@ export class StepEvacueeProfileComponent {
     this.loadTab();
 
     // Load security question list as soon as wizard is initialized
-    this.securityQuestionsService.getSecurityQuestionList().subscribe(
-      (questions) => {
+    this.securityQuestionsService.getSecurityQuestionList().subscribe({
+      error: (questions) => {
         this.stepEvacueeProfileService.securityQuestionOptions = questions;
       },
-      (error) => {
+      next: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.genericError);
       }
-    );
+    });
   }
 
   loadTab() {
