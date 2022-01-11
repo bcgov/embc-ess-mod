@@ -168,7 +168,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("members/username")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> IsUserNameExists(string userName, string memberId = null)
+        public async Task<ActionResult<bool>> IsUserNameExists(string userName, string? memberId = null)
         {
             var response = await client.Send(new ValidateTeamMemberCommand
             {
@@ -210,9 +210,9 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class TeamMember
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        public string TeamId { get; set; }
+        public string? TeamId { get; set; }
         public string TeamName { get; set; }
 
         [Required]
@@ -221,10 +221,10 @@ namespace EMBC.Responders.API.Controllers
         public bool IsActive { get; set; } = true;
 
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Phone]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         [Required]
         public string FirstName { get; set; }
