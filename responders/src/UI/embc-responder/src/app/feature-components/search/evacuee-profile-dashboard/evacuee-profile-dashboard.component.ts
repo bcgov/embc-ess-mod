@@ -45,18 +45,22 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog(globalConst.essFileLinkMessage)
         .afterClosed()
-        .subscribe((value) => {
-          this.evacueeSessionService.fileLinkFlag = null;
-          this.evacueeSessionService.fileLinkMetaData = null;
-          this.evacueeSessionService.fileLinkStatus = null;
+        .subscribe({
+          next: (value) => {
+            this.evacueeSessionService.fileLinkFlag = null;
+            this.evacueeSessionService.fileLinkMetaData = null;
+            this.evacueeSessionService.fileLinkStatus = null;
+          }
         });
     } else if (this.evacueeSessionService.fileLinkStatus === 'E') {
       this.openLinkDialog(globalConst.essFileLinkErrorMessage)
         .afterClosed()
-        .subscribe((value) => {
-          this.evacueeSessionService.fileLinkFlag = null;
-          this.evacueeSessionService.fileLinkMetaData = null;
-          this.evacueeSessionService.fileLinkStatus = null;
+        .subscribe({
+          next: (value) => {
+            this.evacueeSessionService.fileLinkFlag = null;
+            this.evacueeSessionService.fileLinkMetaData = null;
+            this.evacueeSessionService.fileLinkStatus = null;
+          }
         });
     }
   }
@@ -91,9 +95,11 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         width: '620px'
       })
       .afterClosed()
-      .subscribe((value) => {
-        if (value === 'verified') {
-          this.verifyProfile();
+      .subscribe({
+        next: (value) => {
+          if (value === 'verified') {
+            this.verifyProfile();
+          }
         }
       });
   }
@@ -141,26 +147,28 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         width: '600px'
       })
       .afterClosed()
-      .subscribe((emailId) => {
-        if (emailId !== 'close') {
-          this.emailLoader = !this.emailLoader;
-          this.evacueeProfileDashboardService
-            .inviteByEmail(emailId, this.evacueeProfile.id)
-            .subscribe(
-              (value) => {
-                this.emailLoader = !this.emailLoader;
-                this.emailSuccessMessage =
-                  'Email sent successfully to ' + emailId;
-              },
-              (error) => {
-                this.emailLoader = !this.emailLoader;
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.bcscInviteError
-                );
-              }
-            );
+      .subscribe({
+        next: (emailId) => {
+          if (emailId !== 'close') {
+            this.emailLoader = !this.emailLoader;
+            this.evacueeProfileDashboardService
+              .inviteByEmail(emailId, this.evacueeProfile.id)
+              .subscribe({
+                next: (value) => {
+                  this.emailLoader = !this.emailLoader;
+                  this.emailSuccessMessage =
+                    'Email sent successfully to ' + emailId;
+                },
+                error: (error) => {
+                  this.emailLoader = !this.emailLoader;
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.bcscInviteError
+                  );
+                }
+              });
+          }
         }
       });
   }
@@ -188,13 +196,13 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   private verifyProfile(): void {
     this.evacueeProfileService
       .setVerifiedStatus(this.evacueeProfileId, true)
-      .subscribe(
-        (evacueeProfile) => {
+      .subscribe({
+        next: (evacueeProfile) => {
           this.evacueeProfile = evacueeProfile;
           this.isLoading = !this.isLoading;
           this.openSuccessModal(globalConst.successfulVerification);
         },
-        (error) => {
+        error: (error) => {
           this.isLoading = !this.isLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert(
@@ -202,7 +210,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
             globalConst.verifyRegistrantProfileError
           );
         }
-      );
+      });
   }
 
   /**
@@ -211,11 +219,11 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * @param evacueeProfileId the evacuee Profile ID needed to get the profile details
    */
   private getEvacueeProfile(evacueeProfileId): void {
-    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe(
-      (profile: RegistrantProfileModel) => {
+    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
+      next: (profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
       },
-      (error) => {
+      error: (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -223,7 +231,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
           globalConst.verifyRegistrantProfileError
         );
       }
-    );
+    });
   }
 
   /**

@@ -59,31 +59,31 @@ export class LoadTeamListService {
 
   private getMemberRole(): MemberRoleDescription[] {
     let memberRoles: MemberRoleDescription[] = [];
-    this.teamMembersService.teamsGetMemberRoles().subscribe(
-      (roles) => {
+    this.teamMembersService.teamsGetMemberRoles().subscribe({
+      next: (roles) => {
         memberRoles = roles;
         this.setMemberRoles(memberRoles);
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.systemError);
       }
-    );
+    });
     return memberRoles;
   }
 
   private getMemberLabel(): MemberLabelDescription[] {
     let memberLabels: MemberLabelDescription[] = [];
-    this.teamMembersService.teamsGetMemberLabels().subscribe(
-      (labels) => {
+    this.teamMembersService.teamsGetMemberLabels().subscribe({
+      next: (labels) => {
         memberLabels = labels;
         this.setMemberLabels(memberLabels);
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.systemError);
       }
-    );
+    });
     return memberLabels;
   }
 }

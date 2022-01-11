@@ -22,15 +22,15 @@ export class ElectronicAgreementComponent implements OnInit {
   ngOnInit(): void {}
 
   submitEAA(): void {
-    this.eaaService.signAgreement().subscribe(
-      () => {
+    this.eaaService.signAgreement().subscribe({
+      next: () => {
         this.router.navigateByUrl('responder-access');
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.agreementError);
       }
-    );
+    });
   }
 
   agreementChangeEvent(event: MatCheckboxChange): void {

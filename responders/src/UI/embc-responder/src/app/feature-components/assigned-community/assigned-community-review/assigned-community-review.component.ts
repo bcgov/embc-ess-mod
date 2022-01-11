@@ -58,13 +58,13 @@ export class AssignedCommunityReviewComponent implements OnInit {
     this.isSubmitted = !this.isSubmitted;
     this.assignedCommunityReviewService
       .addCommunities(this.addedCommunityList.map((comm) => comm.code))
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.router.navigate([
             '/responder-access/community-management/list-communities'
           ]);
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
@@ -73,7 +73,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
             globalConst.saveCommunityListError
           );
         }
-      );
+      });
   }
 
   /**
@@ -96,13 +96,13 @@ export class AssignedCommunityReviewComponent implements OnInit {
       .removeCommunities(
         this.deleteCommunityList.map((comm) => comm.communityCode)
       )
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.router.navigate([
             '/responder-access/community-management/list-communities'
           ]);
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
@@ -111,6 +111,6 @@ export class AssignedCommunityReviewComponent implements OnInit {
             globalConst.removeCommunityListError
           );
         }
-      );
+      });
   }
 }

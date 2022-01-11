@@ -41,19 +41,19 @@ export class AddCommunityComponent implements OnInit {
     this.assignedCommunityListDataService
       .getCommunitiesToAddList()
       .pipe(delay(1000))
-      .subscribe(
-        (values) => {
+      .subscribe({
+        next: (values) => {
           this.isLoading = !this.isLoading;
           this.communities = values;
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.addCommunityListError
           );
         }
-      );
+      });
 
     if (
       this.addCommunityService.getAddedCommunities() !== undefined &&

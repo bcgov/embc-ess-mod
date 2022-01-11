@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
@@ -50,18 +50,22 @@ export class EssfileDashboardComponent implements OnInit {
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog(globalConst.profileLinkMessage)
         .afterClosed()
-        .subscribe((value) => {
-          this.evacueeSessionService.fileLinkFlag = null;
-          this.evacueeSessionService.fileLinkMetaData = null;
-          this.evacueeSessionService.fileLinkStatus = null;
+        .subscribe({
+          next: (value) => {
+            this.evacueeSessionService.fileLinkFlag = null;
+            this.evacueeSessionService.fileLinkMetaData = null;
+            this.evacueeSessionService.fileLinkStatus = null;
+          }
         });
     } else if (this.evacueeSessionService.fileLinkStatus === 'E') {
       this.openLinkDialog(globalConst.profileLinkErrorMessage)
         .afterClosed()
-        .subscribe((value) => {
-          this.evacueeSessionService.fileLinkFlag = null;
-          this.evacueeSessionService.fileLinkMetaData = null;
-          this.evacueeSessionService.fileLinkStatus = null;
+        .subscribe({
+          next: (value) => {
+            this.evacueeSessionService.fileLinkFlag = null;
+            this.evacueeSessionService.fileLinkMetaData = null;
+            this.evacueeSessionService.fileLinkStatus = null;
+          }
         });
     }
   }
@@ -153,17 +157,17 @@ export class EssfileDashboardComponent implements OnInit {
           return file;
         })
       )
-      .subscribe(
-        (essFile: EvacuationFileModel) => {
+      .subscribe({
+        next: (essFile: EvacuationFileModel) => {
           this.loadDefaultOverviewSection(essFile);
           this.isLoading = !this.isLoading;
         },
-        (error) => {
+        error: (error) => {
           this.isLoading = !this.isLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.fileDashboardError);
         }
-      );
+      });
   }
 
   /**

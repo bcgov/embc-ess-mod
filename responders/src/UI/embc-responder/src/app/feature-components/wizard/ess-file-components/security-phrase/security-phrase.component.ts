@@ -52,8 +52,10 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
+      this.stepEssFileService.nextTabUpdate.subscribe({
+        next: () => {
+          this.updateTabStatus();
+        }
       });
   }
 
@@ -117,7 +119,6 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     this.editedSecurityPhrase = !this.editedSecurityPhrase;
     this.securityFormControl.securityPhrase.enable();
     this.stepEssFileService.editedSecurityPhrase = true;
-    // this.formValidation();
   }
 
   /**
@@ -205,8 +206,6 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
         this.securityFormControl.securityPhrase.enable();
         this.editedSecurityPhrase = true;
       }
-      // } else if (this.wizardType === 'new-ess-file') {
-      //   this.setFormDisabled(this.stepEssFileService.bypassPhrase);
     }
   }
 
