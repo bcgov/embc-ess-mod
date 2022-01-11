@@ -13,7 +13,7 @@ export function generateAnonymousRegistration(communities: Array<CommunityCode>,
         registrationDetails: {
             id: null,
             contactDetails: {
-                phone: faker.phone.phoneNumber(),
+                phone: faker.phone.phoneNumber("###-###-####"),
                 hideEmailRequired: false,
                 hidePhoneRequired: false
             },
