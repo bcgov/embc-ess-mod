@@ -267,14 +267,14 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class EvacuationFile
     {
-        public string Id { get; set; } = null!;
+        public string? Id { get; set; } = null!;
         public string? PaperFileNumber { get; set; }
 
         [Required]
         public string PrimaryRegistrantId { get; set; } = null!;
 
-        public string PrimaryRegistrantFirstName { get; set; } = null!;
-        public string PrimaryRegistrantLastName { get; set; } = null!;
+        public string? PrimaryRegistrantFirstName { get; set; } = null!;
+        public string? PrimaryRegistrantLastName { get; set; } = null!;
 
         [Required]
         public Address EvacuatedFromAddress { get; set; } = null!;
@@ -316,9 +316,9 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string TaskNumber { get; set; } = null!;
 
-        public string CommunityCode { get; set; } = null!;
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        public string? CommunityCode { get; set; } = null!;
+        public DateTime? From { get; set; }
+        public DateTime? To { get; set; }
     }
 
     /// <summary>
@@ -326,11 +326,11 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class NeedsAssessment
     {
-        public string Id { get; set; } = null!;
-        public DateTime CreatedOn { get; set; }
-        public DateTime ModifiedOn { get; set; }
-        public string ReviewingTeamMemberId { get; set; } = null!;
-        public string ReviewingTeamMemberDisplayName { get; set; } = null!;
+        public string? Id { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public string? ReviewingTeamMemberId { get; set; }
+        public string? ReviewingTeamMemberDisplayName { get; set; }
 
         [Required]
         public InsuranceOption Insurance { get; set; }
@@ -457,11 +457,11 @@ namespace EMBC.Responders.API.Controllers
 
     public class EvacuationFileHouseholdMember
     {
-        public string Id { get; set; }
-        public string LinkedRegistrantId { get; set; }
+        public string? Id { get; set; }
+        public string? LinkedRegistrantId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Initials { get; set; }
+        public string? Initials { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
         public HouseholdMemberType Type { get; set; }

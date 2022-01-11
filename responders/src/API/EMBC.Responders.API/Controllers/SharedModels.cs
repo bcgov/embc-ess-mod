@@ -21,12 +21,12 @@ namespace EMBC.Responders.API.Controllers
     public class Address
     {
         public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string City { get; set; }
-        public string CommunityCode { get; set; }
+        public string? AddressLine2 { get; set; }
+        public string? City { get; set; }
+        public string? CommunityCode { get; set; }
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
-        public string PostalCode { get; set; }
+        public string? PostalCode { get; set; }
     }
 
     /// <summary>
@@ -40,8 +40,8 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string LastName { get; set; }
 
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
+        public string? Initials { get; set; }
+        public string? PreferredName { get; set; }
 
         [Required]
         public string Gender { get; set; }
@@ -56,9 +56,9 @@ namespace EMBC.Responders.API.Controllers
     public class ContactDetails
     {
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Phone]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
     }
 }
