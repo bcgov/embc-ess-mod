@@ -266,14 +266,14 @@ namespace EMBC.Responders.API.Controllers
 
     public class Supplier
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public string? Id { get; set; }
+        public string? Name { get; set; }
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
-        public Address Address { get; set; }
-        public SupplierContact Contact { get; set; }
-        public SupplierTeamDetails Team { get; set; }
-        public IEnumerable<SupplierTeamDetails> SharedWithTeams { get; set; }
+        public Address Address { get; set; } = null!;
+        public SupplierContact Contact { get; set; } = null!;
+        public SupplierTeamDetails? Team { get; set; }
+        public IEnumerable<SupplierTeamDetails> SharedWithTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
         public SupplierStatus Status { get; set; }
     }
 
