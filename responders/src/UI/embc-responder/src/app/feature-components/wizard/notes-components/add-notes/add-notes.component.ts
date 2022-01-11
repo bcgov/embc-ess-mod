@@ -67,17 +67,17 @@ export class AddNotesComponent implements OnInit {
       .saveNotes(
         this.stepNotesService.createNoteDTO(this.notesForm.get('note').value)
       )
-      .subscribe(
-        (result) => {
+      .subscribe({
+        next: (result) => {
           this.closeEvent.emit(true);
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.addNotesError);
         }
-      );
+      });
   }
 
   /**
@@ -91,17 +91,17 @@ export class AddNotesComponent implements OnInit {
           this.stepNotesService.selectedNote.id
         )
       )
-      .subscribe(
-        (result) => {
+      .subscribe({
+        error: (result) => {
           this.closeEvent.emit(true);
         },
-        (error) => {
+        next: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.editNotesError);
         }
-      );
+      });
   }
 
   /**

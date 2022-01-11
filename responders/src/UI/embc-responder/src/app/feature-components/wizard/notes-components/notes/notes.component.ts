@@ -53,8 +53,8 @@ export class NotesComponent implements OnInit {
    */
   hideUnhideNotes(note: Note): void {
     this.showLoader = !this.showLoader;
-    this.stepNotesService.hideUnhideNotes(note.id, note.isHidden).subscribe(
-      (notes) => {
+    this.stepNotesService.hideUnhideNotes(note.id, note.isHidden).subscribe({
+      next: (notes) => {
         this.showLoader = !this.showLoader;
         const sortedNotes = notes.sort(
           (a, b) =>
@@ -63,7 +63,7 @@ export class NotesComponent implements OnInit {
         this.notesList = sortedNotes;
         this.count = notes.length;
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         if (note.isHidden) {
@@ -72,7 +72,7 @@ export class NotesComponent implements OnInit {
           this.alertService.setAlert('danger', globalConst.showNoteError);
         }
       }
-    );
+    });
   }
 
   /**
@@ -92,8 +92,8 @@ export class NotesComponent implements OnInit {
    */
   private loadNotes(): void {
     this.showLoader = !this.showLoader;
-    this.stepNotesService.getNotes().subscribe(
-      (notes) => {
+    this.stepNotesService.getNotes().subscribe({
+      next: (notes) => {
         this.showLoader = !this.showLoader;
         const note = notes.sort(
           (a, b) =>
@@ -103,11 +103,11 @@ export class NotesComponent implements OnInit {
         this.count = notes.length;
         this.cd.detectChanges();
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.notesListError);
       }
-    );
+    });
   }
 }

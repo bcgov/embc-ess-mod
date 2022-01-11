@@ -107,18 +107,18 @@ export class EditUserProfileComponent implements OnInit {
 
     this.editUserProfileService
       .editUserProfile(firstName, lastName, phone, email)
-      .subscribe(
-        async () => {
+      .subscribe({
+        next: async () => {
           this.showLoader = !this.showLoader;
           await this.userService.loadUserProfile();
           this.router.navigate(['/responder-access/user-profile']);
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.editProfileError);
         }
-      );
+      });
   }
 }

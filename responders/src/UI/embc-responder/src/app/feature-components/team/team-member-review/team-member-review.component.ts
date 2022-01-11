@@ -70,15 +70,15 @@ export class TeamMemberReviewComponent {
   updateTeamMember(): void {
     this.teamMemberReviewService
       .updateTeamMember(this.teamMember.id, this.teamMember)
-      .subscribe(
-        (value) => {
+      .subscribe({
+        next: (value) => {
           const stateIndicator = { action: 'edit' };
           this.router.navigate(
             ['/responder-access/responder-management/details/member-list'],
             { state: stateIndicator }
           );
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
@@ -87,27 +87,27 @@ export class TeamMemberReviewComponent {
             globalConst.updateTeamMemberError
           );
         }
-      );
+      });
   }
 
   /**
    * Adds the team member and navigates to team list
    */
   addTeamMember(): void {
-    this.teamMemberReviewService.addTeamMember(this.teamMember).subscribe(
-      (value) => {
+    this.teamMemberReviewService.addTeamMember(this.teamMember).subscribe({
+      next: (value) => {
         const stateIndicator = { action: 'add' };
         this.router.navigate(
           ['/responder-access/responder-management/details/member-list'],
           { state: stateIndicator }
         );
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.saveTeamMemberError);
       }
-    );
+    });
   }
 }

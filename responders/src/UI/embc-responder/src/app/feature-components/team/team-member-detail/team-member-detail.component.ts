@@ -55,28 +55,30 @@ export class TeamMemberDetailComponent {
         width: '650px'
       })
       .afterClosed()
-      .subscribe((event) => {
-        if (event === 'delete') {
-          this.teamDetailsService
-            .deleteTeamMember(this.teamMember.id)
-            .subscribe(
-              (value) => {
-                const stateIndicator = { action: 'delete' };
-                this.router.navigate(
-                  [
-                    '/responder-access/responder-management/details/member-list'
-                  ],
-                  { state: stateIndicator }
-                );
-              },
-              (error) => {
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.teamMemberDeleteError
-                );
-              }
-            );
+      .subscribe({
+        next: (event) => {
+          if (event === 'delete') {
+            this.teamDetailsService
+              .deleteTeamMember(this.teamMember.id)
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'delete' };
+                  this.router.navigate(
+                    [
+                      '/responder-access/responder-management/details/member-list'
+                    ],
+                    { state: stateIndicator }
+                  );
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.teamMemberDeleteError
+                  );
+                }
+              });
+          }
         }
       });
   }

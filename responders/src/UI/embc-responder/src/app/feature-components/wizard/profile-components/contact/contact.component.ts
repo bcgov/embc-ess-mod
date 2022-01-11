@@ -121,16 +121,14 @@ export class ContactComponent implements OnInit, OnDestroy {
             : '',
           [
             Validators.email,
-            this.customValidation
-              .conditionalValidation(
-                () =>
-                  (this.contactInfoForm.get('phone').value === '' ||
-                    this.contactInfoForm.get('phone').value === undefined ||
-                    this.contactInfoForm.get('phone').value === null) &&
-                  this.contactInfoForm.get('showContacts').value === true,
-                this.customValidation.whitespaceValidator()
-              )
-              .bind(this.customValidation)
+            this.customValidation.conditionalValidation(
+              () =>
+                (this.contactInfoForm.get('phone').value === '' ||
+                  this.contactInfoForm.get('phone').value === undefined ||
+                  this.contactInfoForm.get('phone').value === null) &&
+                this.contactInfoForm.get('showContacts').value === true,
+              this.customValidation.whitespaceValidator()
+            )
           ]
         ],
         phone: [
@@ -141,16 +139,14 @@ export class ContactComponent implements OnInit, OnDestroy {
             this.customValidation
               .maskedNumberLengthValidator()
               .bind(this.customValidation),
-            this.customValidation
-              .conditionalValidation(
-                () =>
-                  (this.contactInfoForm.get('email').value === '' ||
-                    this.contactInfoForm.get('email').value === undefined ||
-                    this.contactInfoForm.get('email').value === null) &&
-                  this.contactInfoForm.get('showContacts').value === true,
-                this.customValidation.whitespaceValidator()
-              )
-              .bind(this.customValidation)
+            this.customValidation.conditionalValidation(
+              () =>
+                (this.contactInfoForm.get('email').value === '' ||
+                  this.contactInfoForm.get('email').value === undefined ||
+                  this.contactInfoForm.get('email').value === null) &&
+                this.contactInfoForm.get('showContacts').value === true,
+              this.customValidation.whitespaceValidator()
+            )
           ]
         ],
         confirmEmail: [
@@ -159,16 +155,14 @@ export class ContactComponent implements OnInit, OnDestroy {
             : '',
           [
             Validators.email,
-            this.customValidation
-              .conditionalValidation(
-                () =>
-                  this.contactInfoForm.get('email').value !== '' &&
-                  this.contactInfoForm.get('email').value !== undefined &&
-                  this.contactInfoForm.get('email').value !== null &&
-                  this.contactInfoForm.get('showContacts').value === true,
-                this.customValidation.whitespaceValidator()
-              )
-              .bind(this.customValidation)
+            this.customValidation.conditionalValidation(
+              () =>
+                this.contactInfoForm.get('email').value !== '' &&
+                this.contactInfoForm.get('email').value !== undefined &&
+                this.contactInfoForm.get('email').value !== null &&
+                this.contactInfoForm.get('showContacts').value === true,
+              this.customValidation.whitespaceValidator()
+            )
           ]
         ],
         showContacts: [
@@ -178,11 +172,7 @@ export class ContactComponent implements OnInit, OnDestroy {
           [Validators.required]
         ]
       },
-      {
-        validator: this.customValidation
-          .confirmEmailValidator()
-          .bind(this.customValidation)
-      }
+      { validators: [this.customValidation.confirmEmailValidator()] }
     );
   }
 

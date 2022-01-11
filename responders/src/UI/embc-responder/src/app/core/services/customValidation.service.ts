@@ -91,31 +91,6 @@ export class CustomValidationService {
   }
 
   /**
-   * Checks if the email and confirm email field matches
-   */
-  confirmEmailValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      if (control) {
-        const email = control.get('email').value;
-        const confirmEmail = control.get('confirmEmail').value;
-        if (
-          email !== undefined &&
-          confirmEmail !== undefined &&
-          email !== null &&
-          confirmEmail !== null &&
-          email !== '' &&
-          confirmEmail !== ''
-        ) {
-          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
-            return { emailMatch: true };
-          }
-        }
-      }
-      return null;
-    };
-  }
-
-  /**
    * Checks the postal address pattern for Canada and USA
    */
   postalValidation(): ValidatorFn {
@@ -211,6 +186,30 @@ export class CustomValidationService {
           (value2 || '').trim().length === 0
         ) {
           return { groupRequiredError: true };
+        }
+      }
+    };
+  }
+
+  /**
+   * Checks if the email and confirm email field matches
+   */
+  confirmEmailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const email = control.get('email').value;
+        const confirmEmail = control.get('confirmEmail').value;
+        if (
+          email !== undefined &&
+          confirmEmail !== undefined &&
+          email !== null &&
+          confirmEmail !== null &&
+          email !== '' &&
+          confirmEmail !== ''
+        ) {
+          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+            return { emailMatch: true };
+          }
         }
       }
     };

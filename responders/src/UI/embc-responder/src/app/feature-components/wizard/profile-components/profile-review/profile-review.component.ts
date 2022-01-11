@@ -19,7 +19,6 @@ import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.m
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { SecurityQuestion } from 'src/app/core/api/models';
-import { map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-review',
@@ -130,13 +129,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   createNewProfile() {
     this.evacueeProfileService
       .createProfile(this.stepEvacueeProfileService.createProfileDTO())
-      .subscribe(
-        (profile: RegistrantProfileModel) => {
+      .subscribe({
+        next: (profile: RegistrantProfileModel) => {
           this.disableButton = true;
           this.saveLoader = false;
           this.createNewProfileDialog(profile);
         },
-        (error) => {
+        error: (error) => {
           this.saveLoader = false;
           this.alertService.clearAlert();
           this.alertService.setAlert(
@@ -144,7 +143,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
             globalConst.createRegProfileError
           );
         }
-      );
+      });
   }
 
   createMemberRegistration() {
@@ -154,13 +153,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.memberRegistration.id,
         this.evacueeSessionService.essFileNumber
       )
-      .subscribe(
-        (profile) => {
+      .subscribe({
+        next: (profile) => {
           this.disableButton = true;
           this.saveLoader = false;
           this.memberProfileDialog();
         },
-        (error) => {
+        error: (error) => {
           this.saveLoader = false;
           this.alertService.clearAlert();
           this.alertService.setAlert(
@@ -168,22 +167,24 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
             globalConst.createRegProfileError
           );
         }
-      );
+      });
   }
 
   createNewProfileDialog(profile: RegistrantProfileModel) {
     this.stepEvacueeProfileService
       .openModal(globalConst.newRegWizardProfileCreatedMessage)
       .afterClosed()
-      .subscribe(() => {
-        this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
-        this.wizardAdapterService.stepCreateEssFileFromProfileRecord(profile);
+      .subscribe({
+        next: () => {
+          this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+          this.wizardAdapterService.stepCreateEssFileFromProfileRecord(profile);
 
-        this.router.navigate(['/ess-wizard/ess-file'], {
-          state: { step: 'STEP 2', title: 'Create ESS File' }
-        });
+          this.router.navigate(['/ess-wizard/ess-file'], {
+            state: { step: 'STEP 2', title: 'Create ESS File' }
+          });
 
-        this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
+          this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
+        }
       });
   }
 
@@ -193,8 +194,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.profileId,
         this.stepEvacueeProfileService.createProfileDTO()
       )
-      .subscribe(
-        (profile: RegistrantProfileModel) => {
+      .subscribe({
+        next: (profile: RegistrantProfileModel) => {
           this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
           this.disableButton = true;
           this.saveLoader = false;
@@ -209,7 +210,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
               return;
           }
         },
-        (error) => {
+        error: (error) => {
           this.saveLoader = false;
           this.alertService.clearAlert();
           this.alertService.setAlert(
@@ -217,22 +218,24 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
             globalConst.createRegProfileError
           );
         }
-      );
+      });
   }
 
   editNewRegistrationProfileDialog(profile: RegistrantProfileModel) {
     this.stepEvacueeProfileService
       .openModal(globalConst.newRegWizardProfileUpdatedMessage)
       .afterClosed()
-      .subscribe(() => {
-        this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
-        this.wizardAdapterService.stepCreateEssFileFromEditProfileRecord(
-          profile
-        );
+      .subscribe({
+        next: () => {
+          this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+          this.wizardAdapterService.stepCreateEssFileFromEditProfileRecord(
+            profile
+          );
 
-        this.router.navigate(['/ess-wizard/ess-file'], {
-          state: { step: 'STEP 2', title: 'Create ESS File' }
-        });
+          this.router.navigate(['/ess-wizard/ess-file'], {
+            state: { step: 'STEP 2', title: 'Create ESS File' }
+          });
+        }
       });
   }
 

@@ -185,29 +185,31 @@ export class ExistingSupportDetailsComponent implements OnInit {
         width: '720px'
       })
       .afterClosed()
-      .subscribe((reason) => {
-        if (reason !== undefined && reason !== 'close') {
-          this.existingSupportService
-            .voidSupport(
-              this.needsAssessmentForSupport.id,
-              this.selectedSupport.id,
-              reason
-            )
-            .subscribe(
-              (value) => {
-                const stateIndicator = { action: 'void' };
-                this.router.navigate(['/ess-wizard/add-supports/view'], {
-                  state: stateIndicator
-                });
-              },
-              (error) => {
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.voidReferralError
-                );
-              }
-            );
+      .subscribe({
+        next: (reason) => {
+          if (reason !== undefined && reason !== 'close') {
+            this.existingSupportService
+              .voidSupport(
+                this.needsAssessmentForSupport.id,
+                this.selectedSupport.id,
+                reason
+              )
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'void' };
+                  this.router.navigate(['/ess-wizard/add-supports/view'], {
+                    state: stateIndicator
+                  });
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.voidReferralError
+                  );
+                }
+              });
+          }
         }
       });
   }
