@@ -9,7 +9,6 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-matched-essfiles',
@@ -99,12 +98,12 @@ export class MatchedEssfilesComponent implements OnInit {
    */
   private getProfileESSFiles(registrantId: string): void {
     this.isLoading = !this.isLoading;
-    this.evacueeProfileService.getProfileFiles(registrantId).subscribe(
-      (essFilesArray) => {
+    this.evacueeProfileService.getProfileFiles(registrantId).subscribe({
+      next: (essFilesArray) => {
         this.essFiles = essFilesArray;
         this.isLoading = !this.isLoading;
       },
-      (error) => {
+      error: (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -112,6 +111,6 @@ export class MatchedEssfilesComponent implements OnInit {
           globalConst.getProfileEssFilesError
         );
       }
-    );
+    });
   }
 }

@@ -99,20 +99,20 @@ export class EvacueeSearchService {
   public getSubCategoryList(): void {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
-      .subscribe(
-        (subCategories: Code[]) => {
+      .subscribe({
+        next: (subCategories: Code[]) => {
           this.supportSubCategory = subCategories.filter(
             (subCategory) => subCategory.description !== null
           );
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.supportCategoryListError
           );
         }
-      );
+      });
   }
 
   public checkTaskStatus(): void {

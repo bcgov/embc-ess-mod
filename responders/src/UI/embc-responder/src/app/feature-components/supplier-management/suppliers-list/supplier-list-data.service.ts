@@ -120,8 +120,8 @@ export class SupplierListDataService {
    * @param viewType the type of view to be rendered whether the details dsplayed are from a main supplier or a mutual aid.
    */
   getSupplierDetails(supplierId: string, viewType: string): void {
-    this.supplierServices.getSupplierById(supplierId).subscribe(
-      (supplier) => {
+    this.supplierServices.getSupplierById(supplierId).subscribe({
+      next: (supplier) => {
         this.setSelectedSupplier(supplier);
 
         const essTeams: Team[] = this.getEssTeamsList();
@@ -133,11 +133,11 @@ export class SupplierListDataService {
           { queryParams: { type: viewType } }
         );
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.getSupportByIdError);
       }
-    );
+    });
   }
 
   /**
@@ -172,12 +172,12 @@ export class SupplierListDataService {
    */
   public getEssTeams(): Team[] {
     let essTeams: Team[] = [];
-    this.supplierServices
-      .getMutualAidByEssTeam()
-      .subscribe((essTeamsResult) => {
+    this.supplierServices.getMutualAidByEssTeam().subscribe({
+      next: (essTeamsResult) => {
         essTeams = essTeamsResult;
         this.setEssTeams(essTeamsResult);
-      });
+      }
+    });
     return essTeams;
   }
 

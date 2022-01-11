@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   SecurityQuestion,
@@ -29,7 +29,6 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   incorrectScreen = false;
   correctAnswerFlag = false;
   showLoader = false;
-  // isLoading = false;
   color = '#169BD5';
 
   constructor(
@@ -43,7 +42,6 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.isLoading = !this.isLoading;
     this.createAnswersForm();
     this.securityAnswers = [];
     this.firstTryCorrect = false;
@@ -53,21 +51,21 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     } else {
       this.profileSecurityQuestionsService
         .getSecurityQuestions(this.evacueeSessionService.profileId)
-        .subscribe(
-          (results) => {
+        .subscribe({
+          next: (results) => {
             this.securityQuestions =
               this.profileSecurityQuestionsService.shuffleSecurityQuestions(
                 results?.questions
               );
           },
-          (error) => {
+          error: (error) => {
             this.alertService.clearAlert();
             this.alertService.setAlert(
               'danger',
               globalConst.securityQuestionsError
             );
           }
-        );
+        });
     }
   }
 
@@ -100,8 +98,8 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     };
     this.profileSecurityQuestionsService
       .verifySecurityQuestions(this.evacueeSessionService.profileId, body)
-      .subscribe(
-        (results) => {
+      .subscribe({
+        next: (results) => {
           this.securityQuestionResult = results.numberOfCorrectAnswers;
           this.showLoader = !this.showLoader;
 
@@ -128,20 +126,20 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
             if (this.evacueeSessionService.fileLinkFlag === 'Y') {
               this.evacueeProfileService
                 .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
-                .subscribe(
-                  (value) => {
+                .subscribe({
+                  next: (value) => {
                     this.evacueeSessionService.fileLinkStatus = 'S';
                     this.router.navigate([
                       'responder-access/search/essfile-dashboard'
                     ]);
                   },
-                  (error) => {
+                  error: (error) => {
                     this.evacueeSessionService.fileLinkStatus = 'E';
                     this.router.navigate([
                       'responder-access/search/essfile-dashboard'
                     ]);
                   }
-                );
+                });
             } else {
               setTimeout(() => {
                 this.router.navigate([
@@ -151,14 +149,14 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
             }
           }
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.verifySecurityQuestionError
           );
         }
-      );
+      });
   }
 
   /**

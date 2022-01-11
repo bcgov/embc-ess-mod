@@ -52,17 +52,17 @@ export class TeamListComponent implements OnInit {
   ngOnInit(): void {
     this.teamDataService.clear();
     this.addTeamMemberService.clear();
-    this.teamListService.getTeamMembers().subscribe(
-      (values) => {
+    this.teamListService.getTeamMembers().subscribe({
+      next: (values) => {
         this.isLoading = !this.isLoading;
         this.teamMembers = values;
       },
-      (error) => {
+      error: (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.teamMemberListError);
       }
-    );
+    });
     this.filtersToLoad = this.teamDataService.filtersToLoad;
     this.displayedColumns = this.teamDataService.displayedColumns;
     this.loggedInRole = this.userService.currentProfile.role;
@@ -97,12 +97,12 @@ export class TeamListComponent implements OnInit {
    */
   activateTeamMember($event: string): void {
     this.statusLoading = !this.statusLoading;
-    this.teamListService.activateTeamMember($event).subscribe(
-      (value) => {
+    this.teamListService.activateTeamMember($event).subscribe({
+      next: (value) => {
         this.statusLoading = !this.statusLoading;
         this.teamMembers = value;
       },
-      (error) => {
+      error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -110,7 +110,7 @@ export class TeamListComponent implements OnInit {
           globalConst.activateTeamMemberError
         );
       }
-    );
+    });
   }
 
   /**
@@ -120,12 +120,12 @@ export class TeamListComponent implements OnInit {
    */
   deactivateTeamMember($event: string): void {
     this.statusLoading = !this.statusLoading;
-    this.teamListService.deactivatedTeamMember($event).subscribe(
-      (value) => {
+    this.teamListService.deactivatedTeamMember($event).subscribe({
+      next: (value) => {
         this.statusLoading = !this.statusLoading;
         this.teamMembers = value;
       },
-      (error) => {
+      error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -133,7 +133,7 @@ export class TeamListComponent implements OnInit {
           globalConst.deActivateTeamMemberError
         );
       }
-    );
+    });
   }
 
   /**

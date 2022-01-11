@@ -137,8 +137,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   private createNewEssFile() {
     this.essFileService
       .createFile(this.stepEssFileService.createEvacFileDTO())
-      .subscribe(
-        (essFile: EvacuationFileModel) => {
+      .subscribe({
+        next: (essFile: EvacuationFileModel) => {
           // After creating and fetching ESS File, update ESS File Step values
           this.stepEssFileService.setFormValuesFromFile(essFile);
 
@@ -168,12 +168,12 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
               }
             });
         },
-        (error) => {
+        error: (error) => {
           this.saveLoader = false;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.createEssFileError);
         }
-      );
+      });
   }
 
   /**
@@ -185,8 +185,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.essFileNumber,
         this.stepEssFileService.updateEvacFileDTO()
       )
-      .subscribe(
-        (essFile: EvacuationFileModel) => {
+      .subscribe({
+        next: (essFile: EvacuationFileModel) => {
           // After creating and fetching ESS File, update ESS File Step values
           this.stepEssFileService.setFormValuesFromFile(essFile);
 
@@ -216,11 +216,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
               }
             });
         },
-        (error) => {
+        error: (error) => {
           this.saveLoader = false;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.editEssFileError);
         }
-      );
+      });
   }
 }

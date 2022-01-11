@@ -154,26 +154,28 @@ export class SupplierDetailComponent implements OnInit {
         width: '650px'
       })
       .afterClosed()
-      .subscribe((event) => {
-        if (event === 'confirm') {
-          this.supplierService
-            .deleteSupplier(this.selectedSupplier.id)
-            .subscribe(
-              (value) => {
-                const stateIndicator = { action: 'delete' };
-                this.router.navigate(
-                  ['/responder-access/supplier-management/suppliers-list'],
-                  { state: stateIndicator }
-                );
-              },
-              (error) => {
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.deleteSupplierError
-                );
-              }
-            );
+      .subscribe({
+        next: (event) => {
+          if (event === 'confirm') {
+            this.supplierService
+              .deleteSupplier(this.selectedSupplier.id)
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'delete' };
+                  this.router.navigate(
+                    ['/responder-access/supplier-management/suppliers-list'],
+                    { state: stateIndicator }
+                  );
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.deleteSupplierError
+                  );
+                }
+              });
+          }
         }
       });
   }
@@ -215,8 +217,8 @@ export class SupplierDetailComponent implements OnInit {
     this.essTeamsListResult = [];
     this.noneResults = false;
     this.searchESSTeamLoader = !this.searchESSTeamLoader;
-    this.supplierService.getMutualAidByCommunity(community.code).subscribe(
-      (results) => {
+    this.supplierService.getMutualAidByCommunity(community.code).subscribe({
+      next: (results) => {
         this.essTeamsListResult =
           this.supplierListDataService.filterEssTeams(results);
         if (this.essTeamsListResult.length === 0) {
@@ -224,12 +226,12 @@ export class SupplierDetailComponent implements OnInit {
         }
         this.searchESSTeamLoader = !this.searchESSTeamLoader;
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.searchESSTeamLoader = !this.searchESSTeamLoader;
         this.alertService.setAlert('danger', globalConst.genericError);
       }
-    );
+    });
   }
 
   /**
@@ -269,13 +271,15 @@ export class SupplierDetailComponent implements OnInit {
         width: '600px'
       })
       .afterClosed()
-      .subscribe((event) => {
-        if (event === 'confirm') {
-          this.showLoader = !this.showLoader;
-          this.supplierDetailService.rescindMutualAid(
-            this.selectedSupplier.id,
-            team.id
-          );
+      .subscribe({
+        next: (event) => {
+          if (event === 'confirm') {
+            this.showLoader = !this.showLoader;
+            this.supplierDetailService.rescindMutualAid(
+              this.selectedSupplier.id,
+              team.id
+            );
+          }
         }
       });
   }

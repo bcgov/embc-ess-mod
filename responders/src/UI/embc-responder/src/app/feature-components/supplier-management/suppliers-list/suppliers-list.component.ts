@@ -112,35 +112,39 @@ export class SuppliersListComponent implements OnInit {
           width: '600px'
         })
         .afterClosed()
-        .subscribe((event) => {
-          if (event === 'confirm') {
-            this.statusLoading = !this.statusLoading;
-            this.supplierServices.activateSuppliersStatus($event.id).subscribe(
-              (value) => {
-                this.statusLoading = !this.statusLoading;
-                this.suppliersList = value;
-              },
-              (error) => {
-                this.statusLoading = !this.statusLoading;
-                this.alertService.clearAlert();
-                this.alertService.setAlert(
-                  'danger',
-                  globalConst.activateSupplierError
-                );
-              }
-            );
-          } else {
-            this.cancelPrimarySuppliersListChanges();
+        .subscribe({
+          next: (event) => {
+            if (event === 'confirm') {
+              this.statusLoading = !this.statusLoading;
+              this.supplierServices
+                .activateSuppliersStatus($event.id)
+                .subscribe({
+                  next: (value) => {
+                    this.statusLoading = !this.statusLoading;
+                    this.suppliersList = value;
+                  },
+                  error: (error) => {
+                    this.statusLoading = !this.statusLoading;
+                    this.alertService.clearAlert();
+                    this.alertService.setAlert(
+                      'danger',
+                      globalConst.activateSupplierError
+                    );
+                  }
+                });
+            } else {
+              this.cancelPrimarySuppliersListChanges();
+            }
           }
         });
     } else {
       this.statusLoading = !this.statusLoading;
-      this.supplierServices.activateSuppliersStatus($event.id).subscribe(
-        (value) => {
+      this.supplierServices.activateSuppliersStatus($event.id).subscribe({
+        next: (value) => {
           this.statusLoading = !this.statusLoading;
           this.suppliersList = value;
         },
-        (error) => {
+        error: (error) => {
           this.statusLoading = !this.statusLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert(
@@ -148,7 +152,7 @@ export class SuppliersListComponent implements OnInit {
             globalConst.activateSupplierError
           );
         }
-      );
+      });
     }
   }
 
@@ -169,37 +173,39 @@ export class SuppliersListComponent implements OnInit {
           width: '600px'
         })
         .afterClosed()
-        .subscribe((event) => {
-          if (event === 'confirm') {
-            this.statusLoading = !this.statusLoading;
-            this.supplierServices
-              .deactivateSuppliersStatus($event.id)
-              .subscribe(
-                (value) => {
-                  this.statusLoading = !this.statusLoading;
-                  this.suppliersList = value;
-                },
-                (error) => {
-                  this.statusLoading = !this.statusLoading;
-                  this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.deActivateSupplierError
-                  );
-                }
-              );
-          } else {
-            this.cancelPrimarySuppliersListChanges();
+        .subscribe({
+          next: (event) => {
+            if (event === 'confirm') {
+              this.statusLoading = !this.statusLoading;
+              this.supplierServices
+                .deactivateSuppliersStatus($event.id)
+                .subscribe({
+                  next: (value) => {
+                    this.statusLoading = !this.statusLoading;
+                    this.suppliersList = value;
+                  },
+                  error: (error) => {
+                    this.statusLoading = !this.statusLoading;
+                    this.alertService.clearAlert();
+                    this.alertService.setAlert(
+                      'danger',
+                      globalConst.deActivateSupplierError
+                    );
+                  }
+                });
+            } else {
+              this.cancelPrimarySuppliersListChanges();
+            }
           }
         });
     } else {
       this.statusLoading = !this.statusLoading;
-      this.supplierServices.deactivateSuppliersStatus($event.id).subscribe(
-        (value) => {
+      this.supplierServices.deactivateSuppliersStatus($event.id).subscribe({
+        next: (value) => {
           this.statusLoading = !this.statusLoading;
           this.suppliersList = value;
         },
-        (error) => {
+        error: (error) => {
           this.statusLoading = !this.statusLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert(
@@ -207,7 +213,7 @@ export class SuppliersListComponent implements OnInit {
             globalConst.deActivateSupplierError
           );
         }
-      );
+      });
     }
   }
 
@@ -243,12 +249,12 @@ export class SuppliersListComponent implements OnInit {
    * Gets the primary suppliers list from the API
    */
   private getPrimarySuppliersList(): void {
-    this.supplierServices.getMainSuppliersList().subscribe(
-      (values) => {
+    this.supplierServices.getMainSuppliersList().subscribe({
+      next: (values) => {
         this.suppliersLoader = !this.suppliersLoader;
         this.suppliersList = values;
       },
-      (error) => {
+      error: (error) => {
         this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -256,7 +262,7 @@ export class SuppliersListComponent implements OnInit {
           globalConst.mainSuppliersListError
         );
       }
-    );
+    });
   }
 
   /**
@@ -264,12 +270,12 @@ export class SuppliersListComponent implements OnInit {
    */
   private cancelPrimarySuppliersListChanges(): void {
     this.statusLoading = !this.statusLoading;
-    this.supplierServices.getMainSuppliersList().subscribe(
-      (values) => {
+    this.supplierServices.getMainSuppliersList().subscribe({
+      next: (values) => {
         this.statusLoading = !this.statusLoading;
         this.suppliersList = values;
       },
-      (error) => {
+      error: (error) => {
         this.statusLoading = !this.statusLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -277,23 +283,23 @@ export class SuppliersListComponent implements OnInit {
           globalConst.mainSuppliersListError
         );
       }
-    );
+    });
   }
 
   /**
    * Gets the mutual aid suppliers list from the API
    */
   private getMutualAidSuppliersList(): void {
-    this.supplierServices.getMutualAidSuppliersList().subscribe(
-      (values) => {
+    this.supplierServices.getMutualAidSuppliersList().subscribe({
+      next: (values) => {
         this.mutualAidLoader = !this.mutualAidLoader;
         this.mutualAidList = values;
       },
-      (error) => {
+      error: (error) => {
         this.mutualAidLoader = !this.mutualAidLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.mutualAidListError);
       }
-    );
+    });
   }
 }

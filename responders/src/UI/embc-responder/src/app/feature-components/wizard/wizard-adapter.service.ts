@@ -113,8 +113,8 @@ export class WizardAdapterService {
    */
   public stepEditProfileFromProfileId(profileId: string): Observable<boolean> {
     return new Observable<boolean>((obs) => {
-      this.evacueeProfileService.getProfileFromId(profileId).subscribe(
-        (registrantProfileModel: RegistrantProfileModel) => {
+      this.evacueeProfileService.getProfileFromId(profileId).subscribe({
+        next: (registrantProfileModel: RegistrantProfileModel) => {
           this.stepEvacueeProfileService.setFormValuesFromProfile(
             registrantProfileModel
           );
@@ -125,12 +125,12 @@ export class WizardAdapterService {
 
           obs.next(true);
         },
-        (error) => {
+        error: (error) => {
           obs.next(false);
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.getProfileError);
         }
-      );
+      });
     });
   }
 
@@ -141,17 +141,17 @@ export class WizardAdapterService {
     profileId: string
   ): Observable<boolean> {
     return new Observable<boolean>((obs) => {
-      this.evacueeProfileService.getProfileFromId(profileId).subscribe(
-        (registrantProfileModel) => {
+      this.evacueeProfileService.getProfileFromId(profileId).subscribe({
+        next: (registrantProfileModel) => {
           this.stepCreateEssFileFromProfileRecord(registrantProfileModel);
           obs.next(true);
         },
-        (error) => {
+        error: (error) => {
           obs.next(false);
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.getProfileError);
         }
-      );
+      });
     });
   }
 
@@ -205,8 +205,8 @@ export class WizardAdapterService {
     return new Observable<boolean>((obs) => {
       this.essFileService
         .getFileFromId(this.evacueeSessionService.essFileNumber)
-        .subscribe(
-          (evacuationFileModel) => {
+        .subscribe({
+          next: (evacuationFileModel) => {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
             this.stepEssFileService.essTabs =
               this.wizardDataService.createNewESSFileSteps();
@@ -214,12 +214,12 @@ export class WizardAdapterService {
             this.stepEssFileService.selectedHouseholdMembers = [];
             obs.next(true);
           },
-          (error) => {
+          error: (error) => {
             obs.next(false);
             this.alertService.clearAlert();
             this.alertService.setAlert('danger', globalConst.getEssFileError);
           }
-        );
+        });
     });
   }
 
@@ -227,8 +227,8 @@ export class WizardAdapterService {
     return new Observable<boolean>((obs) => {
       this.essFileService
         .getFileFromId(this.evacueeSessionService.essFileNumber)
-        .subscribe(
-          (evacuationFileModel) => {
+        .subscribe({
+          next: (evacuationFileModel) => {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
             this.stepEssFileService.essTabs =
               this.wizardDataService.createNewESSFileSteps();
@@ -236,12 +236,12 @@ export class WizardAdapterService {
             this.stepEssFileService.selectedHouseholdMembers = [];
             obs.next(true);
           },
-          (error) => {
+          error: (error) => {
             obs.next(false);
             this.alertService.clearAlert();
             this.alertService.setAlert('danger', globalConst.getEssFileError);
           }
-        );
+        });
     });
   }
 }

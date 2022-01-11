@@ -21,30 +21,35 @@ export class SupplierDetailService {
    * @param teamId the ESS Team;s ID
    */
   rescindMutualAid(supplierId: string, teamId: string): void {
-    this.supplierService.rescindMutualAidSupplier(supplierId, teamId).subscribe(
-      (result) => {
-        this.router.navigate([
-          '/responder-access/supplier-management/suppliers-list'
-        ]);
-      },
-      (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.rescindSupplierError);
-      }
-    );
+    this.supplierService
+      .rescindMutualAidSupplier(supplierId, teamId)
+      .subscribe({
+        next: (result) => {
+          this.router.navigate([
+            '/responder-access/supplier-management/suppliers-list'
+          ]);
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.rescindSupplierError
+          );
+        }
+      });
   }
 
   addMutualAid(supplierId: string, teamId: string): void {
-    this.supplierService.addMutualAidSupplier(supplierId, teamId).subscribe(
-      (result) => {
+    this.supplierService.addMutualAidSupplier(supplierId, teamId).subscribe({
+      next: (result) => {
         this.router.navigate([
           '/responder-access/supplier-management/suppliers-list'
         ]);
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.addSupplierError);
       }
-    );
+    });
   }
 }

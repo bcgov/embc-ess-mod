@@ -76,8 +76,8 @@ export class SupplierReviewComponent {
   claim(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.supplierService.claimSupplier(this.selectedSupplier.id).subscribe(
-      (value) => {
+    this.supplierService.claimSupplier(this.selectedSupplier.id).subscribe({
+      next: (value) => {
         console.log(value);
         this.showLoader = !this.showLoader;
         const stateIndicator = { action: 'add' };
@@ -86,7 +86,7 @@ export class SupplierReviewComponent {
           { state: stateIndicator }
         );
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         this.alertService.clearAlert();
@@ -96,7 +96,7 @@ export class SupplierReviewComponent {
           this.alertService.setAlert('danger', error.statusText);
         }
       }
-    );
+    });
   }
   /**
    * Updates the selected supplier and navigates to team list
@@ -107,8 +107,8 @@ export class SupplierReviewComponent {
         this.editSupplierService.editedSupplier.id,
         this.editSupplierService.getEditedSupplierDTO()
       )
-      .subscribe(
-        (value) => {
+      .subscribe({
+        next: (value) => {
           this.showLoader = !this.showLoader;
           const stateIndicator = { action: 'edit' };
           this.router.navigate(
@@ -116,7 +116,7 @@ export class SupplierReviewComponent {
             { state: stateIndicator }
           );
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
@@ -126,7 +126,7 @@ export class SupplierReviewComponent {
             this.alertService.setAlert('danger', error.statusText);
           }
         }
-      );
+      });
   }
 
   /**
@@ -135,8 +135,8 @@ export class SupplierReviewComponent {
   private addSupplier(): void {
     this.supplierService
       .createNewSupplier(this.addSupplierService.getCreateSupplierDTO())
-      .subscribe(
-        (value) => {
+      .subscribe({
+        next: (value) => {
           this.showLoader = !this.showLoader;
           const stateIndicator = { action: 'add' };
           this.router.navigate(
@@ -144,7 +144,7 @@ export class SupplierReviewComponent {
             { state: stateIndicator }
           );
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();
@@ -154,6 +154,6 @@ export class SupplierReviewComponent {
             this.alertService.setAlert('danger', error.statusText);
           }
         }
-      );
+      });
   }
 }

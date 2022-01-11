@@ -40,18 +40,18 @@ export class AssignedCommunityListComponent implements OnInit {
     this.assignedCommunityListDataService.clear();
     this.addCommunityService.clear();
     this.communitiesFilterPredicate();
-    this.assignedCommunityListService.getAssignedCommunityList().subscribe(
-      (values) => {
+    this.assignedCommunityListService.getAssignedCommunityList().subscribe({
+      next: (values) => {
         this.isLoading = !this.isLoading;
         this.assignedCommunities = values;
         this.assignedCommunityListDataService.setTeamCommunityList(values);
       },
-      (error) => {
+      error: (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.communityListError);
       }
-    );
+    });
 
     this.filtersToLoad = this.assignedCommunityListDataService.filtersToLoad;
     this.displayedColumns =

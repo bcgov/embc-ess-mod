@@ -74,8 +74,8 @@ export class HouseholdMemberComponent implements OnInit {
           houseHoldMember.lastName,
           houseHoldMember.dateOfBirth
         )
-        .subscribe(
-          (value) => {
+        .subscribe({
+          next: (value) => {
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
             if (value.length > 0) {
@@ -83,12 +83,12 @@ export class HouseholdMemberComponent implements OnInit {
             }
             this.isLoading = !this.isLoading;
           },
-          (error) => {
+          error: (error) => {
             this.isLoading = !this.isLoading;
             this.alertService.clearAlert();
             this.alertService.setAlert('danger', globalConst.genericError);
           }
-        );
+        });
     } else {
       this.isLoading = !this.isLoading;
     }
@@ -116,8 +116,10 @@ export class HouseholdMemberComponent implements OnInit {
         width: '720px'
       })
       .afterClosed()
-      .subscribe((value) => {
-        this.createNavigationForRegistrant(value, memberDetails);
+      .subscribe({
+        next: (value) => {
+          this.createNavigationForRegistrant(value, memberDetails);
+        }
       });
   }
 
@@ -255,20 +257,24 @@ export class HouseholdMemberComponent implements OnInit {
         height: '90%'
       })
       .afterClosed()
-      .subscribe((value) => {
-        if (value !== 'close') {
-          this.evacueeSessionService.fileLinkFlag = 'Y';
-          this.evacueeSessionService.securityQuestionsOpenedFrom =
-            'responder-access/search/essfile-dashboard';
-          this.evacueeSessionService.fileLinkMetaData = {
-            fileId: this.essFile.id,
-            linkRequest: {
-              householdMemberId: multipleLinkRegistrants.householdMemberId,
-              registantId: value
-            }
-          };
-          this.evacueeSessionService.profileId = value;
-          this.router.navigate(['responder-access/search/security-questions']);
+      .subscribe({
+        next: (value) => {
+          if (value !== 'close') {
+            this.evacueeSessionService.fileLinkFlag = 'Y';
+            this.evacueeSessionService.securityQuestionsOpenedFrom =
+              'responder-access/search/essfile-dashboard';
+            this.evacueeSessionService.fileLinkMetaData = {
+              fileId: this.essFile.id,
+              linkRequest: {
+                householdMemberId: multipleLinkRegistrants.householdMemberId,
+                registantId: value
+              }
+            };
+            this.evacueeSessionService.profileId = value;
+            this.router.navigate([
+              'responder-access/search/security-questions'
+            ]);
+          }
         }
       });
   }

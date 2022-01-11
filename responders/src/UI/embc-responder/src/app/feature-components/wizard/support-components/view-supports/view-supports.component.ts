@@ -81,8 +81,8 @@ export class ViewSupportsComponent implements OnInit {
   loadSupportList() {
     this.stepSupportsService
       .getEvacFile(this.evacueeSessionService.essFileNumber)
-      .subscribe(
-        (file) => {
+      .subscribe({
+        next: (file) => {
           this.showLoader = !this.showLoader;
           this.stepSupportsService.currentNeedsAssessment =
             file.needsAssessment;
@@ -110,12 +110,12 @@ export class ViewSupportsComponent implements OnInit {
           );
           this.addDraftSupports();
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.supportListerror);
         }
-      );
+      });
   }
 
   selected(event: MatSelectChange, filterType: string): void {

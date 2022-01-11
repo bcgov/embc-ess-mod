@@ -158,8 +158,8 @@ export class EditTeamMemberComponent implements OnInit {
     this.showLoader = !this.showLoader;
     this.editTeamMemberService
       .checkUserNameExists($event.target.value)
-      .subscribe(
-        (value) => {
+      .subscribe({
+        next: (value) => {
           this.showLoader = !this.showLoader;
           this.editForm
             .get('userName')
@@ -176,12 +176,12 @@ export class EditTeamMemberComponent implements OnInit {
             this.editForm.updateValueAndValidity();
           }
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.usernameCheckerror);
         }
-      );
+      });
   }
 
   /**

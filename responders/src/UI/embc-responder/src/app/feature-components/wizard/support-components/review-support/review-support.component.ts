@@ -25,8 +25,6 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { ProcessSupportsDialogComponent } from 'src/app/shared/components/dialog-components/process-supports-dialog/process-supports-dialog.component';
 import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-review-support',
@@ -297,8 +295,8 @@ export class ReviewSupportComponent implements OnInit {
     win.document.write('Loading Referral document ... ');
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.stepSupportsServices.evacFile.id;
-    this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe(
-      (response) => {
+    this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
+      next: (response) => {
         // Displaying PDF into a new browser tab:
         const blob = new Blob([response], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -310,7 +308,7 @@ export class ReviewSupportComponent implements OnInit {
         this.showLoader = !this.showLoader;
         this.router.navigate(['/ess-wizard/add-supports']);
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(
@@ -319,6 +317,6 @@ export class ReviewSupportComponent implements OnInit {
         );
         win.document.write(globalConst.processSupportDraftsError);
       }
-    );
+    });
   }
 }

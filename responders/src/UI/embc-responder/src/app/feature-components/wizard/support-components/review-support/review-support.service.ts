@@ -56,8 +56,8 @@ export class ReviewSupportService {
   updateExistingSupportsList(): void {
     this.stepSupportsService
       .getEvacFile(this.evacueeSessionService.essFileNumber)
-      .subscribe(
-        (file) => {
+      .subscribe({
+        next: (file) => {
           this.stepSupportsService.currentNeedsAssessment =
             file.needsAssessment;
           // console.log(file.supports);
@@ -87,10 +87,10 @@ export class ReviewSupportService {
           );
           // this.stepSupportsService.evacFile = file;
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.genericError);
         }
-      );
+      });
   }
 }

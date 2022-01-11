@@ -1,6 +1,5 @@
 import {
   Component,
-  ComponentFactoryResolver,
   ComponentRef,
   Inject,
   OnDestroy,
@@ -25,13 +24,11 @@ export class DialogComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private resolver: ComponentFactoryResolver
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit(): void {
-    const factory = this.resolver.resolveComponentFactory(this.data.component);
-    this.componentRef = this.vcRef.createComponent(factory);
+    this.componentRef = this.vcRef.createComponent(this.data.component);
     this.componentRef.instance.content = this.data.content;
 
     if (this.data.profileData !== null) {

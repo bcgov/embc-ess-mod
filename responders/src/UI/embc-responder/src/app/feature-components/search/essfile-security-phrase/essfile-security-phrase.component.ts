@@ -47,18 +47,18 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     } else {
       this.essFileSecurityPhraseService
         .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
-        .subscribe(
-          (results) => {
+        .subscribe({
+          next: (results) => {
             this.securityPhrase = results;
           },
-          (error) => {
+          error: (error) => {
             this.alertService.clearAlert();
             this.alertService.setAlert(
               'danger',
               globalConst.securityPhraseError
             );
           }
-        );
+        });
     }
   }
 
@@ -80,8 +80,8 @@ export class EssfileSecurityPhraseComponent implements OnInit {
 
     this.essFileSecurityPhraseService
       .verifySecurityPhrase(this.evacueeSessionService.essFileNumber, body)
-      .subscribe(
-        (results) => {
+      .subscribe({
+        next: (results) => {
           console.log(results);
           this.showLoader = !this.showLoader;
           if (results.isCorrect) {
@@ -91,21 +91,21 @@ export class EssfileSecurityPhraseComponent implements OnInit {
             if (this.evacueeSessionService.fileLinkFlag === 'Y') {
               this.evacueeProfileService
                 .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
-                .subscribe(
-                  (value) => {
+                .subscribe({
+                  next: (value) => {
                     this.evacueeSessionService.fileLinkStatus = 'S';
                     console.log(this.evacueeSessionService.fileLinkStatus);
                     this.router.navigate([
                       'responder-access/search/evacuee-profile-dashboard'
                     ]);
                   },
-                  (error) => {
+                  error: (error) => {
                     this.evacueeSessionService.fileLinkStatus = 'E';
                     this.router.navigate([
                       'responder-access/search/evacuee-profile-dashboard'
                     ]);
                   }
-                );
+                });
             } else {
               setTimeout(() => {
                 this.router.navigate([
@@ -119,14 +119,14 @@ export class EssfileSecurityPhraseComponent implements OnInit {
             this.wrongAnswerFlag = true;
           }
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
             globalConst.verifySecurityPhraseError
           );
         }
-      );
+      });
   }
 
   /**

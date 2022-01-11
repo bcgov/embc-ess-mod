@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -33,18 +34,18 @@ export class LoadTeamListService {
       : this.getMemberRole();
   }
 
-  public async loadStaticTeamLists(): Promise<void> {
-    const roles = this.teamMembersService.teamsGetMemberRoles();
-    const label = this.teamMembersService.teamsGetMemberLabels();
+  public loadStaticTeamLists(): Observable<void> {
+    const roles: Observable<Array<MemberRoleDescription>> =
+      this.teamMembersService.teamsGetMemberRoles();
+    const label: Observable<Array<MemberLabelDescription>> =
+      this.teamMembersService.teamsGetMemberLabels();
 
-    return forkJoin([roles, label])
-      .pipe(
-        map((results) => {
-          this.setMemberLabels(results[1]);
-          this.setMemberRoles(results[0]);
-        })
-      )
-      .toPromise();
+    return forkJoin([roles, label]).pipe(
+      map((results) => {
+        this.setMemberLabels(results[1]);
+        this.setMemberRoles(results[0]);
+      })
+    );
   }
 
   private setMemberRoles(memberRoles: MemberRoleDescription[]): void {
@@ -59,31 +60,31 @@ export class LoadTeamListService {
 
   private getMemberRole(): MemberRoleDescription[] {
     let memberRoles: MemberRoleDescription[] = [];
-    this.teamMembersService.teamsGetMemberRoles().subscribe(
-      (roles) => {
+    this.teamMembersService.teamsGetMemberRoles().subscribe({
+      next: (roles) => {
         memberRoles = roles;
         this.setMemberRoles(memberRoles);
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.systemError);
       }
-    );
+    });
     return memberRoles;
   }
 
   private getMemberLabel(): MemberLabelDescription[] {
     let memberLabels: MemberLabelDescription[] = [];
-    this.teamMembersService.teamsGetMemberLabels().subscribe(
-      (labels) => {
+    this.teamMembersService.teamsGetMemberLabels().subscribe({
+      next: (labels) => {
         memberLabels = labels;
         this.setMemberLabels(memberLabels);
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.systemError);
       }
-    );
+    });
     return memberLabels;
   }
 }
