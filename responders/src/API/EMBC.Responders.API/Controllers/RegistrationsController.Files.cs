@@ -384,15 +384,15 @@ namespace EMBC.Responders.API.Controllers
 
     public class Note
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
         public string Content { get; set; } = null!;
 
         public DateTime AddedOn { get; set; }
-        public string CreatingTeamMemberId { get; set; } = null!;
-        public string MemberName { get; set; } = null!;
-        public string TeamName { get; set; } = null!;
+        public string? CreatingTeamMemberId { get; set; }
+        public string? MemberName { get; set; }
+        public string? TeamName { get; set; }
         public bool IsEditable { get; set; }
         public bool IsHidden { get; set; }
     }
