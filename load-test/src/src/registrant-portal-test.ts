@@ -5,6 +5,7 @@ import { Rate, Trend } from 'k6/metrics';
 
 import { generateAnonymousRegistration } from './generators/registrants/registration';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
+import { generateProfile } from './generators/registrants/profile';
 
 const baseUrl = 'https://dev1-era-registrants.apps.silver.devops.gov.bc.ca';
 const urls = {
@@ -50,8 +51,15 @@ export const options: Options = {
   }
 };
 
-const getAuthToken = () => {
-  const payload = "grant_type=password&username=EVAC00012&password=98912&scope=openid%20registrants-portal-api";
+const getAuthToken = (login_as_new_registrant: boolean = false) => {
+  let username = "EVAC00012";
+  let password = "98912";
+  if (login_as_new_registrant) {
+    console.log(`VU: ${__VU}  -  ITER: ${__ITER}`);
+    username = `EVAC${__VU.toString().padStart(3, '0')}${__ITER.toString().padStart(3, '0')}`;
+    password = `autotest-${__VU}-${__ITER}`
+  }
+  let payload = `grant_type=password&username=${username}&password=${password}&scope=openid%20registrants-portal-api`;
   const params = {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -133,6 +141,24 @@ const submitAnonymousRegistration = (communities: any, security_questions: any) 
   }
 }
 
+const getCurrentProfileExists = (token: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const response = http.get(urls.current_user_exists, params);
+  formFailRate.add(response.status !== 200);
+  loadTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.log(JSON.stringify(response));
+  }
+  return response.json();
+}
+
 const getCurrentProfile = (token: any) => {
   const params = {
     headers: {
@@ -149,6 +175,28 @@ const getCurrentProfile = (token: any) => {
     console.log(JSON.stringify(response));
   }
   return response.json();
+}
+
+const createProfile = (token: any, communities: any, security_questions: any) => {
+  const profile = generateProfile(communities, security_questions);
+  const payload = JSON.stringify(profile);
+
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const response = http.post(urls.current_profile, payload, params);
+  submissionTime.add(response.timings.waiting);
+  submitFailRate.add(response.status !== 200);
+  if (response.status !== 200) {
+    console.log(JSON.stringify(response));
+  } else {
+    console.log("created profile");
+  }
 }
 
 const submitEvacuationFile = (profile: any, communities: any, token: any) => {
@@ -175,30 +223,38 @@ const submitEvacuationFile = (profile: any, communities: any, token: any) => {
 }
 
 export default () => {
-
   /* ----- Anonymous Registration ----- */
-  getAnonymousStartPage();
-  getConfiguration();
-  let communities = getCommunities();
-  getProvinces();
-  getCountries();
-  let security_questions = getSecurityQuestions();
-  sleep(2);
-  submitAnonymousRegistration(communities, security_questions);
-  /* ---------- */
-
-  /* ----- Authenticated Registration ----- */
-  // getStartPage();
+  // getAnonymousStartPage();
   // getConfiguration();
   // let communities = getCommunities();
   // getProvinces();
   // getCountries();
-  // sleep(1);
-  // let token = getAuthToken();
-  // sleep(1);
-  // let profile = getCurrentProfile(token);
+  // let security_questions = getSecurityQuestions();
   // sleep(2);
-  // //should update current profile too?
-  // submitEvacuationFile(profile, communities, token);
+  // submitAnonymousRegistration(communities, security_questions);
   /* ---------- */
+
+  /* ----- Authenticated Registration ----- */
+  let login_as_new_registrant = true;
+
+  getStartPage();
+  getConfiguration();
+  let communities = getCommunities();
+  getProvinces();
+  getCountries();
+  sleep(1);
+  // let token = getAuthToken();
+  let token = getAuthToken(login_as_new_registrant);
+  let profile_exists = getCurrentProfileExists(token);
+  sleep(1);
+
+  if (profile_exists == false) {
+    //New Profile
+    let security_questions = getSecurityQuestions();
+    createProfile(token, communities, security_questions);
+  }
+
+  let profile = getCurrentProfile(token);
+  sleep(2);
+  submitEvacuationFile(profile, communities, token);
 };
