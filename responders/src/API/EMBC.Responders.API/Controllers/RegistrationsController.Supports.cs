@@ -110,11 +110,11 @@ namespace EMBC.Responders.API.Controllers
     [KnownType(typeof(Referral))]
     public abstract class Support
     {
-        public string Id { get; set; }
-        public DateTime IssuedOn { get; set; }
-        public string IssuingMemberName { get; set; }
-        public string IssuingMemberTeamName { get; set; }
-        public string NeedsAssessmentId { get; set; }
+        public string? Id { get; set; }
+        public DateTime? IssuedOn { get; set; }
+        public string? IssuingMemberName { get; set; }
+        public string? IssuingMemberTeamName { get; set; }
+        public string? NeedsAssessmentId { get; set; }
 
         [Required]
         public DateTime From { get; set; }
