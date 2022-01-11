@@ -168,7 +168,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("members/username")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> IsUserNameExists(string userName, string memberId = null)
+        public async Task<ActionResult<bool>> IsUserNameExists(string userName, string? memberId = null)
         {
             var response = await client.Send(new ValidateTeamMemberCommand
             {
