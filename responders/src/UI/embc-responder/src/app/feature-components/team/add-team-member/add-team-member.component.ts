@@ -118,8 +118,8 @@ export class AddTeamMemberComponent implements OnInit {
     this.showLoader = !this.showLoader;
     this.addTeamMemberService
       .checkUserNameExists($event.target.value)
-      .subscribe(
-        (value) => {
+      .subscribe({
+        next: (value) => {
           this.showLoader = !this.showLoader;
           this.addForm
             .get('userName')
@@ -136,12 +136,12 @@ export class AddTeamMemberComponent implements OnInit {
             this.addForm.updateValueAndValidity();
           }
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.usernameCheckerror);
         }
-      );
+      });
   }
 
   /**

@@ -56,17 +56,17 @@ export class SupplierExistComponent implements OnInit {
    * @param $event the supplier object to be claimed as main supplier
    */
   claimSupplier($event): void {
-    this.supplierService.getSupplierById($event.id).subscribe(
-      (supplier) => {
+    this.supplierService.getSupplierById($event.id).subscribe({
+      next: (supplier) => {
         this.router.navigate(
           ['/responder-access/supplier-management/review-supplier'],
           { state: { ...supplier }, queryParams: { action: 'claim' } }
         );
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.claimSupplierError);
       }
-    );
+    });
   }
 }
