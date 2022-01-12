@@ -5,6 +5,7 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
 import { EvacuationFileStatus, Support } from 'src/app/core/api/models';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -26,11 +27,11 @@ export class EvacuationDetailsComponent implements OnInit {
   displayStatus: string;
 
   constructor(
-    private route: ActivatedRoute,
     public formCreationService: FormCreationService,
     public evacuationFilesService: EvacuationFileService,
     private router: Router,
-    public evacuationFileDataService: EvacuationFileDataService
+    public evacuationFileDataService: EvacuationFileDataService,
+    private datePipe: DatePipe
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -120,16 +121,17 @@ export class EvacuationDetailsComponent implements OnInit {
       Support[]
     >();
     referrals.forEach((item) => {
-      const date = item.issuedOn.split('T')[0];
+      const date: Date = new Date(item.issuedOn);
+      const displayedDate = this.datePipe.transform(date, 'dd-MMM-yyyy');
       let supports: Support[] = [];
-      if (groupedReferrals.get(date)) {
-        supports = groupedReferrals.get(date);
+      if (groupedReferrals.get(displayedDate)) {
+        supports = groupedReferrals.get(displayedDate);
         supports.push(item);
-        groupedReferrals.set(date, supports);
+        groupedReferrals.set(displayedDate, supports);
       } else {
         supports = [];
         supports.push(item);
-        groupedReferrals.set(date, supports);
+        groupedReferrals.set(displayedDate, supports);
       }
     });
 

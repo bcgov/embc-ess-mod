@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { EvacuationDetailsComponent } from './evacuation-details.component';
 import { MatCardModule } from '@angular/material/card';
 import { EvacuationDetailsRoutingModule } from './evacuation-details-routing.module';
@@ -19,6 +19,7 @@ import { CustomPipeModule } from 'src/app/core/pipe/customPipe.module';
     MatExpansionModule,
     MatTableModule,
     CustomPipeModule
-  ]
+  ],
+  providers: [DatePipe]
 })
 export class EvacuationDetailsModule {}
