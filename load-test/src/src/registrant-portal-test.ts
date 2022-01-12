@@ -2,11 +2,12 @@ import { sleep } from 'k6';
 import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
-
 import { generateAnonymousRegistration } from './generators/registrants/registration';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
 import { generateProfile } from './generators/registrants/profile';
-import { RegistrantTestParameters } from '../load-test.parameters';
+
+// @ts-ignore
+import { RegistrantTestParameters } from '../load-test.parameters-APP_TARGET';
 
 const testParams = RegistrantTestParameters;
 const baseUrl = testParams.baseUrl;

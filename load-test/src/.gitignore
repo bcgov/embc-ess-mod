@@ -39,4 +39,4 @@ testem.log
 Thumbs.db
 
 # Load Test Parameters
-load-test.parameters.ts
+load-test.parameters-dev.ts

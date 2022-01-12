@@ -7,7 +7,9 @@ import { generatePersonDetails } from './generators/responders/person-details';
 import { generateEvacuationFile } from './generators/responders/evacuation-file';
 import { generateSupports } from './generators/responders/supports';
 import { generateNote } from './generators/responders/notes';
-import { ResponderTestParameters } from '../load-test.parameters';
+
+// @ts-ignore
+import { ResponderTestParameters } from '../load-test.parameters-APP_TARGET';
 
 const testParams = ResponderTestParameters;
 const baseUrl = testParams.baseUrl;
