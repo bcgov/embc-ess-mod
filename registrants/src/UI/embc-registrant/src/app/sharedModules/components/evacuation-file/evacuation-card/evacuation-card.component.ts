@@ -24,6 +24,7 @@ export class EvacuationCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.changeStatusColor();
+    console.log(this.evacuationFileCard);
   }
 
   changeStatusColor(): void {

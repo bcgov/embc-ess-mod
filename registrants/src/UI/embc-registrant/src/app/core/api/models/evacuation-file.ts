@@ -15,6 +15,7 @@ export interface EvacuationFile {
   isRestricted?: boolean;
   lastModified?: string;
   needsAssessment: NeedsAssessment;
+  paperFileNumber?: null | string;
   secretPhrase?: null | string;
   secretPhraseEdited?: boolean;
   status?: EvacuationFileStatus;

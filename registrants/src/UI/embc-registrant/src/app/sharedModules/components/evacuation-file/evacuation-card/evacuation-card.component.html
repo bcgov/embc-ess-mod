@@ -24,11 +24,7 @@
               </td>
               <td class="dataSpan">{{ evacuationFileCard?.fileId }}</td>
               <td class="dataSpan">
-                {{
-                  evacuationFileCard?.needsAssessment?.type === 'Preliminary'
-                    ? 'No'
-                    : 'Yes'
-                }}
+                {{ evacuationFileCard?.supports.length === 0 ? 'No' : 'Yes' }}
               </td>
               <td class="dataSpan">
                 <img src="{{ imageIcon }}" height="13" width="13" />
