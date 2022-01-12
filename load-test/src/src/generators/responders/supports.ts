@@ -113,9 +113,9 @@ function generateRerral(file: EvacuationFile, suppliers: Array<Supplier>, catego
         method: SupportMethod.Referral,
         subCategory: subCategory,
         issuedToPersonName: file.primaryRegistrantLastName + "," + file.primaryRegistrantFirstName,
-        supplierAddress: random_supplier.address,
-        supplierId: random_supplier.id || "",
-        supplierName: random_supplier.name,
+        supplierAddress: random_supplier?.address || null,
+        supplierId: random_supplier?.id || "",
+        supplierName: random_supplier?.name || null,
         supplierNotes: "notes",
     };
 }

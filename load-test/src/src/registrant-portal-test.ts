@@ -2,12 +2,15 @@ import { sleep } from 'k6';
 import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
-
 import { generateAnonymousRegistration } from './generators/registrants/registration';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
 import { generateProfile } from './generators/registrants/profile';
 
-const baseUrl = 'https://dev1-era-registrants.apps.silver.devops.gov.bc.ca';
+// @ts-ignore
+import { RegistrantTestParameters } from '../load-test.parameters-APP_TARGET';
+
+const testParams = RegistrantTestParameters;
+const baseUrl = testParams.baseUrl;
 const urls = {
   //Metadata
   config: `${baseUrl}/api/Configuration`,
@@ -22,7 +25,7 @@ const urls = {
 
   //Registered
   start_page: `${baseUrl}/registration-method`,
-  auth_token: `https://dev-era-auth.apps.silver.devops.gov.bc.ca/connect/token`,
+  auth_token: testParams.authEndpoint,
   dashboard: `${baseUrl}/verified-registration/dashboard/current`,
   current_user_exists: `${baseUrl}/api/profiles/current/exists`,
   current_evacuations: `${baseUrl}/api/Evacuations/current`,
@@ -51,19 +54,15 @@ export const options: Options = {
   }
 };
 
-const getAuthToken = (login_as_new_registrant: boolean = false) => {
-  let username = "EVAC00012";
-  let password = "98912";
-  if (login_as_new_registrant) {
-    console.log(`VU: ${__VU}  -  ITER: ${__ITER}`);
-    username = `EVAC${__VU.toString().padStart(3, '0')}${__ITER.toString().padStart(3, '0')}`;
-    password = `autotest-${__VU}-${__ITER}`
-  }
-  let payload = `grant_type=password&username=${username}&password=${password}&scope=openid%20registrants-portal-api`;
+const getAuthToken = () => {
+  console.log(`VU: ${__VU}  -  ITER: ${__ITER}`);
+  let username = `${testParams.usernameBase}${__VU.toString().padStart(3, '0')}${__ITER.toString().padStart(3, '0')}`;
+  let password = `${testParams.passwordBase}${__VU}-${__ITER}`
+  const payload = `grant_type=${testParams.grantType}&username=${username}&password=${password}&scope=${testParams.scope}`;
   const params = {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": "Basic ZGV2LXRlc3QtY2xpZW50OktQM0hHVE1RUVA2WEtYVVo=",
+      "Authorization": `Basic ${testParams.basicAuth}`,
     }
   };
 
@@ -128,7 +127,7 @@ const submitAnonymousRegistration = (communities: any, security_questions: any) 
 
   const params = {
     headers: {
-      accept: "application/json",
+      "accept": "application/json",
       "content-type": "application/json",
     }
   };
@@ -199,7 +198,7 @@ const createProfile = (token: any, communities: any, security_questions: any) =>
   }
 }
 
-const submitEvacuationFile = (profile: any, communities: any, token: any) => {
+const submitEvacuationFile = (token: any, profile: any, communities: any) => {
   const file = generateEvacuationFile(profile.personalDetails, communities);
   const payload = JSON.stringify(file);
 
@@ -235,16 +234,13 @@ export default () => {
   /* ---------- */
 
   /* ----- Authenticated Registration ----- */
-  let login_as_new_registrant = true;
-
   getStartPage();
   getConfiguration();
   let communities = getCommunities();
   getProvinces();
   getCountries();
   sleep(1);
-  // let token = getAuthToken();
-  let token = getAuthToken(login_as_new_registrant);
+  let token = getAuthToken();
   let profile_exists = getCurrentProfileExists(token);
   sleep(1);
 
@@ -256,5 +252,5 @@ export default () => {
 
   let profile = getCurrentProfile(token);
   sleep(2);
-  submitEvacuationFile(profile, communities, token);
+  submitEvacuationFile(token, profile, communities);
 };
