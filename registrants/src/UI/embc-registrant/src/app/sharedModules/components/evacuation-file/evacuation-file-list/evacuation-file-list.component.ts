@@ -43,7 +43,6 @@ export class EvacuationFileListComponent implements OnInit {
       this.evacuationFileService.getCurrentEvacuationFiles().subscribe({
         next: (files) => {
           this.dataSourceActive = files;
-          console.log(this.dataSourceActive);
           this.dataSourceActive.sort(
             (a, b) =>
               new Date(b.evacuationFileDate).valueOf() -
