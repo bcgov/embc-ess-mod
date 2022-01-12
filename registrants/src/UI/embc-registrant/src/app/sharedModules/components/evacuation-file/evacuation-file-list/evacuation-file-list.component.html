@@ -2,7 +2,14 @@
   *ngIf="currentPath === '/verified-registration/dashboard/current'"
 >
   <div class="list-loader-align" *ngIf="showLoading">
-    <mat-spinner strokeWidth="3" [diameter]="50"></mat-spinner>
+    <app-loader
+      class="spinner"
+      [showLoader]="true"
+      [strokeWidth]="10"
+      [diameter]="50"
+      [color]="color"
+    >
+    </app-loader>
   </div>
 
   <ng-container *ngIf="!showLoading">
@@ -48,7 +55,14 @@
 
 <ng-container *ngIf="currentPath === '/verified-registration/dashboard/past'">
   <div class="list-loader-align" *ngIf="showLoading">
-    <mat-spinner strokeWidth="3" [diameter]="50"></mat-spinner>
+    <app-loader
+      class="spinner"
+      [showLoader]="true"
+      [strokeWidth]="10"
+      [diameter]="50"
+      [color]="color"
+    >
+    </app-loader>
   </div>
 
   <ng-container *ngIf="!showLoading">
