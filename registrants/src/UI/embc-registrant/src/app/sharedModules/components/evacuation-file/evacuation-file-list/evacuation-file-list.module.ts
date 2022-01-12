@@ -6,17 +6,17 @@ import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.comp
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
   declarations: [EvacuationFileListComponent, EvacuationCardComponent],
   imports: [
     CommonModule,
+    CoreModule,
     EvacuationFileListRoutingModule,
     MatCardModule,
     MatButtonModule,
-    MatTabsModule,
-    MatProgressSpinnerModule
+    MatTabsModule
   ]
 })
 export class EvacuationFileListModule {}

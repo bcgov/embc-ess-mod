@@ -1,20 +1,15 @@
 .list-loader-align {
-    padding: 20% 50%;
-    display: inline-flex;
-}
-
-.list-loader-align ::ng-deep .mat-progress-spinner circle,
-.mat-spinner circle {
-    stroke: #234075 !important;
+  padding: 20% 50%;
+  display: inline-flex;
 }
 
 .start-button {
-    width: 100%;
-    white-space: normal;
-    line-height: inherit;
+  width: 100%;
+  white-space: normal;
+  line-height: inherit;
 }
 
 .card-container {
-    margin: 2em 0;
-    box-shadow: 8px 5px 5px -1px rgba(0, 0, 0, 0.101960784313725);
+  margin: 2em 0;
+  box-shadow: 8px 5px 5px -1px rgba(0, 0, 0, 0.101960784313725);
 }

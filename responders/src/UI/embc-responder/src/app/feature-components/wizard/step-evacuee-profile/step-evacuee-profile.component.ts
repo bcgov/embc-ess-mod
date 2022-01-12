@@ -41,10 +41,10 @@ export class StepEvacueeProfileComponent {
 
     // Load security question list as soon as wizard is initialized
     this.securityQuestionsService.getSecurityQuestionList().subscribe({
-      error: (questions) => {
+      next: (questions) => {
         this.stepEvacueeProfileService.securityQuestionOptions = questions;
       },
-      next: (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.genericError);
       }

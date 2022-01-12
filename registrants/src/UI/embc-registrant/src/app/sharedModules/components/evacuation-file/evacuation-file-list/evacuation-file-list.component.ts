@@ -24,6 +24,7 @@ export class EvacuationFileListComponent implements OnInit {
   dataSourceActive: Array<EvacuationFileModel>;
   dataSourceInactive: Array<EvacuationFileModel>;
   showLoading = false;
+  color = '#169BD5';
 
   constructor(
     private dialog: MatDialog,
@@ -39,8 +40,8 @@ export class EvacuationFileListComponent implements OnInit {
 
     if (this.currentPath === '/verified-registration/dashboard/current') {
       this.showLoading = true;
-      this.evacuationFileService.getCurrentEvacuationFiles().subscribe(
-        (files) => {
+      this.evacuationFileService.getCurrentEvacuationFiles().subscribe({
+        next: (files) => {
           this.dataSourceActive = files;
           this.dataSourceActive.sort(
             (a, b) =>
@@ -54,11 +55,11 @@ export class EvacuationFileListComponent implements OnInit {
           this.primaryEssFile = this.dataSourceActive[0];
           this.showLoading = false;
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.currentEvacError);
         }
-      );
+      });
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
       this.showLoading = true;
       this.evacuationFileService.getPastEvacuationFiles().subscribe(
