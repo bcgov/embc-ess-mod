@@ -7,9 +7,11 @@ import { generatePersonDetails } from './generators/responders/person-details';
 import { generateEvacuationFile } from './generators/responders/evacuation-file';
 import { generateSupports } from './generators/responders/supports';
 import { generateNote } from './generators/responders/notes';
+import { ResponderTestParameters } from '../load-test.parameters';
 
-const baseUrl = 'https://dev1-embc-responders.apps.silver.devops.gov.bc.ca';
-const TASK_ID = 'UNIT-TEST-ACTIVE-TASK';
+const testParams = ResponderTestParameters;
+const baseUrl = testParams.baseUrl;
+const TASK_ID = testParams.taskId;
 
 const urls = {
   //Metadata
@@ -23,7 +25,7 @@ const urls = {
   member_role: `${baseUrl}/api/team/members/codes/memberrole`,
   member_label: `${baseUrl}/api/team/members/codes/memberlabel`,
 
-  auth_token: `https://dev.oidc.gov.bc.ca/auth/realms/udb1ycga/protocol/openid-connect/token`,
+  auth_token: testParams.authEndpoint,
   start_page: `${baseUrl}`,
   dashboard: `${baseUrl}/responder-access/responder-dashboard`,
   task_search_page: `${baseUrl}/responder-access/search/task`,
@@ -44,7 +46,7 @@ const loadTime = new Trend('load_time');
 
 export const options: Options = {
   vus: 1,
-  duration: '90s',
+  duration: '100s',
   thresholds: {
     'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
     'failed form fetches': ['rate<0.01'],
@@ -56,11 +58,11 @@ export const options: Options = {
 };
 
 const getAuthToken = () => {
-  const payload = "grant_type=password&username=dev-test-responder-1@bceid&password=MF2YN3VXEFPXA6VW&scope=openid%20registrants-portal-api";
+  const payload = `grant_type=${testParams.grantType}&username=${testParams.username}&password=${testParams.password}&scope=${testParams.scope}`;
   const params = {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": "Basic cmVzcG9uZGVycy10ZXN0LXVzZXJzOjY1OGQ4NjM3LWUyNmYtNGVmMS1iMWU1LWZlMDk3MDFhNTg4YQ==",
+      "Authorization": `Basic ${testParams.basicAuth}`,
     }
   };
 
