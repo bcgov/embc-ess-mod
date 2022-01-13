@@ -11,7 +11,6 @@ import { LoadTeamListService } from './core/services/load-team-list.service';
 import { EnvironmentInformation } from './core/models/environment-information.model';
 import { TimeoutService } from './core/services/timeout.service';
 import { OutageService } from './feature-components/outage/outage.service';
-import { TimeoutConfiguration } from './core/api/models/timeout-configuration';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { Subscription } from 'rxjs';
 import { lastValueFrom } from 'rxjs';
@@ -27,7 +26,6 @@ export class AppComponent implements OnInit {
   public show = true;
   public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
-  public timeoutInfo: TimeoutConfiguration;
   public pollingInterval: Subscription;
 
   constructor(
@@ -54,7 +52,7 @@ export class AppComponent implements OnInit {
       this.environment = await this.envBannerService.loadEnvironmentBanner();
       const configuration = await this.configService.load();
       this.outageService.outageInfo = configuration.outageInfo;
-      this.timeoutInfo = configuration.timeoutInfo;
+      this.timeOutService.timeOutInfo = configuration.timeoutInfo;
     } catch (error) {
       this.isLoading = false;
       this.router.navigate(['/outage']);
@@ -65,8 +63,8 @@ export class AppComponent implements OnInit {
       this.router.navigate(['/outage']);
     } else {
       this.timeOutService.init(
-        this.timeoutInfo.sessionTimeoutInMinutes,
-        this.timeoutInfo.warningMessageDuration
+        this.timeOutService.timeOutInfo.sessionTimeoutInMinutes,
+        this.timeOutService.timeOutInfo.warningMessageDuration
       );
       try {
         const nextUrl = await this.authenticationService.login();
@@ -92,7 +90,6 @@ export class AppComponent implements OnInit {
           this.alertService.setAlert('danger', globalConst.accessError);
         } else {
           this.router.navigate(['/outage']);
-          // this.alertService.setAlert('danger', globalConst.systemError);
         }
       } finally {
         this.isLoading = false;

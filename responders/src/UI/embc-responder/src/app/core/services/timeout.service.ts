@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
 import { TimeOutDialogComponent } from 'src/app/shared/components/dialog-components/time-out-dialog/time-out-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { TimeoutConfiguration } from '../api/models';
 import { AuthenticationService } from './authentication.service';
 import { UserService } from './user.service';
 
@@ -11,6 +12,7 @@ import { UserService } from './user.service';
 })
 export class TimeoutService {
   timedOut = false;
+  public timeOutInfoVal: TimeoutConfiguration;
 
   constructor(
     public idle: Idle,
@@ -20,6 +22,7 @@ export class TimeoutService {
   ) {}
 
   init(idleTime: number, timeOutDuration: number) {
+    console.log('actual');
     this.idle.setIdle(idleTime * 60);
     this.idle.setTimeout(timeOutDuration * 60);
 
@@ -53,5 +56,12 @@ export class TimeoutService {
   reset() {
     this.idle.watch();
     this.timedOut = false;
+  }
+
+  public get timeOutInfo(): TimeoutConfiguration {
+    return this.timeOutInfoVal;
+  }
+  public set timeOutInfo(value: TimeoutConfiguration) {
+    this.timeOutInfoVal = value;
   }
 }
