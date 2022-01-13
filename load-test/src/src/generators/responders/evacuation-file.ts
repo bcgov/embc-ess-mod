@@ -1,5 +1,5 @@
 import * as faker from 'faker/locale/en_CA';
-import { CommunityCode, EvacuationFile, EvacuationFileSearchResult, PersonDetails } from '../../api/responders/models';
+import { CommunityCode, EvacuationFile, PersonDetails } from '../../api/responders/models';
 import { generateAddress } from './address';
 import { generateNeedsAssessment } from './needs-assessment';
 
@@ -15,21 +15,14 @@ export function generateEvacuationFile(registrantId: string, registrantDetails: 
     };
 }
 
-export function getUpdatedEvacuationFile(file: any, registrantId: string, registrantDetails: PersonDetails, communities: Array<CommunityCode>, taskId: string): EvacuationFile {
-    let ret = {
-        id: file.id,
-        primaryRegistrantId: registrantId,
-        evacuatedFromAddress: generateAddress(communities),
-        registrationLocation: faker.company.companyName(),
-        needsAssessment: generateNeedsAssessment(registrantDetails, registrantId),
-        securityPhrase: "autotest-load",
-        securityPhraseEdited: true,
-        task: { taskNumber: taskId },
-    };
+export function getUpdatedEvacuationFile(file: EvacuationFile, registrantId: string, registrantDetails: PersonDetails): EvacuationFile {
+    let primaryMember = file.needsAssessment.householdMembers.find(m => m.isPrimaryRegistrant);
+    file.needsAssessment = generateNeedsAssessment(registrantDetails, registrantId);
+    if (primaryMember) {
+        file.needsAssessment.householdMembers[0].id = primaryMember.id;
+    }
+    file.evacuatedFromAddress.countryCode = "CAN";
+    file.evacuatedFromAddress.stateProvinceCode = "BC";
 
-    let primaryMemberId = file.householdMembers.find((m: any) => m.isMainApplicant).id;
-    let primaryIndex = ret.needsAssessment.householdMembers.findIndex(m => m.isPrimaryRegistrant)
-    if (primaryIndex >= 0) ret.needsAssessment.householdMembers[primaryIndex].id = primaryMemberId;
-    
-    return ret;
+    return file;
 }

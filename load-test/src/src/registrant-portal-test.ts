@@ -41,8 +41,27 @@ const submissionTime = new Trend('submission_time');
 const loadTime = new Trend('load_time');
 
 export const options: Options = {
-  vus: 1,
-  duration: '8s',
+  scenarios: {
+    registrants_portal: {
+      // executor: 'ramping-vus',
+      // startVUs: 1,
+      // stages: [
+      //   { duration: '15s', target: 1 },
+      //   { duration: '10s', target: 0 },
+      // ],
+      // gracefulRampDown: '0s',
+
+      executor: 'per-vu-iterations',
+      vus: 1,
+      iterations: 1,
+      maxDuration: '1h30m',
+    },
+  },
+
+  // vus: 1,
+  // iterations: 1,
+  // duration: '8s',
+
   thresholds: {
     'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
     'failed form fetches': ['rate<0.01'],

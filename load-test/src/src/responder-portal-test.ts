@@ -47,8 +47,27 @@ const printRequestTime = new Trend('print_request_time');
 const loadTime = new Trend('load_time');
 
 export const options: Options = {
-  vus: 1,
-  duration: '100s',
+  scenarios: {
+    responders_portal: {
+      // executor: 'ramping-vus',
+      // startVUs: 1,
+      // stages: [
+      //   { duration: '15s', target: 1 },
+      //   { duration: '10s', target: 0 },
+      // ],
+      // gracefulRampDown: '0s',
+
+      executor: 'per-vu-iterations',
+      vus: 1,
+      iterations: 1,
+      maxDuration: '1h30m',
+    },
+  },
+
+  // vus: 1,
+  // iterations: 1,
+  // duration: '100s',
+
   thresholds: {
     'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
     'failed form fetches': ['rate<0.01'],
@@ -284,7 +303,7 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   return response.json();
 }
 
-const updateEvacuationFile = (token: any, file: any, registrantId: any, registrant: any, communities: any) => {
+const updateEvacuationFile = (token: any, file: any, registrantId: any, registrant: any) => {
   const params = {
     headers: {
       "accept": "application/json",
@@ -293,7 +312,7 @@ const updateEvacuationFile = (token: any, file: any, registrantId: any, registra
     }
   };
 
-  const evacuationFile = getUpdatedEvacuationFile(file, registrantId.id, registrant, communities, TASK_ID);
+  const evacuationFile = getUpdatedEvacuationFile(file, registrantId.id, registrant);
   const payload = JSON.stringify(evacuationFile);
 
   const response = http.post(`${urls.file}/${file.id}`, payload, params);
@@ -439,13 +458,17 @@ export default () => {
   let file: any;
 
   let existing_registrations: any = searchRegistrations(token, registrant);
+  
   if (existing_registrations?.files?.length > 0 && existing_registrations?.registrants?.length > 0) {
+    //update existing file
     console.log("found existing registration");
     registrantId = { id: existing_registrations.registrants[0].id };
     fileId = { id: existing_registrations.files[0].id };
-    updateEvacuationFile(token, existing_registrations.files[0], registrantId, registrant, communities);
+    file = getEvacuationFile(token, fileId);
+    updateEvacuationFile(token, file, registrantId, registrant);
   }
   else {
+    //create new registrant and file
     console.log("no existing registrations - create new");
     getNewEvacueeWizard(token);
     let security_questions = getSecurityQuestions();
