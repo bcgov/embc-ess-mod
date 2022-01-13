@@ -1,10 +1,10 @@
 import { HouseholdMember, PersonDetails } from '../../api/registrants/models';
-import { generatePersonDetails } from './person-details';
+import { generateNewPersonDetails } from './person-details';
 
 export function generateHouseholdMember(primaryRegistrant?: PersonDetails): HouseholdMember {
     let member: HouseholdMember = {
         id: null,
-        details: generatePersonDetails()
+        details: generateNewPersonDetails()
     };
 
     if (primaryRegistrant) {

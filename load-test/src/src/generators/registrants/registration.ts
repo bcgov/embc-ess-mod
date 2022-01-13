@@ -2,11 +2,11 @@ import * as faker from 'faker/locale/en_CA';
 import { AnonymousRegistration, CommunityCode, PersonDetails } from '../../api/registrants/models';
 import { generateAddress } from './address';
 import { generateEvacuationFile } from './evacuation-file';
-import { generatePersonDetails } from './person-details';
+import { generateNewPersonDetails } from './person-details';
 import { generateSecurityQuestions } from './security-question'
 
 export function generateAnonymousRegistration(communities: Array<CommunityCode>, security_questions: string[]): AnonymousRegistration {
-    let registrantDetails: PersonDetails = generatePersonDetails();
+    let registrantDetails: PersonDetails = generateNewPersonDetails();
     return {
         informationCollectionConsent: faker.datatype.boolean(),
         preliminaryNeedsAssessment: generateEvacuationFile(registrantDetails, communities),

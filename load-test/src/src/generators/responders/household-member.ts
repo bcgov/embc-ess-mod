@@ -2,7 +2,7 @@
 import * as faker from 'faker/locale/en_CA';
 import { EvacuationFileHouseholdMember, PersonDetails } from '../../api/responders/models';
 
-export function generateHouseholdMember(primaryRegistrant?: PersonDetails): EvacuationFileHouseholdMember {
+export function generateHouseholdMember(primaryRegistrant?: PersonDetails, registrantId?: string): EvacuationFileHouseholdMember {
     let genders = ['Female', 'Male', 'X'];
     let member: EvacuationFileHouseholdMember = {
         id: null,
@@ -16,6 +16,7 @@ export function generateHouseholdMember(primaryRegistrant?: PersonDetails): Evac
     if (primaryRegistrant) {
         Object.assign(member, primaryRegistrant);
         member.isPrimaryRegistrant = true;
+        member.linkedRegistrantId = registrantId;
     }
 
     return member;

@@ -1,7 +1,7 @@
 import * as faker from 'faker/locale/en_CA';
 import { CommunityCode, Profile } from '../../api/registrants/models';
 import { generateAddress } from './address';
-import { generatePersonDetails } from './person-details';
+import { getPersonDetailsForIteration } from './person-details';
 import { generateSecurityQuestions } from './security-question';
 
 export function generateProfile(communities: Array<CommunityCode>, questions: string[]): Profile {
@@ -11,7 +11,7 @@ export function generateProfile(communities: Array<CommunityCode>, questions: st
             phone: faker.phone.phoneNumber("###-###-####"),
         },
         isMailingAddressSameAsPrimaryAddress: false,
-        personalDetails: generatePersonDetails(),
+        personalDetails: getPersonDetailsForIteration(),
         primaryAddress: generateAddress(communities),
         mailingAddress: generateAddress(communities),
         restrictedAccess: faker.datatype.boolean(),
