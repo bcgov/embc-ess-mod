@@ -3,8 +3,8 @@ import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 import { generateRegistrant } from './generators/responders/registrant';
-import { generatePersonDetails } from './generators/responders/person-details';
-import { generateEvacuationFile } from './generators/responders/evacuation-file';
+import { generateNewPersonDetails, getPersonDetailsForIteration } from './generators/responders/person-details';
+import { generateEvacuationFile, getUpdatedEvacuationFile } from './generators/responders/evacuation-file';
 import { generateSupports } from './generators/responders/supports';
 import { generateNote } from './generators/responders/notes';
 
@@ -47,8 +47,27 @@ const printRequestTime = new Trend('print_request_time');
 const loadTime = new Trend('load_time');
 
 export const options: Options = {
-  vus: 1,
-  duration: '100s',
+  scenarios: {
+    responders_portal: {
+      // executor: 'ramping-vus',
+      // startVUs: 1,
+      // stages: [
+      //   { duration: '15s', target: 1 },
+      //   { duration: '10s', target: 0 },
+      // ],
+      // gracefulRampDown: '0s',
+
+      executor: 'per-vu-iterations',
+      vus: 1,
+      iterations: 1,
+      maxDuration: '1h30m',
+    },
+  },
+
+  // vus: 1,
+  // iterations: 1,
+  // duration: '100s',
+
   thresholds: {
     'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
     'failed form fetches': ['rate<0.01'],
@@ -72,6 +91,7 @@ const getAuthToken = () => {
   loginFailRate.add(response.status !== 200);
   loadTime.add(response.timings.waiting);
   if (response.status !== 200) {
+    console.log("error getting auth token");
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -236,7 +256,9 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   submissionTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
+    console.log("error submitting registrant");
     console.log(payload);
+    console.log(JSON.stringify(response));
   }
 
   return response.json();
@@ -273,7 +295,33 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   submissionTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
+    console.log("error submitting file");
     console.log(payload);
+    console.log(JSON.stringify(response));
+  }
+
+  return response.json();
+}
+
+const updateEvacuationFile = (token: any, file: any, registrantId: any, registrant: any) => {
+  const params = {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token.access_token}`
+    }
+  };
+
+  const evacuationFile = getUpdatedEvacuationFile(file, registrantId.id, registrant);
+  const payload = JSON.stringify(evacuationFile);
+
+  const response = http.post(`${urls.file}/${file.id}`, payload, params);
+  submissionTime.add(response.timings.waiting);
+  submitFailRate.add(response.status !== 200);
+  if (response.status !== 200) {
+    console.log("error updating file");
+    console.log(payload);
+    console.log(JSON.stringify(response));
   }
 
   return response.json();
@@ -291,6 +339,11 @@ const getEvacuationFile = (token: any, fileRes: any) => {
   const response = http.get(`${urls.file}/${fileRes.id}`, params);
   formFailRate.add(response.status !== 200);
   loadTime.add(response.timings.waiting);
+
+  if (response.status !== 200) {
+    console.log("failed to load file");
+    console.log(JSON.stringify(response));
+  }
   return response.json();
 }
 
@@ -327,6 +380,7 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
   if (response.status !== 200) {
     console.log("error submitting supports");
     console.log(payload);
+    console.log(JSON.stringify(response));
   }
 
   return response.json();
@@ -365,14 +419,22 @@ const submitFileNote = (token: any, file: any) => {
   submissionTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
+    console.log("error submitting note");
     console.log(payload);
+    console.log(JSON.stringify(response));
   }
 
   return response.json();
 }
 
 export default () => {
-  const registrant = generatePersonDetails();
+  /* ----- New Registration ----- */
+  // const registrant = generateNewPersonDetails();
+
+  /* ----- Potentially Existing Registration ----- */
+  const registrant = getPersonDetailsForIteration();
+
+
   getStartPage();
   let token = getAuthToken();
   sleep(1);
@@ -391,24 +453,46 @@ export default () => {
   searchTasks(token);
   sleep(1);
 
-  searchRegistrations(token, registrant);
-  getNewEvacueeWizard(token);
-  let security_questions = getSecurityQuestions();
-  sleep(1);
+  let registrantId: any = "";
+  let fileId: any = "";
+  let file: any;
 
-  let registrantId = submitRegistrant(token, registrant, communities, security_questions);
-  getRegistrant(token, registrantId);
-  sleep(1);
+  let existing_registrations: any = searchRegistrations(token, registrant);
+  
+  if (existing_registrations?.files?.length > 0 && existing_registrations?.registrants?.length > 0) {
+    //update existing file
+    console.log("found existing registration");
+    registrantId = { id: existing_registrations.registrants[0].id };
+    fileId = { id: existing_registrations.files[0].id };
+    file = getEvacuationFile(token, fileId);
+    updateEvacuationFile(token, file, registrantId, registrant);
+  }
+  else {
+    //create new registrant and file
+    console.log("no existing registrations - create new");
+    getNewEvacueeWizard(token);
+    let security_questions = getSecurityQuestions();
+    sleep(1);
 
-  let fileId = submitEvacuationFile(token, registrantId, registrant, communities);
-  let file = getEvacuationFile(token, fileId);
+    registrantId = submitRegistrant(token, registrant, communities, security_questions);
+    getRegistrant(token, registrantId);
+    sleep(1);
+
+    fileId = submitEvacuationFile(token, registrantId, registrant, communities);
+  }
+
+  file = getEvacuationFile(token, fileId);
+
   let suppliers = getTaskSuppliers(token);
+  console.log("submit supports");
   let printRequest = submitSupports(token, file, suppliers);
   sleep(1);
 
+  console.log("submit print request");
   submitPrintRequest(token, file, printRequest);
   sleep(1);
 
+  console.log("submit file note");
   submitFileNote(token, file);
   sleep(1);
 };

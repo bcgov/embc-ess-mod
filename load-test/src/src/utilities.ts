@@ -13,3 +13,7 @@ export function addDays(date: Date, x: number): Date {
     result.setDate(result.getDate() + x);
     return result;
 }
+
+export const getDaysInMonth = function (month: number, year: number) {
+    return new Date(year, month, 0).getDate();
+};
