@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Idle } from '@ng-idle/core';
+import { TimeoutConfiguration } from '../core/api/models';
 import { AuthenticationService } from '../core/services/authentication.service';
 import { TimeoutService } from '../core/services/timeout.service';
 import { UserService } from '../core/services/user.service';
@@ -10,6 +11,7 @@ import { UserService } from '../core/services/user.service';
 })
 export class MockTimeoutService extends TimeoutService {
   public timedOut = false;
+  public timeOutInfoVal: TimeoutConfiguration;
   private state = 'Started';
 
   constructor(
