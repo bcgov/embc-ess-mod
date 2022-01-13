@@ -10,7 +10,7 @@ import { ConfigurationService } from '../api/services';
   providedIn: 'root'
 })
 export class ConfigService {
-  private config?: Configuration = null;
+  public config?: Configuration = null;
 
   constructor(private configurationService: ConfigurationService) {}
 
