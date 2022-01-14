@@ -16,6 +16,7 @@ import {
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
 import { Router } from '@angular/router';
+import { ConfigService } from 'src/app/core/services/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,10 +33,10 @@ export class OutageService {
   private stopPolling = new Subject();
 
   constructor(
-    private dialog: MatDialog,
-    private configService: ConfigurationService,
-    private alertService: AlertService,
-    private router: Router
+    public dialog: MatDialog,
+    public configService: ConfigService,
+    public alertService: AlertService,
+    public router: Router
   ) {}
 
   public get outageInfo(): OutageInformation {
@@ -135,6 +136,6 @@ export class OutageService {
   }
 
   private getOutageConfig(): Observable<OutageInformation> {
-    return this.configService.configurationGetOutageInfo();
+    return this.configService.getOutageConfig();
   }
 }
