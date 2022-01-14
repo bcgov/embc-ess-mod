@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { Observable } from 'rxjs';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -34,18 +35,20 @@ export class LoadTeamListService {
       : this.getMemberRole();
   }
 
-  public loadStaticTeamLists(): Observable<void> {
+  public loadStaticTeamLists(): Promise<void> {
     const roles: Observable<Array<MemberRoleDescription>> =
       this.teamMembersService.teamsGetMemberRoles();
     const label: Observable<Array<MemberLabelDescription>> =
       this.teamMembersService.teamsGetMemberLabels();
 
-    return forkJoin([roles, label]).pipe(
+    const list$ = forkJoin([roles, label]).pipe(
       map((results) => {
         this.setMemberLabels(results[1]);
         this.setMemberRoles(results[0]);
       })
     );
+
+    return lastValueFrom(list$);
   }
 
   private setMemberRoles(memberRoles: MemberRoleDescription[]): void {

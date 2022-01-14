@@ -1,7 +1,7 @@
 <div
   class="main-border"
   [ngStyle]="
-    environment !== {} && environment !== undefined
+    environment !== null && environment !== undefined
       ? {
           padding: '0px 5px 5px 5px',
           'background-color': environment?.bannerColor
@@ -15,7 +15,7 @@
   ></app-outage-banner>
 
   <app-environment-banner
-    *ngIf="environment !== {} && environment !== undefined"
+    *ngIf="environment !== null && environment !== undefined"
   ></app-environment-banner>
 
   <app-header *ngIf="show"></app-header>

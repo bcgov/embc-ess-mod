@@ -69,12 +69,8 @@ export class AppComponent implements OnInit {
       try {
         const nextUrl = await this.authenticationService.login();
         const userProfile = await this.userService.loadUserProfile();
-        const location = await lastValueFrom(
-          this.locationService.loadStaticLocationLists()
-        );
-        const team = await lastValueFrom(
-          this.loadTeamListService.loadStaticTeamLists()
-        );
+        const location = await this.locationService.loadStaticLocationLists();
+        const team = await this.loadTeamListService.loadStaticTeamLists();
         this.getBackendVersionInfo();
         this.outageService.displayOutageBanner();
         const nextRoute = decodeURIComponent(

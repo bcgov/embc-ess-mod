@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, lastValueFrom, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { Address, Code, CommunityType } from '../api/models';
@@ -145,7 +145,7 @@ export class LocationsService {
     }
   }
 
-  public loadStaticLocationLists(): Observable<void> {
+  public loadStaticLocationLists(): Promise<void> {
     const community: Observable<Array<CommunityCode>> =
       this.configService.configurationGetCommunities();
     const province: Observable<Array<CommunityCode>> =
@@ -153,7 +153,7 @@ export class LocationsService {
     const country: Observable<Array<CommunityCode>> =
       this.configService.configurationGetCountries();
 
-    return forkJoin([community, province, country]).pipe(
+    const list$ = forkJoin([community, province, country]).pipe(
       map((results) => {
         this.setCountriesList(
           [...results[2]].map((c) => ({ code: c.value, name: c.description }))
@@ -182,6 +182,7 @@ export class LocationsService {
         );
       })
     );
+    return lastValueFrom(list$);
   }
 
   private setCommunityList(communityList: Community[]): void {
