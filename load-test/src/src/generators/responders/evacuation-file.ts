@@ -8,9 +8,21 @@ export function generateEvacuationFile(registrantId: string, registrantDetails: 
         primaryRegistrantId: registrantId,
         evacuatedFromAddress: generateAddress(communities),
         registrationLocation: faker.company.companyName(),
-        needsAssessment: generateNeedsAssessment(registrantDetails),
+        needsAssessment: generateNeedsAssessment(registrantDetails, registrantId),
         securityPhrase: "autotest-load",
         securityPhraseEdited: true,
         task: { taskNumber: taskId },
     };
+}
+
+export function getUpdatedEvacuationFile(file: EvacuationFile, registrantId: string, registrantDetails: PersonDetails): EvacuationFile {
+    let primaryMember = file.needsAssessment.householdMembers.find(m => m.isPrimaryRegistrant);
+    file.needsAssessment = generateNeedsAssessment(registrantDetails, registrantId);
+    if (primaryMember) {
+        file.needsAssessment.householdMembers[0].id = primaryMember.id;
+    }
+    file.evacuatedFromAddress.countryCode = "CAN";
+    file.evacuatedFromAddress.stateProvinceCode = "BC";
+
+    return file;
 }
