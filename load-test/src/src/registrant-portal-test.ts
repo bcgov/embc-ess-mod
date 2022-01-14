@@ -1,4 +1,3 @@
-import { sleep } from 'k6';
 import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
@@ -8,6 +7,7 @@ import { generateProfile } from './generators/registrants/profile';
 
 // @ts-ignore
 import { RegistrantTestParameters } from '../load-test.parameters-APP_TARGET';
+import { fillInForm, navigate } from './utilities';
 
 const testParams = RegistrantTestParameters;
 const baseUrl = testParams.baseUrl;
@@ -37,10 +37,14 @@ const urls = {
 const loginFailRate = new Rate('failed to login');
 const formFailRate = new Rate('failed form fetches');
 const submitFailRate = new Rate('failed form submits');
-const submissionTime = new Trend('submission_time');
+const submitFile = new Trend('submit_file');
+const submitAnonymous = new Trend('submit_anonymous');
+const submitProfile = new Trend('submit_profile');
 const loadTime = new Trend('load_time');
+const loadCommunities = new Trend('load_communities');
+const loadProfile = new Trend('load_profile');
 
-const MAX_VU = 11;
+const MAX_VU = 10;
 const MAX_ITER = 50;
 
 export const options: Options = {
@@ -49,14 +53,14 @@ export const options: Options = {
       // executor: 'ramping-vus',
       // startVUs: 1,
       // stages: [
-      //   { duration: '60s', target: 2 }, //should keep target less than MAX_VU
+      //   { duration: '60s', target: 2 }, //target should be <= MAX_VU
       //   { duration: '120s', target: 10 },
       //   { duration: '60s', target: 4 },
       // ],
       // gracefulRampDown: '0s',
 
       executor: 'per-vu-iterations',
-      vus: 5,
+      vus: 1,
       iterations: 1,
       maxDuration: '1h30m',
     },
@@ -67,14 +71,19 @@ export const options: Options = {
     'failed form fetches': ['rate<0.01'],
     'failed login': ['rate<0.01'],
     // 'http_req_duration{type:submit}': ['p(100)<4000'], // threshold on submit requests only (in ms)
-    'submission_time': ['p(95)<5000'], // threshold on submit requests only (in ms)
+    'submit_file': ['p(95)<5000'], // threshold on submit requests only (in ms)
+    'submit_anonymous': ['p(95)<5000'], // threshold on submit requests only (in ms)
+    'submit_profile': ['p(95)<5000'], // threshold on submit requests only (in ms)
     'load_time': ['p(95)<4000'], // threshold on load requests only (in ms)
+    'load_communities': ['p(95)<4000'], // threshold on load requests only (in ms)
+    'load_profile': ['p(95)<4000'], // threshold on load requests only (in ms)
     //'http_req_duration': ['p(95)<400'] //Only 5% or less are permitted to have a request duration longer than 400ms
   }
 };
 
 const getAuthToken = () => {
-  let curr_vu = __VU % MAX_VU || 1; //VU's begin at 1, so we're not using VU 0
+  let curr_vu = __VU - 1; //VU's begin at 1, not 0
+  curr_vu = (curr_vu % MAX_VU) + 1;
   let curr_iter = __ITER % MAX_ITER;
   // console.log(`VU: ${curr_vu}  -  ITER: ${curr_iter}`);
   let username = `${testParams.usernameBase}${curr_vu}-${curr_iter}`;
@@ -118,7 +127,7 @@ const getConfiguration = () => {
 const getCommunities = () => {
   const response = http.get(urls.communities);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadCommunities.add(response.timings.waiting);
   return response.json();
 }
 
@@ -155,7 +164,7 @@ const submitAnonymousRegistration = (communities: any, security_questions: any) 
   };
 
   const response = http.post(urls.submit_anonymous, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitAnonymous.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
     console.log(`${__VU},${__ITER}: failed to submit anonymous registration`);
@@ -194,7 +203,7 @@ const getCurrentProfile = (token: any) => {
 
   const response = http.get(urls.current_profile, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadProfile.add(response.timings.waiting);
   if (response.status !== 200) {
     console.log(`${__VU},${__ITER}: failed to get current profile`);
     console.log(JSON.stringify(response));
@@ -215,7 +224,7 @@ const createProfile = (token: any, communities: any, security_questions: any) =>
   };
 
   const response = http.post(urls.current_profile, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitProfile.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
     console.log(`${__VU},${__ITER}: failed to create profile`);
@@ -239,7 +248,7 @@ const submitEvacuationFile = (token: any, profile: any, communities: any) => {
   };
 
   const response = http.post(urls.submit, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitFile.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
     console.log(`${__VU},${__ITER}: failed submit evacuation file`);
@@ -258,7 +267,7 @@ export default () => {
   // getProvinces();
   // getCountries();
   // let security_questions = getSecurityQuestions();
-  // sleep(2);
+  // fillInForm();
   // submitAnonymousRegistration(communities, security_questions);
   /* ---------- */
 
@@ -268,18 +277,19 @@ export default () => {
   let communities = getCommunities();
   getProvinces();
   getCountries();
-  sleep(1); //navigate
+  navigate();
   let token = getAuthToken();
   let profile_exists = getCurrentProfileExists(token);
-  sleep(1);
+  navigate();
 
   if (profile_exists == false) {
     //New Profile
     let security_questions = getSecurityQuestions();
+    fillInForm();
     createProfile(token, communities, security_questions);
   }
 
   let profile = getCurrentProfile(token);
-  sleep(2);
+  fillInForm();
   submitEvacuationFile(token, profile, communities);
 };
