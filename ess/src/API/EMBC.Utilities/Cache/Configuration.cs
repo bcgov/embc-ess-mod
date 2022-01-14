@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,7 @@ namespace EMBC.ESS.Utilities.Cache
             {
                 var cache = sp.GetRequiredService<IDistributedCache>();
                 var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), new ContextualTtl());
-                return new Cache(cache, policy, keyPrefix: configurationServices.Environment.ApplicationName);
+                return new Cache(cache, policy, keyPrefix: Environment.GetEnvironmentVariable("APP_NAME") ?? configurationServices.Environment.ApplicationName);
             });
         }
     }
