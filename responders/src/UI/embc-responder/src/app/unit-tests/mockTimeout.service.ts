@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Idle } from '@ng-idle/core';
 import { TimeoutConfiguration } from '../core/api/models';
-import { AuthenticationService } from '../core/services/authentication.service';
 import { TimeoutService } from '../core/services/timeout.service';
-import { UserService } from '../core/services/user.service';
+import { MockAuthService } from './mockAuth.service';
+import { MockUserService } from './mockUser.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,8 @@ export class MockTimeoutService extends TimeoutService {
   constructor(
     public idle: Idle,
     public dialog: MatDialog,
-    public authenticationService: AuthenticationService,
-    public userService: UserService
+    public authenticationService: MockAuthService,
+    public userService: MockUserService
   ) {
     super(idle, dialog, authenticationService, userService);
   }
@@ -42,5 +42,12 @@ export class MockTimeoutService extends TimeoutService {
 
   getTimeOut(): boolean {
     return this.timedOut;
+  }
+
+  public get timeOutInfo(): TimeoutConfiguration {
+    return this.timeOutInfoVal;
+  }
+  public set timeOutInfo(value: TimeoutConfiguration) {
+    this.timeOutInfoVal = value;
   }
 }

@@ -3,7 +3,11 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 import { lastValueFrom, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Configuration, VersionInformation } from '../api/models';
+import {
+  Configuration,
+  OutageInformation,
+  VersionInformation
+} from '../api/models';
 import { ConfigurationService } from '../api/services';
 
 @Injectable({
@@ -55,5 +59,9 @@ export class ConfigService {
    **/
   public getVersionInfo(): Observable<Array<VersionInformation>> {
     return this.configurationService.configurationGetApplicationVersionInfo();
+  }
+
+  public getOutageConfig(): Observable<OutageInformation> {
+    return this.configurationService.configurationGetOutageInfo();
   }
 }
