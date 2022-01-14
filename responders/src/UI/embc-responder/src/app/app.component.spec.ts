@@ -1,12 +1,12 @@
 import {
-  fakeAsync,
   TestBed,
   tick,
   waitForAsync,
   ComponentFixture,
   flush,
   flushMicrotasks,
-  discardPeriodicTasks
+  discardPeriodicTasks,
+  fakeAsync
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
@@ -157,6 +157,7 @@ describe('AppComponent', () => {
   });
 
   it('should create the app', () => {
+    bannerService.environmentBanner = {};
     configService.config = {
       timeoutInfo: {
         sessionTimeoutInMinutes: 1,
@@ -164,12 +165,20 @@ describe('AppComponent', () => {
       },
       outageInfo: null
     };
+    userService.userProfile = {
+      agreementSignDate: null,
+      firstName: 'Test_First_Name',
+      lastName: 'Test_Last_Name',
+      requiredToSignAgreement: false,
+      userName: 'Test_User'
+    };
     fixture.detectChanges();
     component.ngOnInit();
     expect(app).toBeTruthy();
   });
 
   it('should initiate time out service', () => {
+    bannerService.environmentBanner = {};
     configService.config = {
       timeoutInfo: {
         sessionTimeoutInMinutes: 1,
@@ -380,7 +389,14 @@ describe('AppComponent', () => {
     );
   }));
 
-  it('should display environment banner', () => {
+  it('should display environment banner', fakeAsync(() => {
+    configService.config = {
+      timeoutInfo: {
+        sessionTimeoutInMinutes: 1,
+        warningMessageDuration: 1
+      },
+      outageInfo: null
+    };
     bannerService.environmentBanner = {
       envName: 'dev',
       bannerTitle:
@@ -390,26 +406,61 @@ describe('AppComponent', () => {
       bannerColor: '#097d8c'
     };
     fixture.detectChanges();
+    component.ngOnInit();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+    tick();
+    fixture.detectChanges();
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
     const envBannerElem = nativeElem.querySelector('app-environment-banner');
     expect(envBannerElem).toBeDefined();
-  });
+  }));
 
-  it('should not display environment banner if environment value is undefined', () => {
+  it('should not display environment banner if environment value is undefined', fakeAsync(() => {
+    configService.config = {
+      timeoutInfo: {
+        sessionTimeoutInMinutes: 1,
+        warningMessageDuration: 1
+      },
+      outageInfo: null
+    };
     bannerService.environmentBanner = undefined;
     fixture.detectChanges();
-    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
-    const envBannerElem = nativeElem.querySelector('app-environment-banner');
-    expect(envBannerElem).toEqual(null);
-  });
+    component.ngOnInit();
 
-  it('should not display environment banner if environment value is null', () => {
-    bannerService.environmentBanner = {};
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+    tick();
     fixture.detectChanges();
     const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
     const envBannerElem = nativeElem.querySelector('app-environment-banner');
     expect(envBannerElem).toEqual(null);
-  });
+  }));
+
+  it('should not display environment banner if environment value is null', fakeAsync(() => {
+    configService.config = {
+      timeoutInfo: {
+        sessionTimeoutInMinutes: 1,
+        warningMessageDuration: 1
+      },
+      outageInfo: null
+    };
+    bannerService.environmentBanner = null;
+    fixture.detectChanges();
+
+    component.ngOnInit();
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+    tick();
+    fixture.detectChanges();
+    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+    const envBannerElem = nativeElem.querySelector('app-environment-banner');
+    expect(envBannerElem).toEqual(null);
+  }));
 
   it('should display outage Info', fakeAsync(() => {
     configService.config = {
@@ -423,6 +474,7 @@ describe('AppComponent', () => {
         outageEndDate: '2021-12-16T21:00:00Z'
       }
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -449,6 +501,7 @@ describe('AppComponent', () => {
         outageEndDate: '2021-12-16T21:00:00Z'
       }
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -475,6 +528,7 @@ describe('AppComponent', () => {
         outageEndDate: '2021-12-16T21:00:00Z'
       }
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -502,6 +556,7 @@ describe('AppComponent', () => {
         outageEndDate: new Date(now.getTime() + 2 * 60000)
       }
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
     tick();
@@ -524,6 +579,7 @@ describe('AppComponent', () => {
       },
       outageInfo: null
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -553,6 +609,7 @@ describe('AppComponent', () => {
       requiredToSignAgreement: true,
       userName: 'Test_User'
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -581,6 +638,7 @@ describe('AppComponent', () => {
       requiredToSignAgreement: false,
       userName: 'Test_User'
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -607,6 +665,7 @@ describe('AppComponent', () => {
         outageEndDate: new Date(now.getTime() + 2 * 60000)
       }
     };
+    bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
 
