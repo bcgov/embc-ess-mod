@@ -27,7 +27,7 @@ export class OutageService {
   public showOutageBanner$: Observable<boolean> =
     this.showOutageBanner.asObservable();
 
-  private outageInfoVal: OutageInformation;
+  private outageInfoVal: null | OutageInformation;
   private closeBannerbyUserVal = false;
   private stopPolling = new Subject();
 

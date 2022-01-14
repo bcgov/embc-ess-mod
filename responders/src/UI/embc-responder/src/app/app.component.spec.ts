@@ -249,6 +249,7 @@ describe('AppComponent', () => {
         'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
+
     fixture.detectChanges();
     component.ngOnInit();
 

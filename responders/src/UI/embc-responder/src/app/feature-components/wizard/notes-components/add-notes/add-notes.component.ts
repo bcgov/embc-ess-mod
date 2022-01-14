@@ -92,10 +92,10 @@ export class AddNotesComponent implements OnInit {
         )
       )
       .subscribe({
-        error: (result) => {
+        next: (result) => {
           this.closeEvent.emit(true);
         },
-        next: (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.clearAlert();

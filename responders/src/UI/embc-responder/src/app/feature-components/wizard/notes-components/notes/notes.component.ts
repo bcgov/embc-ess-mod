@@ -43,7 +43,7 @@ export class NotesComponent implements OnInit {
     this.loadNotes();
     this.addNoteFlag = !this.addNoteFlag;
     this.isAddDisabled = !this.isAddDisabled;
-    this.stepNotesService.selectedNote = {};
+    this.stepNotesService.selectedNote = undefined;
   }
 
   /**
