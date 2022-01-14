@@ -6,8 +6,12 @@ import { OutageService } from '../feature-components/outage/outage.service';
   providedIn: 'root'
 })
 export class MockOutageService extends OutageService {
-  public outageInformation: OutageInformation;
-  public getOutageInformation(): OutageInformation {
-    return this.outageInformation;
+  public outageInfoValue: OutageInformation;
+
+  public get outageInfo(): OutageInformation {
+    return this.outageInfoValue;
+  }
+  public set outageInfo(value: OutageInformation) {
+    this.outageInfoValue = value;
   }
 }

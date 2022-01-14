@@ -151,87 +151,87 @@ describe('AppComponent', () => {
   //   expect(routerSpy.navigate).toHaveBeenCalledWith(['responder-access']);
   // });
 
-  it('should set idle time', fakeAsync(() => {
-    configService.config = {
-      timeoutInfo: {
-        sessionTimeoutInMinutes: 1,
-        warningMessageDuration: 1
-      },
-      outageInfo: null
-    };
-    fixture.detectChanges();
-    const idle = timeoutService.idle;
-    component.ngOnInit();
+  // it('should set idle time', fakeAsync(() => {
+  //   configService.config = {
+  //     timeoutInfo: {
+  //       sessionTimeoutInMinutes: 1,
+  //       warningMessageDuration: 1
+  //     },
+  //     outageInfo: null
+  //   };
+  //   fixture.detectChanges();
+  //   const idle = timeoutService.idle;
+  //   component.ngOnInit();
 
-    tick();
-    fixture.detectChanges();
+  //   tick();
+  //   fixture.detectChanges();
 
-    expect(idle.getIdle()).toEqual(60);
-  }));
+  //   expect(idle.getIdle()).toEqual(60);
+  // }));
 
-  it('should set timeout time', fakeAsync(() => {
-    configService.config = {
-      timeoutInfo: {
-        sessionTimeoutInMinutes: 1,
-        warningMessageDuration: 1
-      },
-      outageInfo: null
-    };
-    fixture.detectChanges();
-    const idle = timeoutService.idle;
-    component.ngOnInit();
+  // it('should set timeout time', fakeAsync(() => {
+  //   configService.config = {
+  //     timeoutInfo: {
+  //       sessionTimeoutInMinutes: 1,
+  //       warningMessageDuration: 1
+  //     },
+  //     outageInfo: null
+  //   };
+  //   fixture.detectChanges();
+  //   const idle = timeoutService.idle;
+  //   component.ngOnInit();
 
-    tick();
-    fixture.detectChanges();
+  //   tick();
+  //   fixture.detectChanges();
 
-    expect(idle.getTimeout()).toEqual(60);
-  }));
+  //   expect(idle.getTimeout()).toEqual(60);
+  // }));
 
-  it('should not be idle', fakeAsync(() => {
-    configService.config = {
-      timeoutInfo: {
-        sessionTimeoutInMinutes: 1,
-        warningMessageDuration: 1
-      },
-      outageInfo: null
-    };
-    fixture.detectChanges();
-    const idle = timeoutService.idle;
-    const expiry: MockExpiry = TestBed.inject(MockExpiry);
-    component.ngOnInit();
+  // it('should not be idle', fakeAsync(() => {
+  //   configService.config = {
+  //     timeoutInfo: {
+  //       sessionTimeoutInMinutes: 1,
+  //       warningMessageDuration: 1
+  //     },
+  //     outageInfo: null
+  //   };
+  //   fixture.detectChanges();
+  //   const idle = timeoutService.idle;
+  //   const expiry: MockExpiry = TestBed.inject(MockExpiry);
+  //   component.ngOnInit();
 
-    tick();
-    fixture.detectChanges();
+  //   tick();
+  //   fixture.detectChanges();
 
-    expiry.mockNow = new Date();
-    idle.watch();
-    expect(idle.isIdling()).toEqual(false);
+  //   expiry.mockNow = new Date();
+  //   idle.watch();
+  //   expect(idle.isIdling()).toEqual(false);
 
-    idle.stop();
-  }));
+  //   idle.stop();
+  // }));
 
-  it('should be idle', fakeAsync(() => {
-    configService.config = {
-      timeoutInfo: {
-        sessionTimeoutInMinutes: 1 / 60,
-        warningMessageDuration: 1 / 60
-      },
-      outageInfo: null
-    };
-    const idle = timeoutService.idle;
-    const expiry: MockExpiry = TestBed.inject(MockExpiry);
-    component.ngOnInit();
+  // it('should be idle', fakeAsync(() => {
+  //   configService.config = {
+  //     timeoutInfo: {
+  //       sessionTimeoutInMinutes: 1 / 60,
+  //       warningMessageDuration: 1 / 60
+  //     },
+  //     outageInfo: null
+  //   };
+  //   const idle = timeoutService.idle;
+  //   const expiry: MockExpiry = TestBed.inject(MockExpiry);
+  //   component.ngOnInit();
 
-    tick();
-    fixture.detectChanges();
-    expiry.mockNow = new Date(expiry.now().getTime() + idle.getIdle() * 60000);
-    idle.watch();
+  //   tick();
+  //   fixture.detectChanges();
+  //   expiry.mockNow = new Date(expiry.now().getTime() + idle.getIdle() * 60000);
+  //   idle.watch();
 
-    tick(3000);
-    fixture.detectChanges();
-    expect(idle.isIdling()).toBe(true);
-    idle.stop();
-  }));
+  //   tick(3000);
+  //   fixture.detectChanges();
+  //   expect(idle.isIdling()).toBe(true);
+  //   idle.stop();
+  // }));
 
   it('should have environment name', fakeAsync(() => {
     configService.config = {
@@ -249,6 +249,7 @@ describe('AppComponent', () => {
         'All information entered here will be treated as **dev** data.',
       bannerColor: '#097d8c'
     };
+
     fixture.detectChanges();
     component.ngOnInit();
 

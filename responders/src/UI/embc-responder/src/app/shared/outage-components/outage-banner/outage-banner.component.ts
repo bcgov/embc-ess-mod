@@ -9,12 +9,12 @@ import { OutageService } from '../../../feature-components/outage/outage.service
 })
 export class OutageBannerComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>(true);
-  outageInfo: OutageInformation;
+  public outageInfo: OutageInformation;
 
   constructor(private outageService: OutageService) {}
 
   ngOnInit(): void {
-    this.outageInfo = this.outageService.outageInfo;
+    this.outageInfo = this.outageService?.outageInfo;
   }
 
   public closeOutageBanner() {
