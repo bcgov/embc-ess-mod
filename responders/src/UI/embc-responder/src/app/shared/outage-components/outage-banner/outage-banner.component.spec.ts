@@ -53,7 +53,6 @@ describe('OutageBannerComponent', () => {
     };
     fixture.detectChanges();
     component.ngOnInit();
-    console.log(component);
 
     expect(outageService.outageInfo.content).toEqual(
       'Outage testing in Responders portal'
