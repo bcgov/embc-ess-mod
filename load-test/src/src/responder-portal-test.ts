@@ -1,4 +1,3 @@
-import { sleep } from 'k6';
 import { Options } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
@@ -10,6 +9,7 @@ import { generateNote } from './generators/responders/notes';
 
 // @ts-ignore
 import { ResponderTestParameters } from '../load-test.parameters-APP_TARGET';
+import { fillInForm, navigate } from './utilities';
 
 const testParams = ResponderTestParameters;
 const baseUrl = testParams.baseUrl;
@@ -42,9 +42,22 @@ const urls = {
 const loginFailRate = new Rate('failed to login');
 const formFailRate = new Rate('failed form fetches');
 const submitFailRate = new Rate('failed form submits');
-const submissionTime = new Trend('submission_time');
+// const submissionTime = new Trend('submission_time');
+const submitFileTime = new Trend('submit_file');
+const submitRegistrantTime = new Trend('submit_registrant');
+const submitSupportsTime = new Trend('submit_supports');
+const submitNoteTime = new Trend('submit_note');
 const printRequestTime = new Trend('print_request_time');
 const loadTime = new Trend('load_time');
+const loadCommunitiesTime = new Trend('load_communities');
+const loadFileTime = new Trend('load_file');
+const loadRegistrantTime = new Trend('load_registrant');
+const loadTaskSuppliersTime = new Trend('load_suppliers');
+const searchTaskTime = new Trend('search_tasks');
+const searchRegistrationsTime = new Trend('search_registrations');
+
+// const MAX_VU = 10;
+// const MAX_ITER = 50;
 
 export const options: Options = {
   scenarios: {
@@ -52,29 +65,35 @@ export const options: Options = {
       // executor: 'ramping-vus',
       // startVUs: 1,
       // stages: [
-      //   { duration: '15s', target: 1 },
-      //   { duration: '10s', target: 0 },
+      //   { duration: '60s', target: 2 }, //target should be <= MAX_VU
+      //   { duration: '120s', target: 10 },
+      //   { duration: '60s', target: 4 },
       // ],
       // gracefulRampDown: '0s',
 
       executor: 'per-vu-iterations',
       vus: 1,
-      iterations: 1,
+      iterations: 20,
       maxDuration: '1h30m',
     },
   },
-
-  // vus: 1,
-  // iterations: 1,
-  // duration: '100s',
 
   thresholds: {
     'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
     'failed form fetches': ['rate<0.01'],
     'failed login': ['rate<0.01'],
-    'submission_time': ['p(100)<10000'], // 10s - threshold on submit requests only (in ms)
-    'print_request_time': ['p(100)<90000'], // 90s - threshold on print requests only (in ms)
-    'load_time': ['p(100)<6000'], // 6s - threshold on submit requests only (in ms)
+    'submit_file': ['p(95)<10000'], // 10s - threshold on submit requests only (in ms)
+    'submit_registrant': ['p(95)<10000'], // 10s - threshold on submit requests only (in ms)
+    'submit_supports': ['p(95)<10000'], // 10s - threshold on submit requests only (in ms)
+    'submit_note': ['p(95)<10000'], // 10s - threshold on submit requests only (in ms)
+    'print_request_time': ['p(95)<90000'], // 90s - threshold on print requests only (in ms)
+    'load_time': ['p(95)<6000'], // 6s - threshold on load requests only (in ms)
+    'load_communities': ['p(95)<6000'], // 6s - threshold on load requests only (in ms)
+    'load_file': ['p(95)<6000'], // 6s - threshold on load requests only (in ms)
+    'load_registrant': ['p(95)<6000'], // 6s - threshold on load requests only (in ms)
+    'load_suppliers': ['p(95)<6000'], // 6s - threshold on load requests only (in ms)
+    'search_tasks': ['p(95)<6000'], // 6s - threshold on load requests only (in ms)
+    'search_registrations': ['p(95)<6000'], // 6s - threshold on load requests only (in ms)
   }
 };
 
@@ -91,7 +110,7 @@ const getAuthToken = () => {
   loginFailRate.add(response.status !== 200);
   loadTime.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.log("error getting auth token");
+    console.log(`${__VU},${__ITER}:error getting auth token`);
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -118,7 +137,7 @@ const getConfiguration = () => {
 const getCommunities = () => {
   const response = http.get(urls.communities);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadCommunitiesTime.add(response.timings.waiting);
   return response.json();
 }
 
@@ -206,7 +225,7 @@ const searchTasks = (token: any) => {
 
   const response = http.get(urls.task_search, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  searchTaskTime.add(response.timings.waiting);
   return response.json();
 }
 
@@ -221,7 +240,7 @@ const searchRegistrations = (token: any, registrant: any) => {
 
   const response = http.get(urls.registrations_search + `?firstName=${registrant.firstName}&lastName=${registrant.lastName}&dateOfBirth=${registrant.dateOfBirth}`, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  searchRegistrationsTime.add(response.timings.waiting);
   return response.json();
 }
 
@@ -253,10 +272,10 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   const payload = JSON.stringify(registration);
 
   const response = http.post(urls.registrant, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitRegistrantTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log("error submitting registrant");
+    console.log(`${__VU},${__ITER}:error submitting registrant`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -275,7 +294,7 @@ const getRegistrant = (token: any, regRes: any) => {
 
   const response = http.get(`${urls.registrant}/${regRes.id}`, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadRegistrantTime.add(response.timings.waiting);
   return response.json();
 }
 
@@ -292,10 +311,10 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   const payload = JSON.stringify(evacuationFile);
 
   const response = http.post(urls.file, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitFileTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log("error submitting file");
+    console.log(`${__VU},${__ITER}:error submitting file`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -303,7 +322,7 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   return response.json();
 }
 
-const updateEvacuationFile = (token: any, file: any, registrantId: any, registrant: any) => {
+const updateEvacuationFile = (token: any, file: any, registrantId: any, registrant: any, task: any) => {
   const params = {
     headers: {
       "accept": "application/json",
@@ -312,14 +331,14 @@ const updateEvacuationFile = (token: any, file: any, registrantId: any, registra
     }
   };
 
-  const evacuationFile = getUpdatedEvacuationFile(file, registrantId.id, registrant);
+  const evacuationFile = getUpdatedEvacuationFile(file, registrantId.id, registrant, task);
   const payload = JSON.stringify(evacuationFile);
 
   const response = http.post(`${urls.file}/${file.id}`, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitFileTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log("error updating file");
+    console.log(`${__VU},${__ITER}:error updating file`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -338,10 +357,10 @@ const getEvacuationFile = (token: any, fileRes: any) => {
 
   const response = http.get(`${urls.file}/${fileRes.id}`, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadFileTime.add(response.timings.waiting);
 
   if (response.status !== 200) {
-    console.log("failed to load file");
+    console.log(`${__VU},${__ITER}:failed to load file`);
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -358,7 +377,7 @@ const getTaskSuppliers = (token: any) => {
 
   const response = http.get(urls.task_suppliers, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadTaskSuppliersTime.add(response.timings.waiting);
   return response.json();
 }
 
@@ -375,10 +394,10 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
   const payload = JSON.stringify(supports);
 
   const response = http.post(`${urls.file}/${file.id}/supports?includeSummaryInPrintRequest=true`, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitSupportsTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log("error submitting supports");
+    console.log(`${__VU},${__ITER}:error submitting supports`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -416,10 +435,10 @@ const submitFileNote = (token: any, file: any) => {
   const payload = JSON.stringify(note);
 
   const response = http.post(`${urls.file}/${file.id}/notes`, payload, params);
-  submissionTime.add(response.timings.waiting);
+  submitNoteTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log("error submitting note");
+    console.log(`${__VU},${__ITER}:error submitting note`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -436,8 +455,8 @@ export default () => {
 
 
   getStartPage();
+  navigate();
   let token = getAuthToken();
-  sleep(1);
 
   getDashboard();
   getOutageInfo();
@@ -447,36 +466,38 @@ export default () => {
   getCountries();
   getMemberRole(token);
   getMemberLabel(token);
-  sleep(1);
+  navigate();
 
   getTaskSearchPage(token);
-  searchTasks(token);
-  sleep(1);
+  navigate();
+  let task = searchTasks(token);
+  navigate();
 
   let registrantId: any = "";
   let fileId: any = "";
   let file: any;
 
   let existing_registrations: any = searchRegistrations(token, registrant);
-  
+  navigate();
+
   if (existing_registrations?.files?.length > 0 && existing_registrations?.registrants?.length > 0) {
     //update existing file
-    console.log("found existing registration");
+    console.log(`${__VU},${__ITER}: found existing registration`);
     registrantId = { id: existing_registrations.registrants[0].id };
     fileId = { id: existing_registrations.files[0].id };
     file = getEvacuationFile(token, fileId);
-    updateEvacuationFile(token, file, registrantId, registrant);
+    updateEvacuationFile(token, file, registrantId, registrant, task);
   }
   else {
     //create new registrant and file
-    console.log("no existing registrations - create new");
+    console.log(`${__VU},${__ITER}: no existing registrations - create new`);
     getNewEvacueeWizard(token);
     let security_questions = getSecurityQuestions();
-    sleep(1);
+    fillInForm();
 
     registrantId = submitRegistrant(token, registrant, communities, security_questions);
     getRegistrant(token, registrantId);
-    sleep(1);
+    fillInForm();
 
     fileId = submitEvacuationFile(token, registrantId, registrant, communities);
   }
@@ -484,15 +505,15 @@ export default () => {
   file = getEvacuationFile(token, fileId);
 
   let suppliers = getTaskSuppliers(token);
-  console.log("submit supports");
+  console.log(`${__VU},${__ITER}: submit supports`);
+  fillInForm();
   let printRequest = submitSupports(token, file, suppliers);
-  sleep(1);
+  navigate();
 
-  console.log("submit print request");
+  console.log(`${__VU},${__ITER}: submit print request`);
   submitPrintRequest(token, file, printRequest);
-  sleep(1);
+  navigate();
 
-  console.log("submit file note");
+  console.log(`${__VU},${__ITER}: submit file note`);
   submitFileNote(token, file);
-  sleep(1);
 };

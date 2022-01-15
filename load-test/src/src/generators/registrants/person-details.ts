@@ -23,8 +23,8 @@ export function getPersonDetailsForIteration(): PersonDetails {
     let dob = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
 
     return {
-        firstName: `autotest-load-${__VU.toString().padStart(3, '0')}`,
-        lastName: `autotest-load-${__ITER.toString().padStart(3, '0')}`,
+        firstName: `autotest-load-${__VU}`,
+        lastName: `autotest-load-${__ITER}`,
         initials: null,
         gender: genders[__ITER % 3],
         dateOfBirth: dob
