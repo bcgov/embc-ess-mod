@@ -27,7 +27,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       this.delayedRetry(2000, 2),
       catchError((error: HttpErrorResponse) => {
-        return throwError(() => new Error(error.message));
+        return throwError(() => this.errorHandler(error));
       })
     ) as Observable<HttpEvent<any>>;
   }
@@ -43,10 +43,22 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           errors.pipe(
             delay(delayMs),
             mergeMap((error) =>
-              retries-- > 0 ? of(error) : throwError(() => new Error(error))
+              retries-- > 0
+                ? of(error)
+                : throwError(() => this.errorHandler(error))
             )
           )
         )
       );
+  }
+
+  private errorHandler(error: HttpErrorResponse): HttpErrorResponse {
+    return new HttpErrorResponse({
+      error: error.message,
+      headers: error.headers,
+      status: error.status,
+      statusText: error.statusText,
+      url: error.url
+    });
   }
 }
