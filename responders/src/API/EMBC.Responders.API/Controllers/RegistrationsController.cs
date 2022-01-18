@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Responders.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public partial class RegistrationsController : ControllerBase
     {
         private readonly IMessagingClient messagingClient;
@@ -255,8 +257,7 @@ namespace EMBC.Responders.API.Controllers
 
         public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
 
-        [Required]
-        public SecurityQuestion[] SecurityQuestions { get; set; }
+        public SecurityQuestion[] SecurityQuestions { get; set; } = Array.Empty<SecurityQuestion>();
 
         public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }

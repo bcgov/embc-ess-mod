@@ -14,17 +14,13 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Claims;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Team;
-using EMBC.Responders.API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +32,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/team")]
+    [Authorize]
     public partial class TeamsController : ControllerBase
     {
         private readonly IMessagingClient client;

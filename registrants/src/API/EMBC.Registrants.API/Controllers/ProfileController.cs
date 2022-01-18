@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
@@ -30,7 +31,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using NJsonSchema.Converters;
 
 namespace EMBC.Registrants.API.Controllers
 {
@@ -68,7 +68,6 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = currentUserId;
@@ -88,7 +87,6 @@ namespace EMBC.Registrants.API.Controllers
         /// <returns>true if existing user, false if a new user</returns>
         [HttpGet("current/exists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize]
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
             var userId = currentUserId;
@@ -105,7 +103,6 @@ namespace EMBC.Registrants.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
             profile.Id = currentUserId;
@@ -124,7 +121,6 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current/conflicts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
         {
             var userId = currentUserId;
@@ -191,7 +187,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Base class for profile data conflicts
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
+    [JsonConverter(typeof(ProfileDataConflictJsonConverter))]
     [KnownType(typeof(DateOfBirthDataConflict))]
     [KnownType(typeof(NameDataConflict))]
     [KnownType(typeof(AddressDataConflict))]
@@ -213,7 +209,7 @@ namespace EMBC.Registrants.API.Controllers
     public class DateOfBirthDataConflict : ProfileDataConflict
     {
         [Required]
-        public override string DataElementName => "DateOfBirth";
+        public override string DataElementName => nameof(DateOfBirthDataConflict);
 
         [Required]
         public new string ConflictingValue { get; set; }
@@ -228,7 +224,7 @@ namespace EMBC.Registrants.API.Controllers
     public class NameDataConflict : ProfileDataConflict
     {
         [Required]
-        public override string DataElementName => "Name";
+        public override string DataElementName => nameof(NameDataConflict);
 
         [Required]
         public new (string firstName, string lastName) ConflictingValue
@@ -245,7 +241,7 @@ namespace EMBC.Registrants.API.Controllers
     public class AddressDataConflict : ProfileDataConflict
     {
         [Required]
-        public override string DataElementName => "Address";
+        public override string DataElementName => nameof(AddressDataConflict);
 
         [Required]
         public new Address ConflictingValue { get; set; }
@@ -268,5 +264,34 @@ namespace EMBC.Registrants.API.Controllers
     {
         [Required]
         public string Token { get; set; }
+    }
+
+    public class ProfileDataConflictJsonConverter : JsonConverter<ProfileDataConflict>
+    {
+        public override ProfileDataConflict Read(ref Utf8JsonReader reader, System.Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, ProfileDataConflict value, JsonSerializerOptions options)
+        {
+            switch (value.DataElementName)
+            {
+                case nameof(AddressDataConflict):
+                    JsonSerializer.Serialize(writer, (AddressDataConflict)value, options);
+                    break;
+
+                case nameof(NameDataConflict):
+                    JsonSerializer.Serialize(writer, (NameDataConflict)value, options);
+                    break;
+
+                case nameof(DateOfBirthDataConflict):
+                    JsonSerializer.Serialize(writer, (DateOfBirthDataConflict)value, options);
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }

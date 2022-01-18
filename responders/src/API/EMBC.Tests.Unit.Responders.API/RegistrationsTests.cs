@@ -167,7 +167,7 @@ namespace EMBC.Tests.Unit.Responders.API
         {
             mapper = new MapperConfiguration(cfg =>
             {
-                cfg.AddMaps(typeof(Startup));
+                cfg.AddMaps(typeof(Configuration));
             }).CreateMapper();
 
             messagingClient = A.Fake<IMessagingClient>();

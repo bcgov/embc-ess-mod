@@ -22,6 +22,7 @@ using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.Responders.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProfileController : ControllerBase
     {
         private readonly IMessagingClient messagingClient;

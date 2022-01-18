@@ -52,6 +52,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
+      <ProjectReference Include="..\EMBC.Utilities.Hosting\EMBC.Utilities.Hosting.csproj" />
+      <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
