@@ -16,6 +16,7 @@ export class EvacueeSessionService {
   private fileLinkStatusVal: string;
   private memberRegistrationVal: EvacuationFileHouseholdMember;
   private memberFlag: boolean;
+  private paperBasedVal: boolean;
 
   constructor(private cacheService: CacheService) {}
 
@@ -137,6 +138,16 @@ export class EvacueeSessionService {
     }
   }
 
+  public get paperBased(): boolean {
+    return this.paperBasedVal !== undefined
+      ? this.paperBasedVal
+      : JSON.parse(this.cacheService.get('paperBased'));
+  }
+  public set paperBased(value: boolean) {
+    this.paperBasedVal = value;
+    this.cacheService.set('paperBased', value);
+  }
+
   clearEvacueeSession() {
     this.profileId = null;
     this.essFileNumber = null;
@@ -148,6 +159,7 @@ export class EvacueeSessionService {
     this.memberRegistration = null;
     this.editWizardFlag = null;
     this.memberFlag = null;
+    this.paperBased = null;
     this.cacheService.remove('registrantProfileId');
     this.cacheService.remove('fileNumber');
     this.cacheService.remove('wizardType');
@@ -161,6 +173,7 @@ export class EvacueeSessionService {
     this.cacheService.remove('memberRegistration');
     this.cacheService.remove('editWizardFlag');
     this.cacheService.remove('memberFlag');
+    this.cacheService.remove('paperBased');
   }
 
   public setWizardType(wizardType: string) {

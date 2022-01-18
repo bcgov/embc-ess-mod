@@ -67,7 +67,7 @@ export class EvacueeSearchComponent implements OnInit {
         this.isLoading = !this.isLoading;
         this.showDataEntryComponent = !this.showDataEntryComponent;
         this.userService.updateTaskNumber(result.id, result.status);
-        this.evacueeSearchService.paperBased =
+        this.evacueeSessionService.paperBased =
           result.status === 'Expired' ? true : false;
       },
       error: (error) => {

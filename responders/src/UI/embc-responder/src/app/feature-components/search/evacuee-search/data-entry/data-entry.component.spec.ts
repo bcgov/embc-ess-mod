@@ -2,9 +2,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { MaterialModule } from 'src/app/material.module';
-import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
-import { EvacueeSearchService } from '../evacuee-search.service';
+import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
 
 import { DataEntryComponent } from './data-entry.component';
 
@@ -12,7 +12,7 @@ describe('DataEntryComponent', () => {
   let component: DataEntryComponent;
   let fixture: ComponentFixture<DataEntryComponent>;
   let dataEntry: DataEntryComponent;
-  let evacueeSearchService;
+  let evacueeSessionService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -27,8 +27,8 @@ describe('DataEntryComponent', () => {
         FormBuilder,
         DataEntryComponent,
         {
-          provide: EvacueeSearchService,
-          useClass: MockEvacueeSearchService
+          provide: EvacueeSessionService,
+          useClass: MockEvacueeSessionService
         }
       ]
     }).compileComponents();
@@ -38,7 +38,7 @@ describe('DataEntryComponent', () => {
     fixture = TestBed.createComponent(DataEntryComponent);
     dataEntry = fixture.componentInstance;
     component = TestBed.inject(DataEntryComponent);
-    evacueeSearchService = TestBed.inject(EvacueeSearchService);
+    evacueeSessionService = TestBed.inject(EvacueeSessionService);
   });
 
   it('should create', () => {
@@ -46,7 +46,7 @@ describe('DataEntryComponent', () => {
   });
 
   it('should get paper based true from service', () => {
-    evacueeSearchService.paperBased = true;
+    evacueeSessionService.paperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -54,7 +54,7 @@ describe('DataEntryComponent', () => {
   });
 
   it('should get paper based false from service', () => {
-    evacueeSearchService.paperBased = false;
+    evacueeSessionService.paperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -62,7 +62,7 @@ describe('DataEntryComponent', () => {
   });
 
   it('should get paper based true from form', () => {
-    evacueeSearchService.paperBased = true;
+    evacueeSessionService.paperBased = true;
 
     fixture.detectChanges();
     component.ngOnInit();
@@ -76,6 +76,6 @@ describe('DataEntryComponent', () => {
     component.dataEntryForm.get('paperBased').setValue(false);
     component.next();
 
-    expect(evacueeSearchService.paperBased).toEqual(false);
+    expect(evacueeSessionService.paperBased).toEqual(false);
   });
 });

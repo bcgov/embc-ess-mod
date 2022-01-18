@@ -6,6 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
 
 @Component({
@@ -25,6 +26,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
 
   constructor(
     private builder: FormBuilder,
+    private evacueeSessionService: EvacueeSessionService,
     private evacueeSearchService: EvacueeSearchService
   ) {}
 
@@ -33,7 +35,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
    */
   ngOnInit(): void {
     this.constructIdVerifyForm();
-    this.paperBased = this.evacueeSearchService.paperBased;
+    this.paperBased = this.evacueeSessionService.paperBased;
   }
 
   /**
