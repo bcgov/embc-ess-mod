@@ -5,7 +5,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { EvacueeSearchService } from '../evacuee-search.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-data-entry',
@@ -20,12 +20,12 @@ export class DataEntryComponent implements OnInit {
   isPaperBased: boolean;
   constructor(
     private builder: FormBuilder,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
     this.constructDataEntryForm();
-    this.isPaperBased = this.evacueeSearchService?.paperBased;
+    this.isPaperBased = this.evacueeSessionService?.paperBased;
 
     if (this.isPaperBased) {
       this.dataEntryForm.get('paperBased').setValue(true);
@@ -44,7 +44,7 @@ export class DataEntryComponent implements OnInit {
    */
   next(): void {
     if (this.dataEntryForm.valid) {
-      this.evacueeSearchService.paperBased =
+      this.evacueeSessionService.paperBased =
         this.dataEntryForm.get('paperBased').value;
       this.showDataEntryComponent.emit(false);
       this.showIDPhotoComponent.emit(true);
