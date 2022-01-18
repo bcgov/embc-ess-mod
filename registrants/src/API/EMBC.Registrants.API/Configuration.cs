@@ -17,6 +17,7 @@
 using System;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Services;
@@ -48,6 +49,7 @@ namespace EMBC.Registrants.API
             services.Configure<JsonOptions>(opts =>
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
 
             services.AddAuthentication()
