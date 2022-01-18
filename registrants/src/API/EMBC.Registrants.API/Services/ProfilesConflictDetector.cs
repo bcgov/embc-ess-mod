@@ -57,9 +57,7 @@ namespace EMBC.Registrants.API.Services
             (address != null &&
             address.AddressLine1.StringSafeEquals(other?.AddressLine1) &&
             address.PostalCode.StringSafeEquals(other?.PostalCode) &&
-            address.Community.StringSafeEquals(other?.Community) &&
-            address.StateProvince.StringSafeEquals(other?.StateProvince) &&
-            address.Country.StringSafeEquals(other?.Country));
+            address.StateProvince.StringSafeEquals(other?.StateProvince));
 
         private static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
             personDetails != null &&
