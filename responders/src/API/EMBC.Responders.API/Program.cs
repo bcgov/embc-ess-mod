@@ -14,88 +14,10 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System.Net.Http;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Serilog;
-using Serilog.Events;
-using Serilog.Exceptions;
-using Serilog.Formatting.Elasticsearch;
+using System;
+using EMBC.Utilities.Hosting;
 
-namespace EMBC.Responders.API
-{
-    public static class Program
-    {
-        public static int Main(string[] args)
-        {
-            Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-               .Enrich.FromLogContext()
-#if RELEASE
-             .WriteTo.Console(formatter: new ElasticsearchJsonFormatter())
-#else
-               .WriteTo.Console()
-#endif
-               .CreateBootstrapLogger();
+var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.ESS.Responders.API";
 
-            try
-            {
-                CreateHostBuilder(args).Build().Run();
-                Log.Information("Stopped");
-                return 0;
-            }
-            catch (System.Exception e)
-            {
-                Log.Fatal(e, "An unhandled exception occured during bootstrapping");
-                return 1;
-            }
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-              .UseSerilog((hostingContext, loggerConfiguration) =>
-              {
-                  loggerConfiguration
-                     .ReadFrom.Configuration(hostingContext.Configuration)
-                     .Enrich.WithMachineName()
-                     .Enrich.WithProcessId()
-                     .Enrich.WithProcessName()
-                     .Enrich.FromLogContext()
-                     .Enrich.WithExceptionDetails()
-                     ;
-
-                  if (hostingContext.HostingEnvironment.IsDevelopment())
-                  {
-                      loggerConfiguration.WriteTo.Console();
-                  }
-                  else
-                  {
-                      var splunkUrl = hostingContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
-                      var splunkToken = hostingContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
-                      if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
-                      {
-                          loggerConfiguration.WriteTo.Console(formatter: new ElasticsearchJsonFormatter());
-                          Log.Warning($"Splunk logging sink is not configured properly, check SPLUNK_TOKEN and SPLUNK_URL env vars");
-                      }
-                      else
-                      {
-                          loggerConfiguration
-                            .WriteTo.Console(formatter: new ElasticsearchJsonFormatter())
-                            .WriteTo.EventCollector(
-                                  splunkHost: splunkUrl,
-                                  eventCollectorToken: splunkToken,
-                                  messageHandler: new HttpClientHandler
-                                  {
-                                      ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                                  },
-                                  renderTemplate: false);
-                      }
-                  }
-              })
-              .ConfigureWebHostDefaults(webBuilder =>
-              {
-                  webBuilder.UseStartup<Startup>();
-              });
-    }
-}
+var host = new Host(appName);
+return await host.Run(assembliesPrefix: "EMBC");

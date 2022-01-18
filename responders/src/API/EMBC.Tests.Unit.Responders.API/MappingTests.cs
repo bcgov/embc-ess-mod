@@ -13,7 +13,7 @@ namespace EMBC.Tests.Unit.Responders.API
         {
             mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.AddMaps(typeof(Startup));
+                cfg.AddMaps(typeof(Configuration));
             });
         }
 

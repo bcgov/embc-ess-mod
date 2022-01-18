@@ -20,6 +20,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Team;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/team/communities")]
+    [Authorize]
     public class TeamCommunitiesAssignmentsController : ControllerBase
     {
         private string teamId => User.FindFirstValue("user_team");
