@@ -24,7 +24,7 @@ export class ResponderDashboardComponent implements OnInit {
   }
 
   isTaskSignedIn(): boolean {
-    return this.profile.taskNumber !== null;
+    return this.profile?.taskNumber !== null;
   }
 
   evacueeSearch(): void {
