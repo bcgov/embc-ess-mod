@@ -3,6 +3,8 @@ export interface TabModel {
   route: string;
   name?: string;
   status?: string;
+  next?: string;
+  previous?: string;
 }
 
 export interface TabStatusManager {

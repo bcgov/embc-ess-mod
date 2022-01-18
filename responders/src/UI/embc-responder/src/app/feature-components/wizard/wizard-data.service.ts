@@ -12,43 +12,55 @@ export class WizardDataService {
       label: 'Collection Notice',
       route: 'collection-notice',
       name: 'collection-notice',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/restriction'
     },
     {
       label: 'Restriction',
       route: 'restriction',
       name: 'restriction',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/evacuee-details',
+      previous: '/ess-wizard/evacuee-profile/collection-notice'
     },
     {
       label: 'Evacuee Details',
       route: 'evacuee-details',
       name: 'evacuee-details',
-      status: 'incomplete'
+      status: 'incomplete',
+      next: '/ess-wizard/evacuee-profile/address',
+      previous: '/ess-wizard/evacuee-profile/restriction'
     },
     {
       label: 'Address',
       route: 'address',
       name: 'address',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/contact',
+      previous: '/ess-wizard/evacuee-profile/evacuee-details'
     },
     {
       label: 'Contact',
       route: 'contact',
       name: 'contact',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/security-questions',
+      previous: '/ess-wizard/evacuee-profile/address'
     },
     {
       label: 'Security Questions',
       route: 'security-questions',
       name: 'security-questions',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/review',
+      previous: '/ess-wizard/evacuee-profile/contact'
     },
     {
       label: 'Review & Save',
       route: 'review',
       name: 'review',
-      status: 'not-started'
+      status: 'not-started',
+      previous: '/ess-wizard/evacuee-profile/security-questions'
     }
   ];
 
@@ -57,37 +69,97 @@ export class WizardDataService {
       label: 'Restriction',
       route: 'restriction',
       name: 'restriction',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/evacuee-details',
+      previous: '/ess-wizard/evacuee-profile/collection-notice'
     },
     {
       label: 'Evacuee Details',
       route: 'evacuee-details',
       name: 'evacuee-details',
-      status: 'incomplete'
+      status: 'incomplete',
+      next: '/ess-wizard/evacuee-profile/address',
+      previous: '/ess-wizard/evacuee-profile/restriction'
     },
     {
       label: 'Address',
       route: 'address',
       name: 'address',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/contact',
+      previous: '/ess-wizard/evacuee-profile/evacuee-details'
     },
     {
       label: 'Contact',
       route: 'contact',
       name: 'contact',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/security-questions',
+      previous: '/ess-wizard/evacuee-profile/address'
     },
     {
       label: 'Security Questions',
       route: 'security-questions',
       name: 'security-questions',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/review',
+      previous: '/ess-wizard/evacuee-profile/contact'
     },
     {
       label: 'Review & Save',
       route: 'review',
       name: 'review',
-      status: 'not-started'
+      status: 'not-started',
+      previous: '/ess-wizard/evacuee-profile/security-questions'
+    }
+  ];
+
+  private paperEvacueeProfileTabs: Array<TabModel> = [
+    {
+      label: 'Collection Notice',
+      route: 'collection-notice',
+      name: 'collection-notice',
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/restriction'
+    },
+    {
+      label: 'Restriction',
+      route: 'restriction',
+      name: 'restriction',
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/evacuee-details',
+      previous: '/ess-wizard/evacuee-profile/collection-notice'
+    },
+    {
+      label: 'Evacuee Details',
+      route: 'evacuee-details',
+      name: 'evacuee-details',
+      status: 'incomplete',
+      next: '/ess-wizard/evacuee-profile/address',
+      previous: '/ess-wizard/evacuee-profile/restriction'
+    },
+    {
+      label: 'Address',
+      route: 'address',
+      name: 'address',
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/contact',
+      previous: '/ess-wizard/evacuee-profile/evacuee-details'
+    },
+    {
+      label: 'Contact',
+      route: 'contact',
+      name: 'contact',
+      status: 'not-started',
+      next: '/ess-wizard/evacuee-profile/review',
+      previous: '/ess-wizard/evacuee-profile/address'
+    },
+    {
+      label: 'Review & Save',
+      route: 'review',
+      name: 'review',
+      status: 'not-started',
+      previous: '/ess-wizard/evacuee-profile/contact'
     }
   ];
 

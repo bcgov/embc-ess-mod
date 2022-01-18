@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { WizardService } from '../../wizard.service';
@@ -20,6 +21,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: FormGroup;
   tabUpdateSubscription: Subscription;
   editFlag: boolean;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -38,6 +40,8 @@ export class RestrictionComponent implements OnInit, OnDestroy {
       this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
+    this.tabMetaData =
+      this.stepEvacueeProfileService.getNavLinks('restriction');
   }
 
   createRestrictionForm(): void {
@@ -62,14 +66,14 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/evacuee-details']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 
   /**
    * Navigates to the previous tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/collection-notice']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**

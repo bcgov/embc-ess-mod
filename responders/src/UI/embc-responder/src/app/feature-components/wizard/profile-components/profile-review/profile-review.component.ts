@@ -19,6 +19,7 @@ import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.m
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { SecurityQuestion } from 'src/app/core/api/models';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-profile-review',
@@ -36,6 +37,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
 
   primaryCommunity: string;
   mailingCommunity: string;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -85,6 +87,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       this.stepEvacueeProfileService.nextTabUpdate?.subscribe(() => {
         this.updateTabStatus();
       });
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('review');
   }
 
   get verifiedProfileControl(): { [key: string]: AbstractControl } {
@@ -95,7 +98,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    * Go back to the Security Questions tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/security-questions']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**

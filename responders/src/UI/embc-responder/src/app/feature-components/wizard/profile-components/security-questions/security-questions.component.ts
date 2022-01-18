@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../../wizard.service';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-security-questions',
@@ -27,6 +28,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   parentForm: FormGroup = null;
   questionForm: FormGroup = null;
   tabUpdateSubscription: Subscription;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -74,6 +76,9 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         this.questionForm.get('question1').updateValueAndValidity();
         this.questionForm.get('question2').updateValueAndValidity();
       });
+
+    this.tabMetaData =
+      this.stepEvacueeProfileService.getNavLinks('security-questions');
   }
 
   /**
@@ -226,7 +231,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         globalConst.wizardProfileMessage
       );
     } else {
-      this.router.navigate(['/ess-wizard/evacuee-profile/review']);
+      this.router.navigate([this.tabMetaData?.next]);
     }
   }
 
@@ -234,7 +239,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * Go back to the Contact tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/contact']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**

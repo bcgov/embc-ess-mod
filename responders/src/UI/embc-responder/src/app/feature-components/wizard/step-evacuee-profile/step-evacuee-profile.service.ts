@@ -477,6 +477,10 @@ export class StepEvacueeProfileService {
     });
   }
 
+  getNavLinks(name: string): TabModel {
+    return this.profileTabs.find((tab) => tab.name === name);
+  }
+
   private checkForSameMailingAddress(
     isMailingAddressSameAsPrimaryAddress: boolean
   ): string {
