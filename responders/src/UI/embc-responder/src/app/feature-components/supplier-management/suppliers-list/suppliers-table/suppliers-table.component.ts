@@ -102,14 +102,16 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
       if (
-        data.legalName
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
-        data.name
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        (data.legalName !== null &&
+          data.legalName
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.value.trim().toLowerCase()) !== -1) ||
+        (data.name !== null &&
+          data.name
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.value.trim().toLowerCase()) !== -1)
       ) {
         return true;
       }
