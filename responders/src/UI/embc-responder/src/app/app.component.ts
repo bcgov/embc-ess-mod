@@ -14,6 +14,7 @@ import { OutageService } from './feature-components/outage/outage.service';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { Subscription } from 'rxjs';
 import { lastValueFrom } from 'rxjs';
+import { error } from 'protractor';
 
 @Component({
   selector: 'app-root',
@@ -55,12 +56,12 @@ export class AppComponent implements OnInit {
       this.timeOutService.timeOutInfo = configuration.timeoutInfo;
     } catch (error) {
       this.isLoading = false;
-      this.router.navigate(['/outage']);
+      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
     }
 
     if (this.outageService.displayOutageInfoInit()) {
       this.isLoading = false;
-      this.router.navigate(['/outage']);
+      this.router.navigate(['/outage'], { state: { type: 'planned' } });
     } else {
       this.timeOutService.init(
         this.timeOutService.timeOutInfo.sessionTimeoutInMinutes,
@@ -85,7 +86,7 @@ export class AppComponent implements OnInit {
         if (error.status === 403) {
           this.alertService.setAlert('danger', globalConst.accessError);
         } else {
-          this.router.navigate(['/outage']);
+          this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
         }
       } finally {
         this.isLoading = false;

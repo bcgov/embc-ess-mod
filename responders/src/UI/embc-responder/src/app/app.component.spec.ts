@@ -676,6 +676,8 @@ describe('AppComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/outage']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/outage'], {
+      state: { type: 'unplanned' }
+    });
   }));
 });
