@@ -13,7 +13,6 @@ import { TaskSearchService } from '../task-search/task-search.service';
 })
 export class EvacueeSearchService {
   private searchContext: EvacueeSearchContextModel;
-  private paperBasedVal: boolean;
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
 
@@ -37,18 +36,6 @@ export class EvacueeSearchService {
       ...searchContext
     };
     this.cacheService.set('evacueeSearchContext', this.searchContext);
-  }
-
-  public get paperBased(): boolean {
-    return this.paperBasedVal !== undefined
-      ? this.paperBasedVal
-      : JSON.parse(this.cacheService.get('paperBased'))
-      ? JSON.parse(this.cacheService.get('paperBased'))
-      : this.checkTaskStatus();
-  }
-  public set paperBased(value: boolean) {
-    this.paperBasedVal = value;
-    this.cacheService.set('paperBased', value);
   }
 
   get supportCategory(): Code[] {
@@ -115,23 +102,7 @@ export class EvacueeSearchService {
       });
   }
 
-  public checkTaskStatus(): void {
-    const taskNumber = this.userService?.currentProfile?.taskNumber;
-    this.taskSearchService.searchTask(taskNumber).subscribe({
-      next: (result) => {
-        this.userService.updateTaskNumber(result.id, result.status);
-        this.paperBased = result.status === 'Expired' ? true : false;
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.taskSearchError);
-      }
-    });
-  }
-
   public clearEvacueeSearch(): void {
     this.evacueeSearchContext = undefined;
-    this.paperBased = undefined;
-    this.cacheService.remove('paperBased');
   }
 }
