@@ -36,29 +36,6 @@ namespace EMBC.Responders.API
 {
     public class Configuration : IConfigureComponentServices, IConfigureComponentPipeline
     {
-        public void ConfigurePipeline(PipelineServices services)
-        {
-            var app = services.Application;
-            var env = services.Environment;
-            if (services.Environment.IsDevelopment())
-            {
-                services.Application.UseExceptionHandler("/error-details");
-                IdentityModelEventSource.ShowPII = true;
-            }
-            else
-            {
-                services.Application.UseExceptionHandler("/error");
-            }
-
-            if (!env.IsProduction())
-            {
-                app.UseOpenApi();
-                app.UseSwaggerUi3();
-            }
-            app.UseAuthentication();
-            app.UseAuthorization();
-        }
-
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
             var services = configurationServices.Services;
@@ -94,8 +71,6 @@ namespace EMBC.Responders.API
                 document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
                 document.GenerateAbstractProperties = true;
             });
-
-            services.AddHttpContextAccessor();
 
             services.AddAuthentication(options =>
             {
@@ -154,6 +129,29 @@ namespace EMBC.Responders.API
             services.AddMessaging();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
+        }
+
+        public void ConfigurePipeline(PipelineServices services)
+        {
+            var app = services.Application;
+            var env = services.Environment;
+            if (services.Environment.IsDevelopment())
+            {
+                services.Application.UseExceptionHandler("/error-details");
+                IdentityModelEventSource.ShowPII = true;
+            }
+            else
+            {
+                services.Application.UseExceptionHandler("/error");
+            }
+
+            if (!env.IsProduction())
+            {
+                app.UseOpenApi();
+                app.UseSwaggerUi3();
+            }
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
     }
 }

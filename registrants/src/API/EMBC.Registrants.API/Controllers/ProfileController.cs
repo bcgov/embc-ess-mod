@@ -30,7 +30,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using NJsonSchema.Converters;
 
 namespace EMBC.Registrants.API.Controllers
 {
@@ -68,7 +67,6 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = currentUserId;
@@ -88,7 +86,6 @@ namespace EMBC.Registrants.API.Controllers
         /// <returns>true if existing user, false if a new user</returns>
         [HttpGet("current/exists")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize]
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
             var userId = currentUserId;
@@ -105,7 +102,6 @@ namespace EMBC.Registrants.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
             profile.Id = currentUserId;
@@ -124,7 +120,6 @@ namespace EMBC.Registrants.API.Controllers
         [HttpGet("current/conflicts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
         {
             var userId = currentUserId;
@@ -191,7 +186,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Base class for profile data conflicts
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
+    //[JsonConverter(typeof(PolymorphicJsonConverter<ProfileDataConflict>))]
     [KnownType(typeof(DateOfBirthDataConflict))]
     [KnownType(typeof(NameDataConflict))]
     [KnownType(typeof(AddressDataConflict))]
@@ -213,13 +208,13 @@ namespace EMBC.Registrants.API.Controllers
     public class DateOfBirthDataConflict : ProfileDataConflict
     {
         [Required]
-        public override string DataElementName => "DateOfBirth";
+        public override string DataElementName => nameof(DateOfBirthDataConflict);
 
-        [Required]
-        public new string ConflictingValue { get; set; }
+        //[Required]
+        //public new string ConflictingValue { get; set; }
 
-        [Required]
-        public new string OriginalValue { get; set; }
+        //[Required]
+        //public new string OriginalValue { get; set; }
     }
 
     /// <summary>
@@ -228,15 +223,15 @@ namespace EMBC.Registrants.API.Controllers
     public class NameDataConflict : ProfileDataConflict
     {
         [Required]
-        public override string DataElementName => "Name";
+        public override string DataElementName => nameof(NameDataConflict);
 
-        [Required]
-        public new (string firstName, string lastName) ConflictingValue
-        { get; set; }
+        //[Required]
+        //public new (string firstName, string lastName) ConflictingValue
+        //{ get; set; }
 
-        [Required]
-        public new (string firstName, string lastName) OriginalValue
-        { get; set; }
+        //[Required]
+        //public new (string firstName, string lastName) OriginalValue
+        //{ get; set; }
     }
 
     /// <summary>
@@ -245,13 +240,13 @@ namespace EMBC.Registrants.API.Controllers
     public class AddressDataConflict : ProfileDataConflict
     {
         [Required]
-        public override string DataElementName => "Address";
+        public override string DataElementName => nameof(AddressDataConflict);
 
-        [Required]
-        public new Address ConflictingValue { get; set; }
+        //[Required]
+        //public new Address ConflictingValue { get; set; }
 
-        [Required]
-        public new Address OriginalValue { get; set; }
+        //[Required]
+        //public new Address OriginalValue { get; set; }
     }
 
     public class InviteRequest

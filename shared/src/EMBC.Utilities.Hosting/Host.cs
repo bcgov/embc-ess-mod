@@ -188,10 +188,9 @@ namespace EMBC.Utilities.Hosting
 
             services
                 .AddHttpContextAccessor()
-                .AddEndpointsApiExplorer()
                 .AddResponseCompression();
 
-            var mvcBuilder = services.AddMvcCore();
+            var mvcBuilder = services.AddControllers();
             foreach (var assembly in assemblies)
             {
                 mvcBuilder.AddApplicationPart(assembly).AddControllersAsServices();
