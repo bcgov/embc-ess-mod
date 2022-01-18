@@ -67,7 +67,8 @@ export class OutageService {
       const outageStart = new Date(this.outageInfoVal?.outageStartDate);
       const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
       return (
-        moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)
+        moment(outageStart).isSameOrBefore(now) &&
+        moment(outageEnd).isSameOrAfter(now)
       );
     }
     return false;

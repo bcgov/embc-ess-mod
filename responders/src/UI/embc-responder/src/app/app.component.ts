@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { VersionInformation } from './core/api/models/version-information';
 import { AuthenticationService } from './core/services/authentication.service';
@@ -13,7 +13,6 @@ import { TimeoutService } from './core/services/timeout.service';
 import { OutageService } from './feature-components/outage/outage.service';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { Subscription } from 'rxjs';
-import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -55,12 +54,12 @@ export class AppComponent implements OnInit {
       this.timeOutService.timeOutInfo = configuration.timeoutInfo;
     } catch (error) {
       this.isLoading = false;
-      this.router.navigate(['/outage']);
+      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
     }
 
     if (this.outageService.displayOutageInfoInit()) {
       this.isLoading = false;
-      this.router.navigate(['/outage']);
+      this.router.navigate(['/outage'], { state: { type: 'planned' } });
     } else {
       this.timeOutService.init(
         this.timeOutService.timeOutInfo.sessionTimeoutInMinutes,
@@ -85,7 +84,7 @@ export class AppComponent implements OnInit {
         if (error.status === 403) {
           this.alertService.setAlert('danger', globalConst.accessError);
         } else {
-          this.router.navigate(['/outage']);
+          this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
         }
       } finally {
         this.isLoading = false;
