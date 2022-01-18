@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { VersionInformation } from './core/api/models/version-information';
 import { AuthenticationService } from './core/services/authentication.service';
@@ -13,8 +13,6 @@ import { TimeoutService } from './core/services/timeout.service';
 import { OutageService } from './feature-components/outage/outage.service';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { Subscription } from 'rxjs';
-import { lastValueFrom } from 'rxjs';
-import { error } from 'protractor';
 
 @Component({
   selector: 'app-root',
