@@ -4,10 +4,12 @@ import { Rate, Trend } from 'k6/metrics';
 import { generateAnonymousRegistration } from './generators/registrants/registration';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
 import { generateProfile } from './generators/registrants/profile';
+import { fillInForm, navigate } from './utilities';
 
 // @ts-ignore
 import { RegistrantTestParameters } from '../load-test.parameters-APP_TARGET';
-import { fillInForm, navigate } from './utilities';
+// @ts-ignore
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 
 const testParams = RegistrantTestParameters;
 const baseUrl = testParams.baseUrl;
@@ -61,7 +63,7 @@ export const options: Options = {
 
       executor: 'per-vu-iterations',
       vus: 1,
-      iterations: 1,
+      iterations: 10,
       maxDuration: '1h30m',
     },
   },
@@ -293,3 +295,9 @@ export default () => {
   fillInForm();
   submitEvacuationFile(token, profile, communities);
 };
+
+export function handleSummary(data: any) {
+  return {
+    "registrants.summary.html": htmlReport(data),
+  };
+}
