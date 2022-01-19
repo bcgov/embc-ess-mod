@@ -178,7 +178,7 @@ describe('WizardComponent-Test for New Registration', () => {
       spyOn(router, 'navigate').and.stub();
       spyOn(component, 'openExitModal');
       fixture.detectChanges();
-      let button = fixture.debugElement.query(By.css('.exit-button'));
+      const button = fixture.debugElement.query(By.css('.exit-button'));
       button.triggerEventHandler('click', null);
       fixture.detectChanges();
       expect(component.openExitModal).toHaveBeenCalled();
