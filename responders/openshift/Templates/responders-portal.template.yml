@@ -1,5 +1,5 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: responders-portal-template
 
@@ -81,8 +81,8 @@ objects:
       APP_NAME: ${APP_NAME}-responders-portal
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys/${APP_NAME}-responders-portal"
-      BACKEND__URL: ${BACKEND_URL}
-      BACKEND__ALLOWINVALIDSERVERCERTIFICATE: ${BACKEND_ALLOW_INVALID_CERT}
+      messaging__url: ${BACKEND_URL}
+      messaging__allowInvalidServerCertificate: ${BACKEND_ALLOW_INVALID_CERT}
       JWT__METADATAADDRESS: ${JWT_METADATA_URL}
       JWT__AUDIENCE: ${JWT_AUDIENCE}
       OIDC__ISSUER: ${OIDC_ISSUER}
@@ -229,7 +229,7 @@ objects:
             cpu: 15m
             memory: 64Mi
           requests:
-            cpu: 10m
+            cpu: 5m
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
@@ -250,11 +250,11 @@ objects:
             - name: responders-portal-api
               resources:
                 limits:
-                  cpu: 150m
-                  memory: 256Mi
+                  cpu: 75m
+                  memory: 512Mi
                 requests:
-                  cpu: 50m
-                  memory: 64Mi
+                  cpu: 25m
+                  memory: 256Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
@@ -275,14 +275,27 @@ objects:
                 httpGet:
                   path: /hc/live
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
               startupProbe:
                 httpGet:
                   path: /hc/startup
                   port: 8080
+                initialDelaySeconds: 15
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 5
               readinessProbe:
                 httpGet:
                   path: /hc/ready
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -308,6 +321,35 @@ objects:
               name: responders-portal-api:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
               
+  - kind: HorizontalPodAutoscaler
+    apiVersion: autoscaling/v2beta2
+    metadata:
+      name: ${APP_NAME}-responders-portal-api-has
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-responders-portal-api
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      scaleTargetRef:
+        kind: DeploymentConfig
+        name: ${APP_NAME}-responders-portal-api
+        apiVersion: apps.openshift.io/v1
+      minReplicas: 2
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization: 75
+  
   - apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -333,7 +375,6 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-responders-portal-ui
       strategy:
-        activeDeadlineSeconds: 21600
         resources:
           limits:
             cpu: 15m
@@ -359,10 +400,10 @@ objects:
             - name: responders-portal-ui
               resources:
                 limits:
-                  cpu: 50m
+                  cpu: 15m
                   memory: 64Mi
                 requests:
-                  cpu: 25m
+                  cpu: 5m
                   memory: 32Mi
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/responders-portal-ui:${TAG}
               imagePullPolicy: Always
@@ -409,3 +450,32 @@ objects:
               kind: ImageStreamTag
               name: responders-portal-ui:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: HorizontalPodAutoscaler
+    apiVersion: autoscaling/v2beta2
+    metadata:
+      name: ${APP_NAME}-responders-portal-ui-has
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-responders-portal-ui
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      scaleTargetRef:
+        kind: DeploymentConfig
+        name: ${APP_NAME}-responders-portal-ui
+        apiVersion: apps.openshift.io/v1
+      minReplicas: 2
+      maxReplicas: 4
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization: 75
