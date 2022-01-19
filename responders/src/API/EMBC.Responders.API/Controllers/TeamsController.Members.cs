@@ -177,11 +177,14 @@ namespace EMBC.Responders.API.Controllers
             return Ok(!response.UniqueUserName);
         }
 
+        private const int cacheDuration = 5 * 60; //5 minutes
+
         /// <summary>
         /// Provides a list of team member roles
         /// </summary>
         /// <returns>list of role codes with description</returns>
         [HttpGet("members/codes/memberrole")]
+        [ResponseCache(Duration = cacheDuration)]
         public async Task<ActionResult<IEnumerable<MemberRoleDescription>>> GetMemberRoles()
         {
             var enumList = EnumDescriptionHelper.GetEnumDescriptions<MemberRole>();
@@ -193,6 +196,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>list of label codes with description</returns>
         [HttpGet("members/codes/memberlabel")]
+        [ResponseCache(Duration = cacheDuration)]
         public async Task<ActionResult<IEnumerable<MemberLabelDescription>>> GetMemberLabels()
         {
             var enumList = EnumDescriptionHelper.GetEnumDescriptions<MemberLabel>();
