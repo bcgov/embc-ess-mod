@@ -1,5 +1,5 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: ess-backend-template
 
@@ -159,13 +159,12 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-ess-backend
       strategy:
-        activeDeadlineSeconds: 21600
         resources:
           limits:
             cpu: 15m
             memory: 64Mi
           requests:
-            cpu: 10m
+            cpu: 5m
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
@@ -187,10 +186,10 @@ objects:
               resources:
                 limits:
                   cpu: 150m
-                  memory: 512Mi
+                  memory: 1Gi
                 requests:
                   cpu: 50m
-                  memory: 128Mi
+                  memory: 256Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
@@ -214,16 +213,29 @@ objects:
                   scheme: HTTPS
                   path: /hc/live
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
               startupProbe:
                 httpGet:
                   scheme: HTTPS
                   path: /hc/startup
                   port: 8080
+                initialDelaySeconds: 15
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 5
               readinessProbe:
                 httpGet:
                   scheme: HTTPS
                   path: /hc/ready
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -248,6 +260,35 @@ objects:
               kind: ImageStreamTag
               name: ess-backend:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: HorizontalPodAutoscaler
+    apiVersion: autoscaling/v2beta2
+    metadata:
+      name: ${APP_NAME}-ess-backend-has
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      scaleTargetRef:
+        kind: DeploymentConfig
+        name: ${APP_NAME}-ess-backend
+        apiVersion: apps.openshift.io/v1
+      minReplicas: 2
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization: 75
 
   # pvc shared with all .net pods for data protection keys
   - kind: "PersistentVolumeClaim"
