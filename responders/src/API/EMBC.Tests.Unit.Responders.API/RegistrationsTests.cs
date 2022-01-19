@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Responders.API;
+using EMBC.Utilities.Messaging;
 using FakeItEasy;
 using Shouldly;
 using Xunit;
