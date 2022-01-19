@@ -22,9 +22,9 @@ using EMBC.Utilities.Messaging;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
-namespace EMBC.Responders.API
+namespace EMBC.Registrants.API.Utils
 {
-    public static class DispatcherClientEx
+    internal static class DispatcherClientEx
     {
         public static async Task<TReply> DispatchAsync<TReply>(this Dispatcher.DispatcherClient dispatcherClient, object content)
         {

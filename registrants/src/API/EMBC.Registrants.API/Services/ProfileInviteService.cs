@@ -17,7 +17,7 @@
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Registrants.API.Utils;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.Registrants.API.Services

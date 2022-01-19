@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Registrants.API.Utils;
+using EMBC.Utilities.Messaging;
 
 namespace EMBC.Registrants.API.Services
 {
