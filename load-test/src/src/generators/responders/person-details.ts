@@ -2,6 +2,9 @@ import * as faker from 'faker/locale/en_CA';
 import { PersonDetails } from '../../api/responders/models';
 import { getDaysInMonth } from '../../utilities';
 
+// @ts-ignore
+import { MAX_VU, MAX_ITER } from '../../../load-test.parameters-APP_TARGET';
+
 export function generateNewPersonDetails(): PersonDetails {
     let genders = ['Female', 'Male', 'X'];
     return {
@@ -23,8 +26,6 @@ export function getPersonDetailsForIteration(): PersonDetails {
     let dob = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
 
     let curr_vu = __VU - 1; //VU's begin at 1, not 0
-    const MAX_VU = 100;
-    const MAX_ITER = 10;
     curr_vu = (curr_vu % MAX_VU) + 1;
     let curr_iter = __ITER % MAX_ITER;
 

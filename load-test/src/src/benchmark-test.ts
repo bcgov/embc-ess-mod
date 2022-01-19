@@ -1,103 +1,53 @@
-import { Options } from 'k6/options';
+import { Options, Scenario } from 'k6/options';
 export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-test';
 export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-test';
 
 // @ts-ignore
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 
+let TARGET_VUS = parseInt(__ENV.VUS || "1");
+let TARGET_ITERATIONS = parseInt(__ENV.ITERS || "1");
+
+let execution_type: Scenario = {
+    executor: 'per-vu-iterations',
+    vus: TARGET_VUS,
+    iterations: TARGET_ITERATIONS,
+    maxDuration: '1h30m',
+}
+
+if (!__ENV.ITERS) {
+    execution_type = {
+        executor: 'constant-vus',
+        vus: TARGET_VUS,
+        duration: '5m',
+    }
+}
+
 export const options: Options = {
     scenarios: {
         /*---Registrant---*/
         anonymousRegistration: {
             exec: 'RegistrantAnonymousRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '5m', target: 100 }, //target should be <= MAX_VU
-                { duration: '10m', target: 100 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...execution_type
         },
         newRegistration: {
             exec: 'RegistrantNewRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '5m', target: 100 }, //target should be <= MAX_VU
-                { duration: '10m', target: 100 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...execution_type
         },
         existingProfileRegistration: {
             exec: 'RegistrantExistingProfileRegistration',
-            startTime: '2m',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '5m', target: 100 }, //target should be <= MAX_VU
-                { duration: '10m', target: 100 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...execution_type
         },
 
 
         /*---Responder---*/
         ResponderNewRegistration: {
             exec: 'ResponderNewRegistration',
-            startTime: '15m',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
-                { duration: '2m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...execution_type
         },
         ResponderExistingRegistration: {
             exec: 'ResponderExistingRegistration',
-            startTime: '15m',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
-                { duration: '2m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...execution_type
         },
     },
 
@@ -117,6 +67,7 @@ export const options: Options = {
         'reg_load_communities': ['p(95)<10000'], // 10s
         'reg_load_profile': ['p(95)<10000'], // 10s
         'reg_load_profile_exists': ['p(95)<10000'], // 10s
+
 
         'res_failed_to_login': ['rate<0.01'], // 10s
         'res_failed_form_fetches': ['rate<0.01'], // 10s
@@ -146,6 +97,6 @@ export const options: Options = {
 
 export function handleSummary(data: any) {
     return {
-        "load-test.summary.html": htmlReport(data),
+        "benchmark.summary.html": htmlReport(data),
     };
 }
