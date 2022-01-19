@@ -13,6 +13,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { TabModel } from 'src/app/core/models/tab.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { WizardService } from '../../wizard.service';
@@ -56,6 +57,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   ];
   emailMatcher = new CustomErrorMailMatcher();
   tabUpdateSubscription: Subscription;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -110,6 +112,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('contact');
   }
 
   createContactForm(): void {
@@ -202,14 +205,14 @@ export class ContactComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/security-questions']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 
   /**
    * Navigates to previous tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/address']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**

@@ -25,6 +25,7 @@ import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacu
 import * as globalConst from '../../../../core/services/global-constants';
 import { AddressService } from './address.service';
 import { WizardService } from '../../wizard.service';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-address',
@@ -38,6 +39,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   mailingFilteredOptions: Observable<Country[]>;
   countries: Country[] = [];
   tabUpdateSubscription: Subscription;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -110,6 +112,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('address');
   }
 
   ngAfterViewChecked(): void {
@@ -235,14 +238,14 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * Navigate to next tab
    */
   public next(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/contact']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 
   /**
    * Navigate to previous tab
    */
   public back(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/evacuee-details']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**
