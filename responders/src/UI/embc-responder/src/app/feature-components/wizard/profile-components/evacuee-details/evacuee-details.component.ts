@@ -15,6 +15,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { WizardService } from '../../wizard.service';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-evacuee-details',
@@ -42,6 +43,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   authorizedUser: boolean;
   showLockIcon = true;
   showUnlockLink = false;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -67,6 +69,8 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
       this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
+    this.tabMetaData =
+      this.stepEvacueeProfileService.getNavLinks('evacuee-details');
   }
 
   createEvacueeDetailsForm(): void {
@@ -113,14 +117,14 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/address']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 
   /**
    * Navigates to the previous tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/restriction']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TabModel } from 'src/app/core/models/tab.model';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 
 @Component({
@@ -7,11 +8,17 @@ import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacu
   templateUrl: './collection-notice.component.html',
   styleUrls: ['./collection-notice.component.scss']
 })
-export class CollectionNoticeComponent implements OnDestroy {
+export class CollectionNoticeComponent implements OnInit, OnDestroy {
+  tabMetaData: TabModel;
   constructor(
     private router: Router,
     private stepEvacueeProfileService: StepEvacueeProfileService
   ) {}
+
+  ngOnInit(): void {
+    this.tabMetaData =
+      this.stepEvacueeProfileService.getNavLinks('collection-notice');
+  }
 
   ngOnDestroy(): void {
     this.stepEvacueeProfileService.setTabStatus(
@@ -24,6 +31,6 @@ export class CollectionNoticeComponent implements OnDestroy {
    * Updates the tab status and navigate to next tab
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/evacuee-profile/restriction']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 }
