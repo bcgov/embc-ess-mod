@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace EMBC.Responders.API.Utilities
+namespace EMBC.Utilities.Extensions
 {
     public static class EnumDescriptionHelper
     {
