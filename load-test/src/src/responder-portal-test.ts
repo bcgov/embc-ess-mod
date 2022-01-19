@@ -6,10 +6,12 @@ import { generateNewPersonDetails, getPersonDetailsForIteration } from './genera
 import { generateEvacuationFile, getUpdatedEvacuationFile } from './generators/responders/evacuation-file';
 import { generateSupports } from './generators/responders/supports';
 import { generateNote } from './generators/responders/notes';
+import { fillInForm, navigate } from './utilities';
 
 // @ts-ignore
 import { ResponderTestParameters } from '../load-test.parameters-APP_TARGET';
-import { fillInForm, navigate } from './utilities';
+// @ts-ignore
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 
 const testParams = ResponderTestParameters;
 const baseUrl = testParams.baseUrl;
@@ -56,24 +58,40 @@ const loadTaskSuppliersTime = new Trend('load_suppliers');
 const searchTaskTime = new Trend('search_tasks');
 const searchRegistrationsTime = new Trend('search_registrations');
 
-// const MAX_VU = 10;
-// const MAX_ITER = 50;
+// const MAX_VU = 100;
+// const MAX_ITER = 10;
 
 export const options: Options = {
   scenarios: {
-    responders_portal: {
+    newRegistration: {
+      exec: 'ResponderNewRegistration',
+
       // executor: 'ramping-vus',
       // startVUs: 1,
       // stages: [
-      //   { duration: '60s', target: 2 }, //target should be <= MAX_VU
-      //   { duration: '120s', target: 10 },
-      //   { duration: '60s', target: 4 },
+      //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
       // ],
-      // gracefulRampDown: '0s',
+      // gracefulRampDown: '5m',
 
       executor: 'per-vu-iterations',
       vus: 1,
-      iterations: 20,
+      iterations: 1,
+      maxDuration: '1h30m',
+    },
+    existingRegistration: {
+      exec: 'ResponderExistingRegistration',
+      // startTime: '120s',
+
+      // executor: 'ramping-vus',
+      // startVUs: 1,
+      // stages: [
+      //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
+      // ],
+      // gracefulRampDown: '5m',
+
+      executor: 'per-vu-iterations',
+      vus: 1,
+      iterations: 1,
       maxDuration: '1h30m',
     },
   },
@@ -110,7 +128,7 @@ const getAuthToken = () => {
   loginFailRate.add(response.status !== 200);
   loadTime.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}:error getting auth token`);
+    console.log(`${__VU},${__ITER}: error getting auth token`);
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -166,7 +184,11 @@ const getOutageInfo = () => {
   const response = http.get(urls.outage_info);
   formFailRate.add(response.status !== 200);
   loadTime.add(response.timings.waiting);
-  return response.json();
+
+  if (response.status !== 200) {
+    // console.log(`${__VU},${__ITER}: error retrieving outage info`);
+  }
+  return; //response.json();
 }
 
 const getMemberRole = (token: any) => {
@@ -275,7 +297,7 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   submitRegistrantTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}:error submitting registrant`);
+    console.log(`${__VU},${__ITER}: error submitting registrant`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -314,7 +336,7 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   submitFileTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}:error submitting file`);
+    console.log(`${__VU},${__ITER}: error submitting file`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -338,7 +360,7 @@ const updateEvacuationFile = (token: any, file: any, registrantId: any, registra
   submitFileTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}:error updating file`);
+    console.log(`${__VU},${__ITER}: error updating file`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -360,7 +382,7 @@ const getEvacuationFile = (token: any, fileRes: any) => {
   loadFileTime.add(response.timings.waiting);
 
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}:failed to load file`);
+    console.log(`${__VU},${__ITER}: failed to load file`);
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -397,7 +419,7 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
   submitSupportsTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}:error submitting supports`);
+    console.log(`${__VU},${__ITER}: error submitting supports`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -414,6 +436,8 @@ const submitPrintRequest = (token: any, file: any, printRequest: any) => {
     },
     timeout: 120000 //default timeout of 60s was often failing, so increase to 120s
   };
+
+  // console.log(`${urls.file}/${file.id}/supports/print/${printRequest.printRequestId}`);
 
   const response = http.get(`${urls.file}/${file.id}/supports/print/${printRequest.printRequestId}`, params);
   printRequestTime.add(response.timings.waiting);
@@ -438,7 +462,7 @@ const submitFileNote = (token: any, file: any) => {
   submitNoteTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}:error submitting note`);
+    console.log(`${__VU},${__ITER}: error submitting note`);
     console.log(payload);
     console.log(JSON.stringify(response));
   }
@@ -446,20 +470,15 @@ const submitFileNote = (token: any, file: any) => {
   return response.json();
 }
 
-export default () => {
-  /* ----- New Registration ----- */
-  // const registrant = generateNewPersonDetails();
-
-  /* ----- Potentially Existing Registration ----- */
-  const registrant = getPersonDetailsForIteration();
-
+export function ResponderNewRegistration() {
+  const registrant = generateNewPersonDetails();
 
   getStartPage();
   navigate();
   let token = getAuthToken();
 
   getDashboard();
-  getOutageInfo();
+  // getOutageInfo();
   getConfiguration();
   let communities = getCommunities();
   getProvinces();
@@ -517,3 +536,76 @@ export default () => {
   console.log(`${__VU},${__ITER}: submit file note`);
   submitFileNote(token, file);
 };
+
+export function ResponderExistingRegistration() {
+  const registrant = getPersonDetailsForIteration();
+
+  getStartPage();
+  navigate();
+  let token = getAuthToken();
+
+  getDashboard();
+  // getOutageInfo();
+  getConfiguration();
+  let communities = getCommunities();
+  getProvinces();
+  getCountries();
+  getMemberRole(token);
+  getMemberLabel(token);
+  navigate();
+
+  getTaskSearchPage(token);
+  navigate();
+  let task = searchTasks(token);
+  navigate();
+
+  let registrantId: any = "";
+  let fileId: any = "";
+  let file: any;
+
+  let existing_registrations: any = searchRegistrations(token, registrant);
+  navigate();
+
+  if (existing_registrations?.files?.length > 0 && existing_registrations?.registrants?.length > 0) {
+    //update existing file
+    console.log(`${__VU},${__ITER}: found existing registration`);
+    registrantId = { id: existing_registrations.registrants[0].id };
+    fileId = { id: existing_registrations.files[0].id };
+    file = getEvacuationFile(token, fileId);
+    updateEvacuationFile(token, file, registrantId, registrant, task);
+  }
+  else {
+    //create new registrant and file
+    console.log(`${__VU},${__ITER}: no existing registrations - create new`);
+    getNewEvacueeWizard(token);
+    let security_questions = getSecurityQuestions();
+    fillInForm();
+
+    registrantId = submitRegistrant(token, registrant, communities, security_questions);
+    getRegistrant(token, registrantId);
+    fillInForm();
+
+    fileId = submitEvacuationFile(token, registrantId, registrant, communities);
+  }
+
+  file = getEvacuationFile(token, fileId);
+
+  let suppliers = getTaskSuppliers(token);
+  console.log(`${__VU},${__ITER}: submit supports`);
+  fillInForm();
+  let printRequest = submitSupports(token, file, suppliers);
+  navigate();
+
+  console.log(`${__VU},${__ITER}: submit print request`);
+  submitPrintRequest(token, file, printRequest);
+  navigate();
+
+  console.log(`${__VU},${__ITER}: submit file note`);
+  submitFileNote(token, file);
+};
+
+export function handleSummary(data: any) {
+  return {
+    "responder.summary.html": htmlReport(data),
+  };
+}
