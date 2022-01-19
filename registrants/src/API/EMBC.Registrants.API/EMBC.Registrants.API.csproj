@@ -53,11 +53,6 @@
     <ItemGroup>
       <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
       <ProjectReference Include="..\EMBC.Utilities.Hosting\EMBC.Utilities.Hosting.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Protobuf Include="Protos\Dispatcher.proto" GrpcServices="Client">
-            <SourceUri>https://raw.githubusercontent.com/bcgov/embc-ess-mod/master/ess/src/API/EMBC.ESS/Utilities/Messaging/Dispatcher.proto</SourceUri>
-        </Protobuf>
+      <ProjectReference Include="..\EMBC.Utilities.Messaging\EMBC.Utilities.Messaging.csproj" />
     </ItemGroup>
 </Project>

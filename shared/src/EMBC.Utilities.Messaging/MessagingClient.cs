@@ -17,10 +17,10 @@
 using System;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
-using EMBC.Utilities.Messaging;
+using EMBC.Registrants.API.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.Registrants.API.Utils
+namespace EMBC.Utilities.Messaging
 {
     public interface IMessagingClient
     {
@@ -29,7 +29,7 @@ namespace EMBC.Registrants.API.Utils
         Task<string> Send(Command command);
     }
 
-    public class MessagingClient : IMessagingClient
+    internal class MessagingClient : IMessagingClient
     {
         private readonly Dispatcher.DispatcherClient dispatcherClient;
         private readonly ILogger<MessagingClient> logger;

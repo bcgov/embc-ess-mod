@@ -23,7 +23,7 @@ using Microsoft.Extensions.Options;
 
 namespace EMBC.Utilities.Messaging
 {
-    public class MessageHandlerRegistry
+    internal class MessageHandlerRegistry
     {
         private Dictionary<Type, MethodInfo> registry = new Dictionary<Type, MethodInfo>();
         private readonly ILogger<MessageHandlerRegistry> logger;
