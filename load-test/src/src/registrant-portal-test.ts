@@ -46,24 +46,55 @@ const loadTime = new Trend('load_time');
 const loadCommunities = new Trend('load_communities');
 const loadProfile = new Trend('load_profile');
 
-const MAX_VU = 10;
-const MAX_ITER = 50;
+const MAX_VU = 100;
+const MAX_ITER = 10;
 
 export const options: Options = {
   scenarios: {
-    registrants_portal: {
+    // anonymousRegistration: {
+    //   exec: 'RegistrantAnonymousRegistration',
+
+    //   // executor: 'ramping-vus',
+    //   // startVUs: 1,
+    //   // stages: [
+    //   //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
+    //   // ],
+    //   // gracefulRampDown: '5m',
+
+    //   executor: 'per-vu-iterations',
+    //   vus: 1,
+    //   iterations: 1,
+    //   maxDuration: '1h30m',
+    // },
+    // newRegistration: {
+    //   exec: 'RegistrantNewRegistration',
+
+    //   // executor: 'ramping-vus',
+    //   // startVUs: 1,
+    //   // stages: [
+    //   //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
+    //   // ],
+    //   // gracefulRampDown: '5m',
+
+    //   executor: 'per-vu-iterations',
+    //   vus: 1,
+    //   iterations: 1,
+    //   maxDuration: '1h30m',
+    // },
+    existingProfileRegistration: {
+      exec: 'RegistrantExistingProfileRegistration',
+      // startTime: '120s',
+
       // executor: 'ramping-vus',
       // startVUs: 1,
       // stages: [
-      //   { duration: '60s', target: 2 }, //target should be <= MAX_VU
-      //   { duration: '120s', target: 10 },
-      //   { duration: '60s', target: 4 },
+      //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
       // ],
-      // gracefulRampDown: '0s',
+      // gracefulRampDown: '5m',
 
       executor: 'per-vu-iterations',
-      vus: 1,
-      iterations: 10,
+      vus: 25,
+      iterations: 5,
       maxDuration: '1h30m',
     },
   },
@@ -261,19 +292,41 @@ const submitEvacuationFile = (token: any, profile: any, communities: any) => {
   }
 }
 
-export default () => {
-  /* ----- Anonymous Registration ----- */
-  // getAnonymousStartPage();
-  // getConfiguration();
-  // let communities = getCommunities();
-  // getProvinces();
-  // getCountries();
-  // let security_questions = getSecurityQuestions();
-  // fillInForm();
-  // submitAnonymousRegistration(communities, security_questions);
-  /* ---------- */
+export function RegistrantAnonymousRegistration() {
+  getAnonymousStartPage();
+  getConfiguration();
+  let communities = getCommunities();
+  getProvinces();
+  getCountries();
+  let security_questions = getSecurityQuestions();
+  fillInForm();
+  submitAnonymousRegistration(communities, security_questions);
+};
 
-  /* ----- Authenticated Registration ----- */
+export function RegistrantNewRegistration() {
+  getStartPage();
+  getConfiguration();
+  let communities = getCommunities();
+  getProvinces();
+  getCountries();
+  navigate();
+  let token = getAuthToken();
+  let profile_exists = getCurrentProfileExists(token);
+  navigate();
+
+  if (profile_exists == false) {
+    //New Profile
+    let security_questions = getSecurityQuestions();
+    fillInForm();
+    createProfile(token, communities, security_questions);
+  }
+
+  let profile = getCurrentProfile(token);
+  fillInForm();
+  submitEvacuationFile(token, profile, communities);
+};
+
+export function RegistrantExistingProfileRegistration() {
   getStartPage();
   getConfiguration();
   let communities = getCommunities();

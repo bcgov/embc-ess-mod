@@ -22,9 +22,15 @@ export function getPersonDetailsForIteration(): PersonDetails {
     let day = (__ITER % maxDay) + 1;
     let dob = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
 
+    let curr_vu = __VU - 1; //VU's begin at 1, not 0
+    const MAX_VU = 100;
+    const MAX_ITER = 10;
+    curr_vu = (curr_vu % MAX_VU) + 1;
+    let curr_iter = __ITER % MAX_ITER;
+
     return {
-        firstName: `autotest-load-${__VU}`,
-        lastName: `autotest-load-${__ITER}`,
+        firstName: `autotest-load-${curr_vu}`,
+        lastName: `autotest-load-${curr_iter}`,
         initials: null,
         gender: genders[__ITER % 3],
         dateOfBirth: dob
