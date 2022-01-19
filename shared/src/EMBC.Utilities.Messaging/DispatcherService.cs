@@ -27,7 +27,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EMBC.Utilities.Messaging
 {
-    public class DispatcherService : Dispatcher.DispatcherBase
+    internal class DispatcherService : Dispatcher.DispatcherBase
     {
         private readonly MessageHandlerRegistry serviceRegistry;
         private readonly IServiceProvider serviceProvider;

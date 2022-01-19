@@ -21,6 +21,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.Responders.API.Controllers;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Http;
 
 namespace EMBC.Responders.API.Services

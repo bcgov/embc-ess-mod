@@ -5,7 +5,7 @@
       "applicationUrl": "http://localhost:5020",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "BACKEND__URL": "https://localhost:2020"
+        "messaging__url": "https://localhost:2020"
       }
     }
   }

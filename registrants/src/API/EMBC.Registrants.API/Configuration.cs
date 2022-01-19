@@ -21,7 +21,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Services;
-using EMBC.Registrants.API.Utils;
 using EMBC.Utilities.Configuration;
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -159,8 +158,6 @@ namespace EMBC.Registrants.API
                 document.GenerateAbstractProperties = true;
             });
 
-            services.Configure<MessagingOptions>(configuration.GetSection("backend"));
-            services.AddMessaging();
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
             services.AddTransient<IProfileInviteService, ProfileInviteService>();
         }

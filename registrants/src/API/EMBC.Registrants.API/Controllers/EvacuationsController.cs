@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.Services;
-using EMBC.Registrants.API.Utils;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

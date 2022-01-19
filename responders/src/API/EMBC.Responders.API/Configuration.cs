@@ -18,7 +18,6 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
-using EMBC.Responders.API.Utilities;
 using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -125,8 +124,6 @@ namespace EMBC.Responders.API
                 options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
             });
 
-            services.Configure<MessagingOptions>(configurationServices.Configuration.GetSection("backend"));
-            services.AddMessaging();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
         }

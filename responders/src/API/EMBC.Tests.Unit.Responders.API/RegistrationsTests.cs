@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Responders.API;
+using EMBC.Utilities.Messaging;
 using FakeItEasy;
 using Shouldly;
 using Xunit;
@@ -167,7 +167,7 @@ namespace EMBC.Tests.Unit.Responders.API
         {
             mapper = new MapperConfiguration(cfg =>
             {
-                cfg.AddMaps(typeof(Configuration));
+                cfg.AddMaps(typeof(EMBC.Responders.API.Configuration));
             }).CreateMapper();
 
             messagingClient = A.Fake<IMessagingClient>();

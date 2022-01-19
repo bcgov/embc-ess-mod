@@ -18,6 +18,7 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Reports;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

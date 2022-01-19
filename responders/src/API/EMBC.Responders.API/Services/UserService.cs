@@ -19,9 +19,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Team;
-using EMBC.Responders.API.Utilities;
+using EMBC.ESS.Utilities.Cache;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.Responders.API.Services
@@ -36,7 +36,7 @@ namespace EMBC.Responders.API.Services
     public class UserService : IUserService
     {
         private readonly IMessagingClient messagingClient;
-        private readonly IDistributedCache cache;
+        private readonly ICache cache;
         private readonly IHttpContextAccessor httpContext;
         private readonly ILogger<UserService> logger;
         private ClaimsPrincipal currentPrincipal => httpContext.HttpContext?.User;
@@ -44,7 +44,7 @@ namespace EMBC.Responders.API.Services
 
         private static Func<string, string> generateCacheKeyName = userName => $"_userprincipal_{userName}";
 
-        public UserService(IMessagingClient messagingClient, IDistributedCache cache, IHttpContextAccessor httpContext, ILogger<UserService> logger)
+        public UserService(IMessagingClient messagingClient, ICache cache, IHttpContextAccessor httpContext, ILogger<UserService> logger)
         {
             this.messagingClient = messagingClient;
             this.cache = cache;
@@ -59,7 +59,7 @@ namespace EMBC.Responders.API.Services
             try
             {
                 var cacheKey = generateCacheKeyName(userName);
-                var teamMember = await cache.GetOrAdd(cacheKey, async () => await GetTeamMember(sourcePrincipal), DateTimeOffset.UtcNow.AddMinutes(10));
+                var teamMember = await cache.GetOrSet(cacheKey, async () => await GetTeamMember(sourcePrincipal), TimeSpan.FromMinutes(10));
                 if (teamMember == null) return sourcePrincipal;
 
                 var essClaims = new[]
@@ -82,17 +82,7 @@ namespace EMBC.Responders.API.Services
             if (sourcePrincipal == null) sourcePrincipal = currentPrincipal;
             var member = (await messagingClient.Send(new TeamMembersQuery { UserName = getCurrentUserName(sourcePrincipal), IncludeActiveUsersOnly = true })).TeamMembers.SingleOrDefault();
 
-            if (!IsPrincipalValid(sourcePrincipal, member))
-            {
-                //replace the cached principal when not valid
-                var cacheKey = generateCacheKeyName(getCurrentUserName(sourcePrincipal));
-                await cache.RemoveAsync(cacheKey);
-                await cache.SetAsync(cacheKey, member);
-            }
             return member;
         }
-
-        private bool IsPrincipalValid(ClaimsPrincipal principal, TeamMember member) =>
-            member != null ? principal.FindFirstValue("user_role") == member.Role : false;
     }
 }

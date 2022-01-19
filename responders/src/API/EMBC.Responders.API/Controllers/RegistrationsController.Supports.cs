@@ -24,7 +24,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Responders.API.Utilities;
+using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

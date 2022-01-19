@@ -15,8 +15,11 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Net.Http;
 using EMBC.Utilities.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Utilities.Messaging
 {
@@ -24,17 +27,55 @@ namespace EMBC.Utilities.Messaging
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
+            var options = configurationServices.Configuration.GetSection("messaging").Get<MessagingOptions>();
+
             configurationServices.Services.AddGrpc(opts =>
             {
-                opts.EnableDetailedErrors = true;
+                opts.EnableDetailedErrors = configurationServices.Environment.IsDevelopment();
             });
-            configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
-            configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
+            if (options.Mode == MessagingMode.Server || options.Mode == MessagingMode.Both)
+            {
+                configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
+                configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
+            }
+
+            if (options.Mode == MessagingMode.Client || options.Mode == MessagingMode.Both)
+            {
+                if (options.Url == null) throw new Exception($"Messaging url is missing - can't configure messaging client");
+                configurationServices.Services.AddGrpcClient<Dispatcher.DispatcherClient>((sp, opts) =>
+                {
+                    opts.Address = options.Url;
+                }).ConfigurePrimaryHttpMessageHandler(sp =>
+                {
+                    if (!options.AllowInvalidServerCertificate) return new HttpClientHandler();
+                    return new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    };
+                });
+
+                configurationServices.Services.AddTransient<IMessagingClient, MessagingClient>();
+            }
         }
 
         public Type[] GetGrpcServiceTypes()
         {
             return new[] { typeof(DispatcherService) };
         }
+    }
+
+    public class MessagingOptions
+    {
+        public Uri? Url { get; set; }
+
+        public bool AllowInvalidServerCertificate { get; set; } = false;
+        public MessagingMode Mode { get; set; } = MessagingMode.Both;
+    }
+
+    public enum MessagingMode
+    {
+        Both,
+        Client,
+        Server,
     }
 }

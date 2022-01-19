@@ -23,7 +23,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Metadata;
-using EMBC.Registrants.API.Utils;
+using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -100,7 +101,7 @@ namespace EMBC.Responders.API.Controllers
                 var type = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.Name.Equals(forEnumType, StringComparison.OrdinalIgnoreCase) && t.IsEnum).FirstOrDefault();
                 if (type == null) return NotFound(new ProblemDetails { Detail = $"enum '{forEnumType}' not found" });
                 var values = EnumDescriptionHelper.GetEnumDescriptions(type);
-                return Ok(values.Select(e => new Code { Type = type.Name, Value = e.value, Description = e.description }).ToArray());
+                return Ok(values.Select(e => new Code { Type = type.Name, Value = e.Value, Description = e.Description }).ToArray());
             }
             return BadRequest(new ProblemDetails { Detail = "empty query parameter" });
         }
