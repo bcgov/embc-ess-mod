@@ -1,17 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AnalysisMode>Default</AnalysisMode>
-    <IsPackable>false</IsPackable>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <TargetFramework>net6</TargetFramework>
+      <IsPackable>false</IsPackable>
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+      <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+      <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bogus" Version="33.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.*" />
+    <PackageReference Include="bogus" Version="34.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="shouldly" Version="4.0.3" />
     <PackageReference Include="xunit" Version="2.4.1" />

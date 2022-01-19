@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using EMBC.PDFGenerator;
-using EMBC.Tests.Unit.PDFGenerator;
-using EMBC.PDFGenerator.Utilities.PdfGenerator;
 using EMBC.PDFGenerator.Utilities.Extensions;
+using EMBC.PDFGenerator.Utilities.PdfGenerator;
+using EMBC.Tests.Unit.PDFGenerator;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -123,7 +123,7 @@ namespace EMBC.Tests.Unit.ESS
 
             using var generator = services.GetRequiredService<IPdfGenerator>();
 
-            await Enumerable.Range(0, 50).ForEachAsync(10, async i =>
+            await Enumerable.Range(0, 100).ForEachAsync(10, async i =>
             {
                 await Should.NotThrowAsync(generator.Generate(template()));
             });
