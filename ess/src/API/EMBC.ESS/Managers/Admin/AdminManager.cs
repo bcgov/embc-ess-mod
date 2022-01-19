@@ -27,7 +27,6 @@ using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.ESS.Shared.Contracts.Profile;
 using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
-using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Managers.Admin
@@ -37,7 +36,6 @@ namespace EMBC.ESS.Managers.Admin
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly IMapper mapper;
-        private readonly ICache cache;
         private readonly IMetadataRepository metadataRepository;
         private readonly IEssContextStateReporter essContextStatusReporter;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
@@ -48,14 +46,12 @@ namespace EMBC.ESS.Managers.Admin
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
             IMapper mapper,
-            ICache cache,
             IMetadataRepository metadataRepository,
             IEssContextStateReporter essContextStatusReporter)
         {
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.mapper = mapper;
-            this.cache = cache;
             this.metadataRepository = metadataRepository;
             this.essContextStatusReporter = essContextStatusReporter;
         }
@@ -312,17 +308,14 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<CountriesQueryResponse> Handle(CountriesQuery _)
         {
-            var countries = await cache.GetOrSet("metadata:countries", GetCountries, cacheEntryLifetime);
+            var countries = mapper.Map<IEnumerable<Shared.Contracts.Metadata.Country>>(await metadataRepository.GetCountries());
 
             return new CountriesQueryResponse { Items = countries };
         }
 
-        private async Task<IEnumerable<Shared.Contracts.Metadata.Country>> GetCountries() =>
-            mapper.Map<IEnumerable<Shared.Contracts.Metadata.Country>>(await metadataRepository.GetCountries());
-
         public async Task<StateProvincesQueryResponse> Handle(StateProvincesQuery req)
         {
-            var stateProvinces = await cache.GetOrSet("metadata:stateprovinces", GetStateProvinces, cacheEntryLifetime);
+            var stateProvinces = mapper.Map<IEnumerable<Shared.Contracts.Metadata.StateProvince>>(await metadataRepository.GetStateProvinces());
 
             if (!string.IsNullOrEmpty(req.CountryCode))
             {
@@ -332,12 +325,9 @@ namespace EMBC.ESS.Managers.Admin
             return new StateProvincesQueryResponse { Items = stateProvinces };
         }
 
-        private async Task<IEnumerable<Shared.Contracts.Metadata.StateProvince>> GetStateProvinces() =>
-            mapper.Map<IEnumerable<Shared.Contracts.Metadata.StateProvince>>(await metadataRepository.GetStateProvinces());
-
         public async Task<CommunitiesQueryResponse> Handle(CommunitiesQuery req)
         {
-            var communities = await cache.GetOrSet("metadata:communities", GetCommunities, cacheEntryLifetime);
+            var communities = mapper.Map<IEnumerable<Shared.Contracts.Metadata.Community>>(await metadataRepository.GetCommunities());
             if (!string.IsNullOrEmpty(req.CountryCode))
             {
                 communities = communities.Where(c => c.CountryCode == req.CountryCode);
@@ -356,17 +346,10 @@ namespace EMBC.ESS.Managers.Admin
             return new CommunitiesQueryResponse { Items = communities };
         }
 
-        private async Task<IEnumerable<Shared.Contracts.Metadata.Community>> GetCommunities() =>
-            mapper.Map<IEnumerable<Shared.Contracts.Metadata.Community>>(await metadataRepository.GetCommunities());
-
         public async Task<SecurityQuestionsQueryResponse> Handle(SecurityQuestionsQuery _)
         {
-            var questions = await cache.GetOrSet("metadata:securityquestions", GetSecyurityQuestions, cacheEntryLifetime);
-
-            return new SecurityQuestionsQueryResponse { Items = questions };
+            return new SecurityQuestionsQueryResponse { Items = await metadataRepository.GetSecurityQuestions() };
         }
-
-        private async Task<IEnumerable<string>> GetSecyurityQuestions() => await metadataRepository.GetSecurityQuestions();
 
         public async Task<OutageQueryResponse> Handle(Shared.Contracts.Metadata.OutageQuery query)
         {
@@ -376,7 +359,11 @@ namespace EMBC.ESS.Managers.Admin
 
             if (unplannedOutage == null)
             {
-                var plannedOutages = await cache.GetOrSet("metadata:outage", () => GetPlannedOutages(query.PortalType), TimeSpan.FromMinutes(1));
+                var plannedOutages = mapper.Map<IEnumerable<Shared.Contracts.Metadata.OutageInformation>>(await metadataRepository.GetPlannedOutages(new Resources.Metadata.OutageQuery
+                {
+                    DisplayDate = DateTime.UtcNow,
+                    PortalType = Enum.Parse<Resources.Metadata.PortalType>(query.PortalType.ToString())
+                }));
 
                 return new OutageQueryResponse { OutageInfo = plannedOutages.OrderBy(o => o.OutageStartDate).FirstOrDefault() };
             }
@@ -386,26 +373,19 @@ namespace EMBC.ESS.Managers.Admin
             }
         }
 
-        private async Task<IEnumerable<Shared.Contracts.Metadata.OutageInformation>> GetPlannedOutages(Shared.Contracts.Metadata.PortalType portalType) =>
-            mapper.Map<IEnumerable<Shared.Contracts.Metadata.OutageInformation>>(await metadataRepository.GetPlannedOutages(new Resources.Metadata.OutageQuery
-            {
-                DisplayDate = DateTime.UtcNow,
-                PortalType = Enum.Parse<Resources.Metadata.PortalType>(portalType.ToString())
-            }));
-
-        public async Task Handle(RefreshMetadataCacheCommand cmd)
-        {
-            var cacheDuration = cmd.CacheDuration;
-            await cache.Set("metadata:countries", GetCountries, cacheDuration);
-            await cache.Set("metadata:stateprovinces", GetStateProvinces, cacheDuration);
-            await cache.Set("metadata:communities", GetCommunities, cacheDuration);
-            await cache.Set("metadata:securityquestions", GetSecyurityQuestions, cacheDuration);
-            await cache.Set("metadata:outage", GetSecyurityQuestions, cacheDuration);
-        }
+        //public async Task Handle(RefreshMetadataCacheCommand cmd)
+        //{
+        //    var cacheDuration = cmd.CacheDuration;
+        //    await cache.Set("metadata:countries", GetCountries, cacheDuration);
+        //    await cache.Set("metadata:stateprovinces", GetStateProvinces, cacheDuration);
+        //    await cache.Set("metadata:communities", GetCommunities, cacheDuration);
+        //    await cache.Set("metadata:securityquestions", GetSecyurityQuestions, cacheDuration);
+        //    await cache.Set("metadata:outage", GetSecyurityQuestions, cacheDuration);
+        //}
     }
 
-    public class RefreshMetadataCacheCommand
-    {
-        public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(6);
-    }
+    //public class RefreshMetadataCacheCommand
+    //{
+    //    public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(6);
+    //}
 }
