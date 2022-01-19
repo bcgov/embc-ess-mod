@@ -52,7 +52,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                     },
                     new HttpClientBulkheadIsolationPolicy
                     {
-                        MaxParallelization = 1
+                        MaxParallelization = 10
                     },
                     new HttpClientTimeoutPolicy
                     {

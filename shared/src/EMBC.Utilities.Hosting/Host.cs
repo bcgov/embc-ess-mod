@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -101,6 +102,11 @@ namespace EMBC.Utilities.Hosting
 
         protected virtual IHost CreateHost(params Assembly[] assemblies) =>
              Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
+                 .ConfigureHostConfiguration(opts =>
+                 {
+                     // add secrets json file if exists in the hosting assembly
+                     opts.AddUserSecrets(Assembly.GetEntryAssembly(), true, true);
+                 })
                 .UseSerilog(ConfigureSerilog)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -179,9 +185,36 @@ namespace EMBC.Utilities.Hosting
             services.AddHealthChecks()
                 .AddCheck($"ready hc", () => HealthCheckResult.Healthy("ready"), new[] { HealthCheckReadyTag })
                 .AddCheck($"live hc", () => HealthCheckResult.Healthy("alive"), new[] { HealthCheckAliveTag });
-            services.AddHttpContextAccessor();
-            services.AddControllers();
+
+            services
+                .AddHttpContextAccessor()
+                .AddResponseCompression();
+
+            var mvcBuilder = services.AddControllers();
+            foreach (var assembly in assemblies)
+            {
+                mvcBuilder.AddApplicationPart(assembly).AddControllersAsServices();
+            }
+
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, assemblies);
+            services.AddCors(opts => opts.AddDefaultPolicy(policy =>
+            {
+                // try to get array of origins from section array
+                var corsOrigins = configuration.GetSection("app:cors:origins").GetChildren().Select(c => c.Value).ToArray();
+                // try to get array of origins from value
+                if (!corsOrigins.Any()) corsOrigins = configuration.GetValue("app:cors:origins", string.Empty).Split(',');
+                corsOrigins = corsOrigins.Where(o => !string.IsNullOrWhiteSpace(o)).ToArray();
+                if (corsOrigins.Any())
+                {
+                    policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins);
+                }
+            }));
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.All;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
             Configurer.ConfigureComponentServices(services, configuration, hostEnvironment, logger, assemblies);
         }
 
@@ -191,10 +224,6 @@ namespace EMBC.Utilities.Hosting
 
             logger.LogInformation("Starting configuration of {appName}", appName);
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
             app.UseSerilogRequestLogging(opts =>
             {
                 opts.GetLevel = ExcludeHealthChecks;
@@ -211,12 +240,16 @@ namespace EMBC.Utilities.Hosting
                 };
             });
 
+            app.UseResponseCompression();
+            app.UseForwardedHeaders();
             app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseCors();
+
+            Configurer.ConfigureComponentPipeline(app, configuration, env, logger, assemblies);
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
@@ -229,8 +262,6 @@ namespace EMBC.Utilities.Hosting
                     grpcRegistrationMethodInfo.MakeGenericMethod(service).Invoke(null, new[] { endpoints });
                 }
             });
-
-            Configurer.ConfigureComponentPipeline(app, configuration, env, logger, assemblies);
         }
 
         private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>

@@ -27,9 +27,4 @@
     <ProjectReference Include="..\EMBC.Registrants.API\EMBC.Registrants.API.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="EMBC.ESS.Shared.Contracts">
-      <HintPath>..\..\..\..\ess\src\API\EMBC.ESS.Shared.Contracts\bin\Debug\netstandard2.1\EMBC.ESS.Shared.Contracts.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>
