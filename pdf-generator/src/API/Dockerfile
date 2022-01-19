@@ -3,6 +3,7 @@ WORKDIR /app
 EXPOSE 8080
 ENV ASPNETCORE_URLS=https://*:8080;
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+ENV DOTNET_gcServer=1
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 
