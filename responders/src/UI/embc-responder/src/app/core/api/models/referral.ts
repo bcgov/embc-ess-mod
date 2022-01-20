@@ -6,8 +6,8 @@ import { SupportMethod } from './support-method';
 export interface Referral extends Support {
   issuedToPersonName: string;
   method: SupportMethod;
-  supplierAddress?: null | Address;
+  supplierAddress?: Address;
   supplierId: string;
-  supplierName?: null | string;
-  supplierNotes?: null | string;
+  supplierName?: string;
+  supplierNotes?: string;
 }

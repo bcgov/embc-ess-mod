@@ -5,10 +5,10 @@ import { EvacuationFileStatus } from './evacuation-file-status';
 import { EvacuationFileTask } from './evacuation-file-task';
 export interface EvacuationFileSummary {
   createdOn?: string;
-  evacuatedFromAddress?: null | Address;
+  evacuatedFromAddress?: Address;
   evacuationFileDate?: string;
-  id?: null | string;
+  id?: string;
   isRestricted?: null | boolean;
   status?: EvacuationFileStatus;
-  task?: null | EvacuationFileTask;
+  task?: EvacuationFileTask;
 }

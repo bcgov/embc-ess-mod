@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface SupplierTeamDetails {
-  id?: null | string;
+  id?: string;
   isActive?: boolean;
-  name?: null | string;
+  name?: string;
   sharedWithDate?: string;
 }
