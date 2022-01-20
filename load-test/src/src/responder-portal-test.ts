@@ -609,7 +609,9 @@ export function ResponderExistingRegistration() {
 };
 
 export function handleSummary(data: any) {
-  return {
-    "responder.summary.html": htmlReport(data),
-  };
+  let fileName: string = `responder.${TARGET_VUS}-VUS-${TARGET_ITERATIONS}-ITERS.summary.html`;
+  console.log(fileName);
+  let res: any = {};
+  res[fileName] = htmlReport(data);
+  return res;
 }

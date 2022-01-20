@@ -145,7 +145,10 @@ export const options: Options = {
 };
 
 export function handleSummary(data: any) {
-    return {
-        "load-test.summary.html": htmlReport(data),
-    };
+    let dateString = new Date().toLocaleDateString().replace(/\//g, '-');
+    let fileName: string = `load-test.${dateString}.summary.html`;
+    console.log(fileName);
+    let res: any = {};
+    res[fileName] = htmlReport(data);
+    return res;
 }

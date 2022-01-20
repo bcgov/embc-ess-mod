@@ -8,19 +8,22 @@ import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporte
 let TARGET_VUS = parseInt(__ENV.VUS || "1");
 let TARGET_ITERATIONS = parseInt(__ENV.ITERS || "1");
 
-let execution_type: Scenario = {
-    executor: 'per-vu-iterations',
-    vus: TARGET_VUS,
-    iterations: TARGET_ITERATIONS,
-    maxDuration: '1h30m',
-}
+let type_name = `${TARGET_VUS}-VUS`;
 
-if (!__ENV.ITERS) {
+let execution_type: Scenario = {
+    executor: 'constant-vus',
+    vus: TARGET_VUS,
+    duration: '5m',
+};
+
+if (__ENV.ITERS) {
     execution_type = {
-        executor: 'constant-vus',
+        executor: 'per-vu-iterations',
         vus: TARGET_VUS,
-        duration: '5m',
-    }
+        iterations: TARGET_ITERATIONS,
+        maxDuration: '1h30m',
+    };
+    type_name += `-${TARGET_ITERATIONS}-ITERS`;
 }
 
 export const options: Options = {
@@ -96,7 +99,9 @@ export const options: Options = {
 };
 
 export function handleSummary(data: any) {
-    return {
-        "benchmark.summary.html": htmlReport(data),
-    };
+    let fileName: string = `benchmark.${type_name}.summary.html`;
+    console.log(fileName);
+    let res: any = {};
+    res[fileName] = htmlReport(data);
+    return res;
 }
