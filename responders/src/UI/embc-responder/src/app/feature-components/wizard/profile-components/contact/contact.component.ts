@@ -209,6 +209,7 @@ export class ContactComponent implements OnInit, OnDestroy {
    */
   next(): void {
     if (this.evacueeSessionService.paperBased) {
+      this.stepEvacueeProfileService.nextTabUpdate.next();
       if (this.stepEvacueeProfileService.checkTabsStatus()) {
         this.stepEvacueeProfileService.openModal(
           globalConst.wizardProfileMessage
