@@ -27,7 +27,7 @@ namespace EMBC.Utilities.Messaging
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            var options = configurationServices.Configuration.GetSection("messaging").Get<MessagingOptions>();
+            var options = configurationServices.Configuration.GetSection("messaging").Get<MessagingOptions>() ?? new MessagingOptions() { Mode = MessagingMode.Server };
 
             configurationServices.Services.AddGrpc(opts =>
             {
