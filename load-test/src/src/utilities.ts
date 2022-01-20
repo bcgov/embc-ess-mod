@@ -18,12 +18,17 @@ export function getDaysInMonth(month: number, year: number) {
 
 /** Simulate random wait time to fill in a form */
 export function fillInForm() {
-    sleep(getRandomInt(30, 90));
-    // sleep(1);
+    // sleep(getRandomInt(30, 90));
+    sleep(1);
 }
 
 /** Simulate random wait time to navigate on a page */
 export function navigate() {
-    sleep(getRandomInt(1, 8));
-    // sleep(1);
+    // sleep(getRandomInt(1, 8));
+    sleep(1);
+}
+
+/** Current VU and Iteration identifier */
+export function getIterationName() {
+    return `${__VU},${__ITER}`;
 }
