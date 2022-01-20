@@ -106,14 +106,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   exit(): void {
     const navigateTo = this.cacheService.get('wizardOpenedFrom');
-    if (
-      this.evacueeSessionService.profileId !== null &&
-      navigateTo === '/responder-access/search/evacuee'
-    ) {
-      this.openExitModal('/responder-access/search/evacuee-profile-dashboard');
-    } else {
-      this.openExitModal(navigateTo);
-    }
+    this.openExitModal(navigateTo);
   }
 
   /**
