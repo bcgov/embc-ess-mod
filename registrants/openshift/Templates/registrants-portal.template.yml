@@ -79,8 +79,8 @@ objects:
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys/${APP_NAME}-registrants-portal"
       app__knownNetwork: ${KNOWN_NETWORKS}
-      backend__url: ${BACKEND_URL}
-      backend__allowInvalidServerCertificate: ${BACKEND_ALLOW_INVALID_CERT}
+      messaging__url: ${BACKEND_URL}
+      messaging__allowInvalidServerCertificate: ${BACKEND_ALLOW_INVALID_CERT}
       auth__introspection__authority: ${OAUTH_AUTHORITY}
       auth__jwt__authority: ${OAUTH_AUTHORITY}
       auth__oidc__issuer: ${OAUTH_AUTHORITY}
@@ -223,13 +223,12 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-registrants-portal-api
       strategy:
-        activeDeadlineSeconds: 21600
         resources:
           limits:
             cpu: 15m
             memory: 64Mi
           requests:
-            cpu: 10m
+            cpu: 5m
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
@@ -249,11 +248,11 @@ objects:
           containers:
             - resources:
                 limits:
-                  cpu: 150m
-                  memory: 256Mi
+                  cpu: 75m
+                  memory: 512Mi
                 requests:
-                  cpu: 50m
-                  memory: 64Mi
+                  cpu: 25m
+                  memory: 256Mi
               name: registrants-portal-api
               envFrom:
                 - configMapRef:
@@ -269,14 +268,27 @@ objects:
                 httpGet:
                   path: /hc/live
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
               startupProbe:
                 httpGet:
                   path: /hc/startup
                   port: 8080
+                initialDelaySeconds: 15
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 5
               readinessProbe:
                 httpGet:
                   path: /hc/ready
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -298,7 +310,36 @@ objects:
               kind: ImageStreamTag
               name: registrants-portal-api:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
-              
+
+  - kind: HorizontalPodAutoscaler
+    apiVersion: autoscaling/v2beta2
+    metadata:
+      name: ${APP_NAME}-registrants-portal-api-has
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-registrants-portal-api
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      scaleTargetRef:
+        kind: DeploymentConfig
+        name: ${APP_NAME}-registrants-portal-api
+        apiVersion: apps.openshift.io/v1
+      minReplicas: 2
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization: 75
+
   - apiVersion: v1
     kind: ConfigMap
     metadata:
@@ -325,13 +366,12 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-registrants-portal-ui
       strategy:
-        activeDeadlineSeconds: 21600
         resources:
           limits:
             cpu: 15m
             memory: 64Mi
           requests:
-            cpu: 10m
+            cpu: 5m
             memory: 32Mi
         rollingParams:
           intervalSeconds: 1
@@ -351,10 +391,10 @@ objects:
             - name: registrants-portal-ui
               resources:
                 limits:
-                  cpu: 50m
+                  cpu: 15m
                   memory: 64Mi
                 requests:
-                  cpu: 25m
+                  cpu: 5m
                   memory: 32Mi
               env:
                 - name: API_URL
@@ -404,3 +444,32 @@ objects:
               kind: ImageStreamTag
               name: registrants-portal-ui:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: HorizontalPodAutoscaler
+    apiVersion: autoscaling/v2beta2
+    metadata:
+      name: ${APP_NAME}-registrants-portal-ui-has
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-registrants-portal-ui
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      scaleTargetRef:
+        kind: DeploymentConfig
+        name: ${APP_NAME}-registrants-portal-ui
+        apiVersion: apps.openshift.io/v1
+      minReplicas: 2
+      maxReplicas: 4
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization: 75

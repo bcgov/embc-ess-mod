@@ -8,7 +8,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "IDENTITYSERVER_TESTUSERS_FILE": "./Data/test_users.json",
-        "IDENTITYSERVER_CONFIG_FILE": "./Data/config.json"
+        "IDENTITYSERVER_CONFIG_FILE": "./Data/config.json",
+        "DOTNET_gcServer": "1"
       }
     }
   }

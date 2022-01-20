@@ -163,11 +163,11 @@ objects:
             - name: oauth-server
               resources:
                 limits:
-                  cpu: 50m
-                  memory: 256Mi
+                  cpu: 75m
+                  memory: 512Mi
                 requests:
-                  cpu: 10m
-                  memory: 64Mi
+                  cpu: 15m
+                  memory: 256Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
@@ -190,16 +190,27 @@ objects:
                 httpGet:
                   path: /hc/live
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
               startupProbe:
                 httpGet:
                   path: /hc/startup
                   port: 8080
-                initialDelaySeconds: 20
+                initialDelaySeconds: 30
                 timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 5
               readinessProbe:
                 httpGet:
                   path: /hc/ready
                   port: 8080
+                timeoutSeconds: 5
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -224,6 +235,34 @@ objects:
               kind: ImageStreamTag
               name: oauth-server:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: HorizontalPodAutoscaler
+    apiVersion: autoscaling/v2beta2
+    metadata:
+      name: ${APP_NAME}-oauth-server-has
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-oauth-server
+    spec:
+      scaleTargetRef:
+        kind: DeploymentConfig
+        name: ${APP_NAME}-oauth-server
+        apiVersion: apps.openshift.io/v1
+      minReplicas: 2
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+        - type: Resource
+          resource:
+            name: memory
+            target:
+              type: Utilization
+              averageUtilization: 75
 
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
