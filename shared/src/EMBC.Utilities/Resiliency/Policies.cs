@@ -96,13 +96,14 @@ namespace EMBC.Utilities.Resiliency
 
     public class HttpClientBulkheadIsolationPolicy : IPolicyBuilder<HttpResponseMessage>
     {
-        public int MaxParallelization { get; set; }
+        public int MaxParallelization { get; set; } = 1;
+        public int QueueSize { get; set; } = 0;
 
         public PolicyWrapper<HttpResponseMessage> Build()
         {
             return new PolicyWrapper<HttpResponseMessage>
             {
-                Policy = Policy.BulkheadAsync<HttpResponseMessage>(MaxParallelization)
+                Policy = Policy.BulkheadAsync<HttpResponseMessage>(MaxParallelization, QueueSize)
             };
         }
     }

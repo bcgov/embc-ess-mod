@@ -52,7 +52,14 @@ namespace EMBC.ESS.Utilities.Dynamics
                     },
                     new HttpClientBulkheadIsolationPolicy
                     {
-                        MaxParallelization = 10
+                        MaxParallelization = 1,
+                        QueueSize = 10
+                    },
+                    new HttpClientRetryPolicy
+                    {
+                        NumberOfRetries = options.NumberOfRetries,
+                        WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
+                        OnRetry = (sp, t, e) => { OnRetry("adfs_token", sp, t, e); }
                     },
                     new HttpClientTimeoutPolicy
                     {
