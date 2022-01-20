@@ -236,7 +236,7 @@
           </div>
         </div>
 
-        <div class="col-12">
+        <div *ngIf="!evacueeSessionService?.paperBased" class="col-12">
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Security Questions</label>
 
