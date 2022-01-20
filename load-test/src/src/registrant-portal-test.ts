@@ -1,13 +1,13 @@
-import { Options } from 'k6/options';
+import { Options, Scenario } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 import { generateAnonymousRegistration } from './generators/registrants/registration';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
 import { generateProfile } from './generators/registrants/profile';
-import { fillInForm, navigate } from './utilities';
+import { fillInForm, getIterationName, navigate } from './utilities';
 
 // @ts-ignore
-import { RegistrantTestParameters } from '../load-test.parameters-APP_TARGET';
+import { RegistrantTestParameters, MAX_VU, MAX_ITER } from '../load-test.parameters-APP_TARGET';
 // @ts-ignore
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 
@@ -36,81 +36,58 @@ const urls = {
   submit: `${baseUrl}/api/Evacuations`,
 };
 
-const loginFailRate = new Rate('failed to login');
-const formFailRate = new Rate('failed form fetches');
-const submitFailRate = new Rate('failed form submits');
-const submitFile = new Trend('submit_file');
-const submitAnonymous = new Trend('submit_anonymous');
-const submitProfile = new Trend('submit_profile');
-const loadTime = new Trend('load_time');
-const loadCommunities = new Trend('load_communities');
-const loadProfile = new Trend('load_profile');
+const loginFailRate = new Rate('reg_failed_to_login');
+const formFailRate = new Rate('reg_failed_form_fetches');
+const submitFailRate = new Rate('reg_failed_form_submits');
+const submitFile = new Trend('reg_submit_file');
+const submitAnonymous = new Trend('reg_submit_anonymous');
+const submitProfile = new Trend('reg_submit_profile');
+const loadTime = new Trend('reg_load_time');
+const loadAuthToken = new Trend('reg_load_auth_token');
+const loadConfig = new Trend('reg_load_configuration');
+const loadSecurityQuestions = new Trend('reg_load_security_questions');
+const loadProvincesTime = new Trend('reg_load_provinces');
+const loadCountriesTime = new Trend('reg_load_countries');
+const loadCommunities = new Trend('reg_load_communities');
+const loadProfile = new Trend('reg_load_profile');
+const loadProfileExists = new Trend('reg_load_profile_exists');
 
-const MAX_VU = 100;
-const MAX_ITER = 10;
+let TARGET_VUS = parseInt(__ENV.VUS || "1");
+let TARGET_ITERATIONS = parseInt(__ENV.ITERS || "1");
+
+let execution_type: Scenario = {
+  executor: 'per-vu-iterations',
+  vus: TARGET_VUS,
+  iterations: TARGET_ITERATIONS,
+  maxDuration: '1h30m',
+}
 
 export const options: Options = {
   scenarios: {
     // anonymousRegistration: {
     //   exec: 'RegistrantAnonymousRegistration',
-
-    //   // executor: 'ramping-vus',
-    //   // startVUs: 1,
-    //   // stages: [
-    //   //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
-    //   // ],
-    //   // gracefulRampDown: '5m',
-
-    //   executor: 'per-vu-iterations',
-    //   vus: 1,
-    //   iterations: 1,
-    //   maxDuration: '1h30m',
+    //   ...execution_type
     // },
     // newRegistration: {
     //   exec: 'RegistrantNewRegistration',
-
-    //   // executor: 'ramping-vus',
-    //   // startVUs: 1,
-    //   // stages: [
-    //   //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
-    //   // ],
-    //   // gracefulRampDown: '5m',
-
-    //   executor: 'per-vu-iterations',
-    //   vus: 1,
-    //   iterations: 1,
-    //   maxDuration: '1h30m',
+    //   ...execution_type
     // },
     existingProfileRegistration: {
       exec: 'RegistrantExistingProfileRegistration',
-      // startTime: '120s',
-
-      // executor: 'ramping-vus',
-      // startVUs: 1,
-      // stages: [
-      //   { duration: '5m', target: 100 }, //target should be <= MAX_VU
-      // ],
-      // gracefulRampDown: '5m',
-
-      executor: 'per-vu-iterations',
-      vus: 25,
-      iterations: 5,
-      maxDuration: '1h30m',
+      ...execution_type
     },
   },
 
   thresholds: {
-    'failed form submits': ['rate<0.01'], //Less than 1% are allowed to fail
-    'failed form fetches': ['rate<0.01'],
-    'failed login': ['rate<0.01'],
-    // 'http_req_duration{type:submit}': ['p(100)<4000'], // threshold on submit requests only (in ms)
-    'submit_file': ['p(95)<5000'], // threshold on submit requests only (in ms)
-    'submit_anonymous': ['p(95)<5000'], // threshold on submit requests only (in ms)
-    'submit_profile': ['p(95)<5000'], // threshold on submit requests only (in ms)
-    'load_time': ['p(95)<4000'], // threshold on load requests only (in ms)
-    'load_communities': ['p(95)<4000'], // threshold on load requests only (in ms)
-    'load_profile': ['p(95)<4000'], // threshold on load requests only (in ms)
-    //'http_req_duration': ['p(95)<400'] //Only 5% or less are permitted to have a request duration longer than 400ms
+    'reg_failed_form_submits': ['rate<0.01'], //Less than 1% are allowed to fail
+    'reg_failed_form_fetches': ['rate<0.01'],
+    'reg_failed_login': ['rate<0.01'],
+    'reg_submit_file': ['p(95)<5000'], // threshold on submit requests only (in ms)
+    'reg_submit_anonymous': ['p(95)<5000'], // threshold on submit requests only (in ms)
+    'reg_submit_profile': ['p(95)<5000'], // threshold on submit requests only (in ms)
+    'reg_load_time': ['p(95)<4000'], // threshold on load requests only (in ms)
+    'reg_load_communities': ['p(95)<4000'], // threshold on load requests only (in ms)
+    'reg_load_profile': ['p(95)<4000'], // threshold on load requests only (in ms)
   }
 };
 
@@ -118,7 +95,6 @@ const getAuthToken = () => {
   let curr_vu = __VU - 1; //VU's begin at 1, not 0
   curr_vu = (curr_vu % MAX_VU) + 1;
   let curr_iter = __ITER % MAX_ITER;
-  // console.log(`VU: ${curr_vu}  -  ITER: ${curr_iter}`);
   let username = `${testParams.usernameBase}${curr_vu}-${curr_iter}`;
   let password = `${testParams.passwordBase}${curr_vu}-${curr_iter}`
   const payload = `grant_type=${testParams.grantType}&username=${username}&password=${password}&scope=${testParams.scope}`;
@@ -131,9 +107,9 @@ const getAuthToken = () => {
 
   const response = http.post(urls.auth_token, payload, params);
   loginFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadAuthToken.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}: failed to get auth token`);
+    console.log(`Registrants - ${getIterationName()}: failed to get auth token`);
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -154,7 +130,7 @@ const getAnonymousStartPage = () => {
 const getConfiguration = () => {
   const response = http.get(urls.config);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadConfig.add(response.timings.waiting);
 }
 
 const getCommunities = () => {
@@ -167,21 +143,21 @@ const getCommunities = () => {
 const getProvinces = () => {
   const response = http.get(urls.provinces);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadProvincesTime.add(response.timings.waiting);
   return response.json();
 }
 
 const getCountries = () => {
   const response = http.get(urls.countries);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadCountriesTime.add(response.timings.waiting);
   return response.json();
 }
 
 const getSecurityQuestions = () => {
   const response = http.get(urls.security_questions);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadSecurityQuestions.add(response.timings.waiting);
   return response.json();
 }
 
@@ -200,9 +176,12 @@ const submitAnonymousRegistration = (communities: any, security_questions: any) 
   submitAnonymous.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}: failed to submit anonymous registration`);
+    console.log(`Registrants - ${getIterationName()}: failed to submit anonymous registration`);
     console.log(payload);
     console.log(JSON.stringify(response));
+  }
+  else {
+    console.log(`Registrants - ${getIterationName()}: Anonymous submission successful`);
   }
 }
 
@@ -217,9 +196,9 @@ const getCurrentProfileExists = (token: any) => {
 
   const response = http.get(urls.current_user_exists, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadProfileExists.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}: failed to check if profile exists`);
+    console.log(`Registrants - ${getIterationName()}: failed to check if profile exists`);
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -238,7 +217,7 @@ const getCurrentProfile = (token: any) => {
   formFailRate.add(response.status !== 200);
   loadProfile.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}: failed to get current profile`);
+    console.log(`Registrants - ${getIterationName()}: failed to get current profile`);
     console.log(JSON.stringify(response));
   }
   return response.json();
@@ -260,11 +239,11 @@ const createProfile = (token: any, communities: any, security_questions: any) =>
   submitProfile.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}: failed to create profile`);
+    console.log(`Registrants - ${getIterationName()}: failed to create profile`);
     console.log(payload);
     console.log(JSON.stringify(response));
   } else {
-    console.log(`${__VU},${__ITER}: created profile`);
+    console.log(`Registrants - ${getIterationName()}: created profile`);
   }
 }
 
@@ -284,11 +263,11 @@ const submitEvacuationFile = (token: any, profile: any, communities: any) => {
   submitFile.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`${__VU},${__ITER}: failed submit evacuation file`);
+    console.log(`Registrants - ${getIterationName()}: failed submit evacuation file`);
     console.log(payload);
     console.log(JSON.stringify(response));
   } else {
-    console.log(`${__VU},${__ITER}: submission successful`);
+    console.log(`Registrants - ${getIterationName()}: submission successful`);
   }
 }
 
@@ -320,6 +299,9 @@ export function RegistrantNewRegistration() {
     fillInForm();
     createProfile(token, communities, security_questions);
   }
+  else {
+    console.log(`Registrants - ${getIterationName()}: using existing profile`);
+  }
 
   let profile = getCurrentProfile(token);
   fillInForm();
@@ -343,6 +325,9 @@ export function RegistrantExistingProfileRegistration() {
     fillInForm();
     createProfile(token, communities, security_questions);
   }
+  else {
+    console.log(`Registrants - ${getIterationName()}: using existing profile`);
+  }
 
   let profile = getCurrentProfile(token);
   fillInForm();
@@ -350,7 +335,9 @@ export function RegistrantExistingProfileRegistration() {
 };
 
 export function handleSummary(data: any) {
-  return {
-    "registrants.summary.html": htmlReport(data),
-  };
+  let fileName: string = `registrants.${TARGET_VUS}-VUS-${TARGET_ITERATIONS}-ITERS.summary.html`;
+  console.log(fileName);
+  let res: any = {};
+  res[fileName] = htmlReport(data);
+  return res;
 }

@@ -39,3 +39,6 @@ interface ResponderTestParameters {
     password: string;
     scope: string;
 }
+
+export const MAX_VU = 1;
+export const MAX_ITER = 1;
