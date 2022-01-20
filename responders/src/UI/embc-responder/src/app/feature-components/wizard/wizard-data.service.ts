@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import * as globalConst from '../../core/services/global-constants';
 
 @Injectable({
@@ -409,6 +410,7 @@ export class WizardDataService {
     }
   ];
 
+  constructor(private evacueeSessionService: EvacueeSessionService) {}
   /**
    * Creates new registration menu
    *
@@ -507,9 +509,16 @@ export class WizardDataService {
   public createNewProfileSteps(): Array<TabModel> {
     const profileTabs: Array<TabModel> = new Array<TabModel>();
     let tab: TabModel;
-    for (const tabs of this.evacueeProfileTabs) {
-      profileTabs.push({ ...tab, ...tabs });
+    if (this.evacueeSessionService.paperBased) {
+      for (const tabs of this.paperEvacueeProfileTabs) {
+        profileTabs.push({ ...tab, ...tabs });
+      }
+    } else {
+      for (const tabs of this.evacueeProfileTabs) {
+        profileTabs.push({ ...tab, ...tabs });
+      }
     }
+
     return profileTabs;
   }
 
