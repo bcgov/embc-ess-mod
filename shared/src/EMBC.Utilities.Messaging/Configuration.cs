@@ -21,6 +21,7 @@ using Grpc.Core;
 using Grpc.Net.Client.Balancer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Utilities.Messaging
@@ -35,8 +36,8 @@ namespace EMBC.Utilities.Messaging
             {
                 opts.EnableDetailedErrors = configurationServices.Environment.IsDevelopment();
             });
-            configurationServices.Services.AddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)));
-            configurationServices.Services.AddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
+            configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)));
+            configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
             if (options.Mode == MessagingMode.Server || options.Mode == MessagingMode.Both)
             {
                 configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
