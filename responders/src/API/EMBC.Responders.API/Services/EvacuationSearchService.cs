@@ -61,7 +61,7 @@ namespace EMBC.Responders.API.Services
     public class EvacuationFileSearchResult
     {
         public string Id { get; set; }
-        public string ExternalReference { get; set; }
+        public string ExternalReferenceId { get; set; }
         public bool IsPaperBasedFile { get; set; }
         public bool IsRestricted { get; set; }
         public string TaskId { get; set; }
@@ -175,7 +175,7 @@ namespace EMBC.Responders.API.Services
         public EvacuationSearchMapping()
         {
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult, EvacuationFileSearchResult>()
-                .ForMember(d => d.IsPaperBasedFile, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ExternalReference)))
+                .ForMember(d => d.IsPaperBasedFile, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ExternalReferenceId)))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))

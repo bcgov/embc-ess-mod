@@ -45,7 +45,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
                 .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
-                .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ExternalReference))
+                .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ExternalReferenceId))
                 .AfterMap((s, d) =>
                 {
                     //set link to primary registrant's household member entity
@@ -83,7 +83,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                         string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails },
                         string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
                     }.Where(n => n != null).ToArray()))
-                .ForMember(d => d.ExternalReference, opts => opts.MapFrom(s => s.era_paperbasedessfile))
+                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => s.era_paperbasedessfile))
                 ;
 
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
