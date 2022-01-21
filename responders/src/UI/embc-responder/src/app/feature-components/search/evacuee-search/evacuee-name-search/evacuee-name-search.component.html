@@ -107,6 +107,32 @@
             </mat-form-field>
           </div>
         </div>
+
+        <div class="row" *ngIf="paperBased">
+          <div class="col-md-4">
+            <mat-form-field type="date" appearance="outline">
+              <mat-label>Paper ESS File#</mat-label>
+              <input
+                formControlName="paperBasedEssFile"
+                matInput
+                placeholder="T"
+                required
+              />
+              <mat-hint
+                >This is the ESS File # on the paper ESS File that you are doing
+                data entry for.</mat-hint
+              >
+              <mat-error
+                *ngIf="
+                  nameSearchFormControl.paperBasedEssFile.invalid &&
+                  nameSearchFormControl.paperBasedEssFile.hasError('required')
+                "
+              >
+                Paper ESS File # is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
       </form>
 
       <br />
