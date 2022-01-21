@@ -6,7 +6,7 @@ import { generateNewPersonDetails, getPersonDetailsForIteration } from './genera
 import { generateEvacuationFile, getUpdatedEvacuationFile } from './generators/responders/evacuation-file';
 import { generateSupports } from './generators/responders/supports';
 import { generateNote } from './generators/responders/notes';
-import { fillInForm, getIterationName, navigate } from './utilities';
+import { fillInForm, getIterationName, getRandomInt, logError, navigate } from './utilities';
 
 // @ts-ignore
 import { ResponderTestParameters } from '../load-test.parameters-APP_TARGET';
@@ -49,7 +49,7 @@ const submitRegistrantTime = new Trend('res_submit_registrant');
 const submitSupportsTime = new Trend('res_submit_supports');
 const submitNoteTime = new Trend('res_submit_note');
 const printRequestTime = new Trend('res_print_request_time');
-const loadTime = new Trend('res_load_time');
+const loadHTMLTime = new Trend('res_load_html_time');
 const loadMemberRole = new Trend('res_load_member_role');
 const loadMemberLabel = new Trend('res_load_member_label');
 const loadAuthToken = new Trend('res_load_auth_token');
@@ -65,51 +65,6 @@ const searchTaskTime = new Trend('res_search_tasks');
 const searchRegistrationsTime = new Trend('res_search_registrations');
 const searchRegistrationsNoResultTime = new Trend('reg_search_registrations_no_result');
 
-// const MAX_VU = 100;
-// const MAX_ITER = 10;
-
-let TARGET_VUS = parseInt(__ENV.VUS || "1");
-let TARGET_ITERATIONS = parseInt(__ENV.ITERS || "1");
-
-let execution_type: Scenario = {
-  executor: 'per-vu-iterations',
-  vus: TARGET_VUS,
-  iterations: TARGET_ITERATIONS,
-  maxDuration: '1h30m',
-}
-
-export const options: Options = {
-  scenarios: {
-    // newRegistration: {
-    //   exec: 'ResponderNewRegistration',
-    //   ...execution_type
-    // },
-    existingRegistration: {
-      exec: 'ResponderExistingRegistration',
-      ...execution_type
-    },
-  },
-
-  thresholds: {
-    'res_failed_form_submits': ['rate<0.01'], //Less than 1% are allowed to fail
-    'res_failed_form_fetches': ['rate<0.01'],
-    'res_failed_login': ['rate<0.01'],
-    'reg_submit_file': ['p(95)<10000'], // 10s
-    'reg_submit_registrant': ['p(95)<10000'], // 10s
-    'reg_submit_supports': ['p(95)<10000'], // 10s
-    'reg_submit_note': ['p(95)<10000'], // 10s
-    'reg_print_request_time': ['p(95)<90000'], // 90s
-    'reg_load_time': ['p(95)<6000'], // 6s
-    'reg_load_communities': ['p(95)<6000'], // 6s
-    'reg_load_file': ['p(95)<6000'], // 6s
-    'reg_load_registrant': ['p(95)<6000'], // 6s
-    'reg_load_suppliers': ['p(95)<6000'], // 6s
-    'reg_search_tasks': ['p(95)<6000'], // 6s
-    'reg_search_registrations': ['p(95)<6000'], // 6s
-    'reg_search_registrations_no_result': ['p(95)<6000'], // 6s
-  }
-};
-
 const getAuthToken = () => {
   const payload = `grant_type=${testParams.grantType}&username=${testParams.username}&password=${testParams.password}&scope=${testParams.scope}`;
   const params = {
@@ -123,8 +78,8 @@ const getAuthToken = () => {
   loginFailRate.add(response.status !== 200);
   loadAuthToken.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.log(`Responders - ${getIterationName()}: error getting auth token`);
-    console.log(JSON.stringify(response));
+    console.error(`Responders - ${getIterationName()}: error getting auth token`);
+    logError(response);
   }
   return response.json();
 }
@@ -132,13 +87,13 @@ const getAuthToken = () => {
 const getStartPage = () => {
   const response = http.get(urls.start_page);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadHTMLTime.add(response.timings.waiting);
 }
 
 const getDashboard = () => {
   const response = http.get(urls.dashboard);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadHTMLTime.add(response.timings.waiting);
 }
 
 const getConfiguration = () => {
@@ -178,10 +133,10 @@ const getSecurityQuestions = () => {
 // const getOutageInfo = () => {
 //   const response = http.get(urls.outage_info);
 //   formFailRate.add(response.status !== 200);
-//   loadTime.add(response.timings.waiting);
+//   loadHTMLTime.add(response.timings.waiting);
 
 //   if (response.status !== 200) {
-//     // console.log(`${me}: error retrieving outage info`);
+//     console.error(`Responders - ${getIterationName()}: error retrieving outage info`);
 //   }
 //   return; //response.json();
 // }
@@ -227,7 +182,7 @@ const getTaskSearchPage = (token: any) => {
 
   const response = http.get(urls.task_search_page, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadHTMLTime.add(response.timings.waiting);
   return response.html();
 }
 
@@ -258,6 +213,11 @@ const searchRegistrations = (token: any, registrant: any) => {
   const response = http.get(urls.registrations_search + `?firstName=${registrant.firstName}&lastName=${registrant.lastName}&dateOfBirth=${registrant.dateOfBirth}`, params);
   formFailRate.add(response.status !== 200);
 
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: error searching regisrations`);
+    logError(response);
+  }
+
   if (response.json()) {
     let res: any = response.json();
     if (res?.files?.length > 0 && res?.registrants?.length > 0) {
@@ -281,7 +241,7 @@ const getNewEvacueeWizard = (token: any) => {
 
   const response = http.get(urls.ess_wizard, params);
   formFailRate.add(response.status !== 200);
-  loadTime.add(response.timings.waiting);
+  loadHTMLTime.add(response.timings.waiting);
   return response.html();
 }
 
@@ -301,9 +261,8 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   submitRegistrantTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`Responders - ${getIterationName()}: error submitting registrant`);
-    console.log(payload);
-    console.log(JSON.stringify(response));
+    console.error(`Responders - ${getIterationName()}: error submitting registrant`);
+    logError(response, payload);
   }
 
   return response.json();
@@ -340,9 +299,11 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   submitFileTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`Responders - ${getIterationName()}: error submitting file`);
-    console.log(payload);
-    console.log(JSON.stringify(response));
+    console.error(`Responders - ${getIterationName()}: error submitting file`);
+    logError(response, payload);
+  }
+  else {
+    console.log(`Responders - ${getIterationName()}: successfully submitted file`);
   }
 
   return response.json();
@@ -364,9 +325,11 @@ const updateEvacuationFile = (token: any, file: any, registrantId: any, registra
   submitFileTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`Responders - ${getIterationName()}: error updating file`);
-    console.log(payload);
-    console.log(JSON.stringify(response));
+    console.error(`Responders - ${getIterationName()}: error updating file`);
+    logError(response, payload);
+  }
+  else {
+    console.log(`Responders - ${getIterationName()}: successfully updated file`);
   }
 
   return response.json();
@@ -386,8 +349,8 @@ const getEvacuationFile = (token: any, fileRes: any) => {
   loadFileTime.add(response.timings.waiting);
 
   if (response.status !== 200) {
-    console.log(`Responders - ${getIterationName()}: failed to load file`);
-    console.log(JSON.stringify(response));
+    console.error(`Responders - ${getIterationName()}: failed to load file`);
+    logError(response);
   }
   return response.json();
 }
@@ -423,9 +386,8 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
   submitSupportsTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`Responders - ${getIterationName()}: error submitting supports`);
-    console.log(payload);
-    console.log(JSON.stringify(response));
+    console.error(`Responders - ${getIterationName()}: error submitting supports`);
+    logError(response, payload);
   }
 
   return response.json();
@@ -466,31 +428,40 @@ const submitFileNote = (token: any, file: any) => {
   submitNoteTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
-    console.log(`Responders - ${getIterationName()}: error submitting note`);
-    console.log(payload);
-    console.log(JSON.stringify(response));
+    console.error(`Responders - ${getIterationName()}: error submitting note`);
+    logError(response, payload);
+  }
+  else {
+    console.log(`Responders - ${getIterationName()}: successfully submitted note`);
   }
 
   return response.json();
 }
 
+let token: any = null;
+let communities: any = null;
+let security_questions: any = null;
+let ITERATIONS_PER_LOGIN = getRandomInt(10, 50);
+
 export function ResponderNewRegistration() {
+  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
+    ITERATIONS_PER_LOGIN = getRandomInt(10, 50);
+    // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
+    getStartPage();
+    navigate();
+    token = getAuthToken();
+    getDashboard();
+    getConfiguration();
+    communities = getCommunities();
+    getProvinces();
+    getCountries();
+    getMemberRole(token);
+    getMemberLabel(token);
+    security_questions = getSecurityQuestions();
+    navigate();
+  }
+
   const registrant = generateNewPersonDetails();
-
-  getStartPage();
-  navigate();
-  let token = getAuthToken();
-
-  getDashboard();
-  // getOutageInfo();
-  getConfiguration();
-  let communities = getCommunities();
-  getProvinces();
-  getCountries();
-  getMemberRole(token);
-  getMemberLabel(token);
-  navigate();
-
   getTaskSearchPage(token);
   navigate();
   let task = searchTasks(token);
@@ -505,7 +476,7 @@ export function ResponderNewRegistration() {
 
   if (existing_registrations?.files?.length > 0 && existing_registrations?.registrants?.length > 0) {
     //update existing file
-    console.log(`Responders - ${getIterationName()}: found existing registration`);
+    // console.log(`Responders - ${getIterationName()}: found existing registration`);
     registrantId = { id: existing_registrations.registrants[0].id };
     fileId = { id: existing_registrations.files[0].id };
     file = getEvacuationFile(token, fileId);
@@ -513,9 +484,8 @@ export function ResponderNewRegistration() {
   }
   else {
     //create new registrant and file
-    console.log(`Responders - ${getIterationName()}: no existing registrations - create new`);
+    // console.log(`Responders - ${getIterationName()}: no existing registrations - create new`);
     getNewEvacueeWizard(token);
-    let security_questions = getSecurityQuestions();
     fillInForm();
 
     registrantId = submitRegistrant(token, registrant, communities, security_questions);
@@ -528,36 +498,38 @@ export function ResponderNewRegistration() {
   file = getEvacuationFile(token, fileId);
 
   let suppliers = getTaskSuppliers(token);
-  console.log(`Responders - ${getIterationName()}: submit supports`);
+  // console.log(`Responders - ${getIterationName()}: submit supports`);
   fillInForm();
   let printRequest = submitSupports(token, file, suppliers);
   navigate();
 
-  console.log(`Responders - ${getIterationName()}: submit print request`);
+  // console.log(`Responders - ${getIterationName()}: submit print request`);
   submitPrintRequest(token, file, printRequest);
   navigate();
 
-  console.log(`Responders - ${getIterationName()}: submit file note`);
+  // console.log(`Responders - ${getIterationName()}: submit file note`);
   submitFileNote(token, file);
 };
 
 export function ResponderExistingRegistration() {
+  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
+    ITERATIONS_PER_LOGIN = getRandomInt(10, 50);
+    // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
+    getStartPage();
+    navigate();
+    token = getAuthToken();
+    getDashboard();
+    getConfiguration();
+    communities = getCommunities();
+    getProvinces();
+    getCountries();
+    getMemberRole(token);
+    getMemberLabel(token);
+    security_questions = getSecurityQuestions();
+    navigate();
+  }
+
   const registrant = getPersonDetailsForIteration();
-
-  getStartPage();
-  navigate();
-  let token = getAuthToken();
-
-  getDashboard();
-  // getOutageInfo();
-  getConfiguration();
-  let communities = getCommunities();
-  getProvinces();
-  getCountries();
-  getMemberRole(token);
-  getMemberLabel(token);
-  navigate();
-
   getTaskSearchPage(token);
   navigate();
   let task = searchTasks(token);
@@ -572,7 +544,7 @@ export function ResponderExistingRegistration() {
 
   if (existing_registrations?.files?.length > 0 && existing_registrations?.registrants?.length > 0) {
     //update existing file
-    console.log(`Responders - ${getIterationName()}: found existing registration`);
+    // console.log(`Responders - ${getIterationName()}: found existing registration`);
     registrantId = { id: existing_registrations.registrants[0].id };
     fileId = { id: existing_registrations.files[0].id };
     file = getEvacuationFile(token, fileId);
@@ -580,9 +552,8 @@ export function ResponderExistingRegistration() {
   }
   else {
     //create new registrant and file
-    console.log(`Responders - ${getIterationName()}: no existing registrations - create new`);
+    // console.log(`Responders - ${getIterationName()}: no existing registrations - create new`);
     getNewEvacueeWizard(token);
-    let security_questions = getSecurityQuestions();
     fillInForm();
 
     registrantId = submitRegistrant(token, registrant, communities, security_questions);
@@ -595,23 +566,15 @@ export function ResponderExistingRegistration() {
   file = getEvacuationFile(token, fileId);
 
   let suppliers = getTaskSuppliers(token);
-  console.log(`Responders - ${getIterationName()}: submit supports`);
+  // console.log(`Responders - ${getIterationName()}: submit supports`);
   fillInForm();
   let printRequest = submitSupports(token, file, suppliers);
   navigate();
 
-  console.log(`Responders - ${getIterationName()}: submit print request`);
+  // console.log(`Responders - ${getIterationName()}: submit print request`);
   submitPrintRequest(token, file, printRequest);
   navigate();
 
-  console.log(`Responders - ${getIterationName()}: submit file note`);
+  // console.log(`Responders - ${getIterationName()}: submit file note`);
   submitFileNote(token, file);
 };
-
-export function handleSummary(data: any) {
-  let fileName: string = `responder.${TARGET_VUS}-VUS-${TARGET_ITERATIONS}-ITERS.summary.html`;
-  console.log(fileName);
-  let res: any = {};
-  res[fileName] = htmlReport(data);
-  return res;
-}

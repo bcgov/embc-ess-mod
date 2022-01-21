@@ -1,9 +1,10 @@
 import { Options } from 'k6/options';
-export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-test';
-export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-test';
+export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-scripts';
+export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-scripts';
 
 // @ts-ignore
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { setUseRandomWaitTime } from './utilities';
 
 export const options: Options = {
     scenarios: {
@@ -14,8 +15,8 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '5m', target: 100 }, //target should be <= MAX_VU
-                { duration: '10m', target: 100 }, //target should be <= MAX_VU
+                { duration: '5m', target: 50 }, //target should be <= MAX_VU
+                { duration: '10m', target: 50 }, //target should be <= MAX_VU
                 { duration: '5m', target: 0 },
             ],
             gracefulRampDown: '5m',
@@ -31,8 +32,8 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '5m', target: 100 }, //target should be <= MAX_VU
-                { duration: '10m', target: 100 }, //target should be <= MAX_VU
+                { duration: '5m', target: 50 }, //target should be <= MAX_VU
+                { duration: '10m', target: 50 }, //target should be <= MAX_VU
                 { duration: '5m', target: 0 },
             ],
             gracefulRampDown: '5m',
@@ -49,8 +50,8 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '5m', target: 100 }, //target should be <= MAX_VU
-                { duration: '10m', target: 100 }, //target should be <= MAX_VU
+                { duration: '5m', target: 50 }, //target should be <= MAX_VU
+                { duration: '10m', target: 50 }, //target should be <= MAX_VU
                 { duration: '5m', target: 0 },
             ],
             gracefulRampDown: '5m',
@@ -70,8 +71,8 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
+                { duration: '2m', target: 10 }, //target should be <= MAX_VU
+                { duration: '41m', target: 10 }, //target should be <= MAX_VU
                 { duration: '2m', target: 0 },
             ],
             gracefulRampDown: '5m',
@@ -88,8 +89,8 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
+                { duration: '2m', target: 10 }, //target should be <= MAX_VU
+                { duration: '41m', target: 10 }, //target should be <= MAX_VU
                 { duration: '2m', target: 0 },
             ],
             gracefulRampDown: '5m',
@@ -144,10 +145,11 @@ export const options: Options = {
     }
 };
 
+setUseRandomWaitTime(true);
+
 export function handleSummary(data: any) {
-    let dateString = new Date().toLocaleDateString().replace(/\//g, '-');
+    let dateString = new Date().toLocaleString().replace(/[\/:]/g, '-').replace(/,/g, '');
     let fileName: string = `load-test.${dateString}.summary.html`;
-    console.log(fileName);
     let res: any = {};
     res[fileName] = htmlReport(data);
     return res;
