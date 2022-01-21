@@ -29,26 +29,20 @@ namespace EMBC.Utilities.Messaging
 {
     internal class DispatcherService : Dispatcher.DispatcherBase
     {
-        private readonly MessageHandlerRegistry serviceRegistry;
-        private readonly IServiceProvider serviceProvider;
-        private readonly ILogger<DispatcherService> logger;
-
-        public DispatcherService(MessageHandlerRegistry serviceRegistry, IServiceProvider serviceProvider, ILogger<DispatcherService> logger)
-        {
-            this.serviceRegistry = serviceRegistry;
-            this.serviceProvider = serviceProvider;
-            this.logger = logger;
-        }
-
         public override async Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
         {
+            var serviceProvider = context.GetHttpContext().RequestServices;
+            var serviceRegistry = serviceProvider.GetRequiredService<MessageHandlerRegistry>();
+            var logger = serviceProvider.GetRequiredService<ILogger<DispatcherService>>();
+
             var sw = Stopwatch.StartNew();
             try
             {
-                var requestType = System.Type.GetType(request.Type, an => Assembly.Load(an.Name), null, true, true);
+                var requestType = System.Type.GetType(request.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
                 var messageHandler = serviceRegistry.Resolve(requestType);
-                var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType);
-                var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType);
+                if (messageHandler == null) throw new InvalidOperationException($"Message handler for {requestType} not found");
+                var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType ?? null!);
+                var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType) ?? null!;
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
                 var replyType = replyMessage?.GetType();
 
@@ -87,12 +81,12 @@ namespace EMBC.Utilities.Messaging
 
     public static class DispatcherServiceEx
     {
-        public static async Task<object> InvokeAsync(this MethodInfo method, object obj, params object[] parameters)
+        public static async Task<object?> InvokeAsync(this MethodInfo method, object obj, params object[] parameters)
         {
-            var task = (Task)method.Invoke(obj, parameters);
+            var task = (Task)(method.Invoke(obj, parameters) ?? null!);
             await task.ConfigureAwait(false);
             return method.ReturnType.IsGenericType
-                ? task.GetType().GetProperty("Result").GetValue(task)
+                ? task.GetType().GetProperty("Result")?.GetValue(task)
                 : null;
         }
     }

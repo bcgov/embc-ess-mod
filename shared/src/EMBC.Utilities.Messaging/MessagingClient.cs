@@ -24,9 +24,9 @@ namespace EMBC.Utilities.Messaging
 {
     public interface IMessagingClient
     {
-        Task<TResponse> Send<TResponse>(Query<TResponse> command);
+        Task<TResponse?> Send<TResponse>(Query<TResponse> command);
 
-        Task<string> Send(Command command);
+        Task<string?> Send(Command command);
     }
 
     internal class MessagingClient : IMessagingClient
@@ -40,7 +40,7 @@ namespace EMBC.Utilities.Messaging
             this.logger = logger;
         }
 
-        public async Task<string> Send(Command command)
+        public async Task<string?> Send(Command command)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace EMBC.Utilities.Messaging
             }
         }
 
-        public async Task<TResponse> Send<TResponse>(Query<TResponse> command)
+        public async Task<TResponse?> Send<TResponse>(Query<TResponse> command)
         {
             try
             {
