@@ -268,7 +268,7 @@ namespace EMBC.Responders.API.Controllers
     public class EvacuationFile
     {
         public string? Id { get; set; } = null!;
-        public string? PaperFileNumber { get; set; }
+        public string? ExternalReferenceId { get; set; }
 
         [Required]
         public string PrimaryRegistrantId { get; set; } = null!;

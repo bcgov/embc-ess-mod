@@ -61,6 +61,8 @@ namespace EMBC.Responders.API.Services
     public class EvacuationFileSearchResult
     {
         public string Id { get; set; }
+        public string ExternalReferenceId { get; set; }
+        public bool IsPaperBasedFile { get; set; }
         public bool IsRestricted { get; set; }
         public string TaskId { get; set; }
         public DateTime? TaskStartDate { get; set; }
@@ -123,11 +125,8 @@ namespace EMBC.Responders.API.Services
         public async Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId)
         {
             var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = needsAssessmentId })).Items.SingleOrDefault();
-            if (file == null) return null;
 
-            var mappedFile = mapper.Map<EvacuationFile>(file);
-
-            return mappedFile;
+            return mapper.Map<EvacuationFile>(file);
         }
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId, MemberRole userRole)
@@ -176,10 +175,9 @@ namespace EMBC.Responders.API.Services
         public EvacuationSearchMapping()
         {
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult, EvacuationFileSearchResult>()
+                .ForMember(d => d.IsPaperBasedFile, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ExternalReferenceId)))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CreatedOn))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                ;
 

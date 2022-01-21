@@ -38,13 +38,11 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.IsSecurityPhraseMasked, opts => opts.Ignore())
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.RelatedTask == null ? null : s.RelatedTask.Id))
                 .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
-                .ForMember(d => d.ExternalReference, opts => opts.MapFrom(s => s.PaperFileNumber))
                 ;
 
             CreateMap<EvacuationFile, Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
                 .ForMember(d => d.RelatedTask, opts => opts.MapFrom(s => new Shared.Contracts.Submissions.IncidentTask { Id = s.TaskId }))
-                .ForMember(d => d.PaperFileNumber, opts => opts.MapFrom(s => s.ExternalReference))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, EvacuationAddress>()
