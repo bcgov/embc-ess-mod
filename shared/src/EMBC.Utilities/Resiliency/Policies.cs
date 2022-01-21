@@ -31,7 +31,7 @@ namespace EMBC.Utilities.Resiliency
 
     public class PolicyWrapper<T>
     {
-        internal IAsyncPolicy<T> Policy { get; set; } = null!;
+        public IAsyncPolicy<T> Policy { get; set; } = null!;
     }
 
     public class HttpClientRetryPolicy : IPolicyBuilder<HttpResponseMessage>
@@ -40,15 +40,14 @@ namespace EMBC.Utilities.Resiliency
         public TimeSpan WaitDurationBetweenRetries { get; set; } = TimeSpan.FromSeconds(5);
         public Action<IServiceProvider, TimeSpan, Exception> OnRetry { get; set; } = (sp, t, e) => { };
 
-        public PolicyWrapper<HttpResponseMessage> Build()
+        public virtual PolicyWrapper<HttpResponseMessage> Build()
         {
             return new PolicyWrapper<HttpResponseMessage>
             {
                 Policy = HttpPolicyExtensions.HandleTransientHttpError()
                 .Or<TimeoutRejectedException>()
                 .Or<BrokenCircuitException>()
-                 .WaitAndRetryAsync(NumberOfRetries, r => WaitDurationBetweenRetries,
-                 (r, timespan, ctx) => OnRetry((IServiceProvider)ctx[ResiliencyEx.spKey], timespan, r.Exception))
+                .WaitAndRetryAsync(NumberOfRetries, r => WaitDurationBetweenRetries, (r, timespan, ctx) => OnRetry((IServiceProvider)ctx[ResiliencyEx.spKey], timespan, r.Exception))
             };
         }
     }
@@ -61,7 +60,7 @@ namespace EMBC.Utilities.Resiliency
 
         public Action<IServiceProvider> OnReset { get; set; } = (sp) => { };
 
-        public PolicyWrapper<HttpResponseMessage> Build()
+        public virtual PolicyWrapper<HttpResponseMessage> Build()
         {
             return new PolicyWrapper<HttpResponseMessage>
             {
@@ -70,8 +69,7 @@ namespace EMBC.Utilities.Resiliency
                  .CircuitBreakerAsync(
                      NumberOfErrors,
                      ResetDuration,
-                     (r, timespan, ctx) => OnBreak((IServiceProvider)ctx[ResiliencyEx.spKey], timespan, r.Exception),
-                     ctx => OnReset((IServiceProvider)ctx[ResiliencyEx.spKey]))
+                     (r, timespan, ctx) => OnBreak((IServiceProvider)ctx[ResiliencyEx.spKey], timespan, r.Exception), ctx => OnReset((IServiceProvider)ctx[ResiliencyEx.spKey]))
             };
         }
     }
@@ -81,7 +79,7 @@ namespace EMBC.Utilities.Resiliency
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
         public Action<IServiceProvider, TimeSpan, Exception> OnTimeout { get; set; } = (sp, t, e) => { };
 
-        public PolicyWrapper<HttpResponseMessage> Build()
+        public virtual PolicyWrapper<HttpResponseMessage> Build()
         {
             return new PolicyWrapper<HttpResponseMessage>
             {
@@ -99,7 +97,7 @@ namespace EMBC.Utilities.Resiliency
         public int MaxParallelization { get; set; } = 1;
         public int QueueSize { get; set; } = 0;
 
-        public PolicyWrapper<HttpResponseMessage> Build()
+        public virtual PolicyWrapper<HttpResponseMessage> Build()
         {
             return new PolicyWrapper<HttpResponseMessage>
             {
