@@ -80,7 +80,7 @@ export const options: Options = {
         'res_load_suppliers': ['p(95)<10000'], // 10s
         'res_search_tasks': ['p(95)<10000'], // 10s
         'res_search_registrations': ['p(95)<10000'], // 10s
-        'reg_search_registrations_no_result': ['p(95)<10000'], // 10s
+        'res_search_registrations_no_result': ['p(95)<10000'], // 10s
     }
 };
 
