@@ -5,7 +5,7 @@ export function generateAddress(communities: any[]): Address {
     return {
         addressLine1: `${faker.address.streetAddress()}`,
         country: "CAN",
-        community: faker.random.arrayElement(communities).value,
+        community: faker.random.arrayElement(communities)?.value,
         postalCode: faker.address.zipCode(),
         stateProvince: "BC",
     };

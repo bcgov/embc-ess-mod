@@ -30,11 +30,11 @@ export class BootstrapService {
       this.outageService.outageInfo = config.outageInfo;
       console.log(this.outageService.outageInfo);
     } catch (error) {
-      this.router.navigate(['/outage']);
+      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
     }
 
     if (this.outageService.displayOutageInfoInit()) {
-      this.router.navigate(['/outage']);
+      this.router.navigate(['/outage'], { state: { type: 'planned' } });
     } else {
       try {
         //load metadata lists
@@ -45,7 +45,7 @@ export class BootstrapService {
         this.oauthService.configure(this.configService.getOAuthConfig());
         await this.oauthService.loadDiscoveryDocument();
       } catch (error) {
-        this.router.navigate(['/outage']);
+        this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
       }
     }
   }

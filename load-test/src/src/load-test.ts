@@ -71,8 +71,8 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '2m', target: 10 }, //target should be <= MAX_VU
-                { duration: '41m', target: 10 }, //target should be <= MAX_VU
+                { duration: '2m', target: 15 }, //target should be <= MAX_VU
+                { duration: '41m', target: 15 }, //target should be <= MAX_VU
                 { duration: '2m', target: 0 },
             ],
             gracefulRampDown: '5m',
@@ -89,8 +89,8 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '2m', target: 10 }, //target should be <= MAX_VU
-                { duration: '41m', target: 10 }, //target should be <= MAX_VU
+                { duration: '2m', target: 15 }, //target should be <= MAX_VU
+                { duration: '41m', target: 15 }, //target should be <= MAX_VU
                 { duration: '2m', target: 0 },
             ],
             gracefulRampDown: '5m',
@@ -141,7 +141,7 @@ export const options: Options = {
         'res_load_suppliers': ['p(95)<10000'], // 10s
         'res_search_tasks': ['p(95)<10000'], // 10s
         'res_search_registrations': ['p(95)<10000'], // 10s
-        'reg_search_registrations_no_result': ['p(95)<10000'], // 10s
+        'res_search_registrations_no_result': ['p(95)<10000'], // 10s
     }
 };
 
