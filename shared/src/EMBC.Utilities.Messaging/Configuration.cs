@@ -17,6 +17,8 @@
 using System;
 using System.Net.Http;
 using EMBC.Utilities.Configuration;
+using Grpc.Core;
+using Grpc.Net.Client.Balancer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +35,8 @@ namespace EMBC.Utilities.Messaging
             {
                 opts.EnableDetailedErrors = configurationServices.Environment.IsDevelopment();
             });
+            configurationServices.Services.AddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)));
+            configurationServices.Services.AddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
             if (options.Mode == MessagingMode.Server || options.Mode == MessagingMode.Both)
             {
                 configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
@@ -45,6 +49,12 @@ namespace EMBC.Utilities.Messaging
                 configurationServices.Services.AddGrpcClient<Dispatcher.DispatcherClient>((sp, opts) =>
                 {
                     opts.Address = options.Url;
+                }).ConfigureChannel(opts =>
+                {
+                    if (options.Url.Scheme == "dns")
+                    {
+                        opts.Credentials = ChannelCredentials.SecureSsl;
+                    }
                 }).ConfigurePrimaryHttpMessageHandler(sp =>
                 {
                     if (!options.AllowInvalidServerCertificate) return new HttpClientHandler();
