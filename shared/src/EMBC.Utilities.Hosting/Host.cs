@@ -140,7 +140,9 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithClientAgent()
                 .Enrich.WithClientIp()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
-            //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
+#if DEBUG
+                .WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
+#endif
             ;
 
             var splunkUrl = hostBuilderContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
@@ -275,6 +277,7 @@ namespace EMBC.Utilities.Hosting
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
 
+                //map gRPC services
                 var grpcServices = assemblies.SelectMany(a => a.CreateInstancesOf<IHaveGrpcServices>()).SelectMany(p => p.GetGrpcServiceTypes()).ToArray();
                 var grpcRegistrationMethodInfo = typeof(GrpcEndpointRouteBuilderExtensions).GetMethod(nameof(GrpcEndpointRouteBuilderExtensions.MapGrpcService)) ?? null!;
                 foreach (var service in grpcServices)

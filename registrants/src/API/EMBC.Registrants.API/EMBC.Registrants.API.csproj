@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <Nullable>warnings</Nullable>
+        <Nullable>annotations</Nullable>
         <Company>Province of British Columbia</Company>
         <Authors>Quartech Systems Limited</Authors>
         <Copyright>Copyright 2020 Province of British Columbia</Copyright>
@@ -29,21 +29,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Automapper" Version="10.1.1" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
         <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.15.5" />
-        <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-        <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
-        <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
-        <PackageReference Include="Serilog.Exceptions" Version="8.0.0" />
-        <PackageReference Include="Serilog.Formatting.Elasticsearch" Version="8.4.1" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-        <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
