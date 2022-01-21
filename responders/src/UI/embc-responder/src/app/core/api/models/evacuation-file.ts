@@ -14,18 +14,19 @@ import { Support } from './support';
 export interface EvacuationFile {
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
-  householdMembers?: null | Array<EvacuationFileHouseholdMember>;
+  householdMembers?: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   isRestricted?: null | boolean;
   needsAssessment: NeedsAssessment;
-  notes?: null | Array<Note>;
+  notes?: Array<Note>;
+  paperFileNumber?: null | string;
   primaryRegistrantFirstName?: null | string;
   primaryRegistrantId: string;
   primaryRegistrantLastName?: null | string;
   registrationLocation: string;
   securityPhrase?: null | string;
-  securityPhraseEdited?: boolean;
+  securityPhraseEdited?: null | boolean;
   status?: null | EvacuationFileStatus;
-  supports?: null | Array<Support>;
+  supports?: Array<Support>;
   task: EvacuationFileTask;
 }

@@ -2,9 +2,9 @@
 /* eslint-disable */
 import { HouseholdMemberType } from './household-member-type';
 export interface EvacuationFileHouseholdMember {
-  dateOfBirth?: null | string;
-  firstName?: null | string;
-  gender?: null | string;
+  dateOfBirth?: string;
+  firstName?: string;
+  gender?: string;
   id?: null | string;
   initials?: null | string;
   isHouseholdMember?: boolean;
@@ -12,7 +12,7 @@ export interface EvacuationFileHouseholdMember {
   isRestricted?: null | boolean;
   isUnder19?: boolean;
   isVerified?: null | boolean;
-  lastName?: null | string;
+  lastName?: string;
   linkedRegistrantId?: null | string;
   type?: HouseholdMemberType;
 }

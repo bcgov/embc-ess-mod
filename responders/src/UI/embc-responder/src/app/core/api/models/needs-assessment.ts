@@ -15,7 +15,7 @@ export interface NeedsAssessment {
   canProvideIncidentals?: null | boolean;
   canProvideLodging?: null | boolean;
   canProvideTransportation?: null | boolean;
-  createdOn?: string;
+  createdOn?: null | string;
   evacuationExternalReferrals?: null | string;
   evacuationImpact?: null | string;
   haveMedicalSupplies?: null | boolean;
@@ -25,13 +25,13 @@ export interface NeedsAssessment {
   householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
-  modifiedOn?: string;
+  modifiedOn?: null | string;
   petCarePlans?: null | string;
-  pets?: null | Array<Pet>;
-  recommendedReferralServices?: null | Array<ReferralServices>;
+  pets?: Array<Pet>;
+  recommendedReferralServices?: Array<ReferralServices>;
   reviewingTeamMemberDisplayName?: null | string;
   reviewingTeamMemberId?: null | string;
   specialDietDetails?: null | string;
   takeMedication?: boolean;
-  type?: NeedsAssessmentType;
+  type?: null | NeedsAssessmentType;
 }

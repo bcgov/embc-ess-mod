@@ -24,7 +24,7 @@ import { UserService } from 'src/app/core/services/user.service';
 export class EssFileNotesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   notesList: Array<Note>;
-  notes = new MatTableDataSource();
+  notes = new MatTableDataSource<Note>();
   notes$: Observable<Array<Note>>;
 
   constructor(
