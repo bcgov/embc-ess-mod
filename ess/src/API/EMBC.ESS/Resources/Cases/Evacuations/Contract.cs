@@ -41,7 +41,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
     public class EvacuationFile : Case
     {
-        public string? ExternalReference { get; set; }
+        public string? ExternalReferenceId { get; set; }
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }
         public EvacuationAddress EvacuatedFrom { get => NeedsAssessment?.EvacuatedFrom; }

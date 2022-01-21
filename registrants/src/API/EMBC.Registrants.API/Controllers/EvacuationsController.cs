@@ -154,7 +154,7 @@ namespace EMBC.Registrants.API.Controllers
         public bool SecretPhraseEdited { get; set; }
         public DateTime LastModified { get; set; }
         public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
-        public string PaperFileNumber { get; set; }
+        public string ExternalReferenceId { get; set; }
     }
 
     /// <summary>

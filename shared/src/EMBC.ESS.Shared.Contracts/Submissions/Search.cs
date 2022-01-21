@@ -114,6 +114,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public DateTime EvacuationDate { get; set; }
         public Address EvacuationAddress { get; set; }
         public IEnumerable<EvacuationFileSearchResultHouseholdMember> HouseholdMembers { get; set; }
+        public string ExternalReferenceId { get; set; }
     }
 
     public class EvacuationFileSearchResultHouseholdMember
