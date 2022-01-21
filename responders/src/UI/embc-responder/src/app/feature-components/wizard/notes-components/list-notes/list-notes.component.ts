@@ -37,7 +37,7 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() notesList: Array<Note>;
   @Output() hideUnhideToggle = new EventEmitter<Note>();
   @Output() editNoteFlag = new EventEmitter<boolean>(false);
-  notes = new MatTableDataSource();
+  notes = new MatTableDataSource<Note>();
   notes$: Observable<Array<Note>>;
 
   constructor(
@@ -67,7 +67,7 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
    *
    * @param noteId id of note to be hidden
    */
-  hideNote(noteId: string): void {
+  hideNote(noteId: string, noteContent): void {
     const content = globalConst.hideNote;
     this.dialog
       .open(DialogComponent, {
@@ -81,7 +81,11 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
       .afterClosed()
       .subscribe((event) => {
         if (event === 'confirm') {
-          const noteObject: Note = { id: noteId, isHidden: true };
+          const noteObject: Note = {
+            id: noteId,
+            isHidden: true,
+            content: noteContent
+          };
           this.hideUnhideToggle.emit(noteObject);
         }
       });
@@ -92,7 +96,7 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
    *
    * @param noteId id of note to be shown
    */
-  showNote(noteId: string): void {
+  showNote(noteId: string, noteContent): void {
     const content = globalConst.showNote;
     this.dialog
       .open(DialogComponent, {
@@ -106,7 +110,11 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
       .afterClosed()
       .subscribe((event) => {
         if (event === 'confirm') {
-          const noteObject: Note = { id: noteId, isHidden: false };
+          const noteObject: Note = {
+            id: noteId,
+            isHidden: false,
+            content: noteContent
+          };
           this.hideUnhideToggle.emit(noteObject);
         }
       });
