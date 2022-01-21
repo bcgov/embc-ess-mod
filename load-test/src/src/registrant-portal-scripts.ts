@@ -1,10 +1,9 @@
-import { Options, Scenario } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 import { generateAnonymousRegistration } from './generators/registrants/registration';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
 import { generateProfile } from './generators/registrants/profile';
-import { fillInForm, getIterationName, logError, navigate } from './utilities';
+import { fillInForm, getHTTPParams, getIterationName, logError, navigate } from './utilities';
 
 // @ts-ignore
 import { RegistrantTestParameters, MAX_VU, MAX_ITER } from '../load-test.parameters-APP_TARGET';
@@ -63,7 +62,8 @@ const getAuthToken = () => {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Authorization": `Basic ${testParams.basicAuth}`,
-    }
+    },
+    timeout: 180000
   };
 
   const response = http.post(urls.auth_token, payload, params);
@@ -77,46 +77,54 @@ const getAuthToken = () => {
 }
 
 const getStartPage = () => {
-  const response = http.get(urls.start_page);
+  const params = getHTTPParams();
+  const response = http.get(urls.start_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
 }
 
 const getAnonymousStartPage = () => {
-  const response = http.get(urls.anonymous_start_page);
+  const params = getHTTPParams();
+  const response = http.get(urls.anonymous_start_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
 }
 
 const getConfiguration = () => {
-  const response = http.get(urls.config);
+  const params = getHTTPParams();
+  const response = http.get(urls.config, params);
   formFailRate.add(response.status !== 200);
   loadConfig.add(response.timings.waiting);
 }
 
 const getCommunities = () => {
-  const response = http.get(urls.communities);
+  const params = getHTTPParams();
+  const response = http.get(urls.communities, params);
   formFailRate.add(response.status !== 200);
   loadCommunities.add(response.timings.waiting);
+
   return response.json();
 }
 
 const getProvinces = () => {
-  const response = http.get(urls.provinces);
+  const params = getHTTPParams();
+  const response = http.get(urls.provinces, params);
   formFailRate.add(response.status !== 200);
   loadProvincesTime.add(response.timings.waiting);
-  return response.json();
+  // return response.json();
 }
 
 const getCountries = () => {
-  const response = http.get(urls.countries);
+  const params = getHTTPParams();
+  const response = http.get(urls.countries, params);
   formFailRate.add(response.status !== 200);
   loadCountriesTime.add(response.timings.waiting);
-  return response.json();
+  // return response.json();
 }
 
 const getSecurityQuestions = () => {
-  const response = http.get(urls.security_questions);
+  const params = getHTTPParams();
+  const response = http.get(urls.security_questions, params);
   formFailRate.add(response.status !== 200);
   loadSecurityQuestions.add(response.timings.waiting);
   return response.json();
@@ -125,13 +133,7 @@ const getSecurityQuestions = () => {
 const submitAnonymousRegistration = (communities: any, security_questions: any) => {
   const registration = generateAnonymousRegistration(communities, security_questions);
   const payload = JSON.stringify(registration);
-
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-    }
-  };
+  const params = getHTTPParams();
 
   const response = http.post(urls.submit_anonymous, payload, params);
   submitAnonymous.add(response.timings.waiting);
@@ -146,13 +148,7 @@ const submitAnonymousRegistration = (communities: any, security_questions: any) 
 }
 
 const getCurrentProfileExists = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.current_user_exists, params);
   formFailRate.add(response.status !== 200);
@@ -165,13 +161,7 @@ const getCurrentProfileExists = (token: any) => {
 }
 
 const getCurrentProfile = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.current_profile, params);
   formFailRate.add(response.status !== 200);
@@ -186,14 +176,7 @@ const getCurrentProfile = (token: any) => {
 const createProfile = (token: any, communities: any, security_questions: any) => {
   const profile = generateProfile(communities, security_questions);
   const payload = JSON.stringify(profile);
-
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.post(urls.current_profile, payload, params);
   submitProfile.add(response.timings.waiting);
@@ -209,14 +192,7 @@ const createProfile = (token: any, communities: any, security_questions: any) =>
 const submitEvacuationFile = (token: any, profile: any, communities: any) => {
   const file = generateEvacuationFile(profile.personalDetails, communities);
   const payload = JSON.stringify(file);
-
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.post(urls.submit, payload, params);
   submitFile.add(response.timings.waiting);
@@ -230,6 +206,7 @@ const submitEvacuationFile = (token: any, profile: any, communities: any) => {
 }
 
 export function RegistrantAnonymousRegistration() {
+  navigate();
   getAnonymousStartPage();
   getConfiguration();
   let communities = getCommunities();
@@ -241,6 +218,7 @@ export function RegistrantAnonymousRegistration() {
 };
 
 export function RegistrantNewRegistration() {
+  navigate();
   getStartPage();
   getConfiguration();
   let communities = getCommunities();
@@ -267,6 +245,7 @@ export function RegistrantNewRegistration() {
 };
 
 export function RegistrantExistingProfileRegistration() {
+  navigate();
   getStartPage();
   getConfiguration();
   let communities = getCommunities();
