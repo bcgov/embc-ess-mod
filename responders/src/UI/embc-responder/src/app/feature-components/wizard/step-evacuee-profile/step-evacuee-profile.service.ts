@@ -18,6 +18,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { WizardService } from '../wizard.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
@@ -65,7 +66,8 @@ export class StepEvacueeProfileService {
     private dialog: MatDialog,
     private wizardService: WizardService,
     private evacueeSession: EvacueeSessionService,
-    private locationService: LocationsService
+    private locationService: LocationsService,
+    private cacheService: CacheService
   ) {}
   // Wizard variables
   public get profileTabs(): Array<TabModel> {
@@ -383,6 +385,10 @@ export class StepEvacueeProfileService {
     this.wizardService.createObjectReference(profile, 'profile');
     // Wizard variables
     this.evacueeSession.profileId = profile.id;
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee-profile-dashboard'
+    );
 
     // Restriction tab
     this.restrictedAccess = profile.restriction;
