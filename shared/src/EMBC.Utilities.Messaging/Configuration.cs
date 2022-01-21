@@ -16,6 +16,8 @@
 
 using System;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
 using Grpc.Net.Client.Balancer;
@@ -58,15 +60,27 @@ namespace EMBC.Utilities.Messaging
                     }
                 }).ConfigurePrimaryHttpMessageHandler(sp =>
                 {
-                    if (!options.AllowInvalidServerCertificate) return new HttpClientHandler();
-                    return new HttpClientHandler
+                    if (!options.AllowInvalidServerCertificate) return new SocketsHttpHandler();
+                    return new SocketsHttpHandler
                     {
-                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        SslOptions = new SslClientAuthenticationOptions
+                        {
+                            RemoteCertificateValidationCallback = DangerousCertificationValidation
+                        }
                     };
                 });
 
                 configurationServices.Services.AddTransient<IMessagingClient, MessagingClient>();
             }
+        }
+
+        private static bool DangerousCertificationValidation(
+            object sender,
+            X509Certificate? certificate,
+            X509Chain? chain,
+            SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
         }
 
         public Type[] GetGrpcServiceTypes()
