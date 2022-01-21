@@ -9,14 +9,22 @@ It is configured that if you run one of the load test scripts, it expects to fin
 This can also be customized to whatever you want by updating the NormalModuleReplacementPlugin in webpack.config.js
 
 
-There are multiple test entry points configured in package.json (testRegistrant, testResponder, loadTest, benchmark)
+There are multiple test entry points configured in package.json (regAnonymous, regNewProfile, regExistingProfile, resNewRegistration, resExistingRegistration, loadTest, benchmark)
 e.g.
 
 npm run <scriptName>
 
 Responder and Registrant tests can be run independantly. They will by default do 1 vu and 1 iteration, but you can dynamically set those with arguments. e.g.
-npm run testRegistrant -- -e VUS=# -e ITERS=#
-npm run testResponder -- -e VUS=# -e ITERS=#
+npm run regAnonymous -- -e VUS=# -e ITERS=#
+npm run resNewRegistration -- -e VUS=# -e DUR=#t
+
+Argument options:
+VUS - number of virtual users
+ITERS - number of iterations each vu should perform
+DUR - duration of run (if provided each VU will run for the duration provided instead of a set number of iterations)
+
+DUR is of format <number> + <time descriptor>
+e.g. "5m" = 5 minutes. "10s" = 10 seconds, "1h" = 1 hour, "1h30m" = 1 hour and 30 minutes
 
 
 There is a benchmark test configured to run the distribution matrix defined in the Load Testing plan.

@@ -23,7 +23,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
+using Polly;
+using Polly.CircuitBreaker;
+using Polly.Extensions.Http;
+using Polly.Timeout;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
@@ -52,7 +57,14 @@ namespace EMBC.ESS.Utilities.Dynamics
                     },
                     new HttpClientBulkheadIsolationPolicy
                     {
-                        MaxParallelization = 10
+                        MaxParallelization = 10,
+                        QueueSize = 100
+                    },
+                    new HttpClientRetryPolicy
+                    {
+                        NumberOfRetries = options.NumberOfRetries,
+                        WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
+                        OnRetry = (sp, t, e) => { OnRetry("adfs_token", sp, t, e); }
                     },
                     new HttpClientTimeoutPolicy
                     {
@@ -83,7 +95,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                         OnBreak = (sp, t, e) => { OnBreak("dynamics", sp, t, e); },
                         OnReset = sp => { OnReset("dynamics", sp); }
                     },
-                    new HttpClientRetryPolicy
+                    new DynamicsHttpClientRetryPolicy
                     {
                         NumberOfRetries = options.NumberOfRetries,
                         WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
@@ -128,6 +140,26 @@ namespace EMBC.ESS.Utilities.Dynamics
         {
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
             logger.LogWarning("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+        }
+    }
+
+    //temporary attempt to initiate retry when Dynamics throws an exception
+    public class DynamicsHttpClientRetryPolicy : IPolicyBuilder<HttpResponseMessage>
+    {
+        public int NumberOfRetries { get; set; } = 3;
+        public TimeSpan WaitDurationBetweenRetries { get; set; } = TimeSpan.FromSeconds(5);
+        public Action<IServiceProvider, TimeSpan, Exception> OnRetry { get; set; } = (sp, t, e) => { };
+
+        public virtual PolicyWrapper<HttpResponseMessage> Build()
+        {
+            return new PolicyWrapper<HttpResponseMessage>
+            {
+                Policy = HttpPolicyExtensions.HandleTransientHttpError()
+                .Or<TimeoutRejectedException>()
+                .Or<BrokenCircuitException>()
+                .Or<DataServiceRequestException>()
+                .WaitAndRetryAsync(NumberOfRetries, r => WaitDurationBetweenRetries, (r, timespan, ctx) => OnRetry((IServiceProvider)ctx["_serviceProvider"], timespan, r.Exception))
+            };
         }
     }
 }

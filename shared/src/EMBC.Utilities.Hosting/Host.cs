@@ -15,19 +15,23 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -126,12 +130,18 @@ namespace EMBC.Utilities.Hosting
             loggerConfiguration
                 .ReadFrom.Configuration(hostBuilderContext.Configuration)
                 .Enrich.WithMachineName()
-                .Enrich.WithProcessId()
-                .Enrich.WithProcessName()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
+                .Enrich.WithProperty("app", appName)
+                .Enrich.WithEnvironmentName()
+                .Enrich.WithEnvironmentUserName()
+                .Enrich.WithCorrelationId()
+                .Enrich.WithCorrelationIdHeader()
+                .Enrich.WithClientAgent()
+                .Enrich.WithClientIp()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
-                ;
+            //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
+            ;
 
             var splunkUrl = hostBuilderContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
             var splunkToken = hostBuilderContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
@@ -215,12 +225,24 @@ namespace EMBC.Utilities.Hosting
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
+
+            services.Configure<ExceptionHandlerOptions>(opts => opts.AllowStatusCode404Response = true);
+
             Configurer.ConfigureComponentServices(services, configuration, hostEnvironment, logger, assemblies);
         }
 
         protected virtual void Configure(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, params Assembly[] assemblies)
         {
             var logger = app.ApplicationServices.GetRequiredService<ILogger<Host>>();
+
+            if (env.IsDevelopment())
+            {
+                app.Use(WriteDevelopmentResponse);
+            }
+            else
+            {
+                app.Use(WriteProductionResponse);
+            }
 
             logger.LogInformation("Starting configuration of {appName}", appName);
 
@@ -229,11 +251,10 @@ namespace EMBC.Utilities.Hosting
                 opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
-                    diagCtx.Set("App", appName);
                     diagCtx.Set("User", httpCtx.User.Identity?.Name);
                     diagCtx.Set("Host", httpCtx.Request.Host);
-                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
-                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress?.ToString());
+                    //diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
+                    //diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress?.ToString());
                     diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
                     diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
@@ -272,5 +293,47 @@ namespace EMBC.Utilities.Hosting
                 : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
                     ? LogEventLevel.Verbose
                     : LogEventLevel.Information;
+
+        //borrowed from https://andrewlock.net/creating-a-custom-error-handler-middleware-function/
+        private static Task WriteDevelopmentResponse(HttpContext httpContext, Func<Task> next) => WriteResponse(httpContext, includeDetails: true, next);
+
+        private static Task WriteProductionResponse(HttpContext httpContext, Func<Task> next) => WriteResponse(httpContext, includeDetails: false, next);
+
+        private static async Task WriteResponse(HttpContext httpContext, bool includeDetails, Func<Task> next)
+        {
+            // Try and retrieve the error from the ExceptionHandler middleware
+            var exceptionDetails = httpContext.Features.Get<IExceptionHandlerFeature>();
+            var ex = exceptionDetails?.Error;
+
+            // Should always exist, but best to be safe!
+            if (ex != null)
+            {
+                // ProblemDetails has it's own content type
+                httpContext.Response.ContentType = "application/problem+json";
+
+                // Get the details to display, depending on whether we want to expose the raw exception
+                var title = includeDetails ? "An error occured: " + ex.Message : "An error occured";
+                var details = includeDetails ? ex.ToString() : null;
+
+                var problem = new ProblemDetails
+                {
+                    Status = 500,
+                    Title = title,
+                    Detail = details
+                };
+
+                // This is often very handy information for tracing the specific request
+                var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
+                if (traceId != null)
+                {
+                    problem.Extensions["traceId"] = traceId;
+                }
+
+                //Serialize the problem details object to the Response as JSON (using System.Text.Json)
+                var stream = (httpContext ?? null!).Response.Body;
+                await JsonSerializer.SerializeAsync(stream, problem);
+            }
+            await next();
+        }
     }
 }

@@ -169,14 +169,8 @@ namespace EMBC.Registrants.API
 
             if (!env.IsProduction())
             {
-                app.UseExceptionHandler("/error-details");
                 IdentityModelEventSource.ShowPII = true;
             }
-            else
-            {
-                app.UseExceptionHandler("/error");
-            }
-
             if (!env.IsProduction())
             {
                 app.UseOpenApi();

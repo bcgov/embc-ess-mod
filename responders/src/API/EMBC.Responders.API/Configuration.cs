@@ -132,14 +132,10 @@ namespace EMBC.Responders.API
         {
             var app = services.Application;
             var env = services.Environment;
+
             if (services.Environment.IsDevelopment())
             {
-                services.Application.UseExceptionHandler("/error-details");
                 IdentityModelEventSource.ShowPII = true;
-            }
-            else
-            {
-                services.Application.UseExceptionHandler("/error");
             }
 
             if (!env.IsProduction())
