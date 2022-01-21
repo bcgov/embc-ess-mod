@@ -130,10 +130,13 @@ namespace EMBC.Utilities.Hosting
             loggerConfiguration
                 .ReadFrom.Configuration(hostBuilderContext.Configuration)
                 .Enrich.WithMachineName()
-                .Enrich.WithProcessId()
-                .Enrich.WithProcessName()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
+                .Enrich.WithProperty("app", appName)
+                .Enrich.WithEnvironmentName()
+                .Enrich.WithEnvironmentUserName()
+                .Enrich.WithCorrelationId()
+                .Enrich.WithCorrelationIdHeader()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
             //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
             ;
@@ -246,7 +249,6 @@ namespace EMBC.Utilities.Hosting
                 opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
-                    diagCtx.Set("App", appName);
                     diagCtx.Set("User", httpCtx.User.Identity?.Name);
                     diagCtx.Set("Host", httpCtx.Request.Host);
                     diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
