@@ -137,6 +137,8 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithEnvironmentUserName()
                 .Enrich.WithCorrelationId()
                 .Enrich.WithCorrelationIdHeader()
+                .Enrich.WithClientAgent()
+                .Enrich.WithClientIp()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
             //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
             ;
@@ -251,8 +253,8 @@ namespace EMBC.Utilities.Hosting
                 {
                     diagCtx.Set("User", httpCtx.User.Identity?.Name);
                     diagCtx.Set("Host", httpCtx.Request.Host);
-                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
-                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress?.ToString());
+                    //diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
+                    //diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress?.ToString());
                     diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
                     diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
