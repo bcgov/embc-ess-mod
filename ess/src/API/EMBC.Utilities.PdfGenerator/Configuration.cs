@@ -18,6 +18,8 @@ using System;
 using System.Net.Http;
 using EMBC.PDFGenerator;
 using EMBC.Utilities.Configuration;
+using Grpc.Core;
+using Grpc.Net.Client.Balancer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -33,6 +35,8 @@ namespace EMBC.ESS.Utilities.PdfGenerator
             {
                 opts.EnableDetailedErrors = true;
             });
+            configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)));
+            configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
             var pdfGeneratorUrl = configurationServices.Configuration.GetValue<Uri>("pdfGenerator:url");
             if (pdfGeneratorUrl == null)
             {
@@ -44,6 +48,12 @@ namespace EMBC.ESS.Utilities.PdfGenerator
             var httpClientBuilder = configurationServices.Services.AddGrpcClient<Generator.GeneratorClient>(opts =>
             {
                 opts.Address = pdfGeneratorUrl;
+            }).ConfigureChannel(opts =>
+            {
+                if (pdfGeneratorUrl.Scheme == "dns")
+                {
+                    opts.Credentials = ChannelCredentials.SecureSsl;
+                }
             });
 
             if (allowInvalidServerCertificates)
