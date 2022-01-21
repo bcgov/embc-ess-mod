@@ -2,7 +2,7 @@
 /* eslint-disable */
 export interface EvacuationFileTask {
   communityCode?: null | string;
-  from?: string;
+  from?: null | string;
   taskNumber: string;
-  to?: string;
+  to?: null | string;
 }

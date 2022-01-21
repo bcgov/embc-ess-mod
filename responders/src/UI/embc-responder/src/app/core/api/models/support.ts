@@ -9,7 +9,7 @@ export interface Support {
   from: string;
   id?: null | string;
   includedHouseholdMembers: Array<string>;
-  issuedOn?: string;
+  issuedOn?: null | string;
   issuingMemberName?: null | string;
   issuingMemberTeamName?: null | string;
   method: SupportMethod;

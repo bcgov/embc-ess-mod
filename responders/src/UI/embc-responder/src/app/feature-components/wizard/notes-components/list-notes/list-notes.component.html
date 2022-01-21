@@ -22,7 +22,7 @@
       <button
         *ngIf="!note?.isHidden && hasPermission('canHideUnhideNotes')"
         class="list-image button-margin"
-        (click)="hideNote(note?.id)"
+        (click)="hideNote(note?.id, note?.content)"
         mat-icon-button
         aria-label="Hide"
       >
@@ -33,7 +33,7 @@
       <button
         *ngIf="note?.isHidden && hasPermission('canHideUnhideNotes')"
         class="list-image button-margin"
-        (click)="showNote(note?.id)"
+        (click)="showNote(note?.id, note?.content)"
         mat-icon-button
         aria-label="Unhide"
       >

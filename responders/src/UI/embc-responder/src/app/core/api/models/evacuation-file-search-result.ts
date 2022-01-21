@@ -5,14 +5,14 @@ import { EvacuationFileSearchResultHouseholdMember } from './evacuation-file-sea
 import { EvacuationFileStatus } from './evacuation-file-status';
 export interface EvacuationFileSearchResult {
   createdOn?: string;
-  evacuatedFrom?: null | Address;
-  householdMembers?: null | Array<EvacuationFileSearchResultHouseholdMember>;
-  id?: null | string;
+  evacuatedFrom?: Address;
+  householdMembers?: Array<EvacuationFileSearchResultHouseholdMember>;
+  id?: string;
   isRestricted?: boolean;
   modifiedOn?: string;
   status?: EvacuationFileStatus;
   taskEndDate?: null | string;
-  taskId?: null | string;
-  taskLocationCommunityCode?: null | string;
+  taskId?: string;
+  taskLocationCommunityCode?: string;
   taskStartDate?: null | string;
 }
