@@ -6,34 +6,10 @@ export { ResponderNewRegistration, ResponderExistingRegistration } from './respo
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 import { getExecutionType, getSummaryFileDescriptor } from './utilities';
 
-//benchmark default to 5m duration
-if (!__ENV.ITERS) {
-    __ENV.DUR = '5m';
-}
 let execution_type = getExecutionType();
 
 export const options: Options = {
     scenarios: {
-        /*---Registrant---*/
-        anonymousRegistration: {
-            exec: 'RegistrantAnonymousRegistration',
-            ...execution_type
-        },
-        newRegistration: {
-            exec: 'RegistrantNewRegistration',
-            ...execution_type
-        },
-        existingProfileRegistration: {
-            exec: 'RegistrantExistingProfileRegistration',
-            ...execution_type
-        },
-
-
-        /*---Responder---*/
-        ResponderNewRegistration: {
-            exec: 'ResponderNewRegistration',
-            ...execution_type
-        },
         ResponderExistingRegistration: {
             exec: 'ResponderExistingRegistration',
             ...execution_type
@@ -41,23 +17,6 @@ export const options: Options = {
     },
 
     thresholds: {
-        'reg_failed_to_login': ['rate<0.01'], //Less than 1% are allowed to fail
-        'reg_failed_form_fetches': ['rate<0.01'], //Less than 1% are allowed to fail
-        'reg_failed_form_submits': ['rate<0.01'], //Less than 1% are allowed to fail
-        'reg_submit_file': ['p(95)<10000'], // 10s
-        'reg_submit_anonymous': ['p(95)<10000'], // 10s
-        'reg_submit_profile': ['p(95)<10000'], // 10s
-        'res_load_html_time': ['p(95)<10000'], // 10s
-        'reg_load_auth_token': ['p(95)<10000'], // 10s
-        'reg_load_configuration': ['p(95)<10000'], // 10s
-        'reg_load_security_questions': ['p(95)<10000'], // 10s
-        'reg_load_provinces': ['p(95)<10000'], // 10s
-        'reg_load_countries': ['p(95)<10000'], // 10s
-        'reg_load_communities': ['p(95)<10000'], // 10s
-        'reg_load_profile': ['p(95)<10000'], // 10s
-        'reg_load_profile_exists': ['p(95)<10000'], // 10s
-
-
         'res_failed_to_login': ['rate<0.01'], // 10s
         'res_failed_form_fetches': ['rate<0.01'], // 10s
         'res_failed_form_submits': ['rate<0.01'], // 10s
@@ -85,8 +44,7 @@ export const options: Options = {
 };
 
 export function handleSummary(data: any) {
-    let dateString = new Date().toLocaleString().replace(/[\/:]/g, '-').replace(/,/g, '');
-    let fileName: string = `benchmark.${getSummaryFileDescriptor()}.${dateString}.summary.html`;
+    let fileName: string = `responder-existing-registration.${getSummaryFileDescriptor()}.summary.html`;
     let res: any = {};
     res[fileName] = htmlReport(data);
     return res;
