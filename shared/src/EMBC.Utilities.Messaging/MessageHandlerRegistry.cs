@@ -41,9 +41,9 @@ namespace EMBC.Utilities.Messaging
         {
             var type = registry.Keys.SingleOrDefault(k => k.Equals(requestType));
             if (type == null) throw new ArgumentException($"Request type '{requestType.AssemblyQualifiedName}' has no registered handlers");
-            var method = registry[type];
+            var method = registry[type] ?? null!;
 
-            logger.LogDebug("Resolved handler {0} for type {1}", $"{method.DeclaringType.FullName}.{method.Name}", type);
+            logger.LogDebug("Resolved handler {0} for type {1}", $"{method.DeclaringType?.FullName}.{method.Name}", type);
 
             return method;
         }
@@ -61,8 +61,8 @@ namespace EMBC.Utilities.Messaging
 
         private void Register(MethodInfo method)
         {
-            var methodName = $"{method.DeclaringType.FullName}.{method.Name}";
-            var requestType = method.GetParameters().Single().ParameterType;
+            var methodName = $"{method.DeclaringType?.FullName ?? null!}.{method.Name}";
+            var requestType = method.GetParameters().Single().ParameterType ?? null!;
             var parameters = method.GetParameters();
             if (parameters.Length != 1)
             {
@@ -72,7 +72,7 @@ namespace EMBC.Utilities.Messaging
             if (!registry.TryAdd(requestType, method))
             {
                 throw new InvalidOperationException($"Type '{requestType.AssemblyQualifiedName}' already has a registered handler: " +
-                    $"{registry[requestType].DeclaringType.FullName}.{registry[requestType].Name}, cannot register {methodName})");
+                    $"{registry[requestType].DeclaringType?.FullName}.{registry[requestType].Name}, cannot register {methodName})");
             }
             logger.LogDebug("Registered {0} to handle type '{1}'", methodName, requestType.AssemblyQualifiedName);
         }

@@ -26,7 +26,7 @@ namespace EMBC.Registrants.API.Utils
 {
     internal static class DispatcherClientEx
     {
-        public static async Task<TReply> DispatchAsync<TReply>(this Dispatcher.DispatcherClient dispatcherClient, object content)
+        public static async Task<TReply?> DispatchAsync<TReply>(this Dispatcher.DispatcherClient dispatcherClient, object content)
         {
             var request = new RequestEnvelope
             {
@@ -35,10 +35,10 @@ namespace EMBC.Registrants.API.Utils
                 Content = Value.Parser.ParseJson(JsonSerializer.Serialize(content))
             };
             var response = await dispatcherClient.DispatchAsync(request);
-            if (response.Empty) return default;
             if (response.Error) throw new ServerException(response.CorrelationId, response.ErrorType, response.ErrorMessage, response.ErrorDetails);
+            if (response.Empty || string.IsNullOrEmpty(response.Type)) return default;
             var responseType = System.Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
-            return (TReply)JsonSerializer.Deserialize(JsonFormatter.Default.Format(response.Content), responseType);
+            return (TReply?)JsonSerializer.Deserialize(JsonFormatter.Default.Format(response.Content), responseType);
         }
     }
 
