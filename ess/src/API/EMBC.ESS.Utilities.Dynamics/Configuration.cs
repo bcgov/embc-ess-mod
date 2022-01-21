@@ -57,8 +57,8 @@ namespace EMBC.ESS.Utilities.Dynamics
                     },
                     new HttpClientBulkheadIsolationPolicy
                     {
-                        MaxParallelization = 1,
-                        QueueSize = 10
+                        MaxParallelization = 10,
+                        QueueSize = 100
                     },
                     new HttpClientRetryPolicy
                     {
