@@ -221,6 +221,21 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.EssNumber, opts => opts.Ignore())
                 .ForMember(d => d.HostCommunity, opts => opts.Ignore())
                 .ForMember(d => d.Evacuees, opts => opts.Ignore())
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.Ignore())
+                .ForMember(d => d.ApprovedItems, opts => opts.Ignore())
+                .ForMember(d => d.VolunteerFirstName, opts => opts.Ignore())
+                .ForMember(d => d.VolunteerLastName, opts => opts.Ignore())
+                .ForMember(d => d.DisplayWatermark, opts => opts.Ignore())
+                .ForMember(d => d.NumBreakfasts, opts => opts.Ignore())
+                .ForMember(d => d.NumLunches, opts => opts.Ignore())
+                .ForMember(d => d.NumDinners, opts => opts.Ignore())
+                .ForMember(d => d.NumDaysMeals, opts => opts.Ignore())
+                .ForMember(d => d.NumNights, opts => opts.Ignore())
+                .ForMember(d => d.NumRooms, opts => opts.Ignore())
+                .ForMember(d => d.FromAddress, opts => opts.Ignore())
+                .ForMember(d => d.ToAddress, opts => opts.Ignore())
+                .ForMember(d => d.OtherTransportModeDetails, opts => opts.Ignore())
+                .ForMember(d => d.PrintableEvacuees, opts => opts.Ignore())
                 .AfterMap((s, d, ctx) =>
                 {
                     var file = (Shared.Contracts.Submissions.EvacuationFile)ctx.Items["evacuationFile"];
@@ -231,7 +246,6 @@ namespace EMBC.ESS.Managers.Submissions
                     d.HostCommunity = file.RelatedTask.CommunityCode;
                     d.Evacuees = ctx.Mapper.Map<IEnumerable<PrintEvacuee>>(file.HouseholdMembers.Where(m => s.IncludedHouseholdMembers.Contains(m.Id)));
                 })
-                .ForAllOtherMembers(opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Submissions.FoodRestaurantReferral, PrintReferral>()
