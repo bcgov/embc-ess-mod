@@ -15,8 +15,10 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { WizardService } from '../../wizard.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -64,7 +66,8 @@ export class ContactComponent implements OnInit, OnDestroy {
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
@@ -205,7 +208,18 @@ export class ContactComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate([this.tabMetaData?.next]);
+    if (this.evacueeSessionService.paperBased) {
+      this.stepEvacueeProfileService.nextTabUpdate.next();
+      if (this.stepEvacueeProfileService.checkTabsStatus()) {
+        this.stepEvacueeProfileService.openModal(
+          globalConst.wizardProfileMessage
+        );
+      } else {
+        this.router.navigate([this.tabMetaData?.next]);
+      }
+    } else {
+      this.router.navigate([this.tabMetaData?.next]);
+    }
   }
 
   /**

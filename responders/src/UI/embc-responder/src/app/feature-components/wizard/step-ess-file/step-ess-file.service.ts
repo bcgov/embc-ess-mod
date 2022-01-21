@@ -898,7 +898,6 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkForEvacDetailsPartialUpdates(form: FormGroup): boolean {
-    console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
       const control = form.controls[field] as
