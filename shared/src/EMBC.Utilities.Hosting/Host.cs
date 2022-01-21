@@ -140,7 +140,9 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithClientAgent()
                 .Enrich.WithClientIp()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
-            //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
+#if DEBUG
+                .WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
+#endif
             ;
 
             var splunkUrl = hostBuilderContext.Configuration.GetValue("SPLUNK_URL", string.Empty);

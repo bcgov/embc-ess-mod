@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="IdentityModel" Version="5.2.0" />
+        <PackageReference Include="IdentityModel" Version="6.0.0" />
         <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.*" />
