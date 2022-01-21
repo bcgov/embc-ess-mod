@@ -329,14 +329,14 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
-            file.PaperFileNumber = $"{TestData.TestPrefix}-{Guid.NewGuid().ToString().Substring(0, 4)}";
+            file.ExternalReferenceId = $"{TestData.TestPrefix}-{Guid.NewGuid().ToString().Substring(0, 4)}";
             file.SecurityPhrase = null!;
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             fileId.ShouldNotBeNull();
 
             var savedFile = await GetEvacuationFileById(fileId);
-            savedFile.PaperFileNumber.ShouldBe(file.PaperFileNumber);
+            savedFile.ExternalReferenceId.ShouldBe(file.ExternalReferenceId);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
