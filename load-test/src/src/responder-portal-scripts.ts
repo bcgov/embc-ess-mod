@@ -1,4 +1,3 @@
-import { Options, Scenario } from 'k6/options';
 import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 import { generateRegistrant } from './generators/responders/registrant';
@@ -6,7 +5,7 @@ import { generateNewPersonDetails, getPersonDetailsForIteration } from './genera
 import { generateEvacuationFile, getUpdatedEvacuationFile } from './generators/responders/evacuation-file';
 import { generateSupports } from './generators/responders/supports';
 import { generateNote } from './generators/responders/notes';
-import { fillInForm, getIterationName, getRandomInt, logError, navigate } from './utilities';
+import { fillInForm, getHTTPParams, getIterationName, getRandomInt, logError, navigate } from './utilities';
 
 // @ts-ignore
 import { ResponderTestParameters } from '../load-test.parameters-APP_TARGET';
@@ -63,7 +62,7 @@ const loadRegistrantTime = new Trend('res_load_registrant');
 const loadTaskSuppliersTime = new Trend('res_load_suppliers');
 const searchTaskTime = new Trend('res_search_tasks');
 const searchRegistrationsTime = new Trend('res_search_registrations');
-const searchRegistrationsNoResultTime = new Trend('reg_search_registrations_no_result');
+const searchRegistrationsNoResultTime = new Trend('res_search_registrations_no_result');
 
 const getAuthToken = () => {
   const payload = `grant_type=${testParams.grantType}&username=${testParams.username}&password=${testParams.password}&scope=${testParams.scope}`;
@@ -71,7 +70,8 @@ const getAuthToken = () => {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Authorization": `Basic ${testParams.basicAuth}`,
-    }
+    },
+    timeout: 180000
   };
 
   const response = http.post(urls.auth_token, payload, params);
@@ -85,46 +85,53 @@ const getAuthToken = () => {
 }
 
 const getStartPage = () => {
-  const response = http.get(urls.start_page);
+  const params = getHTTPParams();
+  const response = http.get(urls.start_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
 }
 
 const getDashboard = () => {
-  const response = http.get(urls.dashboard);
+  const params = getHTTPParams();
+  const response = http.get(urls.dashboard, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
 }
 
 const getConfiguration = () => {
-  const response = http.get(urls.config);
+  const params = getHTTPParams();
+  const response = http.get(urls.config, params);
   formFailRate.add(response.status !== 200);
   loadConfig.add(response.timings.waiting);
 }
 
 const getCommunities = () => {
-  const response = http.get(urls.communities);
+  const params = getHTTPParams();
+  const response = http.get(urls.communities, params);
   formFailRate.add(response.status !== 200);
   loadCommunitiesTime.add(response.timings.waiting);
   return response.json();
 }
 
 const getProvinces = () => {
-  const response = http.get(urls.provinces);
+  const params = getHTTPParams();
+  const response = http.get(urls.provinces, params);
   formFailRate.add(response.status !== 200);
   loadProvincesTime.add(response.timings.waiting);
-  return response.json();
+  // return response.json();
 }
 
 const getCountries = () => {
-  const response = http.get(urls.countries);
+  const params = getHTTPParams();
+  const response = http.get(urls.countries, params);
   formFailRate.add(response.status !== 200);
   loadCountriesTime.add(response.timings.waiting);
-  return response.json();
+  // return response.json();
 }
 
 const getSecurityQuestions = () => {
-  const response = http.get(urls.security_questions);
+  const params = getHTTPParams();
+  const response = http.get(urls.security_questions, params);
   formFailRate.add(response.status !== 200);
   loadSecurityQuestions.add(response.timings.waiting);
   return response.json();
@@ -142,58 +149,34 @@ const getSecurityQuestions = () => {
 // }
 
 const getMemberRole = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.member_role, params);
   formFailRate.add(response.status !== 200);
   loadMemberRole.add(response.timings.waiting);
-  return response.json();
+  // return response.json();
 }
 
 const getMemberLabel = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.member_label, params);
   formFailRate.add(response.status !== 200);
   loadMemberLabel.add(response.timings.waiting);
-  return response.json();
+  // return response.json();
 }
 
 const getTaskSearchPage = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.task_search_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
-  return response.html();
+  // return response.html();
 }
 
 const searchTasks = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.task_search, params);
   formFailRate.add(response.status !== 200);
@@ -202,13 +185,7 @@ const searchTasks = (token: any) => {
 }
 
 const searchRegistrations = (token: any, registrant: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.registrations_search + `?firstName=${registrant.firstName}&lastName=${registrant.lastName}&dateOfBirth=${registrant.dateOfBirth}`, params);
   formFailRate.add(response.status !== 200);
@@ -231,28 +208,16 @@ const searchRegistrations = (token: any, registrant: any) => {
 }
 
 const getNewEvacueeWizard = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.ess_wizard, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
-  return response.html();
+  // return response.html();
 }
 
 const submitRegistrant = (token: any, registrant: any, communities: any, security_questions: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const registration = generateRegistrant(registrant, communities, security_questions);
   const payload = JSON.stringify(registration);
@@ -269,13 +234,7 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
 }
 
 const getRegistrant = (token: any, regRes: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(`${urls.registrant}/${regRes.id}`, params);
   formFailRate.add(response.status !== 200);
@@ -284,13 +243,7 @@ const getRegistrant = (token: any, regRes: any) => {
 }
 
 const submitEvacuationFile = (token: any, registrantId: any, registrant: any, communities: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const evacuationFile = generateEvacuationFile(registrantId.id, registrant, communities, TASK_ID);
   const payload = JSON.stringify(evacuationFile);
@@ -310,13 +263,7 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
 }
 
 const updateEvacuationFile = (token: any, file: any, registrantId: any, registrant: any, task: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const evacuationFile = getUpdatedEvacuationFile(file, registrantId.id, registrant, task);
   const payload = JSON.stringify(evacuationFile);
@@ -336,13 +283,7 @@ const updateEvacuationFile = (token: any, file: any, registrantId: any, registra
 }
 
 const getEvacuationFile = (token: any, fileRes: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(`${urls.file}/${fileRes.id}`, params);
   formFailRate.add(response.status !== 200);
@@ -356,13 +297,7 @@ const getEvacuationFile = (token: any, fileRes: any) => {
 }
 
 const getTaskSuppliers = (token: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const response = http.get(urls.task_suppliers, params);
   formFailRate.add(response.status !== 200);
@@ -371,13 +306,7 @@ const getTaskSuppliers = (token: any) => {
 }
 
 const submitSupports = (token: any, file: any, suppliers: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const supports = generateSupports(file, suppliers);
   const payload = JSON.stringify(supports);
@@ -394,14 +323,7 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
 }
 
 const submitPrintRequest = (token: any, file: any, printRequest: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    },
-    timeout: 120000 //default timeout of 60s was often failing, so increase to 120s
-  };
+  const params = getHTTPParams(token.access_token);
 
   // console.log(`${urls.file}/${file.id}/supports/print/${printRequest.printRequestId}`);
 
@@ -409,17 +331,19 @@ const submitPrintRequest = (token: any, file: any, printRequest: any) => {
   printRequestTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
 
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: error getting pdf`);
+    logError(response);
+  }
+  else {
+    console.log(`Responders - ${getIterationName()}: successfully received pdf`);
+  }
+
   // return response.html();
 }
 
 const submitFileNote = (token: any, file: any) => {
-  const params = {
-    headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Authorization": `Bearer ${token.access_token}`
-    }
-  };
+  const params = getHTTPParams(token.access_token);
 
   const note = generateNote();
   const payload = JSON.stringify(note);
@@ -441,11 +365,14 @@ const submitFileNote = (token: any, file: any) => {
 let token: any = null;
 let communities: any = null;
 let security_questions: any = null;
-let ITERATIONS_PER_LOGIN = getRandomInt(10, 50);
+let ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
+
+//TODO - should refresh token avery 5 minutes or so
 
 export function ResponderNewRegistration() {
+  navigate();
   if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
-    ITERATIONS_PER_LOGIN = getRandomInt(10, 50);
+    ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
     // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
     getStartPage();
     navigate();
@@ -512,8 +439,9 @@ export function ResponderNewRegistration() {
 };
 
 export function ResponderExistingRegistration() {
+  navigate();
   if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
-    ITERATIONS_PER_LOGIN = getRandomInt(10, 50);
+    ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
     // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
     getStartPage();
     navigate();
