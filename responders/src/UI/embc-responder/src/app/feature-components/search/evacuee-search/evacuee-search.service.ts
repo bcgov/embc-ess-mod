@@ -13,6 +13,7 @@ import { TaskSearchService } from '../task-search/task-search.service';
 })
 export class EvacueeSearchService {
   private searchContext: EvacueeSearchContextModel;
+  private paperBasedEssFileVal: string;
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
 
@@ -62,6 +63,14 @@ export class EvacueeSearchService {
       : JSON.parse(this.cacheService.get('supportSubCategory'))
       ? JSON.parse(this.cacheService.get('supportSubCategory'))
       : this.getSubCategoryList();
+  }
+
+  public get paperBasedEssFile(): string {
+    return this.paperBasedEssFileVal;
+  }
+
+  public set paperBasedEssFile(value: string) {
+    this.paperBasedEssFileVal = value;
   }
 
   public getCategoryList(): void {

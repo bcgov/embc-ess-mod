@@ -11,6 +11,7 @@ import {
   EvacueeSearchContextModel
 } from 'src/app/core/models/evacuee-search-context.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
 
 @Component({
@@ -37,12 +38,14 @@ export class EvacueeNameSearchComponent implements OnInit {
   ];
   nameSearchForm: FormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
+  paperBased: boolean;
 
   constructor(
     private customValidation: CustomValidationService,
     private builder: FormBuilder,
     private evacueeSearchService: EvacueeSearchService,
-    private router: Router
+    private router: Router,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   /**
@@ -50,6 +53,7 @@ export class EvacueeNameSearchComponent implements OnInit {
    */
   ngOnInit(): void {
     this.constructNameForm();
+    this.paperBased = this.evacueeSessionService.paperBased;
   }
 
   /**
@@ -75,6 +79,15 @@ export class EvacueeNameSearchComponent implements OnInit {
       dateOfBirth: [
         this.evacueeSearchContextModel?.evacueeSearchParameters.dateOfBirth,
         [Validators.required, this.customValidation.dateOfBirthValidator()]
+      ],
+      paperBasedEssFile: [
+        this.evacueeSearchService?.paperBasedEssFile,
+        this.customValidation
+          .conditionalValidation(
+            () => this.paperBased === true,
+            Validators.required
+          )
+          .bind(this.customValidation)
       ]
     });
   }
@@ -92,6 +105,8 @@ export class EvacueeNameSearchComponent implements OnInit {
     this.evacueeSearchService.evacueeSearchContext = {
       evacueeSearchParameters: searchParams
     };
+    this.evacueeSearchService.paperBasedEssFile =
+      this.nameSearchForm.get('paperBasedEssFile').value;
     this.showResultsComponent.emit(true);
     this.router.navigate(['/responder-access/search/evacuee']);
   }
