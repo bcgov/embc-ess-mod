@@ -167,7 +167,7 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class Profile
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
         public PersonDetails PersonalDetails { get; set; }
