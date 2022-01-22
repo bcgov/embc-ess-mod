@@ -23,8 +23,8 @@ namespace EMBC.ESS.Utilities.Dynamics
         public Uri DynamicsApiEndpoint { get; set; } = null!;
         public Uri DynamicsApiBaseUri { get; set; } = null!;
         public int TimeoutInSeconds { get; set; } = 29;
-        public int CircuitBreakerNumberOfErrors { get; set; } = 10;
-        public int CircuitBreakerResetInSeconds { get; set; } = 60;
+        public int CircuitBreakerNumberOfErrors { get; set; } = 5;
+        public int CircuitBreakerResetInSeconds { get; set; } = 15;
         public AdfsOptions Adfs { get; set; } = new AdfsOptions();
         public int NumberOfRetries { get; set; } = 2;
         public int RetryWaitTimeInSeconds { get; set; } = 1;
@@ -41,6 +41,6 @@ namespace EMBC.ESS.Utilities.Dynamics
         public string ResourceName { get; set; } = string.Empty;
         public int TimeoutInSeconds { get; set; } = 5;
         public int CircuitBreakerNumberOfErrors { get; set; } = 5;
-        public int CircuitBreakerResetInSeconds { get; set; } = 30;
+        public int CircuitBreakerResetInSeconds { get; set; } = 15;
     }
 }
