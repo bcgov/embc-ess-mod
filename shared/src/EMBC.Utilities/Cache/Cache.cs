@@ -25,9 +25,9 @@ namespace EMBC.ESS.Utilities.Cache
 {
     public interface ICache
     {
-        Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
+        Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
 
-        Task<T> Get<T>(string key);
+        Task<T?> Get<T>(string key);
 
         Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
     }
@@ -47,9 +47,9 @@ namespace EMBC.ESS.Utilities.Cache
             this.policy = policy;
         }
 
-        public async Task<T> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
+        public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
         {
-            return Deserialize<T>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
+            return Deserialize<T?>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
         }
 
         public async Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
@@ -57,9 +57,9 @@ namespace EMBC.ESS.Utilities.Cache
             await cache.SetAsync(keyGen(key), Serialize(await getter()), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration });
         }
 
-        public async Task<T> Get<T>(string key)
+        public async Task<T?> Get<T>(string key)
         {
-            return Deserialize<T>(await cache.GetAsync(keyGen(key)));
+            return Deserialize<T?>(await cache.GetAsync(keyGen(key)));
         }
 
         private Context CreateContext(string key, TimeSpan? expiration)
@@ -69,7 +69,7 @@ namespace EMBC.ESS.Utilities.Cache
             return context;
         }
 
-        private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
+        private static T? Deserialize<T>(byte[] data) => data == null ? default : JsonSerializer.Deserialize<T>(data);
 
         private static byte[] Serialize<T>(T obj) => obj == null ? Array.Empty<byte>() : JsonSerializer.SerializeToUtf8Bytes(obj);
     }

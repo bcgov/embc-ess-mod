@@ -88,10 +88,10 @@ namespace EMBC.ESS.Utilities.NotificationSender.Channels
 
     public class EmailChannelOptions
     {
-        public string SmtpServer { get; set; }
+        public string SmtpServer { get; set; } = null!;
         public int SmtpPort { get; set; } = 25;
-        public string SmtpUsername { get; set; }
-        public string SmtpPassword { get; set; }
+        public string? SmtpUsername { get; set; }
+        public string? SmtpPassword { get; set; }
         public bool SmtpEnableSSL { get; set; }
         public EmailAddress DefaultSender { get; set; } = new EmailAddress { Name = "ERA Notifications", Address = "era-no-reply@gov.bc.ca" };
 

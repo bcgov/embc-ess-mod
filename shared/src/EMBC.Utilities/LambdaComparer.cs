@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace EMBC.Utilities
 {
@@ -31,8 +30,8 @@ namespace EMBC.Utilities
             this.hashFunc = hashFunc;
         }
 
-        public override bool Equals([AllowNull] T x, [AllowNull] T y) => comparerFunc(x, y);
+        public override bool Equals(T x, T y) => comparerFunc(x, y);
 
-        public override int GetHashCode([DisallowNull] T obj) => hashFunc(obj);
+        public override int GetHashCode(T obj) => hashFunc(obj);
     }
 }
