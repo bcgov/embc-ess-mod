@@ -137,12 +137,12 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class EvacuationFile
     {
-        public string FileId { get; set; }
+        public string? FileId { get; set; }
         public EvacuationFileStatus Status { get; set; }
 
-        public string EvacuationFileDate { get; set; }
+        public string? EvacuationFileDate { get; set; }
 
-        public bool IsRestricted { get; set; }
+        public bool? IsRestricted { get; set; }
 
         [Required]
         public Address EvacuatedFromAddress { get; set; }
@@ -150,11 +150,11 @@ namespace EMBC.Registrants.API.Controllers
         [Required]
         public NeedsAssessment NeedsAssessment { get; set; }
 
-        public string SecretPhrase { get; set; }
-        public bool SecretPhraseEdited { get; set; }
+        public string? SecretPhrase { get; set; }
+        public bool? SecretPhraseEdited { get; set; }
         public DateTime LastModified { get; set; }
         public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
-        public string ExternalReferenceId { get; set; }
+        public string? ExternalReferenceId { get; set; }
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class NeedsAssessment
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
         public InsuranceOption Insurance { get; set; }
@@ -173,7 +173,7 @@ namespace EMBC.Registrants.API.Controllers
         public bool? CanEvacueeProvideTransportation { get; set; }
         public bool? CanEvacueeProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
+        public string? SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
@@ -186,7 +186,7 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class HouseholdMember
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public PersonDetails Details { get; set; }
         public bool IsUnder19 { get; set; }

@@ -26,17 +26,17 @@ namespace EMBC.Registrants.API.Controllers
         [Required]
         public string AddressLine1 { get; set; }
 
-        public string AddressLine2 { get; set; }
+        public string? AddressLine2 { get; set; }
 
-        public string Community { get; set; }
-        public string City { get; set; }
+        public string? Community { get; set; }
+        public string? City { get; set; }
 
         public string StateProvince { get; set; }
 
         [Required]
         public string Country { get; set; }
 
-        public string PostalCode { get; set; }
+        public string? PostalCode { get; set; }
     }
 
     /// <summary>
@@ -50,8 +50,8 @@ namespace EMBC.Registrants.API.Controllers
         [Required]
         public string LastName { get; set; }
 
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
+        public string? Initials { get; set; }
+        public string? PreferredName { get; set; }
 
         [Required]
         public string Gender { get; set; }
@@ -66,10 +66,10 @@ namespace EMBC.Registrants.API.Controllers
     public class ContactDetails
     {
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Phone]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         public bool HidePhoneRequired { get; set; }
 
