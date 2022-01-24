@@ -1,18 +1,40 @@
-.header-style {
-  justify-content: space-between;
-}
-
-.app-heading {
-  font-size: 30px;
-  //margin: 0px 270px 0px 0px;
-}
-
 .heading-text1 {
   color: #ffffff;
 }
 
 .heading-text2 {
   color: #fcba19;
+  padding-left: 2px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+::ng-deep .mat-menu-panel {
+  border-radius: 0px !important;
+  background: #036 !important;
+  min-width: 320px !important;
+}
+
+.mat-menu-item {
+  color: #ffffff !important;
+}
+
+.text {
+  color: white;
+  margin: 0px;
+  line-height: 16px;
+}
+
+.img-align {
+  margin-right: 5px;
+}
+
+.app-heading {
+  font-size: 30px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .divider {
@@ -29,6 +51,44 @@
   }
 }
 
+@media (max-width: 1215px) {
+  .button-align {
+    float: left !important;
+    white-space: normal;
+    padding: 0px;
+  }
+
+  .menu-responsive {
+    width: 50%;
+  }
+}
+
+.divider-col {
+  width: 2% !important;
+}
+
+header mat-toolbar {
+  border-bottom: 2px solid #fcba19;
+}
+
+.mat-toolbar-row,
+.mat-toolbar-single-row {
+  height: auto !important;
+}
+
+.header-toolbar {
+  padding: 0.5rem 1rem;
+}
+
+.row-align {
+  align-items: center !important;
+  width: inherit;
+}
+
+.button-align {
+  float: right;
+}
+
 ::ng-deep .mat-menu-content {
   border-bottom: 2px solid #fcba19;
 }
@@ -39,96 +99,4 @@
 
 .signOut-button:hover {
   text-decoration: underline;
-}
-
-.menuButton {
-  background: #036;
-  color: white;
-  font-size: 15px;
-}
-
-::ng-deep .mat-menu-panel {
-  border-radius: 0px !important;
-  background: #036 !important;
-  min-width: 200px !important;
-}
-
-.mat-menu-item {
-  color: #ffffff;
-}
-
-.text {
-  color: white;
-  padding-left: 10px;
-}
-
-.img-align {
-  margin-right: 5px;
-  // margin-left: 20px;
-}
-
-.align-content {
-  display: inline-block;
-  line-height: 0;
-}
-
-@media (max-width: 1200px) {
-  .app-heading {
-    margin: 0px 100px 0px 0px;
-  }
-}
-
-@media (max-width: 900px) {
-  .app-heading {
-    margin: 0px 100px 0px 0px;
-  }
-
-  .img-align {
-    margin-right: 5px;
-    margin-left: 5px;
-  }
-}
-
-@media (max-width: 768px) {
-  .divider {
-    width: 0px;
-  }
-
-  .app-heading {
-    margin: 0px 0px 0px 0px;
-  }
-
-  .menuButton {
-    margin: 0px 0px 0px 600px;
-  }
-}
-
-@media (max-width: 766px) {
-  .menuButton {
-    margin: 0px 0px 0px 420px;
-  }
-}
-
-@media (max-width: 500px) {
-  .menuButton {
-    margin: 0px 0px 0px 270px;
-  }
-}
-
-@media (max-width: 380px) {
-  .menuButton {
-    margin: 0px 0px 0px 220px;
-  }
-}
-
-@media (max-width: 320px) {
-  .menuButton {
-    margin: 0px 0px 0px 180px;
-  }
-}
-
-@media (max-width: 280px) {
-  .menuButton {
-    margin: 0px 0px 0px 130px;
-  }
 }
