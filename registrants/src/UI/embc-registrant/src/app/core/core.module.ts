@@ -20,6 +20,8 @@ import { EnvironmentBannerComponent } from './layout/environment-banner/environm
 import { HttpClient } from '@angular/common/http';
 import { MarkdownModule } from 'ngx-markdown';
 import { TimeOutDialogComponent } from './components/dialog-components/time-out-dialog/time-out-dialog.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -31,7 +33,9 @@ import { TimeOutDialogComponent } from './components/dialog-components/time-out-
     MatMenuModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    MatButtonModule,
     MatInputModule,
+    MatToolbarModule,
     MarkdownModule.forRoot({ loader: HttpClient })
   ],
   declarations: [
@@ -55,7 +59,9 @@ import { TimeOutDialogComponent } from './components/dialog-components/time-out-
     FooterComponent,
     DialogComponent,
     EnvironmentBannerComponent,
-    TimeOutDialogComponent
+    TimeOutDialogComponent,
+    MatToolbarModule,
+    MatButtonModule
   ]
 })
 export class CoreModule {}
