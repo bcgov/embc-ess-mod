@@ -11,13 +11,13 @@ import { Support } from './support';
 export interface EvacuationFile {
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
+  externalReferenceId?: null | string;
   fileId?: null | string;
-  isRestricted?: boolean;
+  isRestricted?: null | boolean;
   lastModified?: string;
   needsAssessment: NeedsAssessment;
-  paperFileNumber?: null | string;
   secretPhrase?: null | string;
-  secretPhraseEdited?: boolean;
+  secretPhraseEdited?: null | boolean;
   status?: EvacuationFileStatus;
-  supports?: null | Array<Support>;
+  supports?: Array<Support>;
 }

@@ -5,8 +5,8 @@
  * Profile security questions
  */
 export interface SecurityQuestion {
-  answer?: null | string;
+  answer?: string;
   answerChanged?: boolean;
   id?: number;
-  question?: null | string;
+  question?: string;
 }
