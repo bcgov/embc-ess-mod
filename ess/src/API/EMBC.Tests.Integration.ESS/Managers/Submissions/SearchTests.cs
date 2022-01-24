@@ -130,7 +130,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task Search_PaperEvacuationFiles_IncludeEvacuationFilesOnly()
+        public async Task Search_EvacuationFilesWithPapeerId_IncludeEvacuationFilesOnly()
         {
             var firstName = TestData.PaperContactFirstName;
             var lastName = TestData.PaperContactLastName;
