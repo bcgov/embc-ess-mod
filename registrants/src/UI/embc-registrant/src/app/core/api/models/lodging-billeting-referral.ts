@@ -5,11 +5,11 @@ import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
 export interface LodgingBilletingReferral extends Referral {
   category?: SupportCategory;
-  hostAddress?: null | string;
-  hostCity?: null | string;
-  hostEmail?: null | string;
-  hostName?: null | string;
-  hostPhone?: null | string;
+  hostAddress?: string;
+  hostCity?: string;
+  hostEmail?: string;
+  hostName?: string;
+  hostPhone?: string;
   numberOfNights?: number;
   subCategory?: SupportSubCategory;
 }

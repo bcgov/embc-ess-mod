@@ -4,10 +4,9 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { ErrorService } from './services/error.service';
+import { ConfigurationService } from './services/configuration.service';
 import { EvacuationsService } from './services/evacuations.service';
 import { ProfileService } from './services/profile.service';
-import { ConfigurationService } from './services/configuration.service';
 
 /**
  * Module that provides all services and configuration.
@@ -17,10 +16,9 @@ import { ConfigurationService } from './services/configuration.service';
   exports: [],
   declarations: [],
   providers: [
-    ErrorService,
+    ConfigurationService,
     EvacuationsService,
     ProfileService,
-    ConfigurationService,
     ApiConfiguration
   ],
 })

@@ -1,12 +1,18 @@
 /* tslint:disable */
 /* eslint-disable */
+import { SupportCategory } from './support-category';
+import { SupportMethod } from './support-method';
 import { SupportStatus } from './support-status';
+import { SupportSubCategory } from './support-sub-category';
 export interface Support {
+  category?: SupportCategory;
   from?: string;
-  id?: null | string;
-  includedHouseholdMembers?: null | Array<string>;
+  id?: string;
+  includedHouseholdMembers?: Array<string>;
   issuedOn?: string;
-  issuingMemberTeamName?: null | string;
+  issuingMemberTeamName?: string;
+  method?: SupportMethod;
   status?: SupportStatus;
+  subCategory?: SupportSubCategory;
   to?: string;
 }
