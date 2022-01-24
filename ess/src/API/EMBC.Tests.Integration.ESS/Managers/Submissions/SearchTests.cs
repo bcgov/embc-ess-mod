@@ -128,5 +128,19 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             searchResults.EvacuationFiles.ShouldNotBeEmpty();
             searchResults.Profiles.ShouldNotBeEmpty();
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task Search_PaperEvacuationFiles_IncludeEvacuationFilesOnly()
+        {
+            var firstName = TestData.PaperContactFirstName;
+            var lastName = TestData.PaperContactLastName;
+            var dateOfBirth = TestData.PaperContactDateOfBirth;
+
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
+
+            var fileWithPaperId = searchResults.EvacuationFiles.Where(e => e.ExternalReferenceId != null);
+
+            fileWithPaperId.ShouldNotBeNull();
+        }
     }
 }

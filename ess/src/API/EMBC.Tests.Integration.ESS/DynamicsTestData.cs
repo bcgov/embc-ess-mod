@@ -23,10 +23,15 @@ namespace EMBC.Tests.Integration.ESS
         private readonly string inactiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact contact;
+
+        private readonly contact paperContact;
         private readonly era_task activeTask;
+
         private readonly era_task inactiveTask;
         private readonly era_evacuationfile evacuationfile;
+        private readonly era_evacuationfile paperEvacuationFile;
         private readonly era_supplier supplierA;
+
         private readonly era_supplier supplierB;
         private readonly era_supplier supplierC;
         private readonly era_supplier inactiveSupplier;
@@ -52,8 +57,18 @@ namespace EMBC.Tests.Integration.ESS
         public string ContactFirstName => contact.firstname;
         public string ContactLastName => contact.lastname;
         public string ContactDateOfBirth => $"{contact.birthdate.GetValueOrDefault().Month:D2}/{contact.birthdate.GetValueOrDefault().Day:D2}/{contact.birthdate.GetValueOrDefault().Year:D4}";
+
+        public string PaperContactId => paperContact.contactid.GetValueOrDefault().ToString();
+        public string PaperContactUserId => paperContact.era_bcservicescardid;
+        public string PaperContactFirstName => paperContact.firstname;
+        public string PaperContactLastName => paperContact.lastname;
+        public string PaperContactDateOfBirth => $"{paperContact.birthdate.GetValueOrDefault().Month:D2}/{paperContact.birthdate.GetValueOrDefault().Day:D2}/{paperContact.birthdate.GetValueOrDefault().Year:D4}";
+
         public string EvacuationFileId => evacuationfile.era_name;
+
+        public string PaperEvacuationFileId => paperEvacuationFile.era_paperbasedessfile ?? null!;
         public string CurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
+
         public string EvacuationFileSecurityPhrase => testPrefix + "-securityphrase";
         public string SupplierAId => supplierA.era_supplierid.GetValueOrDefault().ToString();
         public string SupplierAName => supplierA.era_suppliername;
@@ -114,6 +129,8 @@ namespace EMBC.Tests.Integration.ESS
             this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").SingleOrDefault()
                 ?? CreateTeamMember(this.otherTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Team.TeamUserRoleOptionSet.Tier1);
             this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").SingleOrDefault() ?? CreateContact();
+            this.paperContact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-Pfirst" && c.lastname == this.testPrefix + "-Plast").SingleOrDefault() ?? CreatePaperContact();
+
             this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").SingleOrDefault() ?? CreateSupplier("A", this.team);
             this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").SingleOrDefault() ?? CreateSupplier("B", this.team);
             this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").SingleOrDefault() ?? CreateSupplier("C", this.otherTeam);
@@ -135,6 +152,22 @@ namespace EMBC.Tests.Integration.ESS
                 CreateReferralPrint(evacuationfile, this.tier4TeamMember, supports);
             }
 
+            var paperEvacuationfile = essContext.era_evacuationfiles
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
+                .Expand(f => f.era_Registrant)
+                .Where(f => f.era_name == testPrefix + "-file-with-paperId").SingleOrDefault();
+
+            if (paperEvacuationfile != null)
+            {
+                essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+            }
+            else
+            {
+                paperEvacuationfile = CreateEvacuationFile(this.paperContact, testPrefix + "-paperfile");
+                var supports = CreateEvacueeSupports(paperEvacuationfile);
+                CreateReferralPrint(paperEvacuationfile, this.tier4TeamMember, supports);
+            }
+
             essContext.SaveChanges();
 
             essContext.DeactivateObject(this.inactiveSupplier, 2);
@@ -147,6 +180,13 @@ namespace EMBC.Tests.Integration.ESS
                 .Where(f => f.era_evacuationfileid == evacuationfile.era_evacuationfileid).Single();
 
             essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+
+            this.paperEvacuationFile = essContext.era_evacuationfiles
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
+                .Expand(f => f.era_Registrant)
+                .Where(f => f.era_evacuationfileid == paperEvacuationfile.era_evacuationfileid).Single();
+
+            essContext.LoadProperty(this.paperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
 
             essContext.DetachAll();
         }
@@ -220,6 +260,28 @@ namespace EMBC.Tests.Integration.ESS
             return task;
         }
 
+        private contact CreatePaperContact()
+        {
+            var contact = new contact
+            {
+                contactid = Guid.NewGuid(),
+                firstname = this.testPrefix + "-Pfirst",
+                lastname = this.testPrefix + "-Plast",
+                era_bcservicescardid = this.testPrefix + "-paperUserId",
+                gendercode = random.Next(1, 3),
+                address1_line1 = this.testPrefix + "-line1",
+                address1_line2 = this.testPrefix + "-line2",
+                address1_postalcode = "v2v 2v2",
+                address1_country = "CAN",
+                address1_stateorprovince = "BC",
+                birthdate = new Date(1999, 11, 11)
+            };
+
+            essContext.AddTocontacts(contact);
+            essContext.SetLink(contact, nameof(contact.era_City), jurisdictions.First());
+            return contact;
+        }
+
         private contact CreateContact()
         {
             var contact = new contact
@@ -242,15 +304,27 @@ namespace EMBC.Tests.Integration.ESS
             return contact;
         }
 
-        private era_evacuationfile CreateEvacuationFile(contact primaryContact)
+        private era_evacuationfile CreateEvacuationFile(contact primaryContact, string? paperFileNumber = null)
         {
-            var file = new era_evacuationfile()
+            var withPaper = new era_evacuationfile()
+            {
+                era_evacuationfileid = Guid.NewGuid(),
+                era_name = testPrefix + "-file-with-paperId",
+                era_evacuationfiledate = DateTime.UtcNow,
+                era_securityphrase = EvacuationFileSecurityPhrase,
+                era_paperbasedessfile = paperFileNumber
+            };
+
+            var withoutPaper = new era_evacuationfile()
             {
                 era_evacuationfileid = Guid.NewGuid(),
                 era_name = testPrefix + "-file",
                 era_evacuationfiledate = DateTime.UtcNow,
-                era_securityphrase = EvacuationFileSecurityPhrase
+                era_securityphrase = EvacuationFileSecurityPhrase,
+                era_paperbasedessfile = null
             };
+
+            var file = paperFileNumber != null ? withPaper : withoutPaper;
 
             essContext.AddToera_evacuationfiles(file);
             essContext.SetLink(file, nameof(era_evacuationfile.era_TaskId), this.activeTask);
