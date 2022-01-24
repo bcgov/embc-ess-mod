@@ -7,6 +7,7 @@ import { LoginService } from './core/services/login.service';
 import { ConfigService } from './core/services/config.service';
 import { EnvironmentInformation } from './core/model/environment-information.model';
 import { OutageService } from './feature-components/outage/outage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -19,11 +20,12 @@ export class AppComponent implements OnInit {
   public environment: EnvironmentInformation = {};
 
   constructor(
+    public outageService: OutageService,
     private alertService: AlertService,
     private bootstrapService: BootstrapService,
     private loginService: LoginService,
     private configService: ConfigService,
-    public outageService: OutageService
+    private router: Router
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -36,8 +38,10 @@ export class AppComponent implements OnInit {
       if (error.status === 400 && error.status === 404) {
         this.environment = null;
       } else {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.systemError);
+        // this.alertService.clearAlert();
+        // this.alertService.setAlert('danger', globalConst.systemError);
+        this.isLoading = false;
+        this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
       }
     } finally {
       this.isLoading = false;
