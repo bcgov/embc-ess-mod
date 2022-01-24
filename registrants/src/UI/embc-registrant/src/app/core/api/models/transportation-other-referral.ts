@@ -7,5 +7,5 @@ export interface TransportationOtherReferral extends Referral {
   category?: SupportCategory;
   subCategory?: SupportSubCategory;
   totalAmount?: number;
-  transportMode?: null | string;
+  transportMode?: string;
 }

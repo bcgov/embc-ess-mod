@@ -11,5 +11,5 @@ export interface Address {
   community?: null | string;
   country: string;
   postalCode?: null | string;
-  stateProvince?: null | string;
+  stateProvince?: string;
 }

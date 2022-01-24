@@ -5,7 +5,7 @@ import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
 export interface TransportationTaxiReferral extends Referral {
   category?: SupportCategory;
-  fromAddress?: null | string;
+  fromAddress?: string;
   subCategory?: SupportSubCategory;
-  toAddress?: null | string;
+  toAddress?: string;
 }
