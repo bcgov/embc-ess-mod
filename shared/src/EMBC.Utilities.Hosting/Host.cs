@@ -230,7 +230,7 @@ namespace EMBC.Utilities.Hosting
 
             services.Configure<ExceptionHandlerOptions>(opts => opts.AllowStatusCode404Response = true);
 
-            Configurer.ConfigureComponentServices(services, configuration, hostEnvironment, logger, assemblies);
+            services.ConfigureComponentServices(configuration, hostEnvironment, logger, assemblies);
         }
 
         protected virtual void Configure(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, params Assembly[] assemblies)
@@ -268,7 +268,7 @@ namespace EMBC.Utilities.Hosting
             app.UseRouting();
             app.UseCors();
 
-            Configurer.ConfigureComponentPipeline(app, configuration, env, logger, assemblies);
+            app.ConfigureComponentPipeline(configuration, env, logger, assemblies);
 
             app.UseEndpoints(endpoints =>
             {
