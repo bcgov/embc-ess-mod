@@ -16,6 +16,8 @@
 
 using System;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using EMBC.PDFGenerator;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
@@ -38,6 +40,7 @@ namespace EMBC.ESS.Utilities.PdfGenerator
             configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)));
             configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
             var pdfGeneratorUrl = configurationServices.Configuration.GetValue<Uri>("pdfGenerator:url");
+            var allowUntrustedCertificates = configurationServices.Configuration.GetValue("pdfGenerator:allowInvalidServerCertificate", false);
             if (pdfGeneratorUrl == null)
             {
                 configurationServices.Logger.LogWarning("PdfGenerator:url env var is not set, PdfGenerator will not be available");
@@ -54,19 +57,27 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                 {
                     opts.Credentials = ChannelCredentials.SecureSsl;
                 }
-            });
-
-            if (allowInvalidServerCertificates)
+            }).ConfigurePrimaryHttpMessageHandler(() =>
             {
-                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+                if (!allowUntrustedCertificates) return new SocketsHttpHandler();
+                return new SocketsHttpHandler
                 {
-                    return new HttpClientHandler
+                    SslOptions = new SslClientAuthenticationOptions
                     {
-                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                    };
-                });
-            }
+                        RemoteCertificateValidationCallback = DangerousCertificationValidation
+                    }
+                };
+            });
             configurationServices.Services.TryAddTransient<IPdfGenerator, PdfGenerator>();
+        }
+
+        private static bool DangerousCertificationValidation(
+            object sender,
+            X509Certificate? certificate,
+            X509Chain? chain,
+            SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
         }
     }
 }

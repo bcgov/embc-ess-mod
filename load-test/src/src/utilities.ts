@@ -43,7 +43,7 @@ export function navigate() {
 export function logError(response: any, payload?: any) {
     // console.error(payload);
     // console.error(JSON.stringify(response));
-    console.error(response.status, response.error);
+    console.error(response.status, response.url, response.error);
 }
 
 /** Current VU and Iteration identifier */
@@ -85,4 +85,20 @@ export function getSummaryFileDescriptor(): string {
     }
 
     return descriptor;
+}
+
+export function getHTTPParams(token?: string) {
+    let headers: any = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "Accept-Encoding": "gzip, deflate, br"
+    };
+    if (token != null) {
+        headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    return {
+        headers: headers,
+        timeout: 180000
+    }
 }
