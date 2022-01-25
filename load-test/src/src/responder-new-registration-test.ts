@@ -4,7 +4,7 @@ export { ResponderNewRegistration, ResponderExistingRegistration } from './respo
 
 // @ts-ignore
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
-import { getExecutionType, getSummaryFileDescriptor } from './utilities';
+import { getExecutionType, getSummaryRes } from './utilities';
 
 let execution_type = getExecutionType();
 
@@ -43,9 +43,8 @@ export const options: Options = {
     }
 };
 
+const TEST_TYPE = "responder-new-registration";
+
 export function handleSummary(data: any) {
-    let fileName: string = `responder-new-registration.${getSummaryFileDescriptor()}.summary.html`;
-    let res: any = {};
-    res[fileName] = htmlReport(data);
-    return res;
+    return getSummaryRes(TEST_TYPE, data);
 }

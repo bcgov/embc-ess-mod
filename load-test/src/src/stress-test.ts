@@ -1,12 +1,12 @@
 import { Options } from 'k6/options';
 export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-scripts';
 export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-scripts';
-import { setUseRandomWaitTime, getSummaryRes } from './utilities';
 
 // @ts-ignore
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
-// @ts-ignore
-import { jUnit, textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
+import { getSummaryRes, setUseRandomWaitTime } from './utilities';
+
+const STAGE_DURATION = '5m';
 
 export const options: Options = {
     scenarios: {
@@ -17,9 +17,16 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '5m', target: 50 }, //target should be <= MAX_VU
-                { duration: '10m', target: 50 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
+                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
+                { duration: STAGE_DURATION, target: 10 },
+                { duration: STAGE_DURATION, target: 15 },
+                { duration: STAGE_DURATION, target: 20 },
+                { duration: STAGE_DURATION, target: 25 },
+                { duration: STAGE_DURATION, target: 30 },
+                { duration: STAGE_DURATION, target: 35 },
+                { duration: STAGE_DURATION, target: 40 },
+                { duration: STAGE_DURATION, target: 45 },
+                { duration: STAGE_DURATION, target: 50 },
             ],
             gracefulRampDown: '5m',
 
@@ -34,9 +41,16 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '5m', target: 50 }, //target should be <= MAX_VU
-                { duration: '10m', target: 50 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
+                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
+                { duration: STAGE_DURATION, target: 10 },
+                { duration: STAGE_DURATION, target: 15 },
+                { duration: STAGE_DURATION, target: 20 },
+                { duration: STAGE_DURATION, target: 25 },
+                { duration: STAGE_DURATION, target: 30 },
+                { duration: STAGE_DURATION, target: 35 },
+                { duration: STAGE_DURATION, target: 40 },
+                { duration: STAGE_DURATION, target: 45 },
+                { duration: STAGE_DURATION, target: 50 },
             ],
             gracefulRampDown: '5m',
 
@@ -52,9 +66,16 @@ export const options: Options = {
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '5m', target: 50 }, //target should be <= MAX_VU
-                { duration: '10m', target: 50 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
+                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
+                { duration: STAGE_DURATION, target: 10 },
+                { duration: STAGE_DURATION, target: 15 },
+                { duration: STAGE_DURATION, target: 20 },
+                { duration: STAGE_DURATION, target: 25 },
+                { duration: STAGE_DURATION, target: 30 },
+                { duration: STAGE_DURATION, target: 35 },
+                { duration: STAGE_DURATION, target: 40 },
+                { duration: STAGE_DURATION, target: 45 },
+                { duration: STAGE_DURATION, target: 50 },
             ],
             gracefulRampDown: '5m',
 
@@ -68,14 +89,20 @@ export const options: Options = {
         /*---Responder---*/
         ResponderNewRegistration: {
             exec: 'ResponderNewRegistration',
-            startTime: '15m',
 
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
-                { duration: '2m', target: 0 },
+                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
+                { duration: STAGE_DURATION, target: 10 },
+                { duration: STAGE_DURATION, target: 15 },
+                { duration: STAGE_DURATION, target: 20 },
+                { duration: STAGE_DURATION, target: 25 },
+                { duration: STAGE_DURATION, target: 30 },
+                { duration: STAGE_DURATION, target: 35 },
+                { duration: STAGE_DURATION, target: 40 },
+                { duration: STAGE_DURATION, target: 45 },
+                { duration: STAGE_DURATION, target: 50 },
             ],
             gracefulRampDown: '5m',
 
@@ -86,14 +113,20 @@ export const options: Options = {
         },
         ResponderExistingRegistration: {
             exec: 'ResponderExistingRegistration',
-            startTime: '15m',
 
             executor: 'ramping-vus',
             startVUs: 1,
             stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
-                { duration: '2m', target: 0 },
+                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
+                { duration: STAGE_DURATION, target: 10 },
+                { duration: STAGE_DURATION, target: 15 },
+                { duration: STAGE_DURATION, target: 20 },
+                { duration: STAGE_DURATION, target: 25 },
+                { duration: STAGE_DURATION, target: 30 },
+                { duration: STAGE_DURATION, target: 35 },
+                { duration: STAGE_DURATION, target: 40 },
+                { duration: STAGE_DURATION, target: 45 },
+                { duration: STAGE_DURATION, target: 50 },
             ],
             gracefulRampDown: '5m',
 
@@ -149,7 +182,7 @@ export const options: Options = {
 
 setUseRandomWaitTime(true);
 
-const TEST_TYPE = "load-test";
+const TEST_TYPE = "stress-test";
 
 export function handleSummary(data: any) {
     return getSummaryRes(TEST_TYPE, data);
