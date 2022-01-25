@@ -17,10 +17,10 @@ export interface NeedsAssessment {
   hasPetsFood?: null | boolean;
   haveMedication?: boolean;
   haveSpecialDiet?: boolean;
-  householdMembers?: null | Array<HouseholdMember>;
+  householdMembers?: Array<HouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
-  pets?: null | Array<Pet>;
+  pets?: Array<Pet>;
   specialDietDetails?: null | string;
   type?: NeedsAssessmentType;
 }

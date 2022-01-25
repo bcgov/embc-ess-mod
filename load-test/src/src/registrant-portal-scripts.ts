@@ -72,6 +72,7 @@ const getAuthToken = () => {
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to get auth token`);
     logError(response);
+    return;
   }
   return response.json();
 }
@@ -81,6 +82,9 @@ const getStartPage = () => {
   const response = http.get(urls.start_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Registrants - ${getIterationName()}: failed to get start page`);
+  }
 }
 
 const getAnonymousStartPage = () => {
@@ -88,6 +92,9 @@ const getAnonymousStartPage = () => {
   const response = http.get(urls.anonymous_start_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Registrants - ${getIterationName()}: failed to get anonymous start page`);
+  }
 }
 
 const getConfiguration = () => {
@@ -95,6 +102,9 @@ const getConfiguration = () => {
   const response = http.get(urls.config, params);
   formFailRate.add(response.status !== 200);
   loadConfig.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Registrants - ${getIterationName()}: failed to get config`);
+  }
 }
 
 const getCommunities = () => {
@@ -102,7 +112,10 @@ const getCommunities = () => {
   const response = http.get(urls.communities, params);
   formFailRate.add(response.status !== 200);
   loadCommunities.add(response.timings.waiting);
-
+  if (response.status !== 200) {
+    console.error(`Registrants - ${getIterationName()}: failed to get communities`);
+    return;
+  }
   return response.json();
 }
 
@@ -111,6 +124,9 @@ const getProvinces = () => {
   const response = http.get(urls.provinces, params);
   formFailRate.add(response.status !== 200);
   loadProvincesTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Registrants - ${getIterationName()}: failed to get provinces`);
+  }
   // return response.json();
 }
 
@@ -119,6 +135,9 @@ const getCountries = () => {
   const response = http.get(urls.countries, params);
   formFailRate.add(response.status !== 200);
   loadCountriesTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Registrants - ${getIterationName()}: failed to get countries`);
+  }
   // return response.json();
 }
 
@@ -127,6 +146,10 @@ const getSecurityQuestions = () => {
   const response = http.get(urls.security_questions, params);
   formFailRate.add(response.status !== 200);
   loadSecurityQuestions.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Registrants - ${getIterationName()}: failed to get security questions`);
+    return;
+  }
   return response.json();
 }
 
@@ -156,6 +179,7 @@ const getCurrentProfileExists = (token: any) => {
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to check if profile exists`);
     logError(response);
+    return;
   }
   return response.json();
 }
@@ -169,6 +193,7 @@ const getCurrentProfile = (token: any) => {
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to get current profile`);
     logError(response);
+    return;
   }
   return response.json();
 }

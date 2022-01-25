@@ -80,6 +80,7 @@ const getAuthToken = () => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error getting auth token`);
     logError(response);
+    return;
   }
   return response.json();
 }
@@ -89,6 +90,9 @@ const getStartPage = () => {
   const response = http.get(urls.start_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get start page`);
+  }
 }
 
 const getDashboard = () => {
@@ -96,6 +100,9 @@ const getDashboard = () => {
   const response = http.get(urls.dashboard, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get dashboard`);
+  }
 }
 
 const getConfiguration = () => {
@@ -103,6 +110,9 @@ const getConfiguration = () => {
   const response = http.get(urls.config, params);
   formFailRate.add(response.status !== 200);
   loadConfig.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get config`);
+  }
 }
 
 const getCommunities = () => {
@@ -110,6 +120,10 @@ const getCommunities = () => {
   const response = http.get(urls.communities, params);
   formFailRate.add(response.status !== 200);
   loadCommunitiesTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get communities`);
+    return;
+  }
   return response.json();
 }
 
@@ -118,6 +132,9 @@ const getProvinces = () => {
   const response = http.get(urls.provinces, params);
   formFailRate.add(response.status !== 200);
   loadProvincesTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get provinces`);
+  }
   // return response.json();
 }
 
@@ -126,6 +143,9 @@ const getCountries = () => {
   const response = http.get(urls.countries, params);
   formFailRate.add(response.status !== 200);
   loadCountriesTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get countries`);
+  }
   // return response.json();
 }
 
@@ -134,6 +154,10 @@ const getSecurityQuestions = () => {
   const response = http.get(urls.security_questions, params);
   formFailRate.add(response.status !== 200);
   loadSecurityQuestions.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get security questions`);
+    return;
+  }
   return response.json();
 }
 
@@ -154,6 +178,9 @@ const getMemberRole = (token: any) => {
   const response = http.get(urls.member_role, params);
   formFailRate.add(response.status !== 200);
   loadMemberRole.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get member roles`);
+  }
   // return response.json();
 }
 
@@ -163,6 +190,9 @@ const getMemberLabel = (token: any) => {
   const response = http.get(urls.member_label, params);
   formFailRate.add(response.status !== 200);
   loadMemberLabel.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get member label`);
+  }
   // return response.json();
 }
 
@@ -172,6 +202,9 @@ const getTaskSearchPage = (token: any) => {
   const response = http.get(urls.task_search_page, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get task search page`);
+  }
   // return response.html();
 }
 
@@ -181,6 +214,10 @@ const searchTasks = (token: any) => {
   const response = http.get(urls.task_search, params);
   formFailRate.add(response.status !== 200);
   searchTaskTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: error searching tasks`);
+    return;
+  }
   return response.json();
 }
 
@@ -193,6 +230,7 @@ const searchRegistrations = (token: any, registrant: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error searching regisrations`);
     logError(response);
+    return;
   }
 
   if (response.json()) {
@@ -213,6 +251,9 @@ const getNewEvacueeWizard = (token: any) => {
   const response = http.get(urls.ess_wizard, params);
   formFailRate.add(response.status !== 200);
   loadHTMLTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get new evacuee wizard`);
+  }
   // return response.html();
 }
 
@@ -228,6 +269,7 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting registrant`);
     logError(response, payload);
+    return;
   }
 
   return response.json();
@@ -239,6 +281,10 @@ const getRegistrant = (token: any, regRes: any) => {
   const response = http.get(`${urls.registrant}/${regRes.id}`, params);
   formFailRate.add(response.status !== 200);
   loadRegistrantTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get registrant`);
+    return;
+  }
   return response.json();
 }
 
@@ -254,6 +300,7 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting file`);
     logError(response, payload);
+    return;
   }
   else {
     console.log(`Responders - ${getIterationName()}: successfully submitted file`);
@@ -274,6 +321,7 @@ const updateEvacuationFile = (token: any, file: any, registrantId: any, registra
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error updating file`);
     logError(response, payload);
+    return;
   }
   else {
     console.log(`Responders - ${getIterationName()}: successfully updated file`);
@@ -292,6 +340,7 @@ const getEvacuationFile = (token: any, fileRes: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: failed to load file`);
     logError(response);
+    return;
   }
   return response.json();
 }
@@ -302,6 +351,10 @@ const getTaskSuppliers = (token: any) => {
   const response = http.get(urls.task_suppliers, params);
   formFailRate.add(response.status !== 200);
   loadTaskSuppliersTime.add(response.timings.waiting);
+  if (response.status !== 200) {
+    console.error(`Responders - ${getIterationName()}: failed to get task suppliers`);
+    return;
+  }
   return response.json();
 }
 
@@ -317,6 +370,7 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting supports`);
     logError(response, payload);
+    return;
   }
 
   return response.json();
@@ -354,6 +408,7 @@ const submitFileNote = (token: any, file: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting note`);
     logError(response, payload);
+    return;
   }
   else {
     console.log(`Responders - ${getIterationName()}: successfully submitted note`);
