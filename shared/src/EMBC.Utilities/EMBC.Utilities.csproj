@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Nullable>warnings</Nullable>
+        <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Company>Province of British Columbia</Company>
         <Authors>Quartech Systems Limited</Authors>
@@ -13,6 +13,7 @@
         <RepositoryType>GIT</RepositoryType>
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
     
     <ItemGroup>

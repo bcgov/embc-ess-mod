@@ -29,6 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\EMBC.ESS\EMBC.ESS.csproj" />
+      <ProjectReference Include="..\EMBC.ESS.Host\EMBC.ESS.Host.csproj" />
     </ItemGroup>
 </Project>

@@ -230,7 +230,10 @@ namespace EMBC.Utilities.Hosting
 
             services.Configure<ExceptionHandlerOptions>(opts => opts.AllowStatusCode404Response = true);
 
-            Configurer.ConfigureComponentServices(services, configuration, hostEnvironment, logger, assemblies);
+            services.ConfigureComponentServices(configuration, hostEnvironment, logger, assemblies);
+
+            //add background tasks
+            services.AddBackgroundTasks(logger, assemblies);
         }
 
         protected virtual void Configure(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, params Assembly[] assemblies)
@@ -248,27 +251,23 @@ namespace EMBC.Utilities.Hosting
 
             logger.LogInformation("Starting configuration of {appName}", appName);
 
-            app.UseSerilogRequestLogging(opts =>
-            {
-                opts.GetLevel = ExcludeHealthChecks;
-                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
-                {
-                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
-                    diagCtx.Set("Host", httpCtx.Request.Host);
-                    //diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
-                    //diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress?.ToString());
-                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
-                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
-                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
-                };
-            });
-
             app.UseResponseCompression();
             app.UseForwardedHeaders();
             app.UseRouting();
             app.UseCors();
 
-            Configurer.ConfigureComponentPipeline(app, configuration, env, logger, assemblies);
+            app.ConfigureComponentPipeline(configuration, env, logger, assemblies);
+
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.GetLevel = ExcludeHealthChecks;
+                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+                {
+                    diagCtx.Set("User", httpCtx.User.Identity?.Name ?? string.Empty);
+                    diagCtx.Set("Host", httpCtx.Request.Host);
+                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength?.ToString() ?? string.Empty);
+                };
+            });
 
             app.UseEndpoints(endpoints =>
             {
