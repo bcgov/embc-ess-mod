@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Linq;
 using System.Reflection;
 using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -70,6 +71,17 @@ namespace EMBC.Utilities.Hosting
                 }
             }
             logger.LogInformation("finished pipeline configuration scan");
+        }
+
+        public static void AddBackgroundTasks(this IServiceCollection services, ILogger logger, params Assembly[] assemblies)
+        {
+            var backgroundTasks = assemblies.SelectMany(a => a.Discover<IBackgroundTask>()).ToArray();
+            var mi = typeof(BackgroundTaskEx).GetMethod(nameof(BackgroundTaskEx.AddBackgroundTask)) ?? null!;
+            foreach (var task in backgroundTasks)
+            {
+                logger.LogInformation("Adding background task {0}", task.FullName);
+                mi.MakeGenericMethod(task).Invoke(null, new[] { services });
+            }
         }
     }
 }

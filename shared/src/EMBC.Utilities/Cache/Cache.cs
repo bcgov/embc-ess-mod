@@ -30,6 +30,10 @@ namespace EMBC.ESS.Utilities.Cache
         Task<T?> Get<T>(string key);
 
         Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
+
+        Task Remove(string key);
+
+        Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
     }
 
     internal class Cache : ICache
@@ -60,6 +64,16 @@ namespace EMBC.ESS.Utilities.Cache
         public async Task<T?> Get<T>(string key)
         {
             return Deserialize<T?>(await cache.GetAsync(keyGen(key)));
+        }
+
+        public async Task Remove(string key)
+        {
+            await cache.RemoveAsync(key);
+        }
+
+        public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
+        {
+            await Set(key, getter, expiration);
         }
 
         private Context CreateContext(string key, TimeSpan? expiration)
