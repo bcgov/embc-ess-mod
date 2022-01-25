@@ -36,11 +36,12 @@ FROM build AS publish
 RUN dotnet publish "EMBC.ESS.Host/EMBC.ESS.Host.csproj" -c Release -o /app/publish --runtime linux-musl-x64 --no-self-contained
 
 FROM base AS final
-# copy app
-WORKDIR /app
-COPY --from=publish /app/publish .
 # copy diagnostics tools
 WORKDIR /tools
 COPY --from=build /tools .
+# copy app
+WORKDIR /app
+COPY --from=publish /app/publish .
+
 
 ENTRYPOINT ["dotnet", "EMBC.ESS.Host.dll"]
