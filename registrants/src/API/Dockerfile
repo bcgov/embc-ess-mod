@@ -6,6 +6,12 @@ ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 ENV DOTNET_gcServer=1
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+
+# install diagnostics tools
+RUN dotnet tool install --tool-path /tools dotnet-trace
+RUN dotnet tool install --tool-path /tools dotnet-counters
+RUN dotnet tool install --tool-path /tools dotnet-dump
+
 WORKDIR /src
 COPY ["EMBC.Registrants.API/EMBC.Registrants.API.csproj", "EMBC.Registrants.API/"]
 COPY ["EMBC.ESS.Shared.Contracts/EMBC.ESS.Shared.Contracts.csproj", "EMBC.ESS.Shared.Contracts/"]
@@ -14,15 +20,21 @@ COPY ["EMBC.Utilities.Hosting/EMBC.Utilities.Hosting.csproj", "EMBC.Utilities.Ho
 COPY ["EMBC.Utilities.Messaging/EMBC.Utilities.Messaging.csproj", "EMBC.Utilities.Messaging/"]
 COPY ["EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj", "EMBC.Tests.Unit.Registrants.API/"]
 COPY ["EMBC.Registrants.sln", "stylecop.json", ".editorconfig", "./"]
-
 RUN dotnet restore .
 COPY . .
+
+# run unit tests
 RUN dotnet test -c Release
 
+# build
 FROM build AS publish
 RUN dotnet publish "EMBC.Registrants.API/EMBC.Registrants.API.csproj" -c Release -o /app/publish --runtime linux-musl-x64 --no-self-contained
 
 FROM base AS final
+# copy app
 WORKDIR /app
 COPY --from=publish /app/publish .
+# copy diagnostics tools
+WORKDIR /tools
+COPY --from=build /tools .
 ENTRYPOINT ["dotnet", "EMBC.Registrants.API.dll"]
