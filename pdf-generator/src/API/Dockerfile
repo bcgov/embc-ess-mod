@@ -45,10 +45,10 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 libxshmfence-dev --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
-# copy app
-WORKDIR /app
-COPY --from=publish /app/publish .
 # copy diagnostics tools
 WORKDIR /tools
 COPY --from=build /tools .
+# copy app
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EMBC.PDFGenerator.dll"]
