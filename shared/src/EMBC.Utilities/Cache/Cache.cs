@@ -16,6 +16,7 @@
 
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Polly;
@@ -41,6 +42,7 @@ namespace EMBC.ESS.Utilities.Cache
         private readonly IDistributedCache cache;
         private readonly string keyPrefix;
         private readonly IAsyncPolicy<byte[]> policy;
+        private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
@@ -53,7 +55,16 @@ namespace EMBC.ESS.Utilities.Cache
 
         public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
         {
-            return Deserialize<T?>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
+            //return Deserialize<T?>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
+            var value = await Get<T>(key);
+            if (value == null)
+            {
+                //cache miss
+                await semaphore.WaitAsync();
+                await Set<T>(key, getter, expiration);
+                semaphore.Release();
+            }
+            return value;
         }
 
         public async Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
