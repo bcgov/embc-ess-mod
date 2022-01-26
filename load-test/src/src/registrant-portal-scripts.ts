@@ -7,8 +7,6 @@ import { fillInForm, getHTTPParams, getIterationName, logError, navigate } from 
 
 // @ts-ignore
 import { RegistrantTestParameters, MAX_VU, MAX_ITER } from '../load-test.parameters-APP_TARGET';
-// @ts-ignore
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 
 const testParams = RegistrantTestParameters;
 const baseUrl = testParams.baseUrl;

@@ -1,106 +1,60 @@
-import { Options } from 'k6/options';
+import { Options, Scenario } from 'k6/options';
 export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-scripts';
 export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-scripts';
 import { setUseRandomWaitTime, getSummaryRes } from './utilities';
 
-// @ts-ignore
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
-// @ts-ignore
-import { jUnit, textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
+let REGISTRANT_TARGET = parseInt(__ENV.REG || "50");
+let RESPONDER_TARGET = parseInt(__ENV.RES || "30");
+
+let registrant_scenario: Scenario = {
+    executor: 'ramping-vus',
+    startVUs: 1,
+    stages: [
+        { duration: '15m', target: REGISTRANT_TARGET }, //target should be <= MAX_VU
+        { duration: '10m', target: REGISTRANT_TARGET }, //target should be <= MAX_VU
+        { duration: '5m', target: 0 },
+    ],
+    gracefulRampDown: '5m',
+};
+
+let responder_scenario: Scenario = {
+    startTime: '15m',
+    executor: 'ramping-vus',
+    startVUs: 1,
+    stages: [
+        { duration: '2m', target: RESPONDER_TARGET }, //target should be <= MAX_VU
+        { duration: '41m', target: RESPONDER_TARGET }, //target should be <= MAX_VU
+        { duration: '2m', target: 0 },
+    ],
+    gracefulRampDown: '5m',
+};
 
 export const options: Options = {
     scenarios: {
         /*---Registrant---*/
         anonymousRegistration: {
             exec: 'RegistrantAnonymousRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '5m', target: 50 }, //target should be <= MAX_VU
-                { duration: '10m', target: 50 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...registrant_scenario
         },
         newRegistration: {
             exec: 'RegistrantNewRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '5m', target: 50 }, //target should be <= MAX_VU
-                { duration: '10m', target: 50 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...registrant_scenario
         },
         existingProfileRegistration: {
             exec: 'RegistrantExistingProfileRegistration',
             startTime: '2m',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '5m', target: 50 }, //target should be <= MAX_VU
-                { duration: '10m', target: 50 }, //target should be <= MAX_VU
-                { duration: '5m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...registrant_scenario
         },
 
 
         /*---Responder---*/
         ResponderNewRegistration: {
             exec: 'ResponderNewRegistration',
-            startTime: '15m',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
-                { duration: '2m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...responder_scenario
         },
         ResponderExistingRegistration: {
             exec: 'ResponderExistingRegistration',
-            startTime: '15m',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: '2m', target: 15 }, //target should be <= MAX_VU
-                { duration: '41m', target: 15 }, //target should be <= MAX_VU
-                { duration: '2m', target: 0 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...responder_scenario
         },
     },
 
