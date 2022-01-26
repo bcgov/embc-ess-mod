@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -24,7 +24,7 @@ namespace EMBC.Tests.Integration.ESS
                 .Select(assembly => Assembly.LoadFrom(assembly))
                 .ToArray();
 
-            return Host.CreateDefaultBuilder()
+            return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
              .ConfigureWebHostDefaults(webBuilder =>
              {
                  webBuilder.ConfigureServices((ctx, services) =>
@@ -33,11 +33,11 @@ namespace EMBC.Tests.Integration.ESS
                      services.AddDataProtection();
                      services.AddDistributedMemoryCache();
                      services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, assemblies);
-                     Configurer.ConfigureComponentServices(services, ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
+                     services.ConfigureComponentServices(ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
                  })
                  .Configure((WebHostBuilderContext ctx, IApplicationBuilder app) =>
                  {
-                     Configurer.ConfigureComponentPipeline(app, ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
+                     app.ConfigureComponentPipeline(ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
                  });
              }).UseEnvironment(Environments.Development);
         }

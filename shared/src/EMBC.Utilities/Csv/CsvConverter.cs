@@ -29,10 +29,10 @@ namespace EMBC.Utilities.Csv
             for (var i = 0; i < properties.Length - 1; i++)
             {
                 var attr = properties[i].GetCustomAttribute<DisplayAttribute>();
-                sw.Write(Quote(attr != null ? attr.Name : properties[i].Name, quoteIdentifier) + ",");
+                sw.Write(Quote(attr != null && attr.Name != null ? attr.Name : properties[i].Name, quoteIdentifier) + ",");
             }
             var lastAttr = properties[properties.Length - 1].GetCustomAttribute<DisplayAttribute>();
-            var lastProp = lastAttr != null ? lastAttr.Name : properties[properties.Length - 1].Name;
+            var lastProp = lastAttr != null && lastAttr.Name != null ? lastAttr.Name : properties[properties.Length - 1].Name;
             sw.Write(Quote(lastProp, quoteIdentifier) + sw.NewLine);
         }
 

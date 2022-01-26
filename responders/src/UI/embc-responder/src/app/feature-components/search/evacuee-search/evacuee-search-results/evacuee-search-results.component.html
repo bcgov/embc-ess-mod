@@ -9,20 +9,52 @@
   <div class="row">
     <div class="col-md-8">
       <app-alert></app-alert>
-      <p class="result-text">
-        Results for "<b
-          >{{
-            evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase
-          }}, {{ evacueeSearchContext?.evacueeSearchParameters?.firstName }}</b
-        >" with a date of birth "{{
-          evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth
-            | date: 'dd-MMM-yyyy'
-        }}".
-      </p>
-      <p>
-        If the evacuee provided ID and there is a profile result, go to the
-        profile. Otherwise, go to the ESS File.
-      </p>
+      <ng-container *ngIf="!isPaperBased; else paperBasedResults">
+        <p class="result-text">
+          Results for "<b
+            >{{
+              evacueeSearchContext?.evacueeSearchParameters?.lastName
+                | uppercase
+            }},
+            {{ evacueeSearchContext?.evacueeSearchParameters?.firstName }}</b
+          >" with a date of birth
+          <b
+            >"{{
+              evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth
+                | date: 'dd-MMM-yyyy'
+            }}".</b
+          >
+        </p>
+        <p>
+          If the evacuee provided ID and there is a profile result, go to the
+          profile. Otherwise, go to the ESS File.
+        </p>
+      </ng-container>
+      <ng-template #paperBasedResults>
+        <p class="result-text">
+          Results for "<b
+            >{{
+              evacueeSearchContext?.evacueeSearchParameters?.lastName
+                | uppercase
+            }},
+            {{ evacueeSearchContext?.evacueeSearchParameters?.firstName }}</b
+          >" with a date of birth
+          <b
+            >"{{
+              evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth
+                | date: 'dd-MMM-yyyy'
+            }}"</b
+          >
+          and a paper ESS File # <b>{{ paperBasedEssFile }}.</b>
+        </p>
+        <p>
+          For data entry of paper ESS Files, you will only be able to access the
+          paper ESS File that you searched for.
+        </p>
+        <p>
+          If there are no matching ESS Files you may start a new registration.
+        </p>
+      </ng-template>
       <br />
       <hr class="solid-hr" />
       <br />

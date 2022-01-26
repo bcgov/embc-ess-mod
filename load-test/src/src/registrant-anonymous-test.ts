@@ -1,10 +1,7 @@
 import { Options } from 'k6/options';
 export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-scripts';
 export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-scripts';
-
-// @ts-ignore
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
-import { getExecutionType, getSummaryFileDescriptor } from './utilities';
+import { getExecutionType, getSummaryRes } from './utilities';
 
 let execution_type = getExecutionType();
 
@@ -35,9 +32,8 @@ export const options: Options = {
     }
 };
 
+const TEST_TYPE = "registrant-anonymous";
+
 export function handleSummary(data: any) {
-    let fileName: string = `registrant-anonymous.${getSummaryFileDescriptor()}.summary.html`;
-    let res: any = {};
-    res[fileName] = htmlReport(data);
-    return res;
+    return getSummaryRes(TEST_TYPE, data);
 }

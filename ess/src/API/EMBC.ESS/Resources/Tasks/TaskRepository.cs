@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
@@ -29,11 +30,13 @@ namespace EMBC.ESS.Resources.Tasks
     {
         private readonly EssContext essContext;
         private readonly IMapper mapper;
+        private readonly ICache cache;
 
-        public TaskRepository(EssContext essContext, IMapper mapper)
+        public TaskRepository(IEssContextFactory essContextFactory, IMapper mapper, ICache cache)
         {
-            this.essContext = essContext;
+            this.essContext = essContextFactory.CreateReadOnly();
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         public async Task<TaskQueryResult> QueryTask(TaskQuery query)
@@ -47,18 +50,19 @@ namespace EMBC.ESS.Resources.Tasks
 
         private async Task<TaskQueryResult> HandleQuery(TaskQuery queryRequest)
         {
-            if (string.IsNullOrEmpty(queryRequest.ById)) throw new ArgumentNullException($"only query a specific task is currently allowed", nameof(TaskQuery.ById));
-            IQueryable<era_task> taskQuery = essContext.era_tasks
-                .Expand(c => c.era_JurisdictionID);
+            if (queryRequest.ById == null) throw new ArgumentNullException(nameof(queryRequest.ById), "Only task query by id is supported");
+            var tasks = await cache.GetOrSet($"tasks:{queryRequest.ById}", async () =>
+            {
+                return mapper.Map<IEnumerable<EssTask>>(await
+                    ((DataServiceQuery<era_task>)essContext.era_tasks
+                    .Expand(c => c.era_JurisdictionID)
+                    .Where(t => t.era_name == queryRequest.ById))
+                    .GetAllPagesAsync());
+            }, TimeSpan.FromMinutes(1));
 
-            if (!string.IsNullOrEmpty(queryRequest.ById)) taskQuery = taskQuery.Where(t => t.era_name == queryRequest.ById);
+            if (queryRequest.ByStatus.Any()) tasks = tasks.Where(t => queryRequest.ByStatus.Any(s => s == t.Status));
 
-            var esstask = await ((DataServiceQuery<era_task>)taskQuery).GetAllPagesAsync();
-
-            essContext.DetachAll();
-
-            var items = mapper.Map<IEnumerable<EssTask>>(esstask);
-            return new TaskQueryResult { Items = items };
+            return new TaskQueryResult { Items = tasks.ToArray() };
         }
     }
 }

@@ -1,6 +1,11 @@
 import { sleep } from 'k6';
 import { Scenario } from 'k6/options';
 
+// @ts-ignore
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+// @ts-ignore
+import { jUnit, textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
+
 /** Returns a random number between min and max (both included) */
 export function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -75,18 +80,6 @@ export function getExecutionType(): Scenario {
     };
 }
 
-export function getSummaryFileDescriptor(): string {
-    let TARGET_VUS = parseInt(__ENV.VUS || "1");
-    let TARGET_ITERATIONS = parseInt(__ENV.ITERS || "1");
-    let descriptor = `${TARGET_VUS}-VUS`;
-
-    if (__ENV.ITERS) {
-        descriptor += `-${TARGET_ITERATIONS}-ITERS`;
-    }
-
-    return descriptor;
-}
-
 export function getHTTPParams(token?: string) {
     let headers: any = {
         "accept": "application/json",
@@ -101,4 +94,45 @@ export function getHTTPParams(token?: string) {
         headers: headers,
         timeout: 180000
     }
+}
+
+/** Get date string as yyyy-mm-dd */
+export function getDateString(date: Date = new Date()) {
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1); //month is 0 based
+    let day = date.getDate();
+    return `${year}-${month}-${day}`;
+}
+
+/** Get string with current time hh-mm-ss */
+export function getTimeString(date: Date = new Date()) {
+    let hours = date.getHours();
+    let minutes = date.getMinutes()
+    let seconds = date.getSeconds();
+    return `${hours}-${minutes}-${seconds}`;
+}
+
+function getSummaryFileDescriptor(): string {
+    let descriptor = ``;
+    if (__ENV.VUS) descriptor += __ENV.VUS + "-VUS ";
+    if (__ENV.ITERS) descriptor += __ENV.ITERS + "-ITERS ";
+    if (__ENV.DUR) descriptor += __ENV.DUR + "-DUR ";
+    descriptor = descriptor.trim();
+    if (descriptor) descriptor = " " + descriptor;
+    return descriptor;
+}
+
+/** Get return obj for handle summary */
+export function getSummaryRes(TEST_TYPE: string, data: any) {
+    let dateString = getDateString();
+    let timeString = getTimeString();
+    let descriptor = getSummaryFileDescriptor();
+    let fileName: string = `${TEST_TYPE}${descriptor}.${dateString}.${timeString}.summary`;
+    let res: any = {
+        'stdout': textSummary(data, { indent: ' ', enableColors: true }), // Show the text summary to stdout...
+    };
+    res[fileName + ".html"] = htmlReport(data);
+    res[fileName + ".json"] = JSON.stringify(data);
+
+    return res
 }

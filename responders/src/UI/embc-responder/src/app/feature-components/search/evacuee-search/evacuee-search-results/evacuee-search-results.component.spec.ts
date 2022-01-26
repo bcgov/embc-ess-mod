@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EvacueeSearchResultsComponent } from './evacuee-search-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('EvacueeSearchResultsComponent', () => {
   let component: EvacueeSearchResultsComponent;
@@ -11,7 +12,7 @@ describe('EvacueeSearchResultsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EvacueeSearchResultsComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule]
+      imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule]
     }).compileComponents();
   });
 

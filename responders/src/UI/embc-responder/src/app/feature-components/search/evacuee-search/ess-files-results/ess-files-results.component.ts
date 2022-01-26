@@ -20,6 +20,9 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { Community } from 'src/app/core/services/locations.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -38,7 +41,8 @@ export class EssFilesResultsComponent
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,11 +69,20 @@ export class EssFilesResultsComponent
    * @param selectedESSFile selected ess file
    */
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
-    this.evacueeSessionService.essFileNumber = selectedESSFile.id;
-    if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
-      this.router.navigate(['responder-access/search/essfile-dashboard']);
+    if (
+      this.evacueeSessionService.paperBased === true &&
+      this.evacueeSearchService.paperBasedEssFile !== selectedESSFile.id
+    ) {
+      this.openUnableAccessESSFileDialog();
     } else {
-      this.router.navigate(['responder-access/search/security-phrase']);
+      this.evacueeSessionService.essFileNumber = selectedESSFile.id;
+      if (
+        this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
+      ) {
+        this.router.navigate(['responder-access/search/essfile-dashboard']);
+      } else {
+        this.router.navigate(['responder-access/search/security-phrase']);
+      }
     }
   }
 
@@ -98,5 +111,38 @@ export class EssFilesResultsComponent
     } else {
       return type;
     }
+  }
+
+  public openUnableAccessESSFileDialog(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: globalConst.disabledESSFileMessage
+      },
+      height: '390px',
+      width: '520px'
+    });
+  }
+
+  public openUnableAccessDialog(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: globalConst.unableAccessFileMessage
+      },
+      height: '285px',
+      width: '493px'
+    });
+  }
+
+  public alreadyExistsDialog(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: globalConst.alreadyExistESSFileMessage
+      },
+      height: '390px',
+      width: '520px'
+    });
   }
 }

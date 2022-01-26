@@ -1,16 +1,17 @@
 import { Options } from 'k6/options';
 export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-scripts';
 export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-scripts';
-
-// @ts-ignore
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
-import { getExecutionType, getSummaryFileDescriptor } from './utilities';
+import { getExecutionType, getSummaryRes, setUseRandomWaitTime } from './utilities';
 
 //benchmark default to 5m duration
 if (!__ENV.ITERS) {
-    __ENV.DUR = '5m';
+    __ENV.DUR = '10m';
 }
 let execution_type = getExecutionType();
+
+if (__ENV.RND) {
+    setUseRandomWaitTime(true);
+}
 
 export const options: Options = {
     scenarios: {
@@ -84,10 +85,8 @@ export const options: Options = {
     }
 };
 
+const TEST_TYPE = "benchmark";
+
 export function handleSummary(data: any) {
-    let dateString = new Date().toLocaleString().replace(/[\/:]/g, '-').replace(/,/g, '');
-    let fileName: string = `benchmark.${getSummaryFileDescriptor()}.${dateString}.summary.html`;
-    let res: any = {};
-    res[fileName] = htmlReport(data);
-    return res;
+    return getSummaryRes(TEST_TYPE, data);
 }
