@@ -23,14 +23,11 @@ namespace EMBC.Tests.Integration.ESS
         private readonly string inactiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact contact;
-
         private readonly era_task activeTask;
-
         private readonly era_task inactiveTask;
         private readonly era_evacuationfile evacuationfile;
         private readonly era_evacuationfile paperEvacuationFile;
         private readonly era_supplier supplierA;
-
         private readonly era_supplier supplierB;
         private readonly era_supplier supplierC;
         private readonly era_supplier inactiveSupplier;
@@ -56,12 +53,9 @@ namespace EMBC.Tests.Integration.ESS
         public string ContactFirstName => contact.firstname;
         public string ContactLastName => contact.lastname;
         public string ContactDateOfBirth => $"{contact.birthdate.GetValueOrDefault().Month:D2}/{contact.birthdate.GetValueOrDefault().Day:D2}/{contact.birthdate.GetValueOrDefault().Year:D4}";
-
         public string EvacuationFileId => evacuationfile.era_name;
-
         public string PaperEvacuationFileId => paperEvacuationFile.era_paperbasedessfile ?? null!;
         public string CurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
-
         public string EvacuationFileSecurityPhrase => testPrefix + "-securityphrase";
         public string SupplierAId => supplierA.era_supplierid.GetValueOrDefault().ToString();
         public string SupplierAName => supplierA.era_suppliername;
@@ -276,25 +270,14 @@ namespace EMBC.Tests.Integration.ESS
 
         private era_evacuationfile CreateEvacuationFile(contact primaryContact, string? paperFileNumber = null)
         {
-            var withPaper = new era_evacuationfile()
+            var file = new era_evacuationfile()
             {
                 era_evacuationfileid = Guid.NewGuid(),
-                era_name = testPrefix + "-file-with-paperId",
+                era_name = paperFileNumber != null ? testPrefix + "-file-with-paperId" : testPrefix + "-file",
                 era_evacuationfiledate = DateTime.UtcNow,
                 era_securityphrase = EvacuationFileSecurityPhrase,
                 era_paperbasedessfile = paperFileNumber
             };
-
-            var withoutPaper = new era_evacuationfile()
-            {
-                era_evacuationfileid = Guid.NewGuid(),
-                era_name = testPrefix + "-file",
-                era_evacuationfiledate = DateTime.UtcNow,
-                era_securityphrase = EvacuationFileSecurityPhrase,
-                era_paperbasedessfile = null
-            };
-
-            var file = paperFileNumber != null ? withPaper : withoutPaper;
 
             essContext.AddToera_evacuationfiles(file);
             essContext.SetLink(file, nameof(era_evacuationfile.era_TaskId), this.activeTask);
