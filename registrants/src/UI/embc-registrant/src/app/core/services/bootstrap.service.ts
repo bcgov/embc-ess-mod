@@ -30,6 +30,7 @@ export class BootstrapService {
       this.outageService.outageInfo = config.outageInfo;
       console.log(this.outageService.outageInfo);
     } catch (error) {
+      console.log('HERE');
       this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
     }
 
