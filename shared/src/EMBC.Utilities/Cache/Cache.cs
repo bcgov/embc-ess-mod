@@ -60,9 +60,10 @@ namespace EMBC.ESS.Utilities.Cache
             if (value == null)
             {
                 //cache miss
-                await semaphore.WaitAsync();
+                //await semaphore.WaitAsync();
                 await Set<T>(key, getter, expiration);
-                semaphore.Release();
+                value = await Get<T>(key);
+                //semaphore.Release();
             }
             return value;
         }
