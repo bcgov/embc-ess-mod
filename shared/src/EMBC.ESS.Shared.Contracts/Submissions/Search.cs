@@ -22,6 +22,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class EvacuationFilesQuery : Query<EvacuationFilesQueryResponse>
     {
         public string FileId { get; set; }
+        public string ExternalReferenceId { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string PrimaryRegistrantUserId { get; set; }
         public string LinkedRegistrantId { get; set; }
