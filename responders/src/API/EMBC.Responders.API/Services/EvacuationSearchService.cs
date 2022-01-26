@@ -105,9 +105,9 @@ namespace EMBC.Responders.API.Services
             this.httpContext = httpContext;
         }
 
-        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string ExternalReferenceId, MemberRole userRole)
+        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string externalReferenceId, MemberRole userRole)
         {
-            var allowedStatues = (!string.IsNullOrEmpty(ExternalReferenceId) || userRole != MemberRole.Tier1 ? tier2andAboveFileStatuses : tier1FileStatuses)
+            var allowedStatues = (!string.IsNullOrEmpty(externalReferenceId) || userRole != MemberRole.Tier1 ? tier2andAboveFileStatuses : tier1FileStatuses)
                 .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray();
             var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
             {

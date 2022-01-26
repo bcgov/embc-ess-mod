@@ -137,10 +137,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             var dateOfBirth = TestData.ContactDateOfBirth;
 
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
-
-            var fileWithPaperId = searchResults.EvacuationFiles.Where(e => e.ExternalReferenceId != null);
-
-            fileWithPaperId.ShouldNotBeNull();
+            searchResults.EvacuationFiles.ShouldContain(e => e.ExternalReferenceId == TestData.PaperEvacuationFileId);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
