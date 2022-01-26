@@ -1,9 +1,82 @@
-.footer-position {
-    // position: fixed;
-    bottom: 0;
-    width: 100%;
+.row-align {
+  align-items: center !important;
+  width: inherit;
 }
 
-// .app-version {
-//     color: white !important;
-// }
+footer mat-toolbar {
+  background-color: #dce2f0;
+  border-top: 2px solid #fcba19;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.footer-position {
+  // position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.ul-direction {
+  flex-direction: row;
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.link {
+  display: block;
+  padding: 0.4rem 0.8rem;
+}
+
+a {
+  color: #333333;
+  text-decoration: none;
+}
+
+a:hover {
+  color: white;
+}
+
+.app-version {
+  color: white !important;
+  cursor: pointer;
+}
+
+.app-version:hover {
+  text-decoration: underline;
+}
+
+ul {
+  margin-top: revert !important;
+}
+
+.mat-toolbar-row,
+.mat-toolbar-single-row .mat-toolbar-multiple-rows {
+  height: auto !important;
+}
+
+@media (max-width: 885px) {
+  .contact-info {
+    white-space: normal;
+  }
+
+  .ul-direction {
+    padding: 0px;
+  }
+
+  .link {
+    padding-left: 0px;
+  }
+
+  .divider {
+    display: none;
+  }
+}
+
+.divider {
+  color: #333333;
+  border-left: 1px solid;
+  height: 16px;
+  align-self: center;
+}

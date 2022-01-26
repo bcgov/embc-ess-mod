@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HandlebarsDotNet;
@@ -27,13 +28,13 @@ namespace EMBC.ESS.Utilities.Transformation
 
     public class TransformationData
     {
-        public string Template { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> Tokens { get; set; }
+        public string Template { get; set; } = null!;
+        public IEnumerable<KeyValuePair<string, string>> Tokens { get; set; } = Array.Empty<KeyValuePair<string, string>>();
     }
 
     public class TransformationResult
     {
-        public string Content { get; set; }
+        public string? Content { get; set; }
     }
 
     public class HbsTransformator : ITransformator

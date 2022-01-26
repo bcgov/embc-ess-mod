@@ -46,7 +46,6 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                 configurationServices.Logger.LogWarning("PdfGenerator:url env var is not set, PdfGenerator will not be available");
                 return;
             }
-            var allowInvalidServerCertificates = configurationServices.Configuration.GetValue("pdfGenerator:allowInvalidServerCertificate", false);
 
             var httpClientBuilder = configurationServices.Services.AddGrpcClient<Generator.GeneratorClient>(opts =>
             {

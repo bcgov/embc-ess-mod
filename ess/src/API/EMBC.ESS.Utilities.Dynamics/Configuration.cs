@@ -46,7 +46,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             services
                 .AddHttpClient("adfs_token")
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-                .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
+                /*.AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
                     new HttpClientCircuitBreakerPolicy
                     {
@@ -71,7 +71,8 @@ namespace EMBC.ESS.Utilities.Dynamics
                         Timeout = TimeSpan.FromSeconds(options.Adfs.TimeoutInSeconds),
                         OnTimeout = (sp, t, e) => { OnTimeout("adfs_token", sp, t, e); }
                     }
-                });
+                })*/
+                ;
 
             services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
 
@@ -86,7 +87,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                     var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                     c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
                 })
-                .AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
+                /*.AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
                     new HttpClientCircuitBreakerPolicy
                     {
@@ -106,7 +107,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                         Timeout = TimeSpan.FromSeconds(options.TimeoutInSeconds),
                         OnTimeout = (sp, t, e) => { OnTimeout("dynamics", sp, t, e); }
                     }
-                })
+                })*/
                 ;
 
             services.AddScoped<IEssContextFactory, EssContextFactory>();

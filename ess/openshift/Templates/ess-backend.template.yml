@@ -78,7 +78,7 @@ objects:
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
       notifications__email__smtpserver: ${SMTP_SERVER}
-      pdfGenerator__url: https://${APP_NAME}-pdf-generator:2020
+      pdfGenerator__url: dns:///${APP_NAME}-pdf-generator:2020
       pdfGenerator__allowInvalidServerCertificate: "true"
       REGISTRANTS_PORTAL_BASE_URL: ${REGISTRANTS_PORTAL_BASE_URL}
 
@@ -185,7 +185,7 @@ objects:
             - name: ess-backend
               resources:
                 limits:
-                  cpu: 150m
+                  cpu: 200m
                   memory: 1Gi
                 requests:
                   cpu: 50m
@@ -216,7 +216,7 @@ objects:
                 timeoutSeconds: 5
                 periodSeconds: 10
                 successThreshold: 1
-                failureThreshold: 3
+                failureThreshold: 5
               startupProbe:
                 httpGet:
                   scheme: HTTPS
@@ -235,7 +235,7 @@ objects:
                 timeoutSeconds: 5
                 periodSeconds: 10
                 successThreshold: 1
-                failureThreshold: 3
+                failureThreshold: 5
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -282,13 +282,13 @@ objects:
             name: cpu
             target:
               type: Utilization
-              averageUtilization: 75
+              averageUtilization: 200
         - type: Resource
           resource:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 75
+              averageUtilization: 200
 
   # pvc shared with all .net pods for data protection keys
   - kind: "PersistentVolumeClaim"

@@ -53,6 +53,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("{taskId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ResponseCache(Duration = 60)]
         public async Task<ActionResult<ESSTask>> GetTask(string taskId)
         {
             var reply = await messagingClient.Send(new TasksSearchQuery { TaskId = taskId });

@@ -37,6 +37,7 @@
         <PackageReference Include="Serilog.Exceptions" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
         <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
+        <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

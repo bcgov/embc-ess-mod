@@ -32,6 +32,7 @@
     "preresExistingRegistration": "webpack --env dev",
     "preloadTest": "webpack --env dev",
     "prebenchmark": "webpack --env dev",
+    "prestressTest": "webpack --env dev",
     "regAnonymous": "k6 run ./dist/registrant-anonymous-test.js",
     "regNewProfile": "k6 run ./dist/registrant-new-profile-test.js",
     "regExistingProfile": "k6 run ./dist/registrant-existing-profile-test.js",
@@ -39,6 +40,7 @@
     "resExistingRegistration": "k6 run ./dist/responder-existing-registration-test.js",
     "loadTest": "k6 run ./dist/load-test.js",
     "benchmark": "k6 run ./dist/benchmark-test.js",
+    "stressTest": "k6 run ./dist/stress-test.js",
     "gen-registrants-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/registrants/api --ignoreUnusedModels false",
     "gen-responders-api": "ng-openapi-gen -i https://dev1-embc-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/responders/api --ignoreUnusedModels false"
   }

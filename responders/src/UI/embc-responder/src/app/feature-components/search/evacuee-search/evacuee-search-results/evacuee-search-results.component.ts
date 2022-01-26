@@ -28,6 +28,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
   registrantResults: Array<RegistrantProfileSearchResultModel>;
   fileResults: Array<EvacuationFileSearchResultModel>;
   evacueeSearchContext: EvacueeSearchContextModel;
+  isPaperBased: boolean;
+  paperBasedEssFile: string;
   isLoading = false;
   color = '#169BD5';
 
@@ -46,6 +48,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
       (this.evacueeSearchContext =
         this.evacueeSearchService.evacueeSearchContext)
     );
+    this.isPaperBased = this.evacueeSessionService.paperBased;
+    this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
   }
 
   /**
@@ -77,7 +81,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.isLoading = !this.isLoading;
     this.evacueeSearchResultsService
-      .searchForEvacuee(evacueeSearchContext.evacueeSearchParameters)
+      .searchForEvacuee(evacueeSearchContext?.evacueeSearchParameters)
       .subscribe({
         next: (results) => {
           this.isLoading = !this.isLoading;

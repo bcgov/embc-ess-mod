@@ -44,7 +44,7 @@ namespace EMBC.ESS.Resources.Metadata
         private readonly EssContext essContext;
         private readonly IMapper mapper;
         private readonly ICache cache;
-        private static TimeSpan cacheEntryLifetime = TimeSpan.FromHours(6);
+        private static TimeSpan cacheEntryLifetime = TimeSpan.FromHours(1);
 
         public MetadataRepository(IEssContextFactory essContextFactory, IMapper mapper, ICache cache)
         {
@@ -108,7 +108,7 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query)
         {
-            return await cache.GetOrSet("metadata:plannedoutages",
+            return await cache.GetOrSet($"metadata:plannedoutages:{query.PortalType}",
                  async () => mapper.Map<IEnumerable<OutageInformation>>(
                      await ((DataServiceQuery<era_portalbanner>)essContext.era_portalbanners
                         .Where(pb => pb.era_portal == (int?)query.PortalType &&

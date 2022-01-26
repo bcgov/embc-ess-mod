@@ -1,10 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using EMBC.ESS;
-using EMBC.ESS.Resources.Contacts;
+﻿using System.Linq;
 using EMBC.ESS.Resources.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -12,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class ESSTaskTests : DynamicsWebAppTestBase
+    public class TaskTests : DynamicsWebAppTestBase
     {
         private readonly ITaskRepository taskRepository;
 
@@ -22,7 +17,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private string ExpiredTaskId => TestData.InactiveTaskId;
         private const string NonExistentTaskId = "XXXXXXX";
 
-        public ESSTaskTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+        public TaskTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             taskRepository = Services.GetRequiredService<ITaskRepository>();
         }

@@ -29,20 +29,21 @@ namespace EMBC.ESS.Utilities.Notifications
         Task Send(Notification notification);
     }
 
-    public abstract class Notification { }
+    public abstract class Notification
+    { }
 
     public class EmailNotification : Notification
     {
-        public EmailAddress From { get; set; }
-        public EmailAddress[] To { get; set; }
-        public string Subject { get; set; }
-        public string Content { get; set; }
+        public EmailAddress? From { get; set; }
+        public EmailAddress[] To { get; set; } = Array.Empty<EmailAddress>();
+        public string? Subject { get; set; }
+        public string? Content { get; set; }
     }
 
     public class EmailAddress
     {
-        public string Name { get; set; }
-        public string Address { get; set; }
+        public string? Name { get; set; }
+        public string? Address { get; set; }
     }
 
     public class NotificationSender : INotificationSender

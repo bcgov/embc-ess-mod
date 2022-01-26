@@ -14,53 +14,19 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using System.Reflection;
+using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.Utilities.Configuration
+namespace EMBC.Utilities.Hosting
 {
-    public interface IConfigureComponentServices
+    public static class ConfigurationHelpers
     {
-        void ConfigureServices(ConfigurationServices services);
-    }
-
-    public class ConfigurationServices
-    {
-        public IServiceCollection Services { get; internal set; } = null!;
-        public IConfiguration Configuration { get; internal set; } = null!;
-        public IHostEnvironment Environment { get; internal set; } = null!;
-        public ILogger Logger { get; internal set; } = null!;
-    }
-
-    public interface IConfigureComponentPipeline
-    {
-        void ConfigurePipeline(PipelineServices services);
-    }
-
-    public interface IHaveGrpcServices
-    {
-        Type[] GetGrpcServiceTypes();
-    }
-
-    public class PipelineServices
-    {
-        public IApplicationBuilder Application { get; internal set; } = null!;
-        public IConfiguration Configuration { get; internal set; } = null!;
-        public IHostEnvironment Environment { get; internal set; } = null!;
-        public ILogger Logger { get; internal set; } = null!;
-    }
-
-    public static class Configurer
-    {
-        public static I[] CreateInstancesOf<I>(this Assembly assembly) =>
-            assembly.DefinedTypes.Where(t => t.IsClass && !t.IsAbstract && t.IsPublic && typeof(I).IsAssignableFrom(t)).Select(t => (I)Activator.CreateInstance(t)).ToArray();
-
         public static void ConfigureComponentServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment, ILogger logger, params Assembly[] assemblies)
         {
             var configServices = new ConfigurationServices
@@ -105,6 +71,17 @@ namespace EMBC.Utilities.Configuration
                 }
             }
             logger.LogInformation("finished pipeline configuration scan");
+        }
+
+        public static void AddBackgroundTasks(this IServiceCollection services, ILogger logger, params Assembly[] assemblies)
+        {
+            var backgroundTasks = assemblies.SelectMany(a => a.Discover<IBackgroundTask>()).ToArray();
+            var mi = typeof(BackgroundTaskEx).GetMethod(nameof(BackgroundTaskEx.AddBackgroundTask)) ?? null!;
+            foreach (var task in backgroundTasks)
+            {
+                logger.LogInformation("Adding background task {0}", task.FullName);
+                mi.MakeGenericMethod(task).Invoke(null, new[] { services });
+            }
         }
     }
 }

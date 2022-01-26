@@ -14,27 +14,34 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
+using System.Threading;
+using System.Threading.Tasks;
+using EMBC.ESS.Utilities.Cache;
 using EMBC.Utilities.Configuration;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
-using Polly;
-using Polly.Caching;
-using Polly.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 
-namespace EMBC.ESS.Utilities.Cache
+namespace EMBC.ESS.Resources.Metadata
 {
-    public class Configuration : IConfigureComponentServices
+    public class CacheUpdater : IBackgroundTask
     {
-        public void ConfigureServices(ConfigurationServices configurationServices)
+        private readonly ILogger<CacheUpdater> logger;
+        private readonly ICache cache;
+        private readonly IMetadataRepository metadataRepository;
+
+        public CacheUpdater(ILogger<CacheUpdater> logger, ICache cache, IMetadataRepository metadataRepository)
         {
-            var keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? configurationServices.Environment.ApplicationName;
-            configurationServices.Services.AddSingleton<ICache>(sp =>
-            {
-                var cache = sp.GetRequiredService<IDistributedCache>();
-                var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), new ContextualTtl());
-                return new Cache(cache, policy, keyPrefix);
-            });
+            this.logger = logger;
+            this.cache = cache;
+            this.metadataRepository = metadataRepository;
+        }
+
+        public string Schedule => "5 * * * *";
+
+        public int DegreeOfParallelism => 1;
+
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
+        {
+            await Task.CompletedTask;
         }
     }
 }
