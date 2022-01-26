@@ -28,11 +28,12 @@ namespace EMBC.ESS.Utilities.Cache
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
+            var keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? configurationServices.Environment.ApplicationName;
             configurationServices.Services.AddSingleton<ICache>(sp =>
             {
                 var cache = sp.GetRequiredService<IDistributedCache>();
                 var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), new ContextualTtl());
-                return new Cache(cache, policy, keyPrefix: Environment.GetEnvironmentVariable("APP_NAME") ?? configurationServices.Environment.ApplicationName);
+                return new Cache(cache, policy, keyPrefix);
             });
         }
     }
