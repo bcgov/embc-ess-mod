@@ -62,6 +62,7 @@ namespace EMBC.Utilities.Configuration
     {
         public string Schedule { get; }
         public int DegreeOfParallelism { get; }
+        public TimeSpan InitialDelay { get; }
 
         public Task ExecuteAsync(CancellationToken cancellationToken);
     }

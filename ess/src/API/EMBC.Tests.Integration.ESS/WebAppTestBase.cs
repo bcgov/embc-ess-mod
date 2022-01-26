@@ -1,16 +1,11 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using EMBC.Utilities.Hosting;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -20,26 +15,13 @@ namespace EMBC.Tests.Integration.ESS
     {
         protected override IHostBuilder? CreateHostBuilder()
         {
-            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "EMBC.*.dll", SearchOption.TopDirectoryOnly)
-                .Select(assembly => Assembly.LoadFrom(assembly))
-                .ToArray();
-
-            return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
-             .ConfigureWebHostDefaults(webBuilder =>
-             {
-                 webBuilder.ConfigureServices((ctx, services) =>
-                 {
-                     services.AddHttpContextAccessor();
-                     services.AddDataProtection();
-                     services.AddDistributedMemoryCache();
-                     services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, assemblies);
-                     services.ConfigureComponentServices(ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
-                 })
-                 .Configure((WebHostBuilderContext ctx, IApplicationBuilder app) =>
-                 {
-                     app.ConfigureComponentPipeline(ctx.Configuration, ctx.HostingEnvironment, new SerilogLoggerFactory(Log.Logger).CreateLogger(nameof(WebAppTestFixture)), assemblies);
-                 });
-             }).UseEnvironment(Environments.Development);
+            var host = new Utilities.Hosting.Host("ess-tests");
+            return host.CreateHost("EMBC").ConfigureHostConfiguration(opts =>
+            {
+                // add secerts from host assembly
+                opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), false, true);
+                opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true);
+            });
         }
     }
 

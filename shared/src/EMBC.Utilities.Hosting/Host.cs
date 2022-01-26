@@ -82,18 +82,9 @@ namespace EMBC.Utilities.Hosting
                .WriteTo.Console(outputTemplate: logOutputTemplate)
                .CreateBootstrapLogger();
 
-            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "*.dll", SearchOption.TopDirectoryOnly)
-                .Where(assembly =>
-                {
-                    var assemblyName = Path.GetFileName(assembly);
-                    return !assemblyName.StartsWith("System.") && !assemblyName.StartsWith("Microsoft.") && (string.IsNullOrEmpty(assembliesPrefix) || assemblyName.StartsWith(assembliesPrefix));
-                })
-                .Select(assembly => Assembly.LoadFrom(assembly))
-                .ToArray();
-
             try
             {
-                await CreateHost(assemblies).RunAsync();
+                await CreateHost(assembliesPrefix).Build().RunAsync();
                 Log.Information("Stopped");
                 return 0;
             }
@@ -104,7 +95,21 @@ namespace EMBC.Utilities.Hosting
             }
         }
 
-        protected virtual IHost CreateHost(params Assembly[] assemblies) =>
+        public IHostBuilder CreateHost(string? assembliesPrefix = null)
+        {
+            var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "*.dll", SearchOption.TopDirectoryOnly)
+                 .Where(assembly =>
+                 {
+                     var assemblyName = Path.GetFileName(assembly);
+                     return !assemblyName.StartsWith("System.") && !assemblyName.StartsWith("Microsoft.") && (string.IsNullOrEmpty(assembliesPrefix) || assemblyName.StartsWith(assembliesPrefix));
+                 })
+                 .Select(assembly => Assembly.LoadFrom(assembly))
+                 .ToArray();
+
+            return CreateHost(assemblies);
+        }
+
+        protected virtual IHostBuilder CreateHost(params Assembly[] assemblies) =>
              Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder()
                  .ConfigureHostConfiguration(opts =>
                  {
@@ -122,8 +127,7 @@ namespace EMBC.Utilities.Hosting
                     {
                         Configure(app, ctx.Configuration, ctx.HostingEnvironment, assemblies);
                     });
-                })
-                .Build();
+                });
 
         protected virtual void ConfigureSerilog(HostBuilderContext hostBuilderContext, LoggerConfiguration loggerConfiguration)
         {
