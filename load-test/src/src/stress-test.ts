@@ -1,139 +1,54 @@
-import { Options } from 'k6/options';
+import { Options, Scenario } from 'k6/options';
 export { RegistrantAnonymousRegistration, RegistrantNewRegistration, RegistrantExistingProfileRegistration } from './registrant-portal-scripts';
 export { ResponderNewRegistration, ResponderExistingRegistration } from './responder-portal-scripts';
-
-// @ts-ignore
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 import { getSummaryRes, setUseRandomWaitTime } from './utilities';
 
 const STAGE_DURATION = '5m';
+
+let ramp_up_scenario: Scenario = {
+    executor: 'ramping-vus',
+    startVUs: 1,
+    stages: [
+        { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
+        { duration: STAGE_DURATION, target: 10 },
+        { duration: STAGE_DURATION, target: 15 },
+        { duration: STAGE_DURATION, target: 20 },
+        { duration: STAGE_DURATION, target: 25 },
+        { duration: STAGE_DURATION, target: 30 },
+        { duration: STAGE_DURATION, target: 35 },
+        { duration: STAGE_DURATION, target: 40 },
+        { duration: STAGE_DURATION, target: 45 },
+        { duration: STAGE_DURATION, target: 50 },
+    ],
+    gracefulRampDown: '5m',
+}
 
 export const options: Options = {
     scenarios: {
         /*---Registrant---*/
         anonymousRegistration: {
             exec: 'RegistrantAnonymousRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
-                { duration: STAGE_DURATION, target: 10 },
-                { duration: STAGE_DURATION, target: 15 },
-                { duration: STAGE_DURATION, target: 20 },
-                { duration: STAGE_DURATION, target: 25 },
-                { duration: STAGE_DURATION, target: 30 },
-                { duration: STAGE_DURATION, target: 35 },
-                { duration: STAGE_DURATION, target: 40 },
-                { duration: STAGE_DURATION, target: 45 },
-                { duration: STAGE_DURATION, target: 50 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...ramp_up_scenario
         },
         newRegistration: {
             exec: 'RegistrantNewRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
-                { duration: STAGE_DURATION, target: 10 },
-                { duration: STAGE_DURATION, target: 15 },
-                { duration: STAGE_DURATION, target: 20 },
-                { duration: STAGE_DURATION, target: 25 },
-                { duration: STAGE_DURATION, target: 30 },
-                { duration: STAGE_DURATION, target: 35 },
-                { duration: STAGE_DURATION, target: 40 },
-                { duration: STAGE_DURATION, target: 45 },
-                { duration: STAGE_DURATION, target: 50 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...ramp_up_scenario
         },
         existingProfileRegistration: {
             exec: 'RegistrantExistingProfileRegistration',
             startTime: '2m',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
-                { duration: STAGE_DURATION, target: 10 },
-                { duration: STAGE_DURATION, target: 15 },
-                { duration: STAGE_DURATION, target: 20 },
-                { duration: STAGE_DURATION, target: 25 },
-                { duration: STAGE_DURATION, target: 30 },
-                { duration: STAGE_DURATION, target: 35 },
-                { duration: STAGE_DURATION, target: 40 },
-                { duration: STAGE_DURATION, target: 45 },
-                { duration: STAGE_DURATION, target: 50 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...ramp_up_scenario
         },
 
 
         /*---Responder---*/
         ResponderNewRegistration: {
             exec: 'ResponderNewRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
-                { duration: STAGE_DURATION, target: 10 },
-                { duration: STAGE_DURATION, target: 15 },
-                { duration: STAGE_DURATION, target: 20 },
-                { duration: STAGE_DURATION, target: 25 },
-                { duration: STAGE_DURATION, target: 30 },
-                { duration: STAGE_DURATION, target: 35 },
-                { duration: STAGE_DURATION, target: 40 },
-                { duration: STAGE_DURATION, target: 45 },
-                { duration: STAGE_DURATION, target: 50 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...ramp_up_scenario
         },
         ResponderExistingRegistration: {
             exec: 'ResponderExistingRegistration',
-
-            executor: 'ramping-vus',
-            startVUs: 1,
-            stages: [
-                { duration: STAGE_DURATION, target: 5 }, //target should be <= MAX_VU
-                { duration: STAGE_DURATION, target: 10 },
-                { duration: STAGE_DURATION, target: 15 },
-                { duration: STAGE_DURATION, target: 20 },
-                { duration: STAGE_DURATION, target: 25 },
-                { duration: STAGE_DURATION, target: 30 },
-                { duration: STAGE_DURATION, target: 35 },
-                { duration: STAGE_DURATION, target: 40 },
-                { duration: STAGE_DURATION, target: 45 },
-                { duration: STAGE_DURATION, target: 50 },
-            ],
-            gracefulRampDown: '5m',
-
-            // executor: 'per-vu-iterations',
-            // vus: 1,
-            // iterations: 1,
-            // maxDuration: '1h30m',
+            ...ramp_up_scenario
         },
     },
 

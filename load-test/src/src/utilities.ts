@@ -80,18 +80,6 @@ export function getExecutionType(): Scenario {
     };
 }
 
-export function getSummaryFileDescriptor(): string {
-    let TARGET_VUS = parseInt(__ENV.VUS || "1");
-    let TARGET_ITERATIONS = parseInt(__ENV.ITERS || "1");
-    let descriptor = `${TARGET_VUS}-VUS`;
-
-    if (__ENV.ITERS) {
-        descriptor += `-${TARGET_ITERATIONS}-ITERS`;
-    }
-
-    return descriptor;
-}
-
 export function getHTTPParams(token?: string) {
     let headers: any = {
         "accept": "application/json",
@@ -124,16 +112,26 @@ export function getTimeString(date: Date = new Date()) {
     return `${hours}-${minutes}-${seconds}`;
 }
 
+function getSummaryFileDescriptor(): string {
+    let descriptor = ``;
+    if (__ENV.VUS) descriptor += __ENV.VUS + "-VUS ";
+    if (__ENV.ITERS) descriptor += __ENV.ITERS + "-ITERS ";
+    if (__ENV.DUR) descriptor += __ENV.DUR + "-DUR ";
+    descriptor = descriptor.trim();
+    if (descriptor) descriptor = " " + descriptor;
+    return descriptor;
+}
+
 /** Get return obj for handle summary */
 export function getSummaryRes(TEST_TYPE: string, data: any) {
     let dateString = getDateString();
     let timeString = getTimeString();
-    let fileName: string = `${TEST_TYPE}.${dateString}.${timeString}.summary`;
+    let descriptor = getSummaryFileDescriptor();
+    let fileName: string = `${TEST_TYPE}${descriptor}.${dateString}.${timeString}.summary`;
     let res: any = {
         'stdout': textSummary(data, { indent: ' ', enableColors: true }), // Show the text summary to stdout...
     };
     res[fileName + ".html"] = htmlReport(data);
-    res[fileName + ".xml"] = jUnit(data);
     res[fileName + ".json"] = JSON.stringify(data);
 
     return res
