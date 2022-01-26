@@ -187,6 +187,21 @@ export const addSupplierMessage: DialogContent = {
   text: '<p>Supplier was successfully added.</p>',
   cancelButton: 'Close'
 };
+export const disabledESSFileMessage: DialogContent = {
+  title: 'Unable to access this ESS File',
+  text: '<p>Responders doing data entry for a paper ESS File can only access ESS Files that match the paper ESS File number used during the search process.</p><p>If you entered the incorrect paper ESS File Number, go back and start a new search with the correct details.</p>',
+  cancelButton: 'Close'
+};
+export const unableAccessFileMessage: DialogContent = {
+  title: 'Unable to access this File',
+  text: '<p>This file can only be viewed if the evacuee presented govenment-issued identification.</p>',
+  cancelButton: 'Close'
+};
+export const alreadyExistESSFileMessage: DialogContent = {
+  title: 'Paper ESS File Already Exists',
+  text: '<p>ESS File # <b>T12345</b> already exists in the ERA Tool. Please continue to that ESS File to proceed with paper-based entry. Speak to your supervisor if no results are displaying and you are still seeing this message, as the file might be restricted.</p><p>Alternatively, go back and search again.</p>',
+  cancelButton: 'Close'
+};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
