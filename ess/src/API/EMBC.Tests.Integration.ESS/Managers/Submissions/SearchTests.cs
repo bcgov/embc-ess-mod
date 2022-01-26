@@ -132,15 +132,22 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Search_EvacuationFilesWithPapeerId_IncludeEvacuationFilesOnly()
         {
-            var firstName = TestData.PaperContactFirstName;
-            var lastName = TestData.PaperContactLastName;
-            var dateOfBirth = TestData.PaperContactDateOfBirth;
+            var firstName = TestData.ContactFirstName;
+            var lastName = TestData.ContactLastName;
+            var dateOfBirth = TestData.ContactDateOfBirth;
 
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
 
             var fileWithPaperId = searchResults.EvacuationFiles.Where(e => e.ExternalReferenceId != null);
 
             fileWithPaperId.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanSearchEvacuationFilesByPaperId()
+        {
+            var files = (await manager.Handle(new EvacuationFilesQuery { ExternalReferenceId = TestData.PaperEvacuationFileId })).Items;
+            files.ShouldNotBeEmpty();
         }
     }
 }
