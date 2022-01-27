@@ -44,7 +44,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     public stepEssFileService: StepEssFileService,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
@@ -96,7 +96,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       this.showBCAddressForm = true;
     }
 
-    this.tabMetaData = this.stepEssFileService.getNavLinks('evacDetails');
+    this.tabMetaData = this.stepEssFileService.getNavLinks('evacuation-details');
   }
 
   /**

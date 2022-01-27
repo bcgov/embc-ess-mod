@@ -272,7 +272,7 @@ export class WizardDataService {
       step: 'STEP 2',
       title: 'Create ESS File',
       route: '/ess-wizard/ess-file',
-      isLocked: false,
+      isLocked: true,
       incompleteMsg: globalConst.essFileStepIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-ess-file.svg',
