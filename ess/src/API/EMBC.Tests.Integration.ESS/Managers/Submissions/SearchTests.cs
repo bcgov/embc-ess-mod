@@ -128,5 +128,23 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             searchResults.EvacuationFiles.ShouldNotBeEmpty();
             searchResults.Profiles.ShouldNotBeEmpty();
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task Search_EvacuationFilesWithPapeerId_IncludeEvacuationFilesOnly()
+        {
+            var firstName = TestData.ContactFirstName;
+            var lastName = TestData.ContactLastName;
+            var dateOfBirth = TestData.ContactDateOfBirth;
+
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
+            searchResults.EvacuationFiles.ShouldContain(e => e.ExternalReferenceId == TestData.PaperEvacuationFileId);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanSearchEvacuationFilesByPaperId()
+        {
+            var files = (await manager.Handle(new EvacuationFilesQuery { ExternalReferenceId = TestData.PaperEvacuationFileId })).Items;
+            files.ShouldNotBeEmpty();
+        }
     }
 }

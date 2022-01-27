@@ -265,6 +265,7 @@ namespace EMBC.ESS.Managers.Submissions
             var cases = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
             {
                 FileId = query.FileId,
+                ExternalReferenceId = query.ExternalReferenceId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
                 LinkedRegistrantId = query.LinkedRegistrantId,
                 NeedsAssessmentId = query.NeedsAssessmentId,
