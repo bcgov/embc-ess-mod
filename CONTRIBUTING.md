@@ -20,13 +20,17 @@ For an existing local copy, follow this to expand the symlinks (stash changes be
 git config core.symlinks true
 git reset --hard
 ```
-
 The simplest way to run the portals is to use [Windows Terminal](https://www.microsoft.com/en-ca/p/windows-terminal/9n0dx20hk701) shortcuts that are in the root folder:
 
 - `wt-registrants.ps1` will open a multi-pane tab for registrants portal
 - `wt-responders.ps1` will open a multi-pane tab for responders portal
 
 to run the c# services, run `dotnet watch` in the ess and api panes, to run the angular app, run `npm run startlocal` in the UI pane.
+
+If you run into error: HttpRequestException: The SSL connection could not be established, run
+```cmd
+dotnet dev-certs https --trust
+```
 
 You must be on the BC government network to be able to access the Dynamics backend.
 

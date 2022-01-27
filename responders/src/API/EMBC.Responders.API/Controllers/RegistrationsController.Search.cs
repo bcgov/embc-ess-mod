@@ -39,7 +39,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchParameters searchParameters)
         {
             var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            var searchResults = await evacuationSearchService.SearchEvacuations(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
+            var searchResults = await evacuationSearchService.SearchEvacuations(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, searchParameters.ExternalReferenceId, userRole);
 
             return Ok(searchResults);
         }
@@ -74,6 +74,8 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public string dateOfBirth { get; set; }
+
+        public string? ExternalReferenceId { get; set; }
     }
 
     public class SearchResults
