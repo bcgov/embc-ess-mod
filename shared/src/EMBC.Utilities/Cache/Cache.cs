@@ -66,7 +66,7 @@ namespace EMBC.ESS.Utilities.Cache
                 {
                     //cache miss
                     value = await getter();
-                    await Set(key, value);
+                    await Set(key, value, expiration);
                 }
                 return value;
             }
