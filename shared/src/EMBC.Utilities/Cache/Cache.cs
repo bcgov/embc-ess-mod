@@ -30,7 +30,7 @@ namespace EMBC.ESS.Utilities.Cache
 
         Task<T?> Get<T>(string key);
 
-        Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
+        Task Set<T>(string key, T value, TimeSpan? expiration = null);
 
         Task Remove(string key);
 
@@ -40,15 +40,16 @@ namespace EMBC.ESS.Utilities.Cache
     internal class Cache : ICache
     {
         private readonly IDistributedCache cache;
+        private readonly CacheSyncManager cacheSyncManager;
         private readonly string keyPrefix;
         private readonly IAsyncPolicy<byte[]> policy;
-        private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
-        public Cache(IDistributedCache cache, IAsyncPolicy<byte[]> policy, string keyPrefix)
+        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IAsyncPolicy<byte[]> policy, string keyPrefix)
         {
             this.cache = cache;
+            this.cacheSyncManager = cacheSyncManager;
             this.keyPrefix = keyPrefix;
             this.policy = policy;
         }
@@ -56,21 +57,28 @@ namespace EMBC.ESS.Utilities.Cache
         public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
         {
             //return Deserialize<T?>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
-            var value = await Get<T>(key);
-            if (value == null)
+            var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
+            await locker.WaitAsync();
+            try
             {
-                //cache miss
-                //await semaphore.WaitAsync();
-                await Set<T>(key, getter, expiration);
-                value = await Get<T>(key);
-                //semaphore.Release();
+                var value = await Get<T>(key);
+                if (value == null)
+                {
+                    //cache miss
+                    value = await getter();
+                    await Set(key, value);
+                }
+                return value;
             }
-            return value;
+            finally
+            {
+                locker.Release();
+            }
         }
 
-        public async Task Set<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
+        public async Task Set<T>(string key, T value, TimeSpan? expiration = null)
         {
-            await cache.SetAsync(keyGen(key), Serialize(await getter()), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration });
+            await cache.SetAsync(keyGen(key), Serialize(value), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration });
         }
 
         public async Task<T?> Get<T>(string key)
@@ -85,7 +93,16 @@ namespace EMBC.ESS.Utilities.Cache
 
         public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
         {
-            await Set(key, getter, expiration);
+            var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
+            await locker.WaitAsync();
+            try
+            {
+                await Set(key, await getter(), expiration);
+            }
+            finally
+            {
+                locker.Release();
+            }
         }
 
         private Context CreateContext(string key, TimeSpan? expiration)
