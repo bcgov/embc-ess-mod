@@ -961,6 +961,10 @@ export class StepEssFileService {
     return this.evacueeSession.essFileNumber !== null;
   }
 
+  getNavLinks(name: string): TabModel {
+    return this.essTabs.find((tab) => tab.name === name);
+  }
+
   updateEditedFormStatus() {
     this.wizardService.editStatus$.subscribe((statues: TabStatusManager[]) => {
       const index = statues.findIndex((tab) => tab.tabUpdateStatus === true);

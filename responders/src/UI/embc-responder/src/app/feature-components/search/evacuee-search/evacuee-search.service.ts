@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Code } from 'src/app/core/api/models';
 import { ConfigurationService } from 'src/app/core/api/services';
@@ -62,11 +63,14 @@ export class EvacueeSearchService {
   }
 
   public get paperBasedEssFile(): string {
-    return this.paperBasedEssFileVal;
+    return this.paperBasedEssFileVal
+      ? this.paperBasedEssFileVal
+      : this.cacheService.get('paperBasedEssFile');
   }
 
-  public set paperBasedEssFile(value: string) {
-    this.paperBasedEssFileVal = value;
+  public set paperBasedEssFile(paperBasedEssFileVal: string) {
+    this.paperBasedEssFileVal = paperBasedEssFileVal;
+    this.cacheService.set('paperBasedEssFile', paperBasedEssFileVal);
   }
 
   public getCategoryList(): void {
