@@ -33,7 +33,7 @@ namespace EMBC.ESS.Utilities.Cache
             this.logger = logger;
         }
 
-        public string Schedule => "* 5 * * * *";
+        public string Schedule => "*/1 * * * *";
 
         public int DegreeOfParallelism => 1;
 
@@ -45,7 +45,7 @@ namespace EMBC.ESS.Utilities.Cache
             var prunned = 0;
             this.AsParallel().ForAll(item =>
             {
-                if (item.Value.CurrentCount == 0)
+                if (item.Value.CurrentCount == 1)
                 {
                     TryRemove(item.Key, out var locker);
                     locker.Dispose();

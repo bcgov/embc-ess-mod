@@ -57,6 +57,7 @@ namespace EMBC.PDFGenerator.Utilities.PdfGenerator
             await page.SetContentAsync(source);
             var content = await page.PdfDataAsync(new PdfOptions { PrintBackground = true });
             logger.LogInformation("Generated pdf with size {0}", content.Length);
+            await page.CloseAsync();
 
             return content;
         }
