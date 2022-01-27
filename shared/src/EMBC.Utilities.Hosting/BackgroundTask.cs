@@ -22,6 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NCrontab;
 
 namespace EMBC.Utilities.Hosting
 {
@@ -39,11 +40,31 @@ namespace EMBC.Utilities.Hosting
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            logger.LogInformation("running");
-
             using var scope = serviceProvider.CreateScope();
-            var task = scope.ServiceProvider.GetRequiredService<T>();
-            await task.ExecuteAsync(stoppingToken);
+            var initialTask = scope.ServiceProvider.GetRequiredService<T>();
+            var schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+
+            await Task.Delay(initialTask.InitialDelay);
+
+            var now = DateTime.UtcNow;
+            var nextExecutionDate = schedule.GetNextOccurrence(now);
+
+            logger.LogDebug("first run is in {0}s", nextExecutionDate.Subtract(now).TotalSeconds);
+
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                logger.LogDebug("check after {0}s", DateTime.UtcNow.Subtract(now).TotalSeconds);
+                now = DateTime.UtcNow;
+                if (now >= nextExecutionDate)
+                {
+                    logger.LogInformation("running {0}", nextExecutionDate);
+                    var task = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<T>();
+                    await task.ExecuteAsync(stoppingToken);
+                    nextExecutionDate = schedule.GetNextOccurrence(nextExecutionDate);
+                    logger.LogDebug("next run in {0}s", nextExecutionDate.Subtract(now).TotalSeconds);
+                }
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
         }
 
         public override async Task StartAsync(CancellationToken cancellationToken)

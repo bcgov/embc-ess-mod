@@ -52,12 +52,12 @@ namespace EMBC.ESS.Utilities.Dynamics
 
         public async Task ReportBroken(string reason)
         {
-            await cache.Set(cacheKey, () => Task.FromResult(new UnplannedOutage { Reason = reason, StartDate = DateTimeOffset.Now }), TimeSpan.FromSeconds(30));
+            await cache.Set(cacheKey, new UnplannedOutage { Reason = reason, StartDate = DateTimeOffset.Now }, TimeSpan.FromSeconds(30));
         }
 
         public async Task ReportFixed()
         {
-            await cache.Set(cacheKey, () => Task.FromResult((UnplannedOutage?)null), TimeSpan.FromSeconds(5));
+            await cache.Remove(cacheKey);
         }
     }
 }
