@@ -42,14 +42,14 @@ namespace EMBC.Utilities.Hosting
         {
             using var scope = serviceProvider.CreateScope();
             var initialTask = scope.ServiceProvider.GetRequiredService<T>();
-            var schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+            var schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
 
             await Task.Delay(initialTask.InitialDelay);
 
             var now = DateTime.UtcNow;
             var nextExecutionDate = schedule.GetNextOccurrence(now);
 
-            logger.LogDebug("first run is in {0}s", nextExecutionDate.Subtract(now).TotalSeconds);
+            logger.LogDebug("first run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(now).TotalSeconds);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -60,8 +60,8 @@ namespace EMBC.Utilities.Hosting
                     logger.LogInformation("running {0}", nextExecutionDate);
                     var task = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<T>();
                     await task.ExecuteAsync(stoppingToken);
-                    nextExecutionDate = schedule.GetNextOccurrence(nextExecutionDate);
-                    logger.LogDebug("next run in {0}s", nextExecutionDate.Subtract(now).TotalSeconds);
+                    nextExecutionDate = schedule.GetNextOccurrence(now);
+                    logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                 }
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
