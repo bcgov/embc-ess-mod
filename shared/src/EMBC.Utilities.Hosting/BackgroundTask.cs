@@ -44,7 +44,6 @@ namespace EMBC.Utilities.Hosting
             var initialTask = scope.ServiceProvider.GetRequiredService<T>();
             var schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
 
-
             await Task.Delay(initialTask.InitialDelay);
 
             var now = DateTime.UtcNow;
