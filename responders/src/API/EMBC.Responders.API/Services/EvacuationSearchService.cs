@@ -28,11 +28,13 @@ namespace EMBC.Responders.API.Services
 {
     public interface IEvacuationSearchService
     {
-        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
+        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string ExternalReferenceId, MemberRole userRole);
 
         Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId);
 
-        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId, MemberRole userRole);
+        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByExternalReferenceId(string externalFileId);
+
+        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string registrantId, MemberRole userRole);
 
         Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
 
@@ -103,18 +105,18 @@ namespace EMBC.Responders.API.Services
             this.httpContext = httpContext;
         }
 
-        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
+        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string externalReferenceId, MemberRole userRole)
         {
+            var allowedStatues = (!string.IsNullOrEmpty(externalReferenceId) || userRole != MemberRole.Tier1 ? tier2andAboveFileStatuses : tier1FileStatuses)
+                .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray();
             var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
                 IncludeRestrictedAccess = userRole != MemberRole.Tier1,
-                InStatuses = (userRole == MemberRole.Tier1 ? tier1FileStatuses : tier2andAboveFileStatuses)
-                    .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray()
+                InStatuses = allowedStatues
             });
-
             return new SearchResults
             {
                 Registrants = mapper.Map<IEnumerable<RegistrantProfileSearchResult>>(searchResults.Profiles),
@@ -129,7 +131,16 @@ namespace EMBC.Responders.API.Services
             return mapper.Map<EvacuationFile>(file);
         }
 
-        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId, MemberRole userRole)
+        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByExternalReferenceId(string externalFileId)
+        {
+            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { ExternalReferenceId = externalFileId }))
+                .Items
+                .OrderBy(f => f.Id)
+                .LastOrDefault();
+            return mapper.Map<IEnumerable<EvacuationFileSummary>>(new[] { file });
+        }
+
+        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string? registrantId, MemberRole userRole)
         {
             var files = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery
             {

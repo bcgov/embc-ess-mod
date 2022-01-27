@@ -62,25 +62,31 @@ namespace EMBC.Responders.API.Controllers
         /// Search files
         /// </summary>
         /// <param name="registrantId">fileId</param>
+        /// <param name="externalReferenceId">externalReferenceId</param>
         /// <returns>file</returns>
         [HttpGet("files")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string registrantId)
+        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string? registrantId, [FromQuery] string? externalReferenceId)
         {
-            if (string.IsNullOrEmpty(registrantId))
+            if (!string.IsNullOrEmpty(registrantId) && string.IsNullOrEmpty(externalReferenceId))
             {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = StatusCodes.Status400BadRequest,
-                    Title = "Invalid request",
-                    Detail = $"{nameof(registrantId)} is mandatory"
-                });
+                var userRole = Enum.Parse<MemberRole>(currentUserRole);
+                var files = await evacuationSearchService.GetEvacuationFilesByRegistrantId(registrantId, userRole);
+                return Ok(files);
             }
-            var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            var files = await evacuationSearchService.GetEvacuationFiles(registrantId, userRole);
+            else if (!string.IsNullOrEmpty(externalReferenceId) && string.IsNullOrEmpty(registrantId))
+            {
+                var files = await evacuationSearchService.GetEvacuationFilesByExternalReferenceId(externalReferenceId);
+                return Ok(files);
+            }
 
-            return Ok(files);
+            return BadRequest(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid request",
+                Detail = $"{nameof(registrantId)} or {nameof(externalReferenceId)} are mandatory, but not both"
+            });
         }
 
         /// <summary>
