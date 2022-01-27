@@ -58,8 +58,11 @@ namespace EMBC.Utilities.Hosting
                 if (now >= nextExecutionDate)
                 {
                     logger.LogInformation("running {0}", nextExecutionDate);
-                    var task = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<T>();
-                    await task.ExecuteAsync(stoppingToken);
+                    using (var executionScope = serviceProvider.CreateScope())
+                    {
+                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                        await task.ExecuteAsync(stoppingToken);
+                    }
                     nextExecutionDate = schedule.GetNextOccurrence(now);
                     logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                 }
