@@ -67,6 +67,7 @@ namespace EMBC.ESS.Resources.Cases
     public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
+        public string ExternalReferenceId { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public bool MaskSecurityPhrase { get; set; } = true;
 

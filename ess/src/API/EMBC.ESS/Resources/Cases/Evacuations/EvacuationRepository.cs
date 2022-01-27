@@ -305,7 +305,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var readCtx = essContextFactory.CreateReadOnly();
 
             //get all matching files
-            var files = (await QueryHouseholdMemberFiles(readCtx, query)).Concat(await QueryEvacuationFiles(readCtx, query)).Concat(await QueryNeedsAssessments(readCtx, query));
+            var files = (await QueryHouseholdMemberFiles(readCtx, query))
+                .Concat(await QueryEvacuationFiles(readCtx, query))
+                .Concat(await QueryNeedsAssessments(readCtx, query));
 
             //secondary filter after loading the files
             if (!string.IsNullOrEmpty(query.FileId)) files = files.Where(f => f.era_name == query.FileId);
@@ -346,6 +348,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var shouldQueryFiles =
                 string.IsNullOrEmpty(query.NeedsAssessmentId) &&
                 (!string.IsNullOrEmpty(query.FileId) ||
+                !string.IsNullOrEmpty(query.ExternalReferenceId) ||
                 query.RegistraionDateFrom.HasValue ||
                 query.RegistraionDateTo.HasValue);
 
@@ -354,6 +357,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var filesQuery = ctx.era_evacuationfiles.Expand(f => f.era_CurrentNeedsAssessmentid).Where(f => f.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(query.FileId)) filesQuery = filesQuery.Where(f => f.era_name == query.FileId);
+            if (!string.IsNullOrEmpty(query.ExternalReferenceId)) filesQuery = filesQuery.Where(f => f.era_paperbasedessfile == query.ExternalReferenceId);
             if (query.RegistraionDateFrom.HasValue) filesQuery = filesQuery.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
             if (query.RegistraionDateTo.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
 

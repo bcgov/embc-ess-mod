@@ -16,13 +16,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
-using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Metadata
 {
@@ -41,80 +38,46 @@ namespace EMBC.ESS.Resources.Metadata
 
     public class MetadataRepository : IMetadataRepository
     {
-        private readonly EssContext essContext;
-        private readonly IMapper mapper;
+        internal const string CountriesCacheKey = "metadata:countries";
+        internal const string StatesProvincesCacheKey = "metadata:stateprovinces";
+        internal const string CommunitiesCacheKey = "metadata:communities";
+        internal const string SecurityQuestionsCacheKey = "metadata:securityquestions";
+        internal const string PlannedOutagesCacheKey = "metadata:plannedoutages";
+
+        internal static readonly TimeSpan CacheEntryLifetime = TimeSpan.FromHours(1);
+
+        private readonly InternalMetadataRepository internalRepository;
         private readonly ICache cache;
-        private static TimeSpan cacheEntryLifetime = TimeSpan.FromHours(1);
 
         public MetadataRepository(IEssContextFactory essContextFactory, IMapper mapper, ICache cache)
         {
-            this.essContext = essContextFactory.CreateReadOnly();
-            this.mapper = mapper;
+            this.internalRepository = new InternalMetadataRepository(essContextFactory, mapper);
             this.cache = cache;
         }
 
         public async Task<IEnumerable<Country>> GetCountries()
         {
-            return await cache.GetOrSet("metadata:countries",
-                async () => mapper.Map<IEnumerable<Country>>(await essContext.era_countries.GetAllPagesAsync()),
-                cacheEntryLifetime);
+            return await cache.GetOrSet(CountriesCacheKey, internalRepository.GetCountries, CacheEntryLifetime);
         }
 
         public async Task<IEnumerable<StateProvince>> GetStateProvinces()
         {
-            return await cache.GetOrSet("metadata:stateprovinces",
-                async () => mapper.Map<IEnumerable<StateProvince>>(await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync()),
-                cacheEntryLifetime);
+            return await cache.GetOrSet(StatesProvincesCacheKey, internalRepository.GetStateProvinces, CacheEntryLifetime);
         }
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            return await cache.GetOrSet("metadata:communities",
-                async () =>
-                {
-                    var jurisdictions = await essContext.era_jurisdictions
-                        .Expand(j => j.era_RelatedProvinceState)
-                        .Expand(j => j.era_RegionalDistrict)
-                        .GetAllPagesAsync();
-
-                    var communities = mapper.Map<IEnumerable<Community>>(jurisdictions);
-
-                    // a hack to map country codes to communities because Dynamics v9.0 doesn't allow multi step expansion (i.e. province->country)
-                    var stateProvinces = essContext.era_provinceterritorieses
-                           .Select(sp => new { code = sp.era_code, countryId = sp.era_RelatedCountry.era_countryid, countryCode = sp.era_RelatedCountry.era_countrycode })
-                           .ToArray();
-
-                    foreach (var community in communities)
-                    {
-                        community.CountryCode = stateProvinces.SingleOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
-                    }
-                    return communities;
-                },
-                cacheEntryLifetime);
+            return await cache.GetOrSet(CommunitiesCacheKey, internalRepository.GetCommunities, CacheEntryLifetime);
         }
 
         public async Task<string[]> GetSecurityQuestions()
         {
-            return await cache.GetOrSet("metadata:securityquestions",
-                async () =>
-                {
-                    var optionSetDefinitions = await essContext.GlobalOptionSetDefinitions.GetAllPagesAsync();
-                    var securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name.Equals("era_registrantsecretquestions")).SingleOrDefault();
-                    var options = securityQuestionsOptionSet.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray();
-                    return options;
-                },
-                cacheEntryLifetime);
+            return await cache.GetOrSet(SecurityQuestionsCacheKey, internalRepository.GetSecurityQuestions, CacheEntryLifetime);
         }
 
         public async Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query)
         {
-            return await cache.GetOrSet($"metadata:plannedoutages:{query.PortalType}",
-                 async () => mapper.Map<IEnumerable<OutageInformation>>(
-                     await ((DataServiceQuery<era_portalbanner>)essContext.era_portalbanners
-                        .Where(pb => pb.era_portal == (int?)query.PortalType &&
-                            pb.era_startdisplaydate <= query.DisplayDate &&
-                            pb.era_enddisplaydate >= query.DisplayDate))
-                        .GetAllPagesAsync()), cacheEntryLifetime);
+            return await cache.GetOrSet($"{PlannedOutagesCacheKey}:{query.PortalType}", () => internalRepository.GetPlannedOutages(query), CacheEntryLifetime);
         }
     }
 
