@@ -28,9 +28,9 @@ export class EvacueeSearchResultsService {
   ): Observable<EvacueeSearchResults> {
     return this.registrationService
       .registrationsSearch({
-        firstName: evacueeSearchParameters.firstName,
-        lastName: evacueeSearchParameters.lastName,
-        dateOfBirth: evacueeSearchParameters.dateOfBirth
+        firstName: evacueeSearchParameters?.firstName,
+        lastName: evacueeSearchParameters?.lastName,
+        dateOfBirth: evacueeSearchParameters?.dateOfBirth
       })
       .pipe(
         map((searchResult: EvacueeSearchResults) => {
