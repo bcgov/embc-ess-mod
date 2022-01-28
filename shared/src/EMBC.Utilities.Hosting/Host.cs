@@ -257,6 +257,7 @@ namespace EMBC.Utilities.Hosting
                     .AddGrpcClientInstrumentation()
                     .AddRedisInstrumentation();
             });
+            services.AddSingleton(TracerProvider.Default.GetTracer(appName));
 
             // add background tasks
             services.AddBackgroundTasks(logger, assemblies);
