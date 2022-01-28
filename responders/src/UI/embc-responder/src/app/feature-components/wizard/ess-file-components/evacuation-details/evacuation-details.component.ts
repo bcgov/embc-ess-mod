@@ -14,6 +14,8 @@ import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../../wizard.service';
+import { TabModel } from 'src/app/core/models/tab.model';
+import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -38,14 +40,16 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
 
   selection = new SelectionModel<any>(true, []);
   tabUpdateSubscription: Subscription;
+  tabMetaData: TabModel;
 
   constructor(
     public stepEssFileService: StepEssFileService,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    public evacueeSearchService: EvacueeSearchService
   ) {}
 
   ngOnInit(): void {
@@ -91,6 +95,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     ) {
       this.showBCAddressForm = true;
     }
+
+    this.tabMetaData =
+      this.stepEssFileService.getNavLinks('evacuation-details');
   }
 
   /**
@@ -181,7 +188,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Updates the tab status and navigate to next tab
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/ess-file/household-members']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 
   /**

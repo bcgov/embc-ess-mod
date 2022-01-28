@@ -20,6 +20,7 @@ import { HouseholdMemberType } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { WizardService } from '../../wizard.service';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-household-members',
@@ -42,6 +43,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   membersColumns: string[] = [];
   tabUpdateSubscription: Subscription;
   wizardType: string;
+  tabMetaData: TabModel;
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -105,9 +107,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       .get('addMemberFormIndicator')
       .valueChanges.subscribe(() => this.updateOnVisibility());
 
-    // this.householdForm
-    //   .get('addMemberIndicator')
-    //   .valueChanges.subscribe(() => this.updateOnVisibility());
+    this.tabMetaData = this.stepEssFileService.getNavLinks('household-members');
   }
 
   /**
@@ -314,14 +314,14 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Goes back to the previous tab from the ESS File Wizard
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/ess-file/evacuation-details']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**
    * Goes to the next tab from the ESS File Wizard
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/ess-file/animals']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 
   /**

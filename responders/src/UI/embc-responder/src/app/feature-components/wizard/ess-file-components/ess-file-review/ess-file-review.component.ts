@@ -7,8 +7,8 @@ import { WizardService } from '../../wizard.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
-import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -40,6 +40,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   ];
 
   petColumns: string[] = ['type', 'quantity'];
+  tabMetaData: TabModel;
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -90,13 +91,14 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
       this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
+    this.tabMetaData = this.stepEssFileService.getNavLinks('review');
   }
 
   /**
    * Go back to the Security Phrase tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/ess-file/security-phrase']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**
