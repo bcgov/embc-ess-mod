@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { WizardService } from '../../wizard.service';
+import { TabModel } from 'src/app/core/models/tab.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-needs',
@@ -20,12 +22,14 @@ export class NeedsComponent implements OnInit, OnDestroy {
   needsForm: FormGroup;
   radioOption = globalConst.needsOptions;
   tabUpdateSubscription: Subscription;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
     private stepEssFileService: StepEssFileService,
     private formBuilder: FormBuilder,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +41,8 @@ export class NeedsComponent implements OnInit, OnDestroy {
       this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
+
+    this.tabMetaData = this.stepEssFileService.getNavLinks('needs');
   }
 
   /**
@@ -50,14 +56,24 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Goes back to the previous ESS File Tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/ess-file/animals']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**
    * Goes to the next tab from the ESS File
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/ess-file/security-phrase']);
+    if (this.evacueeSessionService.paperBased) {
+      this.stepEssFileService.nextTabUpdate.next();
+
+      if (this.stepEssFileService.checkTabsStatus()) {
+        this.stepEssFileService.openModal(globalConst.wizardESSFileMessage);
+      } else {
+        this.router.navigate([this.tabMetaData?.next]);
+      }
+    } else {
+      this.router.navigate([this.tabMetaData?.next]);
+    }
   }
 
   /**
