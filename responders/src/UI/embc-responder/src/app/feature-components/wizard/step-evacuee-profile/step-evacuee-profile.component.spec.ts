@@ -34,12 +34,6 @@ describe('StepEvacueeProfileComponent', () => {
     })
   };
 
-  // getCurrentNavigation() {
-  //   return {
-  //     extras: { state: { step: 'STEP 1', title: 'Create Evacuee Profile' } }
-  //   };
-  // }
-
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({

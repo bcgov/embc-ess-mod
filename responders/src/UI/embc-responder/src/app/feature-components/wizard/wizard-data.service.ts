@@ -169,37 +169,88 @@ export class WizardDataService {
       label: 'Evacuation Details',
       route: 'evacuation-details',
       name: 'evacuation-details',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/household-members'
     },
     {
       label: 'Household Members',
       route: 'household-members',
       name: 'household-members',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/animals',
+      previous: '/ess-wizard/ess-file/evacuation-details'
     },
     {
       label: 'Animals',
       route: 'animals',
       name: 'animals',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/needs',
+      previous: '/ess-wizard/ess-file/household-members'
     },
     {
       label: 'Needs',
       route: 'needs',
       name: 'needs',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/security-phrase',
+      previous: '/ess-wizard/ess-file/animals'
     },
     {
       label: 'Security Phrase',
       route: 'security-phrase',
       name: 'security-phrase',
-      status: 'not-started'
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/review',
+      previous: '/ess-wizard/ess-file/needs'
     },
     {
       label: 'Review & Save',
       route: 'review',
       name: 'review',
-      status: 'not-started'
+      status: 'not-started',
+      previous: '/ess-wizard/ess-file/security-phrase'
+    }
+  ];
+
+  private paperEssFileTabs: Array<TabModel> = [
+    {
+      label: 'Evacuation Details',
+      route: 'evacuation-details',
+      name: 'evacuation-details',
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/household-members'
+    },
+    {
+      label: 'Household Members',
+      route: 'household-members',
+      name: 'household-members',
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/animals',
+      previous: '/ess-wizard/ess-file/evacuation-details'
+    },
+    {
+      label: 'Animals',
+      route: 'animals',
+      name: 'animals',
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/needs',
+      previous: '/ess-wizard/ess-file/household-members'
+    },
+    {
+      label: 'Needs',
+      route: 'needs',
+      name: 'needs',
+      status: 'not-started',
+      next: '/ess-wizard/ess-file/review',
+      previous: '/ess-wizard/ess-file/animals'
+    },
+    {
+      label: 'Review & Save',
+      route: 'review',
+      name: 'review',
+      status: 'not-started',
+      previous: '/ess-wizard/ess-file/needs'
     }
   ];
 
@@ -530,9 +581,16 @@ export class WizardDataService {
   public createNewESSFileSteps(): Array<TabModel> {
     const essFileTabs: Array<TabModel> = new Array<TabModel>();
     let tab: TabModel;
-    for (const tabs of this.essFileTabs) {
-      essFileTabs.push({ ...tab, ...tabs });
+    if (this.evacueeSessionService.paperBased) {
+      for (const tabs of this.paperEssFileTabs) {
+        essFileTabs.push({ ...tab, ...tabs });
+      }
+    } else {
+      for (const tabs of this.essFileTabs) {
+        essFileTabs.push({ ...tab, ...tabs });
+      }
     }
+
     return essFileTabs;
   }
 

@@ -16,6 +16,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { MatDialog } from '@angular/material/dialog';
 import { Pet } from 'src/app/core/api/models';
 import { WizardService } from '../../wizard.service';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-animals',
@@ -33,6 +34,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   rowEdit = false;
   showTable = true;
   tabUpdateSubscription: Subscription;
+  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -77,6 +79,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.addPets();
       this.showPetsForm = true;
     }
+
+    this.tabMetaData = this.stepEssFileService.getNavLinks('animals');
   }
 
   hasPetsChange(event: MatRadioChange): void {
@@ -205,14 +209,14 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Goes back to the previous ESS File Tab
    */
   back() {
-    this.router.navigate(['/ess-wizard/ess-file/household-members']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**
    * Goes to the next tab from the ESS File
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/ess-file/needs']);
+    this.router.navigate([this.tabMetaData?.next]);
   }
 
   /**

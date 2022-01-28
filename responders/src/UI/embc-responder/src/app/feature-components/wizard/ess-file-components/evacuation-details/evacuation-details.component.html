@@ -13,29 +13,20 @@
         <div class="row">
           <div class="col-8">
             <div class="row">
-              <!-- <div class="col-12">
+              <div
+                *ngIf="evacueeSessionService?.paperBased"
+                class="col-12 paper-box"
+              >
                 <label class="tab-subtitle">Paper Based ESS File #</label>
-
-                <p>
-                  If you are entering a
-                  <strong>paper-based ESS File</strong> into the ERA Tool,
-                  please add the ESS File # as it appears on the paper
-                  registration below.
+                <p class="tab-subtitle bold">
+                  {{ evacueeSearchService?.paperBasedEssFile }}
                 </p>
 
-                <div class="row">
-                  <div class="col-6">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Paper Based ESS File #</mat-label>
-                      <input
-                        formControlName="paperESSFile"
-                        maxlength="100"
-                        matInput
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div> -->
+                <p>
+                  If you need to update the Paper ESS File Number, please start
+                  a new search using the correct information.
+                </p>
+              </div>
               <ng-container *ngIf="!essFileNumber; else editEssFile">
                 <div class="col-12">
                   <label
