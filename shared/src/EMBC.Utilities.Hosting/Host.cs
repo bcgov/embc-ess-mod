@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
+using Grpc.Net.Client.Balancer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
@@ -34,10 +35,14 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
+using Serilog.Enrichers.Span;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Extensions.Logging;
@@ -143,6 +148,7 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithCorrelationIdHeader()
                 .Enrich.WithClientAgent()
                 .Enrich.WithClientIp()
+                .Enrich.WithSpan()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
 #if DEBUG
                 .WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
@@ -198,6 +204,7 @@ namespace EMBC.Utilities.Hosting
                 var dataProtectionPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
                 if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
+
             services.AddHealthChecks()
                 .AddCheck($"ready hc", () => HealthCheckResult.Healthy("ready"), new[] { HealthCheckReadyTag })
                 .AddCheck($"live hc", () => HealthCheckResult.Healthy("alive"), new[] { HealthCheckAliveTag });
@@ -236,7 +243,22 @@ namespace EMBC.Utilities.Hosting
 
             services.ConfigureComponentServices(configuration, hostEnvironment, logger, assemblies);
 
-            //add background tasks
+            services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(15)));
+            services.TryAddSingleton<LoadBalancerFactory, PickFirstBalancerFactory>();
+
+            services.AddOpenTelemetryTracing(builder =>
+            {
+                builder
+                    .AddConsoleExporter()
+                    .AddSource(appName)
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: appName, serviceVersion: "1.0.0.0")).AddHttpClientInstrumentation()
+                    .AddAspNetCoreInstrumentation()
+                    .AddGrpcCoreInstrumentation()
+                    .AddGrpcClientInstrumentation()
+                    .AddRedisInstrumentation();
+            });
+
+            // add background tasks
             services.AddBackgroundTasks(logger, assemblies);
         }
 
