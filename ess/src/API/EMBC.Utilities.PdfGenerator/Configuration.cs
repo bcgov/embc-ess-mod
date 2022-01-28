@@ -21,10 +21,10 @@ using System.Security.Cryptography.X509Certificates;
 using EMBC.PDFGenerator;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
-using Grpc.Net.Client.Balancer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
@@ -35,10 +35,8 @@ namespace EMBC.ESS.Utilities.PdfGenerator
         {
             configurationServices.Services.AddGrpc(opts =>
             {
-                opts.EnableDetailedErrors = true;
+                opts.EnableDetailedErrors = configurationServices.Environment.IsDevelopment();
             });
-            configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(30)));
-            configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
             var pdfGeneratorUrl = configurationServices.Configuration.GetValue<Uri>("pdfGenerator:url");
             var allowUntrustedCertificates = configurationServices.Configuration.GetValue("pdfGenerator:allowInvalidServerCertificate", false);
             if (pdfGeneratorUrl == null)
