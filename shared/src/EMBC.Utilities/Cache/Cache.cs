@@ -26,15 +26,15 @@ namespace EMBC.ESS.Utilities.Cache
 {
     public interface ICache
     {
-        Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
+        Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration);
 
         Task<T?> Get<T>(string key);
 
-        Task Set<T>(string key, T value, TimeSpan? expiration = null);
+        Task Set<T>(string key, T value, TimeSpan expiration);
 
         Task Remove(string key);
 
-        Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null);
+        Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration);
     }
 
     internal class Cache : ICache
@@ -54,7 +54,7 @@ namespace EMBC.ESS.Utilities.Cache
             this.policy = policy;
         }
 
-        public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
+        public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration)
         {
             //return Deserialize<T?>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
@@ -76,7 +76,7 @@ namespace EMBC.ESS.Utilities.Cache
             }
         }
 
-        public async Task Set<T>(string key, T value, TimeSpan? expiration = null)
+        public async Task Set<T>(string key, T value, TimeSpan expiration)
         {
             await cache.SetAsync(keyGen(key), Serialize(value), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration });
         }
@@ -91,7 +91,7 @@ namespace EMBC.ESS.Utilities.Cache
             await cache.RemoveAsync(key);
         }
 
-        public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan? expiration = null)
+        public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration)
         {
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
             await locker.WaitAsync();

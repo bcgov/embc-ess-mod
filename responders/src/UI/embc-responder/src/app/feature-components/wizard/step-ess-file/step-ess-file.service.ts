@@ -25,6 +25,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import * as _ from 'lodash';
+import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -93,7 +94,8 @@ export class StepEssFileService {
     private wizardService: WizardService,
     private evacueeSession: EvacueeSessionService,
     private userService: UserService,
-    private locationService: LocationsService
+    private locationService: LocationsService,
+    private evacueeSearchService: EvacueeSearchService
   ) {}
 
   // Selected ESS File Model getter and setter
@@ -491,26 +493,12 @@ export class StepEssFileService {
       canProvideIncidentals: needsIncidentalsDTO
     };
 
-    console.log({
-      primaryRegistrantId: this.evacueeSession.profileId,
-
-      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-        this.evacAddress
-      ),
-      registrationLocation: this.facilityName,
-
-      needsAssessment: needsObject,
-      securityPhrase: this.securityPhrase,
-      securityPhraseEdited: true,
-      task: {
-        taskNumber: this.userService.currentProfile?.taskNumber
-      }
-    });
-
     // Map out into DTO object and return
     return {
       primaryRegistrantId: this.evacueeSession.profileId,
-
+      paperFileNumber: this.evacueeSession.paperBased
+        ? this.evacueeSearchService.paperBasedEssFile
+        : null,
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
       ),
@@ -959,6 +947,10 @@ export class StepEssFileService {
 
   checkForEdit(): boolean {
     return this.evacueeSession.essFileNumber !== null;
+  }
+
+  getNavLinks(name: string): TabModel {
+    return this.essTabs.find((tab) => tab.name === name);
   }
 
   updateEditedFormStatus() {
