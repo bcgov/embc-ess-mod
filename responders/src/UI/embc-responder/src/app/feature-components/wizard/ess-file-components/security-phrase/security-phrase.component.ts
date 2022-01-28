@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../../wizard.service';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-security-phrase',
@@ -26,6 +27,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   wizardType: string;
   essFileNumber: string;
   editedSecurityPhrase: boolean;
+  tabMetaData: TabModel;
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -57,6 +59,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
           this.updateTabStatus();
         }
       });
+    this.tabMetaData = this.stepEssFileService.getNavLinks('security-phrase');
   }
 
   /**
@@ -101,7 +104,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     if (this.stepEssFileService.checkTabsStatus()) {
       this.stepEssFileService.openModal(globalConst.wizardESSFileMessage);
     } else {
-      this.router.navigate(['/ess-wizard/ess-file/review']);
+      this.router.navigate([this.tabMetaData?.next]);
     }
   }
 
@@ -109,7 +112,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * Go back to the Needs tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/ess-file/needs']);
+    this.router.navigate([this.tabMetaData?.previous]);
   }
 
   /**
