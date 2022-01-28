@@ -8652,12 +8652,13 @@
           <PropertyRef Name="era_evacueesupportid" />
         </Key>
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="era_numberofevacueesforsupport" Type="Edm.Int32" />
+        <Property Name="statecode" Type="Edm.Int32" />
         <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
         <Property Name="era_fromaddress" Type="Edm.String" Unicode="false" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="_era_issuedbyid_value" Type="Edm.Guid" />
         <Property Name="era_lodgingcity" Type="Edm.String" Unicode="false" />
+        <Property Name="era_numberofevacueesforsupport" Type="Edm.Int32" />
         <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="era_name" Type="Edm.String" Unicode="false" />
         <Property Name="era_validto" Type="Edm.DateTimeOffset" />
@@ -8669,7 +8670,7 @@
         <Property Name="_era_needsassessmentid_value" Type="Edm.Guid" />
         <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="era_extremewinterconditions" Type="Edm.Int32" />
-        <Property Name="era_supportdeliverytype" Type="Edm.Int32" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="era_suppliernote" Type="Edm.String" Unicode="false" />
         <Property Name="era_lodgingaddress" Type="Edm.String" Unicode="false" />
         <Property Name="era_numberofmeals" Type="Edm.Int32" />
@@ -8679,13 +8680,12 @@
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
         <Property Name="era_lodgingcontactnumber" Type="Edm.String" Unicode="false" />
         <Property Name="era_validfrom" Type="Edm.DateTimeOffset" />
-        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="era_paperreferralcompletedon" Type="Edm.DateTimeOffset" />
         <Property Name="era_numberofnights" Type="Edm.Int32" />
         <Property Name="era_totalamount" Type="Edm.Decimal" Scale="Variable" />
-        <Property Name="era_paperreferralcompletedon" Type="Edm.String" Unicode="false" />
+        <Property Name="era_supportdeliverytype" Type="Edm.Int32" />
         <Property Name="era_lodgingemailaddress" Type="Edm.String" Unicode="false" />
         <Property Name="_era_supplierid_value" Type="Edm.Guid" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="era_approveditems" Type="Edm.String" Unicode="false" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
