@@ -112,7 +112,7 @@ namespace EMBC.ESS.Utilities.Cache
             return context;
         }
 
-        private static T? Deserialize<T>(byte[] data) => data == null ? default : JsonSerializer.Deserialize<T>(data);
+        private static T? Deserialize<T>(byte[] data) => data == null || data.Length == 0 ? default : JsonSerializer.Deserialize<T>(data);
 
         private static byte[] Serialize<T>(T obj) => obj == null ? Array.Empty<byte>() : JsonSerializer.SerializeToUtf8Bytes(obj);
     }
