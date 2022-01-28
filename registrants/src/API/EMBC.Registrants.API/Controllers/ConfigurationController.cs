@@ -24,6 +24,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Metadata;
+using EMBC.ESS.Utilities.Cache;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
@@ -45,13 +46,15 @@ namespace EMBC.Responders.API.Controllers
         private readonly IConfiguration configuration;
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
+        private readonly ICache cache;
         private const int cacheDuration = 60 * 60; //60 minutes
 
-        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper)
+        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache)
         {
             this.configuration = configuration;
             this.client = client;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         /// <summary>
@@ -63,7 +66,11 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
-            var outageInfo = (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo;
+            var outageInfo = await cache.GetOrSet(
+                "outageinfo",
+                async () => (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo,
+                TimeSpan.FromSeconds(30));
+
             var oidcConfig = configuration.GetSection("auth:oidc");
             var config = new Configuration
             {
@@ -112,12 +119,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string? stateProvinceId, [FromQuery] string? countryId, [FromQuery] CommunityType?[] types)
         {
-            var items = (await client.Send(new CommunitiesQuery()
-            {
-                CountryCode = countryId,
-                StateProvinceCode = stateProvinceId,
-                Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Metadata.CommunityType)t)
-            })).Items;
+            var items = await cache.GetOrSet(
+                "communities",
+                async () => (await client.Send(new CommunitiesQuery())).Items,
+                TimeSpan.FromMinutes(5));
+
+            if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
+            if (!string.IsNullOrEmpty(stateProvinceId)) items = items.Where(i => i.StateProvinceCode == stateProvinceId);
+            if (types != null && types.Any()) items = items.Where(i => types.Any(t => t.ToString().Equals(i.Type.ToString(), StringComparison.InvariantCultureIgnoreCase)));
 
             return Ok(mapper.Map<IEnumerable<CommunityCode>>(items));
         }
@@ -127,10 +136,12 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Code>>> GetStateProvinces([FromQuery] string? countryId)
         {
-            var items = (await client.Send(new StateProvincesQuery()
-            {
-                CountryCode = countryId,
-            })).Items;
+            var items = await cache.GetOrSet(
+                "statesprovinces",
+                async () => (await client.Send(new StateProvincesQuery())).Items,
+                TimeSpan.FromMinutes(5));
+
+            if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
 
             return Ok(mapper.Map<IEnumerable<Code>>(items));
         }
@@ -140,7 +151,10 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Code>>> GetCountries()
         {
-            var items = (await client.Send(new CountriesQuery())).Items;
+            var items = await cache.GetOrSet(
+                "countries",
+                async () => (await client.Send(new CountriesQuery())).Items,
+                TimeSpan.FromMinutes(5));
 
             return Ok(mapper.Map<IEnumerable<Code>>(items));
         }
@@ -150,7 +164,10 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<string[]>> GetSecurityQuestions()
         {
-            var questions = (await client.Send(new SecurityQuestionsQuery())).Items;
+            var questions = await cache.GetOrSet(
+                "securityquestions",
+                async () => (await client.Send(new SecurityQuestionsQuery())).Items,
+                TimeSpan.FromMinutes(60));
             return Ok(questions);
         }
 
@@ -159,7 +176,10 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<OutageInformation>> GetOutageInfo()
         {
-            var outageInfo = (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo;
+            var outageInfo = await cache.GetOrSet(
+                "outageinfo",
+                async () => (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo,
+                TimeSpan.FromSeconds(30));
             return Ok(mapper.Map<OutageInformation>(outageInfo));
         }
     }
