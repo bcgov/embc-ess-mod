@@ -96,7 +96,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       this.showBCAddressForm = true;
     }
 
-    this.tabMetaData = this.stepEssFileService.getNavLinks('evacuation-details');
+    this.tabMetaData =
+      this.stepEssFileService.getNavLinks('evacuation-details');
   }
 
   /**

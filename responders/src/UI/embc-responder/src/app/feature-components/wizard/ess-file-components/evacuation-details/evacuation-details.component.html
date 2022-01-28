@@ -13,7 +13,10 @@
         <div class="row">
           <div class="col-8">
             <div class="row">
-              <div *ngIf="evacueeSessionService?.paperBased" class="col-12 paper-box">
+              <div
+                *ngIf="evacueeSessionService?.paperBased"
+                class="col-12 paper-box"
+              >
                 <label class="tab-subtitle">Paper Based ESS File #</label>
                 <p class="tab-subtitle bold">
                   {{ evacueeSearchService?.paperBasedEssFile }}
