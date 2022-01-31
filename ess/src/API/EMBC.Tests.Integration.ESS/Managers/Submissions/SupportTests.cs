@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Submissions;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
@@ -157,6 +158,25 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessSupportsCommand_DigitalAndPaperSupports_BusinessLogicException()
+        {
+            var fileId = TestData.PaperEvacuationFileId;
+
+            var supports = new Referral[]
+            {
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral()
+            };
+
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessSupportsCommand
+            {
+                FileId = fileId,
+                Supports = supports,
+                RequestingUserId = TestData.Tier4TeamMemberId
+            }));
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanProcessPaperReferrals()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -196,9 +216,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 s.PaperReferralDetails = paperDetails;
             }
 
-            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+            var printRequestId = await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
-            printRequestId.ShouldNotBeNullOrEmpty();
+            printRequestId.ShouldBeNullOrEmpty();
 
             var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
             refreshedFile.Supports.ShouldNotBeEmpty();
@@ -217,6 +237,44 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 support.PaperReferralDetails.IssuedBy.ShouldBe(sourceSupport.PaperReferralDetails.IssuedBy);
                 support.PaperReferralDetails.CompletedOn.ShouldBe(sourceSupport.PaperReferralDetails.CompletedOn);
             }
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessPaperSupportsCommand_DuplicateReferralIdAndType_BusinessLogicException()
+        {
+            var fileId = TestData.PaperEvacuationFileId;
+
+            var supports = new Referral[]
+            {
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}}
+            };
+
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            {
+                FileId = fileId,
+                Supports = supports,
+                RequestingUserId = TestData.Tier4TeamMemberId
+            }));
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessPaperSupportsCommand_DigitalAndPaperSupports_BusinessLogicException()
+        {
+            var fileId = TestData.PaperEvacuationFileId;
+
+            var supports = new Referral[]
+            {
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral()
+            };
+
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            {
+                FileId = fileId,
+                Supports = supports,
+                RequestingUserId = TestData.Tier4TeamMemberId
+            }));
         }
     }
 }
