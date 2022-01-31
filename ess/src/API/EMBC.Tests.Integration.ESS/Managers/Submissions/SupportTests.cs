@@ -59,7 +59,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 s.IssuedOn = DateTime.UtcNow;
             }
 
-            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             printRequestId.ShouldNotBeNullOrEmpty();
 
@@ -110,7 +110,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 s.IssuedOn = DateTime.UtcNow;
             }
 
-            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 

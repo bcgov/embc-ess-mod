@@ -467,10 +467,10 @@ namespace EMBC.ESS.Managers.Submissions
             var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Cases.Evacuations.Support>>(cmd.supports)
+                Supports = mapper.Map<IEnumerable<Resources.Cases.Evacuations.Support>>(cmd.Supports)
             })).Id.Split(';');
 
-            var referralPrintId = await printingRepository.Manage(new SavePrintRequest
+            var printRequestId = await printingRepository.Manage(new SavePrintRequest
             {
                 PrintRequest = new ReferralPrintRequest
                 {
@@ -483,7 +483,39 @@ namespace EMBC.ESS.Managers.Submissions
                 }
             });
 
-            return referralPrintId;
+            return printRequestId;
+        }
+
+        public async Task<string> Handle(ProcessPaperSupportsCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
+            if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
+
+            //validate only paper referrals were passed in the command
+            if (!cmd.Supports.All(s => (s is Referral r) && r.PaperReferralDetails != null))
+                throw new BusinessLogicException($"{nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
+
+            var referrals = cmd.Supports.Cast<Referral>().ToArray();
+            //validate paper id and support types are unique
+            var paperIds = referrals.Select(s => s.PaperReferralDetails.ReferralId).ToArray();
+            foreach (var id in paperIds)
+            {
+                if (string.IsNullOrEmpty(id)) throw new BusinessLogicException($"Id is missing from paper referral");
+                var sameIdReferrals = referrals.Where(r => r.PaperReferralDetails.ReferralId == id);
+                var duplicateReferrals = sameIdReferrals.GroupBy(r => r.GetType().Name).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
+                if (duplicateReferrals.Any())
+                    throw new BusinessLogicException($"Referral {id} has more than one referral types :{string.Join(',', duplicateReferrals)}");
+            }
+
+            //save referrals
+            var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
+            {
+                FileId = cmd.FileId,
+                Supports = mapper.Map<IEnumerable<Resources.Cases.Evacuations.Support>>(cmd.Supports)
+            })).Id.Split(';');
+
+            // no print request is returned
+            return string.Empty;
         }
 
         public async Task<string> Handle(VoidSupportCommand cmd)

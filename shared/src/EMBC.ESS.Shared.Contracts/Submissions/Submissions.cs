@@ -107,7 +107,17 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string RequestingUserId { get; set; }
         public bool IncludeSummaryInReferralsPrintout { get; set; }
         public string FileId { get; set; }
-        public IEnumerable<Support> supports { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
+    }
+
+    /// <summary>
+    /// Proccess supports for a file, return a print request id
+    /// </summary>
+    public class ProcessPaperSupportsCommand : Command
+    {
+        public string RequestingUserId { get; set; }
+        public string FileId { get; set; }
+        public IEnumerable<Referral> Supports { get; set; }
     }
 
     /// <summary>

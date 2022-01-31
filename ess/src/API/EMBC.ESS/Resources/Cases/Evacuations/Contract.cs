@@ -183,9 +183,18 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
     public abstract class Referral : Support
     {
-        public string SupplierId { get; set; }
-        public string SupplierNotes { get; set; }
+        public string? SupplierId { get; set; }
+        public string? SupplierNotes { get; set; }
         public string IssuedToPersonName { get; set; }
+        public PaperReferralDetails PaperReferralDetails { get; set; }
+        public bool IsPaperReferral => PaperReferralDetails != null;
+    }
+
+    public class PaperReferralDetails
+    {
+        public string ReferralId { get; set; }
+        public DateTime CompletedOn { get; set; }
+        public string IssuedBy { get; set; }
     }
 
     public class ClothingReferral : Referral

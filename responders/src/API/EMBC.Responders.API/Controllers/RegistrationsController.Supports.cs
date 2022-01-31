@@ -148,6 +148,8 @@ namespace EMBC.Responders.API.Controllers
     [KnownType(typeof(TransportationTaxiReferral))]
     public abstract class Referral : Support
     {
+        public string? ExternalReferenceId { get; set; }
+
         [Required]
         public override SupportMethod Method => SupportMethod.Referral;
 
