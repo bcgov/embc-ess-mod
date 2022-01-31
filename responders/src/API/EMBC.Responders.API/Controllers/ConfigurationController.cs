@@ -46,7 +46,7 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
         private readonly ICache cache;
-        private const int cacheDuration = 5 * 60; //5 minutes
+        private const int cacheDuration = 60 * 5; //5 minutes
 
         public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache)
         {
