@@ -52,14 +52,14 @@ export const options: Options = {
 
 
         /*---Responder---*/
-        // ResponderNewRegistration: {
-        //     exec: 'ResponderNewRegistration',
-        //     ...ramp_up_scenario
-        // },
-        // ResponderExistingRegistration: {
-        //     exec: 'ResponderExistingRegistration',
-        //     ...ramp_up_scenario
-        // },
+        ResponderNewRegistration: {
+            exec: 'ResponderNewRegistration',
+            ...ramp_up_scenario
+        },
+        ResponderExistingRegistration: {
+            exec: 'ResponderExistingRegistration',
+            ...ramp_up_scenario
+        },
     },
 
     thresholds: {
@@ -68,7 +68,7 @@ export const options: Options = {
     }
 };
 
-// setUseRandomWaitTime(true);
+setUseRandomWaitTime(true);
 
 const TEST_TYPE = "stress-test";
 
