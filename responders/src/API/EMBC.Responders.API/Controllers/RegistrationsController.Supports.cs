@@ -58,7 +58,7 @@ namespace EMBC.Responders.API.Controllers
             var printRequestId = await messagingClient.Send(new ProcessSupportsCommand
             {
                 FileId = fileId,
-                supports = mappedSupports,
+                Supports = mappedSupports,
                 RequestingUserId = userId,
                 IncludeSummaryInReferralsPrintout = includeSummaryInPrintRequest
             });

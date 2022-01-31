@@ -111,7 +111,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     }
 
     /// <summary>
-    /// Proccess supports for a file, return a print request id
+    /// Proccess paper supports for a file without printing them
     /// </summary>
     public class ProcessPaperSupportsCommand : Command
     {
