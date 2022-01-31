@@ -69,7 +69,7 @@ namespace EMBC.Responders.API.Controllers
             var outageInfo = await cache.GetOrSet(
                 "outageinfo",
                 async () => (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo,
-                TimeSpan.FromSeconds(30));
+                TimeSpan.FromMinutes(5));
 
             var oidcConfig = configuration.GetSection("auth:oidc");
             var config = new Configuration
@@ -122,7 +122,7 @@ namespace EMBC.Responders.API.Controllers
             var items = await cache.GetOrSet(
                 "communities",
                 async () => (await client.Send(new CommunitiesQuery())).Items,
-                TimeSpan.FromMinutes(5));
+                TimeSpan.FromMinutes(15));
 
             if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
             if (!string.IsNullOrEmpty(stateProvinceId)) items = items.Where(i => i.StateProvinceCode == stateProvinceId);
@@ -139,7 +139,7 @@ namespace EMBC.Responders.API.Controllers
             var items = await cache.GetOrSet(
                 "statesprovinces",
                 async () => (await client.Send(new StateProvincesQuery())).Items,
-                TimeSpan.FromMinutes(5));
+                TimeSpan.FromMinutes(15));
 
             if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
 
@@ -154,7 +154,7 @@ namespace EMBC.Responders.API.Controllers
             var items = await cache.GetOrSet(
                 "countries",
                 async () => (await client.Send(new CountriesQuery())).Items,
-                TimeSpan.FromMinutes(5));
+                TimeSpan.FromMinutes(15));
 
             return Ok(mapper.Map<IEnumerable<Code>>(items));
         }
@@ -167,7 +167,7 @@ namespace EMBC.Responders.API.Controllers
             var questions = await cache.GetOrSet(
                 "securityquestions",
                 async () => (await client.Send(new SecurityQuestionsQuery())).Items,
-                TimeSpan.FromMinutes(60));
+                TimeSpan.FromMinutes(15));
             return Ok(questions);
         }
 
@@ -179,7 +179,7 @@ namespace EMBC.Responders.API.Controllers
             var outageInfo = await cache.GetOrSet(
                 "outageinfo",
                 async () => (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo,
-                TimeSpan.FromSeconds(30));
+                TimeSpan.FromMinutes(5));
             return Ok(mapper.Map<OutageInformation>(outageInfo));
         }
     }
