@@ -262,7 +262,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => SupportMethod.Referral))
                 .ForMember(d => d.era_manualsupport, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? null : s.PaperReferralDetails.ReferralId))
                 .ForMember(d => d.era_paperissuedby, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? null : s.PaperReferralDetails.IssuedBy))
-                .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? (Date?)null : s.PaperReferralDetails.CompletedOn))
+                .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? (DateTimeOffset?)null : s.PaperReferralDetails.CompletedOn))
                 ;
 
             CreateMap<era_evacueesupport, ClothingReferral>()
