@@ -26,6 +26,7 @@ export class BootstrapService {
     try {
       //load server config
       const config = await this.configService.loadConfig();
+      console.log(config);
       this.timeoutService.timeOutInfo = config.timeoutInfo;
       this.outageService.outageInfo = config.outageInfo;
     } catch (error) {
