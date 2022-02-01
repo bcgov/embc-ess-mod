@@ -82,10 +82,10 @@ export class EvacueeSearchResultsService {
   }
 
   public essFileExists(
-    essFile: string
+    externalReferenceId: string
   ): Observable<Array<EvacuationFileSummary>> {
     return this.registrationService.registrationsGetFiles({
-      externalReferenceId: essFile
+      externalReferenceId
     });
   }
 
