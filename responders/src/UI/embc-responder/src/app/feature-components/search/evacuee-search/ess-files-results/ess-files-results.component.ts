@@ -69,11 +69,19 @@ export class EssFilesResultsComponent
    * @param selectedESSFile selected ess file
    */
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
+    console.log(selectedESSFile);
     if (
       this.evacueeSessionService.paperBased === true &&
       this.evacueeSearchService.paperBasedEssFile !== selectedESSFile.id
     ) {
       this.openUnableAccessESSFileDialog();
+    } else if (
+      this.evacueeSessionService.paperBased === false &&
+      this.evacueeSearchService.evacueeSearchContext.hasShownIdentification ===
+        false &&
+      selectedESSFile.isPaperBasedFile === true
+    ) {
+      this.openUnableAccessDialog();
     } else {
       this.evacueeSessionService.essFileNumber = selectedESSFile.id;
       if (

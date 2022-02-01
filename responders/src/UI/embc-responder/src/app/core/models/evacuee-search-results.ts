@@ -28,8 +28,11 @@ export interface EvacuationFileSearchResultModel {
   evacuatedFrom?: null | AddressModel;
   householdMembers?: null | Array<EvacuationFileSearchResultHouseholdMember>;
   id?: null | string;
+  isPaperBasedFile?: boolean;
   isRestricted?: boolean;
   status?: EvacuationFileStatus;
   taskId?: null | string;
+  taskEndDate?: null | string;
+  taskStartDate?: null | string;
   modifiedOn?: string;
 }

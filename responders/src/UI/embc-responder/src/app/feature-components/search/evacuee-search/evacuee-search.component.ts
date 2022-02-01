@@ -56,16 +56,18 @@ export class EvacueeSearchComponent implements OnInit {
   }
 
   allowNewSearch($event: boolean): void {
-    this.showPhotoIDComponent = $event;
+    this.showDataEntryComponent = $event;
     this.showResultsComponent = !$event;
   }
 
   private checkTaskStatus(): void {
+    console.log('hello');
     const taskNumber = this.userService?.currentProfile?.taskNumber;
     this.taskSearchService.searchTask(taskNumber).subscribe({
       next: (result) => {
         this.isLoading = !this.isLoading;
         this.showDataEntryComponent = !this.showDataEntryComponent;
+        console.log(this.showDataEntryComponent);
         this.userService.updateTaskNumber(result.id, result.status);
         this.evacueeSessionService.paperBased =
           result.status === 'Expired' ? true : false;

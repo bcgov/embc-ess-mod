@@ -17,6 +17,9 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { EssFileExistsComponent } from 'src/app/shared/components/dialog-components/ess-file-exists/ess-file-exists.component';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -24,7 +27,7 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
   styleUrls: ['./evacuee-search-results.component.scss']
 })
 export class EvacueeSearchResultsComponent implements OnInit {
-  @Output() showIDPhotoComponent = new EventEmitter<boolean>();
+  @Output() showDataEntryComponent = new EventEmitter<boolean>();
   registrantResults: Array<RegistrantProfileSearchResultModel>;
   fileResults: Array<EvacuationFileSearchResultModel>;
   evacueeSearchContext: EvacueeSearchContextModel;
@@ -40,16 +43,17 @@ export class EvacueeSearchResultsComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private cacheService: CacheService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.searchForEvacuee(
       (this.evacueeSearchContext =
-        this.evacueeSearchService.evacueeSearchContext)
+        this.evacueeSearchService.evacueeSearchContext),
+      (this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile)
     );
     this.isPaperBased = this.evacueeSessionService.paperBased;
-    this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
   }
 
   /**
@@ -69,7 +73,9 @@ export class EvacueeSearchResultsComponent implements OnInit {
    * Resets the search
    */
   searchAgain(): void {
-    this.showIDPhotoComponent.emit(true);
+    this.evacueeSearchService.clearEvacueeSearch();
+    this.evacueeSessionService.clearEvacueeSession();
+    this.showDataEntryComponent.emit(true);
   }
 
   /**
@@ -78,10 +84,16 @@ export class EvacueeSearchResultsComponent implements OnInit {
    *
    * @param evacueeSearchContext search parameters
    */
-  searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
+  searchForEvacuee(
+    evacueeSearchContext: EvacueeSearchContextModel,
+    paperEssFile?: string
+  ): void {
     this.isLoading = !this.isLoading;
     this.evacueeSearchResultsService
-      .searchForEvacuee(evacueeSearchContext?.evacueeSearchParameters)
+      .searchForEvacuee(
+        evacueeSearchContext?.evacueeSearchParameters,
+        paperEssFile
+      )
       .subscribe({
         next: (results) => {
           this.isLoading = !this.isLoading;
@@ -95,6 +107,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
               new Date(b.modifiedOn).valueOf() -
               new Date(a.modifiedOn).valueOf()
           );
+          console.log(this.fileResults);
+          console.log(this.registrantResults);
         },
         error: (error) => {
           this.isLoading = !this.isLoading;
@@ -105,15 +119,30 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
+    if (this.evacueeSessionService.paperBased === true) {
+      this.openEssFileExistsDialog('');
+    } else {
+      this.cacheService.set(
+        'wizardOpenedFrom',
+        '/responder-access/search/evacuee'
+      );
+      this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
 
-    this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: WizardType.NewRegistration },
-      queryParamsHandling: 'merge'
+      this.router.navigate(['/ess-wizard'], {
+        queryParams: { type: WizardType.NewRegistration },
+        queryParamsHandling: 'merge'
+      });
+    }
+  }
+
+  private openEssFileExistsDialog(essFile: string): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: EssFileExistsComponent,
+        essFile
+      },
+      height: '392px',
+      width: '493px'
     });
   }
 }

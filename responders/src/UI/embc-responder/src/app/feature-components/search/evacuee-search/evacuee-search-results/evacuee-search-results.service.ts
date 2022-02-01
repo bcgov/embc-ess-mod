@@ -24,13 +24,16 @@ export class EvacueeSearchResultsService {
    * @returns observable of search results
    */
   public searchForEvacuee(
-    evacueeSearchParameters: EvacueeDetailsModel
+    evacueeSearchParameters: EvacueeDetailsModel,
+    paperBasedEssFile?: string
   ): Observable<EvacueeSearchResults> {
     return this.registrationService
       .registrationsSearch({
         firstName: evacueeSearchParameters?.firstName,
         lastName: evacueeSearchParameters?.lastName,
-        dateOfBirth: evacueeSearchParameters?.dateOfBirth
+        dateOfBirth: evacueeSearchParameters?.dateOfBirth,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        ExternalReferenceId: paperBasedEssFile
       })
       .pipe(
         map((searchResult: EvacueeSearchResults) => {
