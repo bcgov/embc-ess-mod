@@ -56,7 +56,7 @@ export class EvacueeSearchComponent implements OnInit {
   }
 
   allowNewSearch($event: boolean): void {
-    this.showPhotoIDComponent = $event;
+    this.showDataEntryComponent = $event;
     this.showResultsComponent = !$event;
   }
 

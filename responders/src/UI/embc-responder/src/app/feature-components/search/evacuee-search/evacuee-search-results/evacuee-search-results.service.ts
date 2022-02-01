@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { EvacuationFileSummary } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.model';
@@ -24,13 +25,16 @@ export class EvacueeSearchResultsService {
    * @returns observable of search results
    */
   public searchForEvacuee(
-    evacueeSearchParameters: EvacueeDetailsModel
+    evacueeSearchParameters: EvacueeDetailsModel,
+    paperBasedEssFile?: string
   ): Observable<EvacueeSearchResults> {
     return this.registrationService
       .registrationsSearch({
         firstName: evacueeSearchParameters?.firstName,
         lastName: evacueeSearchParameters?.lastName,
-        dateOfBirth: evacueeSearchParameters?.dateOfBirth
+        dateOfBirth: evacueeSearchParameters?.dateOfBirth,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        ExternalReferenceId: paperBasedEssFile
       })
       .pipe(
         map((searchResult: EvacueeSearchResults) => {
@@ -77,8 +81,16 @@ export class EvacueeSearchResultsService {
       );
   }
 
+  public essFileExists(
+    externalReferenceId: string
+  ): Observable<Array<EvacuationFileSummary>> {
+    return this.registrationService.registrationsGetFiles({
+      externalReferenceId
+    });
+  }
+
   /**
-   * Maps codes to generate names
+   * Maps codes to generate names:
    *
    * @param communityCode communityCode from api
    * @param countryCode countryCode from api

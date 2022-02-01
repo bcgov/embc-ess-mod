@@ -496,7 +496,7 @@ export class StepEssFileService {
     // Map out into DTO object and return
     return {
       primaryRegistrantId: this.evacueeSession.profileId,
-      paperFileNumber: this.evacueeSession.paperBased
+      externalReferenceId: this.evacueeSession.paperBased
         ? this.evacueeSearchService.paperBasedEssFile
         : null,
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(

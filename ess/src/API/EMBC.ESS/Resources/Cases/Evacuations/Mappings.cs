@@ -249,9 +249,20 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.IssuedToPersonName, opts => opts.MapFrom(s => s.era_purchaserofgoods))
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s._era_supplierid_value))
                 .ForMember(d => d.SupplierNotes, opts => opts.MapFrom(s => s.era_suppliernote))
+                .ForMember(d => d.PaperReferralDetails, opts => opts.MapFrom(s => s.era_manualsupport == null
+                    ? null
+                    : new PaperReferralDetails
+                    {
+                        ReferralId = s.era_manualsupport,
+                        CompletedOn = s.era_paperreferralcompletedon.Value.UtcDateTime,
+                        IssuedBy = s.era_paperissuedby
+                    }))
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => SupportMethod.Referral))
+                .ForMember(d => d.era_manualsupport, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? null : s.PaperReferralDetails.ReferralId))
+                .ForMember(d => d.era_paperissuedby, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? null : s.PaperReferralDetails.IssuedBy))
+                .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? (DateTimeOffset?)null : s.PaperReferralDetails.CompletedOn))
                 ;
 
             CreateMap<era_evacueesupport, ClothingReferral>()
