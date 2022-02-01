@@ -11,7 +11,10 @@
         'file-complete': essFile?.status === 'Completed',
         'file-expired': essFile?.status === 'Expired'
       }"
-      >ESS File # <span class="bold">{{ essFile?.id }}</span></span
+      >ESS File #
+      <span class="bold">{{
+        essFile?.externalReferenceId || essFile?.id
+      }}</span></span
     >
     <span class="file-heading"
       ><img
@@ -41,7 +44,7 @@
 <div class="row">
   <div class="col-md-3">
     <div class="row dashboard-subheading">
-      <div class="col-md-4">
+      <div class="col">
         <span> Status:</span>
         <span
           class="bold"
@@ -53,12 +56,12 @@
           }"
           >{{ essFile?.status }}</span
         >
-      </div>
-      <div class="col-md-3">
-        <a class="status-info" (click)="openStatusDefinition()">
-          <img src="/assets/images/info.svg" height="28" width="28" />
-          <img src="/assets/images/info-on-hover.svg" height="28" width="28"
-        /></a>
+        <span>
+          <a class="status-info" (click)="openStatusDefinition()">
+            <img src="/assets/images/info.svg" height="28" width="28" />
+            <img src="/assets/images/info-on-hover.svg" height="28" width="28"
+          /></a>
+        </span>
       </div>
     </div>
 
@@ -239,7 +242,12 @@
   </div>
 </div>
 
-<div *ngIf="essFile?.status === 'Completed'" class="row banner">
+<div
+  *ngIf="
+    essFile?.status === 'Completed' && essFile?.externalReferenceId === null
+  "
+  class="row banner"
+>
   <div class="col-md-12 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
     <span class="banner-heading">Complete:</span>
@@ -247,6 +255,28 @@
       >Task number end date has expired and ESS File is closed. To extend or to
       add new supports, task number must be extended.</span
     >
+  </div>
+</div>
+
+<div
+  *ngIf="
+    essFile?.status === 'Completed' && essFile?.externalReferenceId !== null
+  "
+  class="row banner"
+>
+  <div class="col-md-9 center-content">
+    <img src="/assets/images/exclaimation.svg" height="32" width="32" />
+    <span class="banner-heading">Complete:</span>
+    <span>Task number end date has expired and ESS File is closed.</span>
+  </div>
+  <div class="col-md-3">
+    <button
+      class="button-p ess-file-button"
+      (click)="reviewEssFile()"
+      mat-button
+    >
+      Edit ESS File
+    </button>
   </div>
 </div>
 
