@@ -7829,24 +7829,26 @@
         <Key>
           <PropertyRef Name="era_castestid" />
         </Key>
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="era_castestid" Type="Edm.Guid" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="era_securityprofiletest" Type="Edm.String" Unicode="false" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="era_castestid" Type="Edm.Guid" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="era_response" Type="Edm.String" Unicode="false" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="statecode" Type="Edm.Int32" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_castest_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
@@ -8650,12 +8652,14 @@
           <PropertyRef Name="era_evacueesupportid" />
         </Key>
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="era_numberofevacueesforsupport" Type="Edm.Int32" />
+        <Property Name="statecode" Type="Edm.Int32" />
         <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
         <Property Name="era_fromaddress" Type="Edm.String" Unicode="false" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="_era_issuedbyid_value" Type="Edm.Guid" />
         <Property Name="era_lodgingcity" Type="Edm.String" Unicode="false" />
+        <Property Name="era_numberofevacueesforsupport" Type="Edm.Int32" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="era_name" Type="Edm.String" Unicode="false" />
         <Property Name="era_validto" Type="Edm.DateTimeOffset" />
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
@@ -8676,7 +8680,7 @@
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
         <Property Name="era_lodgingcontactnumber" Type="Edm.String" Unicode="false" />
         <Property Name="era_validfrom" Type="Edm.DateTimeOffset" />
-        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="era_paperreferralcompletedon" Type="Edm.DateTimeOffset" />
         <Property Name="era_numberofnights" Type="Edm.Int32" />
         <Property Name="era_totalamount" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="era_supportdeliverytype" Type="Edm.Int32" />
@@ -8700,9 +8704,10 @@
         <Property Name="_era_evacuationfileid_value" Type="Edm.Guid" />
         <Property Name="createdon" Type="Edm.DateTimeOffset" />
         <Property Name="_era_grouplodgingcityid_value" Type="Edm.Guid" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="era_paperissuedby" Type="Edm.String" Unicode="false" />
         <Property Name="versionnumber" Type="Edm.Int64" />
         <Property Name="era_numberoflunches" Type="Edm.Int32" />
+        <Property Name="era_manualsupport" Type="Edm.String" Unicode="false" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_evacueesupport_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -26604,6 +26609,16 @@
         <Parameter Name="ESSFileNumbers" Type="Edm.String" Unicode="false" />
         <ReturnType Type="mscrm.era_DEVOnly_DeleteESSFile_CAResponse" Nullable="false" />
       </Action>
+      <ComplexType Name="era_EvacueeSearchResponse">
+        <Property Name="JSONResults" Type="Edm.String" Unicode="false" />
+      </ComplexType>
+      <Action Name="era_EvacueeSearch">
+        <Parameter Name="FirstName" Type="Edm.String" Unicode="false" />
+        <Parameter Name="LastName" Type="Edm.String" Unicode="false" />
+        <Parameter Name="DateOfBirth" Type="Edm.DateTimeOffset" />
+        <Parameter Name="SearchType" Type="Edm.String" Unicode="false" />
+        <ReturnType Type="mscrm.era_EvacueeSearchResponse" Nullable="false" />
+      </Action>
       <ComplexType Name="era_GetCASTransactionProgressResponse">
         <Property Name="Message" Type="Edm.String" Unicode="false" />
       </ComplexType>
@@ -38540,6 +38555,7 @@
         <ActionImport Name="ConvertSalesOrderToInvoice" Action="Microsoft.Dynamics.CRM.ConvertSalesOrderToInvoice" />
         <ActionImport Name="CreateActivitiesList" Action="Microsoft.Dynamics.CRM.CreateActivitiesList" />
         <ActionImport Name="era_DEVOnly_DeleteESSFile_CA" Action="Microsoft.Dynamics.CRM.era_DEVOnly_DeleteESSFile_CA" />
+        <ActionImport Name="era_EvacueeSearch" Action="Microsoft.Dynamics.CRM.era_EvacueeSearch" />
         <ActionImport Name="era_GetCASTransactionProgress" Action="Microsoft.Dynamics.CRM.era_GetCASTransactionProgress" />
         <ActionImport Name="era_SubmitUnauthInvoices" Action="Microsoft.Dynamics.CRM.era_SubmitUnauthInvoices" />
         <ActionImport Name="GenerateInvoiceFromOpportunity" Action="Microsoft.Dynamics.CRM.GenerateInvoiceFromOpportunity" />

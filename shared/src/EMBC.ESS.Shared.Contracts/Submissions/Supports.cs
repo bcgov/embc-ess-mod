@@ -38,6 +38,14 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string SupplierNotes { get; set; }
         public string IssuedToPersonName { get; set; }
         public SupplierDetails SupplierDetails { get; set; }
+        public PaperReferralDetails PaperReferralDetails { get; set; }
+    }
+
+    public class PaperReferralDetails
+    {
+        public string ReferralId { get; set; }
+        public DateTime CompletedOn { get; set; }
+        public string IssuedBy { get; set; }
     }
 
     public class SupplierDetails
