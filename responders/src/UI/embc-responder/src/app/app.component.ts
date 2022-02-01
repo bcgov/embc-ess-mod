@@ -50,6 +50,7 @@ export class AppComponent implements OnInit {
     try {
       this.environment = await this.envBannerService.loadEnvironmentBanner();
       const configuration = await this.configService.load();
+      console.log(configuration);
       this.outageService.outageInfo = configuration.outageInfo;
       this.timeOutService.timeOutInfo = configuration.timeoutInfo;
     } catch (error) {

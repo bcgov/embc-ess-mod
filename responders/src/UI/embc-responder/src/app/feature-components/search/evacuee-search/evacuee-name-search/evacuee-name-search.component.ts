@@ -69,23 +69,23 @@ export class EvacueeNameSearchComponent implements OnInit {
   constructNameForm(): void {
     this.nameSearchForm = this.builder.group({
       firstName: [
-        this.evacueeSearchContextModel?.evacueeSearchParameters.firstName,
+        '',
         [Validators.required, this.customValidation.whitespaceValidator()]
       ],
       lastName: [
-        this.evacueeSearchContextModel?.evacueeSearchParameters.lastName,
+        '',
         [Validators.required, this.customValidation.whitespaceValidator()]
       ],
       dateOfBirth: [
-        this.evacueeSearchContextModel?.evacueeSearchParameters.dateOfBirth,
+        '',
         [Validators.required, this.customValidation.dateOfBirthValidator()]
       ],
       paperBasedEssFile: [
-        this.evacueeSearchService?.paperBasedEssFile,
+        '',
         this.customValidation
           .conditionalValidation(
             () => this.paperBased === true,
-            Validators.required
+            this.customValidation.whitespaceValidator()
           )
           .bind(this.customValidation)
       ]

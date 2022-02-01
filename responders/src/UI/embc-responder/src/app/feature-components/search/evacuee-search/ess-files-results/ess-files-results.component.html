@@ -15,7 +15,9 @@
               class="file-active highlight"
               (click)="openESSFile(fileResult)"
             >
-              ESS File:<b>{{ fileResult?.id }}</b>
+              ESS File:<b>{{
+                fileResult?.externalReferenceId || fileResult?.id
+              }}</b>
               <span class="status-align"
                 ><img
                   src="/assets/images/active-flag.svg"

@@ -4,7 +4,6 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
-import { ErrorService } from './services/error.service';
 import { ConfigurationService } from './services/configuration.service';
 import { ProfileService } from './services/profile.service';
 import { RegistrationsService } from './services/registrations.service';
@@ -22,7 +21,6 @@ import { TeamsService } from './services/teams.service';
   exports: [],
   declarations: [],
   providers: [
-    ErrorService,
     ConfigurationService,
     ProfileService,
     RegistrationsService,

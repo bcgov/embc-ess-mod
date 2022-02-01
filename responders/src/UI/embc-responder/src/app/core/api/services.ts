@@ -1,4 +1,3 @@
-export { ErrorService } from './services/error.service';
 export { ConfigurationService } from './services/configuration.service';
 export { ProfileService } from './services/profile.service';
 export { RegistrationsService } from './services/registrations.service';
