@@ -28,6 +28,7 @@ export interface EvacuationFileSearchResultModel {
   evacuatedFrom?: null | AddressModel;
   householdMembers?: null | Array<EvacuationFileSearchResultHouseholdMember>;
   id?: null | string;
+  externalReferenceId?: null | string;
   isPaperBasedFile?: boolean;
   isRestricted?: boolean;
   status?: EvacuationFileStatus;

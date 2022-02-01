@@ -43,6 +43,10 @@ export class DialogComponent implements OnInit, OnDestroy {
       this.componentRef.instance.idle = this.data.idle;
     }
 
+    if (this.data.essFile !== undefined) {
+      this.componentRef.instance.essFile = this.data.essFile;
+    }
+
     this.componentRef.instance.outputEvent.subscribe((value) => {
       this.buttonAction(value);
     });

@@ -110,7 +110,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
           console.log(this.fileResults);
           console.log(this.registrantResults);
         },
-        error: (error) => {
+        error: (errorEvacuee) => {
           this.isLoading = !this.isLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeSearchError);
@@ -120,7 +120,34 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   openWizard(): void {
     if (this.evacueeSessionService.paperBased === true) {
-      this.openEssFileExistsDialog('');
+      this.evacueeSearchResultsService
+        .essFileExists(this.paperBasedEssFile)
+        .subscribe({
+          next: (result) => {
+            if (result[0] === null) {
+              this.cacheService.set(
+                'wizardOpenedFrom',
+                '/responder-access/search/evacuee'
+              );
+              this.evacueeSessionService.setWizardType(
+                WizardType.NewRegistration
+              );
+
+              this.router.navigate(['/ess-wizard'], {
+                queryParams: { type: WizardType.NewRegistration },
+                queryParamsHandling: 'merge'
+              });
+            } else {
+              this.openEssFileExistsDialog(
+                this.evacueeSearchService.paperBasedEssFile
+              );
+            }
+          },
+          error: (errorResponse) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.findEssFileError);
+          }
+        });
     } else {
       this.cacheService.set(
         'wizardOpenedFrom',
@@ -139,9 +166,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
     this.dialog.open(DialogComponent, {
       data: {
         component: EssFileExistsComponent,
+        content: { title: 'Paper ESS File Already Exists' },
         essFile
       },
-      height: '392px',
+      height: '400px',
       width: '493px'
     });
   }

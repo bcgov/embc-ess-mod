@@ -72,7 +72,8 @@ export class EssFilesResultsComponent
     console.log(selectedESSFile);
     if (
       this.evacueeSessionService.paperBased === true &&
-      this.evacueeSearchService.paperBasedEssFile !== selectedESSFile.id
+      this.evacueeSearchService.paperBasedEssFile !==
+        selectedESSFile.externalReferenceId
     ) {
       this.openUnableAccessESSFileDialog();
     } else if (
@@ -143,14 +144,14 @@ export class EssFilesResultsComponent
     });
   }
 
-  public alreadyExistsDialog(): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content: globalConst.alreadyExistESSFileMessage
-      },
-      height: '390px',
-      width: '520px'
-    });
-  }
+  // public alreadyExistsDialog(): void {
+  //   this.dialog.open(DialogComponent, {
+  //     data: {
+  //       component: InformationDialogComponent,
+  //       content: globalConst.alreadyExistESSFileMessage
+  //     },
+  //     height: '390px',
+  //     width: '520px'
+  //   });
+  // }
 }

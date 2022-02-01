@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { EvacuationFileSummary } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.model';
@@ -80,8 +81,16 @@ export class EvacueeSearchResultsService {
       );
   }
 
+  public essFileExists(
+    essFile: string
+  ): Observable<Array<EvacuationFileSummary>> {
+    return this.registrationService.registrationsGetFiles({
+      externalReferenceId: essFile
+    });
+  }
+
   /**
-   * Maps codes to generate names
+   * Maps codes to generate names:
    *
    * @param communityCode communityCode from api
    * @param countryCode countryCode from api
