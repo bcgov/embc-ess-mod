@@ -143,15 +143,4 @@ export class EssFilesResultsComponent
       width: '493px'
     });
   }
-
-  // public alreadyExistsDialog(): void {
-  //   this.dialog.open(DialogComponent, {
-  //     data: {
-  //       component: InformationDialogComponent,
-  //       content: globalConst.alreadyExistESSFileMessage
-  //     },
-  //     height: '390px',
-  //     width: '520px'
-  //   });
-  // }
 }
