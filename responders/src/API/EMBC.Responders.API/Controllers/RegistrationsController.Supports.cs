@@ -58,7 +58,7 @@ namespace EMBC.Responders.API.Controllers
             var printRequestId = await messagingClient.Send(new ProcessSupportsCommand
             {
                 FileId = fileId,
-                supports = mappedSupports,
+                Supports = mappedSupports,
                 RequestingUserId = userId,
                 IncludeSummaryInReferralsPrintout = includeSummaryInPrintRequest
             });
@@ -148,6 +148,8 @@ namespace EMBC.Responders.API.Controllers
     [KnownType(typeof(TransportationTaxiReferral))]
     public abstract class Referral : Support
     {
+        public string? ExternalReferenceId { get; set; }
+
         [Required]
         public override SupportMethod Method => SupportMethod.Referral;
 
@@ -548,56 +550,86 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
                 .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
                 .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
+                .ForMember(d => d.ExternalReferenceId, opts => opts.Ignore())
+                .AfterMap((s, d) =>
+                {
+                    if (s.PaperReferralDetails != null)
+                    {
+                        d.IssuedOn = s.PaperReferralDetails.CompletedOn;
+                        d.IssuingMemberName = s.PaperReferralDetails.IssuedBy;
+                        d.ExternalReferenceId = s.PaperReferralDetails.ReferralId;
+                    }
+                })
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.SupplierDetails, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.SupplierId) ? null : new SupplierDetails { Id = s.SupplierId }))
+                .ForMember(d => d.PaperReferralDetails, opts => opts.MapFrom(s =>
+                    s.ExternalReferenceId != null
+                        ? new PaperReferralDetails
+                        {
+                            ReferralId = s.ExternalReferenceId,
+                            CompletedOn = s.IssuedOn.Value,
+                            IssuedBy = s.IssuedToPersonName
+                        }
+                        : null))
+
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()
+
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.IncidentalsReferral, IncidentalsReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.FoodGroceriesReferral, FoodGroceriesReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.FoodRestaurantReferral, FoodRestaurantReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.LodgingBilletingReferral, LodgingBilletingReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.LodgingGroupReferral, LodgingGroupReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.LodgingHotelReferral, LodgingHotelReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.TransportationOtherReferral, TransportationOtherReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.TransportationTaxiReferral, TransportationTaxiReferral>()
-                .ReverseMap()
-                .ValidateMemberList(MemberList.Destination)
-                ;
+
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
         }
     }
 }

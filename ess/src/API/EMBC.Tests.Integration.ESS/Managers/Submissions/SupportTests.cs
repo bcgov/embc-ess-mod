@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Submissions;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,7 +60,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 s.IssuedOn = DateTime.UtcNow;
             }
 
-            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+            var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             printRequestId.ShouldNotBeNullOrEmpty();
 
@@ -110,7 +111,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 s.IssuedOn = DateTime.UtcNow;
             }
 
-            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
@@ -154,6 +155,126 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 RequestingUserId = testPrintRequest._era_requestinguserid_value?.ToString()
             });
             await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", response.Content);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessSupportsCommand_DigitalAndPaperSupports_BusinessLogicException()
+        {
+            var fileId = TestData.PaperEvacuationFileId;
+
+            var supports = new Referral[]
+            {
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral()
+            };
+
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessSupportsCommand
+            {
+                FileId = fileId,
+                Supports = supports,
+                RequestingUserId = TestData.Tier4TeamMemberId
+            }));
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanProcessPaperReferrals()
+        {
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
+            var paperFile = CreateNewTestEvacuationFile(registrant);
+
+            paperFile.ExternalReferenceId = $"{TestData.TestPrefix}-paperfile";
+            paperFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            paperFile.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
+
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = paperFile });
+
+            var paperDetails = new PaperReferralDetails
+            {
+                CompletedOn = DateTime.Parse("2021/12/31T16:04:00Z"),
+                IssuedBy = "autotest R",
+                ReferralId = $"{TestData.TestPrefix}-paperreferral"
+            };
+
+            var supports = new Referral[]
+            {
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
+                new IncidentalsReferral(),
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
+                new LodgingBilletingReferral() { NumberOfNights = 1 },
+                new LodgingGroupReferral() { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity },
+                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
+                new TransportationOtherReferral(),
+                new TransportationTaxiReferral(),
+            };
+
+            foreach (var s in supports)
+            {
+                s.From = DateTime.UtcNow;
+                s.To = DateTime.UtcNow.AddDays(3);
+                s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
+                s.PaperReferralDetails = paperDetails;
+            }
+
+            var printRequestId = await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+
+            printRequestId.ShouldBeNullOrEmpty();
+
+            var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+            refreshedFile.Supports.ShouldNotBeEmpty();
+            refreshedFile.Supports.Count().ShouldBe(supports.Length);
+            foreach (var support in refreshedFile.Supports.Cast<Referral>())
+            {
+                var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
+                if (sourceSupport.SupplierDetails != null)
+                {
+                    support.SupplierDetails.ShouldNotBeNull();
+                    support.SupplierDetails.Id.ShouldBe(sourceSupport.SupplierDetails.Id);
+                    support.SupplierDetails.Name.ShouldNotBeNull();
+                    support.SupplierDetails.Address.ShouldNotBeNull();
+                }
+                support.PaperReferralDetails.ReferralId.ShouldBe(sourceSupport.PaperReferralDetails.ReferralId);
+                support.PaperReferralDetails.IssuedBy.ShouldBe(sourceSupport.PaperReferralDetails.IssuedBy);
+                support.PaperReferralDetails.CompletedOn.ShouldBe(sourceSupport.PaperReferralDetails.CompletedOn);
+            }
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessPaperSupportsCommand_DuplicateReferralIdAndType_BusinessLogicException()
+        {
+            var fileId = TestData.PaperEvacuationFileId;
+
+            var supports = new Referral[]
+            {
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}}
+            };
+
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            {
+                FileId = fileId,
+                Supports = supports,
+                RequestingUserId = TestData.Tier4TeamMemberId
+            }));
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessPaperSupportsCommand_DigitalAndPaperSupports_BusinessLogicException()
+        {
+            var fileId = TestData.PaperEvacuationFileId;
+
+            var supports = new Referral[]
+            {
+                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral()
+            };
+
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            {
+                FileId = fileId,
+                Supports = supports,
+                RequestingUserId = TestData.Tier4TeamMemberId
+            }));
         }
     }
 }

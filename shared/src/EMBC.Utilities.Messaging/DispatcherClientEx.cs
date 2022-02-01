@@ -18,11 +18,10 @@ using System;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using EMBC.Utilities.Messaging;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
-namespace EMBC.Registrants.API.Utils
+namespace EMBC.Utilities.Messaging
 {
     internal static class DispatcherClientEx
     {
