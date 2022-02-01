@@ -71,16 +71,15 @@ export class EssFilesResultsComponent
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
     console.log(selectedESSFile);
     if (
-      this.evacueeSessionService.paperBased === true &&
+      this.evacueeSessionService.paperBased &&
       this.evacueeSearchService.paperBasedEssFile !==
         selectedESSFile.externalReferenceId
     ) {
       this.openUnableAccessESSFileDialog();
     } else if (
-      this.evacueeSessionService.paperBased === false &&
-      this.evacueeSearchService.evacueeSearchContext.hasShownIdentification ===
-        false &&
-      selectedESSFile.isPaperBasedFile === true
+      !this.evacueeSessionService.paperBased &&
+      !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification &&
+      selectedESSFile.isPaperBasedFile
     ) {
       this.openUnableAccessDialog();
     } else {

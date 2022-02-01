@@ -119,7 +119,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
-    if (this.evacueeSessionService.paperBased === true) {
+    if (this.evacueeSessionService.paperBased) {
       this.evacueeSearchResultsService
         .essFileExists(this.paperBasedEssFile)
         .subscribe({
