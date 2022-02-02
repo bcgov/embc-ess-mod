@@ -133,13 +133,18 @@
           ></p>
         </div>
       </div>
-      <div class="row button-div">
+      <div class="row button-div" *ngIf="!file?.isPaperBasedFile">
         <button
           class="button-p proceed-button"
           (click)="linkToESSFile(file?.id)"
         >
           Link to this ESS File
         </button>
+      </div>
+      <div class="row" *ngIf="file?.isPaperBasedFile">
+        <p class="warning">
+          Cannot link to an ESS File without security questions.
+        </p>
       </div>
     </mat-expansion-panel>
   </mat-accordion>

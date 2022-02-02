@@ -13,6 +13,7 @@ import { EssFileSecurityPhraseService } from './essfile-security-phrase.service'
 import * as globalConst from '../../../core/services/global-constants';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-essfile-security-phrase',
@@ -36,7 +37,8 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private evacueeProfileService: EvacueeProfileService,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -63,10 +65,10 @@ export class EssfileSecurityPhraseComponent implements OnInit {
   }
 
   /**
-   * Function that redirects to Search Results page
+   * Function that redirects back
    */
-  goToSearchResults() {
-    this.router.navigate(['responder-access/search/evacuee']);
+  goBack() {
+    this.location.back();
   }
 
   /**
