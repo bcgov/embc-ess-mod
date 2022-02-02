@@ -333,6 +333,10 @@ mat-form-field {
   mat-form-field {
     display: grid !important;
   }
+
+  .mat-form-field-subscript-wrapper {
+    position: absolute !important;
+  }
 }
 
 .mat-tab-label,

@@ -110,7 +110,7 @@
 
         <div class="row" *ngIf="paperBased" id="essFilePaperBased">
           <div class="col-md-4">
-            <mat-form-field type="date" appearance="outline">
+            <mat-form-field appearance="outline">
               <mat-label>Paper ESS File#</mat-label>
               <input
                 formControlName="paperBasedEssFile"
@@ -125,7 +125,9 @@
               <mat-error
                 *ngIf="
                   nameSearchFormControl.paperBasedEssFile.invalid &&
-                  nameSearchFormControl.paperBasedEssFile.hasError('required')
+                  nameSearchFormControl.paperBasedEssFile.hasError(
+                    'whitespaceError'
+                  )
                 "
               >
                 Paper ESS File # is required</mat-error

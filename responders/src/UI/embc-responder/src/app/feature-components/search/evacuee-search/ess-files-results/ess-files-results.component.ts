@@ -69,11 +69,19 @@ export class EssFilesResultsComponent
    * @param selectedESSFile selected ess file
    */
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
+    console.log(selectedESSFile);
     if (
-      this.evacueeSessionService.paperBased === true &&
-      this.evacueeSearchService.paperBasedEssFile !== selectedESSFile.id
+      this.evacueeSessionService.paperBased &&
+      this.evacueeSearchService.paperBasedEssFile !==
+        selectedESSFile.externalReferenceId
     ) {
       this.openUnableAccessESSFileDialog();
+    } else if (
+      !this.evacueeSessionService.paperBased &&
+      !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification &&
+      selectedESSFile.isPaperBasedFile
+    ) {
+      this.openUnableAccessDialog();
     } else {
       this.evacueeSessionService.essFileNumber = selectedESSFile.id;
       if (
@@ -132,17 +140,6 @@ export class EssFilesResultsComponent
       },
       height: '285px',
       width: '493px'
-    });
-  }
-
-  public alreadyExistsDialog(): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content: globalConst.alreadyExistESSFileMessage
-      },
-      height: '390px',
-      width: '520px'
     });
   }
 }

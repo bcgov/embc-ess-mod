@@ -661,11 +661,17 @@ export class RegistrationsService extends BaseService {
      * fileId
      */
     registrantId?: string;
+
+    /**
+     * externalReferenceId
+     */
+    externalReferenceId?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSummary>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilesPath, 'get');
     if (params) {
       rb.query('registrantId', params.registrantId, {});
+      rb.query('externalReferenceId', params.externalReferenceId, {});
     }
 
     return this.http.request(rb.build({
@@ -695,6 +701,11 @@ export class RegistrationsService extends BaseService {
      * fileId
      */
     registrantId?: string;
+
+    /**
+     * externalReferenceId
+     */
+    externalReferenceId?: string;
   }): Observable<Array<EvacuationFileSummary>> {
 
     return this.registrationsGetFiles$Response(params).pipe(
@@ -1208,6 +1219,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
+    ExternalReferenceId?: string;
   }): Observable<StrictHttpResponse<SearchResults>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchPath, 'get');
@@ -1215,6 +1227,7 @@ export class RegistrationsService extends BaseService {
       rb.query('firstName', params.firstName, {});
       rb.query('lastName', params.lastName, {});
       rb.query('dateOfBirth', params.dateOfBirth, {});
+      rb.query('ExternalReferenceId', params.ExternalReferenceId, {});
     }
 
     return this.http.request(rb.build({
@@ -1242,6 +1255,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
+    ExternalReferenceId?: string;
   }): Observable<SearchResults> {
 
     return this.registrationsSearch$Response(params).pipe(
@@ -1264,6 +1278,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
+    ExternalReferenceId?: string;
   }): Observable<StrictHttpResponse<Array<RegistrantProfile>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingRegistrantsPath, 'get');
@@ -1271,6 +1286,7 @@ export class RegistrationsService extends BaseService {
       rb.query('firstName', params.firstName, {});
       rb.query('lastName', params.lastName, {});
       rb.query('dateOfBirth', params.dateOfBirth, {});
+      rb.query('ExternalReferenceId', params.ExternalReferenceId, {});
     }
 
     return this.http.request(rb.build({
@@ -1294,6 +1310,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
+    ExternalReferenceId?: string;
   }): Observable<Array<RegistrantProfile>> {
 
     return this.registrationsSearchMatchingRegistrants$Response(params).pipe(
@@ -1316,6 +1333,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
+    ExternalReferenceId?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingEvacuationFilesPath, 'get');
@@ -1323,6 +1341,7 @@ export class RegistrationsService extends BaseService {
       rb.query('firstName', params.firstName, {});
       rb.query('lastName', params.lastName, {});
       rb.query('dateOfBirth', params.dateOfBirth, {});
+      rb.query('ExternalReferenceId', params.ExternalReferenceId, {});
     }
 
     return this.http.request(rb.build({
@@ -1346,6 +1365,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
+    ExternalReferenceId?: string;
   }): Observable<Array<EvacuationFileSearchResult>> {
 
     return this.registrationsSearchMatchingEvacuationFiles$Response(params).pipe(

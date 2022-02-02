@@ -6,8 +6,10 @@ import { EvacuationFileStatus } from './evacuation-file-status';
 export interface EvacuationFileSearchResult {
   createdOn?: string;
   evacuatedFrom?: Address;
+  externalReferenceId?: string;
   householdMembers?: Array<EvacuationFileSearchResultHouseholdMember>;
   id?: string;
+  isPaperBasedFile?: boolean;
   isRestricted?: boolean;
   modifiedOn?: string;
   status?: EvacuationFileStatus;

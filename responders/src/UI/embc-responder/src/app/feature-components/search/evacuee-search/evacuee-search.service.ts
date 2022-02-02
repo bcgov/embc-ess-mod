@@ -112,7 +112,7 @@ export class EvacueeSearchService {
   }
 
   public clearEvacueeSearch(): void {
-    this.evacueeSearchContext = null;
-    this.paperBasedEssFile = null;
+    this.evacueeSearchContext = undefined;
+    this.paperBasedEssFile = undefined;
   }
 }

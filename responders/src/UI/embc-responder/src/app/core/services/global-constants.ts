@@ -440,6 +440,8 @@ export const editProfileError =
   'Unable to update your user profile at this time. Please try again later';
 export const createEssFileError =
   'Unable to create ESS file at this time. Please try again later';
+export const findEssFileError =
+  'Unable to find ESS file at this time. Please try again later';
 export const editEssFileError =
   'Unable to update the ESS file at this time. Please try again later';
 export const securityQuestionError =

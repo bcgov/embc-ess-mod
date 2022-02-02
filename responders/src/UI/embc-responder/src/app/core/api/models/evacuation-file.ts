@@ -14,12 +14,12 @@ import { Support } from './support';
 export interface EvacuationFile {
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
+  externalReferenceId?: null | string;
   householdMembers?: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   isRestricted?: null | boolean;
   needsAssessment: NeedsAssessment;
   notes?: Array<Note>;
-  paperFileNumber?: null | string;
   primaryRegistrantFirstName?: null | string;
   primaryRegistrantId: string;
   primaryRegistrantLastName?: null | string;
