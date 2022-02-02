@@ -174,7 +174,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ProcessSupportsCommand_DigitalAndPaperSupports_BusinessLogicException()
+        public async Task ProcessSupportsCommand_DigitalAndPaperSupports_BusinessValidationException()
         {
             var fileId = TestData.PaperEvacuationFileId;
 
@@ -184,7 +184,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 new IncidentalsReferral()
             };
 
-            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessSupportsCommand
+            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,
@@ -252,7 +252,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ProcessPaperSupportsCommand_DuplicateReferralIdAndType_BusinessLogicException()
+        public async Task ProcessPaperSupportsCommand_DuplicateReferralIdAndType_BusinessValidationException()
         {
             var fileId = TestData.PaperEvacuationFileId;
 
@@ -262,7 +262,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 new IncidentalsReferral() {  ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" }
             };
 
-            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,
@@ -271,7 +271,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ProcessPaperSupportsCommand_DigitalAndPaperSupports_BusinessLogicException()
+        public async Task ProcessPaperSupportsCommand_DigitalAndPaperSupports_BusinessValidationException()
         {
             var fileId = TestData.PaperEvacuationFileId;
 
@@ -281,7 +281,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 new IncidentalsReferral()
             };
 
-            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,

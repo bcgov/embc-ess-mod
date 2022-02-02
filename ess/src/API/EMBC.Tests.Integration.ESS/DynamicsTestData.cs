@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Microsoft.OData.Edm;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -71,11 +68,11 @@ namespace EMBC.Tests.Integration.ESS
             jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid).ToArray();
             canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").Single();
             bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
-            //#if DEBUG
-            //            this.testPrefix = $"autotest-dev";
-            //#else
+#if DEBUG
+            this.testPrefix = $"autotest-dev";
+#else
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
-            //#endif
+#endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
 
@@ -339,7 +336,7 @@ namespace EMBC.Tests.Integration.ESS
             var supports = Enumerable.Range(1, random.Next(1, 5)).Select(i => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
-                era_name = $"{testPrefix}-support-{i}",
+                era_name = $"{file.era_name}-support-{i}",
                 era_validfrom = DateTime.UtcNow.AddDays(-3),
                 era_validto = DateTime.UtcNow.AddDays(3),
                 era_supporttype = 174360006
