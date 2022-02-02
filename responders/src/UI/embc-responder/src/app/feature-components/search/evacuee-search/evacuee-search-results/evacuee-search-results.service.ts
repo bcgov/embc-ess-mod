@@ -81,14 +81,6 @@ export class EvacueeSearchResultsService {
       );
   }
 
-  public essFileExists(
-    externalReferenceId: string
-  ): Observable<Array<EvacuationFileSummary>> {
-    return this.registrationService.registrationsGetFiles({
-      externalReferenceId
-    });
-  }
-
   /**
    * Maps codes to generate names:
    *

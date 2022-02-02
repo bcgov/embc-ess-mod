@@ -69,27 +69,33 @@ export class EssFilesResultsComponent
    * @param selectedESSFile selected ess file
    */
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
-    console.log(selectedESSFile);
-    if (
-      this.evacueeSessionService.paperBased &&
-      this.evacueeSearchService.paperBasedEssFile !==
-        selectedESSFile.externalReferenceId
-    ) {
-      this.openUnableAccessESSFileDialog();
-    } else if (
-      !this.evacueeSessionService.paperBased &&
-      !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification &&
-      selectedESSFile.isPaperBasedFile
-    ) {
-      this.openUnableAccessDialog();
-    } else {
-      this.evacueeSessionService.essFileNumber = selectedESSFile.id;
+    this.evacueeSessionService.essFileNumber = selectedESSFile.id;
+    if (this.evacueeSessionService.paperBased) {
       if (
-        this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
+        !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {
-        this.router.navigate(['responder-access/search/essfile-dashboard']);
+        this.openUnableAccessDialog();
+      } else if (
+        this.evacueeSearchService.paperBasedEssFile !==
+        selectedESSFile.externalReferenceId
+      ) {
+        this.openUnableAccessESSFileDialog();
       } else {
+        this.router.navigate(['responder-access/search/essfile-dashboard']);
+      }
+    } else {
+      if (
+        !this.evacueeSearchService.evacueeSearchContext
+          .hasShownIdentification &&
+        selectedESSFile.isPaperBasedFile
+      ) {
+        this.openUnableAccessDialog();
+      } else if (
+        !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
+      ) {
         this.router.navigate(['responder-access/search/security-phrase']);
+      } else {
+        this.router.navigate(['responder-access/search/essfile-dashboard']);
       }
     }
   }
