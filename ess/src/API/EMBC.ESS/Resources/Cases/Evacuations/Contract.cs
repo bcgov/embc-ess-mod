@@ -172,8 +172,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
     public abstract class Support
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedByTeamMemberId { get; set; }
         public DateTime IssuedOn { get; set; }
-        public string IssuedByTeamMemberId { get; set; }
         public string OriginatingNeedsAssessmentId { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
@@ -186,15 +187,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public string? SupplierId { get; set; }
         public string? SupplierNotes { get; set; }
         public string IssuedToPersonName { get; set; }
-        public PaperReferralDetails PaperReferralDetails { get; set; }
-        public bool IsPaperReferral => PaperReferralDetails != null;
-    }
-
-    public class PaperReferralDetails
-    {
-        public string ReferralId { get; set; }
-        public DateTime CompletedOn { get; set; }
-        public string IssuedBy { get; set; }
+        public string? ExternalReferenceId { get; set; }
+        public string IssuedByDisplayName { get; set; }
     }
 
     public class ClothingReferral : Referral

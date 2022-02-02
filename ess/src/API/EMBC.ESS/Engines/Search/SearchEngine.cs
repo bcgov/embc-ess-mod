@@ -26,9 +26,9 @@ namespace EMBC.ESS.Engines.Search
     {
         private readonly EssContext essContext;
 
-        public SearchEngine(EssContext essContext)
+        public SearchEngine(IEssContextFactory essContextFactory)
         {
-            this.essContext = essContext;
+            this.essContext = essContextFactory.CreateReadOnly();
         }
 
         public async Task<SearchResponse> Search(SearchRequest request) =>

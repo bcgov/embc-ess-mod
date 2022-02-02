@@ -132,7 +132,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public bool IsActive { get; set; }
     }
 
-    public class CommunitiesAlreadyAssignedException : BusinessLogicException
+    public class CommunitiesAlreadyAssignedException : BusinessValidationException
     {
         public CommunitiesAlreadyAssignedException(IEnumerable<string> communities) : base("Communitie are already assigned to another team")
         {
@@ -142,7 +142,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public IEnumerable<string> Communities { get; }
     }
 
-    public class UsernameAlreadyExistsException : BusinessLogicException
+    public class UsernameAlreadyExistsException : BusinessValidationException
     {
         public UsernameAlreadyExistsException(string userName) : base($"Another user is already using username '{userName}'")
         {

@@ -16,12 +16,13 @@ import { GetSecurityPhraseResponse } from '../models/get-security-phrase-respons
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
 import { InviteRequest } from '../models/invite-request';
 import { Note } from '../models/note';
+import { ProcessDigitalSupportsRequest } from '../models/process-digital-supports-request';
+import { ProcessPaperReferralsRequest } from '../models/process-paper-referrals-request';
 import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
 import { RegistrantLinkRequest } from '../models/registrant-link-request';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
-import { Support } from '../models/support';
 import { SupportReprintReason } from '../models/support-reprint-reason';
 import { SupportVoidReason } from '../models/support-void-reason';
 import { VerifySecurityPhraseRequest } from '../models/verify-security-phrase-request';
@@ -1379,7 +1380,7 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsProcessSupportsPath = '/api/Registrations/files/{fileId}/supports';
 
   /**
-   * Process draft supports by the API and create a print supports request.
+   * Process  digital draft supports by the API and create a print supports request.
    *
    *
    *
@@ -1391,25 +1392,19 @@ export class RegistrationsService extends BaseService {
   registrationsProcessSupports$Response(params: {
 
     /**
-     * evacuation file if
+     * evacuation file id
      */
     fileId: string;
 
     /**
-     * true/false to include a summary page in the print requwst
+     * the request with draft supports to process
      */
-    includeSummaryInPrintRequest?: boolean;
-
-    /**
-     * the draft supports to process
-     */
-    body: Array<Support>
+    body: ProcessDigitalSupportsRequest
   }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessSupportsPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
-      rb.query('includeSummaryInPrintRequest', params.includeSummaryInPrintRequest, {});
       rb.body(params.body, 'application/json');
     }
 
@@ -1425,7 +1420,7 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Process draft supports by the API and create a print supports request.
+   * Process  digital draft supports by the API and create a print supports request.
    *
    *
    *
@@ -1437,23 +1432,91 @@ export class RegistrationsService extends BaseService {
   registrationsProcessSupports(params: {
 
     /**
-     * evacuation file if
+     * evacuation file id
      */
     fileId: string;
 
     /**
-     * true/false to include a summary page in the print requwst
+     * the request with draft supports to process
      */
-    includeSummaryInPrintRequest?: boolean;
-
-    /**
-     * the draft supports to process
-     */
-    body: Array<Support>
+    body: ProcessDigitalSupportsRequest
   }): Observable<ReferralPrintRequestResponse> {
 
     return this.registrationsProcessSupports$Response(params).pipe(
       map((r: StrictHttpResponse<ReferralPrintRequestResponse>) => r.body as ReferralPrintRequestResponse)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsProcessPaperReferrals
+   */
+  static readonly RegistrationsProcessPaperReferralsPath = '/api/Registrations/files/{fileId}/paperreferrals';
+
+  /**
+   * Process draft paper referrals by the API and create a print supports request.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsProcessPaperReferrals()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsProcessPaperReferrals$Response(params: {
+
+    /**
+     * evacuation file id
+     */
+    fileId: string;
+
+    /**
+     * the request with paper referrals to process
+     */
+    body: ProcessPaperReferralsRequest
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsProcessPaperReferralsPath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Process draft paper referrals by the API and create a print supports request.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsProcessPaperReferrals$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsProcessPaperReferrals(params: {
+
+    /**
+     * evacuation file id
+     */
+    fileId: string;
+
+    /**
+     * the request with paper referrals to process
+     */
+    body: ProcessPaperReferralsRequest
+  }): Observable<void> {
+
+    return this.registrationsProcessPaperReferrals$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 

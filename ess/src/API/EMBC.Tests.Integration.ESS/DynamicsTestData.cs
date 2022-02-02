@@ -13,8 +13,6 @@ namespace EMBC.Tests.Integration.ESS
         private Random random = new Random();
         private readonly EssContext essContext;
         private readonly string testPrefix;
-        private readonly int testPortal;
-
         private readonly era_essteam team;
         private readonly era_essteam otherTeam;
         private readonly era_essteamuser tier4TeamMember;
@@ -37,8 +35,6 @@ namespace EMBC.Tests.Integration.ESS
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
         public string TestPrefix => testPrefix;
-        public int TestPortal => testPortal;
-        public DateTime OutageDate = DateTime.Parse("12/31/2021");
         public string TeamId => team.era_essteamid.GetValueOrDefault().ToString();
         public string OtherTeamId => otherTeam.era_essteamid.GetValueOrDefault().ToString();
         public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.First()._era_jurisdictionid_value.GetValueOrDefault().ToString();
@@ -82,7 +78,6 @@ namespace EMBC.Tests.Integration.ESS
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
-            this.testPortal = 174360001;
 
             var existingTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team").SingleOrDefault();
             if (existingTeam != null)
@@ -344,7 +339,7 @@ namespace EMBC.Tests.Integration.ESS
             var supports = Enumerable.Range(1, random.Next(1, 5)).Select(i => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
-                era_name = $"{testPrefix}-support-{i}",
+                era_name = $"{file.era_name}-support-{i}",
                 era_validfrom = DateTime.UtcNow.AddDays(-3),
                 era_validto = DateTime.UtcNow.AddDays(3),
                 era_supporttype = 174360006
