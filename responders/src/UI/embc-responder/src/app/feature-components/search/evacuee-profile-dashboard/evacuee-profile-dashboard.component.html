@@ -292,6 +292,7 @@
         <app-matched-essfiles></app-matched-essfiles>
         <br />
         <app-possible-matched-essfiles
+          *ngIf="!isPaperBased"
           [evacueeProfile]="evacueeProfile"
         ></app-possible-matched-essfiles>
       </div>

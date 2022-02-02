@@ -63,10 +63,10 @@ export class EssfileSecurityPhraseComponent implements OnInit {
   }
 
   /**
-   * Function that redirects to Search Results page
+   * Function that redirects to Evacuee Profile Dashboard
    */
-  goToSearchResults() {
-    this.router.navigate(['responder-access/search/evacuee']);
+  goToEvacueeProfileDashboard() {
+    this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
   }
 
   /**

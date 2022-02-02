@@ -126,7 +126,9 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
       .getFileMatches(firstName, lastName, dateOfBirth)
       .subscribe({
         next: (essFileArray) => {
-          this.essFiles = essFileArray;
+          this.essFiles = essFileArray.sort((a, b) => {
+            return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
+          });
           this.isLoading = !this.isLoading;
         },
         error: (error) => {
