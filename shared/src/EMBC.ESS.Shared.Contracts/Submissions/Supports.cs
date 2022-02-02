@@ -24,7 +24,9 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public abstract class Support
     {
         public string Id { get; set; }
-        public DateTime IssuedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public TeamMember CreatedBy { get; set; }
+        public DateTime? IssuedOn { get; set; }
         public TeamMember IssuedBy { get; set; }
         public string OriginatingNeedsAssessmentId { get; set; }
         public DateTime From { get; set; }
@@ -38,14 +40,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string SupplierNotes { get; set; }
         public string IssuedToPersonName { get; set; }
         public SupplierDetails SupplierDetails { get; set; }
-        public PaperReferralDetails PaperReferralDetails { get; set; }
-    }
-
-    public class PaperReferralDetails
-    {
-        public string ReferralId { get; set; }
-        public DateTime CompletedOn { get; set; }
-        public string IssuedBy { get; set; }
+        public string ExternalReferenceId { get; set; }
+        public bool IsPaperReferral => !string.IsNullOrEmpty(ExternalReferenceId);
     }
 
     public class SupplierDetails

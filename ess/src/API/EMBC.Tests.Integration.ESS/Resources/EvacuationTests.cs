@@ -253,7 +253,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                new ClothingReferral {
                    SupplierId = TestData.SupplierAId,
                    SupplierNotes = "notes",
-                   IssuedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = includedHouseholdMembers,
                    From = now.AddDays(20),
@@ -263,7 +263,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                new IncidentalsReferral {
                    SupplierId = TestData.SupplierAId,
                    SupplierNotes = "notes",
-                   IssuedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = includedHouseholdMembers,
                    From = now.AddDays(20),
@@ -290,8 +290,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
                     if (sourceSupport.IncludedHouseholdMembers.Any())
                         referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
-                    if (sourceSupport.IssuedByTeamMemberId != null)
-                        referral.IssuedByTeamMemberId.ShouldBe(sourceSupport.IssuedByTeamMemberId);
+                    if (sourceSupport.CreatedByTeamMemberId != null)
+                        referral.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
                 }
             }
         }
@@ -309,7 +309,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                new ClothingReferral {
                    SupplierId = TestData.SupplierAId,
                    SupplierNotes = "old notes",
-                   IssuedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IssuedToPersonName = "old test person",
                    IncludedHouseholdMembers = fileToCreateSupportFor.HouseholdMembers.Select(s => s.Id).ToArray(),
                    From = now.AddDays(20),
@@ -337,7 +337,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supportToUpdate.TotalAmount = 100;
             supportToUpdate.SupplierNotes = "New note to supplier is: " + newUniqueSignature;
             supportToUpdate.SupplierId = TestData.SupplierBId;
-            supportToUpdate.IssuedByTeamMemberId = TestData.OtherTeamMemberId;
+            supportToUpdate.CreatedByTeamMemberId = TestData.OtherTeamMemberId;
             supportToUpdate.IncludedHouseholdMembers = includedHouseholdMembers;
 
             var updatedSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Supports = new[] { supportToUpdate } })).Id.Split(';').Single();
@@ -352,7 +352,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedSupport.IssuedToPersonName.ShouldBe(supportToUpdate.IssuedToPersonName);
             updatedSupport.TotalAmount.ShouldBe(supportToUpdate.TotalAmount);
             updatedSupport.SupplierNotes.ShouldBe(supportToUpdate.SupplierNotes);
-            updatedSupport.IssuedByTeamMemberId.ShouldBe(supportToUpdate.IssuedByTeamMemberId);
+            updatedSupport.CreatedByTeamMemberId.ShouldBe(supportToUpdate.CreatedByTeamMemberId);
             updatedSupport.Status.ShouldBe(updatedSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
 
             if (supportToUpdate.IncludedHouseholdMembers.Any())

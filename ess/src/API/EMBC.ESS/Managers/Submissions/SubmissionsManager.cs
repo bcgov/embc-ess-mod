@@ -203,7 +203,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
 
             var memberAlreadyLinked = file.HouseholdMembers.Where(m => m.LinkedRegistrantId == cmd.RegistantId).FirstOrDefault();
-            if (memberAlreadyLinked != null) throw new BusinessLogicException($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
+            if (memberAlreadyLinked != null) throw new BusinessValidationException($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
 
             var caseId = (await caseRepository.ManageCase(new LinkEvacuationFileRegistrant { FileId = file.Id, RegistrantId = cmd.RegistantId, HouseholdMemberId = cmd.HouseholdMemberId })).Id;
             return caseId;
@@ -461,11 +461,17 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             //verify no paper supports included
-            var paperReferrals = cmd.Supports.Where(s => s is Referral r && r.PaperReferralDetails != null).Cast<Referral>().Select(r => r.PaperReferralDetails.ReferralId).ToArray();
+            var paperReferrals = cmd.Supports.Where(s => s is Referral r && r.IsPaperReferral).Cast<Referral>().Select(r => r.ExternalReferenceId).ToArray();
             if (paperReferrals.Any())
-                throw new BusinessLogicException($"file {cmd.FileId} error: cannot process paper referrals {string.Join(',', paperReferrals)} as digital");
+                throw new BusinessValidationException($"file {cmd.FileId} error: cannot process paper referrals {string.Join(',', paperReferrals)} as digital");
 
             var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().Single();
+
+            foreach (var support in cmd.Supports)
+            {
+                support.CreatedBy = new Shared.Contracts.Submissions.TeamMember { Id = requestingUser.Id };
+                support.CreatedOn = DateTime.UtcNow;
+            }
 
             //Not ideal solution - the IDs are concatenated by CaseRepository to ensure
             //all supports are created in a single transaction
@@ -497,21 +503,25 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             //validate only paper referrals were passed in the command
-            if (!cmd.Supports.All(s => (s is Referral r) && r.PaperReferralDetails != null))
-                throw new BusinessLogicException($"file {cmd.FileId} error: {nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
+            if (!cmd.Supports.All(s => (s is Referral r) && r.IsPaperReferral))
+                throw new BusinessValidationException($"file {cmd.FileId} error: {nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
 
             var referrals = cmd.Supports.Cast<Referral>().ToArray();
             //validate paper id and support types are unique
-            var paperIds = referrals.Select(s => s.PaperReferralDetails.ReferralId).ToArray();
-            foreach (var id in paperIds)
+            var duplicates = referrals.GroupBy(s => s.ExternalReferenceId).Where(g => g.GroupBy(e => e.GetType()).Any(gt => gt.Count() != 1));
+            if (duplicates.Any())
             {
-                if (string.IsNullOrEmpty(id)) throw new BusinessLogicException($"file {cmd.FileId} error:id is missing from a paper referral");
-                var sameIdReferrals = referrals.Where(r => r.PaperReferralDetails.ReferralId == id);
-                var duplicateReferrals = sameIdReferrals.GroupBy(r => r.GetType().Name).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
-                if (duplicateReferrals.Any())
-                    throw new BusinessLogicException($"file {cmd.FileId} error: referral {id} has more than one referral types :{string.Join(',', duplicateReferrals)}");
+                throw new BusinessValidationException($"file {cmd.FileId} error: duplicate referral: "
+                    + $"{string.Join(',', duplicates.Select(d => $"{d.Key}: {string.Join(',', d.Select(id => id.GetType().Name))}"))}");
             }
 
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().Single();
+
+            foreach (var referral in referrals)
+            {
+                referral.CreatedBy = new Shared.Contracts.Submissions.TeamMember { Id = requestingUser.Id };
+                referral.CreatedOn = DateTime.UtcNow;
+            }
             //save referrals
             var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
             {

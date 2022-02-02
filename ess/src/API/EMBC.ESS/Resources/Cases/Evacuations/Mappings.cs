@@ -225,47 +225,45 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, Support>()
-                .IncludeAllDerived()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
+                .ForMember(d => d.CreatedByTeamMemberId, opts => opts.MapFrom(s => s._era_issuedbyid_value))
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
-                .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s._era_issuedbyid_value))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.MapFrom(s => s._era_needsassessmentid_value))
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ReverseMap()
+                .IncludeAllDerived()
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
                 .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))
-                .IncludeAllDerived()
                 .ForMember(d => d.era_era_householdmember_era_evacueesupport,
                     opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
                 ;
 
             CreateMap<era_evacueesupport, Referral>()
-                .IncludeAllDerived()
+                .IncludeBase<era_evacueesupport, Support>()
                 .ForMember(d => d.IssuedToPersonName, opts => opts.MapFrom(s => s.era_purchaserofgoods))
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s._era_supplierid_value))
                 .ForMember(d => d.SupplierNotes, opts => opts.MapFrom(s => s.era_suppliernote))
-                .ForMember(d => d.PaperReferralDetails, opts => opts.MapFrom(s => s.era_manualsupport == null
-                    ? null
-                    : new PaperReferralDetails
-                    {
-                        ReferralId = s.era_manualsupport,
-                        CompletedOn = s.era_paperreferralcompletedon.Value.UtcDateTime,
-                        IssuedBy = s.era_paperissuedby
-                    }))
+                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => s.era_manualsupport))
+                .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.era_paperreferralcompletedon.HasValue
+                    ? s.era_paperreferralcompletedon.Value.UtcDateTime
+                    : s.createdon.Value.UtcDateTime))
+                .ForMember(d => d.IssuedByDisplayName, opts => opts.MapFrom(s => s.era_paperissuedby))
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => SupportMethod.Referral))
-                .ForMember(d => d.era_manualsupport, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? null : s.PaperReferralDetails.ReferralId))
-                .ForMember(d => d.era_paperissuedby, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? null : s.PaperReferralDetails.IssuedBy))
-                .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.PaperReferralDetails == null ? (DateTimeOffset?)null : s.PaperReferralDetails.CompletedOn))
+                .ForMember(d => d.era_manualsupport, opts => opts.MapFrom(s => s.ExternalReferenceId))
+                .ForMember(d => d.era_paperissuedby, opts => opts.MapFrom(s => s.ExternalReferenceId != null ? s.IssuedByDisplayName : null))
+                .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.ExternalReferenceId != null ? s.IssuedOn : (DateTimeOffset?)null))
                 ;
 
             CreateMap<era_evacueesupport, ClothingReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.ExtremeWinterConditions, opts => opts.MapFrom(s => s.era_extremewinterconditions == (int)EraTwoOptions.Yes))
                 .ReverseMap()
@@ -274,6 +272,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, IncidentalsReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_approveditems))
                 .ReverseMap()
@@ -281,6 +280,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, FoodGroceriesReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.era_numberofmeals))
                 .ReverseMap()
@@ -288,6 +288,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, FoodRestaurantReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.NumberOfBreakfastsPerPerson, opts => opts.MapFrom(s => s.era_numberofbreakfasts))
                 .ForMember(d => d.NumberOfLunchesPerPerson, opts => opts.MapFrom(s => s.era_numberoflunches))
@@ -297,6 +298,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, LodgingBilletingReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.HostAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
                 .ForMember(d => d.HostCity, opts => opts.MapFrom(s => s.era_lodgingcity))
@@ -308,6 +310,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, LodgingGroupReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.FacilityAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
                 .ForMember(d => d.FacilityCity, opts => opts.MapFrom(s => s.era_lodgingcity))
@@ -319,6 +322,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, LodgingHotelReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.NumberOfRooms, opts => opts.MapFrom(s => s.era_numberofrooms))
                 .ReverseMap()
@@ -326,6 +330,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<era_evacueesupport, TransportationOtherReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.TransportMode, opts => opts.MapFrom(s => s.era_transportmode))
                 .ReverseMap()
@@ -333,6 +338,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                ;
 
             CreateMap<era_evacueesupport, TransportationTaxiReferral>()
+                .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.FromAddress, opts => opts.MapFrom(s => s.era_fromaddress))
                 .ForMember(d => d.ToAddress, opts => opts.MapFrom(s => s.era_toaddress))
                 .ReverseMap()

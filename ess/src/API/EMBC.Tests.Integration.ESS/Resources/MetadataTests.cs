@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Resources.Metadata;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,9 +20,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetPlannedOutages()
         {
-            var reply = await metadataRepository.GetPlannedOutages(new OutageQuery { PortalType = (PortalType)TestData.TestPortal, DisplayDate = TestData.OutageDate });
+            var reply = await metadataRepository.GetPlannedOutages(new OutageQuery { PortalType = PortalType.Suppliers, DisplayDate = DateTime.UtcNow });
 
-            reply.ShouldNotBeEmpty();
+            var outage = reply.ShouldHaveSingleItem();
+            outage.OutageStartDate.ShouldBe(DateTime.Parse("2022/1/1T17:30:00Z").ToUniversalTime());
+            outage.OutageEndDate.ShouldBe(DateTime.Parse("2024/1/1T06:30:00Z").ToUniversalTime());
+            outage.Content.ShouldBe("autotest-suppliers-outage-donotdelete");
         }
     }
 }

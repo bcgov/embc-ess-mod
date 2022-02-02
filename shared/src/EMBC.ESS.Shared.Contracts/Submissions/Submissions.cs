@@ -117,7 +117,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string RequestingUserId { get; set; }
         public string FileId { get; set; }
-        public IEnumerable<Referral> Supports { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
     }
 
     /// <summary>

@@ -27,6 +27,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   isLoading = false;
   emailLoader = false;
   emailSuccessMessage: string;
+  isPaperBased: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -40,6 +41,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.evacueeProfileId = this.evacueeSessionService.profileId;
+    this.isPaperBased = this.evacueeSessionService?.paperBased;
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
     if (this.evacueeSessionService.fileLinkStatus === 'S') {

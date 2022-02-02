@@ -210,11 +210,13 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 member.IsPrimaryRegistrant = true;
             }
 
-            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
+            (await Should.ThrowAsync<Exception>(async () => await manager.Handle(new SubmitEvacuationFileCommand { File = file })))
+                .Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
 
             file.NeedsAssessment.HouseholdMembers = new[] { newPrimaryMember };
 
-            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
+            (await Should.ThrowAsync<Exception>(async () => await manager.Handle(new SubmitEvacuationFileCommand { File = file })))
+                .Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
@@ -227,7 +229,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             //update to a different task
             fileWithTask.RelatedTask.Id = TestData.InactiveTaskId;
-            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask })).Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
+            (await Should.ThrowAsync<Exception>(async () => await manager.Handle(new SubmitEvacuationFileCommand { File = fileWithTask })))
+                .Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

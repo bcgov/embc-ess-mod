@@ -133,6 +133,8 @@ namespace EMBC.ESS.Resources.Contacts
 
         private async Task<ContactQueryResult> Handle(RegistrantQuery query)
         {
+            if (query.UserId == null && query.ContactId == null) throw new ArgumentNullException($"Must query registrants by user id or contact id");
+
             var readCtx = essContextFactory.CreateReadOnly();
 
             IQueryable<contact> contactQuery = readCtx.contacts
