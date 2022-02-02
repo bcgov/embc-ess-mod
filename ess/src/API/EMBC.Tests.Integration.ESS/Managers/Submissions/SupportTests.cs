@@ -133,6 +133,20 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanReprintSupport()
+        {
+            var printRequestId = await manager.Handle(new ReprintSupportCommand
+            {
+                FileId = TestData.EvacuationFileId,
+                ReprintReason = "test",
+                RequestingUserId = TestData.Tier4TeamMemberId,
+                SupportId = TestData.SupportIds.First()
+            });
+
+            printRequestId.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQuerySupplierList()
         {
             var taskId = TestData.ActiveTaskId;
@@ -170,7 +184,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 new IncidentalsReferral()
             };
 
-            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessSupportsCommand
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,
@@ -248,7 +262,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 new IncidentalsReferral() {  ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" }
             };
 
-            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,
@@ -267,7 +281,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 new IncidentalsReferral()
             };
 
-            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,

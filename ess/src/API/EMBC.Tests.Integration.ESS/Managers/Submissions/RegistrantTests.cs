@@ -211,20 +211,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanReprintSupport()
-        {
-            var printRequestId = await manager.Handle(new ReprintSupportCommand
-            {
-                FileId = TestData.EvacuationFileId,
-                ReprintReason = "test",
-                RequestingUserId = TestData.Tier4TeamMemberId,
-                SupportId = TestData.SupportIds.First()
-            });
-
-            printRequestId.ShouldNotBeNullOrEmpty();
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanInviteRegistrant()
         {
             var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
