@@ -57,7 +57,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             {
                 s.From = DateTime.UtcNow;
                 s.To = DateTime.UtcNow.AddDays(3);
-                s.IssuedOn = DateTime.UtcNow;
             }
 
             var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
@@ -77,6 +76,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                     support.SupplierDetails.Name.ShouldNotBeNull();
                     support.SupplierDetails.Address.ShouldNotBeNull();
                 }
+                support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
+                support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
+                support.IssuedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
+                support.IssuedBy.ShouldNotBeNull().Id.ShouldBe(TestData.Tier4TeamMemberId);
             }
         }
 
@@ -108,7 +111,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             {
                 s.From = DateTime.UtcNow;
                 s.To = DateTime.UtcNow.AddDays(3);
-                s.IssuedOn = DateTime.UtcNow;
             }
 
             await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
@@ -164,11 +166,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             var supports = new Referral[]
             {
-                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral() {ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral"},
                 new IncidentalsReferral()
             };
 
-            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessSupportsCommand
+            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,
@@ -188,13 +190,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = paperFile });
 
-            var paperDetails = new PaperReferralDetails
-            {
-                CompletedOn = DateTime.Parse("2021/12/31T16:04:00Z"),
-                IssuedBy = "autotest R",
-                ReferralId = $"{TestData.TestPrefix}-paperreferral"
-            };
-
             var supports = new Referral[]
             {
                 new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
@@ -213,7 +208,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                 s.From = DateTime.UtcNow;
                 s.To = DateTime.UtcNow.AddDays(3);
                 s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
-                s.PaperReferralDetails = paperDetails;
+                s.ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral";
+                s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
             }
 
             var printRequestId = await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
@@ -233,9 +229,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
                     support.SupplierDetails.Name.ShouldNotBeNull();
                     support.SupplierDetails.Address.ShouldNotBeNull();
                 }
-                support.PaperReferralDetails.ReferralId.ShouldBe(sourceSupport.PaperReferralDetails.ReferralId);
-                support.PaperReferralDetails.IssuedBy.ShouldBe(sourceSupport.PaperReferralDetails.IssuedBy);
-                support.PaperReferralDetails.CompletedOn.ShouldBe(sourceSupport.PaperReferralDetails.CompletedOn);
+                support.ExternalReferenceId.ShouldBe(sourceSupport.ExternalReferenceId);
+                support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
+                support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
+                support.IssuedBy.ShouldNotBeNull().DisplayName.ShouldBe(sourceSupport.IssuedBy.DisplayName);
+                support.IssuedOn.ShouldNotBeNull().ShouldBe(sourceSupport.IssuedOn.ShouldNotBeNull());
             }
         }
 
@@ -246,11 +244,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             var supports = new Referral[]
             {
-                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
-                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}}
+                new IncidentalsReferral() { ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" },
+                new IncidentalsReferral() {  ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" }
             };
 
-            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,
@@ -265,11 +263,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
             var supports = new Referral[]
             {
-                new IncidentalsReferral() {PaperReferralDetails = new PaperReferralDetails{ReferralId = $"{TestData.TestPrefix}-paperreferral"}},
+                new IncidentalsReferral() { ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" },
                 new IncidentalsReferral()
             };
 
-            await Should.ThrowAsync<BusinessLogicException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
+            await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
             {
                 FileId = fileId,
                 Supports = supports,

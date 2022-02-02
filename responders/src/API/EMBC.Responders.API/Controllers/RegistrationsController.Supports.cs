@@ -36,33 +36,62 @@ namespace EMBC.Responders.API.Controllers
     public partial class RegistrationsController
     {
         /// <summary>
-        /// Process draft supports by the API and create a print supports request
+        /// Process  digital draft supports by the API and create a print supports request
         /// </summary>
-        /// <param name="fileId">evacuation file if</param>
-        /// <param name="includeSummaryInPrintRequest">true/false to include a summary page in the print requwst</param>
-        /// <param name="supports">the draft supports to process</param>
+        /// <param name="fileId">evacuation file id</param>
+        /// <param name="request">the request with draft supports to process</param>
         /// <returns>the generated print request id which can be later used to request the printed PDF</returns>
         [HttpPost("files/{fileId}/supports")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ReferralPrintRequestResponse>> ProcessSupports(string fileId, bool includeSummaryInPrintRequest, IEnumerable<Support> supports)
+        public async Task<ActionResult<ReferralPrintRequestResponse>> ProcessSupports(string fileId, ProcessDigitalSupportsRequest request)
         {
             var userId = currentUserId;
-            var mappedSupports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.Support>>(supports ?? Array.Empty<Support>());
+            var mappedSupports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.Support>>(request.Supports);
             foreach (var support in mappedSupports)
             {
+                support.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
                 support.IssuedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
+                support.CreatedOn = DateTime.UtcNow;
+                support.IssuedOn = support.CreatedOn;
             }
-
             var printRequestId = await messagingClient.Send(new ProcessSupportsCommand
             {
                 FileId = fileId,
                 Supports = mappedSupports,
                 RequestingUserId = userId,
-                IncludeSummaryInReferralsPrintout = includeSummaryInPrintRequest
+                IncludeSummaryInReferralsPrintout = request.IncludeSummaryInPrintRequest
             });
             return Ok(new ReferralPrintRequestResponse { PrintRequestId = printRequestId });
+        }
+
+        /// <summary>
+        /// Process draft paper referrals by the API and create a print supports request
+        /// </summary>
+        /// <param name="fileId">evacuation file id</param>
+        /// <param name="request">the request with paper referrals to process</param>
+        /// <returns>Ok if paper referrals were processed successfully</returns>
+        [HttpPost("files/{fileId}/paperreferrals")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> ProcessPaperReferrals(string fileId, ProcessPaperReferralsRequest request)
+        {
+            var userId = currentUserId;
+            var referrals = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.Referral>>(request.Referrals);
+            foreach (var referral in referrals)
+            {
+                referral.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
+                referral.CreatedOn = DateTime.UtcNow;
+            }
+            await messagingClient.Send(new ProcessPaperSupportsCommand
+            {
+                FileId = fileId,
+                Supports = referrals,
+                RequestingUserId = userId,
+            });
+            return Ok();
         }
 
         [HttpPost("files/{fileId}/supports/{supportId}/void")]
@@ -106,14 +135,37 @@ namespace EMBC.Responders.API.Controllers
         }
     }
 
+    //[KnownType(typeof(ProcessDigitalSupportsRequest))]
+    //[KnownType(typeof(ProcessPaperReferralsRequest))]
+    //public abstract class ProcessSupportsRequest
+    //{
+    //}
+
+    public class ProcessDigitalSupportsRequest// : ProcessSupportsRequest
+    {
+        public bool IncludeSummaryInPrintRequest { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
+    }
+
+    public class ProcessPaperReferralsRequest //: ProcessSupportsRequest
+    {
+        public IEnumerable<Referral> Referrals { get; set; }
+    }
+
     [JsonConverter(typeof(SupportJsonConverter))]
     [KnownType(typeof(Referral))]
     public abstract class Support
     {
         public string? Id { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
+        public string? CreatedBy { get; set; }
+        public string? CreatedByTeam { get; set; }
+
         public DateTime? IssuedOn { get; set; }
-        public string? IssuingMemberName { get; set; }
-        public string? IssuingMemberTeamName { get; set; }
+        public string? IssuedBy { get; set; }
+        public string? IssuedByTeam { get; set; }
+
         public string? NeedsAssessmentId { get; set; }
 
         [Required]
@@ -536,11 +588,14 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<ESS.Shared.Contracts.Submissions.Support, Support>()
                 .IncludeAllDerived()
                 .ForMember(d => d.NeedsAssessmentId, opts => opts.MapFrom(s => s.OriginatingNeedsAssessmentId))
-                .ForMember(d => d.IssuingMemberName, opts => opts.MapFrom(s => s.IssuedBy.DisplayName))
-                .ForMember(d => d.IssuingMemberTeamName, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
+                .ForMember(d => d.CreatedBy, opts => opts.MapFrom(s => s.CreatedBy.DisplayName))
+                .ForMember(d => d.CreatedByTeam, opts => opts.MapFrom(s => s.CreatedBy.TeamName))
+                .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => s.IssuedBy.DisplayName))
+                .ForMember(d => d.IssuedByTeam, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.CreatedBy, opts => opts.Ignore())
                 .ForMember(d => d.IssuedBy, opts => opts.Ignore())
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
                 ;
@@ -550,30 +605,10 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
                 .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
                 .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
-                .ForMember(d => d.ExternalReferenceId, opts => opts.Ignore())
-                .AfterMap((s, d) =>
-                {
-                    if (s.PaperReferralDetails != null)
-                    {
-                        d.IssuedOn = s.PaperReferralDetails.CompletedOn;
-                        d.IssuingMemberName = s.PaperReferralDetails.IssuedBy;
-                        d.ExternalReferenceId = s.PaperReferralDetails.ReferralId;
-                    }
-                })
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.SupplierDetails, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.SupplierId) ? null : new SupplierDetails { Id = s.SupplierId }))
-                .ForMember(d => d.PaperReferralDetails, opts => opts.MapFrom(s =>
-                    s.ExternalReferenceId != null
-                        ? new PaperReferralDetails
-                        {
-                            ReferralId = s.ExternalReferenceId,
-                            CompletedOn = s.IssuedOn.Value,
-                            IssuedBy = s.IssuedToPersonName
-                        }
-                        : null))
-
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()

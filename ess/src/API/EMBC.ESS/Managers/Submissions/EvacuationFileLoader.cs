@@ -71,14 +71,15 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var support in file.Supports)
             {
-                if (!string.IsNullOrEmpty(support.IssuedBy?.Id))
+                if (!string.IsNullOrEmpty(support.CreatedBy?.Id))
                 {
-                    var teamMember = (await teamRepository.GetMembers(userId: support.IssuedBy.Id)).SingleOrDefault();
+                    var teamMember = (await teamRepository.GetMembers(userId: support.CreatedBy.Id)).SingleOrDefault();
                     if (teamMember != null)
                     {
-                        support.IssuedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
-                        support.IssuedBy.TeamId = teamMember.TeamId;
-                        support.IssuedBy.TeamName = teamMember.TeamName;
+                        support.CreatedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
+                        support.CreatedBy.TeamId = teamMember.TeamId;
+                        support.CreatedBy.TeamName = teamMember.TeamName;
+                        if (support.IssuedBy == null) support.IssuedBy = support.CreatedBy;
                     }
                 }
                 if (support is Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))

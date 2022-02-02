@@ -20,9 +20,11 @@ namespace EMBC.ESS.Shared.Contracts
 {
 #pragma warning disable SA1302 // Interface names should begin with I
 
-    public interface Command { }
+    public interface Command
+    { }
 
-    public interface Query<TResponse> { }
+    public interface Query<TResponse>
+    { }
 
 #pragma warning restore SA1302 // Interface names should begin with I
 
@@ -46,6 +48,13 @@ namespace EMBC.ESS.Shared.Contracts
     public class BusinessLogicException : EssApplicationException
     {
         public BusinessLogicException(string message) : base(message)
+        {
+        }
+    }
+
+    public class BusinessValidationException : EssApplicationException
+    {
+        public BusinessValidationException(string message) : base(message)
         {
         }
     }
