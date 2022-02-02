@@ -20,6 +20,7 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EssFileExistsComponent } from 'src/app/shared/components/dialog-components/ess-file-exists/ess-file-exists.component';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -40,6 +41,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
     private evacueeSearchResultsService: EvacueeSearchResultsService,
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
+    private evacueeProfileService: EvacueeProfileService,
     private userService: UserService,
     private router: Router,
     private cacheService: CacheService,
@@ -120,23 +122,13 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   openWizard(): void {
     if (this.evacueeSessionService.paperBased) {
-      this.evacueeSearchResultsService
-        .essFileExists(this.paperBasedEssFile)
+      this.evacueeProfileService
+        .getProfileFiles(this.paperBasedEssFile)
         .subscribe({
           next: (result) => {
+            console.log(result);
             if (result[0] === null) {
-              this.cacheService.set(
-                'wizardOpenedFrom',
-                '/responder-access/search/evacuee'
-              );
-              this.evacueeSessionService.setWizardType(
-                WizardType.NewRegistration
-              );
-
-              this.router.navigate(['/ess-wizard'], {
-                queryParams: { type: WizardType.NewRegistration },
-                queryParamsHandling: 'merge'
-              });
+              this.navigateToWizard();
             } else {
               this.openEssFileExistsDialog(
                 this.evacueeSearchService.paperBasedEssFile
@@ -149,16 +141,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
           }
         });
     } else {
-      this.cacheService.set(
-        'wizardOpenedFrom',
-        '/responder-access/search/evacuee'
-      );
-      this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
-
-      this.router.navigate(['/ess-wizard'], {
-        queryParams: { type: WizardType.NewRegistration },
-        queryParamsHandling: 'merge'
-      });
+      this.navigateToWizard();
     }
   }
 
@@ -171,6 +154,19 @@ export class EvacueeSearchResultsComponent implements OnInit {
       },
       height: '400px',
       width: '493px'
+    });
+  }
+
+  private navigateToWizard(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee'
+    );
+    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
+
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: WizardType.NewRegistration },
+      queryParamsHandling: 'merge'
     });
   }
 }

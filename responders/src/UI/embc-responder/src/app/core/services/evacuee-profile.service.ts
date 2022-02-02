@@ -124,12 +124,14 @@ export class EvacueeProfileService {
    * @returns an Array of matched ESS Files with the Registrant ID
    */
   public getProfileFiles(
-    registrantId: string
+    registrantId?: string,
+    externalReferenceId?: string
   ): Observable<Array<EvacuationFileSummaryModel>> {
     const evacFileSummaryModelArray: Array<EvacuationFileSummaryModel> = [];
     return this.registrationsService
       .registrationsGetFiles({
-        registrantId
+        registrantId,
+        externalReferenceId
       })
       .pipe(
         map(
