@@ -40,12 +40,16 @@ namespace EMBC.Utilities.Hosting
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using var scope = serviceProvider.CreateScope();
-            var initialTask = scope.ServiceProvider.GetRequiredService<T>();
-            var schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
+            CrontabSchedule schedule;
+            TimeSpan startupDelay;
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var initialTask = scope.ServiceProvider.GetRequiredService<T>();
+                schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
+                startupDelay = initialTask.InitialDelay;
+            }
 
-            await Task.Delay(initialTask.InitialDelay);
-
+            await Task.Delay(startupDelay);
             var now = DateTime.UtcNow;
             var nextExecutionDate = schedule.GetNextOccurrence(now);
 
