@@ -81,12 +81,16 @@ namespace EMBC.ESS.Resources.Metadata
         public PortalType PortalType { get; set; }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum PortalType
     {
         Registrants = 174360000,
         Responders = 174360001,
         Suppliers = 174360002
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 
     public class OutageInformation
     {

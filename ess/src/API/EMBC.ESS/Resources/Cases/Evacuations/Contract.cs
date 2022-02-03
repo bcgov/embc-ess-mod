@@ -48,7 +48,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public NeedsAssessment NeedsAssessment { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
-        public bool SecurityPhraseChanged { get; set; } = false;
+        public bool SecurityPhraseChanged { get; set; }
         public bool IsSecurityPhraseMasked { get; set; }
         public DateTime EvacuationDate { get; set; }
         public EvacuationFileStatus Status { get; set; }
@@ -160,6 +160,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Assessed
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum EvacuationFileStatus
     {
         Pending = 174360000,
@@ -168,6 +170,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Expired = 174360003,
         Archived = 174360004
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 
     public abstract class Support
     {
@@ -255,6 +259,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public string TransportMode { get; set; }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum SupportStatus
     {
         Active = 1,
@@ -292,4 +298,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         TransporationTaxi = 174360007,
         TransportationOther = 174360008
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 }

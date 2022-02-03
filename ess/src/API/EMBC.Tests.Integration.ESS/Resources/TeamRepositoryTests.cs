@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Resources.Metadata;
-using EMBC.ESS.Resources.Team;
-using Microsoft.AspNetCore.Mvc.Testing;
+using EMBC.ESS.Resources.Teams;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;

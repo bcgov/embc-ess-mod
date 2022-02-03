@@ -22,13 +22,13 @@ namespace EMBC.ESS.Resources.Tasks
 {
     public interface ITaskRepository
     {
-        Task<TaskQueryResult> QueryTask(TaskQuery request);
+        Task<TaskQueryResult> QueryTask(TaskQuery query);
     }
 
     public class TaskQuery
     {
         public string ById { get; set; }
-        public TaskStatus[] ByStatus { get; set; } = Array.Empty<TaskStatus>();
+        public IEnumerable<TaskStatus> ByStatus { get; set; } = Array.Empty<TaskStatus>();
     }
 
     public class TaskQueryResult
@@ -42,11 +42,15 @@ namespace EMBC.ESS.Resources.Tasks
         public TaskStatus Status { get; set; }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum TaskStatus
     {
         Active = 1,
         Expired = 2
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 
     public class EssTask : Task
     {

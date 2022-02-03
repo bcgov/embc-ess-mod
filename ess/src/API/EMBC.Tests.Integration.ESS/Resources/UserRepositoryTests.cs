@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using EMBC.ESS.Resources.Team;
+using EMBC.ESS.Resources.Teams;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;

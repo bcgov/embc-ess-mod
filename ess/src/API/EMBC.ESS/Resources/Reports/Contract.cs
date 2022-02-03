@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -23,9 +22,9 @@ namespace EMBC.ESS.Resources.Reports
 {
     public interface IReportRepository
     {
-        Task<EvacueeQueryResult> QueryEvacuee(ReportQuery evacueeQuery);
+        Task<EvacueeQueryResult> QueryEvacuee(ReportQuery query);
 
-        Task<SupportQueryResult> QuerySupport(ReportQuery supportQuery);
+        Task<SupportQueryResult> QuerySupport(ReportQuery query);
     }
 
     public class ReportQuery
@@ -359,6 +358,8 @@ namespace EMBC.ESS.Resources.Reports
         public string LodgingEmail { get; set; }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum EvacuationFileStatus
     {
         Pending = 174360000,
@@ -370,6 +371,7 @@ namespace EMBC.ESS.Resources.Reports
 
     public enum SupportType
     {
+#pragma warning disable CA1707 // Identifiers should not contain underscores
         Food_Groceries = 174360000,
         Food_Restaurant = 174360001,
         Lodging_Hotel = 174360002,
@@ -379,7 +381,10 @@ namespace EMBC.ESS.Resources.Reports
         Clothing = 174360006,
         Transportation_Taxi = 174360007,
         Transportation_Other = 174360008,
+#pragma warning restore CA1707 // Identifiers should not contain underscores
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 
     public enum InsuranceOption
     {

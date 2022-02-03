@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using AutoMapper;
-using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Reports;
 
 namespace EMBC.ESS.Managers.Reports
@@ -47,7 +46,10 @@ namespace EMBC.ESS.Managers.Reports
                 ;
         }
 
+#pragma warning disable CA1034 // Nested types should not be visible
+
         public class PersonalInfoConverter : IValueConverter<string, string>
+#pragma warning restore CA1034 // Nested types should not be visible
         {
             public string Convert(string sourceMember, ResolutionContext context)
             {

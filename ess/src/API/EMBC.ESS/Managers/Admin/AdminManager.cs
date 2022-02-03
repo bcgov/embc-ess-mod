@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Suppliers;
-using EMBC.ESS.Resources.Team;
+using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.ESS.Shared.Contracts.Profile;
@@ -40,7 +40,6 @@ namespace EMBC.ESS.Managers.Admin
         private readonly IEssContextStateReporter essContextStatusReporter;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
         private static TeamMemberStatus[] activeAndInactiveStatus = new[] { TeamMemberStatus.Active, TeamMemberStatus.Inactive };
-        private static TimeSpan cacheEntryLifetime = TimeSpan.FromHours(6);
 
         public AdminManager(
             ITeamRepository teamRepository,
@@ -78,7 +77,7 @@ namespace EMBC.ESS.Managers.Admin
             if (cmd.Member.Id != null) teamMembersWithSameUserName = teamMembersWithSameUserName.Where(m => m.Id != cmd.Member.Id);
             if (teamMembersWithSameUserName.Any()) throw new UsernameAlreadyExistsException(cmd.Member.UserName);
 
-            var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
+            var id = await teamRepository.SaveMember(mapper.Map<Resources.Teams.TeamMember>(cmd.Member));
 
             return id;
         }
@@ -131,7 +130,7 @@ namespace EMBC.ESS.Managers.Admin
             var now = DateTime.UtcNow;
             var newCommunities = cmd.Communities
                 .Where(c => !team.AssignedCommunities.Any(ac => ac.Code == c))
-                .Select(c => new Resources.Team.AssignedCommunity { Code = c, DateAssigned = now });
+                .Select(c => new Resources.Teams.AssignedCommunity { Code = c, DateAssigned = now });
             team.AssignedCommunities = team.AssignedCommunities.Concat(newCommunities).ToArray();
             await teamRepository.SaveTeam(team);
         }
@@ -150,9 +149,9 @@ namespace EMBC.ESS.Managers.Admin
             var member = (await teamRepository.GetMembers(userName: cmd.UserName, includeStatuses: activeOnlyStatus)).SingleOrDefault();
             if (member == null) return new FailedLogin { Reason = $"User {cmd.UserName} not found" };
             if (member.ExternalUserId != null && member.ExternalUserId != cmd.UserId)
-                throw new Exception($"User {cmd.UserName} has external id {member.ExternalUserId} but trying to log in with user id {cmd.UserId}");
+                throw new BusinessLogicException($"User {cmd.UserName} has external id {member.ExternalUserId} but trying to log in with user id {cmd.UserId}");
             if (member.ExternalUserId == null && member.LastSuccessfulLogin.HasValue)
-                throw new Exception($"User {cmd.UserName} has no external id but somehow logged in already");
+                throw new BusinessLogicException($"User {cmd.UserName} has no external id but somehow logged in already");
 
             if (!member.LastSuccessfulLogin.HasValue || string.IsNullOrEmpty(member.ExternalUserId))
             {
@@ -202,7 +201,7 @@ namespace EMBC.ESS.Managers.Admin
             }
             else
             {
-                throw new Exception($"Unknown query type");
+                return new SuppliersQueryResult { Items = Array.Empty<Shared.Contracts.Suppliers.Supplier>() };
             }
         }
 
@@ -264,7 +263,7 @@ namespace EMBC.ESS.Managers.Admin
                 SupplierId = cmd.SupplierId,
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
-            if (supplier.Team != null && supplier.Team.Id != null) throw new Exception($"Supplier already has a primary team");
+            if (supplier.Team != null && supplier.Team.Id != null) throw new BusinessLogicException($"Supplier already has a primary team");
 
             supplier.Team = new Resources.Suppliers.Team { Id = cmd.TeamId };
             supplier.Status = Resources.Suppliers.SupplierStatus.Active;
@@ -280,8 +279,8 @@ namespace EMBC.ESS.Managers.Admin
                 SupplierId = cmd.SupplierId,
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
-            if (supplier.Team.Id == cmd.TeamId) throw new Exception("Can not share with primary team");
-            if (supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new Exception("Already shared with this team");
+            if (supplier.Team.Id == cmd.TeamId) throw new BusinessLogicException("Can not share with primary team");
+            if (supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new BusinessLogicException("Already shared with this team");
 
             var team = new Resources.Suppliers.Team { Id = cmd.TeamId };
             supplier.SharedWithTeams = supplier.SharedWithTeams.Concat(new[] { team });
@@ -297,8 +296,8 @@ namespace EMBC.ESS.Managers.Admin
                 SupplierId = cmd.SupplierId,
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
-            if (supplier.Team.Id == cmd.TeamId) throw new Exception("Can not remove primary team");
-            if (!supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new Exception("Not shared with this team");
+            if (supplier.Team.Id == cmd.TeamId) throw new BusinessLogicException("Can not remove primary team");
+            if (!supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new BusinessLogicException("Not shared with this team");
 
             supplier.SharedWithTeams = supplier.SharedWithTeams.Where(t => t.Id != cmd.TeamId);
             var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });

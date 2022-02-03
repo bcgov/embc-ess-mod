@@ -29,9 +29,9 @@ namespace EMBC.ESS.Managers.Submissions.PrintReferrals
     {
         private readonly string pageBreak = $@"{Environment.NewLine}<div class=""page-break""></div>{Environment.NewLine}";
 
-        public async Task<string> GetReferralHtmlPagesAsync(SupportsToPrint supportsToPrint)
+        public async Task<string> GetReferralHtmlPagesAsync(SupportsToPrint printSupports)
         {
-            return await AssembleReferralHtml(supportsToPrint.RequestingUser, supportsToPrint.Referrals, supportsToPrint.AddSummary, supportsToPrint.AddWatermark);
+            return await AssembleReferralHtml(printSupports.RequestingUser, printSupports.Referrals, printSupports.AddSummary, printSupports.AddWatermark);
         }
 
         private async Task<string> AssembleReferralHtml(PrintRequestingUser requestingUser, IEnumerable<PrintReferral> referrals, bool includeSummary, bool addWatermark)
@@ -68,8 +68,7 @@ namespace EMBC.ESS.Managers.Submissions.PrintReferrals
             });
             handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
             {
-                DateTime.TryParse((string)arguments[0], out var parsedDate);
-                output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
+                if (DateTime.TryParse((string)arguments[0], out var parsedDate)) output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
             });
             handleBars.RegisterHelper("timeFormatter", (output, context, arguments) =>
             {
@@ -79,7 +78,7 @@ namespace EMBC.ESS.Managers.Submissions.PrintReferrals
             handleBars.RegisterHelper("upperCase", (output, context, arguments) =>
             {
                 var upperCaseString = (string)arguments[0];
-                output.WriteSafeString(upperCaseString.ToUpper());
+                output.WriteSafeString(upperCaseString.ToUpperInvariant());
             });
 
             return handleBars;
