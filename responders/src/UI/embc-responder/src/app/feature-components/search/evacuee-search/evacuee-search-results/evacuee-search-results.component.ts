@@ -123,7 +123,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   openWizard(): void {
     if (this.evacueeSessionService.paperBased) {
       this.evacueeProfileService
-        .getProfileFiles(this.paperBasedEssFile)
+        .getProfileFiles(null, this.paperBasedEssFile)
         .subscribe({
           next: (result) => {
             console.log(result);

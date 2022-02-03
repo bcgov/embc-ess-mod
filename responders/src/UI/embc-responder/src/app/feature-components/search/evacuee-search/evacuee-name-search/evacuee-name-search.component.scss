@@ -78,6 +78,14 @@ mat-card {
     color: rgb(255, 255, 255);
 }
 
+::ng-deep .mat-form-field-suffix {
+    top: 0 !important;
+  }
+  
+  ::ng-deep .mat-form-field-prefix {
+    top: 0 !important;
+  }
+
 .list-info {
     margin-left: 15px;
 }
