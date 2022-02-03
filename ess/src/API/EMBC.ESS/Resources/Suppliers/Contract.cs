@@ -22,12 +22,13 @@ namespace EMBC.ESS.Resources.Suppliers
 {
     public interface ISupplierRepository
     {
-        Task<SupplierQueryResult> QuerySupplier(SupplierQuery request);
+        Task<SupplierQueryResult> QuerySupplier(SupplierQuery query);
 
         Task<SupplierCommandResult> ManageSupplier(SupplierCommand cmd);
     }
 
-    public abstract class SupplierCommand { }
+    public abstract class SupplierCommand
+    { }
 
     public class SupplierCommandResult
     {

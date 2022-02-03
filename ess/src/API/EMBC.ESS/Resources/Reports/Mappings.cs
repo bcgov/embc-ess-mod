@@ -221,6 +221,8 @@ namespace EMBC.ESS.Resources.Reports
         }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum InsuranceOptionOptionSet
     {
         No = 174360000,
@@ -234,4 +236,6 @@ namespace EMBC.ESS.Resources.Reports
         Yes = 174360000,
         No = 174360001
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 }

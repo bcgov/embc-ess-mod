@@ -109,7 +109,7 @@ namespace EMBC.Tests.Integration.ESS
             this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").SingleOrDefault()
                 ?? CreateTeamMember(team, Guid.NewGuid());
             this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").SingleOrDefault()
-                ?? CreateTeamMember(this.otherTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Team.TeamUserRoleOptionSet.Tier1);
+                ?? CreateTeamMember(this.otherTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Teams.TeamUserRoleOptionSet.Tier1);
             this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").SingleOrDefault() ?? CreateContact(); ;
 
             this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").SingleOrDefault() ?? CreateSupplier("A", this.team);
@@ -204,7 +204,7 @@ namespace EMBC.Tests.Integration.ESS
             return team;
         }
 
-        private era_essteamuser CreateTeamMember(era_essteam team, Guid id, string suffix = "", EMBC.ESS.Resources.Team.TeamUserRoleOptionSet role = EMBC.ESS.Resources.Team.TeamUserRoleOptionSet.Tier4)
+        private era_essteamuser CreateTeamMember(era_essteam team, Guid id, string suffix = "", EMBC.ESS.Resources.Teams.TeamUserRoleOptionSet role = EMBC.ESS.Resources.Teams.TeamUserRoleOptionSet.Tier4)
         {
             var member = new era_essteamuser
             {

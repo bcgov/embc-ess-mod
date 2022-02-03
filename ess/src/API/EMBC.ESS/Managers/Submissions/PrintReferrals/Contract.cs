@@ -69,7 +69,7 @@ namespace EMBC.ESS.Managers.Submissions.PrintReferrals
         public string OtherTransportModeDetails { get; set; }
         public IEnumerable<PrintEvacuee> Evacuees { get; set; } = Array.Empty<PrintEvacuee>();
 
-        public PrintableEvacueesRow[] PrintableEvacuees
+        public IEnumerable<PrintableEvacueesRow> PrintableEvacuees
         {
             get
             {

@@ -15,9 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
@@ -38,9 +35,13 @@ namespace EMBC.ESS.Resources.Tasks
         }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum EssTaskStatusCode
     {
         Active = 1,
         Expired = 2,
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 }

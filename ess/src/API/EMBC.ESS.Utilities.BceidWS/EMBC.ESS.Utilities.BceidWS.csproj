@@ -30,7 +30,7 @@
         <PackageReference Include="System.ServiceModel.Http" Version="4.9.0" />
         <PackageReference Include="System.ServiceModel.NetTcp" Version="4.9.0" />
         <PackageReference Include="System.ServiceModel.Security" Version="4.9.0" />
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

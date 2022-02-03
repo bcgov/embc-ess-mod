@@ -240,6 +240,9 @@ dotnet_diagnostic.SA1314.severity = suggestion
 # SA1117: Parameters should be on same line or separate lines
 dotnet_diagnostic.SA1117.severity = suggestion
 
+# SA1316: Tuple element names should use correct casing
+dotnet_diagnostic.SA1316.severity = suggestion
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion

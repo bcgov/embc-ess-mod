@@ -362,6 +362,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum InsuranceOptionOptionSet
     {
         No = 174360000,
@@ -382,6 +384,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Member = 174360001
     }
 
+#pragma warning restore CA1008 // Enums should have zero value
+
     public class SecurityPhraseConverter : IValueConverter<string, string>
     {
         public string Convert(string sourceMember, ResolutionContext context)
@@ -391,7 +395,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (string.IsNullOrEmpty(sourceMember))
                 return string.Empty;
             else
-                return sourceMember.Substring(0, 1) + "****" + sourceMember.Substring(sourceMember.Length - 1);
+                return sourceMember[..1] + "****" + sourceMember.Substring(sourceMember.Length - 1);
         }
 
         public static bool ShouldMaskSecretPhrase(ResolutionContext ctx) =>
@@ -400,7 +404,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
     public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
     {
-        public int? Convert(string sourceMember, ResolutionContext context) => sourceMember?.ToLower() switch
+        public int? Convert(string sourceMember, ResolutionContext context) => sourceMember?.ToLowerInvariant() switch
         {
             "male" => 1,
             "female" => 2,

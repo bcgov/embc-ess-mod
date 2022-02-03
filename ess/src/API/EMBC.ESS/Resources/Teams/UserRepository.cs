@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using BCeIDService;
 using EMBC.ESS.Utilities.BceidWS;
 
-namespace EMBC.ESS.Resources.Team
+namespace EMBC.ESS.Resources.Teams
 {
     public class UserRepository : IUserRepository
     {
@@ -63,7 +63,7 @@ namespace EMBC.ESS.Resources.Team
             if (result.code == ResponseCode.Failed)
             {
                 if (result.failureCode == FailureCode.NoResults) return null;
-                throw new Exception($"Failed to call BCeID web service: {result.failureCode}: {result.message}");
+                throw new InvalidOperationException($"Failed to call BCeID web service: {result.failureCode}: {result.message}");
             }
 
             return result.account;

@@ -23,13 +23,14 @@ using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
 
-namespace EMBC.ESS.Resources.Team
+namespace EMBC.ESS.Resources.Teams
 {
     public class TeamRepository : ITeamRepository
     {
         private readonly EssContext context;
         private readonly IMapper mapper;
-        private const int DynamicsActiveStatus = 1;
+
+        //private const int DynamicsActiveStatus = 1;
         private const int DynamicsInactiveStatus = 2;
 
         public TeamRepository(EssContext dynamicsClientContext, IMapper mapper)
@@ -76,7 +77,7 @@ namespace EMBC.ESS.Resources.Team
 
             foreach (var ta in teamAreas)
             {
-                ctx.LoadProperty(ta, nameof(era_essteamarea.era_ESSTeamID));
+                await ctx.LoadPropertyAsync(ta, nameof(era_essteamarea.era_ESSTeamID));
             }
 
             var teams = teamAreas.Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
@@ -103,7 +104,7 @@ namespace EMBC.ESS.Resources.Team
         public async Task<string> SaveMember(TeamMember teamMember)
         {
             var essTeam = EssTeam(Guid.Parse(teamMember.TeamId));
-            if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new Exception($"team {teamMember.TeamId} not found");
+            if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new ArgumentException($"team {teamMember.TeamId} not found");
 
             era_essteamuser essTeamUser;
             if (teamMember.Id == null)
@@ -116,7 +117,7 @@ namespace EMBC.ESS.Resources.Team
                 essTeamUser = context.era_essteamusers
                     .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == Guid.Parse(teamMember.Id))
                     .SingleOrDefault();
-                if (essTeamUser == null) throw new Exception($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
+                if (essTeamUser == null) throw new ArgumentException($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
             }
 
             //TODO: move to automapper profile
@@ -154,7 +155,7 @@ namespace EMBC.ESS.Resources.Team
         {
             if (string.IsNullOrEmpty(team.Id)) throw new ArgumentException($"Team ID cannot be empty", nameof(team.Id));
             var essTeam = EssTeam(Guid.Parse(team.Id));
-            if (essTeam == null) throw new Exception($"Team {team.Id} not found");
+            if (essTeam == null) throw new ArgumentException($"Team {team.Id} not found");
 
             await context.LoadPropertyAsync(essTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
 

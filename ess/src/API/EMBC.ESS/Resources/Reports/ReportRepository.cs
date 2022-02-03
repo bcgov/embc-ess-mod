@@ -100,7 +100,7 @@ namespace EMBC.ESS.Resources.Reports
             foreach (var task in tasks)
             {
                 ctx.AttachTo(nameof(EssContext.era_tasks), task);
-                var currentFiles = ctx.LoadProperty(task, nameof(era_task.era_era_task_era_evacuationfileId));
+                var currentFiles = await ctx.LoadPropertyAsync(task, nameof(era_task.era_era_task_era_evacuationfileId));
                 foreach (var file in currentFiles)
                 {
                     files.Add((era_evacuationfile)file);

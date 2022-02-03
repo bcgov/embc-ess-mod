@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Team
+namespace EMBC.ESS.Resources.Teams
 {
     public interface ITeamRepository
     {
