@@ -140,7 +140,7 @@ namespace EMBC.Registrants.API.Controllers
         public string? FileId { get; set; }
         public EvacuationFileStatus Status { get; set; }
 
-        public string? EvacuationFileDate { get; set; }
+        public DateTime? EvacuationFileDate { get; set; }
 
         public bool? IsRestricted { get; set; }
 
