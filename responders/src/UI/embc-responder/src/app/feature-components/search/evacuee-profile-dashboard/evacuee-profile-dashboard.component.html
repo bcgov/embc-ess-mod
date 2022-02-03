@@ -118,7 +118,11 @@
           </div>
           <div
             class="row services-card info-box"
-            *ngIf="!evacueeProfile?.authenticatedUser"
+            *ngIf="
+              !evacueeProfile?.authenticatedUser &&
+              evacueeProfile?.securityQuestions?.length &&
+              !isPaperBased
+            "
           >
             <div class="col-md-8">
               <p class="services-heading">

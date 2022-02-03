@@ -37,6 +37,7 @@ namespace EMBC.ESS.Managers.Reports
                 .ForMember(d => d.PostalCode, opts => opts.ConvertUsing<PersonalInfoConverter, string>(s => s.PostalCode))
                 .ForMember(d => d.Country, opts => opts.ConvertUsing<PersonalInfoConverter, string>(s => s.Country))
                 .ForMember(d => d.Phone, opts => opts.ConvertUsing<PersonalInfoConverter, string>(s => s.Phone))
+                .ForMember(d => d.Email, opts => opts.ConvertUsing<PersonalInfoConverter, string>(s => s.Email))
                 .ForMember(d => d.MailingAddressLine1, opts => opts.ConvertUsing<PersonalInfoConverter, string>(s => s.MailingAddressLine1))
                 .ForMember(d => d.MailingAddressLine2, opts => opts.ConvertUsing<PersonalInfoConverter, string>(s => s.MailingAddressLine2))
                 .ForMember(d => d.MailingCommunity, opts => opts.ConvertUsing<PersonalInfoConverter, string>(s => s.MailingCommunity))
