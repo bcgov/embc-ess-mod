@@ -31,8 +31,8 @@
     <ItemGroup>
         <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
-        <PackageReference Include="NSwag.AspNetCore" Version="13.15.5" />
-        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+        <PackageReference Include="NSwag.AspNetCore" Version="13.15.7" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
