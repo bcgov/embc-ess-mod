@@ -119,6 +119,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<EvacuationFile, Shared.Contracts.Submissions.EvacuationFileSearchResult>()
                 .ForMember(d => d.EvacuationAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
+                .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.CreatedOn)) //temporary until files have issued date
                 .ForMember(d => d.TaskStartDate, opts => opts.Ignore())
                 .ForMember(d => d.TaskEndDate, opts => opts.Ignore())
                 ;
