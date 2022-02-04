@@ -303,18 +303,22 @@ namespace EMBC.Responders.API.Controllers
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
 
         [Required]
-        public EvacuationFileTask Task { get; set; } = null!;
+        public EvacuationFileTask? Task { get; set; }
     }
 
     public class EvacuationFileSummary
     {
         public string Id { get; set; } = null!;
+        public string? ExternalReferenceId { get; set; }
         public EvacuationFileStatus Status { get; set; }
-        public EvacuationFileTask Task { get; set; }
+        public EvacuationFileTask? Task { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime IssuedOn { get; set; }
         public DateTime EvacuationFileDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
         public bool? IsRestricted { get; set; }
+        public bool IsPaper => !string.IsNullOrEmpty(ExternalReferenceId);
+        public bool IsPerliminary => Task == null;
     }
 
     public class EvacuationFileTask
