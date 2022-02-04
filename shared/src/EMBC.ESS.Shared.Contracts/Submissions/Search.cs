@@ -111,6 +111,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string TaskLocationCommunityCode { get; set; }
         public bool RestrictedAccess { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime IssuedOn { get; set; }
         public DateTime LastModified { get; set; }
         public DateTime EvacuationDate { get; set; }
         public Address EvacuationAddress { get; set; }
