@@ -130,4 +130,14 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool IsPrimaryRegistrant { get; set; }
         public bool? RestrictedAccess { get; set; }
     }
+
+    public class SearchSupportsQuery : Query<SearchSupportsQueryResponse>
+    {
+        public string ExternalReferenceId { get; set; }
+    }
+
+    public class SearchSupportsQueryResponse
+    {
+        public IEnumerable<Support> Items { get; set; }
+    }
 }
