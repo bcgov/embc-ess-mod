@@ -21,7 +21,7 @@ using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace EMBC.ESS.Resources.Team
+namespace EMBC.ESS.Resources.Teams
 {
     public class Configuration : IConfigureComponentServices
     {

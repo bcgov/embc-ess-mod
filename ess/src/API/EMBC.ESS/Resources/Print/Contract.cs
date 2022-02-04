@@ -22,12 +22,13 @@ namespace EMBC.ESS.Resources.Print
 {
     public interface IPrintRequestsRepository
     {
-        Task<string> Manage(ManagePrintRequestCommand request);
+        Task<string> Manage(ManagePrintRequestCommand command);
 
         Task<IEnumerable<PrintRequest>> Query(QueryPrintRequests query);
     }
 
-    public abstract class ManagePrintRequestCommand { }
+    public abstract class ManagePrintRequestCommand
+    { }
 
     public class SavePrintRequest : ManagePrintRequestCommand
     {
@@ -60,9 +61,13 @@ namespace EMBC.ESS.Resources.Print
         public string RequestingUserId { get; set; }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum ReferralPrintType
     {
         New = 174360000,
         Reprint = 174360001
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 }

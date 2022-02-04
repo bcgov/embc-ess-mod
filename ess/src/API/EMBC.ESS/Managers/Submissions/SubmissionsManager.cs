@@ -30,7 +30,7 @@ using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
-using EMBC.ESS.Resources.Team;
+using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Extensions;
@@ -152,7 +152,7 @@ namespace EMBC.ESS.Managers.Submissions
                 var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = file.Id })).Items.SingleOrDefault();
                 var existingFile = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(caseRecord);
 
-                if (!string.IsNullOrEmpty(existingFile.TaskId) && !existingFile.TaskId.Equals(file.TaskId))
+                if (!string.IsNullOrEmpty(existingFile.TaskId) && !existingFile.TaskId.Equals(file.TaskId, StringComparison.Ordinal))
                     throw new BusinessLogicException($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
             }
 
@@ -416,7 +416,7 @@ namespace EMBC.ESS.Managers.Submissions
 
                 if (noteToUpdate == null) throw new NotFoundException($"Evacuation File Note {cmd.Note.Id} not found", cmd.Note.Id);
 
-                if (!noteToUpdate.CreatingTeamMemberId.Equals(cmd.Note.CreatedBy.Id) || noteToUpdate.AddedOn < DateTime.UtcNow.AddHours(-24))
+                if (!noteToUpdate.CreatingTeamMemberId.Equals(cmd.Note.CreatedBy.Id, StringComparison.Ordinal) || noteToUpdate.AddedOn < DateTime.UtcNow.AddHours(-24))
                     throw new BusinessLogicException($"The note may be edited only by the user who created it withing a 24 hour period.");
             }
 
@@ -465,7 +465,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (paperReferrals.Any())
                 throw new BusinessValidationException($"file {cmd.FileId} error: cannot process paper referrals {string.Join(',', paperReferrals)} as digital");
 
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().Single();
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
 
             foreach (var support in cmd.Supports)
             {
@@ -515,7 +515,7 @@ namespace EMBC.ESS.Managers.Submissions
                     + $"{string.Join(',', duplicates.Select(d => $"{d.Key}: {string.Join(',', d.Select(id => id.GetType().Name))}"))}");
             }
 
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().Single();
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
 
             foreach (var referral in referrals)
             {
@@ -570,7 +570,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             //get requesting user
             if (printRequest.RequestingUserId != query.RequestingUserId) throw new BusinessLogicException($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
-            var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().SingleOrDefault();
+            var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault();
             if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
             //load the file
@@ -580,7 +580,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             //Find referrals to print
             var referrals = mapper.Map<IEnumerable<PrintReferral>>(file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)), opts => opts.Items.Add("evacuationFile", file)).ToArray();
-            if (referrals.Count() != printRequest.SupportIds.Count())
+            if (referrals.Length != printRequest.SupportIds.Count())
                 throw new BusinessLogicException($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
 
             //replace community codes with readable name
@@ -621,7 +621,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException(nameof(cmd.SupportId));
 
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Team.TeamMember>().Single();
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
 
             var referralPrintId = await printingRepository.Manage(new SavePrintRequest
             {

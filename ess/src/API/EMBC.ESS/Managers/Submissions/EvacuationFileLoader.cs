@@ -18,7 +18,7 @@ using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
-using EMBC.ESS.Resources.Team;
+using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts.Submissions;
 
 namespace EMBC.ESS.Managers.Submissions

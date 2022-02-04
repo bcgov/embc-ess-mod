@@ -117,10 +117,10 @@ namespace EMBC.ESS.Resources.Suppliers
 
             foreach (var supplier in suppliers)
             {
-                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_PrimaryContact));
-                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCity));
-                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCountry));
-                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_RelatedProvinceState));
+                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_PrimaryContact));
+                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCity));
+                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCountry));
+                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedProvinceState));
 
                 var teamSupplierQuery = essContext.era_essteamsuppliers
                     .Expand(s => s.era_ESSTeamID)
@@ -146,12 +146,12 @@ namespace EMBC.ESS.Resources.Suppliers
             if ((!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)) ||
                 (!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)))
             {
-                throw new Exception("If searching by legal name and gst, both are required");
+                throw new ArgumentException("If searching by legal name and gst, both are required");
             }
 
             if (string.IsNullOrEmpty(queryRequest.SupplierId) && string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber))
             {
-                throw new Exception("no search criteria");
+                throw new ArgumentException("no search criteria");
             }
 
             IQueryable<era_supplier> supplierQuery = essContext.era_suppliers
@@ -251,9 +251,13 @@ namespace EMBC.ESS.Resources.Suppliers
         }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum SupplierVerificationStatus
     {
         Verified = 174360000,
         NotVerified = 1
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 }

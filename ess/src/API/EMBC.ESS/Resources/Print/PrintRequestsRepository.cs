@@ -108,7 +108,7 @@ namespace EMBC.ESS.Resources.Print
         private async Task<string> MarkPrintRequestAsComplete(MarkPrintRequestAsComplete cmd)
         {
             var pr = essContext.era_referralprints.Where(pr => pr.era_referralprintid == Guid.Parse(cmd.PrintRequestId)).SingleOrDefault();
-            if (pr == null) throw new Exception($"Print request {cmd.PrintRequestId} not found");
+            if (pr == null) throw new ArgumentException($"Print request {cmd.PrintRequestId} not found");
 
             essContext.DeactivateObject(pr);
 

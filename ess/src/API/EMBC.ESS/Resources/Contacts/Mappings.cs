@@ -167,7 +167,7 @@ namespace EMBC.ESS.Resources.Contacts
             if (string.IsNullOrEmpty(answer))
                 return string.Empty;
             else
-                return answer.Substring(0, 1) + "*****" + answer.Substring(answer.Length - 1);
+                return answer[..1] + "*****" + answer.Substring(answer.Length - 1);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace EMBC.ESS.Resources.Metadata
         public async Task<string[]> GetSecurityQuestions()
         {
             var optionSetDefinitions = await essContext.GlobalOptionSetDefinitions.GetAllPagesAsync();
-            var securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name.Equals("era_registrantsecretquestions")).SingleOrDefault();
+            var securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name == "era_registrantsecretquestions").SingleOrDefault();
             var options = securityQuestionsOptionSet.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray();
             return options;
         }

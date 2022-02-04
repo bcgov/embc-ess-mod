@@ -23,19 +23,19 @@ namespace EMBC.ESS.Managers.Admin
     {
         public MappingProfile()
         {
-            CreateMap<Shared.Contracts.Team.TeamMember, Resources.Team.TeamMember>()
+            CreateMap<Shared.Contracts.Team.TeamMember, Resources.Teams.TeamMember>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Shared.Contracts.Team.Team, Resources.Team.Team>()
+            CreateMap<Shared.Contracts.Team.Team, Resources.Teams.Team>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Shared.Contracts.Team.AssignedCommunity, Resources.Team.AssignedCommunity>()
+            CreateMap<Shared.Contracts.Team.AssignedCommunity, Resources.Teams.AssignedCommunity>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Resources.Team.TeamMember, Shared.Contracts.Profile.UserProfile>()
+            CreateMap<Resources.Teams.TeamMember, Shared.Contracts.Profile.UserProfile>()
                 .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
                 .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue))
                 ;

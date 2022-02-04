@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Managers.Admin;
-using EMBC.ESS.Resources.Team;
+using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts.Team;
 using Shouldly;
 using Xunit;
@@ -94,34 +94,34 @@ namespace EMBC.Tests.Unit.ESS.Admin
 
     public class TestTeamRepository : ITeamRepository
     {
-        public Dictionary<string, EMBC.ESS.Resources.Team.Team> stagedTeams = new Dictionary<string, EMBC.ESS.Resources.Team.Team>()
+        public Dictionary<string, EMBC.ESS.Resources.Teams.Team> stagedTeams = new Dictionary<string, EMBC.ESS.Resources.Teams.Team>()
         {
-            { "t1", new EMBC.ESS.Resources.Team.Team { Id = "t1", Name = "team1", AssignedCommunities = new []
+            { "t1", new EMBC.ESS.Resources.Teams.Team { Id = "t1", Name = "team1", AssignedCommunities = new []
                     {
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c1", DateAssigned = DateTime.UtcNow },
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c2", DateAssigned = DateTime.UtcNow }
+                        new EMBC.ESS.Resources.Teams.AssignedCommunity { Code = "c1", DateAssigned = DateTime.UtcNow },
+                        new EMBC.ESS.Resources.Teams.AssignedCommunity { Code = "c2", DateAssigned = DateTime.UtcNow }
                     } }
             },
-            { "t2", new EMBC.ESS.Resources.Team.Team { Id = "t2", Name = "team2", AssignedCommunities = new []
+            { "t2", new EMBC.ESS.Resources.Teams.Team { Id = "t2", Name = "team2", AssignedCommunities = new []
                     {
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c3", DateAssigned = DateTime.UtcNow },
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c4", DateAssigned = DateTime.UtcNow }
+                        new EMBC.ESS.Resources.Teams.AssignedCommunity { Code = "c3", DateAssigned = DateTime.UtcNow },
+                        new EMBC.ESS.Resources.Teams.AssignedCommunity { Code = "c4", DateAssigned = DateTime.UtcNow }
                     } }
             },
-            { "t3", new EMBC.ESS.Resources.Team.Team { Id = "t3", Name = "team3", AssignedCommunities = Array.Empty<EMBC.ESS.Resources.Team.AssignedCommunity>() }
+            { "t3", new EMBC.ESS.Resources.Teams.Team { Id = "t3", Name = "team3", AssignedCommunities = Array.Empty<EMBC.ESS.Resources.Teams.AssignedCommunity>() }
             }
         };
 
-        public Dictionary<string, EMBC.ESS.Resources.Team.TeamMember> stagedTeamMembers = new Dictionary<string, EMBC.ESS.Resources.Team.TeamMember>
+        public Dictionary<string, EMBC.ESS.Resources.Teams.TeamMember> stagedTeamMembers = new Dictionary<string, EMBC.ESS.Resources.Teams.TeamMember>
         {
-            { "t1m1", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t1m1", FirstName = "t1m1f", LastName = "t1m1l", IsActive = true, UserName = "t1m1un", TeamId = "t1" } },
-            { "t1m2", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t1m2", FirstName = "t1m2f", LastName = "t1m2l", IsActive = true, UserName = "t1m2un", TeamId = "t1" } },
+            { "t1m1", new EMBC.ESS.Resources.Teams.TeamMember{ Id = "t1m1", FirstName = "t1m1f", LastName = "t1m1l", IsActive = true, UserName = "t1m1un", TeamId = "t1" } },
+            { "t1m2", new EMBC.ESS.Resources.Teams.TeamMember{ Id = "t1m2", FirstName = "t1m2f", LastName = "t1m2l", IsActive = true, UserName = "t1m2un", TeamId = "t1" } },
 
-            { "t2m1", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t2m1", FirstName = "t2m1f", LastName = "t2m1l", IsActive = true, UserName = "t2m1un", TeamId = "t2" } },
-            { "t2m2", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t2m2", FirstName = "t2m2f", LastName = "t2m2l", IsActive = true, UserName = "t2m2un", TeamId = "t2" } },
+            { "t2m1", new EMBC.ESS.Resources.Teams.TeamMember{ Id = "t2m1", FirstName = "t2m1f", LastName = "t2m1l", IsActive = true, UserName = "t2m1un", TeamId = "t2" } },
+            { "t2m2", new EMBC.ESS.Resources.Teams.TeamMember{ Id = "t2m2", FirstName = "t2m2f", LastName = "t2m2l", IsActive = true, UserName = "t2m2un", TeamId = "t2" } },
 
-            { "t3m1", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t3m1", FirstName = "t3m1f", LastName = "t3m1l", IsActive = true, UserName = "t3m1un", TeamId = "t3" } },
-            { "t3m2", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t3m2", FirstName = "t3m2f", LastName = "t3m2l", IsActive = true, UserName = "t3m2un", TeamId = "t3" } },
+            { "t3m1", new EMBC.ESS.Resources.Teams.TeamMember{ Id = "t3m1", FirstName = "t3m1f", LastName = "t3m1l", IsActive = true, UserName = "t3m1un", TeamId = "t3" } },
+            { "t3m2", new EMBC.ESS.Resources.Teams.TeamMember{ Id = "t3m2", FirstName = "t3m2f", LastName = "t3m2l", IsActive = true, UserName = "t3m2un", TeamId = "t3" } },
         };
 
         public async Task<bool> DeleteMember(string teamId, string teamMemberId)
@@ -132,7 +132,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
             return memeber != null;
         }
 
-        public async Task<IEnumerable<EMBC.ESS.Resources.Team.TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
+        public async Task<IEnumerable<EMBC.ESS.Resources.Teams.TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
         {
             includeStatuses = includeStatuses ?? new[] { TeamMemberStatus.Active };
             await Task.CompletedTask;
@@ -152,7 +152,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
             return new TeamQueryResponse { Items = stagedTeams.Values };
         }
 
-        public async Task<string> SaveMember(EMBC.ESS.Resources.Team.TeamMember teamMember)
+        public async Task<string> SaveMember(EMBC.ESS.Resources.Teams.TeamMember teamMember)
         {
             await Task.CompletedTask;
             if (teamMember.Id == null)
@@ -166,7 +166,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
             return teamMember.Id;
         }
 
-        public async Task<string> SaveTeam(EMBC.ESS.Resources.Team.Team team)
+        public async Task<string> SaveTeam(EMBC.ESS.Resources.Teams.Team team)
         {
             await Task.CompletedTask;
             if (team.Id == null)

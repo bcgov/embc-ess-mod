@@ -37,7 +37,7 @@ namespace EMBC.Utilities.Configuration
 
     public interface IConfigureComponentServices
     {
-        void ConfigureServices(ConfigurationServices services);
+        void ConfigureServices(ConfigurationServices configurationServices);
     }
 
     public class PipelineServices

@@ -45,7 +45,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             VerifyEvacuationFileInvariants(evacuationFile);
 
             var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
-            if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
+            if (primaryContact == null) throw new ArgumentException($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
 
             var file = mapper.Map<era_evacuationfile>(evacuationFile);
             file.era_evacuationfileid = Guid.NewGuid();
@@ -74,17 +74,17 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             var currentFile = essContext.era_evacuationfiles
                 .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
-            if (currentFile == null) throw new Exception($"Evacuation file {evacuationFile.Id} not found");
+            if (currentFile == null) throw new ArgumentException($"Evacuation file {evacuationFile.Id} not found");
 
-            essContext.LoadProperty(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-            essContext.LoadProperty(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
+            await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
             VerifyEvacuationFileInvariants(evacuationFile, currentFile);
 
             essContext.DetachAll();
             RemovePets(currentFile);
 
             var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
-            if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
+            if (primaryContact == null) throw new ArgumentException($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
 
             var file = mapper.Map<era_evacuationfile>(evacuationFile);
             file.era_evacuationfileid = currentFile.era_evacuationfileid;
@@ -149,7 +149,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             if (string.IsNullOrEmpty(taskId)) return;
             var task = essContext.era_tasks.Where(t => t.era_name == taskId).SingleOrDefault();
-            if (task == null) throw new Exception($"Task {taskId} not found");
+            if (task == null) throw new ArgumentException($"Task {taskId} not found");
             essContext.AddLink(task, nameof(era_task.era_era_task_era_evacuationfileId), file);
         }
 
@@ -158,7 +158,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (member._era_registrant_value != null)
             {
                 var registrant = essContext.contacts.Where(c => c.contactid == member._era_registrant_value).SingleOrDefault();
-                if (registrant == null) throw new Exception($"Household member has registrant id {member._era_registrant_value} which was not found");
+                if (registrant == null) throw new ArgumentException($"Household member has registrant id {member._era_registrant_value} which was not found");
                 essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
             }
             essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), member);
@@ -195,32 +195,32 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             //Check invariants
             if (string.IsNullOrEmpty(evacuationFile.PrimaryRegistrantId))
             {
-                throw new Exception($"The file has no associated primary registrant");
+                throw new ArgumentNullException($"The file has no associated primary registrant");
             }
             if (evacuationFile.NeedsAssessment == null)
             {
-                throw new Exception($"File {evacuationFile.Id} must have a needs assessment");
+                throw new ArgumentNullException($"File {evacuationFile.Id} must have a needs assessment");
             }
 
             if (evacuationFile.Id == null)
             {
                 if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
                 {
-                    throw new Exception($"File {evacuationFile.Id} must have a single primary registrant household member");
+                    throw new InvalidOperationException($"File {evacuationFile.Id} must have a single primary registrant household member");
                 }
             }
             else
             {
                 if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) > 1)
                 {
-                    throw new Exception($"File {evacuationFile.Id} can not have multiple primary registrant household members");
+                    throw new InvalidOperationException($"File {evacuationFile.Id} can not have multiple primary registrant household members");
                 }
 
                 if (currentFile != null && currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid != null &&
                     currentFile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Any(m => m.era_isprimaryregistrant == true) &&
                     evacuationFile.NeedsAssessment.HouseholdMembers.Any(m => m.IsPrimaryRegistrant && string.IsNullOrEmpty(m.Id)))
                 {
-                    throw new Exception($"File {evacuationFile.Id} can not have multiple primary registrant household members");
+                    throw new InvalidOperationException($"File {evacuationFile.Id} can not have multiple primary registrant household members");
                 }
             }
         }
@@ -228,9 +228,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public async Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId)
         {
             var member = essContext.era_householdmembers.Where(m => m.era_householdmemberid == Guid.Parse(householdMemberId)).SingleOrDefault();
-            if (member == null) throw new Exception($"Household member with id {householdMemberId} not found");
+            if (member == null) throw new ArgumentException($"Household member with id {householdMemberId} not found");
             var registrant = essContext.contacts.Where(c => c.contactid == Guid.Parse(registrantId)).SingleOrDefault();
-            if (registrant == null) throw new Exception($"Registrant with id {registrantId} not found");
+            if (registrant == null) throw new ArgumentException($"Registrant with id {registrantId} not found");
 
             essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
             await essContext.SaveChangesAsync();
@@ -385,7 +385,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             var file = essContext.era_evacuationfiles
                 .Where(f => f.era_name == fileId).SingleOrDefault();
-            if (file == null) throw new Exception($"Evacuation file {fileId} not found");
+            if (file == null) throw new ArgumentException($"Evacuation file {fileId} not found");
 
             var newNote = mapper.Map<era_essfilenote>(note);
             newNote.era_essfilenoteid = Guid.NewGuid();
@@ -411,7 +411,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .Where(n => n.era_essfilenoteid == new Guid(note.Id)).SingleOrDefault();
             essContext.DetachAll();
 
-            if (existingNote == null) throw new Exception($"Evacuation file note {note.Id} not found");
+            if (existingNote == null) throw new ArgumentException($"Evacuation file note {note.Id} not found");
 
             var updatedNote = mapper.Map<era_essfilenote>(note);
 
@@ -429,7 +429,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public async Task<string[]> SaveSupports(string fileId, IEnumerable<Support> supports)
         {
             var file = essContext.era_evacuationfiles.Expand(f => f.era_CurrentNeedsAssessmentid).Where(f => f.era_name == fileId).SingleOrDefault();
-            if (file == null) throw new Exception($"Evacuation file {fileId} not found");
+            if (file == null) throw new ArgumentException($"Evacuation file {fileId} not found");
 
             var mappedSupports = mapper.Map<IEnumerable<era_evacueesupport>>(supports).ToArray();
             foreach (var support in mappedSupports)
@@ -486,8 +486,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .Where(s => s.era_name == support.era_name)
                 .SingleOrDefault();
 
-            if (existingSupport == null) throw new Exception($"Support {support.era_name} not found");
-            if (existingSupport._era_evacuationfileid_value != file.era_evacuationfileid) throw new Exception($"Support {support.era_name} not found in file {file.era_name}");
+            if (existingSupport == null) throw new ArgumentException($"Support {support.era_name} not found");
+            if (existingSupport._era_evacuationfileid_value != file.era_evacuationfileid)
+                throw new InvalidOperationException($"Support {support.era_name} not found in file {file.era_name}");
 
             essContext.LoadProperty(existingSupport, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
             var currentHouseholdMembers = existingSupport.era_era_householdmember_era_evacueesupport.ToArray();
@@ -550,7 +551,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (support._era_supplierid_value.HasValue)
             {
                 var supplier = essContext.era_suppliers.Where(s => s.era_supplierid == support._era_supplierid_value).SingleOrDefault();
-                if (supplier == null) throw new Exception($"Supplier id {support._era_supplierid_value} not found");
+                if (supplier == null) throw new ArgumentException($"Supplier id {support._era_supplierid_value} not found");
                 essContext.SetLink(support, nameof(era_evacueesupport.era_SupplierId), supplier);
             }
         }

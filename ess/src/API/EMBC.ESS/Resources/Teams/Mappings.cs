@@ -18,7 +18,7 @@ using System;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
-namespace EMBC.ESS.Resources.Team
+namespace EMBC.ESS.Resources.Teams
 {
     public class Mappings : Profile
     {
@@ -56,6 +56,8 @@ namespace EMBC.ESS.Resources.Team
         }
     }
 
+#pragma warning disable CA1008 // Enums should have zero value
+
     public enum TeamUserRoleOptionSet
     {
         Tier1 = 174360000,
@@ -83,4 +85,6 @@ namespace EMBC.ESS.Resources.Team
         Inactive = 174360001,
         SoftDelete = 174360000
     }
+
+#pragma warning restore CA1008 // Enums should have zero value
 }
