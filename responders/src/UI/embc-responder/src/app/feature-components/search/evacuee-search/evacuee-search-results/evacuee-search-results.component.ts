@@ -126,8 +126,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
         .getProfileFiles(undefined, this.paperBasedEssFile)
         .subscribe({
           next: (result) => {
-            console.log(result);
-            if (result[0] === null) {
+            if (result.length === 0) {
               this.navigateToWizard();
             } else {
               this.openEssFileExistsDialog(

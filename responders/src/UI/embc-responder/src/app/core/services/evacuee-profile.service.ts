@@ -138,16 +138,19 @@ export class EvacueeProfileService {
           (
             response: Array<EvacuationFileSummary>
           ): Array<EvacuationFileSummaryModel> => {
-            response.forEach((item) => {
-              const evacFileSummary: EvacuationFileSummaryModel = {
-                ...item,
-                evacuatedFromAddress:
-                  this.locationsService.getAddressModelFromAddress(
-                    item.evacuatedFromAddress
-                  )
-              };
-              evacFileSummaryModelArray.push(evacFileSummary);
-            });
+            console.log(response);
+            if (response[0] !== null) {
+              response.forEach((item) => {
+                const evacFileSummary: EvacuationFileSummaryModel = {
+                  ...item,
+                  evacuatedFromAddress:
+                    this.locationsService.getAddressModelFromAddress(
+                      item.evacuatedFromAddress
+                    )
+                };
+                evacFileSummaryModelArray.push(evacFileSummary);
+              });
+            }
             return evacFileSummaryModelArray;
           }
         )
