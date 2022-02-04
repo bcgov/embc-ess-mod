@@ -167,6 +167,11 @@ export const profileLinkErrorMessage: DialogContent = {
   text: '<p>Error while linking the profile. Please try again later</p>',
   cancelButton: 'Close'
 };
+export const incompleteProfileMessage: DialogContent = {
+  title: 'Profile Incomplete',
+  text: '<p>Please complete the evacuee profile.</p>',
+  cancelButton: 'Close'
+};
 export const essFileLinkMessage: DialogContent = {
   text: '<p>ESS File Successfully Linked</p>',
   cancelButton: 'Close'
