@@ -150,7 +150,7 @@ describe('EvacueeNameSearchComponent', () => {
     evacueeSessionService.paperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
-    component.nameSearchForm.get('paperBasedEssFile').setValue('T123456');
+    component.nameSearchForm.get('paperBasedEssFile').setValue('123456');
     component.search();
 
     expect(evacueeSearchService.paperBasedEssFile).toEqual('T123456');

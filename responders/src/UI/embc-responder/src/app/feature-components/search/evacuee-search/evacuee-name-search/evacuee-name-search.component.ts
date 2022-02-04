@@ -106,7 +106,7 @@ export class EvacueeNameSearchComponent implements OnInit {
       evacueeSearchParameters: searchParams
     };
     this.evacueeSearchService.paperBasedEssFile =
-      this.nameSearchForm.get('paperBasedEssFile').value;
+      'T' + this.nameSearchForm.get('paperBasedEssFile').value;
     this.showResultsComponent.emit(true);
     this.router.navigate(['/responder-access/search/evacuee']);
   }
