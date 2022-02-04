@@ -224,14 +224,19 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
       next: (profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
+        if (
+          !this.isPaperBased &&
+          !this.evacueeProfile?.securityQuestions?.length
+        ) {
+          this.openIncompleteProfileDialog(
+            globalConst.incompleteProfileMessage
+          );
+        }
       },
       error: (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.verifyRegistrantProfileError
-        );
+        this.alertService.setAlert('danger', globalConst.getProfileError);
       }
     });
   }
@@ -248,6 +253,20 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         content: displayMessage
       },
       width: '530px'
+    });
+  }
+
+  /**
+   * Opens incomplete profile dialog
+   */
+  private openIncompleteProfileDialog(content: DialogContent): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content
+      },
+      height: '260px',
+      width: '630px'
     });
   }
 }
