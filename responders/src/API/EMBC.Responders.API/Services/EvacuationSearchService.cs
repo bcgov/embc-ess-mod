@@ -135,8 +135,8 @@ namespace EMBC.Responders.API.Services
         {
             var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { ExternalReferenceId = externalFileId }))
                 .Items
-                .OrderBy(f => f.Id)
-                .LastOrDefault();
+                .OrderByDescending(f => f.Id)
+                .FirstOrDefault();
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(new[] { file });
         }
 
@@ -225,7 +225,7 @@ namespace EMBC.Responders.API.Services
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSummary>()
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CreatedOn))
+                .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.CreatedOn)) //temporary until files contain issued on
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask

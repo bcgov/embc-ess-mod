@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -128,26 +129,53 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetPrint(string fileId, string printRequestId)
         {
             var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId, RequestingUserId = currentUserId });
             return new FileContentResult(result.Content, result.ContentType);
         }
+
+        [HttpGet("supports")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SupportSummary>>> SearchSupports(string externalReferenceId)
+        {
+            if (string.IsNullOrEmpty(externalReferenceId))
+                return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = "Must specify search criteria" });
+
+            var items = (await messagingClient.Send(new SearchSupportsQuery { ExternalReferenceId = externalReferenceId })).Items;
+            return Ok(mapper.Map<IEnumerable<SupportSummary>>(items));
+        }
     }
 
-    //[KnownType(typeof(ProcessDigitalSupportsRequest))]
-    //[KnownType(typeof(ProcessPaperReferralsRequest))]
-    //public abstract class ProcessSupportsRequest
-    //{
-    //}
+    public class SupportSummary
+    {
+        public string Id { get; set; }
+        public string FileId { get; set; }
+        public string? ExternalReferenceId { get; set; }
+        public DateTime From { get; set; }
 
-    public class ProcessDigitalSupportsRequest// : ProcessSupportsRequest
+        public DateTime To { get; set; }
+
+        public SupportStatus Status { get; set; }
+
+        public SupportMethod Method { get; set; }
+
+        public SupportCategory Category { get; set; }
+
+        public SupportSubCategory? SubCategory { get; set; }
+    }
+
+    public class ProcessDigitalSupportsRequest
     {
         public bool IncludeSummaryInPrintRequest { get; set; }
         public IEnumerable<Support> Supports { get; set; }
     }
 
-    public class ProcessPaperReferralsRequest //: ProcessSupportsRequest
+    public class ProcessPaperReferralsRequest
     {
         public IEnumerable<Referral> Referrals { get; set; }
     }
