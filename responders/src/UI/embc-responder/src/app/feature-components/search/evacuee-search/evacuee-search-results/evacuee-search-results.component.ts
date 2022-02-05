@@ -123,11 +123,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
   openWizard(): void {
     if (this.evacueeSessionService.paperBased) {
       this.evacueeProfileService
-        .getProfileFiles(this.paperBasedEssFile)
+        .getProfileFiles(undefined, this.paperBasedEssFile)
         .subscribe({
           next: (result) => {
-            console.log(result);
-            if (result[0] === null) {
+            if (result.length === 0) {
               this.navigateToWizard();
             } else {
               this.openEssFileExistsDialog(
