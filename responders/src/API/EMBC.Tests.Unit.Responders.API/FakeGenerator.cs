@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Bogus;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 
 namespace EMBC.Tests.Unit.Responders.API
 {

@@ -18,7 +18,7 @@
 //    {
 //        private readonly IEvacuationSearchService service;
 
-//        private IEnumerable<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult> stagedFiles = Array.Empty<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult>();
+//        private IEnumerable<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult> stagedFiles = Array.Empty<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult>();
 //        private IEnumerable<ProfileSearchResult> stagedProfiles = Array.Empty<ProfileSearchResult>();
 
 //        public EvacuationSearchServiceTests()
@@ -47,7 +47,7 @@
 //        [MemberData(nameof(EvacuationSearchTestCaseGenerator.GenerateCases), MemberType = typeof(EvacuationSearchTestCaseGenerator))]
 //        public async Task SearchOnRestrictions(
 //            EMBC.Responders.API.Controllers.MemberRole role,
-//            MemberDataSerializer<IEnumerable<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult>> files,
+//            MemberDataSerializer<IEnumerable<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult>> files,
 //            MemberDataSerializer<IEnumerable<ProfileSearchResult>> profiles,
 //            int expectedFiles,
 //            int expectedProfiles)
@@ -64,7 +64,7 @@
 
 //    public static class EvacuationSearchTestCaseGenerator
 //    {
-//        private static Func<bool, IEnumerable<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult>> files = restriction =>
+//        private static Func<bool, IEnumerable<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult>> files = restriction =>
 //            FakeGenerator.CreateEvacuationFiles(withAtLeastOneRestrictedAccess: restriction).MapToSearchResults();
 
 //        private static Func<bool, IEnumerable<ProfileSearchResult>> profiles = restriction =>
@@ -80,7 +80,7 @@
 
 //            foreach (var role in Enum.GetValues(typeof(EMBC.Responders.API.Controllers.MemberRole)).Cast<EMBC.Responders.API.Controllers.MemberRole>())
 //            {
-//                var fileOptions = new[] { (resticted: false, items: Array.Empty<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult>()),
+//                var fileOptions = new[] { (resticted: false, items: Array.Empty<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult>()),
 //                    (resticted: true, items: testFilesWithRestriction), (resticted: false, items: testFilesWithNoRestiction) };
 //                foreach (var fileOption in fileOptions)
 //                {
@@ -93,7 +93,7 @@
 //                        var expectedNumberOfFiles = haveRestrictions && role == EMBC.Responders.API.Controllers.MemberRole.Tier1 ? 0 : fileOption.items.Count();
 //                        testCases.Add(new object[] {
 //                            role,
-//                            new MemberDataSerializer<IEnumerable<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult>>(fileOption.items),
+//                            new MemberDataSerializer<IEnumerable<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult>>(fileOption.items),
 //                            new MemberDataSerializer<IEnumerable<ProfileSearchResult>>(profileOption.items),
 //                            expectedNumberOfFiles,
 //                            expectedNumberOfProfiles

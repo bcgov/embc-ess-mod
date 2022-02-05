@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Managers.Submissions;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Managers.Events;
+using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -12,7 +12,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 {
     public class SearchTests : DynamicsWebAppTestBase
     {
-        private readonly SubmissionsManager manager;
+        private readonly EventsManager manager;
 
         private static EvacuationFileStatus[] tier1FileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired };
         private static EvacuationFileStatus[] tier2andAboveFileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired, EvacuationFileStatus.Completed };
@@ -21,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
         public SearchTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            manager = Services.GetRequiredService<SubmissionsManager>();
+            manager = Services.GetRequiredService<EventsManager>();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

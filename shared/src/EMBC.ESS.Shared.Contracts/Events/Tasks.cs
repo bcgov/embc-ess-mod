@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EMBC.ESS.Shared.Contracts.Submissions
+namespace EMBC.ESS.Shared.Contracts.Events
 {
     public class TasksSearchQuery : Query<TasksSearchQueryResult>
     {

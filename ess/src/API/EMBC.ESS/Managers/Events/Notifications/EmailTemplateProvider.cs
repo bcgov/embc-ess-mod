@@ -19,7 +19,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Extensions;
 
-namespace EMBC.ESS.Managers.Submissions.Notifications
+namespace EMBC.ESS.Managers.Events.Notifications
 {
     public class EmailTemplate : Template
     {
@@ -72,7 +72,7 @@ namespace EMBC.ESS.Managers.Submissions.Notifications
         private static string LoadTemplate(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var manifestName = $"EMBC.ESS.Managers.Submissions.Notifications.Templates.{name}.hbs";
+            var manifestName = $"EMBC.ESS.Managers.Events.Notifications.Templates.{name}.hbs";
             return assembly.GetManifestResourceString(manifestName);
         }
     }
