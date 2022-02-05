@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace EMBC.ESS.Shared.Contracts.Submissions
+namespace EMBC.ESS.Shared.Contracts.Events
 {
     [JsonConverter(typeof(PolymorphicJsonConverter<Support>))]
     public abstract class Support

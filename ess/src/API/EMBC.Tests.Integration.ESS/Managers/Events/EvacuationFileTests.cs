@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Managers.Submissions;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Managers.Events;
+using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -13,7 +13,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 {
     public class EvacuationFileTests : DynamicsWebAppTestBase
     {
-        private readonly SubmissionsManager manager;
+        private readonly EventsManager manager;
         private readonly RegistrantProfile registrant;
         private string teamUserId => TestData.Tier4TeamMemberId;
 
@@ -25,7 +25,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
         public EvacuationFileTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            manager = Services.GetRequiredService<SubmissionsManager>();
+            manager = Services.GetRequiredService<EventsManager>();
             registrant = GetTestRegistrant().GetAwaiter().GetResult().ShouldNotBeNull();
         }
 

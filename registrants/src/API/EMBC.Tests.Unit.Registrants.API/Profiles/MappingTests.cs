@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.Mappers;
 using Shouldly;

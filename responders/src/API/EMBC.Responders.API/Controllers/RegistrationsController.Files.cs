@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -99,10 +99,10 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> CreateFile(EvacuationFile file)
         {
-            var mappedFile = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file);
+            var mappedFile = mapper.Map<EMBC.ESS.Shared.Contracts.Events.EvacuationFile>(file);
 
             mappedFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
-            mappedFile.NeedsAssessment.CompletedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = currentUserId };
+            mappedFile.NeedsAssessment.CompletedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = currentUserId };
             var id = await messagingClient.Send(new SubmitEvacuationFileCommand
             {
                 File = mappedFile
@@ -123,10 +123,10 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<RegistrationResult>> UpdateFile(string fileId, EvacuationFile file)
         {
             file.Id = fileId;
-            var mappedFile = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file);
+            var mappedFile = mapper.Map<EMBC.ESS.Shared.Contracts.Events.EvacuationFile>(file);
 
             mappedFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
-            mappedFile.NeedsAssessment.CompletedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = currentUserId };
+            mappedFile.NeedsAssessment.CompletedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = currentUserId };
 
             var id = await messagingClient.Send(new SubmitEvacuationFileCommand
             {
@@ -149,11 +149,11 @@ namespace EMBC.Responders.API.Controllers
         {
             var cmd = new SaveEvacuationFileNoteCommand
             {
-                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
+                Note = mapper.Map<EMBC.ESS.Shared.Contracts.Events.Note>(note),
                 FileId = fileId
             };
 
-            cmd.Note.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember
+            cmd.Note.CreatedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember
             {
                 Id = currentUserId
             };
@@ -178,11 +178,11 @@ namespace EMBC.Responders.API.Controllers
             note.Id = noteId;
             var cmd = new SaveEvacuationFileNoteCommand
             {
-                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
+                Note = mapper.Map<EMBC.ESS.Shared.Contracts.Events.Note>(note),
                 FileId = fileId
             };
 
-            cmd.Note.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember
+            cmd.Note.CreatedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember
             {
                 Id = currentUserId
             };
@@ -537,7 +537,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public EvacuationFileMapping()
         {
-            CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
+            CreateMap<EvacuationFile, EMBC.ESS.Shared.Contracts.Events.EvacuationFile>()
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
                 .ForPath(d => d.RelatedTask.Id, opts => opts.MapFrom(s => s.Task.TaskNumber))
@@ -548,7 +548,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFile, EvacuationFile>()
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
@@ -570,22 +570,22 @@ namespace EMBC.Responders.API.Controllers
                 })
                 ;
 
-            CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
+            CreateMap<NeedsAssessment, EMBC.ESS.Shared.Contracts.Events.NeedsAssessment>()
                 .ForMember(d => d.CompletedOn, opts => opts.Ignore())
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))
                 .ForMember(d => d.Notes, opts => opts.ConvertUsing<NeedsAssessmentNotesConverter, NeedsAssessment>(n => n))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.NeedsAssessment, NeedsAssessment>()
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.ReviewingTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.ReviewingTeamMemberDisplayName, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.DisplayName))
-                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact, n => n.Content)))
-                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals, n => n.Content)))
-                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans, n => n.Content)))
-                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan, n => n.Content)))
+                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationImpact, n => n.Content)))
+                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationExternalReferrals, n => n.Content)))
+                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.PetCarePlans, n => n.Content)))
+                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.RecoveryPlan, n => n.Content)))
                 ;
 
             CreateMap<EvacuationFileHouseholdMember, HouseholdMember>()
@@ -601,68 +601,68 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 ;
 
-            CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
+            CreateMap<Pet, EMBC.ESS.Shared.Contracts.Events.Pet>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
+            CreateMap<Note, EMBC.ESS.Shared.Contracts.Events.Note>()
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatedBy, opts => opts.Ignore())
                 .ForMember(d => d.Type, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.Note, Note>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.Note, Note>()
                 .ForMember(d => d.IsEditable, opts => opts.Ignore())
                 .ForMember(d => d.CreatingTeamMemberId, opts => opts.MapFrom(s => s.CreatedBy.Id))
                 .ForMember(d => d.MemberName, opts => opts.MapFrom(s => s.CreatedBy.DisplayName))
                 .ForMember(d => d.TeamName, opts => opts.MapFrom(s => s.CreatedBy.TeamName))
                 ;
 
-            CreateMap<VerifySecurityPhraseResponse, ESS.Shared.Contracts.Submissions.VerifySecurityPhraseResponse>()
+            CreateMap<VerifySecurityPhraseResponse, EMBC.ESS.Shared.Contracts.Events.VerifySecurityPhraseResponse>()
                 .ReverseMap()
                 ;
         }
     }
 
-    public class NeedsAssessmentNotesConverter : IValueConverter<NeedsAssessment, IEnumerable<ESS.Shared.Contracts.Submissions.Note>>
+    public class NeedsAssessmentNotesConverter : IValueConverter<NeedsAssessment, IEnumerable<EMBC.ESS.Shared.Contracts.Events.Note>>
     {
-        public IEnumerable<ESS.Shared.Contracts.Submissions.Note> Convert(NeedsAssessment sourceMember, ResolutionContext context)
+        public IEnumerable<EMBC.ESS.Shared.Contracts.Events.Note> Convert(NeedsAssessment sourceMember, ResolutionContext context)
         {
-            List<ESS.Shared.Contracts.Submissions.Note> ret = new List<ESS.Shared.Contracts.Submissions.Note>();
+            List<EMBC.ESS.Shared.Contracts.Events.Note> ret = new List<EMBC.ESS.Shared.Contracts.Events.Note>();
 
             if (!string.IsNullOrEmpty(sourceMember.EvacuationImpact))
             {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
                 {
                     Content = sourceMember.EvacuationImpact,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact,
+                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationImpact,
                 });
             }
 
             if (!string.IsNullOrEmpty(sourceMember.EvacuationExternalReferrals))
             {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
                 {
                     Content = sourceMember.EvacuationExternalReferrals,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals,
+                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationExternalReferrals,
                 });
             }
 
             if (!string.IsNullOrEmpty(sourceMember.PetCarePlans))
             {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
                 {
                     Content = sourceMember.PetCarePlans,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans,
+                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.PetCarePlans,
                 });
             }
 
             if (!string.IsNullOrEmpty(sourceMember.HouseHoldRecoveryPlan))
             {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
                 {
                     Content = sourceMember.HouseHoldRecoveryPlan,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan,
+                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.RecoveryPlan,
                 });
             }
 

@@ -24,7 +24,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,11 +49,11 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<ReferralPrintRequestResponse>> ProcessSupports(string fileId, ProcessDigitalSupportsRequest request)
         {
             var userId = currentUserId;
-            var mappedSupports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.Support>>(request.Supports);
+            var mappedSupports = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Events.Support>>(request.Supports);
             foreach (var support in mappedSupports)
             {
-                support.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
-                support.IssuedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
+                support.CreatedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = userId };
+                support.IssuedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = userId };
                 support.CreatedOn = DateTime.UtcNow;
                 support.IssuedOn = support.CreatedOn;
             }
@@ -80,10 +80,10 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult> ProcessPaperReferrals(string fileId, ProcessPaperReferralsRequest request)
         {
             var userId = currentUserId;
-            var referrals = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.Referral>>(request.Referrals);
+            var referrals = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Events.Referral>>(request.Referrals);
             foreach (var referral in referrals)
             {
-                referral.CreatedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
+                referral.CreatedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = userId };
                 referral.CreatedOn = DateTime.UtcNow;
             }
             await messagingClient.Send(new ProcessPaperSupportsCommand
@@ -105,7 +105,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 FileId = fileId,
                 SupportId = supportId,
-                VoidReason = Enum.Parse<ESS.Shared.Contracts.Submissions.SupportVoidReason>(voidReason.ToString(), true)
+                VoidReason = Enum.Parse<EMBC.ESS.Shared.Contracts.Events.SupportVoidReason>(voidReason.ToString(), true)
             });
 
             return Ok();
@@ -613,7 +613,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public SupportMapping()
         {
-            CreateMap<ESS.Shared.Contracts.Submissions.Support, Support>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.Support, Support>()
                 .IncludeAllDerived()
                 .ForMember(d => d.NeedsAssessmentId, opts => opts.MapFrom(s => s.OriginatingNeedsAssessmentId))
                 .ForMember(d => d.CreatedBy, opts => opts.MapFrom(s => s.CreatedBy.DisplayName))
@@ -628,7 +628,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.Referral, Referral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.Referral, Referral>()
                 .IncludeAllDerived()
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
                 .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
@@ -639,56 +639,56 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SupplierDetails, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.SupplierId) ? null : new SupplierDetails { Id = s.SupplierId }))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ClothingReferral, ClothingReferral>()
 
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.IncidentalsReferral, IncidentalsReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.IncidentalsReferral, IncidentalsReferral>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.FoodGroceriesReferral, FoodGroceriesReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodGroceriesReferral, FoodGroceriesReferral>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.FoodRestaurantReferral, FoodRestaurantReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodRestaurantReferral, FoodRestaurantReferral>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.LodgingBilletingReferral, LodgingBilletingReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingBilletingReferral, LodgingBilletingReferral>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.LodgingGroupReferral, LodgingGroupReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingGroupReferral, LodgingGroupReferral>()
 
                     .ReverseMap()
 
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.LodgingHotelReferral, LodgingHotelReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingHotelReferral, LodgingHotelReferral>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.TransportationOtherReferral, TransportationOtherReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationOtherReferral, TransportationOtherReferral>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.TransportationTaxiReferral, TransportationTaxiReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationTaxiReferral, TransportationTaxiReferral>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)

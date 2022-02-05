@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Managers.Submissions;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Managers.Events;
+using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -14,7 +14,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 {
     public class RegistrantTests : DynamicsWebAppTestBase
     {
-        private readonly SubmissionsManager manager;
+        private readonly EventsManager manager;
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
@@ -24,7 +24,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 
         public RegistrantTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            manager = Services.GetRequiredService<SubmissionsManager>();
+            manager = Services.GetRequiredService<EventsManager>();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

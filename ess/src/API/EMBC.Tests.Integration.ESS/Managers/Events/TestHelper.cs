@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Managers.Submissions;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Managers.Events;
+using EMBC.ESS.Shared.Contracts.Events;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Submissions
 {
@@ -114,13 +114,13 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             };
         }
 
-        public static async Task<RegistrantProfile?> GetRegistrantByUserId(SubmissionsManager manager, string userId) =>
+        public static async Task<RegistrantProfile?> GetRegistrantByUserId(EventsManager manager, string userId) =>
             (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
 
-        public static async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(SubmissionsManager manager, string fileId) =>
+        public static async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(EventsManager manager, string fileId) =>
             (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items;
 
-        public static async Task<string> SaveRegistrant(SubmissionsManager manager, RegistrantProfile registrantProfile) =>
+        public static async Task<string> SaveRegistrant(EventsManager manager, RegistrantProfile registrantProfile) =>
             await manager.Handle(new SaveRegistrantCommand { Profile = registrantProfile });
     }
 }
