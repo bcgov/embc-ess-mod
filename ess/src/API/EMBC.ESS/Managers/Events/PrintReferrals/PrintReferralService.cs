@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Extensions;
 using HandlebarsDotNet;
 
-namespace EMBC.ESS.Managers.Submissions.PrintReferrals
+namespace EMBC.ESS.Managers.Events.PrintReferrals
 {
     public class PrintReferralService : IPrintReferralService
     {
@@ -203,7 +203,7 @@ namespace EMBC.ESS.Managers.Submissions.PrintReferrals
         private static string LoadTemplate(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var manifestName = $"EMBC.ESS.Managers.Submissions.PrintReferrals.Views.{name}.hbs";
+            var manifestName = $"EMBC.ESS.Managers.Events.PrintReferrals.Views.{name}.hbs";
             return assembly.GetManifestResourceString(manifestName);
         }
     }

@@ -108,8 +108,8 @@ namespace EMBC.Responders.API.Services
         public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string externalReferenceId, MemberRole userRole)
         {
             var allowedStatues = (!string.IsNullOrEmpty(externalReferenceId) || userRole != MemberRole.Tier1 ? tier2andAboveFileStatuses : tier1FileStatuses)
-                .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray();
-            var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
+                .Select(s => Enum.Parse<EMBC.ESS.Shared.Contracts.Events.EvacuationFileStatus>(s.ToString(), true)).ToArray();
+            var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -126,14 +126,14 @@ namespace EMBC.Responders.API.Services
 
         public async Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId)
         {
-            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = needsAssessmentId })).Items.SingleOrDefault();
+            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = needsAssessmentId })).Items.SingleOrDefault();
 
             return mapper.Map<EvacuationFile>(file);
         }
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByExternalReferenceId(string externalFileId)
         {
-            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { ExternalReferenceId = externalFileId }))
+            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { ExternalReferenceId = externalFileId }))
                 .Items
                 .OrderByDescending(f => f.Id)
                 .FirstOrDefault();
@@ -142,11 +142,11 @@ namespace EMBC.Responders.API.Services
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string? registrantId, MemberRole userRole)
         {
-            var files = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery
+            var files = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery
             {
                 LinkedRegistrantId = registrantId,
                 IncludeFilesInStatuses = (userRole == MemberRole.Tier1 ? tier1FileStatuses : tier2andAboveFileStatuses)
-                    .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray()
+                    .Select(s => Enum.Parse<EMBC.ESS.Shared.Contracts.Events.EvacuationFileStatus>(s.ToString(), true)).ToArray()
             })).Items;
 
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
@@ -154,7 +154,7 @@ namespace EMBC.Responders.API.Services
 
         public async Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
         {
-            var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
+            var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -167,7 +167,7 @@ namespace EMBC.Responders.API.Services
 
         public async Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
         {
-            var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
+            var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -175,7 +175,7 @@ namespace EMBC.Responders.API.Services
                 IncludeRestrictedAccess = true,
                 IncludeEvacuationFilesOnly = true,
                 InStatuses = (userRole == MemberRole.Tier1 ? tier1FileStatuses : tier2andAboveFileStatuses)
-                    .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray()
+                    .Select(s => Enum.Parse<EMBC.ESS.Shared.Contracts.Events.EvacuationFileStatus>(s.ToString(), true)).ToArray()
             });
             return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles);
         }
@@ -185,14 +185,14 @@ namespace EMBC.Responders.API.Services
     {
         public EvacuationSearchMapping()
         {
-            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult, EvacuationFileSearchResult>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult, EvacuationFileSearchResult>()
                 .ForMember(d => d.IsPaperBasedFile, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ExternalReferenceId)))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.ProfileSearchResult, RegistrantProfileSearchResult>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ProfileSearchResult, RegistrantProfileSearchResult>()
                 .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.RecentEvacuationFiles.OrderByDescending(f => f.EvacuationDate).Take(3)))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.IsVerified ? RegistrantStatus.Verified : RegistrantStatus.NotVerified))
@@ -200,7 +200,7 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
               ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.ProfileSearchResult, RegistrantProfile>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ProfileSearchResult, RegistrantProfile>()
                 .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.IsVerified))
                 .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.IsAuthenticated))
@@ -218,13 +218,13 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
               ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.LinkedRegistrantId) ? HouseholdMemberType.HouseholdMember : HouseholdMemberType.Registrant))
                 .ForMember(d => d.IsMainApplicant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSummary>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFile, EvacuationFileSummary>()
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.CreatedOn)) //temporary until files contain issued on
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))

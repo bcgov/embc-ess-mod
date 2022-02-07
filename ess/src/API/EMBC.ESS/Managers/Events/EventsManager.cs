@@ -22,8 +22,8 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
-using EMBC.ESS.Managers.Submissions.Notifications;
-using EMBC.ESS.Managers.Submissions.PrintReferrals;
+using EMBC.ESS.Managers.Events.Notifications;
+using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Metadata;
@@ -32,7 +32,7 @@ using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.PdfGenerator;
@@ -42,9 +42,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Managers.Events
 {
-    public class SubmissionsManager
+    public class EventsManager
     {
         private readonly IMapper mapper;
         private readonly IContactRepository contactRepository;
@@ -66,7 +66,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
 
-        public SubmissionsManager(
+        public EventsManager(
             IMapper mapper,
             IContactRepository contactRepository,
             ITemplateProviderResolver templateProviderResolver,
@@ -102,7 +102,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.dataProtectionProvider = dataProtectionProvider;
             this.configuration = configuration;
             this.env = env;
-            this.evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
+            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -254,7 +254,7 @@ namespace EMBC.ESS.Managers.Submissions
             return new RegistrantsQueryResponse { Items = registrants.ToArray() };
         }
 
-        public async Task<EvacuationFilesQueryResponse> Handle(Shared.Contracts.Submissions.EvacuationFilesQuery query)
+        public async Task<EvacuationFilesQueryResponse> Handle(Shared.Contracts.Events.EvacuationFilesQuery query)
         {
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId))
             {
@@ -272,7 +272,7 @@ namespace EMBC.ESS.Managers.Submissions
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.Evacuations.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>();
 
-            var files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
+            var files = mapper.Map<IEnumerable<EvacuationFile>>(cases);
 
             foreach (var file in files)
             {
@@ -287,7 +287,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrWhiteSpace(query.FirstName)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.FirstName));
             if (string.IsNullOrWhiteSpace(query.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.LastName));
             if (string.IsNullOrWhiteSpace(query.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.DateOfBirth));
-            if (query.InStatuses == null) query.InStatuses = Array.Empty<Shared.Contracts.Submissions.EvacuationFileStatus>();
+            if (query.InStatuses == null) query.InStatuses = Array.Empty<EvacuationFileStatus>();
 
             var searchMode = !query.IncludeEvacuationFilesOnly && query.IncludeRegistrantProfilesOnly
                 ? SearchMode.Registrants
@@ -469,7 +469,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var support in cmd.Supports)
             {
-                support.CreatedBy = new Shared.Contracts.Submissions.TeamMember { Id = requestingUser.Id };
+                support.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
                 support.CreatedOn = DateTime.UtcNow;
             }
 
@@ -503,7 +503,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             //validate only paper referrals were passed in the command
-            if (!cmd.Supports.All(s => (s is Referral r) && r.IsPaperReferral))
+            if (!cmd.Supports.All(s => s is Referral r && r.IsPaperReferral))
                 throw new BusinessValidationException($"file {cmd.FileId} error: {nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
 
             var referrals = cmd.Supports.Cast<Referral>().ToArray();
@@ -519,7 +519,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var referral in referrals)
             {
-                referral.CreatedBy = new Shared.Contracts.Submissions.TeamMember { Id = requestingUser.Id };
+                referral.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
                 referral.CreatedOn = DateTime.UtcNow;
             }
             //save referrals
@@ -574,7 +574,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
             //load the file
-            var file = mapper.Map<Shared.Contracts.Submissions.EvacuationFile>((await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = printRequest.FileId })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault());
+            var file = mapper.Map<EvacuationFile>((await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = printRequest.FileId })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault());
             if (file == null) throw new NotFoundException($"Evacuation file {printRequest.FileId} not found", printRequest.Id);
             await evacuationFileLoader.Load(file);
 

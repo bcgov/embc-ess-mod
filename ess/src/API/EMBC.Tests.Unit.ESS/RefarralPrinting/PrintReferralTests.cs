@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
-using EMBC.ESS.Managers.Submissions.PrintReferrals;
+using EMBC.ESS.Managers.Events.PrintReferrals;
 using Shouldly;
 using Xunit;
 
