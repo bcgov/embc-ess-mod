@@ -71,11 +71,11 @@ namespace EMBC.Tests.Integration.ESS
             jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid).ToArray();
             canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").Single();
             bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
-#if DEBUG
-            this.testPrefix = $"autotest-dev";
-#else
+            //#if DEBUG
+            //            this.testPrefix = $"autotest-dev";
+            //#else
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
-#endif
+            //#endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
 

@@ -12,7 +12,7 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.ESS.Managers.Submissions
+namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
     public class SupportTests : DynamicsWebAppTestBase
     {
@@ -235,7 +235,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Submissions
             refreshedFile.Supports.Count().ShouldBe(supports.Length);
             foreach (var support in refreshedFile.Supports.Cast<Referral>())
             {
-                var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
+                var sourceSupport = supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
                 if (sourceSupport.SupplierDetails != null)
                 {
                     support.SupplierDetails.ShouldNotBeNull();

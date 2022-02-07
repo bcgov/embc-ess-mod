@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Cases.Evacuations;
-using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Evacuees;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -362,10 +362,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 updatedSupport.SupplierId.ShouldBe(supportToUpdate.SupplierId);
         }
 
-        private async Task<Contact> GetContactByUserId(string userId) =>
-            (await Services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
+        private async Task<Evacuee> GetContactByUserId(string userId) =>
+            (await Services.GetRequiredService<IEvacueesRepository>().Query(new EvacueeQuery { UserId = userId })).Items.Single();
 
-        private EvacuationFile CreateTestFile(Contact primaryContact)
+        private EvacuationFile CreateTestFile(Evacuee primaryContact)
         {
             var now = DateTime.UtcNow;
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
