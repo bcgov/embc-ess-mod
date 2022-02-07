@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Managers.Events.PrintReferrals;
-using EMBC.ESS.Resources.Cases.Evacuations;
+using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Utilities.Extensions;
 

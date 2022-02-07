@@ -25,7 +25,7 @@ using EMBC.ESS.Utilities.Extensions;
 using EMBC.Utilities;
 using Microsoft.OData.Client;
 
-namespace EMBC.ESS.Resources.Cases.Evacuations
+namespace EMBC.ESS.Resources.Evacuations
 {
     public class EvacuationRepository : IEvacuationRepository
     {
@@ -35,9 +35,81 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public EvacuationRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.essContext = essContextFactory.Create();
+            essContext = essContextFactory.Create();
             this.essContextFactory = essContextFactory;
             this.mapper = mapper;
+        }
+
+        public async Task<ManageEvacuationFileCommandResult> Manage(ManageEvacuationFileCommand cmd)
+        {
+            return cmd.GetType().Name switch
+            {
+                nameof(SubmitEvacuationFileNeedsAssessment) => await HandleSubmitEvacuationFileNeedsAssessment((SubmitEvacuationFileNeedsAssessment)cmd),
+                nameof(LinkEvacuationFileRegistrant) => await HandleLinkEvacuationFileRegistrant((LinkEvacuationFileRegistrant)cmd),
+                nameof(SaveEvacuationFileNote) => await HandleSaveEvacuationFileNote((SaveEvacuationFileNote)cmd),
+                nameof(SaveEvacuationFileSupportCommand) => await HandleSaveSupportsToEvacuationFileCommand((SaveEvacuationFileSupportCommand)cmd),
+                nameof(VoidEvacuationFileSupportCommand) => await HandleVoidEvacuationFileSupportCommand((VoidEvacuationFileSupportCommand)cmd),
+                _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
+            };
+        }
+
+        public async Task<EvacuationFileQueryResult> Query(EvacuationFilesQuery query)
+        {
+            return query.GetType().Name switch
+            {
+                nameof(EvacuationFilesQuery) => await HandleQueryEvacuationFile(query),
+                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
+            };
+        }
+
+        private async Task<EvacuationFileQueryResult> HandleQueryEvacuationFile(EvacuationFilesQuery query)
+        {
+            var result = new EvacuationFileQueryResult();
+
+            result.Items = await Read(query);
+
+            return result;
+        }
+
+        private async Task<ManageEvacuationFileCommandResult> HandleSubmitEvacuationFileNeedsAssessment(SubmitEvacuationFileNeedsAssessment cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.EvacuationFile.Id))
+            {
+                return new ManageEvacuationFileCommandResult { Id = await Create(cmd.EvacuationFile) };
+            }
+            else
+            {
+                return new ManageEvacuationFileCommandResult { Id = await Update(cmd.EvacuationFile) };
+            }
+        }
+
+        private async Task<ManageEvacuationFileCommandResult> HandleLinkEvacuationFileRegistrant(LinkEvacuationFileRegistrant cmd)
+        {
+            return new ManageEvacuationFileCommandResult { Id = await LinkRegistrant(cmd.FileId, cmd.RegistrantId, cmd.HouseholdMemberId) };
+        }
+
+        private async Task<ManageEvacuationFileCommandResult> HandleSaveEvacuationFileNote(SaveEvacuationFileNote cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.Note.Id))
+            {
+                return new ManageEvacuationFileCommandResult { Id = await CreateNote(cmd.FileId, cmd.Note) };
+            }
+            else
+            {
+                return new ManageEvacuationFileCommandResult { Id = await UpdateNote(cmd.FileId, cmd.Note) };
+            }
+        }
+
+        private async Task<ManageEvacuationFileCommandResult> HandleSaveSupportsToEvacuationFileCommand(SaveEvacuationFileSupportCommand cmd)
+        {
+            //Concatenating the generated IDs is not the ideal solution, might worth considering splitting supports
+            //to their own resource access service. The intent is to ensure all supports are created in a single transaction (Dynamics batch)
+            return new ManageEvacuationFileCommandResult { Id = string.Join(';', await SaveSupports(cmd.FileId, cmd.Supports)) };
+        }
+
+        private async Task<ManageEvacuationFileCommandResult> HandleVoidEvacuationFileSupportCommand(VoidEvacuationFileSupportCommand cmd)
+        {
+            return new ManageEvacuationFileCommandResult { Id = await VoidSupport(cmd.FileId, cmd.SupportId, cmd.VoidReason) };
         }
 
         public async Task<string> Create(EvacuationFile evacuationFile)

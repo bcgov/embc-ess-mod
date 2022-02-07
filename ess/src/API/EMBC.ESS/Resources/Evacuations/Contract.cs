@@ -18,29 +18,100 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Cases.Evacuations
+namespace EMBC.ESS.Resources.Evacuations
 {
     public interface IEvacuationRepository
     {
-        Task<string> Create(EvacuationFile evacuationFile);
+        Task<ManageEvacuationFileCommandResult> Manage(ManageEvacuationFileCommand cmd);
 
-        Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query);
+        Task<EvacuationFileQueryResult> Query(EvacuationFilesQuery query);
 
-        Task<string> Update(EvacuationFile evacuationFile);
+        //Task<string> Create(EvacuationFile evacuationFile);
 
-        Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId);
+        //Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query);
 
-        Task<string> CreateNote(string fileId, Note note);
+        //Task<string> Update(EvacuationFile evacuationFile);
 
-        Task<string> UpdateNote(string fileId, Note note);
+        //Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId);
 
-        Task<string[]> SaveSupports(string fileId, IEnumerable<Support> supports);
+        //Task<string> CreateNote(string fileId, Note note);
 
-        Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
+        //Task<string> UpdateNote(string fileId, Note note);
+
+        //Task<string[]> SaveSupports(string fileId, IEnumerable<Support> supports);
+
+        //Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
     }
 
-    public class EvacuationFile : Case
+    public abstract class ManageEvacuationFileCommand
+    { }
+
+    public class ManageEvacuationFileCommandResult
     {
+        public string Id { get; set; }
+    }
+
+    public abstract class EvacuationFileQuery
+    {
+    }
+
+    public class EvacuationFileQueryResult
+    {
+        public IEnumerable<EvacuationFile> Items { get; set; } = Array.Empty<EvacuationFile>();
+    }
+
+    public class SubmitEvacuationFileNeedsAssessment : ManageEvacuationFileCommand
+    {
+        public EvacuationFile EvacuationFile { get; set; }
+    }
+
+    public class LinkEvacuationFileRegistrant : ManageEvacuationFileCommand
+    {
+        public string FileId { get; set; }
+        public string RegistrantId { get; set; }
+        public string HouseholdMemberId { get; set; }
+    }
+
+    public class EvacuationFilesQuery : EvacuationFileQuery
+    {
+        public string FileId { get; set; }
+        public string ExternalReferenceId { get; set; }
+        public string PrimaryRegistrantId { get; set; }
+        public bool MaskSecurityPhrase { get; set; } = true;
+
+        public IEnumerable<EvacuationFileStatus> IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
+        public DateTime? RegistraionDateFrom { get; set; }
+        public DateTime? RegistraionDateTo { get; set; }
+        public int? Limit { get; set; }
+        public string HouseholdMemberId { get; set; }
+        public string LinkedRegistrantId { get; set; }
+        public string NeedsAssessmentId { get; set; }
+    }
+
+    public class SaveEvacuationFileNote : ManageEvacuationFileCommand
+    {
+        public string FileId { get; set; }
+        public Note Note { get; set; }
+    }
+
+    public class SaveEvacuationFileSupportCommand : ManageEvacuationFileCommand
+    {
+        public string FileId { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
+    }
+
+    public class VoidEvacuationFileSupportCommand : ManageEvacuationFileCommand
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public SupportVoidReason VoidReason { get; set; }
+    }
+
+    public class EvacuationFile
+    {
+        public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
         public string? ExternalReferenceId { get; set; }
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }

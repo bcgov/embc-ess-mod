@@ -24,7 +24,7 @@ using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Managers.Events.PrintReferrals;
-using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Print;
@@ -50,7 +50,7 @@ namespace EMBC.ESS.Managers.Events
         private readonly IEvacueesRepository contactRepository;
         private readonly IInvitationRepository invitationRepository;
         private readonly ITemplateProviderResolver templateProviderResolver;
-        private readonly ICaseRepository caseRepository;
+        private readonly IEvacuationRepository evacuationRepository;
         private readonly ITransformator transformator;
         private readonly INotificationSender notificationSender;
         private readonly ITaskRepository taskRepository;
@@ -72,7 +72,7 @@ namespace EMBC.ESS.Managers.Events
             IEvacueesRepository contactRepository,
             IInvitationRepository invitationRepository,
             ITemplateProviderResolver templateProviderResolver,
-            ICaseRepository caseRepository,
+            IEvacuationRepository evacuationRepository,
             ITransformator transformator,
             INotificationSender notificationSender,
             ITaskRepository taskRepository,
@@ -91,7 +91,7 @@ namespace EMBC.ESS.Managers.Events
             this.contactRepository = contactRepository;
             this.invitationRepository = invitationRepository;
             this.templateProviderResolver = templateProviderResolver;
-            this.caseRepository = caseRepository;
+            this.evacuationRepository = evacuationRepository;
             this.transformator = transformator;
             this.notificationSender = notificationSender;
             this.taskRepository = taskRepository;
@@ -110,13 +110,13 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
         {
-            var file = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(cmd.File);
+            var file = mapper.Map<Resources.Evacuations.EvacuationFile>(cmd.File);
             var contact = mapper.Map<Evacuee>(cmd.SubmitterProfile);
 
             file.PrimaryRegistrantId = (await contactRepository.Manage(new SaveEvacuee { Evacuee = contact })).EvacueeId;
             file.NeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).Single().LinkedRegistrantId = file.PrimaryRegistrantId;
 
-            var caseId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
+            var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
             if (contact.Email != null)
             {
@@ -132,7 +132,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
-            var file = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(cmd.File);
+            var file = mapper.Map<Resources.Evacuations.EvacuationFile>(cmd.File);
 
             var query = new EvacueeQuery();
             //TODO: replace this with an explicit property for userid
@@ -152,14 +152,14 @@ namespace EMBC.ESS.Managers.Events
 
             if (!string.IsNullOrEmpty(file.Id))
             {
-                var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = file.Id })).Items.SingleOrDefault();
-                var existingFile = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(caseRecord);
+                var caseRecord = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = file.Id })).Items.SingleOrDefault();
+                var existingFile = mapper.Map<Resources.Evacuations.EvacuationFile>(caseRecord);
 
                 if (!string.IsNullOrEmpty(existingFile.TaskId) && !existingFile.TaskId.Equals(file.TaskId, StringComparison.Ordinal))
                     throw new BusinessLogicException($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
             }
 
-            var caseId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
+            var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
@@ -200,15 +200,15 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.RegistantId)) throw new ArgumentNullException("RegistantId is required");
             if (string.IsNullOrEmpty(cmd.HouseholdMemberId)) throw new ArgumentNullException("HouseholdMemberId is required");
 
-            var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
-            var file = mapper.Map<Resources.Cases.Evacuations.EvacuationFile>(caseRecord);
+            var caseRecord = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
+            var file = mapper.Map<Resources.Evacuations.EvacuationFile>(caseRecord);
             var member = file.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
             if (member == null) throw new NotFoundException($"HouseholdMember not found '{cmd.HouseholdMemberId}'", cmd.HouseholdMemberId);
 
             var memberAlreadyLinked = file.HouseholdMembers.Where(m => m.LinkedRegistrantId == cmd.RegistantId).FirstOrDefault();
             if (memberAlreadyLinked != null) throw new BusinessValidationException($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
 
-            var caseId = (await caseRepository.ManageCase(new LinkEvacuationFileRegistrant { FileId = file.Id, RegistrantId = cmd.RegistantId, HouseholdMemberId = cmd.HouseholdMemberId })).Id;
+            var caseId = (await evacuationRepository.Manage(new LinkEvacuationFileRegistrant { FileId = file.Id, RegistrantId = cmd.RegistantId, HouseholdMemberId = cmd.HouseholdMemberId })).Id;
             return caseId;
         }
 
@@ -265,17 +265,17 @@ namespace EMBC.ESS.Managers.Events
                 if (registrant == null) throw new NotFoundException($"registrant with user id '{query.PrimaryRegistrantUserId}' not found", query.PrimaryRegistrantUserId);
                 query.PrimaryRegistrantId = registrant.Id;
             }
-            var cases = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
+            var cases = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
             {
                 FileId = query.FileId,
                 ExternalReferenceId = query.ExternalReferenceId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
                 LinkedRegistrantId = query.LinkedRegistrantId,
                 NeedsAssessmentId = query.NeedsAssessmentId,
-                IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.Evacuations.EvacuationFileStatus>(s.ToString())).ToArray()
-            })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>();
+                IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Evacuations.EvacuationFileStatus>(s.ToString())).ToArray()
+            })).Items.Cast<Resources.Evacuations.EvacuationFile>();
 
-            var files = mapper.Map<IEnumerable<EvacuationFile>>(cases);
+            var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(cases);
 
             foreach (var file in files)
             {
@@ -290,7 +290,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrWhiteSpace(query.FirstName)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.FirstName));
             if (string.IsNullOrWhiteSpace(query.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.LastName));
             if (string.IsNullOrWhiteSpace(query.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.DateOfBirth));
-            if (query.InStatuses == null) query.InStatuses = Array.Empty<EvacuationFileStatus>();
+            if (query.InStatuses == null) query.InStatuses = Array.Empty<Shared.Contracts.Events.EvacuationFileStatus>();
 
             var searchMode = !query.IncludeEvacuationFilesOnly && query.IncludeRegistrantProfilesOnly
                 ? SearchMode.Registrants
@@ -310,7 +310,7 @@ namespace EMBC.ESS.Managers.Events
             var profileTasks = searchResults.MatchingRegistrantIds.Select<string, System.Threading.Tasks.Task>((Func<string, System.Threading.Tasks.Task>)(async id =>
             {
                 var profile = Enumerable.Single<Evacuee>((await contactRepository.Query((EvacueeQuery)new Resources.Evacuees.EvacueeQuery { EvacueeId = id })).Items);
-                var files = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { LinkedRegistrantId = id })).Items;
+                var files = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { LinkedRegistrantId = id })).Items;
                 var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 mappedProfile.RecentEvacuationFiles = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files);
                 profiles.Add(mappedProfile);
@@ -319,7 +319,7 @@ namespace EMBC.ESS.Managers.Events
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
             var householdMemberTasks = searchResults.MatchingHouseholdMemberIds.Select(async id =>
             {
-                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.SingleOrDefault();
+                var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { HouseholdMemberId = id })).Items.SingleOrDefault();
                 if (file == null) return;
                 var mappedFile = mapper.Map<EvacuationFileSearchResult>(file);
                 //mark household members that caused a match
@@ -386,11 +386,11 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
         {
-            var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
+            var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
             {
                 FileId = query.FileId,
                 MaskSecurityPhrase = false
-            })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().FirstOrDefault();
+            })).Items.Cast<Resources.Evacuations.EvacuationFile>().FirstOrDefault();
 
             if (file == null) throw new NotFoundException($"Evacuation File {query.FileId} not found", query.FileId);
 
@@ -408,10 +408,10 @@ namespace EMBC.ESS.Managers.Events
 
             if (!string.IsNullOrEmpty(cmd.Note.Id))
             {
-                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
+                var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
                 {
                     FileId = cmd.FileId,
-                })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault();
+                })).Items.Cast<Resources.Evacuations.EvacuationFile>().SingleOrDefault();
 
                 if (file == null) throw new NotFoundException($"Evacuation File {cmd.FileId} not found", cmd.FileId);
 
@@ -423,8 +423,8 @@ namespace EMBC.ESS.Managers.Events
                     throw new BusinessLogicException($"The note may be edited only by the user who created it withing a 24 hour period.");
             }
 
-            var note = mapper.Map<Resources.Cases.Evacuations.Note>(cmd.Note);
-            var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
+            var note = mapper.Map<Resources.Evacuations.Note>(cmd.Note);
+            var id = (await evacuationRepository.Manage(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
             return id;
         }
 
@@ -433,17 +433,17 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.NoteId)) throw new ArgumentNullException("NoteId is required");
 
-            var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
+            var file = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
             {
                 FileId = cmd.FileId,
-            })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault();
+            })).Items.Cast<Resources.Evacuations.EvacuationFile>().SingleOrDefault();
             if (file == null) throw new NotFoundException($"Evacuation File {cmd.FileId} not found", cmd.FileId);
 
             var note = file.Notes.Where(n => n.Id == cmd.NoteId).SingleOrDefault();
             if (note == null) throw new NotFoundException($"Evacuation File Note {cmd.NoteId} not found", cmd.NoteId);
 
             note.IsHidden = cmd.IsHidden;
-            var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
+            var id = (await evacuationRepository.Manage(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
             return id;
         }
 
@@ -464,7 +464,10 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             //verify no paper supports included
-            var paperReferrals = cmd.Supports.Where(s => s is Referral r && r.IsPaperReferral).Cast<Referral>().Select(r => r.ExternalReferenceId).ToArray();
+            var paperReferrals = cmd.Supports.Where(s => s is Shared.Contracts.Events.Referral r && r.IsPaperReferral)
+                .Cast<Shared.Contracts.Events.Referral>()
+                .Select(r => r.ExternalReferenceId)
+                .ToArray();
             if (paperReferrals.Any())
                 throw new BusinessValidationException($"file {cmd.FileId} error: cannot process paper referrals {string.Join(',', paperReferrals)} as digital");
 
@@ -478,10 +481,10 @@ namespace EMBC.ESS.Managers.Events
 
             //Not ideal solution - the IDs are concatenated by CaseRepository to ensure
             //all supports are created in a single transaction
-            var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
+            var supportIds = (await evacuationRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Cases.Evacuations.Support>>(cmd.Supports)
+                Supports = mapper.Map<IEnumerable<Resources.Evacuations.Support>>(cmd.Supports)
             })).Id.Split(';');
 
             var printRequestId = await printingRepository.Manage(new SavePrintRequest
@@ -506,10 +509,10 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             //validate only paper referrals were passed in the command
-            if (!cmd.Supports.All(s => s is Referral r && r.IsPaperReferral))
+            if (!cmd.Supports.All(s => s is Shared.Contracts.Events.Referral r && r.IsPaperReferral))
                 throw new BusinessValidationException($"file {cmd.FileId} error: {nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
 
-            var referrals = cmd.Supports.Cast<Referral>().ToArray();
+            var referrals = cmd.Supports.Cast<Shared.Contracts.Events.Referral>().ToArray();
             //validate paper id and support types are unique
             var duplicates = referrals.GroupBy(s => s.ExternalReferenceId).Where(g => g.GroupBy(e => e.GetType()).Any(gt => gt.Count() != 1));
             if (duplicates.Any())
@@ -526,10 +529,10 @@ namespace EMBC.ESS.Managers.Events
                 referral.CreatedOn = DateTime.UtcNow;
             }
             //save referrals
-            var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
+            var supportIds = (await evacuationRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Cases.Evacuations.Support>>(cmd.Supports)
+                Supports = mapper.Map<IEnumerable<Resources.Evacuations.Support>>(cmd.Supports)
             })).Id.Split(';');
 
             // no print request is returned
@@ -542,11 +545,11 @@ namespace EMBC.ESS.Managers.Events
 
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await caseRepository.ManageCase(new VoidEvacuationFileSupportCommand
+            var id = (await evacuationRepository.Manage(new VoidEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
                 SupportId = cmd.SupportId,
-                VoidReason = Enum.Parse<Resources.Cases.Evacuations.SupportVoidReason>(cmd.VoidReason.ToString())
+                VoidReason = Enum.Parse<Resources.Evacuations.SupportVoidReason>(cmd.VoidReason.ToString())
             })).Id;
             return id;
         }
@@ -577,7 +580,10 @@ namespace EMBC.ESS.Managers.Events
             if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
             //load the file
-            var file = mapper.Map<EvacuationFile>((await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = printRequest.FileId })).Items.Cast<Resources.Cases.Evacuations.EvacuationFile>().SingleOrDefault());
+            var file = mapper.Map<Shared.Contracts.Events.EvacuationFile>((await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
+            {
+                FileId = printRequest.FileId
+            })).Items.Cast<Resources.Evacuations.EvacuationFile>().SingleOrDefault());
             if (file == null) throw new NotFoundException($"Evacuation file {printRequest.FileId} not found", printRequest.Id);
             await evacuationFileLoader.Load(file);
 
@@ -707,7 +713,7 @@ namespace EMBC.ESS.Managers.Events
         {
             if (query.ExternalReferenceId == null) throw new BusinessValidationException($"Search supports must have criteria");
 
-            return await System.Threading.Tasks.Task.FromResult(new SearchSupportsQueryResponse { Items = Array.Empty<Support>() });
+            return await System.Threading.Tasks.Task.FromResult(new SearchSupportsQueryResponse { Items = Array.Empty<Shared.Contracts.Events.Support>() });
         }
     }
 }

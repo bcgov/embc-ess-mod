@@ -21,7 +21,7 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
 
-namespace EMBC.ESS.Resources.Cases.Evacuations
+namespace EMBC.ESS.Resources.Evacuations
 {
     public class Mappings : Profile
     {
@@ -148,11 +148,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(s => s.RecommendedReferralServices, opts => opts.MapFrom(s => new[]
                     {
-                        s.era_haschildcarereferral.GetValueOrDefault(false) ? ReferralServices.ChildCare : (ReferralServices?)null,
-                        s.era_hasfirstaidreferral.GetValueOrDefault(false) ? ReferralServices.FirstAid : (ReferralServices?)null,
-                        s.era_hasinquiryreferral.GetValueOrDefault(false) ? ReferralServices.Inquiry : (ReferralServices?)null,
-                        s.era_haspersonalservicesreferral.GetValueOrDefault(false) ? ReferralServices.Personal : (ReferralServices?)null,
-                        s.era_haspetcarereferral.GetValueOrDefault(false) ? ReferralServices.PetCare : (ReferralServices?)null,
+                        s.era_haschildcarereferral.GetValueOrDefault(false) ? ReferralServices.ChildCare : null,
+                        s.era_hasfirstaidreferral.GetValueOrDefault(false) ? ReferralServices.FirstAid : null,
+                        s.era_hasinquiryreferral.GetValueOrDefault(false) ? ReferralServices.Inquiry : null,
+                        s.era_haspersonalservicesreferral.GetValueOrDefault(false) ? ReferralServices.Personal : null,
+                        s.era_haspetcarereferral.GetValueOrDefault(false) ? ReferralServices.PetCare : null,
                         s.era_hashealthservicesreferral.GetValueOrDefault(false) ? ReferralServices.Health : (ReferralServices?)null,
                     }.Where(r => r != null).ToArray()))
                ;

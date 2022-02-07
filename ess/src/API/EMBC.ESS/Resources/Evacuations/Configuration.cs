@@ -14,17 +14,15 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Resources.Cases
+namespace EMBC.ESS.Resources.Evacuations
 {
     public class Configuration : IConfigureComponentServices
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            configurationServices.Services.AddTransient<ICaseRepository, CaseRepository>();
             configurationServices.Services.AddTransient<IEvacuationRepository, EvacuationRepository>();
         }
     }
