@@ -259,9 +259,51 @@ export class CustomValidationService {
   memberCheckboxValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.value !== null) {
-        console.log(control.value);
         if (control.value.length === 0) {
           return { noSelection: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  dateCompareValidator(taskDate: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== null) {
+        const fromDate = control.value;
+        if (
+          moment(fromDate).isSame(taskDate) ||
+          moment(fromDate).isAfter(taskDate)
+        ) {
+          return { dateCompareFailed: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  toFromDateValidator(fromDate: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== null) {
+        const toDate = control.value;
+        if (moment(fromDate).isAfter(toDate)) {
+          return { dateValidationFailed: true };
+        }
+      }
+      return null;
+    };
+  }
+
+  dateRangeValidator(fromDate: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      const updateFromDate = moment(fromDate).add(30);
+      if (control.value !== null) {
+        const toDate = control.value;
+        if (
+          moment(toDate).isBefore(updateFromDate) ||
+          moment(toDate).isSame(updateFromDate)
+        ) {
+          return { dateRangeFailed: true };
         }
       }
       return null;

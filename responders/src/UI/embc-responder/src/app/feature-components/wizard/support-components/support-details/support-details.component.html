@@ -36,12 +36,7 @@
       <mat-card class="support-time-box">
         <div class="row row-padding">
           <div class="col-md-12">
-            <p *ngIf="isVisible" class="time-heading requiredField">
-              Please confirm timing for commencement of supports:
-            </p>
-            <p *ngIf="!isVisible" class="time-heading requiredField">
-              Support Commencement Details:
-            </p>
+            <p class="time-heading">Task Number Details</p>
           </div>
         </div>
 
@@ -62,58 +57,212 @@
 
         <div class="row row-padding">
           <div class="col-md-4">
-            <p>Support Start Date & Time:</p>
+            <p>Task Number End Date & Time:</p>
           </div>
           <div class="col-md-4">
-            <p class="bold">
-              {{ currentDate }} at
-              {{ now | date: 'hh:mm a' }}
+            <p
+              class="bold"
+              [ngStyle]="{
+                color: validTaskDate(
+                  stepSupportsService?.evacFile?.task?.from,
+                  stepSupportsService?.evacFile?.task?.to
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{
+                stepSupportsService?.evacFile?.task?.to | date: 'dd-MMM-yyyy'
+              }}
+              at
+              {{ stepSupportsService?.evacFile?.task?.to | date: 'hh:mm a' }}
             </p>
-          </div>
-          <div *ngIf="isVisible" class="col-md-4">
-            <a class="override" (click)="toggle = !toggle"
-              >Override start time</a
-            >
-          </div>
-        </div>
-
-        <div *ngIf="toggle" class="row row-padding">
-          <div class="col-md-12">
-            <app-override-datetime
-              [currentDate]="currentDate"
-              [currentTime]="currentTime"
-              (collapse)="collapse($event)"
-              (dateTime)="setDateTime($event)"
-            ></app-override-datetime>
-          </div>
-        </div>
-
-        <div *ngIf="isVisible && !toggle" class="row">
-          <div class="col-md-12">
-            <button
-              class="button-p next-button"
-              mat-button
-              (click)="nextDetails()"
-            >
-              Next
-            </button>
           </div>
         </div>
       </mat-card>
 
-      <div *ngIf="!isVisible" class="row-padding">
-        <div class="row">
-          <div class="col-md-12 add-detail">
-            <div class="row">
-              <div class="col-md-12">
-                <p class="time-heading requiredField">Support Period:</p>
+      <div class="row-padding">
+        <form [formGroup]="supportDetailsForm">
+          <div *ngIf="evacueeSessionService?.paperBased" class="row">
+            <div class="col-md-12 paper-details">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="time-heading requiredField">
+                    Paper Support Number:
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <p>
+                    Please enter the support number as it appears on the paper
+                    referral.
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="paperSupportNumber"
+                      matInput
+                      type="text"
+                      maxlength="8"
+                      required
+                    />
+                    <span matPrefix>R</span>
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
+                        supportDetailsFormControl?.paperSupportNumber.hasError(
+                          'whitespaceError'
+                        )
+                      "
+                    >
+                      Support Number is required</mat-error
+                    >
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperSupportNumber.hasError(
+                          'minlength'
+                        )
+                      "
+                    >
+                      Support Number must be 8 characters long</mat-error
+                    >
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperSupportNumber.hasError(
+                          'pattern'
+                        )
+                      "
+                    >
+                      Only digits allowed</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="time-heading requiredField">Paper Issued By:</p>
+                </div>
+              </div>
+
+              <div class="row" formGroupName="paperIssuedBy">
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Interviewer first name</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="firstName"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperIssuedBy?.get(
+                          'firstName'
+                        ).invalid &&
+                        supportDetailsFormControl?.paperIssuedBy
+                          ?.get('firstName')
+                          .hasError('whitespaceError')
+                      "
+                    >
+                      Interviewer first name is required</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Initial of their last name</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="lastNameInitial"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperIssuedBy?.get(
+                          'lastNameInitial'
+                        ).invalid &&
+                        supportDetailsFormControl?.paperIssuedBy
+                          ?.get('lastNameInitial')
+                          .hasError('whitespaceError')
+                      "
+                    >
+                      Initial is required</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="time-heading requiredField">
+                    Paper Support Completed On:
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [matDatepicker]="paperPicker"
+                      (dateChange)="updateToDate($event)"
+                      formControlName="paperCompletedOn"
+                      placeholder="Support Completed On"
+                      required
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="paperPicker"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #paperPicker></mat-datepicker>
+
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperCompletedOn?.invalid &&
+                        supportDetailsFormControl?.paperCompletedOn?.hasError(
+                          'invalidDate'
+                        )
+                      "
+                    >
+                      Please enter a valid date</mat-error
+                    >
+
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperCompletedOn?.invalid &&
+                        supportDetailsFormControl?.paperCompletedOn?.hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Completed on date is required</mat-error
+                    >
+                  </mat-form-field>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-12">
-                <p>Valid From:</p>
-                <form [formGroup]="supportDetailsForm">
+          <div class="row">
+            <div class="col-md-12 add-detail">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="time-heading requiredField">Support Period:</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <p>Valid From:</p>
+
                   <div class="row">
                     <div class="col-md-4">
                       <mat-form-field appearance="outline">
@@ -151,6 +300,18 @@
                           "
                         >
                           From Date is required</mat-error
+                        >
+
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl?.fromDate?.invalid &&
+                            supportDetailsFormControl?.fromDate?.hasError(
+                              'dateCompareFailed'
+                            )
+                          "
+                        >
+                          Valid From Date must be equal to or greater then the
+                          Task Start Date</mat-error
                         >
                       </mat-form-field>
                     </div>
@@ -208,7 +369,63 @@
                     <div class="col-md-4">
                       <mat-form-field appearance="outline">
                         <mat-label>Valid To Date</mat-label>
-                        <input matInput formControlName="toDate" />
+                        <input
+                          matInput
+                          formControlName="toDate"
+                          [matDatepicker]="toDatepicker"
+                          required
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="toDatepicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #toDatepicker></mat-datepicker>
+
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.toDate.invalid &&
+                            supportDetailsFormControl.toDate.hasError(
+                              'invalidDate'
+                            )
+                          "
+                        >
+                          Please enter a valid date</mat-error
+                        >
+
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.toDate.invalid &&
+                            supportDetailsFormControl.toDate.hasError(
+                              'required'
+                            )
+                          "
+                        >
+                          To Date is required</mat-error
+                        >
+
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.toDate.invalid &&
+                            supportDetailsFormControl.toDate.hasError(
+                              'dateValidationFailed'
+                            )
+                          "
+                        >
+                          Valid To Date must be at greater then the Valid From
+                          Date</mat-error
+                        >
+
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.toDate.invalid &&
+                            supportDetailsFormControl.toDate.hasError(
+                              'dateRangeFailed'
+                            )
+                          "
+                        >
+                          Valid To Date cannot be greater then the 30 days from
+                          the Valid From Date</mat-error
+                        >
                       </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -367,11 +584,11 @@
                       ></app-clothing>
                     </div>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
