@@ -219,6 +219,6 @@ describe('EssFileDetailsComponent', () => {
       essfileDashboardService
     );
     fixture.detectChanges();
-    expect(testMockComponent.essFile).toBeDefined();
+    expect(component.essFile).toBeDefined();
   });
 });
