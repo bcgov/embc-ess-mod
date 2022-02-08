@@ -35,25 +35,25 @@ export class ReviewSupportService {
   /**
    * Calls the REST API to post new supports associated to a given ESSFile
    */
-  processSupports(fileId: string, supportsDraft: Support[]): Observable<Blob> {
-    return this.registrationService
-      .registrationsProcessSupports({
-        fileId,
-        body: {
-          includeSummaryInPrintRequest: this.includeEvacueeSummary,
-          supports: supportsDraft
-        }
-      })
-      .pipe(
-        mergeMap((result: ReferralPrintRequestResponse) => {
-          const printRequestId = result.printRequestId;
-          return this.registrationService.registrationsGetPrint({
-            fileId,
-            printRequestId
-          });
-        })
-      );
-  }
+  // processSupports(fileId: string, supportsDraft: Support[]): Observable<Blob> {
+  //   return this.registrationService
+  //     .registrationsProcessSupports({
+  //       fileId,
+  //       body: {
+  //         includeSummaryInPrintRequest: this.includeEvacueeSummary,
+  //         supports: supportsDraft
+  //       }
+  //     })
+  //     .pipe(
+  //       mergeMap((result: ReferralPrintRequestResponse) => {
+  //         const printRequestId = result.printRequestId;
+  //         return this.registrationService.registrationsGetPrint({
+  //           fileId,
+  //           printRequestId
+  //         });
+  //       })
+  //     );
+  // }
 
   updateExistingSupportsList(): void {
     this.stepSupportsService

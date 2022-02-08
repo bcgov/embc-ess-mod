@@ -290,33 +290,32 @@ export class ReviewSupportComponent implements OnInit {
   }
 
   private processDraftSupports(): void {
-    this.showLoader = !this.showLoader;
-    const win = window.open('', '_blank');
-    win.document.write('Loading Referral document ... ');
-    const supportsDraft: Support[] = this.referralService.getDraftSupport();
-    const fileId: string = this.stepSupportsServices.evacFile.id;
-    this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
-      next: (response) => {
-        // Displaying PDF into a new browser tab:
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        win.location.href = url;
-
-        //Clearing Draft supports array and updating the supports list for the selected ESS File
-        this.referralService.clearDraftSupport();
-        this.reviewSupportService.updateExistingSupportsList();
-        this.showLoader = !this.showLoader;
-        this.router.navigate(['/ess-wizard/add-supports']);
-      },
-      error: (error) => {
-        this.showLoader = !this.showLoader;
-        this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.processSupportDraftsError
-        );
-        win.document.write(globalConst.processSupportDraftsError);
-      }
-    });
+    // this.showLoader = !this.showLoader;
+    // const win = window.open('', '_blank');
+    // win.document.write('Loading Referral document ... ');
+    // const supportsDraft: Support[] = this.referralService.getDraftSupport();
+    // const fileId: string = this.stepSupportsServices.evacFile.id;
+    // this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
+    //   next: (response) => {
+    //     // Displaying PDF into a new browser tab:
+    //     const blob = new Blob([response], { type: 'application/pdf' });
+    //     const url = window.URL.createObjectURL(blob);
+    //     win.location.href = url;
+    //     //Clearing Draft supports array and updating the supports list for the selected ESS File
+    //     this.referralService.clearDraftSupport();
+    //     this.reviewSupportService.updateExistingSupportsList();
+    //     this.showLoader = !this.showLoader;
+    //     this.router.navigate(['/ess-wizard/add-supports']);
+    //   },
+    //   error: (error) => {
+    //     this.showLoader = !this.showLoader;
+    //     this.alertService.clearAlert();
+    //     this.alertService.setAlert(
+    //       'danger',
+    //       globalConst.processSupportDraftsError
+    //     );
+    //     win.document.write(globalConst.processSupportDraftsError);
+    //   }
+    // });
   }
 }
