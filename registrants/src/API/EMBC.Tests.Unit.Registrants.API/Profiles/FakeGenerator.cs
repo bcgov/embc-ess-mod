@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Bogus;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Tests.Unit.Registrants.API.Profiles
@@ -45,9 +45,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .Generate();
         }
 
-        private static IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion> FakeSecurityQuestions()
+        private static IEnumerable<ESS.Shared.Contracts.Events.SecurityQuestion> FakeSecurityQuestions()
         {
-            List<ESS.Shared.Contracts.Submissions.SecurityQuestion> ret = new List<ESS.Shared.Contracts.Submissions.SecurityQuestion>
+            List<ESS.Shared.Contracts.Events.SecurityQuestion> ret = new List<ESS.Shared.Contracts.Events.SecurityQuestion>
             {
                 FakeSecurityQuestion(1),
                 FakeSecurityQuestion(2),
@@ -56,9 +56,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             return ret;
         }
 
-        private static ESS.Shared.Contracts.Submissions.SecurityQuestion FakeSecurityQuestion(int id)
+        private static EMBC.ESS.Shared.Contracts.Events.SecurityQuestion FakeSecurityQuestion(int id)
         {
-            return new Faker<ESS.Shared.Contracts.Submissions.SecurityQuestion>()
+            return new Faker<EMBC.ESS.Shared.Contracts.Events.SecurityQuestion>()
                 .RuleFor(o => o.Id, id)
                 .RuleFor(o => o.Question, f => f.Random.Word())
                 .RuleFor(o => o.Answer, f => f.Random.Word())
@@ -66,9 +66,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .Generate();
         }
 
-        private static ESS.Shared.Contracts.Submissions.Address FakeAddress()
+        private static EMBC.ESS.Shared.Contracts.Events.Address FakeAddress()
         {
-            return new Faker<ESS.Shared.Contracts.Submissions.Address>()
+            return new Faker<EMBC.ESS.Shared.Contracts.Events.Address>()
                 .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                 .RuleFor(o => o.Community, f => f.Address.City())
                 .RuleFor(o => o.Country, f => f.Address.CountryCode())

@@ -23,7 +23,7 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Responders.API.Services;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
@@ -86,7 +86,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (registrant == null) return BadRequest();
 
-            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
+            var profile = mapper.Map<ESS.Shared.Contracts.Events.RegistrantProfile>(registrant);
             var id = await messagingClient.Send(new SaveRegistrantCommand
             {
                 Profile = profile
@@ -109,7 +109,7 @@ namespace EMBC.Responders.API.Controllers
 
             registrant.Id = registrantId;
 
-            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
+            var profile = mapper.Map<ESS.Shared.Contracts.Events.RegistrantProfile>(registrant);
             var id = await messagingClient.Send(new SaveRegistrantCommand
             {
                 Profile = profile
@@ -167,7 +167,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
         {
-            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>>(request.Answers) };
+            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Events.SecurityQuestion>>(request.Answers) };
             var response = await messagingClient.Send(verifySecurityQuestionsQuery);
             return Ok(mapper.Map<VerifySecurityQuestionsResponse>(response));
         }
@@ -275,33 +275,33 @@ namespace EMBC.Responders.API.Controllers
     {
         public RegistrationsMapping()
         {
-            CreateMap<VerifySecurityQuestionsResponse, ESS.Shared.Contracts.Submissions.VerifySecurityQuestionsResponse>()
+            CreateMap<VerifySecurityQuestionsResponse, ESS.Shared.Contracts.Events.VerifySecurityQuestionsResponse>()
                 .ReverseMap()
                 ;
 
-            CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
+            CreateMap<SecurityQuestion, ESS.Shared.Contracts.Events.SecurityQuestion>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
+            CreateMap<Address, ESS.Shared.Contracts.Events.Address>()
                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
                ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.Address, Address>()
+            CreateMap<ESS.Shared.Contracts.Events.Address, Address>()
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
                 .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
                 .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.IncidentTask, EvacuationFileTask>()
+            CreateMap<ESS.Shared.Contracts.Events.IncidentTask, EvacuationFileTask>()
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
                 ;
 
-            CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+            CreateMap<RegistrantProfile, ESS.Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
@@ -320,7 +320,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfile>()
+            CreateMap<ESS.Shared.Contracts.Events.RegistrantProfile, RegistrantProfile>()
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails

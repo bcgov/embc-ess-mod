@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EMBC.ESS.Shared.Contracts.Submissions
+namespace EMBC.ESS.Shared.Contracts.Events
 {
     public class RegistrantProfile
     {

@@ -23,7 +23,7 @@ namespace EMBC.Registrants.API.Mappers
     {
         public Mappings()
         {
-            CreateMap<Controllers.Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+            CreateMap<Controllers.Profile, ESS.Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
@@ -56,15 +56,15 @@ namespace EMBC.Registrants.API.Mappers
                     string.Equals(s.MailingAddress.AddressLine2, s.PrimaryAddress.AddressLine2, StringComparison.InvariantCultureIgnoreCase)))
                 ;
 
-            CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
+            CreateMap<SecurityQuestion, ESS.Shared.Contracts.Events.SecurityQuestion>()
                 .ReverseMap()
                 ;
 
-            CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
+            CreateMap<Address, ESS.Shared.Contracts.Events.Address>()
                 .ReverseMap()
                 ;
 
-            CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
+            CreateMap<NeedsAssessment, ESS.Shared.Contracts.Events.NeedsAssessment>()
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.RecommendedReferralServices, opts => opts.Ignore())
@@ -79,7 +79,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
              ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
+            CreateMap<ESS.Shared.Contracts.Events.NeedsAssessment, NeedsAssessment>()
                 .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => s.CanProvideFood))
                 .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => s.CanProvideLodging))
                 .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.CanProvideClothing))
@@ -89,7 +89,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.HavePetsFood))
              ;
 
-            CreateMap<HouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
+            CreateMap<HouseholdMember, ESS.Shared.Contracts.Events.HouseholdMember>()
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.Details.DateOfBirth))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.Details.FirstName))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.Details.LastName))
@@ -102,7 +102,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Authenticated, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.HouseholdMember, HouseholdMember>()
+            CreateMap<ESS.Shared.Contracts.Events.HouseholdMember, HouseholdMember>()
                 .ForPath(d => d.Details.FirstName, opts => opts.MapFrom(s => s.FirstName))
                 .ForPath(d => d.Details.LastName, opts => opts.MapFrom(s => s.LastName))
                 .ForPath(d => d.Details.Gender, opts => opts.MapFrom(s => s.Gender))
@@ -110,11 +110,11 @@ namespace EMBC.Registrants.API.Mappers
                 .ForPath(d => d.Details.DateOfBirth, opts => opts.MapFrom(s => s.DateOfBirth))
                 ;
 
-            CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
+            CreateMap<Pet, ESS.Shared.Contracts.Events.Pet>()
                 .ReverseMap()
                 ;
 
-            CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
+            CreateMap<EvacuationFile, ESS.Shared.Contracts.Events.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.FileId))
                 .ForMember(d => d.RelatedTask, opts => opts.Ignore())
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
@@ -130,7 +130,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
+            CreateMap<ESS.Shared.Contracts.Events.EvacuationFile, EvacuationFile>()
                 .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
@@ -139,43 +139,43 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.Support, Support>()
+            CreateMap<ESS.Shared.Contracts.Events.Support, Support>()
                 .IncludeAllDerived()
                 .ForMember(d => d.IssuingMemberTeamName, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.Referral, Referral>()
+            CreateMap<ESS.Shared.Contracts.Events.Referral, Referral>()
                 .IncludeAllDerived()
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
                 .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
                 .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ClothingReferral, ClothingReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.IncidentalsReferral, IncidentalsReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.IncidentalsReferral, IncidentalsReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.FoodGroceriesReferral, FoodGroceriesReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodGroceriesReferral, FoodGroceriesReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.FoodRestaurantReferral, FoodRestaurantReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodRestaurantReferral, FoodRestaurantReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.LodgingBilletingReferral, LodgingBilletingReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingBilletingReferral, LodgingBilletingReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.LodgingGroupReferral, LodgingGroupReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingGroupReferral, LodgingGroupReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.LodgingHotelReferral, LodgingHotelReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingHotelReferral, LodgingHotelReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.TransportationOtherReferral, TransportationOtherReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationOtherReferral, TransportationOtherReferral>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Submissions.TransportationTaxiReferral, TransportationTaxiReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationTaxiReferral, TransportationTaxiReferral>()
                 ;
         }
     }

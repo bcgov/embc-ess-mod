@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Managers.Submissions.PrintReferrals
+namespace EMBC.ESS.Managers.Events.PrintReferrals
 {
     public interface IPrintReferralService
     {

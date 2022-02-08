@@ -15,13 +15,13 @@
 // -------------------------------------------------------------------------
 
 using System;
-using EMBC.ESS.Managers.Submissions.Notifications;
-using EMBC.ESS.Managers.Submissions.PrintReferrals;
+using EMBC.ESS.Managers.Events.Notifications;
+using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Managers.Events
 {
     public class Configuration : IConfigureComponentServices
     {
@@ -29,8 +29,8 @@ namespace EMBC.ESS.Managers.Submissions
         {
             var services = configurationServices.Services;
 
-            services.AddTransient<SubmissionsManager>();
-            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(SubmissionsManager)));
+            services.AddTransient<EventsManager>();
+            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(EventsManager)));
             services.AddTransient<EmailTemplateProvider>();
             services.AddTransient<IPrintReferralService, PrintReferralService>();
             services.AddTransient<ITemplateProviderResolver>(sp =>

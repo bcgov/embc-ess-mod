@@ -24,7 +24,7 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Services;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
@@ -66,7 +66,7 @@ namespace EMBC.Registrants.API.Controllers
             //anonymous profiles are unverified and not authenticated
             profile.AuthenticatedUser = false;
             profile.VerifiedUser = false;
-            var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration.PreliminaryNeedsAssessment);
+            var file = mapper.Map<ESS.Shared.Contracts.Events.EvacuationFile>(registration.PreliminaryNeedsAssessment);
             var id = await messagingClient.Send(new SubmitAnonymousEvacuationFileCommand
             {
                 File = file,
@@ -87,7 +87,7 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = currentUserId;
             var files = await evacuationSearchService.GetFiles(userId,
-                new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired });
+                new[] { ESS.Shared.Contracts.Events.EvacuationFileStatus.Active, ESS.Shared.Contracts.Events.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Events.EvacuationFileStatus.Expired });
 
             return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
@@ -103,7 +103,7 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = currentUserId;
             var files = await evacuationSearchService.GetFiles(userId,
-               new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Archived, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed });
+               new[] { ESS.Shared.Contracts.Events.EvacuationFileStatus.Archived, ESS.Shared.Contracts.Events.EvacuationFileStatus.Completed });
 
             return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
@@ -124,7 +124,7 @@ namespace EMBC.Registrants.API.Controllers
                 return BadRequest();
 
             var userId = currentUserId;
-            var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(evacuationFile);
+            var file = mapper.Map<ESS.Shared.Contracts.Events.EvacuationFile>(evacuationFile);
             file.PrimaryRegistrantId = userId;
             var fileId = await messagingClient.Send(new SubmitEvacuationFileCommand { File = file });
 

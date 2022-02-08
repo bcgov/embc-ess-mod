@@ -19,9 +19,9 @@ using AutoMapper;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Events;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Managers.Events
 {
     public class EvacuationFileLoader
     {
@@ -88,7 +88,7 @@ namespace EMBC.ESS.Managers.Submissions
                     if (supplier != null)
                     {
                         referral.SupplierDetails.Name = supplier.LegalName;
-                        referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Submissions.Address>(supplier.Address);
+                        referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Events.Address>(supplier.Address);
                         referral.SupplierDetails.TeamId = supplier.Team?.Id;
                         referral.SupplierDetails.TeamName = supplier.Team?.Name;
                     }
