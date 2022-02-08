@@ -9,6 +9,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
+import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Component({
   selector: 'app-matched-essfiles',
@@ -19,6 +20,8 @@ export class MatchedEssfilesComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   currentlyOpenedItemIndex = -1;
   essFiles: Array<EvacuationFileSummaryModel>;
+  isPaperBased: boolean;
+  paperBasedEssFile: string;
   registrantId: string;
   isLoading = false;
   public color = '#169BD5';
@@ -26,12 +29,15 @@ export class MatchedEssfilesComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private evacueeSessionService: EvacueeSessionService,
+    private evacueeSearchService: EvacueeSearchService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.isPaperBased = this.evacueeSessionService.paperBased;
+    this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
     this.registrantId = this.evacueeSessionService.profileId;
     this.getProfileESSFiles(this.registrantId);
   }
@@ -89,6 +95,23 @@ export class MatchedEssfilesComponent implements OnInit {
   goToESSFile(essFileId: string): void {
     this.evacueeSessionService.essFileNumber = essFileId;
     this.router.navigate(['/responder-access/search/essfile-dashboard']);
+  }
+
+  /**
+   * Checks whether the button "Proceed to ESS File should be displayed or not"
+   *
+   * @param externalEssFile the externalEssFile number for the selected file
+   */
+  isDisplayedProceedESSFile(externalEssFile: string): boolean {
+    if (this.isPaperBased) {
+      if (this.paperBasedEssFile === externalEssFile) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
   }
 
   /**

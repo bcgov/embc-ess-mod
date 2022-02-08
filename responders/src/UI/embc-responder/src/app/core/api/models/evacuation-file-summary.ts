@@ -7,8 +7,12 @@ export interface EvacuationFileSummary {
   createdOn?: string;
   evacuatedFromAddress?: Address;
   evacuationFileDate?: string;
+  externalReferenceId?: null | string;
   id?: string;
+  isPaper?: boolean;
+  isPerliminary?: boolean;
   isRestricted?: null | boolean;
+  issuedOn?: string;
   status?: EvacuationFileStatus;
-  task?: EvacuationFileTask;
+  task?: null | EvacuationFileTask;
 }
