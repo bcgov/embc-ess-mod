@@ -213,6 +213,7 @@ describe('EssFileDetailsComponent', () => {
   });
 
   it('should get essFile from service', () => {
+    mockEssfileState = undefined;
     const routingTest = TestBed.inject(Router);
     const testMockComponent = new EssFileDetailsComponent(
       routingTest,
