@@ -326,6 +326,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             foreach (var support in supports)
             {
                 var referral = support.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                referral.FileId.ShouldBe(fileId);
                 referral.ExternalReferenceId.ShouldBe(externalReferenceId);
                 referral.OriginatingNeedsAssessmentId.ShouldBe(TestData.PaperEvacuationFileNeedsAssessmentId);
             }

@@ -155,17 +155,11 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
         public string FileId { get; set; }
-        public string? ExternalReferenceId { get; set; }
         public DateTime From { get; set; }
-
         public DateTime To { get; set; }
-
         public SupportStatus Status { get; set; }
-
         public SupportMethod Method { get; set; }
-
         public SupportCategory Category { get; set; }
-
         public SupportSubCategory? SubCategory { get; set; }
     }
 
@@ -185,6 +179,7 @@ namespace EMBC.Responders.API.Controllers
     public abstract class Support
     {
         public string? Id { get; set; }
+        public string? FileId { get; set; }
 
         public DateTime? CreatedOn { get; set; }
         public string? CreatedBy { get; set; }
@@ -693,6 +688,9 @@ namespace EMBC.Responders.API.Controllers
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
+
+            CreateMap<Support, SupportSummary>()
+            ;
         }
     }
 }

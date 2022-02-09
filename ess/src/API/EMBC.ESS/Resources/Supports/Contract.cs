@@ -68,6 +68,7 @@ namespace EMBC.ESS.Resources.Supports
     public abstract class Support
     {
         public string Id { get; set; }
+        public string FileId { get; set; }
         public DateTime CreatedOn { get; set; }
         public string CreatedByTeamMemberId { get; set; }
         public DateTime IssuedOn { get; set; }
