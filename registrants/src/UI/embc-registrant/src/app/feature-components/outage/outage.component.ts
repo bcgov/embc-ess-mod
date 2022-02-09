@@ -31,5 +31,7 @@ export class OutageComponent implements OnInit {
     this.outageInfo = this.outageService.outageInfo;
   }
 
-  goHomePage(): void {}
+  goHomePage(): void {
+    window.location.href = 'https://ess.gov.bc.ca/';
+  }
 }
