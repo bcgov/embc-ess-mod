@@ -2,7 +2,7 @@
 /* eslint-disable */
 export interface Note {
   addedOn?: string;
-  content?: null | string;
+  content: string;
   creatingTeamMemberId?: null | string;
   id?: null | string;
   isEditable?: boolean;

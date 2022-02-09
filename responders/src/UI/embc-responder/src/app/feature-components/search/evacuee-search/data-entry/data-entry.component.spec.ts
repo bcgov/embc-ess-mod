@@ -46,7 +46,7 @@ describe('DataEntryComponent', () => {
   });
 
   it('should get paper based true from service', () => {
-    evacueeSessionService.paperBased = true;
+    evacueeSessionService.isPaperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -54,7 +54,7 @@ describe('DataEntryComponent', () => {
   });
 
   it('should get paper based false from service', () => {
-    evacueeSessionService.paperBased = false;
+    evacueeSessionService.isPaperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -62,7 +62,7 @@ describe('DataEntryComponent', () => {
   });
 
   it('should get paper based true from form', () => {
-    evacueeSessionService.paperBased = true;
+    evacueeSessionService.isPaperBased = true;
 
     fixture.detectChanges();
     component.ngOnInit();
@@ -76,6 +76,6 @@ describe('DataEntryComponent', () => {
     component.dataEntryForm.get('paperBased').setValue(false);
     component.next();
 
-    expect(evacueeSessionService.paperBased).toEqual(false);
+    expect(evacueeSessionService.isPaperBased).toEqual(false);
   });
 });

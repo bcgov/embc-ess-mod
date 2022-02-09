@@ -57,7 +57,7 @@ describe('EvacueeIdVerifyComponent', () => {
   });
 
   it('should get paper based true from service', () => {
-    evacueeSessionService.paperBased = true;
+    evacueeSessionService.isPaperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -65,7 +65,7 @@ describe('EvacueeIdVerifyComponent', () => {
   });
 
   it('should get paper based false from service', () => {
-    evacueeSessionService.paperBased = false;
+    evacueeSessionService.isPaperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -95,7 +95,7 @@ describe('EvacueeIdVerifyComponent', () => {
   });
 
   it('should get label for Paper-based ID', fakeAsync(() => {
-    evacueeSessionService.paperBased = true;
+    evacueeSessionService.isPaperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -113,7 +113,7 @@ describe('EvacueeIdVerifyComponent', () => {
   }));
 
   it('should get label for Digital-based ID', fakeAsync(() => {
-    evacueeSessionService.paperBased = false;
+    evacueeSessionService.isPaperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
 

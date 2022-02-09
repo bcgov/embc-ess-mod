@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { Address } from './address';
 export interface SuppliersListItem {
-  address?: null | Address;
-  id?: null | string;
-  name?: null | string;
+  address?: Address;
+  id?: string;
+  name?: string;
 }

@@ -7,5 +7,5 @@ import { MemberRole } from './member-role';
  */
 export interface MemberRoleDescription {
   code?: MemberRole;
-  description?: null | string;
+  description?: string;
 }
