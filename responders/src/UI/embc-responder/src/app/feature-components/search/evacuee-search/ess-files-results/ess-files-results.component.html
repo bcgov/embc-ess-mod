@@ -29,7 +29,8 @@
               *ngIf="fileResult?.status === 'Pending'"
               class="file-pending highlight"
               (click)="openESSFile(fileResult)"
-              >ESS File: <b>{{ fileResult?.id }}</b
+              >ESS File:
+              <b>{{ fileResult?.externalReferenceId || fileResult?.id }}</b
               ><span class="status-align"
                 ><img
                   src="/assets/images/pending-flag.svg"
@@ -41,7 +42,8 @@
               *ngIf="fileResult?.status === 'Completed'"
               class="file-complete highlight"
               (click)="openESSFile(fileResult)"
-              >ESS File: <b>{{ fileResult?.id }}</b
+              >ESS File:
+              <b>{{ fileResult?.externalReferenceId || fileResult?.id }}</b
               ><span class="status-align"
                 ><img
                   src="/assets/images/complete-flag.svg"
@@ -53,7 +55,8 @@
               *ngIf="fileResult?.status === 'Expired'"
               class="file-expired highlight"
               (click)="openESSFile(fileResult)"
-              >ESS File: <b>{{ fileResult?.id }}</b
+              >ESS File:
+              <b>{{ fileResult?.externalReferenceId || fileResult?.id }}</b
               ><span class="status-align"
                 ><img
                   src="/assets/images/expired-flag.svg"
