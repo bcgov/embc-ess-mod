@@ -5,6 +5,6 @@
  * Pet
  */
 export interface Pet {
-  quantity?: null | string;
-  type?: null | string;
+  quantity: string;
+  type: string;
 }

@@ -12,9 +12,9 @@ export interface Profile {
   contactDetails: ContactDetails;
   id?: null | string;
   isMailingAddressSameAsPrimaryAddress?: boolean;
-  mailingAddress?: null | Address;
+  mailingAddress?: Address;
   personalDetails: PersonDetails;
   primaryAddress: Address;
   restrictedAccess?: boolean;
-  securityQuestions?: null | Array<SecurityQuestion>;
+  securityQuestions?: Array<SecurityQuestion>;
 }

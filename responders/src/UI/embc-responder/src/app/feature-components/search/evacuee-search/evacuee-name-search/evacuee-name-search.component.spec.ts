@@ -61,7 +61,7 @@ describe('EvacueeNameSearchComponent', () => {
   });
 
   it('should get paper based true from service', () => {
-    evacueeSessionService.paperBased = true;
+    evacueeSessionService.isPaperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -69,7 +69,7 @@ describe('EvacueeNameSearchComponent', () => {
   });
 
   it('should get paper based false from service', () => {
-    evacueeSessionService.paperBased = false;
+    evacueeSessionService.isPaperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -77,7 +77,7 @@ describe('EvacueeNameSearchComponent', () => {
   });
 
   it('should appear ESSFile Paper based field', fakeAsync(() => {
-    evacueeSessionService.paperBased = true;
+    evacueeSessionService.isPaperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -109,7 +109,7 @@ describe('EvacueeNameSearchComponent', () => {
   }));
 
   it('should get first name from form', () => {
-    evacueeSessionService.paperBased = false;
+    evacueeSessionService.isPaperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
     component.nameSearchForm.get('firstName').setValue('EvacueeSearchTest');
@@ -122,7 +122,7 @@ describe('EvacueeNameSearchComponent', () => {
   });
 
   it('should get last name from form', () => {
-    evacueeSessionService.paperBased = false;
+    evacueeSessionService.isPaperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
     component.nameSearchForm.get('lastName').setValue('EvacueeSearchTest');
@@ -134,7 +134,7 @@ describe('EvacueeNameSearchComponent', () => {
   });
 
   it('should get date of birth from form', () => {
-    evacueeSessionService.paperBased = false;
+    evacueeSessionService.isPaperBased = false;
     fixture.detectChanges();
     component.ngOnInit();
     component.nameSearchForm.get('dateOfBirth').setValue('11/11/2011');
@@ -147,7 +147,7 @@ describe('EvacueeNameSearchComponent', () => {
   });
 
   it('should get paper based EssFile #', () => {
-    evacueeSessionService.paperBased = true;
+    evacueeSessionService.isPaperBased = true;
     fixture.detectChanges();
     component.ngOnInit();
     component.nameSearchForm.get('paperBasedEssFile').setValue('123456');
@@ -160,7 +160,7 @@ describe('EvacueeNameSearchComponent', () => {
     [Router],
     (router: Router) => {
       spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.paperBased = false;
+      evacueeSessionService.isPaperBased = false;
 
       fixture.detectChanges();
       component.ngOnInit();
@@ -181,7 +181,7 @@ describe('EvacueeNameSearchComponent', () => {
     [Router],
     (router: Router) => {
       spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.paperBased = true;
+      evacueeSessionService.isPaperBased = true;
 
       fixture.detectChanges();
       component.ngOnInit();

@@ -1,8 +1,9 @@
 import * as faker from 'faker/locale/en_CA';
 import { ClothingReferral, EvacuationFile, FoodGroceriesReferral, FoodRestaurantReferral, IncidentalsReferral, LodgingBilletingReferral, LodgingGroupReferral, LodgingHotelReferral, Referral, Supplier, Support, SupportCategory, SupportMethod, SupportStatus, SupportSubCategory, TransportationOtherReferral, TransportationTaxiReferral } from '../../api/responders/models';
+import { ProcessDigitalSupportsRequest } from '../../api/responders/models';
 import { addDays, getRandomInt } from '../../utilities';
 
-export function generateSupports(file: EvacuationFile, suppliers: Array<Supplier>): Array<Support> {
+export function generateSupports(file: EvacuationFile, suppliers: Array<Supplier>): ProcessDigitalSupportsRequest {
     let supportFunctions = [generateClothingSupport,
         generateIncidentalSupport,
         generateLodgingHotelSupport,
@@ -19,7 +20,10 @@ export function generateSupports(file: EvacuationFile, suppliers: Array<Supplier
         let random_support = supportFunctions.splice(getRandomInt(0, supportFunctions.length - 1), 1)[0];
         supports.push(random_support(file, suppliers));
     }
-    return supports;
+    return {
+        includeSummaryInPrintRequest: true,
+        supports: supports
+    };
 }
 
 function generateClothingSupport(file: EvacuationFile, suppliers: Array<Supplier>): ClothingReferral {

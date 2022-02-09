@@ -4,9 +4,9 @@ import { Address } from './address';
 import { Support } from './support';
 import { SupportMethod } from './support-method';
 export interface Referral extends Support {
-  issuedToPersonName?: null | string;
+  issuedToPersonName?: string;
   method?: SupportMethod;
-  supplierAddress?: null | Address;
-  supplierId?: null | string;
-  supplierName?: null | string;
+  supplierAddress?: Address;
+  supplierId?: string;
+  supplierName?: string;
 }

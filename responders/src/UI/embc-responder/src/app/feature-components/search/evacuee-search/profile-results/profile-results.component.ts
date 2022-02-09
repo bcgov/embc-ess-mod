@@ -67,7 +67,7 @@ export class ProfileResultsComponent
    */
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     if (
-      this.evacueeSessionService.paperBased === true &&
+      this.evacueeSessionService.isPaperBased === true &&
       this.evacueeSearchService.evacueeSearchContext.hasShownIdentification ===
         false
     ) {

@@ -560,7 +560,7 @@ export class WizardDataService {
   public createNewProfileSteps(): Array<TabModel> {
     const profileTabs: Array<TabModel> = new Array<TabModel>();
     let tab: TabModel;
-    if (this.evacueeSessionService.paperBased) {
+    if (this.evacueeSessionService.isPaperBased) {
       for (const tabs of this.paperEvacueeProfileTabs) {
         profileTabs.push({ ...tab, ...tabs });
       }
@@ -581,7 +581,7 @@ export class WizardDataService {
   public createNewESSFileSteps(): Array<TabModel> {
     const essFileTabs: Array<TabModel> = new Array<TabModel>();
     let tab: TabModel;
-    if (this.evacueeSessionService.paperBased) {
+    if (this.evacueeSessionService.isPaperBased) {
       for (const tabs of this.paperEssFileTabs) {
         essFileTabs.push({ ...tab, ...tabs });
       }

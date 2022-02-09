@@ -35,7 +35,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
    */
   ngOnInit(): void {
     this.constructIdVerifyForm();
-    this.paperBased = this.evacueeSessionService.paperBased;
+    this.paperBased = this.evacueeSessionService.isPaperBased;
   }
 
   /**
