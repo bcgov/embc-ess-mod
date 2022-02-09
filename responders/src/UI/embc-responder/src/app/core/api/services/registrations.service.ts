@@ -24,6 +24,7 @@ import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
 import { SupportReprintReason } from '../models/support-reprint-reason';
+import { SupportSummary } from '../models/support-summary';
 import { SupportVoidReason } from '../models/support-void-reason';
 import { VerifySecurityPhraseRequest } from '../models/verify-security-phrase-request';
 import { VerifySecurityPhraseResponse } from '../models/verify-security-phrase-response';
@@ -1638,7 +1639,7 @@ export class RegistrationsService extends BaseService {
   registrationsGetPrint$Response(params: {
     fileId: string;
     printRequestId: string;
-  }): Observable<StrictHttpResponse<Blob>> {
+  }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetPrintPath, 'get');
     if (params) {
@@ -1647,12 +1648,12 @@ export class RegistrationsService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
+      responseType: 'text',
+      accept: '*/*'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
     );
   }
@@ -1666,10 +1667,56 @@ export class RegistrationsService extends BaseService {
   registrationsGetPrint(params: {
     fileId: string;
     printRequestId: string;
-  }): Observable<Blob> {
+  }): Observable<void> {
 
     return this.registrationsGetPrint$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsSearchSupports
+   */
+  static readonly RegistrationsSearchSupportsPath = '/api/Registrations/supports';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsSearchSupports()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSearchSupports$Response(params?: {
+    externalReferenceId?: string;
+  }): Observable<StrictHttpResponse<Array<SupportSummary>>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchSupportsPath, 'get');
+    if (params) {
+      rb.query('externalReferenceId', params.externalReferenceId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<SupportSummary>>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsSearchSupports$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSearchSupports(params?: {
+    externalReferenceId?: string;
+  }): Observable<Array<SupportSummary>> {
+
+    return this.registrationsSearchSupports$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<SupportSummary>>) => r.body as Array<SupportSummary>)
     );
   }
 

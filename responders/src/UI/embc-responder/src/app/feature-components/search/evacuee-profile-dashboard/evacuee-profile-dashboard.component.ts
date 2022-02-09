@@ -9,11 +9,13 @@ import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.ser
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { BcscInviteDialogComponent } from 'src/app/shared/components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
+import { EssFileExistsComponent } from 'src/app/shared/components/dialog-components/ess-file-exists/ess-file-exists.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../core/services/global-constants';
+import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.service';
 
 @Component({
@@ -28,6 +30,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   emailLoader = false;
   emailSuccessMessage: string;
   isPaperBased: boolean;
+  paperBasedEssFile: string;
 
   constructor(
     private dialog: MatDialog,
@@ -35,6 +38,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     private cacheService: CacheService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
+    private evacueeSearchService: EvacueeSearchService,
     private alertService: AlertService,
     private evacueeProfileDashboardService: EvacueeProfileDashboardService
   ) {}
@@ -42,6 +46,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.evacueeProfileId = this.evacueeSessionService.profileId;
     this.isPaperBased = this.evacueeSessionService?.paperBased;
+    this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
@@ -110,16 +115,27 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Navigates to the Wizard configured to insert a new ESS File
    */
   createNewESSFile(): void {
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee-profile-dashboard'
-    );
-    this.evacueeSessionService.essFileNumber = null;
-    this.evacueeSessionService.setWizardType(WizardType.NewEssFile);
-    this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: WizardType.NewEssFile },
-      queryParamsHandling: 'merge'
-    });
+    if (this.evacueeSessionService.paperBased) {
+      this.evacueeProfileService
+        .getProfileFiles(undefined, this.paperBasedEssFile)
+        .subscribe({
+          next: (result) => {
+            if (result.length === 0) {
+              this.navigateToWizard();
+            } else {
+              this.openEssFileExistsDialog(
+                this.evacueeSearchService.paperBasedEssFile
+              );
+            }
+          },
+          error: (errorResponse) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.findEssFileError);
+          }
+        });
+    } else {
+      this.navigateToWizard();
+    }
   }
 
   /**
@@ -267,6 +283,39 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       },
       height: '260px',
       width: '630px'
+    });
+  }
+
+  /**
+   * opens a dialog that notices the user that the paper based ESS File number already exists
+   *
+   * @param essFile the paper based essFile number to display on the dialog
+   */
+  private openEssFileExistsDialog(essFile: string): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: EssFileExistsComponent,
+        content: { title: 'Paper ESS File Already Exists' },
+        essFile
+      },
+      height: '400px',
+      width: '493px'
+    });
+  }
+
+  /**
+   * navigates to the wizard component
+   */
+  private navigateToWizard(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee-profile-dashboard'
+    );
+    this.evacueeSessionService.essFileNumber = null;
+    this.evacueeSessionService.setWizardType(WizardType.NewEssFile);
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: WizardType.NewEssFile },
+      queryParamsHandling: 'merge'
     });
   }
 }

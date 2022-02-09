@@ -215,49 +215,49 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   reprint(): void {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          component: ReprintReferralDialogComponent,
-          profileData: this.selectedSupport.id
-        },
-        height: '550px',
-        width: '720px'
-      })
-      .afterClosed()
-      .subscribe({
-        next: (reason) => {
-          if (reason !== undefined && reason !== 'close') {
-            this.isLoading = !this.isLoading;
-            console.log(this.isLoading);
-            const win = window.open('', '_blank');
-            win.document.write('Loading referral document ... ');
-            this.existingSupportService
-              .reprintSupport(
-                this.needsAssessmentForSupport.id,
-                this.selectedSupport.id,
-                reason
-              )
-              .subscribe({
-                next: (value) => {
-                  const blob = value;
-                  const url = window.URL.createObjectURL(blob);
-                  win.location.href = url;
-                  this.isLoading = !this.isLoading;
-                },
-                error: (error) => {
-                  this.isLoading = !this.isLoading;
-                  this.alertService.clearAlert();
-                  this.alertService.setAlert(
-                    'danger',
-                    globalConst.reprintReferralError
-                  );
-                  win.document.write(globalConst.reprintReferralError);
-                }
-              });
-          }
-        }
-      });
+    // this.dialog
+    //   .open(DialogComponent, {
+    //     data: {
+    //       component: ReprintReferralDialogComponent,
+    //       profileData: this.selectedSupport.id
+    //     },
+    //     height: '550px',
+    //     width: '720px'
+    //   })
+    //   .afterClosed()
+    //   .subscribe({
+    //     next: (reason) => {
+    //       if (reason !== undefined && reason !== 'close') {
+    //         this.isLoading = !this.isLoading;
+    //         console.log(this.isLoading);
+    //         const win = window.open('', '_blank');
+    //         win.document.write('Loading referral document ... ');
+    //         this.existingSupportService
+    //           .reprintSupport(
+    //             this.needsAssessmentForSupport.id,
+    //             this.selectedSupport.id,
+    //             reason
+    //           )
+    //           .subscribe({
+    //             next: (value) => {
+    //               const blob = value;
+    //               const url = window.URL.createObjectURL(blob);
+    //               win.location.href = url;
+    //               this.isLoading = !this.isLoading;
+    //             },
+    //             error: (error) => {
+    //               this.isLoading = !this.isLoading;
+    //               this.alertService.clearAlert();
+    //               this.alertService.setAlert(
+    //                 'danger',
+    //                 globalConst.reprintReferralError
+    //               );
+    //               win.document.write(globalConst.reprintReferralError);
+    //             }
+    //           });
+    //       }
+    //     }
+    //   });
   }
 
   mapMemberName(memberId: string): string {
