@@ -84,6 +84,7 @@ namespace EMBC.ESS.Resources.Evacuations
         public DateTime CreatedOn { get; set; }
         public DateTime LastModified { get; set; }
         public string? ExternalReferenceId { get; set; }
+        public bool IsPaper { get; set; }
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }
         public EvacuationAddress EvacuatedFrom { get => NeedsAssessment?.EvacuatedFrom; }

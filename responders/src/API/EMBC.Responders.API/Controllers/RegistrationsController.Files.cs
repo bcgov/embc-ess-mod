@@ -275,6 +275,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public string? Id { get; set; } = null!;
         public string? ExternalReferenceId { get; set; }
+        public bool? IsPaper { get; set; }
 
         [Required]
         public string PrimaryRegistrantId { get; set; } = null!;
@@ -317,7 +318,7 @@ namespace EMBC.Responders.API.Controllers
         public DateTime EvacuationFileDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
         public bool? IsRestricted { get; set; }
-        public bool IsPaper => !string.IsNullOrEmpty(ExternalReferenceId);
+        public bool? IsPaper { get; set; }
         public bool IsPerliminary => Task == null;
     }
 

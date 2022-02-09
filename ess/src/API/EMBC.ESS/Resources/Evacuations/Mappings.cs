@@ -51,9 +51,9 @@ namespace EMBC.ESS.Resources.Evacuations
                     var primaryHouseholdMember = d.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment.SingleOrDefault(m => m.era_isprimaryregistrant == true);
                     if (primaryHouseholdMember != null)
                         primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
-                });
-
-            CreateMap<era_evacuationfile, EvacuationFile>()
+                })
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.era_TaskId == null ? null : s.era_TaskId.era_name))
                 .ForMember(d => d.TaskLocationCommunityCode, opts => opts.MapFrom(s => s.era_TaskId == null ? null : s.era_TaskId._era_jurisdictionid_value))
@@ -83,6 +83,7 @@ namespace EMBC.ESS.Resources.Evacuations
                         string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
                     }.Where(n => n != null).ToArray()))
                 .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => s.era_paperbasedessfile))
+                .ForMember(d => d.IsPaper, opts => opts.MapFrom(s => s.era_paperbasedessfile != null))
                 ;
 
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
