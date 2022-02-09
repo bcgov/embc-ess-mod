@@ -14,11 +14,11 @@ export interface RegistrantProfile {
   createdOn?: string;
   id?: null | string;
   isMailingAddressSameAsPrimaryAddress?: boolean;
-  mailingAddress?: null | Address;
+  mailingAddress: Address;
   modifiedOn?: string;
   personalDetails: PersonDetails;
   primaryAddress: Address;
-  restriction?: boolean;
-  securityQuestions?: null | Array<SecurityQuestion>;
+  restriction: boolean;
+  securityQuestions?: Array<SecurityQuestion>;
   verifiedUser?: boolean;
 }

@@ -41,7 +41,7 @@
     "loadTest": "k6 run ./dist/load-test.js",
     "benchmark": "k6 run ./dist/benchmark-test.js",
     "stressTest": "k6 run ./dist/stress-test.js",
-    "gen-registrants-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/registrants/api --ignoreUnusedModels false",
-    "gen-responders-api": "ng-openapi-gen -i https://dev1-embc-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/responders/api --ignoreUnusedModels false"
+    "gen-registrants-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/api/registrants --ignoreUnusedModels false",
+    "gen-responders-api": "ng-openapi-gen -i https://dev1-embc-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/api/responders --ignoreUnusedModels false"
   }
 }

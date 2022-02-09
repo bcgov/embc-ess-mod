@@ -5,8 +5,8 @@
  * An associated community and team
  */
 export interface AssignedCommunity {
-  communityCode?: null | string;
+  communityCode?: string;
   dateAssigned?: string;
-  teamId?: null | string;
-  teamName?: null | string;
+  teamId?: string;
+  teamName?: string;
 }

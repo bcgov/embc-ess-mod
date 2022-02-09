@@ -362,7 +362,7 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
   const supports = generateSupports(file, suppliers);
   const payload = JSON.stringify(supports);
 
-  const response = http.post(`${urls.file}/${file.id}/supports?includeSummaryInPrintRequest=true`, payload, params);
+  const response = http.post(`${urls.file}/${file.id}/supports`, payload, params);
   submitSupportsTime.add(response.timings.waiting);
   submitFailRate.add(response.status !== 200);
   if (response.status !== 200) {
