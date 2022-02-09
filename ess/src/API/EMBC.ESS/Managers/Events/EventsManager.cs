@@ -48,7 +48,7 @@ namespace EMBC.ESS.Managers.Events
     public class EventsManager
     {
         private readonly IMapper mapper;
-        private readonly IEvacueesRepository contactRepository;
+        private readonly IEvacueesRepository evacueesRepository;
         private readonly IInvitationRepository invitationRepository;
         private readonly ITemplateProviderResolver templateProviderResolver;
         private readonly IEvacuationRepository evacuationRepository;
@@ -91,7 +91,7 @@ namespace EMBC.ESS.Managers.Events
             IConfiguration configuration)
         {
             this.mapper = mapper;
-            this.contactRepository = contactRepository;
+            this.evacueesRepository = contactRepository;
             this.invitationRepository = invitationRepository;
             this.templateProviderResolver = templateProviderResolver;
             this.evacuationRepository = evacuationRepository;
@@ -117,7 +117,7 @@ namespace EMBC.ESS.Managers.Events
             var file = mapper.Map<Resources.Evacuations.EvacuationFile>(cmd.File);
             var contact = mapper.Map<Evacuee>(cmd.SubmitterProfile);
 
-            file.PrimaryRegistrantId = (await contactRepository.Manage(new SaveEvacuee { Evacuee = contact })).EvacueeId;
+            file.PrimaryRegistrantId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact })).EvacueeId;
             file.NeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).Single().LinkedRegistrantId = file.PrimaryRegistrantId;
 
             var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
@@ -149,7 +149,7 @@ namespace EMBC.ESS.Managers.Events
                 query.UserId = file.PrimaryRegistrantId;
             }
 
-            var contact = (await contactRepository.Query(query)).Items.SingleOrDefault();
+            var contact = (await evacueesRepository.Query(query)).Items.SingleOrDefault();
 
             if (contact == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
             file.PrimaryRegistrantId = contact.Id;
@@ -181,7 +181,7 @@ namespace EMBC.ESS.Managers.Events
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
             var contact = mapper.Map<Evacuee>(cmd.Profile);
-            var result = await contactRepository.Manage(new SaveEvacuee { Evacuee = contact });
+            var result = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact });
 
             if (string.IsNullOrEmpty(cmd.Profile.Id))
             {
@@ -218,17 +218,17 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)
         {
-            var contact = (await contactRepository.Query(new EvacueeQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
+            var contact = (await evacueesRepository.Query(new EvacueeQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
             if (contact == null) return;
-            await contactRepository.Manage(new DeleteEvacuee { Id = contact.Id });
+            await evacueesRepository.Manage(new DeleteEvacuee { Id = contact.Id });
         }
 
         public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
         {
-            var contact = (await contactRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
+            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
             if (contact == null) throw new NotFoundException($"Could not find existing Registrant with id {cmd.RegistrantId}", cmd.RegistrantId);
             contact.Verified = cmd.Verified;
-            var res = await contactRepository.Manage(new SaveEvacuee { Evacuee = contact });
+            var res = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact });
             return res.EvacueeId;
         }
 
@@ -251,7 +251,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<RegistrantsQueryResponse> Handle(RegistrantsQuery query)
         {
-            var contacts = (await contactRepository.Query(new EvacueeQuery
+            var contacts = (await evacueesRepository.Query(new EvacueeQuery
             {
                 EvacueeId = query.Id,
                 UserId = query.UserId
@@ -265,7 +265,7 @@ namespace EMBC.ESS.Managers.Events
         {
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId))
             {
-                var registrant = (await contactRepository.Query(new EvacueeQuery { UserId = query.PrimaryRegistrantUserId })).Items.SingleOrDefault();
+                var registrant = (await evacueesRepository.Query(new EvacueeQuery { UserId = query.PrimaryRegistrantUserId })).Items.SingleOrDefault();
                 if (registrant == null) throw new NotFoundException($"registrant with user id '{query.PrimaryRegistrantUserId}' not found", query.PrimaryRegistrantUserId);
                 query.PrimaryRegistrantId = registrant.Id;
             }
@@ -313,7 +313,7 @@ namespace EMBC.ESS.Managers.Events
             var profiles = new ConcurrentBag<ProfileSearchResult>();
             var profileTasks = searchResults.MatchingRegistrantIds.Select<string, System.Threading.Tasks.Task>((Func<string, System.Threading.Tasks.Task>)(async id =>
             {
-                var profile = Enumerable.Single<Evacuee>((await contactRepository.Query((EvacueeQuery)new Resources.Evacuees.EvacueeQuery { EvacueeId = id })).Items);
+                var profile = Enumerable.Single<Evacuee>((await evacueesRepository.Query((EvacueeQuery)new Resources.Evacuees.EvacueeQuery { EvacueeId = id })).Items);
                 var files = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { LinkedRegistrantId = id })).Items;
                 var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 mappedProfile.RecentEvacuationFiles = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files);
@@ -378,7 +378,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
         {
-            var contact = (await contactRepository.Query(new EvacueeQuery { EvacueeId = query.RegistrantId, MaskSecurityAnswers = false })).Items.FirstOrDefault();
+            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = query.RegistrantId, MaskSecurityAnswers = false })).Items.FirstOrDefault();
 
             if (contact == null) throw new NotFoundException($"registrant {query.RegistrantId} not found", query.RegistrantId);
 
@@ -654,13 +654,13 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<string> Handle(InviteRegistrantCommand cmd)
         {
-            var contact = (await contactRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
+            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
             if (contact == null) throw new NotFoundException($"registrant not found", cmd.RegistrantId);
             if (contact.Authenticated) throw new BusinessLogicException($"registrant {cmd.RegistrantId} is already authenticated");
 
             var inviteId = (await invitationRepository.Manage(new CreateNewEmailInvitation
             {
-                ContactId = cmd.RegistrantId,
+                EvacueeId = cmd.RegistrantId,
                 Email = cmd.Email,
                 InviteDate = DateTime.UtcNow,
                 RequestingUserId = cmd.RequestingUserId
@@ -694,18 +694,18 @@ namespace EMBC.ESS.Managers.Events
 
             var registrantId = invite.EvacueeId;
 
-            var contact = (await contactRepository.Query(new EvacueeQuery { EvacueeId = registrantId })).Items.SingleOrDefault();
+            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = registrantId })).Items.SingleOrDefault();
             if (contact == null) throw new NotFoundException($"registrant not found", registrantId);
             if (contact.UserId != null) throw new BusinessLogicException($"registrant {contact.Id} is already associated with user id {contact.UserId}");
 
-            var contactByUser = (await contactRepository.Query(new EvacueeQuery { UserId = cmd.LoggedInUserId })).Items.SingleOrDefault();
+            var contactByUser = (await evacueesRepository.Query(new EvacueeQuery { UserId = cmd.LoggedInUserId })).Items.SingleOrDefault();
             if (contactByUser != null) throw new BusinessLogicException($"registrant {contactByUser.Id} is already associated with user id {contactByUser.UserId}");
 
             //associate the contact with the user id and mark as verified and authenticated
             contact.UserId = cmd.LoggedInUserId;
             contact.Authenticated = true;
             contact.Verified = true;
-            var contactId = (await contactRepository.Manage(new SaveEvacuee { Evacuee = contact })).EvacueeId;
+            var contactId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact })).EvacueeId;
 
             //mark invite as used
             await invitationRepository.Manage(new MarkInvitationAsComplete { InviteId = invite.InviteId });

@@ -156,14 +156,14 @@ namespace EMBC.ESS.Resources.Evacuees
 
         private async Task<ManageInvitationCommandResult> Handle(CreateNewEmailInvitation cmd)
         {
-            var contact = await essContext.contacts.ByKey(Guid.Parse(cmd.ContactId)).GetValueAsync();
+            var contact = await essContext.contacts.ByKey(Guid.Parse(cmd.EvacueeId)).GetValueAsync();
             var invitingTeamMember = string.IsNullOrEmpty(cmd.RequestingUserId)
                 ? null
                 : essContext.era_essteamusers.Where(m => m.statecode == (int)EntityState.Active && m.era_essteamuserid == Guid.Parse(cmd.RequestingUserId)).Single();
 
             //deactivate all current invites for this contact
             var currentInvites = await ((DataServiceQuery<era_evacueeemailinvite>)essContext.era_evacueeemailinvites
-                .Where(i => i.statecode == (int)EntityState.Active && i._era_registrant_value == Guid.Parse(cmd.ContactId)))
+                .Where(i => i.statecode == (int)EntityState.Active && i._era_registrant_value == Guid.Parse(cmd.EvacueeId)))
                 .GetAllPagesAsync();
 
             foreach (var currentInvite in currentInvites)

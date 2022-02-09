@@ -161,7 +161,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var inviteId = (await invitationRepository.Manage(new CreateNewEmailInvitation
             {
-                ContactId = evacuee.Id ?? null!,
+                EvacueeId = evacuee.Id ?? null!,
                 Email = email,
                 InviteDate = DateTime.UtcNow,
                 RequestingUserId = null

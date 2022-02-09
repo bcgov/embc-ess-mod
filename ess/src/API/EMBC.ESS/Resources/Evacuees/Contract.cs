@@ -86,7 +86,7 @@ namespace EMBC.ESS.Resources.Evacuees
     public class CreateNewEmailInvitation : ManageInvitationCommand
     {
         [Required]
-        public string ContactId { get; set; } = null!;
+        public string EvacueeId { get; set; } = null!;
 
         [Required]
         public string Email { get; set; }
@@ -100,7 +100,7 @@ namespace EMBC.ESS.Resources.Evacuees
     public class MarkInvitationAsComplete : ManageInvitationCommand
     {
         [Required]
-        public string ContactId { get; set; }
+        public string EvacueeId { get; set; }
 
         [Required]
         public string InviteId { get; set; }
