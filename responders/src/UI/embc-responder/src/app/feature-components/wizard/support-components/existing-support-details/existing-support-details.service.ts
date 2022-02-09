@@ -63,27 +63,27 @@ export class ExistingSupportDetailsService {
     });
   }
 
-  // reprintSupport(
-  //   fileId: string,
-  //   supportId: string,
-  //   reprintReason: SupportReprintReason
-  // ): Observable<Blob> {
-  //   return this.registrationService
-  //     .registrationsReprintSupport({
-  //       fileId,
-  //       supportId,
-  //       reprintReason
-  //     })
-  //     .pipe(
-  //       mergeMap((result: ReferralPrintRequestResponse) => {
-  //         const printRequestId = result.printRequestId;
-  //         return this.registrationService.registrationsGetPrint({
-  //           fileId,
-  //           printRequestId
-  //         });
-  //       })
-  //     );
-  // }
+  reprintSupport(
+    fileId: string,
+    supportId: string,
+    reprintReason: SupportReprintReason
+  ): Observable<Blob> {
+    return this.registrationService
+      .registrationsReprintSupport({
+        fileId,
+        supportId,
+        reprintReason
+      })
+      .pipe(
+        mergeMap((result: ReferralPrintRequestResponse) => {
+          const printRequestId = result.printRequestId;
+          return this.registrationService.registrationsGetPrint({
+            fileId,
+            printRequestId
+          });
+        })
+      );
+  }
 
   mapMember(
     memberId: string,

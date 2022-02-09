@@ -1639,7 +1639,7 @@ export class RegistrationsService extends BaseService {
   registrationsGetPrint$Response(params: {
     fileId: string;
     printRequestId: string;
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<Blob>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetPrintPath, 'get');
     if (params) {
@@ -1648,12 +1648,12 @@ export class RegistrationsService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'blob',
+      accept: 'application/octet-stream'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<Blob>;
       })
     );
   }
@@ -1667,10 +1667,10 @@ export class RegistrationsService extends BaseService {
   registrationsGetPrint(params: {
     fileId: string;
     printRequestId: string;
-  }): Observable<void> {
+  }): Observable<Blob> {
 
     return this.registrationsGetPrint$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
     );
   }
 

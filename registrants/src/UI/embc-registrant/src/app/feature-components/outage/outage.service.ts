@@ -79,7 +79,7 @@ export class OutageService {
       const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
       if (moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)) {
         this.stopPolling.next(true);
-        this.router.navigate(['/outage']);
+        this.router.navigate(['/outage'], { state: { type: 'planned' } });
       }
     } else if (this.outageInfo === null && this.router.url === '/outage') {
       this.router.navigate(['/registration-method']);
@@ -121,7 +121,7 @@ export class OutageService {
       )
       .subscribe({
         next: (response) => {
-          console.log(response);
+          // console.log(response);
           this.outageInfo = response;
           this.displayOutageBanner();
           this.routeOutageInfo();

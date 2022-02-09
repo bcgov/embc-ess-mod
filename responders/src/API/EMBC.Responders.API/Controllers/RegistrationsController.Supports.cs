@@ -129,9 +129,6 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetPrint(string fileId, string printRequestId)
         {
             var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId, RequestingUserId = currentUserId });

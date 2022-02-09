@@ -131,6 +131,10 @@ export class SupportsTableComponent
     this.clickedRow.emit(row);
   }
 
+  getExternalReferralId(element: Support): string {
+    return (element as Referral).externalReferenceId;
+  }
+
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
       const category = this.stepSupportsService.supportCategory.find(
