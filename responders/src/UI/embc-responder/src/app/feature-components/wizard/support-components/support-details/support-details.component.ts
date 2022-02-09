@@ -62,30 +62,41 @@ export class SupportDetailsComponent implements OnInit {
     this.currentTime = this.datePipe.transform(Date.now(), 'HH:mm');
   }
 
-  digitalFromDateFilter = (d: Date | null): boolean => {
-    const date = d || new Date();
-    return moment(date).isBetween(
-      moment(new Date()),
-      moment(this.stepSupportsService?.evacFile?.task?.to),
-      'D',
-      '[]'
-    );
-  };
+  // digitalFromDateFilter = (d: Date | null): boolean => {
+  //   const date = d || new Date();
+  //   return moment(date).isBetween(
+  //     moment(new Date()),
+  //     moment(this.stepSupportsService?.evacFile?.task?.to),
+  //     'D',
+  //     '[]'
+  //   );
+  // };
 
-  paperFromDateFilter = (d: Date | null): boolean => {
-    const date = d || new Date();
-    return moment(date).isBetween(
-      moment(this.stepSupportsService?.evacFile?.task?.from),
-      moment(this.stepSupportsService?.evacFile?.task?.to),
-      'D',
-      '[]'
-    );
-  };
+  // paperFromDateFilter = (d: Date | null): boolean => {
+  //   const date = d || new Date();
+  //   return moment(date).isBetween(
+  //     moment(this.stepSupportsService?.evacFile?.task?.from),
+  //     moment(this.stepSupportsService?.evacFile?.task?.to),
+  //     'D',
+  //     '[]'
+  //   );
+  // };
 
-  validDateFilter = (): any => {
+  validDateFilter = (d: Date | null): boolean => {
+    const date = d || new Date();
     return this.evacueeSessionService.isPaperBased
-      ? this.paperFromDateFilter
-      : this.digitalFromDateFilter;
+      ? moment(date).isBetween(
+          moment(this.stepSupportsService?.evacFile?.task?.from),
+          moment(this.stepSupportsService?.evacFile?.task?.to),
+          'D',
+          '[]'
+        )
+      : moment(date).isBetween(
+          moment(new Date()),
+          moment(this.stepSupportsService?.evacFile?.task?.to),
+          'D',
+          '[]'
+        );
   };
 
   // digitalToDateFilter = (d: Date | null): boolean => {
@@ -344,8 +355,8 @@ export class SupportDetailsComponent implements OnInit {
    * Updates date field based on number of days to be added
    */
   updateValidToDate(days?: number): void {
-    if (days !== null) {
-      const currentVal = this.supportDetailsForm.get('fromDate').value;
+    const currentVal = this.supportDetailsForm.get('fromDate').value;
+    if (days !== null && currentVal !== '') {
       const date = new Date(currentVal);
       const finalValue = this.datePipe.transform(
         date.setDate(date.getDate() + days),
@@ -423,9 +434,9 @@ export class SupportDetailsComponent implements OnInit {
     this.stepSupportsService.supportDetails.externalReferenceId =
       this.supportDetailsForm.get('paperSupportNumber').value;
     this.stepSupportsService.supportDetails.issuedBy =
-      this.supportDetailsForm.get('paperIssuedBy?.firstName').value +
+      this.supportDetailsForm.get('paperIssuedBy.firstName').value +
       ' ' +
-      this.supportDetailsForm.get('paperIssuedBy?.lastNameInitial').value;
+      this.supportDetailsForm.get('paperIssuedBy.lastNameInitial').value;
     this.stepSupportsService.supportDetails.issuedOn =
       this.supportDetailsForm.get('paperCompletedOn').value;
   }
