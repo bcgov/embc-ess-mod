@@ -244,7 +244,7 @@ namespace EMBC.Utilities.Hosting
             services.ConfigureComponentServices(configuration, hostEnvironment, logger, assemblies);
 
             services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(15)));
-            services.TryAddSingleton<LoadBalancerFactory, PickFirstBalancerFactory>();
+            services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
 
             services.AddOpenTelemetryTracing(builder =>
             {
