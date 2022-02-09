@@ -213,7 +213,6 @@
                     <input
                       matInput
                       [matDatepicker]="paperPicker"
-                      (dateChange)="updateToDate($event)"
                       formControlName="paperCompletedOn"
                       placeholder="Support Completed On"
                       required
@@ -269,6 +268,7 @@
                         <mat-label>Valid From Date</mat-label>
                         <input
                           matInput
+                          [matDatepickerFilter]="validDateFilter"
                           formControlName="fromDate"
                           [matDatepicker]="picker"
                           (dateChange)="updateToDate($event)"
@@ -302,7 +302,7 @@
                           From Date is required</mat-error
                         >
 
-                        <mat-error
+                        <!-- <mat-error
                           *ngIf="
                             supportDetailsFormControl?.fromDate?.invalid &&
                             supportDetailsFormControl?.fromDate?.hasError(
@@ -312,7 +312,7 @@
                         >
                           Valid From Date must be equal to or greater then the
                           Task Start Date</mat-error
-                        >
+                        > -->
                       </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -335,6 +335,16 @@
                         >
                           From Time is required</mat-error
                         >
+                        <!-- <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.fromTime.invalid &&
+                            supportDetailsFormControl.fromTime.hasError(
+                              'timeValidationFailed'
+                            )
+                          "
+                        >
+                          Time Validation--Test</mat-error
+                        > -->
                       </mat-form-field>
                     </div>
                   </div>
@@ -373,6 +383,8 @@
                           matInput
                           formControlName="toDate"
                           [matDatepicker]="toDatepicker"
+                          [matDatepickerFilter]="validDateFilter"
+                          (dateChange)="updateNoOfDays($event)"
                           required
                         />
                         <mat-datepicker-toggle
@@ -402,31 +414,15 @@
                         >
                           To Date is required</mat-error
                         >
-
-                        <mat-error
-                          *ngIf="
-                            supportDetailsFormControl.toDate.invalid &&
-                            supportDetailsFormControl.toDate.hasError(
-                              'dateValidationFailed'
-                            )
-                          "
-                        >
-                          Valid To Date must be at greater then the Valid From
-                          Date</mat-error
-                        >
-
-                        <mat-error
-                          *ngIf="
-                            supportDetailsFormControl.toDate.invalid &&
-                            supportDetailsFormControl.toDate.hasError(
-                              'dateRangeFailed'
-                            )
-                          "
-                        >
-                          Valid To Date cannot be greater then the 30 days from
-                          the Valid From Date</mat-error
-                        >
                       </mat-form-field>
+
+                      <mat-error
+                        class="custom-mat-error"
+                        *ngIf="!checkDateRange()"
+                      >
+                        Valid To Date cannot be greater then the 30 days from
+                        the Valid From Date</mat-error
+                      >
                     </div>
                     <div class="col-md-4">
                       <mat-form-field appearance="outline">
@@ -593,7 +589,7 @@
     </div>
   </div>
 
-  <div *ngIf="!isVisible" class="row button-row">
+  <div class="row button-row">
     <div *ngIf="editFlag" class="col-md-6">
       <button class="button-s" mat-button (click)="backToEdit()">Cancel</button>
     </div>

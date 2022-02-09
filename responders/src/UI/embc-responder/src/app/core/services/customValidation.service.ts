@@ -267,46 +267,84 @@ export class CustomValidationService {
     };
   }
 
-  dateCompareValidator(taskDate: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      if (control.value !== null) {
-        const fromDate = control.value;
-        if (
-          moment(fromDate).isSame(taskDate) ||
-          moment(fromDate).isAfter(taskDate)
-        ) {
-          return { dateCompareFailed: true };
-        }
-      }
-      return null;
-    };
-  }
+  // dateCompareValidator(taskDate: string): ValidatorFn {
+  //   return (control: AbstractControl): { [key: string]: boolean } | null => {
+  //     if (control.value !== null) {
+  //       const fromDate = control.value;
+  //       if (
+  //         moment(fromDate).isSame(taskDate) ||
+  //         moment(fromDate).isAfter(taskDate)
+  //       ) {
+  //         return { dateCompareFailed: true };
+  //       }
+  //     }
+  //     return null;
+  //   };
+  // }
 
-  toFromDateValidator(fromDate: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      if (control.value !== null) {
-        const toDate = control.value;
-        if (moment(fromDate).isAfter(toDate)) {
-          return { dateValidationFailed: true };
-        }
-      }
-      return null;
-    };
-  }
+  // timeCompareValidator(t1: string, t2: string): ValidatorFn {
+  //   return (control: AbstractControl): { [key: string]: boolean } | null => {
+  //     if (control.value !== null) {
+  //       const formTime = moment(control.value, 'HH:mm a');
+  //       console.log(t2);
+  //       console.log(
+  //         moment(control.value, 'HH:mm').isAfter(moment(Date.now(), 'HH:mm'))
+  //       );
 
-  dateRangeValidator(fromDate: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      const updateFromDate = moment(fromDate).add(30);
-      if (control.value !== null) {
-        const toDate = control.value;
-        if (
-          moment(toDate).isBefore(updateFromDate) ||
-          moment(toDate).isSame(updateFromDate)
-        ) {
-          return { dateRangeFailed: true };
-        }
-      }
-      return null;
-    };
-  }
+  //       // moment(formTime).isBetween(
+  //       //   moment(Date.now(), 'HH:mm a'),
+  //       //   moment(t2, 'HH:mm a'),
+  //       //   'minutes'
+  //       // )
+  //       if (t1 !== null) {
+  //         //its paper processing
+  //         if (
+  //           !moment(formTime).isBetween(
+  //             moment(t1, 'HH:mm a'),
+  //             moment(t2, 'HH:mm a')
+  //           )
+  //         ) {
+  //           return { timeValidationFailed: true };
+  //         }
+  //       } else if (
+  //         moment(control.value, 'HH:mm').isAfter(moment(Date.now(), 'HH:mm'))
+  //       ) {
+  //         return { timeValidationFailed: true };
+  //       }
+  //     }
+  //     return null;
+  //   };
+  // }
+
+  // toFromDateValidator(fromDate: string): ValidatorFn {
+  //   return (control: AbstractControl): { [key: string]: boolean } | null => {
+  //     if (control.value !== null) {
+  //       const toDate = control.value;
+  //       if (moment(fromDate).isAfter(toDate)) {
+  //         return { dateValidationFailed: true };
+  //       }
+  //     }
+  //     return null;
+  //   };
+  // }
+
+  // dateRangeValidator(fromDate: string): ValidatorFn {
+  //   return (control: AbstractControl): { [key: string]: boolean } | null => {
+  //     console.log(fromDate)
+  //     let x = new Date(fromDate);
+  //     console.log(x.setDate(x.getDate() + 30));
+  //     const updateFromDate = moment(fromDate).add(30);
+  //     console.log(updateFromDate);
+  //     if (control.value !== null) {
+  //       const toDate = control.value;
+  //       if (
+  //         moment(toDate).isBefore(updateFromDate) ||
+  //         moment(toDate).isSame(updateFromDate)
+  //       ) {
+  //         return { dateRangeFailed: true };
+  //       }
+  //     }
+  //     return null;
+  //   };
+  // }
 }
