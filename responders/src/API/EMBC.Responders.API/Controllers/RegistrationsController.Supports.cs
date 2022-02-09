@@ -168,7 +168,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class ProcessPaperReferralsRequest
     {
-        public IEnumerable<Referral> Referrals { get; set; }
+        public IEnumerable<Support> Referrals { get; set; }
     }
 
     [JsonConverter(typeof(SupportJsonConverter))]
