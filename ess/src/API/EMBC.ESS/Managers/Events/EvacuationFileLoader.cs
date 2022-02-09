@@ -82,27 +82,32 @@ namespace EMBC.ESS.Managers.Events
 
             foreach (var support in file.Supports)
             {
-                if (!string.IsNullOrEmpty(support.CreatedBy?.Id))
+                await Load(support);
+            }
+        }
+
+        public async System.Threading.Tasks.Task Load(Shared.Contracts.Events.Support support)
+        {
+            if (!string.IsNullOrEmpty(support.CreatedBy?.Id))
+            {
+                var teamMember = (await teamRepository.GetMembers(userId: support.CreatedBy.Id)).SingleOrDefault();
+                if (teamMember != null)
                 {
-                    var teamMember = (await teamRepository.GetMembers(userId: support.CreatedBy.Id)).SingleOrDefault();
-                    if (teamMember != null)
-                    {
-                        support.CreatedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
-                        support.CreatedBy.TeamId = teamMember.TeamId;
-                        support.CreatedBy.TeamName = teamMember.TeamName;
-                        if (support.IssuedBy == null) support.IssuedBy = support.CreatedBy;
-                    }
+                    support.CreatedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
+                    support.CreatedBy.TeamId = teamMember.TeamId;
+                    support.CreatedBy.TeamName = teamMember.TeamName;
+                    if (support.IssuedBy == null) support.IssuedBy = support.CreatedBy;
                 }
-                if (support is Shared.Contracts.Events.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
+            }
+            if (support is Shared.Contracts.Events.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
+            {
+                var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
+                if (supplier != null)
                 {
-                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
-                    if (supplier != null)
-                    {
-                        referral.SupplierDetails.Name = supplier.LegalName;
-                        referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Events.Address>(supplier.Address);
-                        referral.SupplierDetails.TeamId = supplier.Team?.Id;
-                        referral.SupplierDetails.TeamName = supplier.Team?.Name;
-                    }
+                    referral.SupplierDetails.Name = supplier.LegalName;
+                    referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Events.Address>(supplier.Address);
+                    referral.SupplierDetails.TeamId = supplier.Team?.Id;
+                    referral.SupplierDetails.TeamName = supplier.Team?.Name;
                 }
             }
         }

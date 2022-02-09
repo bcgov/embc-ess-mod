@@ -78,7 +78,7 @@ namespace EMBC.ESS.Resources.Supports
                 ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
                 await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
             }
-            return await Task.FromResult(new SupportQueryResults { Items = mapper.Map<IEnumerable<Support>>(supports) });
+            return new SupportQueryResults { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
         }
 
         private static async Task<IEnumerable<era_evacueesupport>> Search(EssContext ctx, SearchSupportsQuery query)
@@ -107,7 +107,7 @@ namespace EMBC.ESS.Resources.Supports
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByExternalReferenceId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByExternalReferenceId);
 
-            return await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync();
+            return (await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync()).ToArray();
         }
 
         private async Task<string[]> SaveSupports(string fileId, IEnumerable<Support> supports)

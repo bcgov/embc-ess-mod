@@ -50,8 +50,10 @@ namespace EMBC.Tests.Integration.ESS
         public string ContactLastName => contact.lastname;
         public string ContactDateOfBirth => $"{contact.birthdate.GetValueOrDefault().Month:D2}/{contact.birthdate.GetValueOrDefault().Day:D2}/{contact.birthdate.GetValueOrDefault().Year:D4}";
         public string EvacuationFileId => evacuationfile.era_name;
-        public string PaperEvacuationFileId => paperEvacuationFile.era_paperbasedessfile ?? null!;
-        public string CurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
+        public string PaperEvacuationFileId => paperEvacuationFile.era_name;
+        public string PaperEvacuationFilePaperId => paperEvacuationFile.era_paperbasedessfile;
+        public string EvacuationFileCurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
+        public string PaperEvacuationFileNeedsAssessmentId => paperEvacuationFile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
         public string EvacuationFileSecurityPhrase => testPrefix + "-securityphrase";
         public string SupplierAId => supplierA.era_supplierid.GetValueOrDefault().ToString();
         public string SupplierAName => supplierA.era_suppliername;

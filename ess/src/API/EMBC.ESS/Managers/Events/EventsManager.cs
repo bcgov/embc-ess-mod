@@ -717,7 +717,19 @@ namespace EMBC.ESS.Managers.Events
         {
             if (query.ExternalReferenceId == null) throw new BusinessValidationException($"Search supports must have criteria");
 
-            return await System.Threading.Tasks.Task.FromResult(new SearchSupportsQueryResponse { Items = Array.Empty<Shared.Contracts.Events.Support>() });
+            var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>((await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+            {
+                ByExternalReferenceId = query.ExternalReferenceId
+            })).Items);
+
+            foreach (var support in supports)
+            {
+                await evacuationFileLoader.Load(support);
+            }
+            return new SearchSupportsQueryResponse
+            {
+                Items = supports
+            };
         }
     }
 }

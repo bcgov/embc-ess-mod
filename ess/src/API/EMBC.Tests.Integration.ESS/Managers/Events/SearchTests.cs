@@ -146,7 +146,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacuationFilesByPaperId()
         {
-            var files = (await manager.Handle(new EvacuationFilesQuery { ExternalReferenceId = TestData.PaperEvacuationFileId })).Items;
+            var files = (await manager.Handle(new EvacuationFilesQuery { ExternalReferenceId = TestData.PaperEvacuationFilePaperId })).Items;
             files.ShouldNotBeEmpty();
         }
 
