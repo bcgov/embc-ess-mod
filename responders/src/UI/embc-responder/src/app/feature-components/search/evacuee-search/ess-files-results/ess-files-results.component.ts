@@ -70,7 +70,7 @@ export class EssFilesResultsComponent
    */
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
     this.evacueeSessionService.essFileNumber = selectedESSFile.id;
-    if (this.evacueeSessionService.paperBased) {
+    if (this.evacueeSessionService.isPaperBased) {
       if (
         !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {

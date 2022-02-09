@@ -45,7 +45,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.evacueeProfileId = this.evacueeSessionService.profileId;
-    this.isPaperBased = this.evacueeSessionService?.paperBased;
+    this.isPaperBased = this.evacueeSessionService?.isPaperBased;
     this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
@@ -115,7 +115,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Navigates to the Wizard configured to insert a new ESS File
    */
   createNewESSFile(): void {
-    if (this.evacueeSessionService.paperBased) {
+    if (this.evacueeSessionService.isPaperBased) {
       this.evacueeProfileService
         .getProfileFiles(undefined, this.paperBasedEssFile)
         .subscribe({
@@ -217,6 +217,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       .subscribe({
         next: (evacueeProfile) => {
           this.evacueeProfile = evacueeProfile;
+          console.log(this.evacueeProfile);
           this.isLoading = !this.isLoading;
           this.openSuccessModal(globalConst.successfulVerification);
         },
@@ -240,6 +241,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
       next: (profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
+        console.log(this.evacueeProfile);
         if (
           !this.isPaperBased &&
           !this.evacueeProfile?.securityQuestions?.length

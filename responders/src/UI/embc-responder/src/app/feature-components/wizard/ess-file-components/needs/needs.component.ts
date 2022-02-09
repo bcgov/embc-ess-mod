@@ -63,7 +63,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Goes to the next tab from the ESS File
    */
   next(): void {
-    if (this.evacueeSessionService.paperBased) {
+    if (this.evacueeSessionService.isPaperBased) {
       this.stepEssFileService.nextTabUpdate.next();
 
       if (this.stepEssFileService.checkTabsStatus()) {

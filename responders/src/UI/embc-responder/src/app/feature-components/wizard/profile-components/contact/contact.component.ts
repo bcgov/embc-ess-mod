@@ -208,7 +208,7 @@ export class ContactComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    if (this.evacueeSessionService.paperBased) {
+    if (this.evacueeSessionService.isPaperBased) {
       this.stepEvacueeProfileService.nextTabUpdate.next();
       if (this.stepEvacueeProfileService.checkTabsStatus()) {
         this.stepEvacueeProfileService.openModal(

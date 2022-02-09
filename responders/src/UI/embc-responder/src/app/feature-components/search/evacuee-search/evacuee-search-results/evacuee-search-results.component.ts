@@ -55,7 +55,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
         this.evacueeSearchService.evacueeSearchContext),
       (this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile)
     );
-    this.isPaperBased = this.evacueeSessionService.paperBased;
+    this.isPaperBased = this.evacueeSessionService.isPaperBased;
   }
 
   /**
@@ -99,18 +99,16 @@ export class EvacueeSearchResultsComponent implements OnInit {
       .subscribe({
         next: (results) => {
           this.isLoading = !this.isLoading;
-          this.fileResults = results.files.sort(
+          this.fileResults = results?.files?.sort(
             (a, b) =>
               new Date(b.modifiedOn).valueOf() -
               new Date(a.modifiedOn).valueOf()
           );
-          this.registrantResults = results.registrants.sort(
+          this.registrantResults = results?.registrants?.sort(
             (a, b) =>
               new Date(b.modifiedOn).valueOf() -
               new Date(a.modifiedOn).valueOf()
           );
-          console.log(this.fileResults);
-          console.log(this.registrantResults);
         },
         error: (errorEvacuee) => {
           this.isLoading = !this.isLoading;
@@ -121,7 +119,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
-    if (this.evacueeSessionService.paperBased) {
+    if (this.evacueeSessionService.isPaperBased) {
       this.evacueeProfileService
         .getProfileFiles(undefined, this.paperBasedEssFile)
         .subscribe({
