@@ -3,6 +3,9 @@ import { Community } from '../services/locations.service';
 import { SupplierListItemModel } from './supplier-list-item.model';
 
 export class SupportDetailsModel {
+  externalReferenceId?: string;
+  issuedBy?: string;
+  issuedOn?: string;
   fromDate: string;
   fromTime: string;
   noOfDays: number;

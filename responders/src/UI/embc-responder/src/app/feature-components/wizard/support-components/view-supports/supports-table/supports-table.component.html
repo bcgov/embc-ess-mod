@@ -4,7 +4,9 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
         Support#
       </th>
-      <td mat-cell class="bold" *matCellDef="let element">{{ element?.id }}</td>
+      <td mat-cell class="bold" *matCellDef="let element">
+        {{ element?.id ?? getExternalReferralId(element) }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="category">
