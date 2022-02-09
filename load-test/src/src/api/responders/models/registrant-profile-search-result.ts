@@ -5,12 +5,12 @@ import { EvacuationFileSearchResult } from './evacuation-file-search-result';
 import { RegistrantStatus } from './registrant-status';
 export interface RegistrantProfileSearchResult {
   createdOn?: string;
-  evacuationFiles?: null | Array<EvacuationFileSearchResult>;
-  firstName?: null | string;
-  id?: null | string;
+  evacuationFiles?: Array<EvacuationFileSearchResult>;
+  firstName?: string;
+  id?: string;
   isRestricted?: boolean;
-  lastName?: null | string;
+  lastName?: string;
   modifiedOn?: string;
-  primaryAddress?: null | Address;
+  primaryAddress?: Address;
   status?: RegistrantStatus;
 }
