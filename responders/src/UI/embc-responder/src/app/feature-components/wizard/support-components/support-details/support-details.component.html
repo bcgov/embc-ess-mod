@@ -502,7 +502,7 @@
                     Required</mat-error
                   >
 
-                  <div [ngSwitch]="stepSupportsService.supportTypeToAdd.value">
+                  <div [ngSwitch]="stepSupportsService?.supportTypeToAdd?.value">
                     <!--Restaurant Meals-->
                     <div *ngSwitchCase="'Food_Restaurant'">
                       <app-food-meals

@@ -423,9 +423,9 @@ export class SupportDetailsComponent implements OnInit {
     this.stepSupportsService.supportDetails.externalReferenceId =
       this.supportDetailsForm.get('paperSupportNumber').value;
     this.stepSupportsService.supportDetails.issuedBy =
-      this.supportDetailsForm.get('paperIssuedBy.firstName').value +
+      this.supportDetailsForm.get('paperIssuedBy?.firstName').value +
       ' ' +
-      this.supportDetailsForm.get('paperIssuedBy.lastNameInitial').value;
+      this.supportDetailsForm.get('paperIssuedBy?.lastNameInitial').value;
     this.stepSupportsService.supportDetails.issuedOn =
       this.supportDetailsForm.get('paperCompletedOn').value;
   }
