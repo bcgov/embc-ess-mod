@@ -616,7 +616,7 @@ namespace EMBC.Responders.API.Controllers
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.CreatedBy, opts => opts.Ignore())
-                .ForMember(d => d.IssuedBy, opts => opts.Ignore())
+                .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => new EMBC.ESS.Shared.Contracts.Events.TeamMember { DisplayName = s.IssuedBy }))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
                 ;
 
