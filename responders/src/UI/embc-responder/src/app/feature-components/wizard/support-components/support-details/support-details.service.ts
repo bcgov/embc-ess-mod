@@ -25,7 +25,6 @@ export class SupportDetailsService {
   ) {}
 
   generateDynamicForm(supportType: string): FormGroup {
-    console.log(supportType);
     if (supportType === SupportSubCategory.Food_Restaurant) {
       return this.mealForm();
     } else if (supportType === SupportSubCategory.Food_Groceries) {

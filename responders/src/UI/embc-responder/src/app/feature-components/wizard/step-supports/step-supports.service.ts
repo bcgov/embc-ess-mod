@@ -257,6 +257,8 @@ export class StepSupportsService {
       return value.id;
     });
     const support: Support = {
+      issuedBy: this.supportDetails.issuedBy,
+      createdOn: this.supportDetails.issuedOn,
       from: this.convertDateTimeToString(
         this.supportDetails.fromDate,
         this.supportDetails.fromTime
@@ -274,6 +276,7 @@ export class StepSupportsService {
     };
     const referral: Referral = {
       ...support,
+      externalReferenceId: this.supportDetails.externalReferenceId,
       issuedToPersonName:
         this.supportDelivery.issuedTo !== 'Someone else'
           ? this.supportDelivery.issuedTo.lastName +
