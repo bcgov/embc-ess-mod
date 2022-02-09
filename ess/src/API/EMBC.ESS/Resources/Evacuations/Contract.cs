@@ -18,29 +18,71 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Cases.Evacuations
+namespace EMBC.ESS.Resources.Evacuations
 {
     public interface IEvacuationRepository
     {
-        Task<string> Create(EvacuationFile evacuationFile);
+        Task<ManageEvacuationFileCommandResult> Manage(ManageEvacuationFileCommand cmd);
 
-        Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query);
-
-        Task<string> Update(EvacuationFile evacuationFile);
-
-        Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId);
-
-        Task<string> CreateNote(string fileId, Note note);
-
-        Task<string> UpdateNote(string fileId, Note note);
-
-        Task<string[]> SaveSupports(string fileId, IEnumerable<Support> supports);
-
-        Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
+        Task<EvacuationFileQueryResult> Query(EvacuationFilesQuery query);
     }
 
-    public class EvacuationFile : Case
+    public abstract class ManageEvacuationFileCommand
+    { }
+
+    public class ManageEvacuationFileCommandResult
     {
+        public string Id { get; set; }
+    }
+
+    public abstract class EvacuationFileQuery
+    {
+    }
+
+    public class EvacuationFileQueryResult
+    {
+        public IEnumerable<EvacuationFile> Items { get; set; } = Array.Empty<EvacuationFile>();
+    }
+
+    public class SubmitEvacuationFileNeedsAssessment : ManageEvacuationFileCommand
+    {
+        public EvacuationFile EvacuationFile { get; set; }
+    }
+
+    public class LinkEvacuationFileRegistrant : ManageEvacuationFileCommand
+    {
+        public string FileId { get; set; }
+        public string RegistrantId { get; set; }
+        public string HouseholdMemberId { get; set; }
+    }
+
+    public class EvacuationFilesQuery : EvacuationFileQuery
+    {
+        public string FileId { get; set; }
+        public string ExternalReferenceId { get; set; }
+        public string PrimaryRegistrantId { get; set; }
+        public bool MaskSecurityPhrase { get; set; } = true;
+
+        public IEnumerable<EvacuationFileStatus> IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
+        public DateTime? RegistraionDateFrom { get; set; }
+        public DateTime? RegistraionDateTo { get; set; }
+        public int? Limit { get; set; }
+        public string HouseholdMemberId { get; set; }
+        public string LinkedRegistrantId { get; set; }
+        public string NeedsAssessmentId { get; set; }
+    }
+
+    public class SaveEvacuationFileNote : ManageEvacuationFileCommand
+    {
+        public string FileId { get; set; }
+        public Note Note { get; set; }
+    }
+
+    public class EvacuationFile
+    {
+        public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
         public string? ExternalReferenceId { get; set; }
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }
@@ -56,7 +98,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
         public IEnumerable<Note> Notes { get; set; }
-        public IEnumerable<Support> Supports { get; set; }
+        public IEnumerable<string> Supports { get; set; }
     }
 
     public class EvacuationAddress
@@ -162,6 +204,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
 #pragma warning disable CA1008 // Enums should have zero value
 
+    public enum EraTwoOptions
+    {
+        Yes = 174360000,
+        No = 174360001
+    }
+
     public enum EvacuationFileStatus
     {
         Pending = 174360000,
@@ -169,134 +217,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Completed = 174360002,
         Expired = 174360003,
         Archived = 174360004
-    }
-
-#pragma warning restore CA1008 // Enums should have zero value
-
-    public abstract class Support
-    {
-        public string Id { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string CreatedByTeamMemberId { get; set; }
-        public DateTime IssuedOn { get; set; }
-        public string OriginatingNeedsAssessmentId { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
-        public SupportStatus Status { get; set; } = SupportStatus.Active;
-        public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
-    }
-
-    public abstract class Referral : Support
-    {
-        public string? SupplierId { get; set; }
-        public string? SupplierNotes { get; set; }
-        public string IssuedToPersonName { get; set; }
-        public string? ExternalReferenceId { get; set; }
-        public string IssuedByDisplayName { get; set; }
-    }
-
-    public class ClothingReferral : Referral
-    {
-        public bool ExtremeWinterConditions { get; set; }
-        public double TotalAmount { get; set; }
-    }
-
-    public class IncidentalsReferral : Referral
-    {
-        public string ApprovedItems { get; set; }
-        public double TotalAmount { get; set; }
-    }
-
-    public class FoodGroceriesReferral : Referral
-    {
-        public int NumberOfDays { get; set; }
-        public double TotalAmount { get; set; }
-    }
-
-    public class FoodRestaurantReferral : Referral
-    {
-        public int NumberOfBreakfastsPerPerson { get; set; }
-        public int NumberOfLunchesPerPerson { get; set; }
-        public int NumberOfDinnersPerPerson { get; set; }
-        public double TotalAmount { get; set; }
-    }
-
-    public class LodgingHotelReferral : Referral
-    {
-        public int NumberOfNights { get; set; }
-        public int NumberOfRooms { get; set; }
-    }
-
-    public class LodgingBilletingReferral : Referral
-    {
-        public int NumberOfNights { get; set; }
-        public string HostName { get; set; }
-        public string HostAddress { get; set; }
-        public string HostCity { get; set; }
-        public string HostEmail { get; set; }
-        public string HostPhone { get; set; }
-    }
-
-    public class LodgingGroupReferral : Referral
-    {
-        public int NumberOfNights { get; set; }
-        public string FacilityName { get; set; }
-        public string FacilityAddress { get; set; }
-        public string FacilityCity { get; set; }
-        public string FacilityCommunityCode { get; set; }
-        public string FacilityContactPhone { get; set; }
-    }
-
-    public class TransportationTaxiReferral : Referral
-    {
-        public string FromAddress { get; set; }
-        public string ToAddress { get; set; }
-    }
-
-    public class TransportationOtherReferral : Referral
-    {
-        public double TotalAmount { get; set; }
-        public string TransportMode { get; set; }
-    }
-
-#pragma warning disable CA1008 // Enums should have zero value
-
-    public enum SupportStatus
-    {
-        Active = 1,
-        Expired = 174360000,
-        Void = 2
-    }
-
-    public enum SupportVoidReason
-    {
-        ErrorOnPrintedReferral = 174360000,
-        NewSupplierRequired = 174360001,
-        SupplierCouldNotMeetNeed = 174360002
-    }
-
-    public enum EraTwoOptions
-    {
-        Yes = 174360000,
-        No = 174360001
-    }
-
-    public enum SupportMethod
-    {
-        Referral = 174360000
-    }
-
-    public enum SupportType
-    {
-        FoodGroceries = 174360000,
-        FoodRestaurant = 174360001,
-        LodgingHotel = 174360002,
-        LodgingBilleting = 174360003,
-        LodgingGroup = 174360004,
-        Incidentals = 174360005,
-        Clothing = 174360006,
-        TransporationTaxi = 174360007,
-        TransportationOther = 174360008
     }
 
 #pragma warning restore CA1008 // Enums should have zero value

@@ -14,9 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.Utilities.Hosting;
+using EMBC.Utilities.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.ESS";
-
-var host = new Host(appName);
-return await host.Run(assembliesPrefix: "EMBC");
+namespace EMBC.ESS.Resources.Evacuations
+{
+    public class Configuration : IConfigureComponentServices
+    {
+        public void ConfigureServices(ConfigurationServices configurationServices)
+        {
+            configurationServices.Services.AddTransient<IEvacuationRepository, EvacuationRepository>();
+        }
+    }
+}

@@ -19,7 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Managers.Events.PrintReferrals;
-using EMBC.ESS.Resources.Cases.Evacuations;
+using EMBC.ESS.Resources.Evacuations;
+using EMBC.ESS.Resources.Evacuees;
+using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Utilities.Extensions;
 
 namespace EMBC.ESS.Managers.Events
@@ -43,6 +45,7 @@ namespace EMBC.ESS.Managers.Events
             CreateMap<EvacuationFile, Shared.Contracts.Events.EvacuationFile>()
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
                 .ForMember(d => d.RelatedTask, opts => opts.MapFrom(s => new Shared.Contracts.Events.IncidentTask { Id = s.TaskId }))
+                .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Events.Address, EvacuationAddress>()
@@ -94,21 +97,21 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.CreatedBy, opts => opts.MapFrom(s => new Shared.Contracts.Events.TeamMember { Id = s.CreatingTeamMemberId }))
                 ;
 
-            CreateMap<Shared.Contracts.Events.RegistrantProfile, Resources.Contacts.Contact>()
+            CreateMap<Shared.Contracts.Events.RegistrantProfile, Evacuee>()
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.AuthenticatedUser))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.VerifiedUser))
                 ;
-            CreateMap<Resources.Contacts.Contact, Shared.Contracts.Events.RegistrantProfile>()
+            CreateMap<Evacuee, Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.Verified))
                 ;
 
-            CreateMap<Shared.Contracts.Events.Address, Resources.Contacts.Address>()
+            CreateMap<Shared.Contracts.Events.Address, Address>()
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
                 ;
 
-            CreateMap<Shared.Contracts.Events.SecurityQuestion, Resources.Contacts.SecurityQuestion>()
+            CreateMap<Shared.Contracts.Events.SecurityQuestion, SecurityQuestion>()
                 .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
                 .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => false))
@@ -124,7 +127,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.TaskEndDate, opts => opts.Ignore())
                 ;
 
-            CreateMap<Resources.Contacts.Contact, Shared.Contracts.Events.ProfileSearchResult>()
+            CreateMap<Evacuee, Shared.Contracts.Events.ProfileSearchResult>()
                 .ForMember(d => d.RecentEvacuationFiles, opts => opts.Ignore())
                 .ForMember(d => d.RegistrationDate, opts => opts.MapFrom(s => s.CreatedOn))
                 .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))

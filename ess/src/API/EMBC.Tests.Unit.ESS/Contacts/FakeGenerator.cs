@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Bogus;
-using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.Tests.Unit.ESS.Contacts
@@ -68,9 +68,9 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .Generate();
         }
 
-        public static Contact CreateRegistrantProfile()
+        public static Evacuee CreateRegistrantProfile()
         {
-            return new Faker<Contact>()
+            return new Faker<Evacuee>()
                 .RuleFor(o => o.Id, f => f.Random.Guid().ToString())
                 .RuleFor(o => o.UserId, f => f.Random.String(10))
                 .RuleFor(o => o.SecurityQuestions, f => FakeSecurityQuestions())

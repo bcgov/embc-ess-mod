@@ -17,13 +17,13 @@
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Resources.Contacts
+namespace EMBC.ESS.Resources.Supports
 {
     public class Configuration : IConfigureComponentServices
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            configurationServices.Services.AddTransient<IContactRepository, ContactRepository>();
+            configurationServices.Services.AddTransient<ISupportRepository, SupportRepository>();
         }
     }
 }

@@ -21,7 +21,7 @@ using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.ESS.Utilities.Extensions;
 using Microsoft.OData.Edm;
 
-namespace EMBC.ESS.Resources.Contacts
+namespace EMBC.ESS.Resources.Evacuees
 {
     public class Mappings : Profile
     {
@@ -29,7 +29,7 @@ namespace EMBC.ESS.Resources.Contacts
         {
             Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
 
-            CreateMap<Contact, contact>(MemberList.None)
+            CreateMap<Evacuee, contact>(MemberList.None)
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Id) ? (Guid?)null : Guid.Parse(s.Id)))
                 .ForMember(d => d.era_bcservicescardid, opts => opts.MapFrom(s => s.UserId))
                 .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
@@ -75,7 +75,7 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.SingleOrDefaultProperty(q => q.Id == 3 && !q.AnswerIsMasked, q => q.Question)))
                 ;
 
-            CreateMap<contact, Contact>()
+            CreateMap<contact, Evacuee>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid.ToString()))
                 .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.era_bcservicescardid))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
@@ -114,9 +114,9 @@ namespace EMBC.ESS.Resources.Contacts
                     : null))
               ;
 
-            CreateMap<era_evacueeemailinvite, ContactInvite>()
+            CreateMap<era_evacueeemailinvite, Invitation>()
                 .ForMember(d => d.InviteId, opts => opts.MapFrom(s => s.era_evacueeemailinviteid.ToString()))
-                .ForMember(d => d.ContactId, opts => opts.MapFrom(s => s._era_registrant_value.ToString()))
+                .ForMember(d => d.EvacueeId, opts => opts.MapFrom(s => s._era_registrant_value.ToString()))
                 .ForMember(d => d.ExpiryDate, opts => opts.MapFrom(s => s.era_expirydate.Value.UtcDateTime))
                 ;
         }
@@ -145,9 +145,9 @@ namespace EMBC.ESS.Resources.Contacts
     {
         public IEnumerable<SecurityQuestion> Convert(contact sourceMember, ResolutionContext context)
         {
-            string mask = (string)(context.Options.Items.ContainsKey("MaskSecurityAnswers") ? context.Options.Items["MaskSecurityAnswers"] : "true");
-            bool maskSecurityAnswers = mask.Equals("true", StringComparison.OrdinalIgnoreCase);
-            List<SecurityQuestion> ret = new List<SecurityQuestion>();
+            var mask = (string)(context.Options.Items.ContainsKey("MaskSecurityAnswers") ? context.Options.Items["MaskSecurityAnswers"] : "true");
+            var maskSecurityAnswers = mask.Equals("true", StringComparison.OrdinalIgnoreCase);
+            var ret = new List<SecurityQuestion>();
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext1) && !string.IsNullOrEmpty(sourceMember.era_securityquestion1answer))
                 ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = MaskAnswer(sourceMember.era_securityquestion1answer, maskSecurityAnswers), AnswerIsMasked = maskSecurityAnswers });
 

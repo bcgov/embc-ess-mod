@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
-using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Shouldly;
 using Xunit;
@@ -24,7 +24,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
         public void CanMapProfileFromDynamicsEntities()
         {
             var contact = FakeGenerator.CreateDynamicsContact();
-            var profile = mapper.Map<Contact>(contact, opt => opt.Items["MaskSecurityAnswers"] = "false");
+            var profile = mapper.Map<Evacuee>(contact, opt => opt.Items["MaskSecurityAnswers"] = "false");
 
             profile.ShouldNotBeNull();
 

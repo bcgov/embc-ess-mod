@@ -19,75 +19,74 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Contacts
+namespace EMBC.ESS.Resources.Evacuees
 {
-    public interface IContactRepository
+    public interface IEvacueesRepository
     {
-        Task<ContactCommandResult> ManageContact(ContactCommand cmd);
+        Task<ManageEvacueeCommandResult> Manage(ManageEvacueeCommand cmd);
 
-        Task<ContactQueryResult> QueryContact(ContactQuery query);
-
-        Task<ContactInviteCommandResult> ManageContactInvite(ContactInviteCommand cmd);
-
-        Task<ContactInviteQueryResult> QueryContactInvite(ContactInviteQuery query);
+        Task<EvacueeQueryResult> Query(EvacueeQuery query);
     }
 
-    public abstract class ContactCommand
+    public interface IInvitationRepository
+    {
+        Task<ManageInvitationCommandResult> Manage(ManageInvitationCommand cmd);
+
+        Task<InvitationQueryResult> Query(InvitationQuery query);
+    }
+
+    public abstract class ManageEvacueeCommand
     { }
 
-    public class ContactCommandResult
+    public class ManageEvacueeCommandResult
     {
-        public string ContactId { get; set; }
+        public string EvacueeId { get; set; }
     }
 
-    public abstract class ContactQuery
+    public class EvacueeQuery
     {
-        public string ContactId { get; set; }
+        public string EvacueeId { get; set; }
         public string UserId { get; set; }
         public bool MaskSecurityAnswers { get; set; } = true;
     }
 
-    public class ContactQueryResult
+    public class EvacueeQueryResult
     {
-        public IEnumerable<Contact> Items { get; set; }
+        public IEnumerable<Evacuee> Items { get; set; }
     }
 
-    public class SaveContact : ContactCommand
-    {
-        [Required]
-        public Contact Contact { get; set; }
-    }
-
-    public class DeleteContact : ContactCommand
+    public class SaveEvacuee : ManageEvacueeCommand
     {
         [Required]
-        public string ContactId { get; set; }
+        public Evacuee Evacuee { get; set; }
     }
 
-    public class RegistrantQuery : ContactQuery
+    public class DeleteEvacuee : ManageEvacueeCommand
     {
+        [Required]
+        public string Id { get; set; }
     }
 
-    public abstract class ContactInviteCommand
+    public abstract class ManageInvitationCommand
     { }
 
-    public class ContactInviteCommandResult
+    public class ManageInvitationCommandResult
     {
         public string InviteId { get; set; }
     }
 
-    public abstract class ContactInviteQuery
+    public abstract class InvitationQuery
     { }
 
-    public class ContactInviteQueryResult
+    public class InvitationQueryResult
     {
-        public IEnumerable<ContactInvite> Items { get; set; }
+        public IEnumerable<Invitation> Items { get; set; }
     }
 
-    public class CreateNewContactEmailInvite : ContactInviteCommand
+    public class CreateNewEmailInvitation : ManageInvitationCommand
     {
         [Required]
-        public string ContactId { get; set; } = null!;
+        public string EvacueeId { get; set; } = null!;
 
         [Required]
         public string Email { get; set; }
@@ -98,21 +97,21 @@ namespace EMBC.ESS.Resources.Contacts
         public DateTime InviteDate { get; set; }
     }
 
-    public class MarkContactInviteAsUsed : ContactInviteCommand
+    public class MarkInvitationAsComplete : ManageInvitationCommand
     {
         [Required]
-        public string ContactId { get; set; }
+        public string EvacueeId { get; set; }
 
         [Required]
         public string InviteId { get; set; }
     }
 
-    public class ContactEmailInviteQuery : ContactInviteQuery
+    public class EmailInvitationQuery : InvitationQuery
     {
         public string InviteId { get; set; }
     }
 
-    public class Contact
+    public class Evacuee
     {
         public string? Id { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -157,14 +156,14 @@ namespace EMBC.ESS.Resources.Contacts
         public bool AnswerIsMasked { get; set; } = true;
     }
 
-    public class ContactInvite
+    public class Invitation
     {
         public string InviteId { get; set; }
-        public string ContactId { get; set; }
+        public string EvacueeId { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
 
-    public enum ContactInviteStatus
+    public enum InvitationStatus
     {
         Active,
         Used,

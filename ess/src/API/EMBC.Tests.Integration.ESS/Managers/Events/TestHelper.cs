@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
 
-namespace EMBC.Tests.Integration.ESS.Managers.Submissions
+namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
     public static class TestHelper
     {
