@@ -31,7 +31,5 @@ export class OutageComponent implements OnInit {
     this.outageInfo = this.outageService.outageInfo;
   }
 
-  goHomePage(): void {
-    this.router.navigateByUrl('./home');
-  }
+  goHomePage(): void {}
 }
