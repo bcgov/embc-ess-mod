@@ -53,7 +53,7 @@ export class EvacueeNameSearchComponent implements OnInit {
    */
   ngOnInit(): void {
     this.constructNameForm();
-    this.paperBased = this.evacueeSessionService.paperBased;
+    this.paperBased = this.evacueeSessionService.isPaperBased;
   }
 
   /**
