@@ -18,6 +18,12 @@ export class OutageComponent implements OnInit {
         const state = this.router.getCurrentNavigation().extras.state;
         this.outageType = state.type;
       }
+    } else {
+      if (this.outageService.displayOutageInfoInit()) {
+        this.outageType = 'planned';
+      } else {
+        this.outageType = 'unplanned';
+      }
     }
   }
 
