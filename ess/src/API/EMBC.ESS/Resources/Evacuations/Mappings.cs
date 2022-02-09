@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -73,7 +72,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.RegistrationLocation, opts => opts.MapFrom(s => s.era_CurrentNeedsAssessmentid.era_registrationlocation))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid))
                 .ForMember(d => d.Notes, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_essfilenote_ESSFileID))
-                .ForMember(d => d.Supports, opts => opts.ConvertUsing<SupportConverter, IEnumerable<era_evacueesupport>>(s => s.era_era_evacuationfile_era_evacueesupport_ESSFileId))
+                .ForMember(d => d.Supports, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name)))
                 .ForPath(d => d.NeedsAssessment.HavePetsFood, opts => opts.MapFrom(s => s.era_haspetfood == (int)EraTwoOptions.Yes))
                 .ForPath(d => d.NeedsAssessment.Pets, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_animal_ESSFileid))
                 .ForPath(d => d.NeedsAssessment.Notes, opts => opts.MapFrom(s => new[]
@@ -223,127 +222,6 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d._era_essteamuserid_value, opts => opts.MapFrom(s => isGuid(s.CreatingTeamMemberId) ? Guid.Parse(s.CreatingTeamMemberId) : (Guid?)null))
                 .ForMember(d => d.era_ishidden, opts => opts.MapFrom(s => s.IsHidden))
                 ;
-
-            CreateMap<era_evacueesupport, Support>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
-                .ForMember(d => d.CreatedByTeamMemberId, opts => opts.MapFrom(s => s._era_issuedbyid_value))
-                .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
-                .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.MapFrom(s => s._era_needsassessmentid_value))
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
-                .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
-                .ReverseMap()
-                .IncludeAllDerived()
-                .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
-                .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
-                .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
-                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))
-                .ForMember(d => d.era_era_householdmember_era_evacueesupport,
-                    opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
-                ;
-
-            CreateMap<era_evacueesupport, Referral>()
-                .IncludeBase<era_evacueesupport, Support>()
-                .ForMember(d => d.IssuedToPersonName, opts => opts.MapFrom(s => s.era_purchaserofgoods))
-                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s._era_supplierid_value))
-                .ForMember(d => d.SupplierNotes, opts => opts.MapFrom(s => s.era_suppliernote))
-                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => s.era_manualsupport))
-                .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.era_paperreferralcompletedon.HasValue
-                    ? s.era_paperreferralcompletedon.Value.UtcDateTime
-                    : s.createdon.Value.UtcDateTime))
-                .ForMember(d => d.IssuedByDisplayName, opts => opts.MapFrom(s => s.era_paperissuedby))
-                .ReverseMap()
-                .IncludeAllDerived()
-                .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => SupportMethod.Referral))
-                .ForMember(d => d.era_manualsupport, opts => opts.MapFrom(s => s.ExternalReferenceId))
-                .ForMember(d => d.era_paperissuedby, opts => opts.MapFrom(s => s.ExternalReferenceId != null ? s.IssuedByDisplayName : null))
-                .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.ExternalReferenceId != null ? s.IssuedOn : (DateTimeOffset?)null))
-                ;
-
-            CreateMap<era_evacueesupport, ClothingReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.ExtremeWinterConditions, opts => opts.MapFrom(s => s.era_extremewinterconditions == (int)EraTwoOptions.Yes))
-                .ReverseMap()
-                .ForMember(d => d.era_extremewinterconditions, opts => opts.MapFrom(s => s.ExtremeWinterConditions ? EraTwoOptions.Yes : EraTwoOptions.No))
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Clothing))
-                ;
-
-            CreateMap<era_evacueesupport, IncidentalsReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_approveditems))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Incidentals))
-                ;
-
-            CreateMap<era_evacueesupport, FoodGroceriesReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.era_numberofmeals))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.FoodGroceries))
-                ;
-
-            CreateMap<era_evacueesupport, FoodRestaurantReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.NumberOfBreakfastsPerPerson, opts => opts.MapFrom(s => s.era_numberofbreakfasts))
-                .ForMember(d => d.NumberOfLunchesPerPerson, opts => opts.MapFrom(s => s.era_numberoflunches))
-                .ForMember(d => d.NumberOfDinnersPerPerson, opts => opts.MapFrom(s => s.era_numberofdinners))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.FoodRestaurant))
-                ;
-
-            CreateMap<era_evacueesupport, LodgingBilletingReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
-                .ForMember(d => d.HostAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
-                .ForMember(d => d.HostCity, opts => opts.MapFrom(s => s.era_lodgingcity))
-                .ForMember(d => d.HostEmail, opts => opts.MapFrom(s => s.era_lodgingemailaddress))
-                .ForMember(d => d.HostPhone, opts => opts.MapFrom(s => s.era_lodgingcontactnumber))
-                .ForMember(d => d.HostName, opts => opts.MapFrom(s => s.era_lodgingname))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingBilleting))
-                ;
-
-            CreateMap<era_evacueesupport, LodgingGroupReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
-                .ForMember(d => d.FacilityAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
-                .ForMember(d => d.FacilityCity, opts => opts.MapFrom(s => s.era_lodgingcity))
-                .ForMember(d => d.FacilityCommunityCode, opts => opts.MapFrom(s => s._era_grouplodgingcityid_value))
-                .ForMember(d => d.FacilityContactPhone, opts => opts.MapFrom(s => s.era_lodgingcontactnumber))
-                .ForMember(d => d.FacilityName, opts => opts.MapFrom(s => s.era_lodgingname))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingGroup))
-                ;
-
-            CreateMap<era_evacueesupport, LodgingHotelReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
-                .ForMember(d => d.NumberOfRooms, opts => opts.MapFrom(s => s.era_numberofrooms))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingHotel))
-                ;
-
-            CreateMap<era_evacueesupport, TransportationOtherReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.TransportMode, opts => opts.MapFrom(s => s.era_transportmode))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.TransportationOther))
-               ;
-
-            CreateMap<era_evacueesupport, TransportationTaxiReferral>()
-                .IncludeBase<era_evacueesupport, Referral>()
-                .ForMember(d => d.FromAddress, opts => opts.MapFrom(s => s.era_fromaddress))
-                .ForMember(d => d.ToAddress, opts => opts.MapFrom(s => s.era_toaddress))
-                .ReverseMap()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.TransporationTaxi))
-                ;
         }
 
         private static int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
@@ -419,35 +297,5 @@ namespace EMBC.ESS.Resources.Evacuations
             3 => "X",
             _ => null
         };
-    }
-
-    /// <summary>
-    /// Automapper converter to help transforming Dynamics support entity into the correct Support concrete object
-    /// </summary>
-    public class SupportConverter :
-        IValueConverter<era_evacueesupport, Support>,
-        IValueConverter<IEnumerable<era_evacueesupport>, IEnumerable<Support>>
-    {
-        public Support Convert(era_evacueesupport sourceMember, ResolutionContext context) =>
-            (Support)context.Mapper.Map(sourceMember, sourceMember.GetType(), supportTypeResolver((SupportType?)sourceMember.era_supporttype));
-
-        public IEnumerable<Support> Convert(IEnumerable<era_evacueesupport> sourceMember, ResolutionContext context) =>
-            sourceMember.Select(s => Convert(s, context));
-
-        private Type supportTypeResolver(SupportType? supportType) =>
-            supportType switch
-            {
-                SupportType.Clothing => typeof(ClothingReferral),
-                SupportType.Incidentals => typeof(IncidentalsReferral),
-                SupportType.FoodGroceries => typeof(FoodGroceriesReferral),
-                SupportType.FoodRestaurant => typeof(FoodRestaurantReferral),
-                SupportType.LodgingBilleting => typeof(LodgingBilletingReferral),
-                SupportType.LodgingGroup => typeof(LodgingGroupReferral),
-                SupportType.LodgingHotel => typeof(LodgingHotelReferral),
-                SupportType.TransporationTaxi => typeof(TransportationTaxiReferral),
-                SupportType.TransportationOther => typeof(TransportationOtherReferral),
-
-                _ => throw new NotImplementedException($"No known type for support type value '{supportType}'")
-            };
     }
 }

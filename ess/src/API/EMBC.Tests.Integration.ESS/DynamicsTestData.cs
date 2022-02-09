@@ -64,6 +64,7 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveSupplierLegalName => inactiveSupplier.era_name;
         public string InactiveSupplierGST => inactiveSupplier.era_gstnumber;
         public string[] SupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name.ToString()).ToArray();
+        public string[] HouseholdMemberIds => evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(s => s.era_householdmemberid?.ToString() ?? string.Empty).ToArray();
 
         public DynamicsTestData(EssContext essContext)
         {
@@ -71,11 +72,12 @@ namespace EMBC.Tests.Integration.ESS
             jurisdictions = essContext.era_jurisdictions.OrderBy(j => j.era_jurisdictionid).ToArray();
             canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").Single();
             bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
-            //#if DEBUG
-            //            this.testPrefix = $"autotest-dev";
-            //#else
+#if DEBUG
+            //this.testPrefix = $"autotest-dev";
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
-            //#endif
+#else
+            this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
+#endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
 
@@ -161,6 +163,7 @@ namespace EMBC.Tests.Integration.ESS
                 .Where(f => f.era_evacuationfileid == evacuationfile.era_evacuationfileid).Single();
 
             essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+            essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
 
             this.paperEvacuationFile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
@@ -168,6 +171,7 @@ namespace EMBC.Tests.Integration.ESS
                 .Where(f => f.era_evacuationfileid == paperEvacuationfile.era_evacuationfileid).Single();
 
             essContext.LoadProperty(this.paperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+            essContext.LoadProperty(this.paperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
 
             essContext.DetachAll();
         }

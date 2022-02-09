@@ -21,6 +21,7 @@ using AutoMapper;
 using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
+using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Utilities.Extensions;
 
 namespace EMBC.ESS.Managers.Events
@@ -44,6 +45,7 @@ namespace EMBC.ESS.Managers.Events
             CreateMap<EvacuationFile, Shared.Contracts.Events.EvacuationFile>()
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
                 .ForMember(d => d.RelatedTask, opts => opts.MapFrom(s => new Shared.Contracts.Events.IncidentTask { Id = s.TaskId }))
+                .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Events.Address, EvacuationAddress>()

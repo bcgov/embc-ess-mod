@@ -29,6 +29,7 @@ using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
+using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
@@ -51,6 +52,7 @@ namespace EMBC.ESS.Managers.Events
         private readonly IInvitationRepository invitationRepository;
         private readonly ITemplateProviderResolver templateProviderResolver;
         private readonly IEvacuationRepository evacuationRepository;
+        private readonly ISupportRepository supportRepository;
         private readonly ITransformator transformator;
         private readonly INotificationSender notificationSender;
         private readonly ITaskRepository taskRepository;
@@ -73,6 +75,7 @@ namespace EMBC.ESS.Managers.Events
             IInvitationRepository invitationRepository,
             ITemplateProviderResolver templateProviderResolver,
             IEvacuationRepository evacuationRepository,
+            ISupportRepository supportRepository,
             ITransformator transformator,
             INotificationSender notificationSender,
             ITaskRepository taskRepository,
@@ -92,6 +95,7 @@ namespace EMBC.ESS.Managers.Events
             this.invitationRepository = invitationRepository;
             this.templateProviderResolver = templateProviderResolver;
             this.evacuationRepository = evacuationRepository;
+            this.supportRepository = supportRepository;
             this.transformator = transformator;
             this.notificationSender = notificationSender;
             this.taskRepository = taskRepository;
@@ -105,7 +109,7 @@ namespace EMBC.ESS.Managers.Events
             this.dataProtectionProvider = dataProtectionProvider;
             this.configuration = configuration;
             this.env = env;
-            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository);
+            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository);
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -481,10 +485,10 @@ namespace EMBC.ESS.Managers.Events
 
             //Not ideal solution - the IDs are concatenated by CaseRepository to ensure
             //all supports are created in a single transaction
-            var supportIds = (await evacuationRepository.Manage(new SaveEvacuationFileSupportCommand
+            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Evacuations.Support>>(cmd.Supports)
+                Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
             })).Id.Split(';');
 
             var printRequestId = await printingRepository.Manage(new SavePrintRequest
@@ -529,10 +533,10 @@ namespace EMBC.ESS.Managers.Events
                 referral.CreatedOn = DateTime.UtcNow;
             }
             //save referrals
-            var supportIds = (await evacuationRepository.Manage(new SaveEvacuationFileSupportCommand
+            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Evacuations.Support>>(cmd.Supports)
+                Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
             })).Id.Split(';');
 
             // no print request is returned
@@ -545,11 +549,11 @@ namespace EMBC.ESS.Managers.Events
 
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await evacuationRepository.Manage(new VoidEvacuationFileSupportCommand
+            var id = (await supportRepository.Manage(new VoidEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
                 SupportId = cmd.SupportId,
-                VoidReason = Enum.Parse<Resources.Evacuations.SupportVoidReason>(cmd.VoidReason.ToString())
+                VoidReason = Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString())
             })).Id;
             return id;
         }
@@ -709,7 +713,7 @@ namespace EMBC.ESS.Managers.Events
             return contactId;
         }
 
-        public async Task<SearchSupportsQueryResponse> Handle(SearchSupportsQuery query)
+        public async Task<SearchSupportsQueryResponse> Handle(Shared.Contracts.Events.SearchSupportsQuery query)
         {
             if (query.ExternalReferenceId == null) throw new BusinessValidationException($"Search supports must have criteria");
 
