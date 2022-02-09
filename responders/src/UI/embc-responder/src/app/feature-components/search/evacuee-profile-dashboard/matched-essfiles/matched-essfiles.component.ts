@@ -36,7 +36,7 @@ export class MatchedEssfilesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isPaperBased = this.evacueeSessionService.paperBased;
+    this.isPaperBased = this.evacueeSessionService.isPaperBased;
     this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
     this.registrantId = this.evacueeSessionService.profileId;
     this.getProfileESSFiles(this.registrantId);

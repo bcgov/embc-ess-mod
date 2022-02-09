@@ -25,7 +25,7 @@ export class DataEntryComponent implements OnInit {
 
   ngOnInit(): void {
     this.constructDataEntryForm();
-    this.isPaperBased = this.evacueeSessionService?.paperBased;
+    this.isPaperBased = this.evacueeSessionService?.isPaperBased;
 
     if (this.isPaperBased) {
       this.dataEntryForm.get('paperBased').setValue(true);
@@ -44,7 +44,7 @@ export class DataEntryComponent implements OnInit {
    */
   next(): void {
     if (this.dataEntryForm.valid) {
-      this.evacueeSessionService.paperBased =
+      this.evacueeSessionService.isPaperBased =
         this.dataEntryForm.get('paperBased').value;
       this.showDataEntryComponent.emit(false);
       this.showIDPhotoComponent.emit(true);
