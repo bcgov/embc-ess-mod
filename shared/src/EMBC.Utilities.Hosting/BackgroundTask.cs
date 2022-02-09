@@ -70,7 +70,7 @@ namespace EMBC.Utilities.Hosting
                     nextExecutionDate = schedule.GetNextOccurrence(now);
                     logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                 }
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(15));
             }
         }
 
