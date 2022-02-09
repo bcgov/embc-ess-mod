@@ -6,12 +6,15 @@ import { SupportStatus } from './support-status';
 import { SupportSubCategory } from './support-sub-category';
 export interface Support {
   category: SupportCategory;
+  createdBy?: null | string;
+  createdByTeam?: null | string;
+  createdOn?: null | string;
   from: string;
   id?: null | string;
   includedHouseholdMembers: Array<string>;
-  issuedOn?: string;
-  issuingMemberName?: null | string;
-  issuingMemberTeamName?: null | string;
+  issuedBy?: null | string;
+  issuedByTeam?: null | string;
+  issuedOn?: null | string;
   method: SupportMethod;
   needsAssessmentId?: null | string;
   status?: SupportStatus;

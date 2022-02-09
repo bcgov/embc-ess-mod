@@ -4,15 +4,14 @@ import { SupportCategory } from './support-category';
 import { SupportMethod } from './support-method';
 import { SupportStatus } from './support-status';
 import { SupportSubCategory } from './support-sub-category';
-export interface Support {
+export interface SupportSummary {
   category?: SupportCategory;
+  externalReferenceId?: null | string;
+  fileId?: string;
   from?: string;
   id?: string;
-  includedHouseholdMembers?: Array<string>;
-  issuedOn?: string;
-  issuingMemberTeamName?: string;
   method?: SupportMethod;
   status?: SupportStatus;
-  subCategory?: SupportSubCategory;
+  subCategory?: null | SupportSubCategory;
   to?: string;
 }

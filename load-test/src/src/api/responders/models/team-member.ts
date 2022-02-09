@@ -19,6 +19,6 @@ export interface TeamMember {
   phone?: null | string;
   role: MemberRole;
   teamId?: null | string;
-  teamName?: null | string;
+  teamName?: string;
   userName: string;
 }

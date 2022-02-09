@@ -1,10 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface EssTask {
-  communityCode?: null | string;
-  description?: null | string;
+  communityCode?: string;
+  description?: string;
   endDate?: string;
-  id?: null | string;
+  id?: string;
   startDate?: string;
-  status?: null | string;
+  status?: string;
 }
