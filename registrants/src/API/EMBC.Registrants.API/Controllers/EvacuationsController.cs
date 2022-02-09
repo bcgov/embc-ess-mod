@@ -155,6 +155,7 @@ namespace EMBC.Registrants.API.Controllers
         public DateTime LastModified { get; set; }
         public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
         public string? ExternalReferenceId { get; set; }
+        public bool? IsPaper { get; set; }
     }
 
     /// <summary>

@@ -21,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private string TestEssFileNumber => TestData.EvacuationFileId;
 
-        private string TestNeedsAssessmentId => TestData.CurrentNeedsAssessmentId;
+        private string TestNeedsAssessmentId => TestData.EvacuationFileCurrentNeedsAssessmentId;
 
         public EvacuationTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
@@ -237,7 +237,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 pet.Id.ShouldNotBeNullOrEmpty();
             }
         }
-
 
         private async Task<Evacuee> GetContactByUserId(string userId) =>
             (await Services.GetRequiredService<IEvacueesRepository>().Query(new EvacueeQuery { UserId = userId })).Items.Single();

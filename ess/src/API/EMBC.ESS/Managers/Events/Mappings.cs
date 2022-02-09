@@ -40,9 +40,8 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.IsSecurityPhraseMasked, opts => opts.Ignore())
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.RelatedTask == null ? null : s.RelatedTask.Id))
                 .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
-                ;
-
-            CreateMap<EvacuationFile, Shared.Contracts.Events.EvacuationFile>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
                 .ForMember(d => d.RelatedTask, opts => opts.MapFrom(s => new Shared.Contracts.Events.IncidentTask { Id = s.TaskId }))
                 .ForMember(d => d.Supports, opts => opts.Ignore())

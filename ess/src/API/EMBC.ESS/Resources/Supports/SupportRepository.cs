@@ -71,14 +71,18 @@ namespace EMBC.ESS.Resources.Supports
 
         private async Task<SupportQueryResults> Handle(SearchSupportsQuery query)
         {
-            var ctx = essContextFactory.CreateReadOnly();
+            var ctx = essContextFactory.Create();
             var supports = await Search(ctx, query);
             foreach (var support in supports)
             {
-                ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
+                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_EvacuationFileId));
                 await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
             }
-            return await Task.FromResult(new SupportQueryResults { Items = mapper.Map<IEnumerable<Support>>(supports) });
+            var results = new SupportQueryResults { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
+
+            ctx.DetachAll();
+
+            return results;
         }
 
         private static async Task<IEnumerable<era_evacueesupport>> Search(EssContext ctx, SearchSupportsQuery query)
@@ -92,7 +96,6 @@ namespace EMBC.ESS.Resources.Supports
                 var file = ctx.era_evacuationfiles.Where(f => f.era_name == query.ByEvacuationFileId).SingleOrDefault();
                 if (file == null) return Array.Empty<era_evacueesupport>();
 
-                ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
                 await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
                 IEnumerable<era_evacueesupport> supports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId;
                 if (!string.IsNullOrEmpty(query.ById)) supports = supports.Where(s => s.era_name == query.ById);
@@ -107,7 +110,7 @@ namespace EMBC.ESS.Resources.Supports
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByExternalReferenceId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByExternalReferenceId);
 
-            return await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync();
+            return (await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync()).ToArray();
         }
 
         private async Task<string[]> SaveSupports(string fileId, IEnumerable<Support> supports)

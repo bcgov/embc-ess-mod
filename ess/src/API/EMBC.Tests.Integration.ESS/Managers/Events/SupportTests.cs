@@ -288,5 +288,48 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 RequestingUserId = TestData.Tier4TeamMemberId
             }));
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task SearchSupports_ExternalReferenceId_CorrectListOfSupports()
+        {
+            var fileId = TestData.PaperEvacuationFileId;
+
+            var newSupports = new Referral[]
+            {
+                     new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
+                     new IncidentalsReferral(),
+                     new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
+                     new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
+                     new LodgingBilletingReferral() { NumberOfNights = 1 },
+                     new LodgingGroupReferral() { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity },
+                     new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
+                     new TransportationOtherReferral(),
+                     new TransportationTaxiReferral(),
+            };
+
+            var externalReferenceId = $"{TestData.TestPrefix}-paperreferral";
+
+            foreach (var s in newSupports)
+            {
+                s.From = DateTime.UtcNow;
+                s.To = DateTime.UtcNow.AddDays(3);
+                s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
+                s.ExternalReferenceId = externalReferenceId;
+                s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
+            }
+
+            await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, RequestingUserId = TestData.Tier4TeamMemberId, Supports = newSupports });
+
+            var supports = (await manager.Handle(new SearchSupportsQuery { ExternalReferenceId = externalReferenceId })).Items;
+            supports.ShouldNotBeEmpty();
+            supports.Count().ShouldBe(newSupports.Length);
+            foreach (var support in supports)
+            {
+                var referral = support.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                referral.FileId.ShouldBe(fileId);
+                referral.ExternalReferenceId.ShouldBe(externalReferenceId);
+                referral.OriginatingNeedsAssessmentId.ShouldBe(TestData.PaperEvacuationFileNeedsAssessmentId);
+            }
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public abstract class Support
     {
         public string Id { get; set; }
+        public string FileId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public TeamMember CreatedBy { get; set; }
         public DateTime? IssuedOn { get; set; }

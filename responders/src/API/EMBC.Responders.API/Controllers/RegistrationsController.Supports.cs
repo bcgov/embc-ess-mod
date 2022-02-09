@@ -152,17 +152,11 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
         public string FileId { get; set; }
-        public string? ExternalReferenceId { get; set; }
         public DateTime From { get; set; }
-
         public DateTime To { get; set; }
-
         public SupportStatus Status { get; set; }
-
         public SupportMethod Method { get; set; }
-
         public SupportCategory Category { get; set; }
-
         public SupportSubCategory? SubCategory { get; set; }
     }
 
@@ -174,7 +168,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class ProcessPaperReferralsRequest
     {
-        public IEnumerable<Referral> Referrals { get; set; }
+        public IEnumerable<Support> Referrals { get; set; }
     }
 
     [JsonConverter(typeof(SupportJsonConverter))]
@@ -182,6 +176,7 @@ namespace EMBC.Responders.API.Controllers
     public abstract class Support
     {
         public string? Id { get; set; }
+        public string? FileId { get; set; }
 
         public DateTime? CreatedOn { get; set; }
         public string? CreatedBy { get; set; }
@@ -621,7 +616,7 @@ namespace EMBC.Responders.API.Controllers
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.CreatedBy, opts => opts.Ignore())
-                .ForMember(d => d.IssuedBy, opts => opts.Ignore())
+                .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => new EMBC.ESS.Shared.Contracts.Events.TeamMember { DisplayName = s.IssuedBy }))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
                 ;
 
@@ -690,6 +685,9 @@ namespace EMBC.Responders.API.Controllers
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
+
+            CreateMap<Support, SupportSummary>()
+            ;
         }
     }
 }
