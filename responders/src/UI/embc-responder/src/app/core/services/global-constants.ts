@@ -317,6 +317,12 @@ export const exitWizardDialog: DialogContent = {
   cancelButton: 'No, Cancel'
 };
 
+export const paperProcessSupports: DialogContent = {
+  text: '<p>By clicking "Proceed", the supports will be processed & no longer editable.</p>',
+  confirmButton: 'Proceed',
+  cancelButton: 'Cancel'
+};
+
 export const evacueeProfileStepIncompleteMessage: DialogContent = {
   text: '<p>Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.</p>',
   cancelButton: 'Close'

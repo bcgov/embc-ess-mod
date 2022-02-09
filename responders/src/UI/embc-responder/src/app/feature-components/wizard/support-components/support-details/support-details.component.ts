@@ -83,7 +83,7 @@ export class SupportDetailsComponent implements OnInit {
   };
 
   validDateFilter = (): any => {
-    return this.evacueeSessionService.paperBased
+    return this.evacueeSessionService.isPaperBased
       ? this.paperFromDateFilter
       : this.digitalFromDateFilter;
   };
@@ -406,7 +406,7 @@ export class SupportDetailsComponent implements OnInit {
     } else {
       this.stepSupportsService.supportDetails =
         this.supportDetailsForm.getRawValue();
-      if (this.evacueeSessionService.paperBased) {
+      if (this.evacueeSessionService.isPaperBased) {
         this.mapPaperFields();
       }
       if (!this.editFlag) {
@@ -456,7 +456,7 @@ export class SupportDetailsComponent implements OnInit {
   private createSupportDetailsForm(): void {
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
-        this.evacueeSessionService.paperBased
+        this.evacueeSessionService.isPaperBased
           ? ''
           : new Date(
               this.stepSupportsService.convertStringToDate(
@@ -472,7 +472,7 @@ export class SupportDetailsComponent implements OnInit {
         ]
       ],
       fromTime: [
-        this.evacueeSessionService.paperBased ? '' : this.currentTime,
+        this.evacueeSessionService.isPaperBased ? '' : this.currentTime,
         [
           Validators.required
           // this.evacueeSessionService.paperBased
@@ -519,18 +519,67 @@ export class SupportDetailsComponent implements OnInit {
       paperSupportNumber: [
         '',
         [
-          this.customValidation.whitespaceValidator(),
-          Validators.minLength(8),
-          Validators.pattern(globalConst.supportNumberPattern)
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation),
+
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              Validators.minLength(8)
+            )
+            .bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              Validators.pattern(globalConst.supportNumberPattern)
+            )
+            .bind(this.customValidation)
         ]
       ],
       paperIssuedBy: this.formBuilder.group({
-        firstName: ['', [this.customValidation.whitespaceValidator()]],
-        lastNameInitial: ['', [this.customValidation.whitespaceValidator()]]
+        firstName: [
+          '',
+          [
+            this.customValidation
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
+              .bind(this.customValidation)
+          ]
+        ],
+        lastNameInitial: [
+          '',
+          [
+            this.customValidation
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
+              .bind(this.customValidation)
+          ]
+        ]
       }),
       paperCompletedOn: [
         '',
-        [Validators.required, this.customValidation.validDateValidator()]
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              Validators.required
+            )
+            .bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              this.customValidation.validDateValidator()
+            )
+            .bind(this.customValidation)
+        ]
       ]
     });
   }
