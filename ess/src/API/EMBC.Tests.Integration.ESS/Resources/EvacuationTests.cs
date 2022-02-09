@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Resources.Cases;
-using EMBC.ESS.Resources.Cases.Evacuations;
-using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Evacuations;
+using EMBC.ESS.Resources.Evacuees;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -13,7 +12,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 {
     public class EvacuationTests : DynamicsWebAppTestBase
     {
-        private readonly ICaseRepository caseRepository;
+        private readonly IEvacuationRepository evacuationRepository;
 
         // Constants
         private string TestContactId => TestData.ContactId;
@@ -26,7 +25,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         public EvacuationTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            caseRepository = Services.GetRequiredService<ICaseRepository>();
+            evacuationRepository = Services.GetRequiredService<IEvacuationRepository>();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
@@ -36,7 +35,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 FileId = TestEssFileNumber
             };
-            var queryResult = await caseRepository.QueryCase(caseQuery);
+            var queryResult = await evacuationRepository.Query(caseQuery);
             queryResult.Items.ShouldHaveSingleItem();
 
             var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
@@ -51,7 +50,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 FileId = TestEssFileNumber,
                 NeedsAssessmentId = TestNeedsAssessmentId
             };
-            var queryResult = await caseRepository.QueryCase(caseQuery);
+            var queryResult = await evacuationRepository.Query(caseQuery);
             queryResult.Items.ShouldHaveSingleItem();
 
             var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
@@ -66,7 +65,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 NeedsAssessmentId = TestNeedsAssessmentId
             };
-            var queryResult = await caseRepository.QueryCase(caseQuery);
+            var queryResult = await evacuationRepository.Query(caseQuery);
             queryResult.Items.ShouldBeEmpty();
         }
 
@@ -78,7 +77,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 FileId = "nofileid",
                 PrimaryRegistrantId = TestContactId
             };
-            var queryResult = await caseRepository.QueryCase(caseQuery);
+            var queryResult = await evacuationRepository.Query(caseQuery);
             queryResult.Items.ShouldBeEmpty();
         }
 
@@ -90,7 +89,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 PrimaryRegistrantId = primaryContactId,
             };
-            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            var files = (await evacuationRepository.Query(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == primaryContactId));
             files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContactId);
@@ -103,7 +102,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 LinkedRegistrantId = TestContactId
             };
-            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            var files = (await evacuationRepository.Query(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == TestContactId));
         }
@@ -113,19 +112,19 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
+            var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
 
             var caseQuery = new EvacuationFilesQuery
             {
                 FileId = fileId
             };
-            (await caseRepository.QueryCase(caseQuery)).Items.ShouldHaveSingleItem();
+            (await evacuationRepository.Query(caseQuery)).Items.ShouldHaveSingleItem();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUpdateEvacuationFile()
         {
-            var fileToUpdate = (await caseRepository.QueryCase(new EvacuationFilesQuery
+            var fileToUpdate = (await evacuationRepository.Query(new EvacuationFilesQuery
             {
                 FileId = TestEssFileNumber,
             })).Items.Cast<EvacuationFile>().Single();
@@ -142,9 +141,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 member.LastName = $"{newUniqueSignature}_{originalLastName}";
             }
 
-            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = fileToUpdate })).Id;
+            var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = fileToUpdate })).Id;
 
-            var updatedFile = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
+            var updatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
 
             var updatedNeedsAssessment = updatedFile.NeedsAssessment;
             updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
@@ -164,13 +163,13 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var now = DateTime.UtcNow;
             var primaryContact = await GetContactByUserId(TestContactUserId);
             var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
+            var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
 
             var caseQuery = new EvacuationFilesQuery
             {
                 FileId = fileId
             };
-            var evacuationFile = (EvacuationFile)(await caseRepository.QueryCase(caseQuery)).Items.ShouldHaveSingleItem();
+            var evacuationFile = (EvacuationFile)(await evacuationRepository.Query(caseQuery)).Items.ShouldHaveSingleItem();
 
             // Evacuation file
             evacuationFile.EvacuatedFrom.ShouldNotBeNull();
@@ -239,133 +238,11 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanCreateSupports()
-        {
-            var now = DateTime.UtcNow;
-            var primaryContact = await GetContactByUserId(TestContactUserId);
-            var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = originalFile })).Id;
-            var createdFile = (EvacuationFile)(await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
-            var includedHouseholdMembers = createdFile.HouseholdMembers.Select(s => s.Id).ToArray();
-            var supports = new Support[]
-            {
-               new ClothingReferral {
-                   SupplierId = TestData.SupplierAId,
-                   SupplierNotes = "notes",
-                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IssuedToPersonName = "test person",
-                   IncludedHouseholdMembers = includedHouseholdMembers,
-                   From = now.AddDays(20),
-                   To = now.AddDays(50),
-                   IssuedOn = now
-               },
-               new IncidentalsReferral {
-                   SupplierId = TestData.SupplierAId,
-                   SupplierNotes = "notes",
-                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IssuedToPersonName = "test person",
-                   IncludedHouseholdMembers = includedHouseholdMembers,
-                   From = now.AddDays(20),
-                   To = now.AddDays(50),
-                   IssuedOn = now
-               }
-            };
 
-            var supportIds = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = fileId, Supports = supports })).Id.Split(';');
+        private async Task<Evacuee> GetContactByUserId(string userId) =>
+            (await Services.GetRequiredService<IEvacueesRepository>().Query(new EvacueeQuery { UserId = userId })).Items.Single();
 
-            var file = (EvacuationFile)(await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
-
-            var readSupportIds = file.Supports.Select(s => s.Id).OrderBy(id => id).ToArray();
-            readSupportIds.ShouldBe(supportIds.OrderBy(id => id).ToArray());
-            foreach (var support in file.Supports)
-            {
-                var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).Single();
-
-                if (support is Referral referral)
-                {
-                    referral.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
-
-                    if (sourceSupport.SupplierId != null)
-                        referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
-                    if (sourceSupport.IncludedHouseholdMembers.Any())
-                        referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
-                    if (sourceSupport.CreatedByTeamMemberId != null)
-                        referral.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
-                }
-            }
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanUpdateSupports()
-        {
-            var now = DateTime.UtcNow;
-            var fileToCreateSupportFor = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = TestEssFileNumber, })).Items.Cast<EvacuationFile>().Single();
-
-            //____
-            //First create a support
-            var newSupport = new Support[]
-            {
-               new ClothingReferral {
-                   SupplierId = TestData.SupplierAId,
-                   SupplierNotes = "old notes",
-                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IssuedToPersonName = "old test person",
-                   IncludedHouseholdMembers = fileToCreateSupportFor.HouseholdMembers.Select(s => s.Id).ToArray(),
-                   From = now.AddDays(20),
-                   To = now.AddDays(50),
-                   IssuedOn = now,
-                   TotalAmount = 0
-               }
-            };
-            var createdSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Supports = newSupport })).Id;
-
-            //____
-            //Then update the created support
-            var fileToUpdateItsSupport = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = TestEssFileNumber, })).Items.Cast<EvacuationFile>().Single();
-            var supportToUpdate = (ClothingReferral)fileToUpdateItsSupport.Supports.Where(s => s.Id == createdSupportId).Single();
-
-            //Parameters to change in support
-            var newUniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
-
-            var randomIndex = new Random().Next(0, fileToUpdateItsSupport.HouseholdMembers.Count());
-            var includedHouseholdMembers = fileToUpdateItsSupport.HouseholdMembers.Where((m, i) => i == randomIndex).Select(s => s.Id).ToArray();
-
-            supportToUpdate.From = supportToUpdate.From.AddDays(-30);
-            supportToUpdate.To = supportToUpdate.To.AddDays(-51);
-            supportToUpdate.IssuedToPersonName = "New Test Person";
-            supportToUpdate.TotalAmount = 100;
-            supportToUpdate.SupplierNotes = "New note to supplier is: " + newUniqueSignature;
-            supportToUpdate.SupplierId = TestData.SupplierBId;
-            supportToUpdate.CreatedByTeamMemberId = TestData.OtherTeamMemberId;
-            supportToUpdate.IncludedHouseholdMembers = includedHouseholdMembers;
-
-            var updatedSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Supports = new[] { supportToUpdate } })).Id.Split(';').Single();
-
-            //__
-            //Performing test
-            var updatedFile = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = TestEssFileNumber, })).Items.Cast<EvacuationFile>().Single();
-            var updatedSupport = (ClothingReferral)updatedFile.Supports.Where(s => s.Id == updatedSupportId).Single();
-
-            updatedSupport.From.ShouldBe(supportToUpdate.From);
-            updatedSupport.To.ShouldBe(supportToUpdate.To);
-            updatedSupport.IssuedToPersonName.ShouldBe(supportToUpdate.IssuedToPersonName);
-            updatedSupport.TotalAmount.ShouldBe(supportToUpdate.TotalAmount);
-            updatedSupport.SupplierNotes.ShouldBe(supportToUpdate.SupplierNotes);
-            updatedSupport.CreatedByTeamMemberId.ShouldBe(supportToUpdate.CreatedByTeamMemberId);
-            updatedSupport.Status.ShouldBe(updatedSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
-
-            if (supportToUpdate.IncludedHouseholdMembers.Any())
-                updatedSupport.IncludedHouseholdMembers.ShouldBe(supportToUpdate.IncludedHouseholdMembers);
-
-            if (supportToUpdate.SupplierId != null)
-                updatedSupport.SupplierId.ShouldBe(supportToUpdate.SupplierId);
-        }
-
-        private async Task<Contact> GetContactByUserId(string userId) =>
-            (await Services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
-
-        private EvacuationFile CreateTestFile(Contact primaryContact)
+        private EvacuationFile CreateTestFile(Evacuee primaryContact)
         {
             var now = DateTime.UtcNow;
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);

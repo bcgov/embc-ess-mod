@@ -14,9 +14,11 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Resources.Suppliers;
+using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts.Events;
@@ -29,13 +31,19 @@ namespace EMBC.ESS.Managers.Events
         private readonly ITeamRepository teamRepository;
         private readonly ITaskRepository taskRepository;
         private readonly ISupplierRepository supplierRepository;
+        private readonly ISupportRepository supportRepository;
 
-        public EvacuationFileLoader(IMapper mapper, ITeamRepository teamRepository, ITaskRepository taskRepository, ISupplierRepository supplierRepository)
+        public EvacuationFileLoader(IMapper mapper,
+            ITeamRepository teamRepository,
+            ITaskRepository taskRepository,
+            ISupplierRepository supplierRepository,
+            ISupportRepository supportRepository)
         {
             this.mapper = mapper;
             this.teamRepository = teamRepository;
             this.taskRepository = taskRepository;
             this.supplierRepository = supplierRepository;
+            this.supportRepository = supportRepository;
         }
 
         public async System.Threading.Tasks.Task Load(EvacuationFile file)
@@ -69,6 +77,9 @@ namespace EMBC.ESS.Managers.Events
                 }
             }
 
+            var supports = (await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
+            file.Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports);
+
             foreach (var support in file.Supports)
             {
                 if (!string.IsNullOrEmpty(support.CreatedBy?.Id))
@@ -82,7 +93,7 @@ namespace EMBC.ESS.Managers.Events
                         if (support.IssuedBy == null) support.IssuedBy = support.CreatedBy;
                     }
                 }
-                if (support is Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
+                if (support is Shared.Contracts.Events.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
                 {
                     var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
                     if (supplier != null)
