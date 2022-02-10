@@ -15,13 +15,15 @@ import {
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { RegistrationsService } from 'src/app/core/api/services';
 
 @Injectable({ providedIn: 'root' })
 export class SupportDetailsService {
   constructor(
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    public stepSupportsService: StepSupportsService
+    public stepSupportsService: StepSupportsService,
+    private registrationService: RegistrationsService
   ) {}
 
   generateDynamicForm(supportType: string): FormGroup {
@@ -191,6 +193,12 @@ export class SupportDetailsService {
           ?.userTotalAmount ?? '',
         [Validators.required, Validators.pattern(globalConst.currencyPattern)]
       ]
+    });
+  }
+
+  checkUniqueReferralNumber(externalReferenceId: string) {
+    return this.registrationService.registrationsSearchSupports({
+      externalReferenceId
     });
   }
 }
