@@ -6,7 +6,6 @@ import { SupportStatus } from './support-status';
 import { SupportSubCategory } from './support-sub-category';
 export interface SupportSummary {
   category?: SupportCategory;
-  externalReferenceId?: null | string;
   fileId?: string;
   from?: string;
   id?: string;

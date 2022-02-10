@@ -9,7 +9,7 @@ export interface EvacuationFileSummary {
   evacuationFileDate?: string;
   externalReferenceId?: null | string;
   id?: string;
-  isPaper?: boolean;
+  isPaper?: null | boolean;
   isPerliminary?: boolean;
   isRestricted?: null | boolean;
   issuedOn?: string;
