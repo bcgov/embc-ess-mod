@@ -18,9 +18,11 @@ using System;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using EMBC.PDFGenerator;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
+using Grpc.Net.Client.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -56,15 +58,39 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                 }
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
-                if (!allowUntrustedCertificates) return new SocketsHttpHandler();
-                return new SocketsHttpHandler
+                var handler = new SocketsHttpHandler()
                 {
-                    SslOptions = new SslClientAuthenticationOptions
-                    {
-                        RemoteCertificateValidationCallback = DangerousCertificationValidation
-                    }
+                    EnableMultipleHttp2Connections = true,
+                    PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+                    KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+                    KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
                 };
-            });
+                if (allowUntrustedCertificates)
+                {
+                    handler.SslOptions = new SslClientAuthenticationOptions { RemoteCertificateValidationCallback = DangerousCertificationValidation };
+                }
+                return handler;
+            }).ConfigureChannel(opts =>
+            {
+                opts.ServiceConfig = new ServiceConfig
+                {
+                    MethodConfigs =
+                        {
+                            new MethodConfig
+                            {
+                                RetryPolicy = new RetryPolicy
+                                {
+                                    MaxAttempts = 5,
+                                    InitialBackoff = TimeSpan.FromSeconds(1),
+                                    MaxBackoff = TimeSpan.FromSeconds(5),
+                                    BackoffMultiplier = 1.5,
+                                    RetryableStatusCodes = { StatusCode.Unavailable }
+                                }
+                            }
+                        }
+                };
+            }).EnableCallContextPropagation(opts => opts.SuppressContextNotFoundErrors = true);
+
             configurationServices.Services.TryAddTransient<IPdfGenerator, PdfGenerator>();
         }
 
