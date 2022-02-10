@@ -17,6 +17,7 @@ export interface EvacuationFile {
   externalReferenceId?: null | string;
   householdMembers?: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
+  isPaper?: null | boolean;
   isRestricted?: null | boolean;
   needsAssessment: NeedsAssessment;
   notes?: Array<Note>;
