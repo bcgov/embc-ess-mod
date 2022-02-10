@@ -55,6 +55,18 @@ export class ReviewSupportService {
       );
   }
 
+  savePaperSupports(
+    fileId: string,
+    supportsDraft: Referral[]
+  ): Observable<void> {
+    return this.registrationService.registrationsProcessPaperReferrals({
+      fileId,
+      body: {
+        referrals: supportsDraft
+      }
+    });
+  }
+
   updateExistingSupportsList(): void {
     this.stepSupportsService
       .getEvacFile(this.evacueeSessionService.essFileNumber)
