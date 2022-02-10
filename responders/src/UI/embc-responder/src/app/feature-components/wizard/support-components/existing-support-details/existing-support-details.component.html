@@ -13,7 +13,106 @@
   <div class="row row-padding">
     <div class="col-md-12 needs-box">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8" *ngIf="evacueeSessionService?.isPaperBased">
+          <p class="question-heading">
+            Support #{{ referral?.externalReferenceId }}
+          </p>
+          <div class="row">
+            <div class="col-md-1">
+              <p class="box-text-color">Status:</p>
+            </div>
+            <div class="col-md-3 bold">
+              <p
+                [ngClass]="{
+                  'active-status': selectedSupport?.status === 'Active',
+                  'void-status': selectedSupport?.status === 'Void',
+                  'expired-status': selectedSupport?.status === 'Expired',
+                  'draft-status': selectedSupport?.status === 'Draft'
+                }"
+              >
+                {{ selectedSupport?.status }}
+              </p>
+            </div>
+          </div>
+
+          <div *ngIf="selectedSupport?.status === 'Draft'">
+            <div class="row">
+              <div class="col-md-2">
+                <p class="box-text-color">Paper Support Completed On:</p>
+              </div>
+              <div class="col-md-4 bold">
+                <p>
+                  {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
+                  {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
+                </p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-2">
+                <p class="box-text-color">Paper Support Issued by:</p>
+              </div>
+              <div class="col-md-4 bold">
+                <p>{{ selectedSupport?.issuedBy }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedSupport?.status !== 'Draft'">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-2">
+                    <p class="box-text-color header-width">Issued:</p>
+                  </div>
+                  <div class="col-md-4 bold header-width">
+                    <p>
+                      {{ selectedSupport?.createdOn | date: 'dd-MMM-yyyy' }} at
+                      {{ selectedSupport?.createdOn | date: 'hh:mm a' }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-2">
+                    <p class="box-text-color header-width">Issued by:</p>
+                  </div>
+                  <div class="col-md-4 bold header-width">
+                    <p>{{ selectedSupport?.createdBy }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-3">
+                    <p class="box-text-color header-width">
+                      Paper Support Completed On:
+                    </p>
+                  </div>
+                  <div class="col-md-3 bold header-width">
+                    <p>
+                      {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
+                      {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-3">
+                    <p class="box-text-color header-width">
+                      Paper Support Issued by:
+                    </p>
+                  </div>
+                  <div class="col-md-3 bold header-width">
+                    <p>{{ selectedSupport?.issuedBy }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!evacueeSessionService?.isPaperBased" class="col-md-8">
           <p
             *ngIf="selectedSupport?.status !== 'Draft'"
             class="question-heading"
@@ -27,7 +126,7 @@
             Support
           </p>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <p class="box-text-color">Status:</p>
             </div>
             <div class="col-md-4 bold">
@@ -45,23 +144,23 @@
           </div>
 
           <div *ngIf="selectedSupport?.status !== 'Draft'" class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <p class="box-text-color">Issued:</p>
             </div>
             <div class="col-md-4 bold">
               <p>
-                {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
-                {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
+                {{ selectedSupport?.createdOn | date: 'dd-MMM-yyyy' }} at
+                {{ selectedSupport?.createdOn | date: 'hh:mm a' }}
               </p>
             </div>
           </div>
 
           <div *ngIf="selectedSupport?.status !== 'Draft'" class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
               <p class="box-text-color">Issued by:</p>
             </div>
             <div class="col-md-4 bold">
-              <p>{{ selectedSupport?.issuedBy }}</p>
+              <p>{{ selectedSupport?.createdBy }}</p>
             </div>
           </div>
         </div>
@@ -84,7 +183,13 @@
             </div>
           </div>
 
-          <div class="row" *ngIf="selectedSupport?.status === 'Active'">
+          <div
+            class="row"
+            *ngIf="
+              selectedSupport?.status === 'Active' &&
+              !evacueeSessionService?.isPaperBased
+            "
+          >
             <div class="col-md-12">
               <a (click)="reprint()"
                 ><img

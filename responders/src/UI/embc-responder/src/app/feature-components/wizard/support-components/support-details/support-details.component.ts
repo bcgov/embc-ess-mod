@@ -86,6 +86,16 @@ export class SupportDetailsComponent implements OnInit {
         );
   };
 
+  paperCompletedDateFilter = (d: Date | null): boolean => {
+    const date = d || new Date();
+    return moment(date).isBetween(
+      moment(this.stepSupportsService?.evacFile?.task?.from),
+      moment(new Date()),
+      'D',
+      '[]'
+    );
+  };
+
   ngOnInit(): void {
     this.createSupportDetailsForm();
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
