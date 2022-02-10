@@ -20,8 +20,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker/public-api';
-import { SupportSubCategory } from 'src/app/core/api/models';
+import { Referral, Support, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { ReferralCreationService } from '../../step-supports/referral-creation.service';
+import { SupportSummary } from 'src/app/core/api/models/support-summary';
 
 @Component({
   selector: 'app-support-details',
@@ -39,6 +42,8 @@ export class SupportDetailsComponent implements OnInit {
   selectedStartDate: string;
   editFlag = false;
   taskStartTime: string;
+  showLoader = false;
+  color = '#169BD5';
 
   constructor(
     private router: Router,
@@ -48,7 +53,9 @@ export class SupportDetailsComponent implements OnInit {
     private customValidation: CustomValidationService,
     private supportDetailsService: SupportDetailsService,
     private dialog: MatDialog,
-    public evacueeSessionService: EvacueeSessionService
+    public evacueeSessionService: EvacueeSessionService,
+    private alertService: AlertService,
+    private referralCreationService: ReferralCreationService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -61,26 +68,6 @@ export class SupportDetailsComponent implements OnInit {
     this.currentDate = this.datePipe.transform(Date.now(), 'dd-MMM-yyyy');
     this.currentTime = this.datePipe.transform(Date.now(), 'HH:mm');
   }
-
-  // digitalFromDateFilter = (d: Date | null): boolean => {
-  //   const date = d || new Date();
-  //   return moment(date).isBetween(
-  //     moment(new Date()),
-  //     moment(this.stepSupportsService?.evacFile?.task?.to),
-  //     'D',
-  //     '[]'
-  //   );
-  // };
-
-  // paperFromDateFilter = (d: Date | null): boolean => {
-  //   const date = d || new Date();
-  //   return moment(date).isBetween(
-  //     moment(this.stepSupportsService?.evacFile?.task?.from),
-  //     moment(this.stepSupportsService?.evacFile?.task?.to),
-  //     'D',
-  //     '[]'
-  //   );
-  // };
 
   validDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
@@ -98,30 +85,6 @@ export class SupportDetailsComponent implements OnInit {
           '[]'
         );
   };
-
-  // digitalToDateFilter = (d: Date | null): boolean => {
-  //   const date = d || new Date();
-  //   let x = new Date(this.supportDetailsForm.get('fromDate').value);
-  //   let y = new Date(x.setDate(x.getDate() + 2));
-  //   console.log(y)
-  //   return moment(date).isBetween(moment(new Date()), moment(y), 'D', '[]');
-  // };
-
-  // paperToDateFilter = (d: Date | null): boolean => {
-  //   const date = d || new Date();
-  //   let x = new Date(date);
-  //   let y = x.setDate(x.getDate() + 30);
-  //   return moment(date).isBetween(
-  //     moment(this.stepSupportsService?.evacFile?.task?.from),
-  //     moment(y),
-  //     'D',
-  //     '[]'
-  //   );
-  // };
-
-  // validToDateFilter = this.evacueeSessionService.paperBased
-  //   ? this.paperToDateFilter
-  //   : this.digitalToDateFilter;
 
   ngOnInit(): void {
     this.createSupportDetailsForm();
@@ -399,13 +362,6 @@ export class SupportDetailsComponent implements OnInit {
     } else {
       this.supportDetailsForm.get('noOfDays').patchValue(days);
     }
-
-    // const days = this.supportDetailsForm.get('noOfDays').value;
-    // const finalValue = this.datePipe.transform(
-    //   event.value.setDate(event.value.getDate() + days),
-    //   'MM/dd/yyyy'
-    // );
-    // this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
   }
 
   /**
@@ -461,6 +417,53 @@ export class SupportDetailsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/view-detail']);
   }
 
+  checkReferralNumber($event): void {
+    this.showLoader = !this.showLoader;
+    this.supportDetailsService
+      .checkUniqueReferralNumber('R' + $event.target.value)
+      .subscribe({
+        next: (value) => {
+          this.showLoader = !this.showLoader;
+          console.log(value);
+          const draftList = this.referralCreationService.getDraftSupport();
+          const duplicateReferralList: SupportSummary[] = [
+            ...value,
+            ...draftList
+          ];
+          const filteredReferrals = duplicateReferralList.filter(
+            (referrals) =>
+              referrals.category ===
+                this.stepSupportsService?.supportTypeToAdd?.value ||
+              referrals.subCategory ===
+                this.stepSupportsService?.supportTypeToAdd?.value
+          );
+
+          this.supportDetailsForm
+            .get('paperSupportNumber')
+            .setValidators([
+              this.customValidation
+                .userNameExistsValidator(filteredReferrals.length > 0)
+                .bind(this.customValidation)
+            ]);
+          this.supportDetailsForm
+            .get('paperSupportNumber')
+            .updateValueAndValidity();
+          if (value) {
+            this.supportDetailsForm
+              .get('paperSupportNumber')
+              .updateValueAndValidity();
+          } else {
+            this.supportDetailsForm.updateValueAndValidity();
+          }
+        },
+        error: (error) => {
+          this.showLoader = !this.showLoader;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.referralCheckerror);
+        }
+      });
+  }
+
   /**
    * Support details form
    */
@@ -474,31 +477,11 @@ export class SupportDetailsComponent implements OnInit {
                 this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
               )
             ),
-        [
-          this.customValidation.validDateValidator(),
-          Validators.required
-          // this.customValidation.dateCompareValidator(
-          //   this.stepSupportsService?.evacFile?.task?.from
-          // )
-        ]
+        [this.customValidation.validDateValidator(), Validators.required]
       ],
       fromTime: [
         this.evacueeSessionService.isPaperBased ? '' : this.currentTime,
-        [
-          Validators.required
-          // this.evacueeSessionService.paperBased
-          //   ? this.customValidation.timeCompareValidator(
-          //       this.stepSupportsService?.evacFile?.task?.from,
-          //       this.stepSupportsService?.evacFile?.task?.to
-          //     )
-          //   : this.customValidation.timeCompareValidator(
-          //       null,
-          //       this.datePipe.transform(
-          //         this.stepSupportsService?.evacFile?.task?.to,
-          //         'HH:mm'
-          //       )
-          //     )
-        ]
+        [Validators.required]
       ],
       noOfDays: [
         this.stepSupportsService?.supportDetails?.noOfDays
@@ -508,16 +491,7 @@ export class SupportDetailsComponent implements OnInit {
       ],
       toDate: [
         '',
-        [
-          this.customValidation.validDateValidator(),
-          Validators.required
-          // this.customValidation.toFromDateValidator(
-          //   this.supportDetailsForm?.get('fromDate').value
-          // ),
-          // this.customValidation.dateRangeValidator(
-          //   this.supportDetailsForm?.get('fromDate').value
-          // )
-        ]
+        [this.customValidation.validDateValidator(), Validators.required]
       ],
       toTime: ['', [Validators.required]],
       members: this.formBuilder.array(
