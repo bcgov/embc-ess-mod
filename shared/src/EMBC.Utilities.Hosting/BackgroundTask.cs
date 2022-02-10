@@ -57,11 +57,10 @@ namespace EMBC.Utilities.Hosting
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                logger.LogDebug("check after {0}s", DateTime.UtcNow.Subtract(now).TotalSeconds);
                 now = DateTime.UtcNow;
                 if (now >= nextExecutionDate)
                 {
-                    logger.LogInformation("running {0}", nextExecutionDate);
+                    logger.LogDebug("running {0}", nextExecutionDate);
                     using (var executionScope = serviceProvider.CreateScope())
                     {
                         var task = executionScope.ServiceProvider.GetRequiredService<T>();

@@ -143,7 +143,7 @@ namespace EMBC.Responders.API.Controllers
             if (string.IsNullOrEmpty(externalReferenceId))
                 return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = "Must specify search criteria" });
 
-            var items = (await messagingClient.Send(new SearchSupportsQuery { ExternalReferenceId = externalReferenceId })).Items;
+            var items = mapper.Map<IEnumerable<Support>>((await messagingClient.Send(new SearchSupportsQuery { ExternalReferenceId = externalReferenceId })).Items);
             return Ok(mapper.Map<IEnumerable<SupportSummary>>(items));
         }
     }
