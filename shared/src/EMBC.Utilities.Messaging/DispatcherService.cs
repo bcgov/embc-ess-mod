@@ -16,11 +16,11 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,7 +42,9 @@ namespace EMBC.Utilities.Messaging
                 var messageHandler = serviceRegistry.Resolve(requestType);
                 if (messageHandler == null) throw new InvalidOperationException($"Message handler for {requestType} not found");
                 var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType ?? null!);
-                var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType) ?? null!;
+                //var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType) ?? null!;
+                using var ms = new MemoryStream(request.Data.ToByteArray());
+                var requestMessage = await JsonSerializer.DeserializeAsync(ms, requestType) ?? null!;
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
                 var replyType = replyMessage?.GetType();
 
@@ -50,9 +52,12 @@ namespace EMBC.Utilities.Messaging
                 {
                     CorrelationId = request.CorrelationId,
                     Type = replyType?.AssemblyQualifiedName ?? string.Empty,
-                    Content = replyMessage == null
-                        ? Value.ForNull()
-                        : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
+                    //Content = replyMessage == null
+                    //    ? Value.ForNull()
+                    //    : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
+                    Data = replyMessage == null
+                        ? null
+                        : UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(replyMessage)),
                     Empty = replyMessage == null
                 };
 

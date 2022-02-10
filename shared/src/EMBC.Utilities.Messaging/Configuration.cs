@@ -18,8 +18,10 @@ using System;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
+using Grpc.Net.Client.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -56,15 +58,38 @@ namespace EMBC.Utilities.Messaging
                     }
                 }).ConfigurePrimaryHttpMessageHandler(sp =>
                 {
-                    if (!options.AllowInvalidServerCertificate) return new SocketsHttpHandler();
-                    return new SocketsHttpHandler
+                    var handler = new SocketsHttpHandler()
                     {
-                        SslOptions = new SslClientAuthenticationOptions
+                        EnableMultipleHttp2Connections = true,
+                        PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+                        KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+                        KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+                    };
+                    if (options.AllowInvalidServerCertificate)
+                    {
+                        handler.SslOptions = new SslClientAuthenticationOptions { RemoteCertificateValidationCallback = DangerousCertificationValidation };
+                    }
+                    return handler;
+                }).ConfigureChannel(opts =>
+                {
+                    opts.ServiceConfig = new ServiceConfig
+                    {
+                        MethodConfigs =
                         {
-                            RemoteCertificateValidationCallback = DangerousCertificationValidation
+                            new MethodConfig
+                            {
+                                RetryPolicy = new RetryPolicy
+                                {
+                                    MaxAttempts = 5,
+                                    InitialBackoff = TimeSpan.FromSeconds(1),
+                                    MaxBackoff = TimeSpan.FromSeconds(5),
+                                    BackoffMultiplier = 1.5,
+                                    RetryableStatusCodes = { StatusCode.Unavailable }
+                                }
+                            }
                         }
                     };
-                });
+                }).EnableCallContextPropagation(opts => opts.SuppressContextNotFoundErrors = true);
 
                 configurationServices.Services.AddTransient<IMessagingClient, MessagingClient>();
             }

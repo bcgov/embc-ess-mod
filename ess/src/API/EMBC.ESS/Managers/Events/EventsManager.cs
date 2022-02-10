@@ -59,7 +59,7 @@ namespace EMBC.ESS.Managers.Events
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
-        private readonly IPrintReferralService supportsService;
+        private readonly IPrintReferralService referralPrintingService;
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly IMetadataRepository metadataRepository;
@@ -82,7 +82,7 @@ namespace EMBC.ESS.Managers.Events
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
             ISearchEngine searchEngine,
-            IPrintReferralService supportsService,
+            IPrintReferralService referralPrintingService,
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator,
             IWebHostEnvironment env,
@@ -102,7 +102,7 @@ namespace EMBC.ESS.Managers.Events
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
-            this.supportsService = supportsService;
+            this.referralPrintingService = referralPrintingService;
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
             this.metadataRepository = metadataRepository;
@@ -606,7 +606,7 @@ namespace EMBC.ESS.Managers.Events
             var isProduction = env.IsProduction();
 
             //convert referrals to html
-            var printedReferrals = await supportsService.GetReferralHtmlPagesAsync(new SupportsToPrint()
+            var printedReferrals = await referralPrintingService.GetReferralHtmlPagesAsync(new SupportsToPrint()
             {
                 Referrals = referrals,
                 AddSummary = printRequest.IncludeSummary,
