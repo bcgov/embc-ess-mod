@@ -276,7 +276,7 @@ export class StepSupportsService {
     };
     const referral: Referral = {
       ...support,
-      externalReferenceId: 'R'+this.supportDetails.externalReferenceId,
+      externalReferenceId: 'R' + this.supportDetails.externalReferenceId,
       issuedToPersonName:
         this.supportDelivery.issuedTo !== 'Someone else'
           ? this.supportDelivery.issuedTo.lastName +
