@@ -9,6 +9,7 @@ export interface Support {
   createdBy?: null | string;
   createdByTeam?: null | string;
   createdOn?: null | string;
+  fileId?: null | string;
   from: string;
   id?: null | string;
   includedHouseholdMembers: Array<string>;

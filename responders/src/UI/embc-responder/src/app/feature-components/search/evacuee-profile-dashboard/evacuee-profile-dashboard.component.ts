@@ -241,7 +241,6 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
       next: (profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
-        console.log(this.evacueeProfile);
         if (
           !this.isPaperBased &&
           !this.evacueeProfile?.securityQuestions?.length
