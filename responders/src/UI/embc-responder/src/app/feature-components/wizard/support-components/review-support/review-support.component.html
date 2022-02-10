@@ -134,6 +134,12 @@
         Incidentals
       </label>
 
+      <div *ngIf="evacueeSessionService.isPaperBased" class="row">
+        <div class="col-md-12 paper-referral-number">
+          # {{ getReferral(support)?.externalReferenceId }}
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-md-8 support-padding">
           <div>
@@ -424,7 +430,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div *ngIf="!evacueeSessionService.isPaperBased" class="row">
     <div class="col-md-8 accept-box">
       <mat-checkbox (change)="certificationChangeEvent($event)"
         >I certify that a supervisor or ESSD has checked my work and approved
@@ -433,7 +439,7 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="showErrorMsg">
+  <div class="row" *ngIf="!evacueeSessionService.isPaperBased && showErrorMsg">
     <div class="col-md-8 bold accept-box warning">
       <img
         src="../../../../../assets/images/warning-red.svg"

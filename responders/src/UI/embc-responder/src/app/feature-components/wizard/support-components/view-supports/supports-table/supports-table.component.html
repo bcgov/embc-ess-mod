@@ -5,7 +5,7 @@
         Support#
       </th>
       <td mat-cell class="bold" *matCellDef="let element">
-        {{ element?.id ?? getExternalReferralId(element) }}
+        {{ getExternalReferralId(element) ?? element?.id }}
       </td>
     </ng-container>
 

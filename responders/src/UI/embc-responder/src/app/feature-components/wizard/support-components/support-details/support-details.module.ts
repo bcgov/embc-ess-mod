@@ -17,6 +17,7 @@ import { LodgingGroupComponent } from './details-type/lodging-group/lodging-grou
 import { ClothingComponent } from './details-type/clothing/clothing.component';
 import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
 import { CustomDirectiveModule } from 'src/app/shared/directives/customDirective.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CustomDirectiveModule } from 'src/app/shared/directives/customDirective
     MaterialModule,
     ReactiveFormsModule,
     CustomPipeModule,
-    CustomDirectiveModule
+    CustomDirectiveModule,
+    SharedModule
   ],
   providers: [DatePipe]
 })
