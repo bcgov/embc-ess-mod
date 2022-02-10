@@ -110,7 +110,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                 })*/
                 ;
 
-            services.AddScoped<IEssContextFactory, EssContextFactory>();
+            services.AddSingleton<IEssContextFactory, EssContextFactory>();
             services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
             services.AddTransient<IEssContextStateReporter, EssContextStateReporter>();
         }
