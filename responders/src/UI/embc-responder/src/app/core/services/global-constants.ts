@@ -438,6 +438,8 @@ export const updateTeamMemberError =
   'Unable to update team member at this time. Please try again later';
 export const usernameCheckerror =
   'Unable to check username at this time. Please try again later';
+export const referralCheckerror =
+  'Unable to check paper referral number at this time. Please try again later';
 export const communityListError =
   'Unable to retrieve assigned communities at this time. Please try again later';
 export const addCommunityListError =

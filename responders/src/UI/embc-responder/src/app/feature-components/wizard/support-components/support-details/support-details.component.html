@@ -100,7 +100,7 @@
                   </p>
                 </div>
               </div>
-              <div class="row">
+              <div class="row align-items-center">
                 <div class="col-md-4">
                   <mat-form-field appearance="outline">
                     <input
@@ -108,6 +108,7 @@
                       matInput
                       type="text"
                       maxlength="8"
+                      (change)="checkReferralNumber($event)"
                       required
                     />
                     <span matPrefix>R</span>
@@ -139,7 +140,26 @@
                     >
                       Only digits allowed</mat-error
                     >
+                    <mat-error
+                      *ngIf="
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
+                        supportDetailsFormControl?.paperSupportNumber.hasError(
+                          'userNameExists'
+                        )
+                      "
+                    >
+                      Paper Referral Number already exists</mat-error
+                    >
                   </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <app-loader
+                    [strokeWidth]="3"
+                    [diameter]="25"
+                    [showLoader]="showLoader"
+                    [color]="color"
+                  >
+                  </app-loader>
                 </div>
               </div>
 
@@ -213,6 +233,7 @@
                     <input
                       matInput
                       [matDatepicker]="paperPicker"
+                      [matDatepickerFilter]="paperCompletedDateFilter"
                       formControlName="paperCompletedOn"
                       placeholder="Support Completed On"
                       required
@@ -301,18 +322,6 @@
                         >
                           From Date is required</mat-error
                         >
-
-                        <!-- <mat-error
-                          *ngIf="
-                            supportDetailsFormControl?.fromDate?.invalid &&
-                            supportDetailsFormControl?.fromDate?.hasError(
-                              'dateCompareFailed'
-                            )
-                          "
-                        >
-                          Valid From Date must be equal to or greater then the
-                          Task Start Date</mat-error
-                        > -->
                       </mat-form-field>
                     </div>
                     <div class="col-md-4">
@@ -335,16 +344,6 @@
                         >
                           From Time is required</mat-error
                         >
-                        <!-- <mat-error
-                          *ngIf="
-                            supportDetailsFormControl.fromTime.invalid &&
-                            supportDetailsFormControl.fromTime.hasError(
-                              'timeValidationFailed'
-                            )
-                          "
-                        >
-                          Time Validation--Test</mat-error
-                        > -->
                       </mat-form-field>
                     </div>
                   </div>
