@@ -1,11 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Messaging;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Grpc.Core.Testing;
 using Microsoft.AspNetCore.Http;
@@ -55,14 +55,15 @@ namespace EMBC.Tests
             var request = new RequestEnvelope()
             {
                 Type = cmd.GetType().AssemblyQualifiedName,
-                Content = Value.Parser.ParseJson(JsonSerializer.Serialize(cmd))
+                Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(cmd))
             };
 
             var response = await dispatcher.Dispatch(request, serverCallContext);
 
-            response.ShouldNotBeNull().Content.ShouldNotBeNull();
+            response.ShouldNotBeNull().Data.ShouldNotBeNull().ShouldNotBeEmpty();
             var responseType = System.Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
-            JsonSerializer.Deserialize(JsonFormatter.Default.Format(response.Content), responseType).ShouldBeOfType<string>().ShouldBe(cmd.Value);
+            using var ms = new MemoryStream(response.Data.ToByteArray());
+            JsonSerializer.Deserialize(ms, responseType).ShouldBeOfType<string>().ShouldBe(cmd.Value);
         }
 
         [Fact]
@@ -76,11 +77,11 @@ namespace EMBC.Tests
             RequestEnvelope request = new RequestEnvelope()
             {
                 Type = cmd.GetType().AssemblyQualifiedName,
-                Content = Value.Parser.ParseJson(JsonSerializer.Serialize(cmd))
+                Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(cmd))
             };
             var response = await dispatcher.Dispatch(request, serverCallContext);
             response.Type.ShouldBeNullOrEmpty();
-            response.Content.ShouldBe(Value.ForNull());
+            response.Data.IsEmpty.ShouldBeTrue();
         }
 
         [Fact]
@@ -97,12 +98,13 @@ namespace EMBC.Tests
             var request = new RequestEnvelope()
             {
                 Type = query.GetType().AssemblyQualifiedName,
-                Content = Value.Parser.ParseJson(JsonSerializer.Serialize(query))
+                Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(query))
             };
             var response = await dispatcher.Dispatch(request, serverCallContext);
-            response.ShouldNotBeNull().Content.ShouldNotBeNull();
+            response.ShouldNotBeNull().Data.ShouldNotBeNull().IsEmpty.ShouldBeFalse();
             var responseType = System.Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
-            JsonSerializer.Deserialize(JsonFormatter.Default.Format(response.Content), responseType).ShouldBeOfType<TestQueryReply>().Value.ShouldBe(query.Value);
+            using var ms = new MemoryStream(response.Data.ToByteArray());
+            JsonSerializer.Deserialize(ms, responseType).ShouldBeOfType<TestQueryReply>().Value.ShouldBe(query.Value);
         }
     }
 

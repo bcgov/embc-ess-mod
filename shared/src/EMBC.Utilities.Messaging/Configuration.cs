@@ -18,6 +18,7 @@ using System;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
 using Microsoft.Extensions.Configuration;
@@ -56,16 +57,19 @@ namespace EMBC.Utilities.Messaging
                     }
                 }).ConfigurePrimaryHttpMessageHandler(sp =>
                 {
-                    if (!options.AllowInvalidServerCertificate) return new SocketsHttpHandler();
-                    return new SocketsHttpHandler
+                    var handler = new SocketsHttpHandler()
                     {
-                        SslOptions = new SslClientAuthenticationOptions
-                        {
-                            RemoteCertificateValidationCallback = DangerousCertificationValidation
-                        }
+                        EnableMultipleHttp2Connections = true,
+                        PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+                        KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+                        KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
                     };
+                    if (options.AllowInvalidServerCertificate)
+                    {
+                        handler.SslOptions = new SslClientAuthenticationOptions { RemoteCertificateValidationCallback = DangerousCertificationValidation };
+                    }
+                    return handler;
                 });
-
                 configurationServices.Services.AddTransient<IMessagingClient, MessagingClient>();
             }
         }
