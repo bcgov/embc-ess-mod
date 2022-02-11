@@ -37,8 +37,8 @@ export class VerifiedRegistrationComponent implements OnInit {
     if (inviteId !== undefined) {
       this.emailService.validateInvite(inviteId).subscribe({
         next: () => {
-         // this.router.navigate(['/verified-registration']);
-         this.loadExistingProfileWorkflow();
+          // this.router.navigate(['/verified-registration']);
+          this.loadExistingProfileWorkflow();
         },
         error: () => {
           this.router.navigate(['/invite-error']);
@@ -87,7 +87,7 @@ export class VerifiedRegistrationComponent implements OnInit {
   loadProfileConflicts() {
     this.profileService.getConflicts().subscribe({
       next: (conflicts: ProfileDataConflict[]) => {
-       // this.mappingService.mapConflicts(conflicts);
+        // this.mappingService.mapConflicts(conflicts);
         this.router.navigate(['/verified-registration/conflicts']);
       },
       error: (error) => {
