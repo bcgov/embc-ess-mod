@@ -25,14 +25,18 @@ namespace EMBC.ESS.Utilities.Dynamics
     public class DynamicsODataClientHandler : IODataClientHandler
     {
         private readonly DynamicsOptions options;
+        private readonly ISecurityTokenProvider tokenProvider;
+        private string? authToken;
 
-        public DynamicsODataClientHandler(IOptions<DynamicsOptions> options)
+        public DynamicsODataClientHandler(IOptions<DynamicsOptions> options, ISecurityTokenProvider tokenProvider)
         {
             this.options = options.Value;
+            this.tokenProvider = tokenProvider;
         }
 
         public void OnClientCreated(ClientCreatedArgs args)
         {
+            authToken = tokenProvider.AcquireToken().ConfigureAwait(false).GetAwaiter().GetResult();
             var client = args.ODataClient;
             client.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
             client.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
@@ -42,6 +46,12 @@ namespace EMBC.ESS.Utilities.Dynamics
                 arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
             });
             client.BuildingRequest += Client_BuildingRequest;
+            client.SendingRequest2 += Client_SendingRequest2;
+        }
+
+        private void Client_SendingRequest2(object sender, SendingRequest2EventArgs e)
+        {
+            e.RequestMessage.SetHeader("Authorization", $"Bearer {authToken}");
         }
 
         private void Client_BuildingRequest(object sender, BuildingRequestEventArgs e)

@@ -44,13 +44,15 @@ namespace EMBC.ESS.Resources.Metadata
 
         public TimeSpan InitialDelay => TimeSpan.FromSeconds(10);
 
+        public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(30);
+
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("Start metadata cache refresh");
-            await cache.Refresh(MetadataRepository.CountriesCacheKey, metadataRepository.GetCountries, MetadataRepository.CacheEntryLifetime);
-            await cache.Refresh(MetadataRepository.StatesProvincesCacheKey, metadataRepository.GetStateProvinces, MetadataRepository.CacheEntryLifetime);
-            await cache.Refresh(MetadataRepository.CommunitiesCacheKey, metadataRepository.GetCommunities, MetadataRepository.CacheEntryLifetime);
-            await cache.Refresh(MetadataRepository.SecurityQuestionsCacheKey, metadataRepository.GetSecurityQuestions, MetadataRepository.CacheEntryLifetime);
+            await cache.Refresh(MetadataRepository.CommunitiesCacheKey, metadataRepository.GetCommunities, MetadataRepository.CacheEntryLifetime, cancellationToken);
+            await cache.Refresh(MetadataRepository.CountriesCacheKey, metadataRepository.GetCountries, MetadataRepository.CacheEntryLifetime, cancellationToken);
+            await cache.Refresh(MetadataRepository.StatesProvincesCacheKey, metadataRepository.GetStateProvinces, MetadataRepository.CacheEntryLifetime, cancellationToken);
+            await cache.Refresh(MetadataRepository.SecurityQuestionsCacheKey, metadataRepository.GetSecurityQuestions, MetadataRepository.CacheEntryLifetime, cancellationToken);
             logger.LogInformation("End metadata cache refresh");
         }
     }
