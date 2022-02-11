@@ -61,6 +61,7 @@ export { ProcessPaperReferralsRequest } from './models/process-paper-referrals-r
 export { SupportVoidReason } from './models/support-void-reason';
 export { SupportReprintReason } from './models/support-reprint-reason';
 export { SupportSummary } from './models/support-summary';
+export { ReferralSummary } from './models/referral-summary';
 export { SupplierListItem } from './models/supplier-list-item';
 export { SupplierTeamDetails } from './models/supplier-team-details';
 export { SupplierStatus } from './models/supplier-status';
