@@ -19,9 +19,6 @@ using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Polly;
-using Polly.Caching;
-using Polly.Caching.Distributed;
 
 namespace EMBC.ESS.Utilities.Cache
 {
@@ -35,8 +32,8 @@ namespace EMBC.ESS.Utilities.Cache
             {
                 var cache = sp.GetRequiredService<IDistributedCache>();
                 var cacheSyncManager = sp.GetRequiredService<CacheSyncManager>();
-                var policy = Policy.CacheAsync(cache.AsAsyncCacheProvider<byte[]>(), new ContextualTtl());
-                return new Cache(cache, cacheSyncManager, policy, keyPrefix);
+
+                return new Cache(cache, cacheSyncManager, keyPrefix);
             });
         }
     }

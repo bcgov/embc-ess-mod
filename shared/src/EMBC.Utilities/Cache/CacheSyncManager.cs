@@ -35,9 +35,11 @@ namespace EMBC.ESS.Utilities.Cache
 
         public string Schedule => "*/1 * * * *";
 
-        public int DegreeOfParallelism => 1;
+        public int DegreeOfParallelism => -1;
 
         public TimeSpan InitialDelay => TimeSpan.FromSeconds(10);
+
+        public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(5);
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {

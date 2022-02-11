@@ -19,22 +19,20 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
-using Polly;
-using Polly.Caching;
 
 namespace EMBC.ESS.Utilities.Cache
 {
     public interface ICache
     {
-        Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration);
+        Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default);
 
-        Task<T?> Get<T>(string key);
+        Task<T?> Get<T>(string key, CancellationToken cancellationToken = default);
 
-        Task Set<T>(string key, T value, TimeSpan expiration);
+        Task Set<T>(string key, T value, TimeSpan expiration, CancellationToken cancellationToken = default);
 
-        Task Remove(string key);
+        Task Remove(string key, CancellationToken cancellationToken = default);
 
-        Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration);
+        Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default);
     }
 
     internal class Cache : ICache
@@ -42,23 +40,20 @@ namespace EMBC.ESS.Utilities.Cache
         private readonly IDistributedCache cache;
         private readonly CacheSyncManager cacheSyncManager;
         private readonly string keyPrefix;
-        private readonly IAsyncPolicy<byte[]> policy;
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
-        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IAsyncPolicy<byte[]> policy, string keyPrefix)
+        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, string keyPrefix)
         {
             this.cache = cache;
             this.cacheSyncManager = cacheSyncManager;
             this.keyPrefix = keyPrefix;
-            this.policy = policy;
         }
 
-        public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration)
+        public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
-            //return Deserialize<T?>(await policy.ExecuteAsync(async ctx => Serialize(await getter()), CreateContext(key, expiration)));
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            await locker.WaitAsync();
+            while (!await locker.WaitAsync(TimeSpan.FromSeconds(15), cancellationToken)) continue;
             try
             {
                 var value = await Get<T>(key);
@@ -66,7 +61,7 @@ namespace EMBC.ESS.Utilities.Cache
                 {
                     //cache miss
                     value = await getter();
-                    await Set(key, value, expiration);
+                    await Set(key, value, expiration, cancellationToken);
                 }
                 return value;
             }
@@ -76,40 +71,33 @@ namespace EMBC.ESS.Utilities.Cache
             }
         }
 
-        public async Task Set<T>(string key, T value, TimeSpan expiration)
+        public async Task Set<T>(string key, T value, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
-            await cache.SetAsync(keyGen(key), Serialize(value), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration });
+            await cache.SetAsync(keyGen(key), Serialize(value), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration }, cancellationToken);
         }
 
-        public async Task<T?> Get<T>(string key)
+        public async Task<T?> Get<T>(string key, CancellationToken cancellationToken = default)
         {
-            return Deserialize<T?>(await cache.GetAsync(keyGen(key)));
+            return Deserialize<T?>(await cache.GetAsync(keyGen(key), cancellationToken));
         }
 
-        public async Task Remove(string key)
+        public async Task Remove(string key, CancellationToken cancellationToken = default)
         {
-            await cache.RemoveAsync(key);
+            await cache.RemoveAsync(key, cancellationToken);
         }
 
-        public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration)
+        public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            await locker.WaitAsync();
+            while (!await locker.WaitAsync(TimeSpan.FromSeconds(15), cancellationToken)) continue;
             try
             {
-                await Set(key, await getter(), expiration);
+                await Set(key, await getter(), expiration, cancellationToken);
             }
             finally
             {
                 locker.Release();
             }
-        }
-
-        private Context CreateContext(string key, TimeSpan? expiration)
-        {
-            var context = new Context(keyGen(key));
-            if (expiration.HasValue) context[ContextualTtl.TimeSpanKey] = expiration;
-            return context;
         }
 
         private static T? Deserialize<T>(byte[] data) => data == null || data.Length == 0 ? default : JsonSerializer.Deserialize<T>(data);
