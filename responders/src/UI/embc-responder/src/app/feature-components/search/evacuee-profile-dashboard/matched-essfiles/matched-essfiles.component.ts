@@ -2,9 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
 import { Router } from '@angular/router';
+import { EvacuationFileStatus, MemberRole } from 'src/app/core/api/models';
 import { EvacuationFileSummaryModel } from 'src/app/core/models/evacuation-file-summary.model';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -32,7 +34,8 @@ export class MatchedEssfilesComponent implements OnInit {
     private evacueeSearchService: EvacueeSearchService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -123,7 +126,29 @@ export class MatchedEssfilesComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.evacueeProfileService.getProfileFiles(registrantId).subscribe({
       next: (essFilesArray) => {
-        this.essFiles = essFilesArray;
+        const loggedInRole = this.userService.currentProfile.role;
+        if (this.evacueeSessionService.isPaperBased) {
+          if (loggedInRole !== MemberRole.Tier1) {
+            this.essFiles = essFilesArray;
+          } else if (
+            loggedInRole == MemberRole.Tier1 &&
+            this.evacueeSearchService.paperBasedEssFile
+          ) {
+            this.essFiles = essFilesArray.filter(
+              (files) =>
+                files.externalReferenceId ===
+                this.evacueeSearchService.paperBasedEssFile
+            );
+          }
+        } else {
+          if (loggedInRole === MemberRole.Tier1) {
+            this.essFiles = essFilesArray.filter(
+              (files) => files.status !== EvacuationFileStatus.Completed
+            );
+          } else {
+            this.essFiles = essFilesArray;
+          }
+        }
         this.isLoading = !this.isLoading;
       },
       error: (error) => {
