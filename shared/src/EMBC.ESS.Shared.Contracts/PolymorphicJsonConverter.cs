@@ -22,35 +22,32 @@ namespace EMBC.ESS.Shared.Contracts
 {
     public class PolymorphicJsonConverter<T> : JsonConverter<T>
     {
-        private const string TypePropertyName = "type";
-        private const string ValuePropertyName = "value";
-
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType != JsonTokenType.StartObject) throw new JsonException();
-            reader.Read();
-            if (reader.TokenType != JsonTokenType.PropertyName || reader.GetString() != TypePropertyName) throw new JsonException();
-            reader.Read();
-            var type = reader.GetString();
-            reader.Read();
-            if (reader.TokenType != JsonTokenType.PropertyName || reader.GetString() != ValuePropertyName) throw new JsonException();
-            reader.Read();
-            var value = (T)JsonSerializer.Deserialize(ref reader, Type.GetType(type), options);
-            reader.Read();
-            if (reader.TokenType != JsonTokenType.EndObject) throw new JsonException();
-
-            return value;
+            var clonedReader = reader;
+            Type type = null;
+            while (clonedReader.Read())
+            {
+                if (clonedReader.TokenType == JsonTokenType.PropertyName)
+                {
+                    if (clonedReader.GetString() == "_type")
+                    {
+                        clonedReader.Read();
+                        type = Type.GetType(clonedReader.GetString());
+                        break;
+                    }
+                }
+            }
+            if (type == null) throw new JsonException("serialized json doesn't have a _type property");
+            return (T)JsonSerializer.Deserialize(ref reader, type, options);
         }
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
             var type = value.GetType();
-            writer.WriteStartObject();
-            writer.WritePropertyName(TypePropertyName);
-            writer.WriteStringValue(type.FullName);
-            writer.WritePropertyName(ValuePropertyName);
-            JsonSerializer.Serialize(writer, value, type, options);
-            writer.WriteEndObject();
+            var serializedValue = JsonSerializer.SerializeToNode(value, type, options).AsObject();
+            serializedValue.Add("_type", type.FullName);
+            serializedValue.WriteTo(writer, options);
         }
     }
 }

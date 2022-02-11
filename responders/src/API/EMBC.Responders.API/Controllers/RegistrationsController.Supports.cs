@@ -18,12 +18,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -144,11 +146,14 @@ namespace EMBC.Responders.API.Controllers
                 return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = "Must specify search criteria" });
 
             var items = mapper.Map<IEnumerable<Support>>((await messagingClient.Send(new SearchSupportsQuery { ExternalReferenceId = externalReferenceId })).Items);
-            return Ok(mapper.Map<IEnumerable<SupportSummary>>(items));
+            var results = mapper.Map<IEnumerable<SupportSummary>>(items).ToArray();
+            return Ok(results);
         }
     }
 
-    public class SupportSummary
+    [KnownType(typeof(ReferralSummary))]
+    [JsonConverter(typeof(PolymorphicJsonConverter<SupportSummary>))]
+    public abstract class SupportSummary
     {
         public string Id { get; set; }
         public string FileId { get; set; }
@@ -158,6 +163,11 @@ namespace EMBC.Responders.API.Controllers
         public SupportMethod Method { get; set; }
         public SupportCategory Category { get; set; }
         public SupportSubCategory? SubCategory { get; set; }
+    }
+
+    public class ReferralSummary : SupportSummary
+    {
+        public string? ExternalReferenceId { get; set; }
     }
 
     public class ProcessDigitalSupportsRequest
@@ -686,7 +696,17 @@ namespace EMBC.Responders.API.Controllers
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
+            CreateMap<IEnumerable<Support>, IEnumerable<SupportSummary>>()
+                .ConvertUsing((s, d, ctx) =>
+                    s.Select(i => i is Referral r
+                        ? ctx.Mapper.Map<ReferralSummary>(r)
+                        : ctx.Mapper.Map<SupportSummary>(i)));
+
             CreateMap<Support, SupportSummary>()
+            ;
+
+            CreateMap<Referral, ReferralSummary>()
+                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => s.ExternalReferenceId))
             ;
         }
     }
