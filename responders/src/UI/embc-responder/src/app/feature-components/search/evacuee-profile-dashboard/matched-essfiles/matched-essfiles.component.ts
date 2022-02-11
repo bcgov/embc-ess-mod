@@ -131,7 +131,7 @@ export class MatchedEssfilesComponent implements OnInit {
           if (loggedInRole !== MemberRole.Tier1) {
             this.essFiles = essFilesArray;
           } else if (
-            loggedInRole == MemberRole.Tier1 &&
+            loggedInRole === MemberRole.Tier1 &&
             this.evacueeSearchService.paperBasedEssFile
           ) {
             this.essFiles = essFilesArray.filter(
