@@ -21,6 +21,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
@@ -80,6 +81,8 @@ namespace EMBC.Utilities.Hosting
         /// <returns>awaitable Task that returns the status code of the host on exit</returns>
         public async Task<int> Run(string? assembliesPrefix = null)
         {
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
