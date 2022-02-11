@@ -14,9 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using EMBC.Utilities.Configuration;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -26,15 +24,8 @@ namespace EMBC.ESS.Utilities.Cache
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            var keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? configurationServices.Environment.ApplicationName;
             configurationServices.Services.AddSingleton(sp => new CacheSyncManager(sp.GetRequiredService<ILogger<CacheSyncManager>>()));
-            configurationServices.Services.AddTransient<ICache>(sp =>
-            {
-                var cache = sp.GetRequiredService<IDistributedCache>();
-                var cacheSyncManager = sp.GetRequiredService<CacheSyncManager>();
-
-                return new Cache(cache, cacheSyncManager, keyPrefix);
-            });
+            configurationServices.Services.AddSingleton<ICache, Cache>();
         }
     }
 }

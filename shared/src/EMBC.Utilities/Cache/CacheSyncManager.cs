@@ -24,7 +24,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Utilities.Cache
 {
-    public class CacheSyncManager : ConcurrentDictionary<string, SemaphoreSlim>, IBackgroundTask
+    internal class CacheSyncManager : ConcurrentDictionary<string, SemaphoreSlim>, IBackgroundTask
     {
         private readonly ILogger logger;
 

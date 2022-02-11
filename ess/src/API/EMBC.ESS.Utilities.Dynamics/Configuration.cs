@@ -16,13 +16,11 @@
 
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Resiliency;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
 using Polly;
@@ -45,7 +43,7 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             services
                 .AddHttpClient("adfs_token")
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                .SetHandlerLifetime(TimeSpan.FromMinutes(30))
                 /*.AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
                     new HttpClientCircuitBreakerPolicy
@@ -74,19 +72,19 @@ namespace EMBC.ESS.Utilities.Dynamics
                 })*/
                 ;
 
-            services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
+            services.AddSingleton<ISecurityTokenProvider, ADFSSecurityTokenProvider>();
 
             services
                 .AddODataClient("dynamics")
                 .AddODataClientHandler<DynamicsODataClientHandler>()
                 .AddHttpClient()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-                .ConfigureHttpClient((sp, c) =>
-                {
-                    var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
-                    var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
-                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
-                })
+                //.ConfigureHttpClient((sp, c) =>
+                //{
+                //    var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
+                //    var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
+                //    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
+                //})
                 /*.AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
                     new HttpClientCircuitBreakerPolicy

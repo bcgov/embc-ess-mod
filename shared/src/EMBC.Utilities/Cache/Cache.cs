@@ -19,6 +19,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Utilities.Cache
 {
@@ -39,27 +41,34 @@ namespace EMBC.ESS.Utilities.Cache
     {
         private readonly IDistributedCache cache;
         private readonly CacheSyncManager cacheSyncManager;
+        private readonly ILogger<Cache> logger;
         private readonly string keyPrefix;
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
-        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, string keyPrefix)
+        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IHostEnvironment env, ILogger<Cache> logger)
         {
             this.cache = cache;
             this.cacheSyncManager = cacheSyncManager;
-            this.keyPrefix = keyPrefix;
+            this.logger = logger;
+            this.keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? env.ApplicationName;
         }
 
         public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            while (!await locker.WaitAsync(TimeSpan.FromSeconds(15), cancellationToken)) continue;
+            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken))
+            {
+                logger.LogDebug("{0} retrying to obtain lock", key);
+                continue;
+            }
             try
             {
                 var value = await Get<T>(key);
                 if (value == null)
                 {
                     //cache miss
+                    logger.LogDebug("{0} cache miss", key);
                     value = await getter();
                     await Set(key, value, expiration, cancellationToken);
                 }
@@ -89,7 +98,7 @@ namespace EMBC.ESS.Utilities.Cache
         public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            while (!await locker.WaitAsync(TimeSpan.FromSeconds(15), cancellationToken)) continue;
+            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken)) continue;
             try
             {
                 await Set(key, await getter(), expiration, cancellationToken);
