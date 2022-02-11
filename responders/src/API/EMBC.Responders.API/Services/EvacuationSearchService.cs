@@ -144,9 +144,7 @@ namespace EMBC.Responders.API.Services
         {
             var files = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery
             {
-                LinkedRegistrantId = registrantId,
-                IncludeFilesInStatuses = (userRole == MemberRole.Tier1 ? tier1FileStatuses : tier2andAboveFileStatuses)
-                    .Select(s => Enum.Parse<EMBC.ESS.Shared.Contracts.Events.EvacuationFileStatus>(s.ToString(), true)).ToArray()
+                LinkedRegistrantId = registrantId
             })).Items;
 
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
