@@ -125,30 +125,35 @@ export class MatchedEssfilesComponent implements OnInit {
   private getProfileESSFiles(registrantId: string): void {
     this.isLoading = !this.isLoading;
     this.evacueeProfileService.getProfileFiles(registrantId).subscribe({
-      next: (essFilesArray) => {
-        const loggedInRole = this.userService.currentProfile.role;
-        if (this.evacueeSessionService.isPaperBased) {
-          if (loggedInRole !== MemberRole.Tier1) {
-            this.essFiles = essFilesArray;
-          } else if (
-            loggedInRole === MemberRole.Tier1 &&
-            this.evacueeSearchService.paperBasedEssFile
-          ) {
-            this.essFiles = essFilesArray.filter(
-              (files) =>
-                files.externalReferenceId ===
-                this.evacueeSearchService.paperBasedEssFile
-            );
+      next: (essFilesArray: Array<EvacuationFileSummaryModel>) => {
+        const loggedInRole = this.userService?.currentProfile?.role;
+        if (essFilesArray === undefined || essFilesArray.length === 0) {
+          if (this.evacueeSessionService.isPaperBased) {
+            if (loggedInRole !== MemberRole.Tier1) {
+              this.essFiles = essFilesArray;
+            } else if (
+              loggedInRole === MemberRole.Tier1 &&
+              this.evacueeSearchService.paperBasedEssFile
+            ) {
+              this.essFiles = essFilesArray.filter(
+                (files) =>
+                  files.externalReferenceId ===
+                  this.evacueeSearchService.paperBasedEssFile
+              );
+            }
+          } else {
+            if (loggedInRole === MemberRole.Tier1) {
+              this.essFiles = essFilesArray.filter(
+                (files) => files.status !== EvacuationFileStatus.Completed
+              );
+            } else {
+              this.essFiles = essFilesArray;
+            }
           }
         } else {
-          if (loggedInRole === MemberRole.Tier1) {
-            this.essFiles = essFilesArray.filter(
-              (files) => files.status !== EvacuationFileStatus.Completed
-            );
-          } else {
-            this.essFiles = essFilesArray;
-          }
+          this.essFiles = [];
         }
+
         this.isLoading = !this.isLoading;
       },
       error: (error) => {
