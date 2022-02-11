@@ -13,6 +13,7 @@ export interface EvacuationFile {
   evacuationFileDate?: null | string;
   externalReferenceId?: null | string;
   fileId?: null | string;
+  isPaper?: null | boolean;
   isRestricted?: null | boolean;
   lastModified?: string;
   needsAssessment: NeedsAssessment;
