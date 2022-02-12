@@ -371,20 +371,5 @@ namespace EMBC.ESS.Managers.Admin
                 return new OutageQueryResponse { OutageInfo = unplannedOutage };
             }
         }
-
-        //public async Task Handle(RefreshMetadataCacheCommand cmd)
-        //{
-        //    var cacheDuration = cmd.CacheDuration;
-        //    await cache.Set("metadata:countries", GetCountries, cacheDuration);
-        //    await cache.Set("metadata:stateprovinces", GetStateProvinces, cacheDuration);
-        //    await cache.Set("metadata:communities", GetCommunities, cacheDuration);
-        //    await cache.Set("metadata:securityquestions", GetSecyurityQuestions, cacheDuration);
-        //    await cache.Set("metadata:outage", GetSecyurityQuestions, cacheDuration);
-        //}
     }
-
-    //public class RefreshMetadataCacheCommand
-    //{
-    //    public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(6);
-    //}
 }

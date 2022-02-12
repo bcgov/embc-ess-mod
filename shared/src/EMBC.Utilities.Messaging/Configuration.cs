@@ -50,12 +50,6 @@ namespace EMBC.Utilities.Messaging
                 configurationServices.Services.AddGrpcClient<Dispatcher.DispatcherClient>((sp, opts) =>
                 {
                     opts.Address = options.Url;
-                }).ConfigureChannel(opts =>
-                {
-                    if (options.Url.Scheme == "dns")
-                    {
-                        opts.Credentials = ChannelCredentials.SecureSsl;
-                    }
                 }).ConfigurePrimaryHttpMessageHandler(sp =>
                 {
                     var handler = new SocketsHttpHandler()
@@ -72,8 +66,13 @@ namespace EMBC.Utilities.Messaging
                     return handler;
                 }).ConfigureChannel(opts =>
                 {
+                    if (options.Url.Scheme == "dns")
+                    {
+                        opts.Credentials = ChannelCredentials.SecureSsl;
+                    }
                     opts.ServiceConfig = new ServiceConfig
                     {
+                        LoadBalancingConfigs = { new RoundRobinConfig() },
                         MethodConfigs =
                         {
                             new MethodConfig

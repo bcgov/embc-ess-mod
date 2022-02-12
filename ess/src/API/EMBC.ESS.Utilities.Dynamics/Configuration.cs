@@ -74,17 +74,25 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             services.AddSingleton<ISecurityTokenProvider, ADFSSecurityTokenProvider>();
 
+            var policy = HttpPolicyExtensions.HandleTransientHttpError()
+                .CircuitBreakerAsync(
+                        options.CircuitBreakerNumberOfErrors,
+                        TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
+                        OnBreak,
+                        OnReset);
+
             services
                 .AddODataClient("dynamics")
                 .AddODataClientHandler<DynamicsODataClientHandler>()
                 .AddHttpClient()
-                .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-                //.ConfigureHttpClient((sp, c) =>
-                //{
-                //    var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
-                //    var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
-                //    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenProvider.AcquireToken().GetAwaiter().GetResult());
-                //})
+                .SetHandlerLifetime(TimeSpan.FromMinutes(30))
+                .AddPolicyHandler((sp, request) =>
+                {
+                    var ctx = request.GetPolicyExecutionContext() ?? new Context();
+                    ctx["_serviceprovider"] = sp;
+                    request.SetPolicyExecutionContext(ctx);
+                    return policy;
+                })
                 /*.AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
                 {
                     new HttpClientCircuitBreakerPolicy
@@ -113,33 +121,53 @@ namespace EMBC.ESS.Utilities.Dynamics
             services.AddTransient<IEssContextStateReporter, EssContextStateReporter>();
         }
 
-        private static void OnBreak(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        private static void OnBreak(DelegateResult<HttpResponseMessage> r, TimeSpan time, Context ctx)
         {
+            var source = "dynamics-circuitbreaker";
+            var sp = (IServiceProvider)ctx["_serviceprovider"];
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogError("BREAK: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+            logger.LogError("BREAK: {0} {1}: {2}", time, r.Exception.GetType().FullName, r.Exception.Message);
             var reporter = sp.GetRequiredService<IEssContextStateReporter>();
-            reporter.ReportBroken($"{source}: {exception.Message}").GetAwaiter().GetResult();
+            reporter.ReportBroken($"{source}: {r.Exception.Message}").ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        private static void OnReset(string source, IServiceProvider sp)
+        private static void OnReset(Context ctx)
         {
+            var source = "dynamics-circuitbreaker";
+            var sp = (IServiceProvider)ctx["_serviceprovider"];
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
             logger.LogInformation("RESET");
             var reporter = sp.GetRequiredService<IEssContextStateReporter>();
-            reporter.ReportFixed().GetAwaiter().GetResult();
+            reporter.ReportFixed().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
-        {
-            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogWarning("RETRY: {0} {1}: {2}", time, exception?.GetType().FullName, exception?.Message);
-        }
+        //private static void OnBreak(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        //{
+        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+        //    logger.LogError("BREAK: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+        //    var reporter = sp.GetRequiredService<IEssContextStateReporter>();
+        //    reporter.ReportBroken($"{source}: {exception.Message}").GetAwaiter().GetResult();
+        //}
 
-        private static void OnTimeout(string source, IServiceProvider sp, TimeSpan time, Exception exception)
-        {
-            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogWarning("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
-        }
+        //private static void OnReset(string source, IServiceProvider sp)
+        //{
+        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+        //    logger.LogInformation("RESET");
+        //    var reporter = sp.GetRequiredService<IEssContextStateReporter>();
+        //    reporter.ReportFixed().GetAwaiter().GetResult();
+        //}
+
+        //private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        //{
+        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+        //    logger.LogWarning("RETRY: {0} {1}: {2}", time, exception?.GetType().FullName, exception?.Message);
+        //}
+
+        //private static void OnTimeout(string source, IServiceProvider sp, TimeSpan time, Exception exception)
+        //{
+        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+        //    logger.LogWarning("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
+        //}
     }
 
     //temporary attempt to initiate retry when Dynamics throws an exception
