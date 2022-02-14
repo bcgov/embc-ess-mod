@@ -37,8 +37,8 @@ namespace EMBC.Registrants.API.Services
             {
                 yield return new NameDataConflict
                 {
-                    OriginalValue = (firstName: source.PersonalDetails?.FirstName, lastName: source.PersonalDetails?.LastName),
-                    ConflictingValue = (firstName: target.PersonalDetails?.FirstName, lastName: target.PersonalDetails?.LastName),
+                    OriginalValue = new ProfileName { FirstName = source.PersonalDetails?.FirstName, LastName = source.PersonalDetails?.LastName },
+                    ConflictingValue = new ProfileName { FirstName = target.PersonalDetails?.FirstName, LastName = target.PersonalDetails?.LastName },
                 };
             }
             if (source.PrimaryAddress != null && !source.PrimaryAddress.AddressEquals(target.PrimaryAddress))
