@@ -87,7 +87,7 @@ export class VerifiedRegistrationComponent implements OnInit {
   loadProfileConflicts() {
     this.profileService.getConflicts().subscribe({
       next: (conflicts: ProfileDataConflict[]) => {
-        // this.mappingService.mapConflicts(conflicts);
+        this.mappingService.mapConflicts(conflicts);
         this.router.navigate(['/verified-registration/conflicts']);
       },
       error: (error) => {
