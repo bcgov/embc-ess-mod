@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { ProfileDataConflict } from './profile-data-conflict';
 export interface DateOfBirthDataConflict extends ProfileDataConflict {
-  conflictingValue: string;
+  conflictingValue?: string;
   dataElementName: string;
-  originalValue: string;
+  originalValue?: string;
 }
