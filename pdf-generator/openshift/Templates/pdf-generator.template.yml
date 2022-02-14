@@ -140,8 +140,8 @@ objects:
             - name: pdf-generator
               resources:
                 limits:
-                  cpu: 150m
-                  memory: 768Mi
+                  cpu: 300m
+                  memory: 512Mi
                 requests:
                   cpu: 50m
                   memory: 256Mi
@@ -248,7 +248,7 @@ objects:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 150
+              averageUtilization: 200
 
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
