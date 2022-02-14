@@ -55,7 +55,6 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
     this.conflictService.getConflicts().subscribe(
       (bcscConflicts) => {
         this.conflicts = bcscConflicts;
-        console.log(bcscConflicts);
         this.nameConflict = bcscConflicts.find(
           (element) => element.dataElementName === 'NameDataConflict'
         );
