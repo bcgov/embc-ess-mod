@@ -24,6 +24,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Services;
 using EMBC.Utilities.Messaging;
@@ -187,7 +188,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Base class for profile data conflicts
     /// </summary>
-    [JsonConverter(typeof(ProfileDataConflictJsonConverter))]
+    [JsonConverter(typeof(PolymorphicJsonConverter<ProfileDataConflict>))]
     [KnownType(typeof(DateOfBirthDataConflict))]
     [KnownType(typeof(NameDataConflict))]
     [KnownType(typeof(AddressDataConflict))]
@@ -195,12 +196,6 @@ namespace EMBC.Registrants.API.Controllers
     {
         [Required]
         public abstract string DataElementName { get; }
-
-        [Required]
-        public virtual object ConflictingValue { get; set; }
-
-        [Required]
-        public virtual object OriginalValue { get; set; }
     }
 
     /// <summary>
@@ -211,11 +206,9 @@ namespace EMBC.Registrants.API.Controllers
         [Required]
         public override string DataElementName => nameof(DateOfBirthDataConflict);
 
-        [Required]
-        public new string ConflictingValue { get; set; }
+        public string ConflictingValue { get; set; }
 
-        [Required]
-        public new string OriginalValue { get; set; }
+        public string OriginalValue { get; set; }
     }
 
     /// <summary>
@@ -223,15 +216,12 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class NameDataConflict : ProfileDataConflict
     {
-        [Required]
         public override string DataElementName => nameof(NameDataConflict);
 
-        [Required]
-        public new (string firstName, string lastName) ConflictingValue
+        public (string firstName, string lastName) ConflictingValue
         { get; set; }
 
-        [Required]
-        public new (string firstName, string lastName) OriginalValue
+        public (string firstName, string lastName) OriginalValue
         { get; set; }
     }
 
@@ -240,14 +230,11 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class AddressDataConflict : ProfileDataConflict
     {
-        [Required]
         public override string DataElementName => nameof(AddressDataConflict);
 
-        [Required]
-        public new Address ConflictingValue { get; set; }
+        public Address ConflictingValue { get; set; }
 
-        [Required]
-        public new Address OriginalValue { get; set; }
+        public Address OriginalValue { get; set; }
     }
 
     public class InviteRequest
@@ -264,34 +251,5 @@ namespace EMBC.Registrants.API.Controllers
     {
         [Required]
         public string Token { get; set; }
-    }
-
-    public class ProfileDataConflictJsonConverter : JsonConverter<ProfileDataConflict>
-    {
-        public override ProfileDataConflict Read(ref Utf8JsonReader reader, System.Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Write(Utf8JsonWriter writer, ProfileDataConflict value, JsonSerializerOptions options)
-        {
-            switch (value.DataElementName)
-            {
-                case nameof(AddressDataConflict):
-                    JsonSerializer.Serialize(writer, (AddressDataConflict)value, options);
-                    break;
-
-                case nameof(NameDataConflict):
-                    JsonSerializer.Serialize(writer, (NameDataConflict)value, options);
-                    break;
-
-                case nameof(DateOfBirthDataConflict):
-                    JsonSerializer.Serialize(writer, (DateOfBirthDataConflict)value, options);
-                    break;
-
-                default:
-                    break;
-            }
-        }
     }
 }
