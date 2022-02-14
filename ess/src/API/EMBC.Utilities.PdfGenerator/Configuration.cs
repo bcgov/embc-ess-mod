@@ -50,12 +50,6 @@ namespace EMBC.ESS.Utilities.PdfGenerator
             var httpClientBuilder = configurationServices.Services.AddGrpcClient<Generator.GeneratorClient>(opts =>
             {
                 opts.Address = pdfGeneratorUrl;
-            }).ConfigureChannel(opts =>
-            {
-                if (pdfGeneratorUrl.Scheme == "dns")
-                {
-                    opts.Credentials = ChannelCredentials.SecureSsl;
-                }
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
                 var handler = new SocketsHttpHandler()
@@ -72,8 +66,13 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                 return handler;
             }).ConfigureChannel(opts =>
             {
+                if (pdfGeneratorUrl.Scheme == "dns")
+                {
+                    opts.Credentials = ChannelCredentials.SecureSsl;
+                }
                 opts.ServiceConfig = new ServiceConfig
                 {
+                    LoadBalancingConfigs = { new RoundRobinConfig() },
                     MethodConfigs =
                         {
                             new MethodConfig

@@ -32,14 +32,12 @@ namespace EMBC.Utilities.Messaging
             {
                 CorrelationId = Guid.NewGuid().ToString(),
                 Type = content.GetType().AssemblyQualifiedName,
-                //Content = Value.Parser.ParseJson(JsonSerializer.Serialize(content))
                 Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(content))
             };
             var response = await dispatcherClient.DispatchAsync(request, new CallOptions(deadline: DateTime.UtcNow.AddSeconds(118)));
             if (response.Error) throw new ServerException(response.CorrelationId, response.ErrorType, response.ErrorMessage, response.ErrorDetails);
             if (response.Empty || string.IsNullOrEmpty(response.Type)) return default;
-            var responseType = System.Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
-            //return (TReply?)JsonSerializer.Deserialize(JsonFormatter.Default.Format(response.Content), responseType);
+            var responseType = Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
             using var ms = new MemoryStream(response.Data.ToByteArray());
             return (TReply?)JsonSerializer.Deserialize(ms, responseType);
         }
