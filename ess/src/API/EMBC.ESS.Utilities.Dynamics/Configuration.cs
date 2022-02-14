@@ -17,16 +17,12 @@
 using System;
 using System.Net.Http;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Resiliency;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
 using Polly;
-using Polly.CircuitBreaker;
 using Polly.Extensions.Http;
-using Polly.Timeout;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
@@ -44,32 +40,6 @@ namespace EMBC.ESS.Utilities.Dynamics
             services
                 .AddHttpClient("adfs_token")
                 .SetHandlerLifetime(TimeSpan.FromMinutes(30))
-                /*.AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
-                {
-                    new HttpClientCircuitBreakerPolicy
-                    {
-                        NumberOfErrors = options.Adfs.CircuitBreakerNumberOfErrors,
-                        ResetDuration = TimeSpan.FromSeconds(options.Adfs.CircuitBreakerResetInSeconds),
-                        OnBreak = (sp, t, e) => { OnBreak("adfs_token", sp, t, e); },
-                        OnReset = sp => { OnReset("adfs_token", sp); }
-                    },
-                    new HttpClientBulkheadIsolationPolicy
-                    {
-                        MaxParallelization = 10,
-                        QueueSize = 100
-                    },
-                    new HttpClientRetryPolicy
-                    {
-                        NumberOfRetries = options.NumberOfRetries,
-                        WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
-                        OnRetry = (sp, t, e) => { OnRetry("adfs_token", sp, t, e); }
-                    },
-                    new HttpClientTimeoutPolicy
-                    {
-                        Timeout = TimeSpan.FromSeconds(options.Adfs.TimeoutInSeconds),
-                        OnTimeout = (sp, t, e) => { OnTimeout("adfs_token", sp, t, e); }
-                    }
-                })*/
                 ;
 
             services.AddSingleton<ISecurityTokenProvider, ADFSSecurityTokenProvider>();
@@ -93,27 +63,6 @@ namespace EMBC.ESS.Utilities.Dynamics
                     request.SetPolicyExecutionContext(ctx);
                     return policy;
                 })
-                /*.AddResiliencyPolicies(new IPolicyBuilder<HttpResponseMessage>[]
-                {
-                    new HttpClientCircuitBreakerPolicy
-                    {
-                        NumberOfErrors = options.CircuitBreakerNumberOfErrors,
-                        ResetDuration = TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
-                        OnBreak = (sp, t, e) => { OnBreak("dynamics", sp, t, e); },
-                        OnReset = sp => { OnReset("dynamics", sp); }
-                    },
-                    new DynamicsHttpClientRetryPolicy
-                    {
-                        NumberOfRetries = options.NumberOfRetries,
-                        WaitDurationBetweenRetries = TimeSpan.FromSeconds(options.RetryWaitTimeInSeconds),
-                        OnRetry = (sp, t, e) => { OnRetry("dynamics", sp, t, e); }
-                    },
-                    new HttpClientTimeoutPolicy
-                    {
-                        Timeout = TimeSpan.FromSeconds(options.TimeoutInSeconds),
-                        OnTimeout = (sp, t, e) => { OnTimeout("dynamics", sp, t, e); }
-                    }
-                })*/
                 ;
 
             services.AddSingleton<IEssContextFactory, EssContextFactory>();
@@ -139,54 +88,6 @@ namespace EMBC.ESS.Utilities.Dynamics
             logger.LogInformation("RESET");
             var reporter = sp.GetRequiredService<IEssContextStateReporter>();
             reporter.ReportFixed().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        //private static void OnBreak(string source, IServiceProvider sp, TimeSpan time, Exception exception)
-        //{
-        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-        //    logger.LogError("BREAK: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
-        //    var reporter = sp.GetRequiredService<IEssContextStateReporter>();
-        //    reporter.ReportBroken($"{source}: {exception.Message}").GetAwaiter().GetResult();
-        //}
-
-        //private static void OnReset(string source, IServiceProvider sp)
-        //{
-        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-        //    logger.LogInformation("RESET");
-        //    var reporter = sp.GetRequiredService<IEssContextStateReporter>();
-        //    reporter.ReportFixed().GetAwaiter().GetResult();
-        //}
-
-        //private static void OnRetry(string source, IServiceProvider sp, TimeSpan time, Exception exception)
-        //{
-        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-        //    logger.LogWarning("RETRY: {0} {1}: {2}", time, exception?.GetType().FullName, exception?.Message);
-        //}
-
-        //private static void OnTimeout(string source, IServiceProvider sp, TimeSpan time, Exception exception)
-        //{
-        //    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-        //    logger.LogWarning("TIMOUT: {0} {1}: {2}", time, exception.GetType().FullName, exception.Message);
-        //}
-    }
-
-    //temporary attempt to initiate retry when Dynamics throws an exception
-    public class DynamicsHttpClientRetryPolicy : IPolicyBuilder<HttpResponseMessage>
-    {
-        public int NumberOfRetries { get; set; } = 3;
-        public TimeSpan WaitDurationBetweenRetries { get; set; } = TimeSpan.FromSeconds(5);
-        public Action<IServiceProvider, TimeSpan, Exception> OnRetry { get; set; } = (sp, t, e) => { };
-
-        public virtual PolicyWrapper<HttpResponseMessage> Build()
-        {
-            return new PolicyWrapper<HttpResponseMessage>
-            {
-                Policy = HttpPolicyExtensions.HandleTransientHttpError()
-                .Or<TimeoutRejectedException>()
-                .Or<BrokenCircuitException>()
-                .Or<DataServiceRequestException>()
-                .WaitAndRetryAsync(NumberOfRetries, r => WaitDurationBetweenRetries, (r, timespan, ctx) => OnRetry((IServiceProvider)ctx["_serviceProvider"], timespan, r.Exception))
-            };
         }
     }
 }
