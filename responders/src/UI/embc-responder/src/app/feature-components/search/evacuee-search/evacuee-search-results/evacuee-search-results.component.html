@@ -281,4 +281,6 @@
   </div>
 </ng-template>
 
-<app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>
+<app-overlay-loader
+  [showLoader]="evacueeSearchResultsService.overlayIsLoading"
+></app-overlay-loader>
