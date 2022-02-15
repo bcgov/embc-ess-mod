@@ -12,7 +12,16 @@ import { RegistrationsService } from 'src/app/core/api/services';
   providedIn: 'root'
 })
 export class ProfileSecurityQuestionsService {
+  private shuffledSecurityQuestionsVal: Array<SecurityQuestion>;
+
   constructor(private registrationService: RegistrationsService) {}
+
+  public get shuffledSecurityQuestions(): Array<SecurityQuestion> {
+    return this.shuffledSecurityQuestionsVal;
+  }
+  public set shuffledSecurityQuestions(value: Array<SecurityQuestion>) {
+    this.shuffledSecurityQuestionsVal = value;
+  }
 
   /**
    * Method that randomizes the order of a given array of questions and hints
@@ -22,7 +31,7 @@ export class ProfileSecurityQuestionsService {
    */
   public shuffleSecurityQuestions(
     securityQuestions: Array<SecurityQuestion>
-  ): Array<SecurityQuestion> {
+  ): void {
     let currentIndex: number = securityQuestions.length;
     let temporaryValue: SecurityQuestion;
     let randomIndex: number;
@@ -35,7 +44,7 @@ export class ProfileSecurityQuestionsService {
       securityQuestions[currentIndex] = securityQuestions[randomIndex];
       securityQuestions[randomIndex] = temporaryValue;
     }
-    return securityQuestions;
+    this.shuffledSecurityQuestions = securityQuestions;
   }
 
   /**
