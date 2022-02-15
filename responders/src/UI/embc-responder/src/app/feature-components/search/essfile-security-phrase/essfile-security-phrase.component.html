@@ -60,7 +60,7 @@
               type="button"
               mat-button
               (click)="next()"
-              [disabled]="showLoader"
+              [disabled]="showLoader || !securityPhraseForm.valid"
             >
               Continue
               <app-loader

@@ -34,11 +34,11 @@ export class EvacueeSearchResultsComponent implements OnInit {
   evacueeSearchContext: EvacueeSearchContextModel;
   isPaperBased: boolean;
   paperBasedEssFile: string;
-  isLoading = false;
+  // isLoading = false;
   color = '#169BD5';
 
   constructor(
-    private evacueeSearchResultsService: EvacueeSearchResultsService,
+    public evacueeSearchResultsService: EvacueeSearchResultsService,
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
@@ -90,7 +90,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
     evacueeSearchContext: EvacueeSearchContextModel,
     paperEssFile?: string
   ): void {
-    this.isLoading = !this.isLoading;
+    this.evacueeSearchResultsService.overlayIsLoading =
+      !this.evacueeSearchResultsService.overlayIsLoading;
     this.evacueeSearchResultsService
       .searchForEvacuee(
         evacueeSearchContext?.evacueeSearchParameters,
@@ -98,7 +99,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
       )
       .subscribe({
         next: (results) => {
-          this.isLoading = !this.isLoading;
+          this.evacueeSearchResultsService.overlayIsLoading =
+            !this.evacueeSearchResultsService.overlayIsLoading;
           this.fileResults = results?.files?.sort(
             (a, b) =>
               new Date(b.modifiedOn).valueOf() -
@@ -111,7 +113,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
           );
         },
         error: (errorEvacuee) => {
-          this.isLoading = !this.isLoading;
+          this.evacueeSearchResultsService.overlayIsLoading =
+            !this.evacueeSearchResultsService.overlayIsLoading;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeSearchError);
         }

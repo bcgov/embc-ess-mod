@@ -23,6 +23,9 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essfile-security-phrase.service';
+import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -40,9 +43,12 @@ export class EssFilesResultsComponent
   constructor(
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
+    private essFileSecurityPhraseService: EssFileSecurityPhraseService,
+    private evacueeSearchResultsService: EvacueeSearchResultsService,
     private router: Router,
     private cd: ChangeDetectorRef,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private alertService: AlertService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,10 +78,6 @@ export class EssFilesResultsComponent
     this.evacueeSessionService.essFileNumber = selectedESSFile.id;
     if (this.evacueeSessionService.isPaperBased) {
       if (
-        !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
-      ) {
-        this.openUnableAccessDialog();
-      } else if (
         this.evacueeSearchService.paperBasedEssFile !==
         selectedESSFile.externalReferenceId
       ) {
@@ -93,7 +95,28 @@ export class EssFilesResultsComponent
       } else if (
         !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {
-        this.router.navigate(['responder-access/search/security-phrase']);
+        this.evacueeSearchResultsService.overlayIsLoading =
+          !this.evacueeSearchResultsService.overlayIsLoading;
+        this.essFileSecurityPhraseService
+          .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
+          .subscribe({
+            next: (results) => {
+              console.log(results);
+              this.evacueeSearchResultsService.overlayIsLoading =
+                !this.evacueeSearchResultsService.overlayIsLoading;
+              this.essFileSecurityPhraseService.securityPhrase = results;
+              this.router.navigate(['responder-access/search/security-phrase']);
+            },
+            error: (error) => {
+              this.evacueeSearchResultsService.overlayIsLoading =
+                !this.evacueeSearchResultsService.overlayIsLoading;
+              this.alertService.clearAlert();
+              this.alertService.setAlert(
+                'danger',
+                globalConst.securityPhraseError
+              );
+            }
+          });
       } else {
         this.router.navigate(['responder-access/search/essfile-dashboard']);
       }

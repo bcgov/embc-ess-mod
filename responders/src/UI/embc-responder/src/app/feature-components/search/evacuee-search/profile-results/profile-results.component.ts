@@ -22,6 +22,9 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { ThisReceiver } from '@angular/compiler';
+import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
 
 @Component({
   selector: 'app-profile-results',
@@ -42,7 +45,10 @@ export class ProfileResultsComponent
     private router: Router,
     private cd: ChangeDetectorRef,
     private evacueeSessionService: EvacueeSessionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
+    private alertService: AlertService,
+    private evacueeSearchResultsService: EvacueeSearchResultsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -81,9 +87,37 @@ export class ProfileResultsComponent
           'responder-access/search/evacuee-profile-dashboard'
         ]);
       } else {
-        this.evacueeSessionService.securityQuestionsOpenedFrom =
-          'responder-access/search/evacuee';
-        this.router.navigate(['responder-access/search/security-questions']);
+        this.evacueeSearchResultsService.overlayIsLoading =
+          !this.evacueeSearchResultsService.overlayIsLoading;
+        this.profileSecurityQuestionsService
+          .getSecurityQuestions(this.evacueeSessionService.profileId)
+          .subscribe({
+            next: (results) => {
+              this.evacueeSearchResultsService.overlayIsLoading =
+                !this.evacueeSearchResultsService.overlayIsLoading;
+              if (results.questions.length === 0) {
+                this.openUnableAccessDialog();
+              } else {
+                this.profileSecurityQuestionsService.shuffleSecurityQuestions(
+                  results?.questions
+                );
+                this.evacueeSessionService.securityQuestionsOpenedFrom =
+                  'responder-access/search/evacuee';
+                this.router.navigate([
+                  'responder-access/search/security-questions'
+                ]);
+              }
+            },
+            error: (error) => {
+              this.evacueeSearchResultsService.overlayIsLoading =
+                !this.evacueeSearchResultsService.overlayIsLoading;
+              this.alertService.clearAlert();
+              this.alertService.setAlert(
+                'danger',
+                globalConst.securityQuestionsError
+              );
+            }
+          });
       }
     }
   }

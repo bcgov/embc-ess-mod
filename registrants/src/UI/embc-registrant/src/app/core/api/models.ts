@@ -38,7 +38,7 @@ export { TransportationTaxiReferral } from './models/transportation-taxi-referra
 export { ProfileDataConflict } from './models/profile-data-conflict';
 export { DateOfBirthDataConflict } from './models/date-of-birth-data-conflict';
 export { NameDataConflict } from './models/name-data-conflict';
-export { ValueTupleOfStringAndString } from './models/value-tuple-of-string-and-string';
+export { ProfileName } from './models/profile-name';
 export { AddressDataConflict } from './models/address-data-conflict';
 export { InviteRequest } from './models/invite-request';
 export { InviteToken } from './models/invite-token';

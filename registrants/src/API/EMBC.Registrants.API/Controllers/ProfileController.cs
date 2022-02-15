@@ -216,13 +216,20 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class NameDataConflict : ProfileDataConflict
     {
+        [Required]
         public override string DataElementName => nameof(NameDataConflict);
 
-        public (string firstName, string lastName) ConflictingValue
+        public ProfileName ConflictingValue
         { get; set; }
 
-        public (string firstName, string lastName) OriginalValue
+        public ProfileName OriginalValue
         { get; set; }
+    }
+
+    public class ProfileName
+    {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 
     /// <summary>
@@ -230,6 +237,7 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class AddressDataConflict : ProfileDataConflict
     {
+        [Required]
         public override string DataElementName => nameof(AddressDataConflict);
 
         public Address ConflictingValue { get; set; }
