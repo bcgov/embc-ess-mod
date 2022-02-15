@@ -42,7 +42,7 @@ namespace EMBC.Tests.Unit.ESS
     {
         public static IEqualityComparer<TestComparisionClass> Comparer => new LambdaComparer<TestComparisionClass>((o1, o2) => o1.Property2.Equals(o2.Property2), o => o.Property2.GetHashCode());
 
-        public string Property1 { get; set; }
+        public string? Property1 { get; set; }
         public int Property2 { get; set; }
     }
 }

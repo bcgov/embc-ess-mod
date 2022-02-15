@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
@@ -45,7 +44,7 @@ namespace EMBC.ESS.Utilities.Cache
         {
             logger.LogInformation("start cache lockers prunning");
             var prunned = 0;
-            this.AsParallel().ForAll(item =>
+            foreach (var item in this)
             {
                 if (item.Value.CurrentCount == 1)
                 {
@@ -53,9 +52,9 @@ namespace EMBC.ESS.Utilities.Cache
                     locker.Dispose();
                     prunned++;
                 }
-            });
+            }
 
-            logger.LogInformation($"end cache lockers prunning: {0} prunned", prunned);
+            logger.LogInformation("end cache lockers prunning: {0} prunned", prunned);
             await Task.CompletedTask;
         }
     }

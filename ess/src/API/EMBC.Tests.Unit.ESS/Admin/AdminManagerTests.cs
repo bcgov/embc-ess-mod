@@ -4,8 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Managers.Admin;
+using EMBC.ESS.Resources.Metadata;
+using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Utilities.Dynamics;
+using FakeItEasy;
 using Shouldly;
 using Xunit;
 
@@ -24,7 +28,10 @@ namespace EMBC.Tests.Unit.ESS.Admin
             }).CreateMapper();
 
             teamRepository = new TestTeamRepository();
-            adminManager = new AdminManager(teamRepository, null, mapper, null, null);
+            var essContextStatusReporter = A.Fake<IEssContextStateReporter>();
+            var metadataRepository = A.Fake<IMetadataRepository>();
+            var supplierRepository = A.Fake<ISupplierRepository>();
+            adminManager = new AdminManager(teamRepository, supplierRepository, mapper, metadataRepository, essContextStatusReporter);
         }
 
         [Fact]
@@ -132,7 +139,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
             return memeber != null;
         }
 
-        public async Task<IEnumerable<EMBC.ESS.Resources.Teams.TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
+        public async Task<IEnumerable<EMBC.ESS.Resources.Teams.TeamMember>> GetMembers(string? teamId = null, string? userName = null, string? userId = null, TeamMemberStatus[]? includeStatuses = null)
         {
             includeStatuses = includeStatuses ?? new[] { TeamMemberStatus.Active };
             await Task.CompletedTask;

@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <Nullable>annotations</Nullable>
+        <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -12,6 +12,7 @@
     <ItemGroup>
         <PackageReference Include="bogus" Version="34.0.1" />
         <PackageReference Include="Divergic.Logging.Xunit" Version="4.0.0" />
+        <PackageReference Include="FakeItEasy" Version="7.3.0" />
         <PackageReference Include="Grpc.Core.Testing" Version="2.44.0-pre2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="shouldly" Version="4.0.3" />

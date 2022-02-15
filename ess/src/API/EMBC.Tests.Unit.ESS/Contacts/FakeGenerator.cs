@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Bogus;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -45,17 +44,17 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.address1_city, f => f.Address.City())
                 .RuleFor(o => o.address1_country, f => f.Address.CountryCode())
                 .RuleFor(o => o.address1_stateorprovince, f => f.Address.State())
-                .RuleFor(o => o.era_City, f => null)
-                .RuleFor(o => o.era_ProvinceState, f => null)
-                .RuleFor(o => o.era_Country, f => null)
+                //.RuleFor(o => o.era_City, f => null)
+                //.RuleFor(o => o.era_ProvinceState, f => null)
+                //.RuleFor(o => o.era_Country, f => null)
 
                 .RuleFor(o => o.address2_line1, f => f.Address.StreetAddress())
                 .RuleFor(o => o.address2_city, f => f.Address.City())
                 .RuleFor(o => o.address2_country, f => f.Address.CountryCode())
                 .RuleFor(o => o.address2_stateorprovince, f => f.Address.State())
-                .RuleFor(o => o.era_MailingCity, f => null)
-                .RuleFor(o => o.era_MailingProvinceState, f => null)
-                .RuleFor(o => o.era_MailingCountry, f => null)
+                //.RuleFor(o => o.era_MailingCity, f => null)
+                //.RuleFor(o => o.era_MailingProvinceState, f => null)
+                //.RuleFor(o => o.era_MailingCountry, f => null)
 
                 .RuleFor(o => o.era_issamemailingaddress, f => f.Random.Bool())
 
@@ -93,7 +92,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
             return new Faker<Address>()
                 .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                 .RuleFor(o => o.City, f => f.Address.City())
-                .RuleFor(o => o.Community, f => null)
+                .RuleFor(o => o.Community, f => string.Empty)
                 .RuleFor(o => o.Country, f => f.Address.CountryCode())
                 .RuleFor(o => o.StateProvince, f => f.Address.State())
                 .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())

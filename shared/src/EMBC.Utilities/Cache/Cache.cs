@@ -51,7 +51,7 @@ namespace EMBC.ESS.Utilities.Cache
             this.cache = cache;
             this.cacheSyncManager = cacheSyncManager;
             this.logger = logger;
-            this.keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? env.ApplicationName;
+            this.keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? env?.ApplicationName ?? string.Empty;
         }
 
         public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
@@ -64,8 +64,10 @@ namespace EMBC.ESS.Utilities.Cache
             }
             try
             {
-                var value = await Get<T>(key);
-                if (value == null)
+                var value = await Get<T?>(key);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                if (value == null || default(T).Equals(value))
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 {
                     //cache miss
                     logger.LogDebug("{0} cache miss", key);
@@ -109,7 +111,7 @@ namespace EMBC.ESS.Utilities.Cache
             }
         }
 
-        private static T? Deserialize<T>(byte[] data) => data == null || data.Length == 0 ? default : JsonSerializer.Deserialize<T>(data);
+        private static T? Deserialize<T>(byte[] data) => data == null || data.Length == 0 ? default(T?) : JsonSerializer.Deserialize<T?>(data);
 
         private static byte[] Serialize<T>(T obj) => obj == null ? Array.Empty<byte>() : JsonSerializer.SerializeToUtf8Bytes(obj);
     }
