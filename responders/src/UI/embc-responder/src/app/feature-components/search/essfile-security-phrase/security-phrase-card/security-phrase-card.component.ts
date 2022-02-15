@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { GetSecurityPhraseResponse } from 'src/app/core/api/models';
 
 @Component({
@@ -14,4 +14,11 @@ export class SecurityPhraseCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  /**
+   * Return form control
+   */
+  get securityPhraseFormControl(): { [key: string]: AbstractControl } {
+    return this.parentForm.controls;
+  }
 }

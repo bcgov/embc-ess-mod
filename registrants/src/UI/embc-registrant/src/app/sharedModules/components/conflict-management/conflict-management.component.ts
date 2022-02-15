@@ -1,7 +1,12 @@
 import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { Profile, ProfileDataConflict } from 'src/app/core/api/models';
+import {
+  DateOfBirthDataConflict,
+  NameDataConflict,
+  Profile,
+  ProfileDataConflict
+} from 'src/app/core/api/models';
 import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
 import { ProfileService } from '../../../feature-components/profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -120,17 +125,20 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
 
   resolveNameConflict(): void {
     if (this.nameConflict) {
-      this.profile.personalDetails.firstName =
-        this.nameConflict.conflictingValue.item1;
-      this.profile.personalDetails.lastName =
-        this.nameConflict.conflictingValue.item2;
+      this.profile.personalDetails.firstName = (
+        this.nameConflict as NameDataConflict
+      ).conflictingValue.firstName;
+      this.profile.personalDetails.lastName = (
+        this.nameConflict as NameDataConflict
+      ).conflictingValue.lastName;
     }
   }
 
   resolveDOBConflict(): void {
     if (this.dobConflict) {
-      this.profile.personalDetails.dateOfBirth =
-        this.dobConflict.conflictingValue;
+      this.profile.personalDetails.dateOfBirth = (
+        this.dobConflict as DateOfBirthDataConflict
+      ).conflictingValue;
     }
   }
 

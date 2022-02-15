@@ -78,7 +78,8 @@ export class VerifiedRegistrationComponent implements OnInit {
     } else if (
       !this.conflictService.getHasVisitedConflictPage() ||
       this.router.url === '/verified-registration/conflicts' ||
-      this.router.url === '/verified-registration'
+      this.router.url === '/verified-registration' ||
+      this.conflictService.getCount() === null
     ) {
       this.loadProfileConflicts();
     }
@@ -87,8 +88,12 @@ export class VerifiedRegistrationComponent implements OnInit {
   loadProfileConflicts() {
     this.profileService.getConflicts().subscribe({
       next: (conflicts: ProfileDataConflict[]) => {
-        // this.mappingService.mapConflicts(conflicts);
-        this.router.navigate(['/verified-registration/conflicts']);
+        this.mappingService.mapConflicts(conflicts);
+        if (conflicts.length !== 0) {
+          this.router.navigate(['/verified-registration/conflicts']);
+        } else {
+          this.router.navigate(['/verified-registration/dashboard']);
+        }
       },
       error: (error) => {
         this.alertService.clearAlert();

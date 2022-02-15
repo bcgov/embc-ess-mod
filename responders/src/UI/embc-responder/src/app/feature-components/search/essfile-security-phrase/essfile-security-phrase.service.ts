@@ -11,7 +11,16 @@ import { RegistrationsService } from 'src/app/core/api/services';
   providedIn: 'root'
 })
 export class EssFileSecurityPhraseService {
+  private securityPhraseVal: GetSecurityPhraseResponse;
+
   constructor(private registrationService: RegistrationsService) {}
+
+  public get securityPhrase(): GetSecurityPhraseResponse {
+    return this.securityPhraseVal;
+  }
+  public set securityPhrase(value: GetSecurityPhraseResponse) {
+    this.securityPhraseVal = value;
+  }
 
   /**
    *

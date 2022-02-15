@@ -18,24 +18,6 @@
           The answers are not case sensitive and do not include any special
           characters.
         </p>
-        <!-- <ng-container *ngIf="isLoading">
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-loader
-                style="
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  margin-bottom: 20px;
-                "
-                [showLoader]="isLoading"
-                [strokeWidth]="3"
-                [diameter]="50"
-                [color]="color"
-              ></app-loader>
-            </div>
-          </div>
-        </ng-container> -->
         <form [formGroup]="securityQuestionsForm">
           <div class="row row-space">
             <div class="col-md-8">
@@ -82,7 +64,7 @@
               type="button"
               mat-button
               (click)="next()"
-              [disabled]="showLoader"
+              [disabled]="showLoader || !securityQuestionsForm.valid"
             >
               Continue
               <app-loader
@@ -143,7 +125,7 @@
               type="button"
               mat-button
               (click)="next()"
-              [disabled]="showLoader"
+              [disabled]="showLoader || !securityQuestionsForm.valid"
             >
               Continue
               <app-loader
