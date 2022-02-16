@@ -20,7 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker/public-api';
-import { Referral, Support, SupportSubCategory } from 'src/app/core/api/models';
+import { SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
@@ -474,25 +474,44 @@ export class SupportDetailsComponent implements OnInit {
       });
   }
 
+  private setFromDate() {
+    if (this.evacueeSessionService.isPaperBased) {
+      return this.stepSupportsService?.supportDetails?.fromDate
+        ? this.stepSupportsService?.supportDetails?.fromDate
+        : '';
+    } else {
+      return this.stepSupportsService?.supportDetails?.fromDate
+        ? this.stepSupportsService?.supportDetails?.fromDate
+        : new Date(
+            this.stepSupportsService.convertStringToDate(
+              this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
+            )
+          );
+    }
+  }
+
+  private setFromTime() {
+    if (this.evacueeSessionService.isPaperBased) {
+      return this.stepSupportsService?.supportDetails?.fromTime
+        ? this.stepSupportsService?.supportDetails?.fromTime
+        : '';
+    } else {
+      return this.stepSupportsService?.supportDetails?.fromTime
+        ? this.stepSupportsService?.supportDetails?.fromTime
+        : this.currentTime;
+    }
+  }
+
   /**
    * Support details form
    */
   private createSupportDetailsForm(): void {
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
-        this.evacueeSessionService.isPaperBased
-          ? ''
-          : new Date(
-              this.stepSupportsService.convertStringToDate(
-                this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
-              )
-            ),
+        this.setFromDate(),
         [this.customValidation.validDateValidator(), Validators.required]
       ],
-      fromTime: [
-        this.evacueeSessionService.isPaperBased ? '' : this.currentTime,
-        [Validators.required]
-      ],
+      fromTime: [this.setFromTime(), [Validators.required]],
       noOfDays: [
         this.stepSupportsService?.supportDetails?.noOfDays
           ? this.stepSupportsService?.supportDetails?.noOfDays
@@ -500,10 +519,17 @@ export class SupportDetailsComponent implements OnInit {
         [Validators.required]
       ],
       toDate: [
-        '',
+        this.stepSupportsService?.supportDetails?.toDate
+          ? this.stepSupportsService?.supportDetails?.toDate
+          : '',
         [this.customValidation.validDateValidator(), Validators.required]
       ],
-      toTime: ['', [Validators.required]],
+      toTime: [
+        this.stepSupportsService?.supportDetails?.toTime
+          ? this.stepSupportsService?.supportDetails?.toTime
+          : '',
+        [Validators.required]
+      ],
       members: this.formBuilder.array(
         [],
         [this.customValidation.memberCheckboxValidator()]
@@ -512,7 +538,9 @@ export class SupportDetailsComponent implements OnInit {
         this.stepSupportsService?.supportTypeToAdd?.value
       ),
       paperSupportNumber: [
-        '',
+        this.stepSupportsService?.supportDetails?.externalReferenceId
+          ? this.stepSupportsService?.supportDetails?.externalReferenceId
+          : '',
         [
           this.customValidation
             .conditionalValidation(
@@ -537,7 +565,9 @@ export class SupportDetailsComponent implements OnInit {
       ],
       paperIssuedBy: this.formBuilder.group({
         firstName: [
-          '',
+          this.stepSupportsService?.supportDetails?.issuedBy?.split(' ')[0]
+            ? this.stepSupportsService?.supportDetails?.issuedBy?.split(' ')[0]
+            : '',
           [
             this.customValidation
               .conditionalValidation(
@@ -548,7 +578,9 @@ export class SupportDetailsComponent implements OnInit {
           ]
         ],
         lastNameInitial: [
-          '',
+          this.stepSupportsService?.supportDetails?.issuedBy?.split(' ')[1]
+            ? this.stepSupportsService?.supportDetails?.issuedBy?.split(' ')[1]
+            : '',
           [
             this.customValidation
               .conditionalValidation(
@@ -560,7 +592,9 @@ export class SupportDetailsComponent implements OnInit {
         ]
       }),
       paperCompletedOn: [
-        '',
+        this.stepSupportsService?.supportDetails?.issuedOn
+          ? this.stepSupportsService?.supportDetails?.issuedOn
+          : '',
         [
           this.customValidation
             .conditionalValidation(

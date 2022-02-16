@@ -25,10 +25,20 @@
   </div>
 </div>
 
-<!-- <div class="row row-padding">
-  <div class="col-md-5">Paper Based ESS File Number</div>
-  <div class="col-md-7 bold">n/a</div>
-</div> -->
+<div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
+  <div class="col-md-5">Paper ESS File Number</div>
+  <div class="col-md-7 bold">{{ profileData?.externalReferenceId }}</div>
+</div>
+
+<div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
+  <div class="col-md-5">Paper ESS File Created by</div>
+  <div class="col-md-7 bold">tbd</div>
+</div>
+
+<div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
+  <div class="col-md-5">Paper ESS File Created on</div>
+  <div class="col-md-7 bold">{{ profileData?.needsAssessment?.createdOn }}</div>
+</div>
 
 <div class="row row-padding">
   <div class="col-md-5">Evacuated From</div>
