@@ -250,7 +250,7 @@ objects:
             - name: responders-portal-api
               resources:
                 limits:
-                  cpu: 75m
+                  cpu: 50m
                   memory: 256Mi
                 requests:
                   cpu: 25m
@@ -334,21 +334,21 @@ objects:
         kind: DeploymentConfig
         name: ${APP_NAME}-responders-portal-api
         apiVersion: apps.openshift.io/v1
-      minReplicas: 2
-      maxReplicas: 8
+      minReplicas: 3
+      maxReplicas: 6
       metrics:
         - type: Resource
           resource:
             name: cpu
             target:
               type: Utilization
-              averageUtilization: 200
+              averageUtilization: 150
         - type: Resource
           resource:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 150
+              averageUtilization: 125
   
   - apiVersion: v1
     kind: ConfigMap
@@ -400,11 +400,11 @@ objects:
             - name: responders-portal-ui
               resources:
                 limits:
-                  cpu: 15m
-                  memory: 64Mi
+                  cpu: 10m
+                  memory: 48Mi
                 requests:
                   cpu: 5m
-                  memory: 32Mi
+                  memory: 24Mi
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/responders-portal-ui:${TAG}
               imagePullPolicy: Always
               volumeMounts:
@@ -464,15 +464,15 @@ objects:
         kind: DeploymentConfig
         name: ${APP_NAME}-responders-portal-ui
         apiVersion: apps.openshift.io/v1
-      minReplicas: 2
-      maxReplicas: 4
+      minReplicas: 3
+      maxReplicas: 5
       metrics:
         - type: Resource
           resource:
             name: cpu
             target:
               type: Utilization
-              averageUtilization: 200
+              averageUtilization: 150
         - type: Resource
           resource:
             name: memory
