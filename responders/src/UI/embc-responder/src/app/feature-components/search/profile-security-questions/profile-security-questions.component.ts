@@ -12,6 +12,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 @Component({
   selector: 'app-profile-security-questions',
@@ -30,6 +31,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   correctAnswerFlag = false;
   showLoader = false;
   color = '#169BD5';
+  // isLoading = true;
 
   constructor(
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
@@ -38,34 +40,22 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private customValidation: CustomValidationService
   ) {}
 
   ngOnInit(): void {
     this.createAnswersForm();
     this.securityAnswers = [];
     this.firstTryCorrect = false;
+    this.securityQuestions =
+      this.profileSecurityQuestionsService.shuffledSecurityQuestions;
 
-    if (this.evacueeSessionService.profileId === undefined) {
+    if (
+      this.securityQuestions === undefined ||
+      this.securityQuestions === undefined
+    ) {
       this.router.navigate(['responder-access/search/evacuee']);
-    } else {
-      this.profileSecurityQuestionsService
-        .getSecurityQuestions(this.evacueeSessionService.profileId)
-        .subscribe({
-          next: (results) => {
-            this.securityQuestions =
-              this.profileSecurityQuestionsService.shuffleSecurityQuestions(
-                results?.questions
-              );
-          },
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.securityQuestionsError
-            );
-          }
-        });
     }
   }
 
@@ -74,16 +64,19 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    */
   getAnswers() {
     this.securityAnswers = [];
+
     let counter = 1;
     for (const question of this.securityQuestions) {
-      const securityAQuestion: SecurityQuestion = {
-        question: question.question,
-        answer: this.securityQuestionsForm.get('answer' + counter).value,
-        answerChanged: false,
-        id: question.id
-      };
-      counter++;
-      this.securityAnswers.push(securityAQuestion);
+      if (this.securityQuestionsForm.get('answer' + counter).value) {
+        const securityQuestion: SecurityQuestion = {
+          question: question.question,
+          answer: this.securityQuestionsForm.get('answer' + counter).value,
+          answerChanged: false,
+          id: question.id
+        };
+        counter++;
+        this.securityAnswers.push(securityQuestion);
+      }
     }
   }
 
@@ -186,9 +179,21 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
 
   private createAnswersForm(): void {
     this.securityQuestionsForm = this.formBuilder.group({
-      answer1: [''],
-      answer2: [''],
-      answer3: ['']
+      answer1: ['', [this.customValidation.whitespaceValidator()]],
+      answer2: ['', [this.customValidation.whitespaceValidator()]],
+      answer3: [
+        '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.securityQuestionsForm.get('answer1').status === 'VALID' &&
+                this.securityQuestionsForm.get('answer2').status === 'VALID',
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ]
     });
   }
 }

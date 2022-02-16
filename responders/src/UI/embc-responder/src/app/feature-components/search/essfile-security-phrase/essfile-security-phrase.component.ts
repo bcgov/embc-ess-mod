@@ -1,6 +1,6 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   GetSecurityPhraseResponse,
@@ -14,6 +14,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { Location } from '@angular/common';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 @Component({
   selector: 'app-essfile-security-phrase',
@@ -24,7 +25,6 @@ export class EssfileSecurityPhraseComponent implements OnInit {
   securityPhraseForm: FormGroup;
   securityPhrase: GetSecurityPhraseResponse;
   attemptsRemaning = 3;
-  isLoading = false;
   showLoader = false;
   correctAnswerFlag = false;
   wrongAnswerFlag = false;
@@ -38,29 +38,19 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private cacheService: CacheService,
-    private location: Location
+    private location: Location,
+    private customValidation: CustomValidationService
   ) {}
 
   ngOnInit(): void {
     this.createSecurityPhraseForm();
 
-    if (this.evacueeSessionService.essFileNumber === undefined) {
+    this.securityPhrase = this.essFileSecurityPhraseService.securityPhrase;
+    if (
+      this.evacueeSessionService.essFileNumber === undefined ||
+      this.securityPhrase === undefined
+    ) {
       this.router.navigate(['responder-access/search/evacuee']);
-    } else {
-      this.essFileSecurityPhraseService
-        .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
-        .subscribe({
-          next: (results) => {
-            this.securityPhrase = results;
-          },
-          error: (error) => {
-            this.alertService.clearAlert();
-            this.alertService.setAlert(
-              'danger',
-              globalConst.securityPhraseError
-            );
-          }
-        });
     }
   }
 
@@ -84,7 +74,6 @@ export class EssfileSecurityPhraseComponent implements OnInit {
       .verifySecurityPhrase(this.evacueeSessionService.essFileNumber, body)
       .subscribe({
         next: (results) => {
-          console.log(results);
           this.showLoader = !this.showLoader;
           if (results.isCorrect) {
             this.wrongAnswerFlag = false;
@@ -96,7 +85,6 @@ export class EssfileSecurityPhraseComponent implements OnInit {
                 .subscribe({
                   next: (value) => {
                     this.evacueeSessionService.fileLinkStatus = 'S';
-                    console.log(this.evacueeSessionService.fileLinkStatus);
                     this.router.navigate([
                       'responder-access/search/evacuee-profile-dashboard'
                     ]);
@@ -149,7 +137,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
 
   private createSecurityPhraseForm() {
     this.securityPhraseForm = this.formBuilder.group({
-      phraseAnswer: ['']
+      phraseAnswer: ['', [this.customValidation.whitespaceValidator()]]
     });
   }
 }

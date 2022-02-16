@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { EvacuationFileSummary } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.model';
@@ -12,10 +11,19 @@ import { LocationsService } from 'src/app/core/services/locations.service';
   providedIn: 'root'
 })
 export class EvacueeSearchResultsService {
+  private overlayIsLoadingVal = false;
+
   constructor(
     private registrationService: RegistrationsService,
     private locationsService: LocationsService
   ) {}
+
+  public get overlayIsLoading(): boolean {
+    return this.overlayIsLoadingVal;
+  }
+  public set overlayIsLoading(value: boolean) {
+    this.overlayIsLoadingVal = value;
+  }
 
   /**
    * Gets the search results from dymanics and maps the results into UI
