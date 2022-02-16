@@ -1,12 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
-using Polly.CircuitBreaker;
-using Polly.Timeout;
-using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,42 +24,6 @@ namespace EMBC.Tests.Integration.ESS
         {
             var context = Services.GetRequiredService<EssContext>();
             await context.era_countries.GetAllPagesAsync();
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public void CanTriggerCricuitBreaker()
-        {
-            var essContextFactory = Services.GetRequiredService<IEssContextFactory>();
-            var call = () =>
-            {
-                try
-                {
-                    var context = essContextFactory.Create();
-                    context.era_countries.ToArray();
-                    return null;
-                }
-                catch (Exception e)
-                {
-                    return e.InnerException ?? e;
-                }
-                finally
-                {
-                    //System.Threading.Thread.Sleep(TimeSpan.FromSeconds(Random.Shared.Next(1, 5)));
-                }
-            };
-
-            var sw = Stopwatch.StartNew();
-
-            var results = Enumerable.Range(1, 10).Select(i => new { i, sw.Elapsed, exeption = call() }).ToArray();
-            sw.Stop();
-
-            foreach (var r in results)
-            {
-                output.WriteLine("{0} {1}: {2}", r.i, r.Elapsed, r.exeption?.GetType().Name);
-            }
-            results.Length.ShouldBe(10);
-            results.First().exeption?.GetType().ShouldBe(typeof(TimeoutRejectedException));
-            results.Skip(1).ShouldAllBe(r => r.exeption != null && r.exeption.GetType().Equals(typeof(BrokenCircuitException)));
         }
     }
 }

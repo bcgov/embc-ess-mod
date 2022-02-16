@@ -6,8 +6,6 @@ using EMBC.ESS.Utilities.Cache;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Shouldly;
 using Xunit;
@@ -17,27 +15,21 @@ namespace EMBC.Tests.Unit.ESS.Utilities
 {
     public class BackgroundTaskTests
     {
-        private readonly ITestOutputHelper output;
-        private readonly ServiceProvider services;
+        private readonly IServiceProvider services;
 
         public BackgroundTaskTests(ITestOutputHelper output)
         {
-            this.output = output;
-            var services = new ServiceCollection();
-            services.AddLogging(builder => builder.AddXunit(output));
+            var services = TestHelper.CreateDIContainer(output);
             services.AddTransient<TestTask>();
-            services.AddDistributedMemoryCache();
-            services.AddSingleton<IHostEnvironment>(new HostingEnvironment { EnvironmentName = Environments.Development });
-            services.AddSingleton<CacheSyncManager>();
-            services.AddSingleton<ICache, Cache>();
+            services.AddTestCache();
 
-            this.services = services.BuildServiceProvider(validateScopes: true);
+            this.services = services.Build();
         }
 
         [Fact]
         public async Task Execute_DoPOne_OnlyOneExecutes()
         {
-            var task = new BackgroundTask<TestTask>(services, output.BuildLoggerFor<TestTask>());
+            var task = new BackgroundTask<TestTask>(services, services.GetRequiredService<ILogger<TestTask>>());
 
             await task.StartAsync(CancellationToken.None);
         }
