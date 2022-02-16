@@ -76,6 +76,7 @@ namespace EMBC.Tests.Unit.ESS.Utilities
             (await manager.TryRegister("instance1")).ShouldBeTrue();
             await Task.Delay(50);
             (await manager.TryRegister("instance2")).ShouldBeTrue();
+            await Task.Delay(50);
             (await manager.TryRegister("instance3")).ShouldBeFalse();
         }
 
