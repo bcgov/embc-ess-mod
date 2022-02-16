@@ -124,7 +124,7 @@ namespace EMBC.ESS.Resources.Evacuees
 
     public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
     {
-        public int? Convert(string sourceMember, ResolutionContext context) => sourceMember switch
+        public int? Convert(string sourceMember, ResolutionContext? context) => sourceMember switch
         {
             "Male" => 1,
             "Female" => 2,
@@ -132,7 +132,7 @@ namespace EMBC.ESS.Resources.Evacuees
             _ => null
         };
 
-        public string Convert(int? sourceMember, ResolutionContext context) => sourceMember switch
+        public string Convert(int? sourceMember, ResolutionContext? context) => sourceMember switch
         {
             1 => "Male",
             2 => "Female",

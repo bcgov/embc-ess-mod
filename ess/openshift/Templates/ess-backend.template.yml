@@ -185,11 +185,11 @@ objects:
             - name: ess-backend
               resources:
                 limits:
-                  cpu: 200m
-                  memory: 1Gi
+                  cpu: 300m
+                  memory: 768Mi
                 requests:
                   cpu: 50m
-                  memory: 256Mi
+                  memory: 384Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
@@ -275,7 +275,7 @@ objects:
         name: ${APP_NAME}-ess-backend
         apiVersion: apps.openshift.io/v1
       minReplicas: 2
-      maxReplicas: 10
+      maxReplicas: 12
       metrics:
         - type: Resource
           resource:
@@ -288,7 +288,7 @@ objects:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 200
+              averageUtilization: 150
 
   # pvc shared with all .net pods for data protection keys
   - kind: "PersistentVolumeClaim"

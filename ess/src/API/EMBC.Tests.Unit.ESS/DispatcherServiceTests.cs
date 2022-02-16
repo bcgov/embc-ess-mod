@@ -139,7 +139,7 @@ namespace EMBC.Tests
 
     public class TestCommand : Command
     {
-        public string Value { get; set; }
+        public string Value { get; set; } = null!;
     }
 
     public class TestCommandNoReturnValue : Command
@@ -148,11 +148,11 @@ namespace EMBC.Tests
 
     public class TestQuery : Query<TestQueryReply>
     {
-        public string Value { get; set; }
+        public string Value { get; set; } = null!;
     }
 
     public class TestQueryReply
     {
-        public string Value { get; set; }
+        public string Value { get; set; } = null!;
     }
 }

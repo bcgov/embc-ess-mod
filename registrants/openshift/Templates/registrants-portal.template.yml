@@ -249,10 +249,10 @@ objects:
             - resources:
                 limits:
                   cpu: 75m
-                  memory: 512Mi
+                  memory: 256Mi
                 requests:
                   cpu: 25m
-                  memory: 256Mi
+                  memory: 128Mi
               name: registrants-portal-api
               envFrom:
                 - configMapRef:
@@ -325,7 +325,7 @@ objects:
         name: ${APP_NAME}-registrants-portal-api
         apiVersion: apps.openshift.io/v1
       minReplicas: 2
-      maxReplicas: 10
+      maxReplicas: 8
       metrics:
         - type: Resource
           resource:
