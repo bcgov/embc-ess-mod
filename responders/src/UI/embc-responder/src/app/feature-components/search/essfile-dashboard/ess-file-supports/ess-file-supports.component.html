@@ -39,7 +39,7 @@
           <div class="row support-header info-box">
             <div class="col-md-2">
               <p class="bold">
-                {{ support?.id }}
+                {{ getExternalReferralId(support) ?? support?.id }}
               </p>
             </div>
             <div class="col-md-1">

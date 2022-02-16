@@ -133,10 +133,18 @@ export class ExistingSupportDetailsService {
     );
 
     this.stepSupportsService.supportTypeToAdd =
-      subCategory === undefined ? category : subCategory;
+      selectedSupport.category === SupportCategory.Clothing ||
+      selectedSupport.category === SupportCategory.Incidentals
+        ? category
+        : subCategory;
     this.stepSupportsService.supportDetails = {
-      fromDate: this.datePipe.transform(selectedSupport.from, 'dd-MMM-yyyy'),
-      toDate: this.datePipe.transform(selectedSupport.to, 'dd-MMM-yyyy'),
+      externalReferenceId: (
+        selectedSupport as Referral
+      ).externalReferenceId.substr(1),
+      issuedBy: selectedSupport.issuedBy,
+      issuedOn: selectedSupport.issuedOn,
+      fromDate: selectedSupport.from,
+      toDate: selectedSupport.to,
       toTime: this.datePipe.transform(selectedSupport.to, 'HH:mm'),
       fromTime: this.datePipe.transform(selectedSupport.from, 'HH:mm'),
       members,

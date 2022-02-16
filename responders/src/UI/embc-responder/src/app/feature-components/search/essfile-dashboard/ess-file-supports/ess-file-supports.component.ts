@@ -96,6 +96,10 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getExternalReferralId(element: Support): string {
+    return (element as Referral).externalReferenceId;
+  }
+
   /**
    * Filters the datatable
    *

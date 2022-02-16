@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
@@ -16,11 +17,9 @@ export class ViewAssessmentDialogComponent implements OnInit {
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
   petColumns: string[] = ['type', 'quantity'];
 
-  constructor() {}
+  constructor(public evacueeSessionService: EvacueeSessionService) {}
 
-  ngOnInit(): void {
-    // console.log(this.profileData);
-  }
+  ngOnInit(): void {}
 
   cancel() {
     this.outputEvent.emit('close');
