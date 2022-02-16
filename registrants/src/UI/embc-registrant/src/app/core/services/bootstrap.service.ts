@@ -7,6 +7,7 @@ import { ConfigService } from './config.service';
 import { LocationService } from './location.service';
 import { SecurityQuestionsService } from './security-questions.service';
 import { TimeoutService } from './timeout.service';
+import * as globalConst from './globalConstants';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class BootstrapService {
     private securityQuestionsService: SecurityQuestionsService,
     private timeoutService: TimeoutService,
     private outageService: OutageService,
+    private alertService: AlertService,
     private router: Router
   ) {}
 
@@ -29,10 +31,12 @@ export class BootstrapService {
       this.timeoutService.timeOutInfo = config.timeoutInfo;
       this.outageService.outageInfo = config.outageInfo;
     } catch (error) {
-      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
+      this.alertService.clearAlert();
+      this.alertService.setAlert('danger', globalConst.systemError);
     }
 
     if (this.outageService.displayOutageInfoInit()) {
+      this.outageService.signOut();
       this.router.navigate(['/outage'], { state: { type: 'planned' } });
     } else {
       try {
@@ -44,7 +48,8 @@ export class BootstrapService {
         this.oauthService.configure(this.configService.getOAuthConfig());
         await this.oauthService.loadDiscoveryDocument();
       } catch (error) {
-        this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.systemError);
       }
     }
   }
