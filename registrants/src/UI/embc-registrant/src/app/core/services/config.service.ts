@@ -5,7 +5,7 @@ import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { lastValueFrom } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { tap } from 'rxjs/internal/operators/tap';
-import { Configuration } from '../api/models';
+import { Configuration, OutageInformation } from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { EnvironmentInformation } from '../model/environment-information.model';
 import { AlertService } from './alert.service';
@@ -28,21 +28,37 @@ export class ConfigService {
   }
 
   constructor(
-    private configurationService: ConfigurationService,
-    private cacheService: CacheService,
-    private http: HttpClient,
-    private alertService: AlertService,
+    public configurationService: ConfigurationService,
+    public cacheService: CacheService,
+    public http: HttpClient,
+    public alertService: AlertService,
     @Inject(APP_BASE_HREF) public baseHref: string
   ) {}
 
+  // public async loadConfig(): Promise<Configuration> {
+  //   await this.configurationService
+  //     .configurationGetConfiguration()
+  //     .toPromise()
+  //     .then((config: Configuration) => {
+  //       this.configuration = config;
+  //     });
+  //   return this.configuration;
+  // }
+
   public async loadConfig(): Promise<Configuration> {
-    await this.configurationService
+    if (this.configuration !== null) {
+      return this.configuration;
+    }
+
+    const config$ = this.configurationService
       .configurationGetConfiguration()
-      .toPromise()
-      .then((config: Configuration) => {
-        this.configuration = config;
-      });
-    return this.configuration;
+      .pipe(
+        tap((c: Configuration) => {
+          this.configuration = c;
+        })
+      );
+
+    return lastValueFrom(config$);
   }
 
   public getOAuthConfig(): AuthConfig {
@@ -85,6 +101,10 @@ export class ConfigService {
   public setEnvironmentBanner(environmentBanner: EnvironmentInformation): void {
     this.environmentBanner = environmentBanner;
     this.cacheService.set('environment', environmentBanner);
+  }
+
+  public getOutageConfiguration(): Observable<OutageInformation> {
+    return this.configurationService.configurationGetOutageInfo();
   }
 
   private getEnvironmentInfo(): EnvironmentInformation {

@@ -38,10 +38,9 @@ export class AppComponent implements OnInit {
       if (error.status === 400 && error.status === 404) {
         this.environment = null;
       } else {
-        // this.alertService.clearAlert();
-        // this.alertService.setAlert('danger', globalConst.systemError);
         this.isLoading = false;
-        this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.systemError);
       }
     } finally {
       this.isLoading = false;

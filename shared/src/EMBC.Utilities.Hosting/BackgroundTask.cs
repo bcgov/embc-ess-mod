@@ -70,8 +70,12 @@ namespace EMBC.Utilities.Hosting
                 now = DateTime.UtcNow;
                 if (now >= nextExecutionDate)
                 {
-                    //if (!await concurrencyManager.TryRegister(instanceName)) continue;
-                    logger.LogDebug("running {0}", nextExecutionDate);
+                    if (!await concurrencyManager.TryRegister(instanceName))
+                    {
+                        logger.LogInformation("skipping {0}", nextExecutionDate);
+                        continue;
+                    }
+                    logger.LogInformation("running {0}", nextExecutionDate);
                     using (var executionScope = serviceProvider.CreateScope())
                     {
                         var task = executionScope.ServiceProvider.GetRequiredService<T>();

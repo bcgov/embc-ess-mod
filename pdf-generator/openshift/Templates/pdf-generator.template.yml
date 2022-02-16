@@ -140,7 +140,7 @@ objects:
             - name: pdf-generator
               resources:
                 limits:
-                  cpu: 300m
+                  cpu: 150m
                   memory: 512Mi
                 requests:
                   cpu: 50m
@@ -234,21 +234,21 @@ objects:
         kind: DeploymentConfig
         name: ${APP_NAME}-pdf-generator
         apiVersion: apps.openshift.io/v1
-      minReplicas: 2
-      maxReplicas: 10
+      minReplicas: 3
+      maxReplicas: 12
       metrics:
         - type: Resource
           resource:
             name: cpu
             target:
               type: Utilization
-              averageUtilization: 200
+              averageUtilization: 150
         - type: Resource
           resource:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 200
+              averageUtilization: 125
 
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
