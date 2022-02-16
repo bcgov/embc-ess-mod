@@ -18,12 +18,13 @@ using System;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
+using Grpc.Net.Client.Balancer;
 using Grpc.Net.Client.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Utilities.Messaging
@@ -46,6 +47,8 @@ namespace EMBC.Utilities.Messaging
 
             if (options.Mode == MessagingMode.Client || options.Mode == MessagingMode.Both)
             {
+                configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(15)));
+                configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
                 if (options.Url == null) throw new Exception($"Messaging url is missing - can't configure messaging client");
                 configurationServices.Services.AddGrpcClient<Dispatcher.DispatcherClient>((sp, opts) =>
                 {
@@ -55,9 +58,11 @@ namespace EMBC.Utilities.Messaging
                     var handler = new SocketsHttpHandler()
                     {
                         EnableMultipleHttp2Connections = true,
-                        PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
-                        KeepAlivePingDelay = TimeSpan.FromSeconds(60),
-                        KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+                        PooledConnectionIdleTimeout = TimeSpan.FromMinutes(2),
+                        PooledConnectionLifetime = TimeSpan.FromSeconds(20),
+                        KeepAlivePingDelay = TimeSpan.FromSeconds(20),
+                        KeepAlivePingTimeout = TimeSpan.FromSeconds(20),
+                        KeepAlivePingPolicy = HttpKeepAlivePingPolicy.WithActiveRequests
                     };
                     if (options.AllowInvalidServerCertificate)
                     {

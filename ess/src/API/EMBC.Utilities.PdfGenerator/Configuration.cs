@@ -18,10 +18,10 @@ using System;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using EMBC.PDFGenerator;
 using EMBC.Utilities.Configuration;
 using Grpc.Core;
+using Grpc.Net.Client.Balancer;
 using Grpc.Net.Client.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +35,8 @@ namespace EMBC.ESS.Utilities.PdfGenerator
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
+            configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(15)));
+            configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
             configurationServices.Services.AddGrpc(opts =>
             {
                 opts.EnableDetailedErrors = configurationServices.Environment.IsDevelopment();
@@ -55,9 +57,11 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                 var handler = new SocketsHttpHandler()
                 {
                     EnableMultipleHttp2Connections = true,
-                    PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
-                    KeepAlivePingDelay = TimeSpan.FromSeconds(60),
-                    KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+                    PooledConnectionIdleTimeout = TimeSpan.FromMinutes(2),
+                    PooledConnectionLifetime = TimeSpan.FromSeconds(20),
+                    KeepAlivePingDelay = TimeSpan.FromSeconds(20),
+                    KeepAlivePingTimeout = TimeSpan.FromSeconds(20),
+                    KeepAlivePingPolicy = HttpKeepAlivePingPolicy.WithActiveRequests
                 };
                 if (allowUntrustedCertificates)
                 {

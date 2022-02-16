@@ -21,12 +21,11 @@ namespace EMBC.Tests.Unit.ESS.Utilities
 
         public CacheTests(ITestOutputHelper output)
         {
-            var logger = output.BuildLoggerFor<Cache>();
             var env = new HostingEnvironment { EnvironmentName = Environments.Development };
             var opts = Options.Create(new MemoryDistributedCacheOptions());
             underlyingDistributedCache = new MemoryDistributedCache(opts);
-            cacheSyncManager = new CacheSyncManager(logger);
-            cache = new Cache(underlyingDistributedCache, cacheSyncManager, env, logger);
+            cacheSyncManager = new CacheSyncManager(output.BuildLoggerFor<CacheSyncManager>());
+            cache = new Cache(underlyingDistributedCache, cacheSyncManager, env, output.BuildLoggerFor<Cache>());
         }
 
         [Fact]

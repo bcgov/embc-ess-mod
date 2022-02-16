@@ -65,9 +65,7 @@ namespace EMBC.ESS.Utilities.Cache
             try
             {
                 var value = await Get<T?>(key);
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                if (value == null || default(T).Equals(value))
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                if (value == null || value.Equals(default(T)))
                 {
                     //cache miss
                     logger.LogDebug("{0} cache miss", key);

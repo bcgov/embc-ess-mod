@@ -29,5 +29,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\EMBC.ESS\EMBC.ESS.csproj" />
+        <ProjectReference Include="..\EMBC.Utilities.Hosting\EMBC.Utilities.Hosting.csproj" />
     </ItemGroup>
 </Project>

@@ -15,8 +15,11 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EMBC.ESS.Utilities.Cache;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -30,28 +33,35 @@ namespace EMBC.Utilities.Hosting
         where T : IBackgroundTask
     {
         private readonly IServiceProvider serviceProvider;
-        private readonly ILogger<BackgroundTask<T>> logger;
+        private readonly ILogger<T> logger;
+        private readonly CrontabSchedule schedule;
+        private readonly TimeSpan startupDelay;
+        private readonly BackgroundTaskConcurrencyManager concurrencyManager;
 
-        public BackgroundTask(IServiceProvider serviceProvider, ILogger<BackgroundTask<T>> logger)
+        public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger)
         {
             this.serviceProvider = serviceProvider;
             this.logger = logger;
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            CrontabSchedule schedule;
-            TimeSpan startupDelay;
             using (var scope = serviceProvider.CreateScope())
             {
                 var initialTask = scope.ServiceProvider.GetRequiredService<T>();
                 schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
                 startupDelay = initialTask.InitialDelay;
-            }
 
+                concurrencyManager = new BackgroundTaskConcurrencyManager(
+                    scope.ServiceProvider.GetRequiredService<ICache>(),
+                    typeof(T).FullName ?? null!,
+                    initialTask.DegreeOfParallelism,
+                    initialTask.InactivityTimeout);
+            }
+        }
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
             await Task.Delay(startupDelay);
             var now = DateTime.UtcNow;
             var nextExecutionDate = schedule.GetNextOccurrence(now);
+            var instanceName = Environment.MachineName;
 
             logger.LogDebug("first run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(now).TotalSeconds);
 
@@ -60,6 +70,7 @@ namespace EMBC.Utilities.Hosting
                 now = DateTime.UtcNow;
                 if (now >= nextExecutionDate)
                 {
+                    //if (!await concurrencyManager.TryRegister(instanceName)) continue;
                     logger.LogDebug("running {0}", nextExecutionDate);
                     using (var executionScope = serviceProvider.CreateScope())
                     {
@@ -83,6 +94,62 @@ namespace EMBC.Utilities.Hosting
         {
             logger.LogInformation("stopping");
             await base.StopAsync(stoppingToken);
+        }
+    }
+
+    public class BackgroundTaskConcurrencyManager
+    {
+        private readonly string cacheKey;
+        private readonly int concurrency;
+        private readonly TimeSpan timeout;
+        private readonly ICache cache;
+
+        public BackgroundTaskConcurrencyManager(ICache cache, string taskName, int concurrency, TimeSpan timeout)
+        {
+            this.cacheKey = $"task-{taskName}";
+            this.concurrency = concurrency;
+            this.timeout = timeout;
+            this.cache = cache;
+        }
+
+        public async Task<bool> TryRegister(string serviceInstanceName)
+        {
+            if (concurrency < 0) return true; // always register - no state
+
+            // get state
+            var now = DateTime.UtcNow;
+            var state = await cache.GetOrSet(cacheKey,
+                async () => await Task.FromResult(new ConcurrencyState { { serviceInstanceName, now } }),
+                TimeSpan.FromMinutes(30)) ?? null!;
+
+            // trim expired services
+            state.Trim(timeout);
+
+            // check if the instance is already registered
+            if (state.ContainsKey(serviceInstanceName)) return true;
+
+            // register if allowed
+            if (state.Count < concurrency)
+            {
+                state.Add(serviceInstanceName, now);
+                await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30));
+                return true;
+            }
+
+            // not allowed and not registered
+            return false;
+        }
+    }
+
+    public class ConcurrencyState : Dictionary<string, DateTime>
+    {
+        public void Trim(TimeSpan timeout)
+        {
+            var now = DateTime.UtcNow;
+            foreach (var s in this.Where(s => now.Subtract(s.Value) > timeout).ToArray())
+            {
+                Remove(s.Key);
+            }
         }
     }
 

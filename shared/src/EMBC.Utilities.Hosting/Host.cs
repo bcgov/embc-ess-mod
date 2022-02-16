@@ -25,7 +25,6 @@ using System.Runtime;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
-using Grpc.Net.Client.Balancer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
@@ -36,7 +35,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -245,9 +243,6 @@ namespace EMBC.Utilities.Hosting
             services.Configure<ExceptionHandlerOptions>(opts => opts.AllowStatusCode404Response = true);
 
             services.ConfigureComponentServices(configuration, hostEnvironment, logger, assemblies);
-
-            services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(15)));
-            services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
 
             services.AddOpenTelemetryTracing(builder =>
             {

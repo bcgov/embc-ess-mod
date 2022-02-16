@@ -27,7 +27,7 @@ namespace EMBC.ESS.Utilities.Cache
     {
         private readonly ILogger logger;
 
-        public CacheSyncManager(ILogger logger)
+        public CacheSyncManager(ILogger<CacheSyncManager> logger)
         {
             this.logger = logger;
         }
