@@ -186,10 +186,10 @@ objects:
               resources:
                 limits:
                   cpu: 300m
-                  memory: 512Mi
+                  memory: 768Mi
                 requests:
                   cpu: 50m
-                  memory: 256Mi
+                  memory: 384Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
@@ -275,7 +275,7 @@ objects:
         name: ${APP_NAME}-ess-backend
         apiVersion: apps.openshift.io/v1
       minReplicas: 2
-      maxReplicas: 8
+      maxReplicas: 12
       metrics:
         - type: Resource
           resource:
