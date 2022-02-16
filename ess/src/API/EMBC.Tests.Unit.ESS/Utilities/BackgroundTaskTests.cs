@@ -74,9 +74,9 @@ namespace EMBC.Tests.Unit.ESS.Utilities
         {
             var manager = new BackgroundTaskConcurrencyManager(services.GetRequiredService<ICache>(), "testtask", 2, TimeSpan.FromMilliseconds(100));
             (await manager.TryRegister("instance1")).ShouldBeTrue();
-            await Task.Delay(50);
+            await Task.Delay(20);
             (await manager.TryRegister("instance2")).ShouldBeTrue();
-            await Task.Delay(50);
+            await Task.Delay(20);
             (await manager.TryRegister("instance3")).ShouldBeFalse();
         }
 
