@@ -160,6 +160,6 @@ export class OutageService {
   }
 
   private getOutageConfig(): Observable<OutageInformation> {
-    return this.configService.getOutageConfig();
+    return this.configService.getOutageConfiguration();
   }
 }

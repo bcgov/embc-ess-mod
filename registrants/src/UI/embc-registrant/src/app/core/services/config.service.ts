@@ -103,7 +103,7 @@ export class ConfigService {
     this.cacheService.set('environment', environmentBanner);
   }
 
-  public getOutageConfig(): Observable<OutageInformation> {
+  public getOutageConfiguration(): Observable<OutageInformation> {
     return this.configurationService.configurationGetOutageInfo();
   }
 
