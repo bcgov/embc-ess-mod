@@ -3,7 +3,7 @@ import { OutageInformation } from 'src/app/core/api/models/outage-information';
 import * as moment from 'moment';
 import { OutageDialogComponent } from 'src/app/sharedModules/outage-components/outage-dialog/outage-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfigurationService } from 'src/app/core/api/services';
+// import { ConfigurationService } from 'src/app/core/api/services';
 import { Observable } from 'rxjs/internal/Observable';
 import {
   BehaviorSubject,
@@ -16,6 +16,9 @@ import {
 import { AlertService } from 'src/app/core/services/alert.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
 import { Router } from '@angular/router';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { LoginService } from 'src/app/core/services/login.service';
+import { ConfigService } from 'src/app/core/services/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,10 +35,12 @@ export class OutageService {
   private stopPolling = new Subject();
 
   constructor(
-    private dialog: MatDialog,
-    private configService: ConfigurationService,
-    private alertService: AlertService,
-    private router: Router
+    public dialog: MatDialog,
+    public configService: ConfigService,
+    public alertService: AlertService,
+    public router: Router,
+    public loginService: LoginService,
+    public cacheService: CacheService
   ) {}
 
   public get outageInfo(): OutageInformation {
@@ -74,14 +79,28 @@ export class OutageService {
 
   public routeOutageInfo(): void {
     if (this.outageInfo !== null) {
-      const now = new Date();
-      const outageStart = new Date(this.outageInfoVal?.outageStartDate);
-      const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
-      if (moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)) {
+      if (
+        this.outageInfo.outageStartDate !== null ||
+        this.outageInfo.outageEndDate !== null
+      ) {
+        const now = new Date();
+        const outageStart = new Date(this.outageInfo?.outageStartDate);
+        const outageEnd = new Date(this.outageInfo?.outageEndDate);
+        if (
+          moment(outageStart).isBefore(now) &&
+          moment(outageEnd).isAfter(now)
+        ) {
+          this.stopPolling.next(true);
+          this.signOut();
+          this.router.navigate(['/outage'], { state: { type: 'planned' } });
+        }
+      } else {
         this.stopPolling.next(true);
-        this.router.navigate(['/outage'], { state: { type: 'planned' } });
+        this.signOut();
+        this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
       }
     } else if (this.outageInfo === null && this.router.url === '/outage') {
+      this.stopPolling.next(false);
       this.router.navigate(['/registration-method']);
     }
   }
@@ -134,7 +153,13 @@ export class OutageService {
       });
   }
 
+  public async signOut(): Promise<void> {
+    await this.loginService.logout();
+    this.cacheService.clear();
+    localStorage.clear();
+  }
+
   private getOutageConfig(): Observable<OutageInformation> {
-    return this.configService.configurationGetOutageInfo();
+    return this.configService.getOutageConfiguration();
   }
 }
