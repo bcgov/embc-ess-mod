@@ -30,7 +30,7 @@ e.g. "5m" = 5 minutes. "10s" = 10 seconds, "1h" = 1 hour, "1h30m" = 1 hour and 3
 There is a benchmark test configured to run the distribution matrix defined in the Load Testing plan.
 You can pass this a parameter for the number of vus to run for this benchmark. (Will default to one vu each)
 By defaul this will run for a duration of 5 minutes.
-You can optionally pass in an iteration count for each vu to do instead of a set 5m duration.
+You can optionally pass in an interation count for each vu to do instead of a set 5m duration.
 
-npm run benchmark --- -e VUS=#
-npm run benchmark --- -e VUS=# -e ITERS=#
+npm run benchmark -- -e VUS=#
+npm run benchmark -- -e VUS=# -e ITERS=#
