@@ -40,7 +40,3 @@ Thumbs.db
 
 # Load Test Parameters
 load-test.parameters-dev.ts
-
-# Results Summary
-*.summary.*
-/results

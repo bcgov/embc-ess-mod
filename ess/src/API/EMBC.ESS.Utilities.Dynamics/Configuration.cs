@@ -16,10 +16,12 @@
 
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OData.Client;
 using Microsoft.OData.Extensions.Client;
 using Polly;
 using Polly.Extensions.Http;
@@ -37,14 +39,31 @@ namespace EMBC.ESS.Utilities.Dynamics
 
             services.Configure<DynamicsOptions>(opts => configuration.GetSection("Dynamics").Bind(opts));
 
+            var adfsTokenErrorHandlingPolicy = HttpPolicyExtensions.HandleTransientHttpError()
+                .CircuitBreakerAsync(
+                        options.CircuitBreakerNumberOfErrors,
+                        TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
+                        OnBreak,
+                        OnReset);
+
             services
                 .AddHttpClient("adfs_token")
                 .SetHandlerLifetime(TimeSpan.FromMinutes(30))
-                ;
+                 .AddPolicyHandler((sp, request) =>
+                 {
+                     var ctx = request.GetPolicyExecutionContext() ?? new Context();
+                     ctx["_serviceprovider"] = sp;
+                     request.SetPolicyExecutionContext(ctx);
+                     return adfsTokenErrorHandlingPolicy;
+                 })
+               ;
 
             services.AddSingleton<ISecurityTokenProvider, ADFSSecurityTokenProvider>();
 
-            var policy = HttpPolicyExtensions.HandleTransientHttpError()
+            var dynamicsErrorHandlingPolicy = HttpPolicyExtensions.HandleTransientHttpError()
+                .Or<TaskCanceledException>() // when Dynamics API is rejecting requests
+                .Or<DataServiceRequestException>()
+                .Or<DataServiceTransportException>()
                 .CircuitBreakerAsync(
                         options.CircuitBreakerNumberOfErrors,
                         TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds),
@@ -61,7 +80,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                     var ctx = request.GetPolicyExecutionContext() ?? new Context();
                     ctx["_serviceprovider"] = sp;
                     request.SetPolicyExecutionContext(ctx);
-                    return policy;
+                    return dynamicsErrorHandlingPolicy;
                 })
                 ;
 
