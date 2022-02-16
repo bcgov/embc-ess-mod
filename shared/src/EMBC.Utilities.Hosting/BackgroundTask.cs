@@ -103,6 +103,7 @@ namespace EMBC.Utilities.Hosting
         private readonly int concurrency;
         private readonly TimeSpan timeout;
         private readonly ICache cache;
+        private readonly SemaphoreSlim locker;
 
         public BackgroundTaskConcurrencyManager(ICache cache, string taskName, int concurrency, TimeSpan timeout)
         {
@@ -110,34 +111,43 @@ namespace EMBC.Utilities.Hosting
             this.concurrency = concurrency;
             this.timeout = timeout;
             this.cache = cache;
+            this.locker = new SemaphoreSlim(1, 1);
         }
 
         public async Task<bool> TryRegister(string serviceInstanceName)
         {
             if (concurrency < 0) return true; // always register - no state
 
-            // get state
-            var now = DateTime.UtcNow;
-            var state = await cache.GetOrSet(cacheKey,
-                async () => await Task.FromResult(new ConcurrencyState { { serviceInstanceName, now } }),
-                TimeSpan.FromMinutes(30)) ?? null!;
-
-            // trim expired services
-            state.Trim(timeout);
-
-            // check if the instance is already registered
-            if (state.ContainsKey(serviceInstanceName)) return true;
-
-            // register if allowed
-            if (state.Count < concurrency)
+            await locker.WaitAsync();
+            try
             {
-                state.Add(serviceInstanceName, now);
-                await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30));
-                return true;
-            }
+                // get state
+                var now = DateTime.UtcNow;
+                var state = await cache.GetOrSet(cacheKey,
+                    async () => await Task.FromResult(new ConcurrencyState { { serviceInstanceName, now } }),
+                    TimeSpan.FromMinutes(30)) ?? null!;
 
-            // not allowed and not registered
-            return false;
+                // trim expired services
+                state.Trim(timeout);
+
+                // check if the instance is already registered
+                if (state.ContainsKey(serviceInstanceName)) return true;
+
+                // register if allowed
+                if (state.Count < concurrency)
+                {
+                    state.Add(serviceInstanceName, now);
+                    await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30));
+                    return true;
+                }
+
+                // not allowed and not registered
+                return false;
+            }
+            finally
+            {
+                locker.Release();
+            }
         }
     }
 
