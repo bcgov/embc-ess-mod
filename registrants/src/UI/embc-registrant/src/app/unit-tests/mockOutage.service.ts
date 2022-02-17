@@ -13,6 +13,7 @@ import { MockLoginService } from './mockLogin.service';
 })
 export class MockOutageService extends OutageService {
   public outageInfoValue: OutageInformation;
+  public outageState: boolean;
 
   public get outageInfo(): OutageInformation {
     return this.outageInfoValue;
@@ -37,5 +38,9 @@ export class MockOutageService extends OutageService {
       loginService,
       cacheService
     );
+  }
+
+  public displayOutageInfoInit(): boolean {
+    return this.outageState;
   }
 }

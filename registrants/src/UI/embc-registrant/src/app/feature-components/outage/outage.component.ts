@@ -29,6 +29,7 @@ export class OutageComponent implements OnInit {
 
   ngOnInit(): void {
     this.outageInfo = this.outageService.outageInfo;
+    this.outageService.signOut();
   }
 
   goHomePage(): void {
