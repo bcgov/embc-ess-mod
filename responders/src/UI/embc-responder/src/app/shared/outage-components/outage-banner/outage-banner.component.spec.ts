@@ -11,6 +11,7 @@ import { OutageService } from 'src/app/feature-components/outage/outage.service'
 import { MockOutageService } from 'src/app/unit-tests/mockOutage.service';
 import { OutageBannerComponent } from './outage-banner.component';
 import { Component } from '@angular/core';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 describe('OutageBannerComponent', () => {
   let component: OutageBannerComponent;
@@ -20,7 +21,12 @@ describe('OutageBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [
+        MatDialogModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        OAuthModule.forRoot()
+      ],
       declarations: [OutageBannerComponent],
       providers: [
         OutageBannerComponent,

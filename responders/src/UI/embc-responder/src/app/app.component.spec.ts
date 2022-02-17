@@ -665,6 +665,7 @@ describe('AppComponent', () => {
         outageEndDate: new Date(now.getTime() + 2 * 60000)
       }
     };
+    outageService.outageState = true;
     bannerService.environmentBanner = null;
     fixture.detectChanges();
     component.ngOnInit();
@@ -677,7 +678,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     expect(routerMock.navigate).toHaveBeenCalledWith(['/outage'], {
-      state: { type: 'unplanned' }
+      state: { type: 'planned' }
     });
   }));
 });
