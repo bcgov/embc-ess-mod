@@ -38,7 +38,9 @@ export class HeaderComponent implements OnInit {
   public ngOnInit(): void {}
 
   public homeButton(): void {
-    this.router.navigate(['/responder-access']);
+    if (this.router.url !== '/outage') {
+      this.router.navigate(['/responder-access']);
+    }
   }
 
   public openUserProfile(): void {
