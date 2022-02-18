@@ -14,7 +14,9 @@ export class OutageBannerComponent implements OnInit {
   constructor(private outageService: OutageService) {}
 
   ngOnInit(): void {
-    this.outageInfo = this.outageService.outageInfo;
+    this.outageService.getOutageInformation().subscribe((outageInfo) => {
+      this.outageInfo = outageInfo;
+    });
   }
 
   public closeOutageBanner() {
