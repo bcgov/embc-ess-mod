@@ -36,12 +36,6 @@ export class OutageService {
   public showOutageBanner$: Observable<boolean> =
     this.showOutageBanner.asObservable();
 
-  public showOutageDialog: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(true);
-
-  public showOutageDialog$: Observable<boolean> =
-    this.showOutageDialog.asObservable();
-
   private outageInfoVal: OutageInformation;
   private closeBannerbyUserVal = false;
   private stopPolling = new Subject();
