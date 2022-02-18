@@ -36,8 +36,7 @@ export class BootstrapService {
     }
 
     if (this.outageService.displayOutageInfoInit()) {
-      this.outageService.signOut();
-      this.router.navigate(['/outage'], { state: { type: 'planned' } });
+      this.outageService.initOutageType();
     } else {
       try {
         //load metadata lists

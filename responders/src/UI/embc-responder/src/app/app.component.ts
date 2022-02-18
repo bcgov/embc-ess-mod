@@ -50,17 +50,17 @@ export class AppComponent implements OnInit {
     try {
       this.environment = await this.envBannerService.loadEnvironmentBanner();
       const configuration = await this.configService.load();
-      console.log(configuration);
+      // console.log(configuration);
       this.outageService.outageInfo = configuration.outageInfo;
       this.timeOutService.timeOutInfo = configuration.timeoutInfo;
     } catch (error) {
-      this.isLoading = false;
-      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
+      this.alertService.clearAlert();
+      this.alertService.setAlert('danger', globalConst.systemError);
     }
 
     if (this.outageService.displayOutageInfoInit()) {
       this.isLoading = false;
-      this.router.navigate(['/outage'], { state: { type: 'planned' } });
+      this.outageService.initOutageType();
     } else {
       this.timeOutService.init(
         this.timeOutService.timeOutInfo.sessionTimeoutInMinutes,
@@ -85,7 +85,8 @@ export class AppComponent implements OnInit {
         if (error.status === 403) {
           this.alertService.setAlert('danger', globalConst.accessError);
         } else {
-          this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.systemError);
         }
       } finally {
         this.isLoading = false;

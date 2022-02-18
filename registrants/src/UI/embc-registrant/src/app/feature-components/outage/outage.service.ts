@@ -67,14 +67,35 @@ export class OutageService {
 
   public displayOutageInfoInit(): boolean {
     if (this.outageInfo !== null) {
-      const now = new Date();
-      const outageStart = new Date(this.outageInfoVal?.outageStartDate);
-      const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
-      return (
-        moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)
-      );
+      if (
+        this.outageInfo.outageStartDate !== null ||
+        this.outageInfo.outageEndDate !== null
+      ) {
+        const now = new Date();
+        const outageStart = new Date(this.outageInfo.outageStartDate);
+        const outageEnd = new Date(this.outageInfo.outageEndDate);
+        return (
+          moment(outageStart).isSameOrBefore(now) &&
+          moment(outageEnd).isSameOrAfter(now)
+        );
+      } else {
+        return true;
+      }
     }
     return false;
+  }
+
+  public initOutageType(): void {
+    this.stopPolling.next(true);
+
+    if (
+      this.outageInfo.outageStartDate !== null ||
+      this.outageInfo.outageEndDate !== null
+    ) {
+      this.router.navigate(['/outage'], { state: { type: 'planned' } });
+    } else {
+      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
+    }
   }
 
   public routeOutageInfo(): void {
@@ -91,12 +112,10 @@ export class OutageService {
           moment(outageEnd).isAfter(now)
         ) {
           this.stopPolling.next(true);
-          this.signOut();
           this.router.navigate(['/outage'], { state: { type: 'planned' } });
         }
       } else {
         this.stopPolling.next(true);
-        this.signOut();
         this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
       }
     } else if (this.outageInfo === null && this.router.url === '/outage') {

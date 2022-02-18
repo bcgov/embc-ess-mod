@@ -17,6 +17,8 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
 import { Router } from '@angular/router';
 import { ConfigService } from 'src/app/core/services/config.service';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +38,9 @@ export class OutageService {
     public dialog: MatDialog,
     public configService: ConfigService,
     public alertService: AlertService,
-    public router: Router
+    public router: Router,
+    public authenticationService: AuthenticationService,
+    public cacheService: CacheService
   ) {}
 
   public get outageInfo(): OutageInformation {
@@ -63,25 +67,56 @@ export class OutageService {
 
   public displayOutageInfoInit(): boolean {
     if (this.outageInfo !== null) {
-      const now = new Date();
-      const outageStart = new Date(this.outageInfoVal?.outageStartDate);
-      const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
-      return (
-        moment(outageStart).isSameOrBefore(now) &&
-        moment(outageEnd).isSameOrAfter(now)
-      );
+      if (
+        this.outageInfo.outageStartDate !== null ||
+        this.outageInfo.outageEndDate !== null
+      ) {
+        const now = new Date();
+        const outageStart = new Date(this.outageInfo.outageStartDate);
+        const outageEnd = new Date(this.outageInfo.outageEndDate);
+        return (
+          moment(outageStart).isSameOrBefore(now) &&
+          moment(outageEnd).isSameOrAfter(now)
+        );
+      } else {
+        return true;
+      }
     }
     return false;
   }
 
+  public initOutageType(): void {
+    this.stopPolling.next(true);
+
+    if (
+      this.outageInfo.outageStartDate !== null ||
+      this.outageInfo.outageEndDate !== null
+    ) {
+      this.router.navigate(['/outage'], { state: { type: 'planned' } });
+    } else {
+      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
+    }
+  }
+
   public routeOutageInfo(): void {
     if (this.outageInfo !== null) {
-      const now = new Date();
-      const outageStart = new Date(this.outageInfoVal?.outageStartDate);
-      const outageEnd = new Date(this.outageInfoVal?.outageEndDate);
-      if (moment(outageStart).isBefore(now) && moment(outageEnd).isAfter(now)) {
+      if (
+        this.outageInfo.outageStartDate !== null ||
+        this.outageInfo.outageEndDate !== null
+      ) {
+        const now = new Date();
+        const outageStart = new Date(this.outageInfo?.outageStartDate);
+        const outageEnd = new Date(this.outageInfo?.outageEndDate);
+        if (
+          moment(outageStart).isBefore(now) &&
+          moment(outageEnd).isAfter(now)
+        ) {
+          this.stopPolling.next(true);
+          this.router.navigate(['/outage'], { state: { type: 'planned' } });
+        }
+      } else {
         this.stopPolling.next(true);
-        this.router.navigate(['/outage']);
+        this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
       }
     } else if (this.outageInfo === null && this.router.url === '/outage') {
       this.router.navigate(['/responder-access']);
@@ -134,6 +169,12 @@ export class OutageService {
           this.alertService.setAlert('danger', globalConst.systemError);
         }
       });
+  }
+
+  public async signOut(): Promise<void> {
+    await this.authenticationService.logout();
+    this.cacheService.clear();
+    localStorage.clear();
   }
 
   private getOutageConfig(): Observable<OutageInformation> {

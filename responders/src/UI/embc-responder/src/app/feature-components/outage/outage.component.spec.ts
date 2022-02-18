@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { MockOutageService } from 'src/app/unit-tests/mockOutage.service';
 
 import { OutageComponent } from './outage.component';
@@ -10,12 +11,16 @@ import { OutageService } from './outage.service';
 describe('OutageComponent', () => {
   let component: OutageComponent;
   let fixture: ComponentFixture<OutageComponent>;
-  let outage: OutageComponent;
   let outageService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [
+        MatDialogModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        OAuthModule.forRoot()
+      ],
       declarations: [OutageComponent],
       providers: [
         OutageComponent,
@@ -29,27 +34,32 @@ describe('OutageComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(OutageComponent);
-    outage = fixture.componentInstance;
-    component = TestBed.inject(OutageComponent);
+    component = fixture.componentInstance;
     outageService = TestBed.inject(OutageService);
   });
 
   it('should create', () => {
-    fixture.detectChanges();
-    component.ngOnInit();
-    expect(component).toBeTruthy();
-  });
-
-  it('should display outage Info', () => {
-    outageService.outageInfoValue = {
+    outageService.outageInfo = {
       content: 'Outage testing in Responders portal',
       outageStartDate: '2021-12-15T21:00:00Z',
       outageEndDate: '2021-12-16T21:00:00Z'
     };
+    outageService.outageState = true;
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+  });
+
+  it('should display outage Info', () => {
+    outageService.outageInfo = {
+      content: 'Outage testing in Responders portal',
+      outageStartDate: '2021-12-15T21:00:00Z',
+      outageEndDate: '2021-12-16T21:00:00Z'
+    };
+    outageService.outageState = true;
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.content).toEqual(
+    expect(component.outageInfo.content).toEqual(
       'Outage testing in Responders portal'
     );
   });
@@ -60,10 +70,11 @@ describe('OutageComponent', () => {
       outageStartDate: '2021-12-15T21:00:00Z',
       outageEndDate: '2021-12-16T21:00:00Z'
     };
+    outageService.outageState = true;
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageStartDate).toEqual(
+    expect(component.outageInfo.outageStartDate).toEqual(
       '2021-12-15T21:00:00Z'
     );
   });
@@ -74,11 +85,25 @@ describe('OutageComponent', () => {
       outageStartDate: '2021-12-15T21:00:00Z',
       outageEndDate: '2021-12-16T21:00:00Z'
     };
+    outageService.outageState = true;
     fixture.detectChanges();
     component.ngOnInit();
 
-    expect(outageService.outageInfo.outageEndDate).toEqual(
-      '2021-12-16T21:00:00Z'
+    expect(component.outageInfo.outageEndDate).toEqual('2021-12-16T21:00:00Z');
+  });
+
+  it('should display unplanned outage', () => {
+    outageService.outageInfoValue = {
+      content: 'Unplanned Outage testing in Responders portal',
+      outageStartDate: null,
+      outageEndDate: null
+    };
+    outageService.outageState = false;
+    fixture.detectChanges();
+    component.ngOnInit();
+
+    expect(component.outageInfo.content).toEqual(
+      'Unplanned Outage testing in Responders portal'
     );
   });
 });
