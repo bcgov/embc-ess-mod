@@ -311,14 +311,15 @@ namespace EMBC.ESS.Managers.Events
             });
 
             var profiles = new ConcurrentBag<ProfileSearchResult>();
-            var profileTasks = searchResults.MatchingRegistrantIds.Select<string, System.Threading.Tasks.Task>((Func<string, System.Threading.Tasks.Task>)(async id =>
+            var profileTasks = searchResults.MatchingRegistrantIds.Select<string, System.Threading.Tasks.Task>(async id =>
             {
-                var profile = Enumerable.Single<Evacuee>((await evacueesRepository.Query((EvacueeQuery)new Resources.Evacuees.EvacueeQuery { EvacueeId = id })).Items);
+                var profile = Enumerable.SingleOrDefault<Evacuee>((await evacueesRepository.Query(new EvacueeQuery { EvacueeId = id })).Items);
+                if (profile == null) throw new BusinessValidationException($"Profile {id} not found");
                 var files = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery { LinkedRegistrantId = id })).Items;
                 var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 mappedProfile.RecentEvacuationFiles = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files);
                 profiles.Add(mappedProfile);
-            }));
+            });
 
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
             var householdMemberTasks = searchResults.MatchingHouseholdMemberIds.Select(async id =>
