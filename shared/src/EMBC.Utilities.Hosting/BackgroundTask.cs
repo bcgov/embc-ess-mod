@@ -58,7 +58,7 @@ namespace EMBC.Utilities.Hosting
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(startupDelay);
+            await Task.Delay(startupDelay, stoppingToken);
             var now = DateTime.UtcNow;
             var nextExecutionDate = schedule.GetNextOccurrence(now);
             var instanceName = Environment.MachineName;
@@ -70,7 +70,7 @@ namespace EMBC.Utilities.Hosting
                 now = DateTime.UtcNow;
                 if (now >= nextExecutionDate)
                 {
-                    if (!await concurrencyManager.TryRegister(instanceName))
+                    if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
                     {
                         logger.LogInformation("skipping {0}", nextExecutionDate);
                         continue;
@@ -84,7 +84,7 @@ namespace EMBC.Utilities.Hosting
                     nextExecutionDate = schedule.GetNextOccurrence(now);
                     logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                 }
-                await Task.Delay(TimeSpan.FromSeconds(15));
+                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
             }
         }
 
@@ -118,18 +118,18 @@ namespace EMBC.Utilities.Hosting
             this.locker = new SemaphoreSlim(1, 1);
         }
 
-        public async Task<bool> TryRegister(string serviceInstanceName)
+        public async Task<bool> TryRegister(string serviceInstanceName, CancellationToken cancellationToken = default)
         {
             if (concurrency < 0) return true; // always register - no state
 
-            await locker.WaitAsync();
+            await locker.WaitAsync(cancellationToken);
             try
             {
                 // get state
                 var now = DateTime.UtcNow;
                 var state = await cache.GetOrSet(cacheKey,
                     async () => await Task.FromResult(new ConcurrencyState { { serviceInstanceName, now } }),
-                    TimeSpan.FromMinutes(30)) ?? null!;
+                    TimeSpan.FromMinutes(30), cancellationToken) ?? null!;
 
                 // trim expired services
                 state.Trim(timeout);
@@ -141,7 +141,7 @@ namespace EMBC.Utilities.Hosting
                 if (state.Count < concurrency)
                 {
                     state.Add(serviceInstanceName, now);
-                    await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30));
+                    await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30), cancellationToken);
                     return true;
                 }
 
