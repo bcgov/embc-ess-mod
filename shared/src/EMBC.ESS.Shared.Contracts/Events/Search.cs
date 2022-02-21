@@ -134,6 +134,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class SearchSupportsQuery : Query<SearchSupportsQueryResponse>
     {
         public string ExternalReferenceId { get; set; }
+        public string FileId { get; set; }
     }
 
     public class SearchSupportsQueryResponse
