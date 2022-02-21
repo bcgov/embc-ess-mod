@@ -655,9 +655,9 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<string> Handle(InviteRegistrantCommand cmd)
         {
-            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
-            if (contact == null) throw new NotFoundException($"registrant not found", cmd.RegistrantId);
-            if (contact.Authenticated) throw new BusinessLogicException($"registrant {cmd.RegistrantId} is already authenticated");
+            var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
+            if (evacuee == null) throw new NotFoundException($"registrant not found", cmd.RegistrantId);
+            if (evacuee.Authenticated) throw new BusinessLogicException($"registrant {cmd.RegistrantId} is already authenticated");
 
             var inviteId = (await invitationRepository.Manage(new CreateNewEmailInvitation
             {
@@ -673,7 +673,7 @@ namespace EMBC.ESS.Managers.Events
             await SendEmailNotification(
                 SubmissionTemplateType.InviteProfile,
                 email: cmd.Email,
-                name: $"{contact.LastName}, {contact.FirstName}",
+                name: $"{evacuee.LastName}, {evacuee.FirstName}",
                 tokens: new[]
                 {
                     KeyValuePair.Create("inviteExpiryDate", invite.ExpiryDate.ToShortDateString()),
@@ -695,21 +695,23 @@ namespace EMBC.ESS.Managers.Events
 
             var registrantId = invite.EvacueeId;
 
-            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = registrantId })).Items.SingleOrDefault();
-            if (contact == null) throw new NotFoundException($"registrant not found", registrantId);
-            if (contact.UserId != null) throw new BusinessLogicException($"registrant {contact.Id} is already associated with user id {contact.UserId}");
+            // get evacuee record
+            var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = registrantId })).Items.SingleOrDefault();
+            if (evacuee == null) throw new NotFoundException($"registrant not found", registrantId);
+            if (evacuee.UserId != null) throw new BusinessLogicException($"registrant {evacuee.Id} is already associated with user id {evacuee.UserId}");
 
-            var contactByUser = (await evacueesRepository.Query(new EvacueeQuery { UserId = cmd.LoggedInUserId })).Items.SingleOrDefault();
-            if (contactByUser != null) throw new BusinessLogicException($"registrant {contactByUser.Id} is already associated with user id {contactByUser.UserId}");
+            // validate the user id is not already in use
+            var evacueeWithUserId = (await evacueesRepository.Query(new EvacueeQuery { UserId = cmd.LoggedInUserId })).Items.SingleOrDefault();
+            if (evacueeWithUserId != null) throw new BusinessLogicException($"registrant {evacueeWithUserId.Id} is already associated with user id {evacueeWithUserId.UserId}");
 
-            //associate the contact with the user id and mark as verified and authenticated
-            contact.UserId = cmd.LoggedInUserId;
-            contact.Authenticated = true;
-            contact.Verified = true;
-            var contactId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact })).EvacueeId;
+            // associate the contact with the user id and mark as verified and authenticated
+            evacuee.UserId = cmd.LoggedInUserId;
+            evacuee.Authenticated = true;
+            evacuee.Verified = true;
+            var contactId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee })).EvacueeId;
 
-            //mark invite as used
-            await invitationRepository.Manage(new MarkInvitationAsComplete { InviteId = invite.InviteId });
+            // mark invite as used
+            await invitationRepository.Manage(new CompleteInvitation { InviteId = invite.InviteId });
 
             return contactId;
         }

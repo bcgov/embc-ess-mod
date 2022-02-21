@@ -75,8 +75,8 @@ namespace EMBC.Tests.Integration.ESS
             canada = essContext.era_countries.Where(c => c.era_countrycode == "CAN").Single();
             bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
 #if DEBUG
-            //this.testPrefix = $"autotest-dev";
-            this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
+            this.testPrefix = $"autotest-dev";
+            //this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
 #else
             this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
 #endif
