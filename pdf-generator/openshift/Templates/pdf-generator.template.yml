@@ -173,7 +173,7 @@ objects:
                 timeoutSeconds: 5
                 periodSeconds: 10
                 successThreshold: 1
-                failureThreshold: 3
+                failureThreshold: 5
               startupProbe:
                 httpGet:
                   scheme: HTTPS
@@ -192,7 +192,7 @@ objects:
                 timeoutSeconds: 5
                 periodSeconds: 10
                 successThreshold: 1
-                failureThreshold: 3
+                failureThreshold: 5
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
