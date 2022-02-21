@@ -40,6 +40,7 @@ namespace EMBC.Tests.Integration.ESS
         {
             var factory = fixture.WithWebHostBuilder(builder =>
            {
+#pragma warning disable CS0618 // Type or member is obsolete
                builder.UseSerilog((ctx, cfg) =>
                {
                    cfg
@@ -47,6 +48,7 @@ namespace EMBC.Tests.Integration.ESS
                     .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
                     .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
                });
+#pragma warning restore CS0618 // Type or member is obsolete
            });
             this.Services = factory.Server.Services.CreateScope().ServiceProvider;
             this.output = output;
