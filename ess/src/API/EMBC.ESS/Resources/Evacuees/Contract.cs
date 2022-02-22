@@ -97,7 +97,7 @@ namespace EMBC.ESS.Resources.Evacuees
         public DateTime InviteDate { get; set; }
     }
 
-    public class MarkInvitationAsComplete : ManageInvitationCommand
+    public class CompleteInvitation : ManageInvitationCommand
     {
         [Required]
         public string EvacueeId { get; set; }

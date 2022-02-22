@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
@@ -256,6 +257,32 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, uniqueSignature)).ShouldNotBeNull();
             actualRegistrant.AuthenticatedUser.ShouldBeTrue();
             actualRegistrant.VerifiedUser.ShouldBeTrue();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessRegistrantInvite_TwoSameRegistrant_FirstIsInvalid()
+        {
+            var dp = Services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
+            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
+            var registrant = CreateNewTestRegistrantProfile(uniqueSignature);
+            var registrantId = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
+            var firstInviteId = dp.Protect(await manager.Handle(new InviteRegistrantCommand
+            {
+                RegistrantId = registrantId,
+                Email = "test@nowhere.notavailable",
+                RequestingUserId = null
+            }));
+
+            var secondInviteId = dp.Protect(await manager.Handle(new InviteRegistrantCommand
+            {
+                RegistrantId = registrantId,
+                Email = "test@nowhere.notavailable",
+                RequestingUserId = null
+            }));
+
+            await Should.ThrowAsync<NotFoundException>(manager.Handle(new ProcessRegistrantInviteCommand { InviteId = firstInviteId, LoggedInUserId = uniqueSignature }));
+            await Should.NotThrowAsync(manager.Handle(new ProcessRegistrantInviteCommand { InviteId = secondInviteId, LoggedInUserId = uniqueSignature }));
         }
     }
 }
