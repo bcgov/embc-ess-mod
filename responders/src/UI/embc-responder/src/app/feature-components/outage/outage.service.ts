@@ -24,15 +24,22 @@ import { AuthenticationService } from 'src/app/core/services/authentication.serv
   providedIn: 'root'
 })
 export class OutageService {
-  showOutageBanner: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
+  public outageInformation: BehaviorSubject<OutageInformation> =
+    new BehaviorSubject<OutageInformation>(null);
+
+  public outageInfoVal$: Observable<OutageInformation> =
+    this.outageInformation.asObservable();
+
+  public showOutageBanner: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+
   public showOutageBanner$: Observable<boolean> =
     this.showOutageBanner.asObservable();
 
   private outageInfoVal: null | OutageInformation;
   private closeBannerbyUserVal = false;
   private stopPolling = new Subject();
+  private outageDialogCounter = 0;
 
   constructor(
     public dialog: MatDialog,
@@ -48,6 +55,14 @@ export class OutageService {
   }
   public set outageInfo(value: OutageInformation) {
     this.outageInfoVal = value;
+  }
+
+  public setOutageInformation(outageInfo: OutageInformation): void {
+    return this.outageInformation.next(outageInfo);
+  }
+
+  public getOutageInformation(): Observable<OutageInformation> {
+    return this.outageInfoVal$;
   }
 
   public setShowOutageBanner(showbanner: boolean): void {
@@ -123,13 +138,24 @@ export class OutageService {
     }
   }
 
-  public displayOutageBanner(): void {
-    if (this.outageInfo !== null && this.closeBannerbyUser === false) {
-      const now = new Date();
-      const outageStart = new Date(this.outageInfo.outageStartDate);
-      this.setShowOutageBanner(moment(outageStart).isAfter(now));
+  public displayOutageBanner(newOutageInfo: OutageInformation): void {
+    if (
+      newOutageInfo.outageEndDate !== null &&
+      newOutageInfo.outageStartDate !== null
+    ) {
+      if (
+        !this.outageInfoIsEqual(newOutageInfo) ||
+        this.closeBannerbyUser === false
+      ) {
+        this.outageInfo = newOutageInfo;
+        const now = new Date();
+        const outageStart = new Date(this.outageInfo.outageStartDate);
+        this.setShowOutageBanner(moment(outageStart).isAfter(now));
+      } else {
+        this.setShowOutageBanner(false);
+      }
     } else {
-      this.setShowOutageBanner(false);
+      this.outageInfo = newOutageInfo;
     }
   }
 
@@ -138,13 +164,18 @@ export class OutageService {
       const now = moment();
       const outageStart = moment(this.outageInfo.outageStartDate);
       const duration = moment.duration(outageStart.diff(now));
-      if (duration.asMinutes() <= 5 && duration.asMinutes() > 0) {
+      if (
+        duration.asMinutes() <= 5 &&
+        Math.round(duration.asMinutes()) >= 4 &&
+        this.outageDialogCounter === 0
+      ) {
         this.dialog.open(OutageDialogComponent, {
           data: { message: this.outageInfo, time: 5 },
           maxHeight: '100%',
           width: '556px',
           maxWidth: '100%'
         });
+        this.outageDialogCounter++;
       }
     }
   }
@@ -159,16 +190,37 @@ export class OutageService {
       .subscribe({
         next: (response) => {
           console.log(response);
-          this.outageInfo = response;
-          this.displayOutageBanner();
-          this.routeOutageInfo();
-          this.openOutageDialog();
+          // this.outageInfo = response;
+          if (response !== null) {
+            if (!this.outageInfoIsEqual(response)) {
+              this.outageDialogCounter = 0;
+            }
+            this.setOutageInformation(response);
+            this.displayOutageBanner(response);
+          }
         },
         error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.systemError);
         }
       });
+  }
+
+  public startOutageInterval(): void {
+    timer(1000, 30000)
+      .pipe(share(), takeUntil(this.stopPolling))
+      .subscribe(() => {
+        this.routeOutageInfo();
+        this.openOutageDialog();
+      });
+  }
+
+  public outageInfoIsEqual(newOutageInfo: OutageInformation): boolean {
+    return (
+      this.outageInfo.content === newOutageInfo.content &&
+      this.outageInfo.outageEndDate === newOutageInfo.outageEndDate &&
+      this.outageInfo.outageStartDate === newOutageInfo.outageStartDate
+    );
   }
 
   public async signOut(): Promise<void> {
