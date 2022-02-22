@@ -4,7 +4,8 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "src/*.Registrants.API/**"
+      - "src/**"
+      - "!src/EMBC.ESS.*"
       - "src/EMBC.ESS.Shared.Contracts/**"
       - "src/build/Registrants/*API*"
       - ".github/workflows/ci-registrants-portal-api.yml"

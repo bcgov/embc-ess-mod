@@ -5,8 +5,8 @@ on:
     types: [opened, reopened, edited, synchronize]
     paths:
       - "src/**"
-      - "!src/*API*"
-      - "!src/*UI*"
+      - "!src/*.API/**"
+      - "!src/*.UI/**"
       - "!src/build/**"
       - "src/build/ESS/**"
       - ".github/workflows/ci-ess-backend.yml"
