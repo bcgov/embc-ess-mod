@@ -722,7 +722,8 @@ namespace EMBC.ESS.Managers.Events
 
             var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>((await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
             {
-                ByExternalReferenceId = query.ExternalReferenceId
+                ByExternalReferenceId = query.ExternalReferenceId,
+                ByEvacuationFileId = query.FileId
             })).Items);
 
             foreach (var support in supports)
