@@ -137,7 +137,10 @@ export class OutageService {
   }
 
   public displayOutageBanner(newOutageInfo: OutageInformation): void {
-    if (this.outageInfo !== null) {
+    if (
+      newOutageInfo.outageEndDate !== null &&
+      newOutageInfo.outageStartDate !== null
+    ) {
       if (
         !this.outageInfoIsEqual(newOutageInfo) ||
         this.closeBannerbyUser === false
@@ -149,6 +152,8 @@ export class OutageService {
       } else {
         this.setShowOutageBanner(false);
       }
+    } else {
+      this.outageInfo = newOutageInfo;
     }
   }
 
@@ -185,11 +190,13 @@ export class OutageService {
           console.log(response);
           // this.outageInfo = response;
 
-          if (!this.outageInfoIsEqual(response)) {
-            this.outageDialogCounter = 0;
+          if (response !== null) {
+            if (!this.outageInfoIsEqual(response)) {
+              this.outageDialogCounter = 0;
+            }
+            this.setOutageInformation(response);
+            this.displayOutageBanner(response);
           }
-          this.setOutageInformation(response);
-          this.displayOutageBanner(response);
         },
         error: (error) => {
           this.alertService.clearAlert();
