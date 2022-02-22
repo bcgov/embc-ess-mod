@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { OutageInformation } from '../core/api/models';
 import { AuthenticationService } from '../core/services/authentication.service';
 import { CacheService } from '../core/services/cache.service';
@@ -42,5 +44,13 @@ export class MockOutageService extends OutageService {
 
   public displayOutageInfoInit(): boolean {
     return this.outageState;
+  }
+
+  public setOutageInformation(outageInfo: OutageInformation): void {
+    return this.outageInformation.next(outageInfo);
+  }
+
+  public getOutageInformation(): Observable<OutageInformation> {
+    return new BehaviorSubject<OutageInformation>(this.outageInfo);
   }
 }
