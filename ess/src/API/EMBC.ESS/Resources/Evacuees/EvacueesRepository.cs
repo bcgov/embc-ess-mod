@@ -57,7 +57,7 @@ namespace EMBC.ESS.Resources.Evacuees
             cmd switch
             {
                 CreateNewEmailInvitation command => await Handle(command),
-                MarkInvitationAsComplete command => await Handle(command),
+                CompleteInvitation command => await Handle(command),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
 
@@ -205,7 +205,7 @@ namespace EMBC.ESS.Resources.Evacuees
             };
         }
 
-        private async Task<ManageInvitationCommandResult> Handle(MarkInvitationAsComplete cmd)
+        private async Task<ManageInvitationCommandResult> Handle(CompleteInvitation cmd)
         {
             var invite = essContext.era_evacueeemailinvites
             .Where(i => i.statecode == (int)EntityState.Active && i.era_evacueeemailinviteid == Guid.Parse(cmd.InviteId))
