@@ -52,6 +52,7 @@ export class AppComponent implements OnInit {
       const configuration = await this.configService.load();
       // console.log(configuration);
       this.outageService.outageInfo = configuration.outageInfo;
+      this.outageService.setOutageInformation(configuration.outageInfo);
       this.timeOutService.timeOutInfo = configuration.timeoutInfo;
     } catch (error) {
       this.alertService.clearAlert();
@@ -72,7 +73,6 @@ export class AppComponent implements OnInit {
         const location = await this.locationService.loadStaticLocationLists();
         const team = await this.loadTeamListService.loadStaticTeamLists();
         this.getBackendVersionInfo();
-        this.outageService.displayOutageBanner();
         const nextRoute = decodeURIComponent(
           userProfile.requiredToSignAgreement
             ? 'electronic-agreement'
@@ -93,6 +93,7 @@ export class AppComponent implements OnInit {
       }
     }
     this.outageService.outagePolling();
+    this.outageService.startOutageInterval();
   }
 
   public closeOutageBanner($event: boolean): void {
