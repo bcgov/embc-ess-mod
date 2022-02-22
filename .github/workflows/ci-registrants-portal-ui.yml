@@ -4,7 +4,8 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "registrants/src/UI/**"
+      - "src/*.Registrants.UI/**"
+      - "src/build/Registrants/*UI*"
       - ".github/workflows/ci-registrants-portal-ui.yml"
 
 env:

@@ -4,7 +4,10 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "pdf-generator/src/API/**"
+      - "src/EMBC.PDFGenerator/**"
+      - "src/EMBC.Tests.Unit.PDFGenerator/**"
+      - "!src/build/**"
+      - "src/build/PdfGenerator/**"
       - ".github/workflows/ci-pdf-generator.yml"
 
 env:
@@ -17,5 +20,5 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        working-directory: ./pdf-generator/src/API
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        working-directory: ./src
+        run: docker build . --file build/PdfGenerator/PdfGenerator.Dockerfile --tag $IMAGE_NAME

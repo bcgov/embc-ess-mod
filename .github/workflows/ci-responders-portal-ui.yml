@@ -4,7 +4,8 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "responders/src/UI/**"
+      - "src/*.Responders.UI/**"
+      - "src/build/Responders/*UI*"
       - ".github/workflows/ci-responders-portal-ui.yml"
 
 env:

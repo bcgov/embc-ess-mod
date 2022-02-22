@@ -1,35 +1,33 @@
 version: "3.4"
 
 services:
-  suppliers-portal-api:
-    build:
-      context: ./suppliers/src/API
-      args:
-        - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
-        - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
-    image: embcess-suppliers-api:dev
-    ports:
-      - 7020:8080
-    env_file:
-      - .env
+  #suppliers-portal-api:
+  #  build:
+  #    context: ./suppliers/src/API
+  #    args:
+  #      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+  #      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
+  #  image: embcess-suppliers-api:dev
+  #  ports:
+  #    - 7020:8080
+  #  env_file:
+  #    - .env
 
-  suppliers-portal-ui:
-    build:
-      context: ./suppliers/src/UI
-    image: embcess-suppliers-ui:dev
-    ports:
-      - 7200:2015
-    environment:
-      - "API_URL=suppliers-portal-api:8080"
-    depends_on:
-      - suppliers-portal-api
+  #suppliers-portal-ui:
+  #  build:
+  #    context: ./suppliers/src/UI
+  #  image: embcess-suppliers-ui:dev
+  #  ports:
+  #    - 7200:2015
+  #  environment:
+  #    - "API_URL=suppliers-portal-api:8080"
+  #  depends_on:
+  #    - suppliers-portal-api
 
   registrants-portal-api:
     build:
-      context: ./registrants/src/API
-      args:
-        - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
-        - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
+      dockerfile: ./build/Registrants/Registrants.API.Dockerfile
+      context: ./src
     image: embcess-registrants-api:dev
     ports:
       - 5020:8080
@@ -38,7 +36,8 @@ services:
 
   registrants-portal-ui:
     build:
-      context: ./registrants/src/UI
+      dockerfile: ./build/Registrants/Registrants.UI.Dockerfile
+      context: ./src
     image: embcess-registrants-ui:dev
     ports:
       - 5200:2015
@@ -49,10 +48,8 @@ services:
 
   responders-portal-api:
     build:
-      context: ./responders/src/API
-      args:
-        - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
-        - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
+      dockerfile: ./build/Responders/Responders.API.Dockerfile
+      context: ./src
     image: embcess-responders-api:dev
     ports:
       - 6020:8080
@@ -66,7 +63,8 @@ services:
 
   responders-portal-ui:
     build:
-      context: ./responders/src/UI
+      dockerfile: ./build/Responders/Responders.UI.Dockerfile
+      context: ./src
     image: embcess-responders-ui:dev
     ports:
       - 6200:2015
@@ -77,7 +75,8 @@ services:
 
   ess-backend:
     build:
-      context: ./ess/src/API
+      dockerfile: ./build/ESS/ESS.Dockerfile
+      context: ./src
     image: embcess-backend-api:dev
     ports:
       - 2020:8080
@@ -90,7 +89,8 @@ services:
       
   pdf-generator:
     build:
-      context: ./pdf-generator/src/API
+      dockerfile: ./build/PdfGenerator/PdfGenerator.Dockerfile
+      context: ./src
     image: embcess-pdf-generator:dev
     ports:
       - 8200:8080
