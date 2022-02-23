@@ -47,7 +47,7 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
         private readonly ICache cache;
-        private const int cacheDuration = 60 * 5; //5 minutes
+        private const int cacheDuration = 60 * 1; //1 minute
 
         public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache)
         {
@@ -69,7 +69,7 @@ namespace EMBC.Responders.API.Controllers
             var outageInfo = await cache.GetOrSet(
                 "outageinfo",
                 async () => (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo,
-                TimeSpan.FromMinutes(5));
+                TimeSpan.FromSeconds(30));
 
             var oidcConfig = configuration.GetSection("auth:oidc");
             var config = new Configuration
@@ -179,7 +179,7 @@ namespace EMBC.Responders.API.Controllers
             var outageInfo = await cache.GetOrSet(
                 "outageinfo",
                 async () => (await client.Send(new OutageQuery { PortalType = PortalType.Registrants })).OutageInfo,
-                TimeSpan.FromMinutes(5));
+                TimeSpan.FromSeconds(30));
             return Ok(mapper.Map<OutageInformation>(outageInfo));
         }
     }
