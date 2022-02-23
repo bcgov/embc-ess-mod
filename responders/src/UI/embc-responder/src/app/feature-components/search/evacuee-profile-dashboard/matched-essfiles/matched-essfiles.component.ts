@@ -127,7 +127,7 @@ export class MatchedEssfilesComponent implements OnInit {
     this.evacueeProfileService.getProfileFiles(registrantId).subscribe({
       next: (essFilesArray: Array<EvacuationFileSummaryModel>) => {
         const loggedInRole = this.userService?.currentProfile?.role;
-        if (essFilesArray === undefined || essFilesArray.length === 0) {
+        if (essFilesArray !== undefined || essFilesArray.length !== 0) {
           if (this.evacueeSessionService.isPaperBased) {
             if (loggedInRole !== MemberRole.Tier1) {
               this.essFiles = essFilesArray;

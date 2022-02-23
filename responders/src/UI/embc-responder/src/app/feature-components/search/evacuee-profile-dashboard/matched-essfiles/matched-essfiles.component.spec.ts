@@ -26,7 +26,7 @@ describe('MatchedEssfilesComponent', () => {
   const mockMatchedEssFiles = [
     {
       id: '127510',
-      externalReferenceId: null,
+      externalReferenceId: 'T2000',
       status: 'Pending',
       task: {
         taskNumber: null,
@@ -100,76 +100,78 @@ describe('MatchedEssfilesComponent', () => {
     userService = TestBed.inject(UserService);
   });
 
-  // it('should get profileId from service', () => {
-  //   userService.currentProfileValue = {
-  //     agreementSignDate: null,
-  //     firstName: 'Test_First_Name',
-  //     lastName: 'Test_Last_Name',
-  //     requiredToSignAgreement: false,
-  //     userName: 'Test_User',
-  //     role: MemberRole.Tier1
-  //   };
-  //   evacueeSessionService.isPaperBased = false;
-  //   evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
-  //   evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   expect(component.registrantId).toEqual(
-  //     'a7b76c4b-256b-4385-b35e-7b496e70f172'
-  //   );
-  // });
+  it('should get profileId from service', () => {
+    userService.currentProfileValue = {
+      agreementSignDate: null,
+      firstName: 'Test_First_Name',
+      lastName: 'Test_Last_Name',
+      requiredToSignAgreement: false,
+      userName: 'Test_User',
+      role: MemberRole.Tier1
+    };
+    evacueeSessionService.isPaperBased = true;
+    evacueeSearchService.paperBasedEssFile = 'T2000';
+    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
+    evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
+    fixture.detectChanges();
+    component.ngOnInit();
+    expect(component.registrantId).toEqual(
+      'a7b76c4b-256b-4385-b35e-7b496e70f172'
+    );
+  });
 
-  // it('should get paperBased from service', () => {
-  //   userService.currentProfileValue = {
-  //     agreementSignDate: null,
-  //     firstName: 'Test_First_Name',
-  //     lastName: 'Test_Last_Name',
-  //     requiredToSignAgreement: false,
-  //     userName: 'Test_User',
-  //     role: MemberRole.Tier1
-  //   };
-  //   evacueeSessionService.isPaperBased = false;
-  //   evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   expect(component.isPaperBased).toEqual(false);
-  // });
+  it('should get paperBased from service', () => {
+    userService.currentProfileValue = {
+      agreementSignDate: null,
+      firstName: 'Test_First_Name',
+      lastName: 'Test_Last_Name',
+      requiredToSignAgreement: false,
+      userName: 'Test_User',
+      role: MemberRole.Tier2
+    };
+    evacueeSessionService.isPaperBased = false;
+    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
+    evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
+    fixture.detectChanges();
+    component.ngOnInit();
+    expect(component.isPaperBased).toEqual(false);
+  });
 
-  // it('should get paperBased EssFile number from service', () => {
-  //   userService.currentProfileValue = {
-  //     agreementSignDate: null,
-  //     firstName: 'Test_First_Name',
-  //     lastName: 'Test_Last_Name',
-  //     requiredToSignAgreement: false,
-  //     userName: 'Test_User',
-  //     role: MemberRole.Tier1
-  //   };
-  //   evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
-  //   evacueeSessionService.isPaperBased = true;
-  //   evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
-  //   evacueeSearchService.paperBasedEssFile = 'T2000';
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   expect(component.paperBasedEssFile).toEqual('T2000');
-  // });
+  it('should get paperBased EssFile number from service', () => {
+    userService.currentProfileValue = {
+      agreementSignDate: null,
+      firstName: 'Test_First_Name',
+      lastName: 'Test_Last_Name',
+      requiredToSignAgreement: false,
+      userName: 'Test_User',
+      role: MemberRole.Tier2
+    };
+    evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
+    evacueeSessionService.isPaperBased = true;
+    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
+    evacueeSearchService.paperBasedEssFile = 'T2000';
+    fixture.detectChanges();
+    component.ngOnInit();
+    expect(component.paperBasedEssFile).toEqual('T2000');
+  });
 
-  // it('should get matches ess files from service', () => {
-  //   // evacueeSessionService.isPaperBased = true;
-  //   // evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
-  //   // evacueeSearchService.paperBasedEssFile = 'T2000';
-  //   userService.currentProfileValue = {
-  //     agreementSignDate: null,
-  //     firstName: 'Test_First_Name',
-  //     lastName: 'Test_Last_Name',
-  //     requiredToSignAgreement: false,
-  //     userName: 'Test_User',
-  //     role: MemberRole.Tier1
-  //   };
-  //   evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   expect(component.essFiles).toEqual(
-  //     evacueeProfileService.evacuationFileSummaryValue
-  //   );
-  // });
+  it('should get matches ess files from service', () => {
+    evacueeSessionService.isPaperBased = true;
+    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
+    evacueeSearchService.paperBasedEssFile = 'T2000';
+    userService.currentProfileValue = {
+      agreementSignDate: null,
+      firstName: 'Test_First_Name',
+      lastName: 'Test_Last_Name',
+      requiredToSignAgreement: false,
+      userName: 'Test_User',
+      role: MemberRole.Tier2
+    };
+    evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
+    fixture.detectChanges();
+    component.ngOnInit();
+    expect(component.essFiles).toEqual(
+      evacueeProfileService.evacuationFileSummaryValue
+    );
+  });
 });
