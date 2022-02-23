@@ -53,6 +53,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                  {
                      var ctx = request.GetPolicyExecutionContext() ?? new Context();
                      ctx["_serviceprovider"] = sp;
+                     ctx["_source"] = "adfs-circuitbreaker";
                      request.SetPolicyExecutionContext(ctx);
                      return adfsTokenErrorHandlingPolicy;
                  })
@@ -79,6 +80,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                 {
                     var ctx = request.GetPolicyExecutionContext() ?? new Context();
                     ctx["_serviceprovider"] = sp;
+                    ctx["_source"] = "dynamics-circuitbreaker";
                     request.SetPolicyExecutionContext(ctx);
                     return dynamicsErrorHandlingPolicy;
                 })
@@ -91,17 +93,17 @@ namespace EMBC.ESS.Utilities.Dynamics
 
         private static void OnBreak(DelegateResult<HttpResponseMessage> r, TimeSpan time, Context ctx)
         {
-            var source = "dynamics-circuitbreaker";
+            var source = (string)ctx["_source"];
             var sp = (IServiceProvider)ctx["_serviceprovider"];
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
-            logger.LogError("BREAK: {0} {1}: {2}", time, r.Exception.GetType().FullName, r.Exception.Message);
+            logger.LogError(r.Exception, "BREAK: {0} {1}: {2}", time, r.Result?.StatusCode, r.Result?.RequestMessage?.RequestUri);
             var reporter = sp.GetRequiredService<IEssContextStateReporter>();
-            reporter.ReportBroken($"{source}: {r.Exception.Message}").ConfigureAwait(false).GetAwaiter().GetResult();
+            reporter.ReportBroken($"{source}: {r.Exception?.Message ?? r.Result?.StatusCode.ToString()}").ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private static void OnReset(Context ctx)
         {
-            var source = "dynamics-circuitbreaker";
+            var source = (string)ctx["_source"];
             var sp = (IServiceProvider)ctx["_serviceprovider"];
             var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
             logger.LogInformation("RESET");
