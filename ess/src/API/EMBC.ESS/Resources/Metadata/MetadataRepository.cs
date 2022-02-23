@@ -64,7 +64,7 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query)
         {
-            return await cache.GetOrSet($"{PlannedOutagesCacheKey}:{query.PortalType}", () => internalRepository.GetPlannedOutages(query), TimeSpan.FromMinutes(5));
+            return await cache.GetOrSet($"{PlannedOutagesCacheKey}:{query.PortalType}", () => internalRepository.GetPlannedOutages(query), CacheEntryLifetime);
         }
     }
 }
