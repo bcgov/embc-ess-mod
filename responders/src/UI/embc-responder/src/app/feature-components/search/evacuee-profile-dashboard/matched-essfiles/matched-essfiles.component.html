@@ -1,7 +1,9 @@
 <mat-card class="overview-card data-card">
   <div class="row card-heading-outer info-box">
     <div class="col-md-9">
-      <p class="margins card-heading">ESS Files</p>
+      <p class="margins card-heading">
+        ESS Files <span *ngIf="!isLoading">({{ essFiles?.length }})</span>
+      </p>
     </div>
     <div class="col-md-3 info-parent">
       <a class="info-test card-heading" (click)="openStatusDefinition()">
