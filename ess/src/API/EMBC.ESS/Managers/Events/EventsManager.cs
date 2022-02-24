@@ -621,11 +621,13 @@ namespace EMBC.ESS.Managers.Events
 
             await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });
 
+            var now = DateTime.UtcNow;
             return new PrintRequestQueryResult
             {
                 Content = content,
                 ContentType = contentType,
-                PrintedOn = DateTime.UtcNow
+                PrintedOn = now,
+                FileName = $"supports-{file.Id}-{now:yyyyMMddhhmmss:R}.pdf"
             };
         }
 
