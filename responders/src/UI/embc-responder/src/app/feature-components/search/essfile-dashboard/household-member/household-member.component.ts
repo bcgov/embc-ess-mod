@@ -18,6 +18,9 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
+import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
+import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
 
 @Component({
   selector: 'app-household-member',
@@ -31,16 +34,17 @@ export class HouseholdMemberComponent implements OnInit {
   registrantId: string;
   isLoading = false;
   matchedProfileCount: number;
-  matchedProfiles: RegistrantProfile[];
+  matchedProfiles: LinkRegistrantProfileModel[];
   linkedFlag = false;
   public color = '#169BD5';
+  hasSecurityQues = false;
 
   constructor(
     private dialog: MatDialog,
     private alertService: AlertService,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private cacheService: CacheService
   ) {}
 
@@ -75,11 +79,14 @@ export class HouseholdMemberComponent implements OnInit {
           houseHoldMember.dateOfBirth
         )
         .subscribe({
-          next: (value) => {
+          next: (value: LinkRegistrantProfileModel[]) => {
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
             if (value.length > 0) {
               this.linkedFlag = !this.linkedFlag;
+            }
+            if (value.length === 1) {
+              this.hasSecurityQues = value[0].hasSecurityQuestions;
             }
             this.isLoading = !this.isLoading;
           },
@@ -110,7 +117,8 @@ export class HouseholdMemberComponent implements OnInit {
       .open(DialogComponent, {
         data: {
           component: FileDashboardVerifyDialogComponent,
-          content: globalConst.dashboardViewProfile
+          content: globalConst.dashboardViewProfile,
+          profileData: memberDetails
         },
         height: '450px',
         width: '720px'
@@ -170,8 +178,8 @@ export class HouseholdMemberComponent implements OnInit {
    * @returns sorted array
    */
   private sortByAuthenticationFactor(
-    matchedProfiles: RegistrantProfile[]
-  ): RegistrantProfile[] {
+    matchedProfiles: LinkRegistrantProfileModel[]
+  ): LinkRegistrantProfileModel[] {
     return matchedProfiles.sort((a, b) =>
       a.authenticatedUser === b.authenticatedUser
         ? 0
@@ -188,8 +196,8 @@ export class HouseholdMemberComponent implements OnInit {
    * @returns sorted array
    */
   private sortByVerificationFactor(
-    matchedProfiles: RegistrantProfile[]
-  ): RegistrantProfile[] {
+    matchedProfiles: LinkRegistrantProfileModel[]
+  ): LinkRegistrantProfileModel[] {
     return matchedProfiles.sort((a, b) =>
       a.verifiedUser === b.verifiedUser ? 0 : a.verifiedUser ? -1 : 1
     );

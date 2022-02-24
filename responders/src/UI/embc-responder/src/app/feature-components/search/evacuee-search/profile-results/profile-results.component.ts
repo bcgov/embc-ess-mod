@@ -25,6 +25,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
+import { EvacueeMetaDataModel } from 'src/app/core/models/evacuee-metadata.model';
 
 @Component({
   selector: 'app-profile-results',
@@ -73,12 +74,13 @@ export class ProfileResultsComponent
    */
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     if (
-      this.evacueeSessionService.isPaperBased === true &&
+      this.evacueeSessionService.isPaperBased  &&
       this.evacueeSearchService.evacueeSearchContext.hasShownIdentification ===
         false
     ) {
       this.openUnableAccessDialog();
     } else {
+      this.setProfileMetaData(selectedRegistrant);
       this.evacueeSessionService.profileId = selectedRegistrant.id;
       if (
         this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
@@ -141,5 +143,17 @@ export class ProfileResultsComponent
       height: '285px',
       width: '493px'
     });
+  }
+
+  private setProfileMetaData(
+    selectedRegistrant: RegistrantProfileSearchResultModel
+  ) {
+    let metaData: EvacueeMetaDataModel = {
+      firstName: selectedRegistrant.firstName,
+      lastName: selectedRegistrant.lastName,
+      registrantId: selectedRegistrant.id,
+      fileId: null
+    };
+    this.evacueeSessionService.evacueeMetaData = metaData;
   }
 }

@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div *ngIf="profile?.hasSecurityQuestions" class="row">
       <div class="col-md-6">
         <button
           class="button-p link-button"
@@ -80,6 +80,13 @@
         </button>
       </div>
     </div>
+
+    <div *ngIf="!profile?.hasSecurityQuestions" class="row">
+      <div class="col-md-6">
+       <p class="cannot-link">Cannot link to a profile without security questions</p>
+      </div>
+    </div>
+
   </div>
 </div>
 
