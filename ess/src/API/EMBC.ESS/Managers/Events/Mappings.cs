@@ -323,6 +323,7 @@ namespace EMBC.ESS.Managers.Events
             CreateMap<Shared.Contracts.Events.SupplierDetails, PrintSupplier>()
                 .ForMember(d => d.Address, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Address.AddressLine2) ? s.Address.AddressLine1 : s.Address.AddressLine1 + "," + s.Address.AddressLine2))
                 .ForMember(d => d.City, opts => opts.MapFrom(s => s.Address.City))
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.Address.Community))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Name))
                 .ForMember(d => d.Province, opts => opts.MapFrom(s => s.Address.StateProvince))
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.Address.PostalCode))
