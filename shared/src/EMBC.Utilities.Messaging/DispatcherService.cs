@@ -56,7 +56,7 @@ namespace EMBC.Utilities.Messaging
                     //    ? Value.ForNull()
                     //    : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
                     Data = replyMessage == null
-                        ? null
+                        ? ByteString.Empty
                         : UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(replyMessage)),
                     Empty = replyMessage == null
                 };
