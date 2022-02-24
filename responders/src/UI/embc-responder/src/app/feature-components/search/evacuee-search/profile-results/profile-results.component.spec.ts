@@ -30,7 +30,6 @@ describe('ProfileResultsComponent', () => {
   let evacueeSearchService;
   let evacueeSessionService;
   let profileSecurityQuestionsService;
-  let evacueeSearchResultsService;
 
   const mockProfileSearchResult: RegistrantProfileSearchResultModel = {
     id: 'a7b76c4b-256b-4385-b35e-7b496e70f172',
@@ -155,7 +154,6 @@ describe('ProfileResultsComponent', () => {
     profileSecurityQuestionsService = TestBed.inject(
       ProfileSecurityQuestionsService
     );
-    evacueeSearchResultsService = TestBed.inject(EvacueeSearchResultsService);
   });
 
   it('should create', () => {
