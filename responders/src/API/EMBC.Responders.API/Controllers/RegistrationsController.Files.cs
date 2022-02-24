@@ -276,9 +276,9 @@ namespace EMBC.Responders.API.Controllers
         public string? Id { get; set; } = null!;
         public string? ExternalReferenceId { get; set; }
 
-        public string CompletedOn { get; set; }
+        public string? CompletedOn { get; set; }
 
-        public string CompletedBy { get; set; }
+        public string? CompletedBy { get; set; }
         public bool? IsPaper { get; set; }
 
         [Required]
