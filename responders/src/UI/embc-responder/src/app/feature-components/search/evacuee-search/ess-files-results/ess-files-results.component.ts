@@ -174,10 +174,10 @@ export class EssFilesResultsComponent
   }
 
   private setFileMetaData(selectedFile: EvacuationFileSearchResultModel) {
-    let primaryMember = selectedFile.householdMembers.find(
+    const primaryMember = selectedFile.householdMembers.find(
       (member) => member.isSearchMatch
     );
-    let metaData: EvacueeMetaDataModel = {
+    const metaData: EvacueeMetaDataModel = {
       firstName: primaryMember.firstName,
       lastName: primaryMember.lastName,
       registrantId: primaryMember.id,

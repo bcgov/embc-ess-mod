@@ -43,7 +43,7 @@ export class EssfileDashboardService {
       })
       .pipe(
         map((matchedProfiles: LinkRegistrantProfileModel[]) => {
-          for (let profile of matchedProfiles) {
+          for (const profile of matchedProfiles) {
             this.profileSecurityQuestionsService
               .getSecurityQuestions(profile.id)
               .subscribe({

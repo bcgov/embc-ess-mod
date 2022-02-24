@@ -74,7 +74,7 @@ export class ProfileResultsComponent
    */
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     if (
-      this.evacueeSessionService.isPaperBased  &&
+      this.evacueeSessionService.isPaperBased &&
       this.evacueeSearchService.evacueeSearchContext.hasShownIdentification ===
         false
     ) {
@@ -148,7 +148,7 @@ export class ProfileResultsComponent
   private setProfileMetaData(
     selectedRegistrant: RegistrantProfileSearchResultModel
   ) {
-    let metaData: EvacueeMetaDataModel = {
+    const metaData: EvacueeMetaDataModel = {
       firstName: selectedRegistrant.firstName,
       lastName: selectedRegistrant.lastName,
       registrantId: selectedRegistrant.id,
