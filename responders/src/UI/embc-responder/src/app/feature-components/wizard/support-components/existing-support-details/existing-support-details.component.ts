@@ -28,6 +28,8 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
+import { DownloadService } from 'src/app/core/services/download.service';
+import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -48,7 +50,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private existingSupportService: ExistingSupportDetailsService,
     private referralCreationService: ReferralCreationService,
     private alertService: AlertService,
-    public evacueeSessionService: EvacueeSessionService
+    public evacueeSessionService: EvacueeSessionService,
+    private downloadService: DownloadService
   ) {}
 
   ngOnInit(): void {
@@ -228,9 +231,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
         next: (reason) => {
           if (reason !== undefined && reason !== 'close') {
             this.isLoading = !this.isLoading;
-            console.log(this.isLoading);
-            const win = window.open('', '_blank');
-            win.document.write('Loading referral document ... ');
             this.existingSupportService
               .reprintSupport(
                 this.needsAssessmentForSupport.id,
@@ -238,10 +238,15 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 reason
               )
               .subscribe({
-                next: (value) => {
-                  const blob = value;
-                  const url = window.URL.createObjectURL(blob);
-                  win.location.href = url;
+                next: (response) => {
+                  const blob = new Blob([response], { type: response.type });
+                  this.downloadService.downloadFile(
+                    window,
+                    blob,
+                    `support-${
+                      this.selectedSupport.id
+                    }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
+                  );
                   this.isLoading = !this.isLoading;
                 },
                 error: (error) => {
@@ -251,7 +256,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
                     'danger',
                     globalConst.reprintReferralError
                   );
-                  win.document.write(globalConst.reprintReferralError);
                 }
               });
           }

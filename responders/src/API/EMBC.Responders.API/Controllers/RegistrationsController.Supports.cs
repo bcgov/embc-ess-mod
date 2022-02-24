@@ -41,9 +41,9 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Process  digital draft supports by the API and create a print supports request
         /// </summary>
-        /// <param name="fileId">evacuation file id</param>
+        /// <param name="fileId">evacuation file number</param>
         /// <param name="request">the request with draft supports to process</param>
-        /// <returns>the generated print request id which can be later used to request the printed PDF</returns>
+        /// <returns>new print request id</returns>
         [HttpPost("files/{fileId}/supports")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -72,9 +72,9 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Process draft paper referrals by the API and create a print supports request
         /// </summary>
-        /// <param name="fileId">evacuation file id</param>
+        /// <param name="fileId">evacuation file number</param>
         /// <param name="request">the request with paper referrals to process</param>
-        /// <returns>Ok if paper referrals were processed successfully</returns>
+        /// <returns>Ok if successfully submitted</returns>
         [HttpPost("files/{fileId}/paperreferrals")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -97,6 +97,13 @@ namespace EMBC.Responders.API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Void a support
+        /// </summary>
+        /// <param name="fileId">evacuation file number</param>
+        /// <param name="supportId">support id</param>
+        /// <param name="voidReason">reason to void the support</param>
+        /// <returns>Ok if successfully voided</returns>
         [HttpPost("files/{fileId}/supports/{supportId}/void")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -113,6 +120,13 @@ namespace EMBC.Responders.API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Reprint a referral support
+        /// </summary>
+        /// <param name="fileId">evacuation file number</param>
+        /// <param name="supportId">support if</param>
+        /// <param name="reprintReason">reprint reason</param>
+        /// <returns>new print request id</returns>
         [HttpPost("files/{fileId}/supports/{supportId}/reprint")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -130,13 +144,26 @@ namespace EMBC.Responders.API.Controllers
             return Ok(new ReferralPrintRequestResponse { PrintRequestId = result });
         }
 
+        /// <summary>
+        /// Request a print by id
+        /// </summary>
+        /// <param name="fileId">evacuation file number</param>
+        /// <param name="printRequestId">print request id</param>
+        /// <returns>Blob of the print request results</returns>
         [HttpGet("files/{fileId}/supports/print/{printRequestId}")]
-        public async Task<IActionResult> GetPrint(string fileId, string printRequestId)
+        public async Task<FileContentResult> GetPrint(string fileId, string printRequestId)
         {
             var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId, RequestingUserId = currentUserId });
+            Response.Headers.Add("Content-Disposition", "attachment;filename=" + result.FileName);
             return new FileContentResult(result.Content, result.ContentType);
         }
 
+        /// <summary>
+        /// Search for supports
+        /// </summary>
+        /// <param name="externalReferenceId">search for supports for an external reference id</param>
+        /// <param name="fileId">search for supports in a specific evacuation file</param>
+        /// <returns>list of supports</returns>
         [HttpGet("supports")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
