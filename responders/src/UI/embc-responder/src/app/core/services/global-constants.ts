@@ -74,7 +74,7 @@ export const radioButtonOptions = [
 
 export const mealRateSheet: DialogContent = {
   title: 'ESS Rate Sheet - Meals',
-  text: '<div class="row primary"><div class="col-md-2">Breakfast</div><div class="col-md-2 bold">$12.25</div></div><div class="row primary"><div class="col-md-2">Lunch</div><div class="col-md-2 bold">$14.25</div></div><div class="row primary"><div class="col-md-2">Dinner</div><div class="col-md-2 bold">$24.50</div></div><div class="row primary"><div class="col-md-2">Total</div><div class="col-md-2 bold">$51.00(incl. GST)</div></div><p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>',
+  text: '<div class="row primary"><div class="col-md-2">Breakfast</div><div class="col-md-2 bold">$12.25</div></div><div class="row primary"><div class="col-md-2">Lunch</div><div class="col-md-2 bold">$14.25</div></div><div class="row primary"><div class="col-md-2">Dinner</div><div class="col-md-2 bold">$24.50</div></div><div class="row primary"><div class="col-md-2">Total</div><div class="col-md-4 bold">$51 (incl. GST)</div></div><p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>',
   cancelButton: 'Close'
 };
 
