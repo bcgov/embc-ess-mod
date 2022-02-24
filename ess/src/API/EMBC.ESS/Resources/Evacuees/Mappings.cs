@@ -167,7 +167,7 @@ namespace EMBC.ESS.Resources.Evacuees
             if (string.IsNullOrEmpty(answer))
                 return string.Empty;
             else
-                return string.Concat(answer[..1], "*****", answer.AsSpan(answer.Length - 1));
+                return string.Concat(answer.AsSpan()[..1], "*****", answer.AsSpan(answer.Length - 1));
         }
     }
 }

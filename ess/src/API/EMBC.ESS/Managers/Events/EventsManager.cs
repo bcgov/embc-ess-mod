@@ -602,6 +602,10 @@ namespace EMBC.ESS.Managers.Events
             foreach (var referral in referrals)
             {
                 referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault()?.Name;
+                if (!string.IsNullOrEmpty(referral.Supplier?.Community))
+                {
+                    referral.Supplier.City = communities.Where(c => c.Code == referral.Supplier.Community).SingleOrDefault()?.Name;
+                }
             }
 
             var isProduction = env.IsProduction();
