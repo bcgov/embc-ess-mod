@@ -285,6 +285,7 @@ namespace EMBC.Utilities.Hosting
 
             app.UseSerilogRequestLogging(opts =>
             {
+                opts.IncludeQueryInRequestPath = true;
                 opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
