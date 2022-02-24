@@ -21,7 +21,6 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { ThisReceiver } from '@angular/compiler';
 import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';

@@ -80,6 +80,7 @@ namespace EMBC.Tests
                 Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(cmd))
             };
             var response = await dispatcher.Dispatch(request, serverCallContext);
+            response.Error.ShouldBeFalse();
             response.Type.ShouldBeNullOrEmpty();
             response.Data.IsEmpty.ShouldBeTrue();
         }
