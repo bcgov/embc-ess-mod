@@ -81,6 +81,8 @@ namespace EMBC.ESS.Resources.Evacuations
     public class EvacuationFile
     {
         public string Id { get; set; }
+        public string CompletedOn { get; set; }
+        public string CompletedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastModified { get; set; }
         public string? ExternalReferenceId { get; set; }
