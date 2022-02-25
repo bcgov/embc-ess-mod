@@ -22,14 +22,19 @@ export class TimeoutService {
   ) {}
 
   init(idleTime: number, timeOutDuration: number) {
-    console.log('actual');
     this.idle.setIdle(idleTime * 60);
     this.idle.setTimeout(timeOutDuration * 60);
 
     this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
     this.idle.onIdleStart.subscribe(() => {
-      this.openTimeOutModal();
+      this.idle.clearInterrupts();
+      this.openTimeOutModal()
+        .afterClosed()
+        .subscribe((result) => {
+          this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
+          this.reset();
+        });
     });
 
     this.idle.onTimeout.subscribe(() => {
@@ -46,7 +51,7 @@ export class TimeoutService {
     return this.dialog.open(DialogComponent, {
       data: {
         component: TimeOutDialogComponent,
-        profileData: 1 * 60,
+        profileData: this.timeOutInfoVal.warningMessageDuration * 60,
         idle: this.idle
       },
       width: '530px'

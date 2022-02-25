@@ -101,7 +101,6 @@ export class EssFilesResultsComponent
           .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
           .subscribe({
             next: (results) => {
-              console.log(results);
               this.evacueeSearchResultsService.overlayIsLoading =
                 !this.evacueeSearchResultsService.overlayIsLoading;
               this.essFileSecurityPhraseService.securityPhrase = results;
