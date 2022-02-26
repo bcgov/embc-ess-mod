@@ -53,6 +53,21 @@ namespace EMBC.ESS.Resources.Teams
                     : (DateTime?)null))
                 .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.statuscode == (int)TeamMemberStatus.Active))
                 ;
+
+            CreateMap<TeamMember, era_essteamuser>(MemberList.None)
+                .ForMember(d => d.era_essteamuserid, opts => opts.MapFrom(s => Guid.NewGuid()))
+                .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
+                .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
+                .ForMember(d => d.era_email, opts => opts.MapFrom(s => s.Email))
+                .ForMember(d => d.era_phone, opts => opts.MapFrom(s => s.Phone))
+                .ForMember(d => d.era_externalsystemuser, opts => opts.MapFrom(s => s.ExternalUserId))
+                .ForMember(d => d.era_externalsystemtype, opts => opts.MapFrom(s => (int)ExternalSystemOptionSet.Bceid))
+                .ForMember(d => d.era_externalsystemusername, opts => opts.MapFrom(s => s.UserName))
+                .ForMember(d => d.era_electronicaccessagreementaccepteddate, opts => opts.MapFrom(s => s.AgreementSignDate))
+                .ForMember(d => d.era_label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? (int?)null : (int)Enum.Parse<TeamUserLabelOptionSet>(s.Label)))
+                .ForMember(d => d.era_role, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Role) ? (int?)null : (int)Enum.Parse<TeamUserRoleOptionSet>(s.Role)))
+                .ForMember(d => d.era_lastsuccessfullogin, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
+                ;
         }
     }
 
