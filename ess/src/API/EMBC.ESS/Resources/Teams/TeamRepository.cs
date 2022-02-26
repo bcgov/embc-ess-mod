@@ -107,19 +107,21 @@ namespace EMBC.ESS.Resources.Teams
             if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new ArgumentException($"team {teamMember.TeamId} not found");
 
             var essTeamUser = mapper.Map<era_essteamuser>(teamMember);
-            var existingMember = context.era_essteamusers
-                    .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == Guid.Parse(teamMember.Id))
-                    .SingleOrDefault();
+
+            var existingMember = essTeamUser.era_essteamuserid.HasValue ? context.era_essteamusers
+                    .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == essTeamUser.era_essteamuserid.Value)
+                    .SingleOrDefault()
+                    : null;
 
             context.DetachAll();
 
             if (existingMember == null)
             {
+                essTeamUser.era_essteamuserid = Guid.NewGuid();
                 context.AddToera_essteamusers(essTeamUser);
             }
             else
             {
-                essTeamUser.era_essteamuserid = existingMember.era_essteamuserid;
                 context.AttachTo(nameof(EssContext.era_essteamusers), essTeamUser);
             }
 

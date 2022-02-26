@@ -55,7 +55,7 @@ namespace EMBC.ESS.Resources.Teams
                 ;
 
             CreateMap<TeamMember, era_essteamuser>(MemberList.None)
-                .ForMember(d => d.era_essteamuserid, opts => opts.MapFrom(s => Guid.NewGuid()))
+                .ForMember(d => d.era_essteamuserid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.era_email, opts => opts.MapFrom(s => s.Email))
