@@ -32,12 +32,12 @@
 
 <div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
   <div class="col-md-5">Paper ESS File Created by</div>
-  <div class="col-md-7 bold">tbd</div>
+  <div class="col-md-7 bold">{{ profileData?.completedBy }}</div>
 </div>
 
 <div *ngIf="evacueeSessionService.isPaperBased" class="row row-padding">
   <div class="col-md-5">Paper ESS File Created on</div>
-  <div class="col-md-7 bold">{{ profileData?.needsAssessment?.createdOn }}</div>
+  <div class="col-md-7 bold">{{ profileData?.completedOn }}</div>
 </div>
 
 <div class="row row-padding">
