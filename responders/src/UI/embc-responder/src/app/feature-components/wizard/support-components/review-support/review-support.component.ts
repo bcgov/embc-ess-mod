@@ -27,6 +27,8 @@ import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DownloadService } from 'src/app/core/services/download.service';
+import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 
 @Component({
   selector: 'app-review-support',
@@ -48,7 +50,8 @@ export class ReviewSupportComponent implements OnInit {
     private stepSupportsServices: StepSupportsService,
     private alertService: AlertService,
     private dialog: MatDialog,
-    public evacueeSessionService: EvacueeSessionService
+    public evacueeSessionService: EvacueeSessionService,
+    private downloadService: DownloadService
   ) {}
 
   ngOnInit(): void {
@@ -337,16 +340,19 @@ export class ReviewSupportComponent implements OnInit {
 
   private processDraftSupports(): void {
     this.showLoader = !this.showLoader;
-    const win = window.open('', '_blank');
-    win.document.write('Loading Referral document ... ');
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
       next: (response) => {
-        // Displaying PDF into a new browser tab:
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        win.location.href = url;
+        const blob = new Blob([response], { type: response.type });
+        this.downloadService.downloadFile(
+          window,
+          blob,
+          `supports-${fileId}-${new FlatDateFormatPipe().transform(
+            new Date()
+          )}.pdf`
+        );
+
         //Clearing Draft supports array and updating the supports list for the selected ESS File
         this.referralService.clearDraftSupport();
         this.reviewSupportService.updateExistingSupportsList();
@@ -360,7 +366,6 @@ export class ReviewSupportComponent implements OnInit {
           'danger',
           globalConst.processSupportDraftsError
         );
-        win.document.write(globalConst.processSupportDraftsError);
       }
     });
   }

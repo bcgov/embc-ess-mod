@@ -8,6 +8,7 @@ import { NumberArrayPipe } from './numberArray.pipe';
 import { NumberOfNightsPipe } from './numberOfNights.pipe';
 import { SupplierContactPipe } from './supplierContact.pipe';
 import { NumberOfMealsPipe } from './numberOfMeals.pipe';
+import { FlatDateFormatPipe } from './flatDateFormat.pipe';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { NumberOfMealsPipe } from './numberOfMeals.pipe';
     NumberArrayPipe,
     NumberOfNightsPipe,
     SupplierContactPipe,
-    NumberOfMealsPipe
+    NumberOfMealsPipe,
+    FlatDateFormatPipe
   ],
   imports: [CommonModule],
   exports: [
@@ -29,7 +31,8 @@ import { NumberOfMealsPipe } from './numberOfMeals.pipe';
     NumberArrayPipe,
     NumberOfNightsPipe,
     SupplierContactPipe,
-    NumberOfMealsPipe
+    NumberOfMealsPipe,
+    FlatDateFormatPipe
   ]
 })
 export class CustomPipeModule {}

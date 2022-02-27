@@ -1393,7 +1393,7 @@ export class RegistrationsService extends BaseService {
   registrationsProcessSupports$Response(params: {
 
     /**
-     * evacuation file id
+     * evacuation file number
      */
     fileId: string;
 
@@ -1433,7 +1433,7 @@ export class RegistrationsService extends BaseService {
   registrationsProcessSupports(params: {
 
     /**
-     * evacuation file id
+     * evacuation file number
      */
     fileId: string;
 
@@ -1466,7 +1466,7 @@ export class RegistrationsService extends BaseService {
   registrationsProcessPaperReferrals$Response(params: {
 
     /**
-     * evacuation file id
+     * evacuation file number
      */
     fileId: string;
 
@@ -1506,7 +1506,7 @@ export class RegistrationsService extends BaseService {
   registrationsProcessPaperReferrals(params: {
 
     /**
-     * evacuation file id
+     * evacuation file number
      */
     fileId: string;
 
@@ -1527,14 +1527,30 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsVoidSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/void';
 
   /**
+   * Void a support.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `registrationsVoidSupport()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsVoidSupport$Response(params: {
+
+    /**
+     * evacuation file number
+     */
     fileId: string;
+
+    /**
+     * support id
+     */
     supportId: string;
+
+    /**
+     * reason to void the support
+     */
     voidReason?: SupportVoidReason;
   }): Observable<StrictHttpResponse<void>> {
 
@@ -1557,14 +1573,30 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Void a support.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `registrationsVoidSupport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsVoidSupport(params: {
+
+    /**
+     * evacuation file number
+     */
     fileId: string;
+
+    /**
+     * support id
+     */
     supportId: string;
+
+    /**
+     * reason to void the support
+     */
     voidReason?: SupportVoidReason;
   }): Observable<void> {
 
@@ -1579,14 +1611,30 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsReprintSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/reprint';
 
   /**
+   * Reprint a referral support.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `registrationsReprintSupport()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsReprintSupport$Response(params: {
+
+    /**
+     * evacuation file number
+     */
     fileId: string;
+
+    /**
+     * support if
+     */
     supportId: string;
+
+    /**
+     * reprint reason
+     */
     reprintReason?: SupportReprintReason;
   }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
 
@@ -1609,14 +1657,30 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Reprint a referral support.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `registrationsReprintSupport$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsReprintSupport(params: {
+
+    /**
+     * evacuation file number
+     */
     fileId: string;
+
+    /**
+     * support if
+     */
     supportId: string;
+
+    /**
+     * reprint reason
+     */
     reprintReason?: SupportReprintReason;
   }): Observable<ReferralPrintRequestResponse> {
 
@@ -1631,13 +1695,25 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsGetPrintPath = '/api/Registrations/files/{fileId}/supports/print/{printRequestId}';
 
   /**
+   * Request a print by id.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `registrationsGetPrint()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsGetPrint$Response(params: {
+
+    /**
+     * evacuation file number
+     */
     fileId: string;
+
+    /**
+     * print request id
+     */
     printRequestId: string;
   }): Observable<StrictHttpResponse<Blob>> {
 
@@ -1659,13 +1735,25 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Request a print by id.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `registrationsGetPrint$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsGetPrint(params: {
+
+    /**
+     * evacuation file number
+     */
     fileId: string;
+
+    /**
+     * print request id
+     */
     printRequestId: string;
   }): Observable<Blob> {
 
@@ -1680,18 +1768,32 @@ export class RegistrationsService extends BaseService {
   static readonly RegistrationsSearchSupportsPath = '/api/Registrations/supports';
 
   /**
+   * Search for supports.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `registrationsSearchSupports()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsSearchSupports$Response(params?: {
+
+    /**
+     * search for supports for an external reference id
+     */
     externalReferenceId?: string;
+
+    /**
+     * search for supports in a specific evacuation file
+     */
+    fileId?: string;
   }): Observable<StrictHttpResponse<Array<SupportSummary>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchSupportsPath, 'get');
     if (params) {
       rb.query('externalReferenceId', params.externalReferenceId, {});
+      rb.query('fileId', params.fileId, {});
     }
 
     return this.http.request(rb.build({
@@ -1706,13 +1808,26 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Search for supports.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `registrationsSearchSupports$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
   registrationsSearchSupports(params?: {
+
+    /**
+     * search for supports for an external reference id
+     */
     externalReferenceId?: string;
+
+    /**
+     * search for supports in a specific evacuation file
+     */
+    fileId?: string;
   }): Observable<Array<SupportSummary>> {
 
     return this.registrationsSearchSupports$Response(params).pipe(

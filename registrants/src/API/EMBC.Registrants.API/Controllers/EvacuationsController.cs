@@ -138,6 +138,8 @@ namespace EMBC.Registrants.API.Controllers
     public class EvacuationFile
     {
         public string? FileId { get; set; }
+        public string? CompletedOn { get; set; }
+        public string? CompletedBy { get; set; }
         public EvacuationFileStatus Status { get; set; }
 
         public DateTime? EvacuationFileDate { get; set; }

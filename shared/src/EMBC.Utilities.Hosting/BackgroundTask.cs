@@ -72,10 +72,10 @@ namespace EMBC.Utilities.Hosting
                 {
                     if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
                     {
-                        logger.LogInformation("skipping {0}", nextExecutionDate);
+                        logger.LogDebug("skipping {0}", nextExecutionDate);
                         continue;
                     }
-                    logger.LogInformation("running {0}", nextExecutionDate);
+                    logger.LogDebug("running {0}", nextExecutionDate);
                     using (var executionScope = serviceProvider.CreateScope())
                     {
                         var task = executionScope.ServiceProvider.GetRequiredService<T>();
