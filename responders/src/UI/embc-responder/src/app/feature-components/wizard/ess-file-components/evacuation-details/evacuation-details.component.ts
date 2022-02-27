@@ -16,6 +16,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
+import { DateConversionService } from 'src/app/core/services/dateConversion.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -49,7 +50,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private wizardService: WizardService,
-    public evacueeSearchService: EvacueeSearchService
+    public evacueeSearchService: EvacueeSearchService,
+    private dateConversionService: DateConversionService
   ) {}
 
   ngOnInit(): void {
@@ -283,7 +285,71 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           : ''
       ],
       primaryAddressIndicator: [true],
-      evacAddress: this.createEvacAddressForm()
+      evacAddress: this.createEvacAddressForm(),
+      paperIssuedBy: this.formBuilder.group({
+        firstName: [
+          this.stepEssFileService.completedBy
+            ? this.stepEssFileService.completedBy.split(' ')[0]
+            : '',
+          [
+            this.customValidation
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
+              .bind(this.customValidation)
+          ]
+        ],
+        lastNameInitial: [
+          this.stepEssFileService.completedBy
+            ? this.stepEssFileService.completedBy.split(' ')[1]
+            : '',
+          [
+            this.customValidation
+              .conditionalValidation(
+                () => this.evacueeSessionService.isPaperBased,
+                this.customValidation.whitespaceValidator()
+              )
+              .bind(this.customValidation)
+          ]
+        ]
+      }),
+      paperCompletedOn: [
+        this.stepEssFileService.completedOn
+          ? this.dateConversionService.convertDateTimeToDate(
+              this.stepEssFileService.completedOn
+            )
+          : '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              Validators.required
+            )
+            .bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              this.customValidation.validDateValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      paperCompletedTime: [
+        this.stepEssFileService.completedOn
+          ? this.dateConversionService.convertDateTimeToTime(
+              this.stepEssFileService.completedOn
+            )
+          : '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.evacueeSessionService.isPaperBased,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ]
     });
   }
 
@@ -383,8 +449,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.paperESSFile =
-      this.evacDetailsForm.get('paperESSFile').value;
+    if (this.evacueeSessionService.isPaperBased) {
+      this.savePaperFields();
+    }
     this.stepEssFileService.evacuatedFromPrimary = this.evacDetailsForm.get(
       'evacuatedFromPrimary'
     ).value;
@@ -404,5 +471,19 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.stepEssFileService.referredServiceDetails = this.selection.selected;
     this.stepEssFileService.evacuationExternalReferrals =
       this.evacDetailsForm.get('externalServices').value;
+  }
+
+  private savePaperFields() {
+    this.stepEssFileService.paperESSFile =
+      this.evacDetailsForm.get('paperESSFile').value;
+    this.stepEssFileService.completedOn =
+      this.dateConversionService.createDateTimeString(
+        this.evacDetailsForm.get('paperCompletedOn').value,
+        this.evacDetailsForm.get('paperCompletedTime').value
+      );
+    this.stepEssFileService.completedBy =
+      this.evacDetailsForm.get('paperIssuedBy.firstName').value +
+      ' ' +
+      this.evacDetailsForm.get('paperIssuedBy.lastNameInitial').value;
   }
 }
