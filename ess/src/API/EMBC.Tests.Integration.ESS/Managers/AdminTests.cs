@@ -111,6 +111,24 @@ namespace EMBC.Tests.Integration.ESS.Managers
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task RemoveLabel_TeamMember_ReturnsMemberId()
+        {
+            var memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            if (string.IsNullOrEmpty(memberToUpdate.Label))
+            {
+                memberToUpdate.Label = "Volunteer";
+                await adminManager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
+                memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            }
+            memberToUpdate.Label.ShouldNotBeNull();
+            memberToUpdate.Label = string.Empty;
+            await adminManager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
+
+            var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            updatedMember.Label.ShouldBeNull();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanDeleteTeamMember()
         {
             var now = DateTime.UtcNow;
