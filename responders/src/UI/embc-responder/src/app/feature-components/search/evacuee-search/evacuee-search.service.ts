@@ -78,7 +78,7 @@ export class EvacueeSearchService {
       .subscribe({
         next: (categories: Code[]) => {
           this.supportCategory = categories.filter(
-            (category) => category.description !== null
+            (category) => category.description
           );
         },
         error: (error) => {
@@ -97,7 +97,7 @@ export class EvacueeSearchService {
       .subscribe({
         next: (subCategories: Code[]) => {
           this.supportSubCategory = subCategories.filter(
-            (subCategory) => subCategory.description !== null
+            (subCategory) => subCategory.description
           );
         },
         error: (error) => {
