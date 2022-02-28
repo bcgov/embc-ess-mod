@@ -53,7 +53,9 @@ export class EvacueeSearchResultsComponent implements OnInit {
     this.searchForEvacuee(
       (this.evacueeSearchContext =
         this.evacueeSearchService.evacueeSearchContext),
-      (this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile)
+      (this.paperBasedEssFile = this.evacueeSessionService.isPaperBased
+        ? this.evacueeSearchService.paperBasedEssFile
+        : null)
     );
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
   }
