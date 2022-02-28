@@ -26,6 +26,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essfile-security-phrase.service';
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
+import { EvacueeMetaDataModel } from 'src/app/core/models/evacuee-metadata.model';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -76,6 +77,7 @@ export class EssFilesResultsComponent
    */
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
     this.evacueeSessionService.essFileNumber = selectedESSFile.id;
+    this.setFileMetaData(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
       if (
         this.evacueeSearchService.paperBasedEssFile !==
@@ -169,5 +171,18 @@ export class EssFilesResultsComponent
       height: '285px',
       width: '493px'
     });
+  }
+
+  private setFileMetaData(selectedFile: EvacuationFileSearchResultModel) {
+    const primaryMember = selectedFile.householdMembers.find(
+      (member) => member.isSearchMatch
+    );
+    const metaData: EvacueeMetaDataModel = {
+      firstName: primaryMember.firstName,
+      lastName: primaryMember.lastName,
+      registrantId: primaryMember.id,
+      fileId: selectedFile.id
+    };
+    this.evacueeSessionService.evacueeMetaData = metaData;
   }
 }
