@@ -14,19 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Cache;
-using EMBC.Utilities.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NCrontab;
-
 namespace EMBC.Utilities.Hosting
 {
     public class BackgroundTask<T> : BackgroundService
@@ -86,7 +73,7 @@ namespace EMBC.Utilities.Hosting
                         logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                     }
                 }
-                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
 
