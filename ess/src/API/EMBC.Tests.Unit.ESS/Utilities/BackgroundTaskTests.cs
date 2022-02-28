@@ -37,7 +37,7 @@ namespace EMBC.Tests.Unit.ESS.Utilities
         [Fact]
         public async Task TryRegister_DopOf1AndOtherInstanceBeforeTimeout_False()
         {
-            var manager = new BackgroundTaskConcurrencyManager(services.GetRequiredService<ICache>(), "testtask", 1, TimeSpan.FromMilliseconds(100));
+            var manager = new BackgroundTaskConcurrencyManager(services.GetRequiredService<ICache>(), "testtask", 1, TimeSpan.FromMilliseconds(500));
             (await manager.TryRegister("instance1")).ShouldBeTrue();
             await Task.Delay(50);
             (await manager.TryRegister("instance2")).ShouldBeFalse();
