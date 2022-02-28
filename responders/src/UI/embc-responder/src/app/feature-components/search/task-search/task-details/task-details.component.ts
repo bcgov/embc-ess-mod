@@ -13,15 +13,17 @@ export class TaskDetailsComponent implements OnInit {
   essTask: EssTaskModel;
   taskNumber: string;
   taskStatus: string;
+  taskCommunity: string;
 
   constructor(private router: Router, private userService: UserService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state
-          .essTask as EssTask;
+          .essTask as EssTaskModel;
         this.essTask = state;
         this.taskNumber = state.id;
         this.taskStatus = state.status;
+        this.taskCommunity = state.communityName;
       }
     }
   }
@@ -40,7 +42,11 @@ export class TaskDetailsComponent implements OnInit {
    * search
    */
   signInTask(): void {
-    this.userService.updateTaskNumber(this.taskNumber, this.taskStatus);
+    this.userService.updateTaskNumber(
+      this.taskNumber,
+      this.taskStatus,
+      this.taskCommunity
+    );
     this.router.navigate(['/responder-access/search/evacuee']);
   }
 }
