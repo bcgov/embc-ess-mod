@@ -64,7 +64,7 @@ namespace EMBC.ESS.Resources.Teams
                 .ForMember(d => d.era_externalsystemtype, opts => opts.MapFrom(s => (int)ExternalSystemOptionSet.Bceid))
                 .ForMember(d => d.era_externalsystemusername, opts => opts.MapFrom(s => s.UserName))
                 .ForMember(d => d.era_electronicaccessagreementaccepteddate, opts => opts.MapFrom(s => s.AgreementSignDate))
-                .ForMember(d => d.era_label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? (int?)null : (int)Enum.Parse<TeamUserLabelOptionSet>(s.Label)))
+                .ForMember(d => d.era_label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? -1 : (int)Enum.Parse<TeamUserLabelOptionSet>(s.Label)))
                 .ForMember(d => d.era_role, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Role) ? (int?)null : (int)Enum.Parse<TeamUserRoleOptionSet>(s.Role)))
                 .ForMember(d => d.era_lastsuccessfullogin, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
                 ;

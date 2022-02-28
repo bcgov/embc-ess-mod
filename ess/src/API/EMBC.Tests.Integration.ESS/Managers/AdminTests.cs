@@ -111,7 +111,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task RemoveLabel_TeamMember_ReturnsMemberId()
+        public async Task RemoveLabel_TeamMemberWithLabel_LabelRemoved()
         {
             var memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
             if (string.IsNullOrEmpty(memberToUpdate.Label))
@@ -121,7 +121,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             }
             memberToUpdate.Label.ShouldNotBeNull();
-            memberToUpdate.Label = string.Empty;
+            memberToUpdate.Label = null;
             await adminManager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
 
             var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();

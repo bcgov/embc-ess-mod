@@ -39,9 +39,9 @@ namespace EMBC.ESS.Resources.Suppliers
 
         public async Task<SupplierCommandResult> ManageSupplier(SupplierCommand cmd)
         {
-            return cmd.GetType().Name switch
+            return cmd switch
             {
-                nameof(SaveSupplier) => await HandleSaveSupplier((SaveSupplier)cmd),
+                SaveSupplier c => await HandleSaveSupplier(c),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
