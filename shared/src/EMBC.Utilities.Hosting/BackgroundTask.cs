@@ -73,18 +73,20 @@ namespace EMBC.Utilities.Hosting
                     if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
                     {
                         logger.LogDebug("skipping {0}", nextExecutionDate);
-                        continue;
                     }
-                    logger.LogDebug("running {0}", nextExecutionDate);
-                    using (var executionScope = serviceProvider.CreateScope())
+                    else
                     {
-                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                        await task.ExecuteAsync(stoppingToken);
+                        logger.LogDebug("running {0}", nextExecutionDate);
+                        using (var executionScope = serviceProvider.CreateScope())
+                        {
+                            var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                            await task.ExecuteAsync(stoppingToken);
+                        }
+                        nextExecutionDate = schedule.GetNextOccurrence(now);
+                        logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                     }
-                    nextExecutionDate = schedule.GetNextOccurrence(now);
-                    logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                 }
-                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
 
