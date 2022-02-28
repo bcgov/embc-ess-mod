@@ -396,7 +396,14 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Deactivate_Suppliers_ReturnsSupplierId()
         {
-            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = TestData.TeamId, SupplierId = TestData.SupplierCId });
+            var supplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
+
+            if (supplier.Team == null)
+            {
+                await adminManager.Handle(new ClaimSupplierCommand { SupplierId = supplier.Id, TeamId = TestData.OtherTeamId });
+            }
+
+            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = TestData.OtherTeamId, SupplierId = TestData.SupplierCId });
 
             results.ShouldBe(TestData.SupplierCId);
 
