@@ -1,7 +1,7 @@
-import { RegistrantProfile } from '../api/models';
+import { LinkRegistrantProfileModel } from './link-registrant-profile.model';
 
 export class MultipleLinkRegistrantModel {
-  profiles: RegistrantProfile[];
+  profiles: LinkRegistrantProfileModel[];
   firstName: string;
   lastName: string;
   dateOfBirth: string;
