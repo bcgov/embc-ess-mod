@@ -268,6 +268,33 @@ namespace EMBC.Tests.Integration.ESS.Managers
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task AssignCommunities_Team_PreserveDateAssigned()
+        {
+            var now = DateTime.UtcNow;
+            var manager = Services.GetRequiredService<AdminManager>();
+            var communities = (await manager.Handle(new CommunitiesQuery())).Items;
+
+            var assignedCommunities = (await adminManager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
+
+            var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+
+            var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code).ToList();
+            if (!assignedCommunities.Any(c => c.Code == TestData.ActiveTaskCommunity) && !newCommunities.Any(c => c == TestData.ActiveTaskCommunity)) newCommunities.Add(TestData.ActiveTaskCommunity);
+
+            await adminManager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
+
+            var updatedTeam = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+
+            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).Concat(newCommunities).OrderBy(c => c));
+
+            var originalCommunities = updatedTeam.AssignedCommunities.Where(c => assignedCommunities.Any(ac => ac.Code == c.Code));
+            originalCommunities.Select(c => c.DateAssigned).ShouldAllBe(d => d < now);
+
+            var addedCommunities = updatedTeam.AssignedCommunities.Where(c => newCommunities.Any(nc => nc == c.Code));
+            addedCommunities.Select(c => c.DateAssigned).ShouldAllBe(d => d >= now);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUnassignCommunitiesToTeam()
         {
             var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();

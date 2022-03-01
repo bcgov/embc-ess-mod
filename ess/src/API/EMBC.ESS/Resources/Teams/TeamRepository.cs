@@ -152,20 +152,19 @@ namespace EMBC.ESS.Resources.Teams
 
             await context.LoadPropertyAsync(essTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
 
-            //delete current assigned communities
-            foreach (var community in essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID)
+            //delete assigned communities not in updated list
+            foreach (var community in essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.Where(ta => !team.AssignedCommunities.Any(c => c.Code == ta._era_jurisdictionid_value.ToString())))
             {
                 context.DeleteObject(community);
             }
 
-            //add all assigned communities
-            foreach (var community in team.AssignedCommunities)
+            //add newly assigned communities
+            foreach (var community in team.AssignedCommunities.Where(c => !essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.Any(ta => ta._era_jurisdictionid_value.ToString() == c.Code)))
             {
                 var teamArea = new era_essteamarea
                 {
                     era_essteamareaid = Guid.NewGuid(),
-                    era_ESSTeamID = essTeam,
-                    createdon = community.DateAssigned
+                    era_ESSTeamID = essTeam
                 };
                 context.AddToera_essteamareas(teamArea);
                 context.AddLink(essTeam, nameof(essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID), teamArea);
