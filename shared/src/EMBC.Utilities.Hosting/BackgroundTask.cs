@@ -37,6 +37,7 @@ namespace EMBC.Utilities.Hosting
         private readonly CrontabSchedule schedule;
         private readonly TimeSpan startupDelay;
         private readonly BackgroundTaskConcurrencyManager concurrencyManager;
+        private string instanceName => Environment.MachineName;
 
         public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger)
         {
@@ -61,7 +62,6 @@ namespace EMBC.Utilities.Hosting
             await Task.Delay(startupDelay, stoppingToken);
             var now = DateTime.UtcNow;
             var nextExecutionDate = schedule.GetNextOccurrence(now);
-            var instanceName = Environment.MachineName;
 
             logger.LogDebug("first run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(now).TotalSeconds);
 
@@ -98,6 +98,8 @@ namespace EMBC.Utilities.Hosting
 
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
+            logger.LogInformation("deregistrering instance");
+            await concurrencyManager.Deregister(instanceName, stoppingToken);
             logger.LogInformation("stopping");
             await base.StopAsync(stoppingToken);
         }
@@ -153,6 +155,17 @@ namespace EMBC.Utilities.Hosting
             finally
             {
                 locker.Release();
+            }
+        }
+
+        public async Task Deregister(string serviceInstanceName, CancellationToken cancellationToken = default)
+        {
+            var state = await cache.Get<ConcurrencyState>(cacheKey);
+            if (state != null && state.ContainsKey(serviceInstanceName))
+            {
+                state.Remove(serviceInstanceName);
+                state.Trim(timeout);
+                await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30), cancellationToken);
             }
         }
     }

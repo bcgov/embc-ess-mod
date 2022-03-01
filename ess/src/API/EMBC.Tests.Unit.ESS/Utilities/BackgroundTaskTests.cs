@@ -99,6 +99,37 @@ namespace EMBC.Tests.Unit.ESS.Utilities
             await Task.Delay(150);
             (await manager.TryRegister("instance1")).ShouldBeTrue();
         }
+
+        [Fact]
+        public async Task TryRegister_DopOf1Instance1DeregisterAndRegisterInstance2_True()
+        {
+            var manager = new BackgroundTaskConcurrencyManager(services.GetRequiredService<ICache>(), "testtask", 1, TimeSpan.FromMilliseconds(500));
+            (await manager.TryRegister("instance1")).ShouldBeTrue();
+            await Task.Delay(50);
+            await manager.Deregister("instance1");
+            await Task.Delay(50);
+            (await manager.TryRegister("instance2")).ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task TryRegister_DopOf2Instance1DeregisterAndRegisterMoreInstances_True()
+        {
+            var manager = new BackgroundTaskConcurrencyManager(services.GetRequiredService<ICache>(), "testtask", 2, TimeSpan.FromMilliseconds(500));
+            (await manager.TryRegister("instance1")).ShouldBeTrue();
+            (await manager.TryRegister("instance2")).ShouldBeTrue();
+            (await manager.TryRegister("instance3")).ShouldBeFalse();
+            await manager.Deregister("instance1");
+            (await manager.TryRegister("instance3")).ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task Deregister_AfterCacheTimeout_NoError()
+        {
+            var manager = new BackgroundTaskConcurrencyManager(services.GetRequiredService<ICache>(), "testtask", 2, TimeSpan.FromMilliseconds(50));
+            (await manager.TryRegister("instance1")).ShouldBeTrue();
+            await Task.Delay(100);
+            await manager.Deregister("instance1");
+        }
     }
 
     public class TestTask : IBackgroundTask
