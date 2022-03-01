@@ -242,6 +242,12 @@ export class StepEvacueeProfileService {
       if (tab.name !== 'review') {
         tab.status = 'complete';
       }
+      if (this.savedQuestions.length === 0) {
+        if (tab.name === 'security-questions') {
+          tab.status = 'not-started';
+        }
+      }
+
       return tab;
     });
   }
