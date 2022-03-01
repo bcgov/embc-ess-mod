@@ -37,6 +37,7 @@ namespace EMBC.Utilities.Hosting
         private readonly CrontabSchedule schedule;
         private readonly TimeSpan startupDelay;
         private readonly BackgroundTaskConcurrencyManager concurrencyManager;
+        private string instanceName => Environment.MachineName;
 
         public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger)
         {
@@ -61,7 +62,6 @@ namespace EMBC.Utilities.Hosting
             await Task.Delay(startupDelay, stoppingToken);
             var now = DateTime.UtcNow;
             var nextExecutionDate = schedule.GetNextOccurrence(now);
-            var instanceName = Environment.MachineName;
 
             logger.LogDebug("first run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(now).TotalSeconds);
 
@@ -73,18 +73,20 @@ namespace EMBC.Utilities.Hosting
                     if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
                     {
                         logger.LogDebug("skipping {0}", nextExecutionDate);
-                        continue;
                     }
-                    logger.LogDebug("running {0}", nextExecutionDate);
-                    using (var executionScope = serviceProvider.CreateScope())
+                    else
                     {
-                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                        await task.ExecuteAsync(stoppingToken);
+                        logger.LogDebug("running {0}", nextExecutionDate);
+                        using (var executionScope = serviceProvider.CreateScope())
+                        {
+                            var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                            await task.ExecuteAsync(stoppingToken);
+                        }
                     }
                     nextExecutionDate = schedule.GetNextOccurrence(now);
                     logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                 }
-                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
 
@@ -96,12 +98,14 @@ namespace EMBC.Utilities.Hosting
 
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
+            logger.LogInformation("deregistrering instance");
+            await concurrencyManager.Deregister(instanceName, stoppingToken);
             logger.LogInformation("stopping");
             await base.StopAsync(stoppingToken);
         }
     }
 
-    public class BackgroundTaskConcurrencyManager
+    internal class BackgroundTaskConcurrencyManager
     {
         private readonly string cacheKey;
         private readonly int concurrency;
@@ -151,6 +155,17 @@ namespace EMBC.Utilities.Hosting
             finally
             {
                 locker.Release();
+            }
+        }
+
+        public async Task Deregister(string serviceInstanceName, CancellationToken cancellationToken = default)
+        {
+            var state = await cache.Get<ConcurrencyState>(cacheKey);
+            if (state != null && state.ContainsKey(serviceInstanceName))
+            {
+                state.Remove(serviceInstanceName);
+                state.Trim(timeout);
+                await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30), cancellationToken);
             }
         }
     }

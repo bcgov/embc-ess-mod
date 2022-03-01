@@ -42,7 +42,6 @@ namespace EMBC.Utilities.Messaging
                 var messageHandler = serviceRegistry.Resolve(requestType);
                 if (messageHandler == null) throw new InvalidOperationException($"Message handler for {requestType} not found");
                 var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType ?? null!);
-                //var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType) ?? null!;
                 using var ms = new MemoryStream(request.Data.ToByteArray());
                 var requestMessage = await JsonSerializer.DeserializeAsync(ms, requestType) ?? null!;
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
@@ -52,9 +51,6 @@ namespace EMBC.Utilities.Messaging
                 {
                     CorrelationId = request.CorrelationId,
                     Type = replyType?.AssemblyQualifiedName ?? string.Empty,
-                    //Content = replyMessage == null
-                    //    ? Value.ForNull()
-                    //    : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
                     Data = replyMessage == null
                         ? ByteString.Empty
                         : UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(replyMessage)),

@@ -43,7 +43,7 @@ namespace EMBC.Utilities.Messaging
         {
             try
             {
-                logger.LogInformation("Sending command {0}", command.GetType().FullName);
+                logger.LogDebug("Sending command {0}", command.GetType().FullName);
                 var response = await dispatcherClient.DispatchAsync<string>(command);
                 return response;
             }
@@ -63,7 +63,7 @@ namespace EMBC.Utilities.Messaging
         {
             try
             {
-                logger.LogInformation("Sending query {0}", command.GetType().FullName);
+                logger.LogDebug("Sending query {0}", command.GetType().FullName);
                 var response = await dispatcherClient.DispatchAsync<TResponse>(command);
                 return response;
             }
