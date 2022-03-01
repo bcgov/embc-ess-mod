@@ -82,9 +82,9 @@ namespace EMBC.Utilities.Hosting
                             var task = executionScope.ServiceProvider.GetRequiredService<T>();
                             await task.ExecuteAsync(stoppingToken);
                         }
-                        nextExecutionDate = schedule.GetNextOccurrence(now);
-                        logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                     }
+                    nextExecutionDate = schedule.GetNextOccurrence(now);
+                    logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                 }
                 await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
@@ -105,7 +105,7 @@ namespace EMBC.Utilities.Hosting
         }
     }
 
-    public class BackgroundTaskConcurrencyManager
+    internal class BackgroundTaskConcurrencyManager
     {
         private readonly string cacheKey;
         private readonly int concurrency;
