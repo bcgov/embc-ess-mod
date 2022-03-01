@@ -169,7 +169,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SupportSummary>>> SearchSupports(string? externalReferenceId, string? fileId)
         {
-            if (string.IsNullOrEmpty(externalReferenceId) || string.IsNullOrEmpty(fileId))
+            if (string.IsNullOrEmpty(externalReferenceId) && string.IsNullOrEmpty(fileId))
                 return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = "Must specify search criteria" });
 
             var items = mapper.Map<IEnumerable<Support>>((await messagingClient.Send(new SearchSupportsQuery

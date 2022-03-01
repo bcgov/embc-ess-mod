@@ -59,14 +59,12 @@ namespace EMBC.ESS.Resources.Supports
 
         private async Task<ManageSupportCommandResult> Handle(SaveEvacuationFileSupportCommand cmd)
         {
-            // Concatenating the generated IDs is not the ideal solution, might worth considering splitting supports
-            // to their own resource access service. The intent is to ensure all supports are created in a single transaction (Dynamics batch)
-            return new ManageSupportCommandResult { Id = string.Join(';', await SaveSupports(cmd.FileId, cmd.Supports)) };
+            return new ManageSupportCommandResult { Ids = await SaveSupports(cmd.FileId, cmd.Supports) };
         }
 
         private async Task<ManageSupportCommandResult> Handle(VoidEvacuationFileSupportCommand cmd)
         {
-            return new ManageSupportCommandResult { Id = await VoidSupport(cmd.FileId, cmd.SupportId, cmd.VoidReason) };
+            return new ManageSupportCommandResult { Ids = new[] { await VoidSupport(cmd.FileId, cmd.SupportId, cmd.VoidReason) } };
         }
 
         private async Task<SupportQueryResults> Handle(SearchSupportsQuery query)
