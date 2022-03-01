@@ -57,6 +57,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.wizardType = this.evacueeSessionService.getWizardType();
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
+    this.stepEssFileService.paperESSFile =
+      this.evacueeSearchService.paperBasedEssFile;
 
     this.createEvacDetailsForm();
     this.checkAddress();
