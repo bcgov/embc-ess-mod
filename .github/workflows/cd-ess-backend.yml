@@ -84,3 +84,4 @@ jobs:
           docker tag $IMAGE_ID:temp $IMAGE_ID:$VERSION
           docker tag $IMAGE_ID:temp $IMAGE_ID:$TAG
           docker push $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$TAG          
