@@ -51,7 +51,7 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            {{Supplier.City}}, {{Supplier.PostalCode}}<br />
+                            {{Supplier.City}}{{#if Supplier.PostalCode}} , {{Supplier.PostalCode}}{{/if}}<br />
                             <strong>Phone:</strong> {{Supplier.Telephone}}
                         </div>
                     </div>

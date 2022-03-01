@@ -9,6 +9,8 @@ import { Support } from './support';
  * Evacuation File
  */
 export interface EvacuationFile {
+  completedBy?: null | string;
+  completedOn?: null | string;
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
   externalReferenceId?: null | string;

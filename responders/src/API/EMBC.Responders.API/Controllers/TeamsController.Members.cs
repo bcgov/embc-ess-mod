@@ -95,6 +95,7 @@ namespace EMBC.Responders.API.Controllers
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
             teamMember.TeamId = teamId;
+            var member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember);
             var updatedMemberId = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)

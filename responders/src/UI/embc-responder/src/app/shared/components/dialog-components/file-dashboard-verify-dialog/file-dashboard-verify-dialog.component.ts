@@ -5,8 +5,10 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
-import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { ProfileSecurityQuestionsService } from 'src/app/feature-components/search/profile-security-questions/profile-security-questions.service';
 
 @Component({
   selector: 'app-file-dashboard-verify-dialog',
@@ -15,14 +17,20 @@ import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.m
 })
 export class FileDashboardVerifyDialogComponent implements OnInit {
   @Input() content: DialogContent;
-  @Input() profileData?: RegistrantProfileModel;
+  @Input() profileData: EvacuationFileHouseholdMember;
   @Output() outputEvent = new EventEmitter<string>();
   verificationForm: FormGroup;
+  hasSecurityQues = false;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private evacueeSessionService: EvacueeSessionService,
+    private profileSecurityQuestionsService: ProfileSecurityQuestionsService
+  ) {}
 
   ngOnInit(): void {
     this.createVerificationForm();
+    this.checkForSecurityQues(this.profileData.id);
   }
 
   createVerificationForm(): void {
@@ -40,6 +48,22 @@ export class FileDashboardVerifyDialogComponent implements OnInit {
 
   close(): void {
     this.outputEvent.emit('close');
+  }
+
+  checkForSecurityQues(id: string) {
+    this.profileSecurityQuestionsService.getSecurityQuestions(id).subscribe({
+      next: (results) => {
+        if (results.questions.length === 0) {
+          this.hasSecurityQues = false;
+        } else {
+          this.hasSecurityQues = true;
+        }
+      }
+    });
+  }
+
+  isOptionDisabled(): boolean {
+    return this.evacueeSessionService.isPaperBased || !this.hasSecurityQues;
   }
 
   /**
