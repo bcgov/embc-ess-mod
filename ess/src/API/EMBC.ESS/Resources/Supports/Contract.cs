@@ -33,7 +33,7 @@ namespace EMBC.ESS.Resources.Supports
 
     public class ManageSupportCommandResult
     {
-        public string Id { get; set; }
+        public IEnumerable<string> Ids { get; set; }
     }
 
     public class SaveEvacuationFileSupportCommand : ManageSupportCommand

@@ -484,28 +484,37 @@ namespace EMBC.ESS.Managers.Events
                 support.CreatedOn = DateTime.UtcNow;
             }
 
-            //Not ideal solution - the IDs are concatenated by CaseRepository to ensure
-            //all supports are created in a single transaction
             var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = cmd.FileId,
                 Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
-            })).Id.Split(';');
+            })).Ids;
 
-            var printRequestId = await printingRepository.Manage(new SavePrintRequest
+            try
             {
-                PrintRequest = new ReferralPrintRequest
+                var printRequestId = await printingRepository.Manage(new SavePrintRequest
                 {
-                    FileId = cmd.FileId,
-                    SupportIds = supportIds,
-                    IncludeSummary = cmd.IncludeSummaryInReferralsPrintout,
-                    RequestingUserId = requestingUser.Id,
-                    Type = ReferralPrintType.New,
-                    Comments = "Process supports"
+                    PrintRequest = new ReferralPrintRequest
+                    {
+                        FileId = cmd.FileId,
+                        SupportIds = supportIds,
+                        IncludeSummary = cmd.IncludeSummaryInReferralsPrintout,
+                        RequestingUserId = requestingUser.Id,
+                        Type = ReferralPrintType.New,
+                        Comments = "Process supports"
+                    }
+                });
+                return printRequestId;
+            }
+            catch (Exception)
+            {
+                //try to deactivate the supports if failed to create the print request
+                foreach (var id in supportIds)
+                {
+                    await supportRepository.Manage(new VoidEvacuationFileSupportCommand { FileId = cmd.FileId, SupportId = id, VoidReason = Resources.Supports.SupportVoidReason.ErrorOnPrintedReferral });
                 }
-            });
-
-            return printRequestId;
+                throw;
+            }
         }
 
         public async Task<string> Handle(ProcessPaperSupportsCommand cmd)
@@ -538,7 +547,7 @@ namespace EMBC.ESS.Managers.Events
             {
                 FileId = cmd.FileId,
                 Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
-            })).Id.Split(';');
+            })).Ids;
 
             // no print request is returned
             return string.Empty;
@@ -555,7 +564,7 @@ namespace EMBC.ESS.Managers.Events
                 FileId = cmd.FileId,
                 SupportId = cmd.SupportId,
                 VoidReason = Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString())
-            })).Id;
+            })).Ids.SingleOrDefault();
             return id;
         }
 

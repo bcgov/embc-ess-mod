@@ -51,8 +51,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = newSupports })).Id.Split(';');
-            newSupportIds.Length.ShouldBe(newSupports.Length);
+            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = newSupports })).Ids;
+            newSupportIds.Count().ShouldBe(newSupports.Length);
 
             var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
                 .Items.Where(s => s is Referral r && (r.SupplierNotes ?? string.Empty).StartsWith(uniqueId))
@@ -127,8 +127,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = paperSupports })).Id.Split(';');
-            newSupportIds.Length.ShouldBe(paperSupports.Length);
+            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = paperSupports })).Ids;
+            newSupportIds.Count().ShouldBe(paperSupports.Length);
 
             var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
                 .Items.Where(s => s is Referral r && (r.SupplierNotes ?? string.Empty).StartsWith(uniqueId))
