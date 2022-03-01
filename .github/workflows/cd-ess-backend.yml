@@ -59,7 +59,7 @@ jobs:
           # Get latest version from tag
           TAG=${{ steps.tag_version.outputs.new_tag }}
 
-          tar -czh . | docker build --tag $IMAGE_ID:temp --cache-from=$IMAGE_ID -e VERSION=$TAG -
+          tar -czh . | docker build --tag $IMAGE_ID:temp --cache-from=$IMAGE_ID --build-arg VERSION=$TAG -
 
       - name: Push image
         run: |
