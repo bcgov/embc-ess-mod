@@ -42,20 +42,21 @@ namespace EMBC.ESS.Utilities.Cache
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation("start cache lockers prunning");
+            await Task.CompletedTask;
+            logger.LogDebug("start cache lockers prunning");
             var prunned = 0;
             foreach (var item in this)
             {
                 if (item.Value.CurrentCount == 1)
                 {
-                    TryRemove(item.Key, out var locker);
-                    locker.Dispose();
-                    prunned++;
+                    if (TryRemove(item.Key, out var locker))
+                    {
+                        locker.Dispose();
+                        prunned++;
+                    }
                 }
             }
-
-            logger.LogInformation("end cache lockers prunning: {0} prunned", prunned);
-            await Task.CompletedTask;
+            logger.LogDebug("end cache lockers prunning: {0} prunned", prunned);
         }
     }
 }
