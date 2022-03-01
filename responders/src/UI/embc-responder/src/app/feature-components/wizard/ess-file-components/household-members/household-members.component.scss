@@ -80,6 +80,10 @@ td.mat-footer-cell {
   border-bottom-style: none !important;
 }
 
+::ng-deep .mat-checkbox-inner-container {
+  background-color: white;
+}
+
 ::ng-deep mat-row,
 mat-header-row,
 mat-footer-row {
