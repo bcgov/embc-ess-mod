@@ -5,6 +5,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TaskSearchService } from '../task-search/task-search.service';
 import { EvacueeSearchService } from './evacuee-search.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { EssTaskModel } from '../../../core/models/ess-task.model';
 
 @Component({
   selector: 'app-evacuee-search',
@@ -63,10 +64,14 @@ export class EvacueeSearchComponent implements OnInit {
   private checkTaskStatus(): void {
     const taskNumber = this.userService?.currentProfile?.taskNumber;
     this.taskSearchService.searchTask(taskNumber).subscribe({
-      next: (result) => {
+      next: (result: EssTaskModel) => {
         this.isLoading = !this.isLoading;
         this.showDataEntryComponent = !this.showDataEntryComponent;
-        this.userService.updateTaskNumber(result.id, result.status);
+        this.userService.updateTaskNumber(
+          result.id,
+          result.status,
+          result.communityName
+        );
         this.evacueeSessionService.isPaperBased =
           result.status === 'Expired' ? true : false;
       },

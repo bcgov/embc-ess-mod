@@ -111,6 +111,24 @@ namespace EMBC.Tests.Integration.ESS.Managers
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task RemoveLabel_TeamMemberWithLabel_LabelRemoved()
+        {
+            var memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            if (string.IsNullOrEmpty(memberToUpdate.Label))
+            {
+                memberToUpdate.Label = "Volunteer";
+                await adminManager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
+                memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            }
+            memberToUpdate.Label.ShouldNotBeNull();
+            memberToUpdate.Label = null;
+            await adminManager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
+
+            var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            updatedMember.Label.ShouldBeNull();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanDeleteTeamMember()
         {
             var now = DateTime.UtcNow;
@@ -378,7 +396,14 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Deactivate_Suppliers_ReturnsSupplierId()
         {
-            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = TestData.TeamId, SupplierId = TestData.SupplierCId });
+            var supplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
+
+            if (supplier.Team == null)
+            {
+                await adminManager.Handle(new ClaimSupplierCommand { SupplierId = supplier.Id, TeamId = TestData.OtherTeamId });
+            }
+
+            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = TestData.OtherTeamId, SupplierId = TestData.SupplierCId });
 
             results.ShouldBe(TestData.SupplierCId);
 

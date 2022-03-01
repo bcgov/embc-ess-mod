@@ -39,9 +39,9 @@ namespace EMBC.ESS.Resources.Suppliers
 
         public async Task<SupplierCommandResult> ManageSupplier(SupplierCommand cmd)
         {
-            return cmd.GetType().Name switch
+            return cmd switch
             {
-                nameof(SaveSupplier) => await HandleSaveSupplier((SaveSupplier)cmd),
+                SaveSupplier c => await HandleSaveSupplier(c),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -91,7 +91,7 @@ namespace EMBC.ESS.Resources.Suppliers
             foreach (var ts in supplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
                 ts.era_active = cmd.Supplier.Status == SupplierStatus.Active;
-                ts.era_isprimarysupplier = cmd.Supplier.Team.Id != null ? ts._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id) : false;
+                ts.era_isprimarysupplier = cmd.Supplier.Team?.Id != null ? ts._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id) : false;
             }
 
             AddTeamSuppliers(existingSupplier, supplier);

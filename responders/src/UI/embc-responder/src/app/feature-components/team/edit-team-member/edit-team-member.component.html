@@ -147,7 +147,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Optional Label</mat-label>
                 <mat-select formControlName="label">
-                  <mat-option>--Select Label</mat-option>
+                  <mat-option [value]="null">--Select Label--</mat-option>
                   <mat-option *ngFor="let label of labels" [value]="label.code">
                     {{ label?.description }}
                   </mat-option>
