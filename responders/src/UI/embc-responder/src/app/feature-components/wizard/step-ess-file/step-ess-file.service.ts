@@ -644,6 +644,8 @@ export class StepEssFileService {
 
     // Evacuation Details tab
     this.paperESSFile = undefined;
+    this.completedBy = undefined;
+    this.completedOnVal = undefined;
     this.evacuatedFromPrimary = undefined;
     this.evacAddress = undefined;
     this.facilityName = undefined;
@@ -930,6 +932,15 @@ export class StepEssFileService {
       }
       if (tab.name === 'household-members') {
         tab.status = 'incomplete';
+      }
+      if (
+        this.securityPhrase === null ||
+        this.securityPhrase === undefined ||
+        this.securityPhrase === ''
+      ) {
+        if (tab.name === 'security-phrase') {
+          tab.status = 'not-started';
+        }
       }
       return tab;
     });
