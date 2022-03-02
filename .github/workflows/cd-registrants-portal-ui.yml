@@ -32,24 +32,27 @@ jobs:
 
       - name: Build image
         working-directory: ./registrants/src/UI
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
-
+        run: |
+          # Get latest version from tag
+          TAG=${{ steps.tag_version.outputs.new_tag }}
+          tar -czh . | docker build --tag $IMAGE_ID:temp --cache-from=$IMAGE_ID --build-arg VERSION=$TAG -
+          
       - name: Push image
         run: |
+          # Get latest version from tag
+          TAG=${{ steps.tag_version.outputs.new_tag }}
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
-
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          echo TAG=${{ steps.tag_version.outputs.new_tag }}
+          docker tag $IMAGE_ID:temp $IMAGE_ID:$VERSION
+          docker tag $IMAGE_ID:temp $IMAGE_ID:$TAG
           docker push $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$TAG
