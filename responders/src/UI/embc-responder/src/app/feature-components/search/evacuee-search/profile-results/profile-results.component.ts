@@ -88,14 +88,12 @@ export class ProfileResultsComponent
           'responder-access/search/evacuee-profile-dashboard'
         ]);
       } else {
-        this.evacueeSearchResultsService.overlayIsLoading =
-          !this.evacueeSearchResultsService.overlayIsLoading;
+        this.evacueeSearchResultsService.setloadingOverlay(true);
         this.profileSecurityQuestionsService
           .getSecurityQuestions(this.evacueeSessionService.profileId)
           .subscribe({
             next: (results) => {
-              this.evacueeSearchResultsService.overlayIsLoading =
-                !this.evacueeSearchResultsService.overlayIsLoading;
+              this.evacueeSearchResultsService.setloadingOverlay(false);
               if (results.questions.length === 0) {
                 this.openUnableAccessDialog();
               } else {
@@ -104,14 +102,15 @@ export class ProfileResultsComponent
                 );
                 this.evacueeSessionService.securityQuestionsOpenedFrom =
                   'responder-access/search/evacuee';
-                this.router.navigate([
-                  'responder-access/search/security-questions'
-                ]);
+                setTimeout(() => {
+                  this.router.navigate([
+                    'responder-access/search/security-questions'
+                  ]);
+                }, 200);
               }
             },
             error: (error) => {
-              this.evacueeSearchResultsService.overlayIsLoading =
-                !this.evacueeSearchResultsService.overlayIsLoading;
+              this.evacueeSearchResultsService.setloadingOverlay(false);
               this.alertService.clearAlert();
               this.alertService.setAlert(
                 'danger',

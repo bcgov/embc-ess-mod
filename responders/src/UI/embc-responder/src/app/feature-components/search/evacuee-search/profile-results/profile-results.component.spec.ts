@@ -274,9 +274,11 @@ describe('ProfileResultsComponent', () => {
       component.openProfile(mockProfileSearchResult);
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-questions'
-      ]);
+      setTimeout(() => {
+        expect(router.navigate).toHaveBeenCalledWith([
+          'responder-access/search/security-questions'
+        ]);
+      }, 500);
     }
   ));
 });
