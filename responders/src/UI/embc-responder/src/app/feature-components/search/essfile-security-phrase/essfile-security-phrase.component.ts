@@ -15,7 +15,6 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { Location } from '@angular/common';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { EvacueeSearchResultsService } from '../evacuee-search/evacuee-search-results/evacuee-search-results.service';
 
 @Component({
   selector: 'app-essfile-security-phrase',
@@ -40,8 +39,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private alertService: AlertService,
     private cacheService: CacheService,
     private location: Location,
-    private customValidation: CustomValidationService,
-    private evacueeSearchResultsService: EvacueeSearchResultsService
+    private customValidation: CustomValidationService
   ) {}
 
   ngOnInit(): void {
