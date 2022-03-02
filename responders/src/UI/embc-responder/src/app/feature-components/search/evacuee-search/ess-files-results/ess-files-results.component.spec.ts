@@ -240,9 +240,11 @@ describe('EssFilesResultsComponent', () => {
       component.openESSFile(mockDigitalEssFileResult);
       fixture.detectChanges();
 
-      expect(router.navigate).toHaveBeenCalledWith([
-        'responder-access/search/security-phrase'
-      ]);
+      setTimeout(() => {
+        expect(router.navigate).toHaveBeenCalledWith([
+          'responder-access/search/security-phrase'
+        ]);
+      }, 500);
     }
   ));
 
