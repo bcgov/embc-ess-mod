@@ -174,15 +174,16 @@ export class EvacueeProfileService {
       });
 
     const $result = profile$.pipe(
-      mergeMap((regResult) =>
-        this.linkMemberProfile({
+      mergeMap((regResult: RegistrationResult) => {
+        this.evacueeSessionService.profileId = regResult.id;
+        return this.linkMemberProfile({
           fileId: essFileId,
           linkRequest: {
             householdMemberId: memberId,
             registantId: regResult.id
           }
-        })
-      )
+        });
+      })
       // withLatestFrom(profile$),
       // map(([blob, regResult]) => {
       //   this.evacueeSessionService.profileId = regResult.id;
