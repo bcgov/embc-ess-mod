@@ -7,11 +7,9 @@ COPY ./embc-supplier/ .
 RUN npm run test -- --no-watch --no-progress
 RUN npm run build -- --prod
 
-#FROM caddy:builder AS caddy-builder
-#RUN caddy-builder
-
 FROM caddy:alpine as final
-#COPY --from=caddy-builder /usr/bin/caddy /usr/bin/caddy
+ARG VERSION
+ENV VERSION=$VERSION
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-supplier/ /site
 ENV API_URL=
