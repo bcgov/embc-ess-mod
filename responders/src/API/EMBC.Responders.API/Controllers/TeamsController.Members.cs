@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -126,9 +127,16 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
+            catch (ServerException ex)
+            {
+                if (ex.Type.Equals("EMBC.ESS.Shared.Contracts.NotFoundException"))
+                    return NotFound(ex.Message);
+                else
+                    return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
