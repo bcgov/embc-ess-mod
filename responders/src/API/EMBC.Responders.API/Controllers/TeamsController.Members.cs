@@ -115,15 +115,21 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMemberResult>> DeleteTeamMember(string memberId)
         {
-            if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
-
-            var reply = await client.Send(new DeleteTeamMemberCommand
+            try
             {
-                TeamId = teamId,
-                MemberId = memberId
-            });
-            if (reply == null) return NotFound(memberId);
-            return Ok(new TeamMemberResult { Id = memberId });
+                if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
+
+                var reply = await client.Send(new DeleteTeamMemberCommand
+                {
+                    TeamId = teamId,
+                    MemberId = memberId
+                });
+                return Ok(new TeamMemberResult { Id = memberId });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         /// <summary>
