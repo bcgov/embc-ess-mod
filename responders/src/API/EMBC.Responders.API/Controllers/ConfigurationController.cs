@@ -104,7 +104,7 @@ namespace EMBC.Responders.API.Controllers
             if (!string.IsNullOrEmpty(forEnumType))
             {
                 var type = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.Name.Equals(forEnumType, StringComparison.OrdinalIgnoreCase) && t.IsEnum).FirstOrDefault();
-                if (type == null) return NotFound(new ProblemDetails { Detail = $"enum '{forEnumType}' not found" });
+                if (type == null) return NotFound(forEnumType);
                 var values = EnumDescriptionHelper.GetEnumDescriptions(type);
                 return Ok(values.Select(e => new Code { Type = type.Name, Value = e.Value, Description = e.Description }).ToArray());
             }

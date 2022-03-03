@@ -15,8 +15,10 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
+using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.Utilities.Messaging
@@ -50,6 +52,16 @@ namespace EMBC.Utilities.Messaging
             catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
             {
                 throw new NotFoundException(e.Message, e.CorrelationId);
+            }
+            catch (ServerException e) when (e.Type == typeof(UsernameAlreadyExistsException).FullName)
+            {
+                //TODO - better handling to not double up the base string - no access to the userName property here
+                throw new UsernameAlreadyExistsException(e.Message.Split(' ').Last().Replace("'", string.Empty));
+            }
+            catch (ServerException e) when (e.Type == typeof(CommunitiesAlreadyAssignedException).FullName)
+            {
+                //TODO - already assigned communities are not making it here
+                throw new CommunitiesAlreadyAssignedException(Enumerable.Empty<string>());
             }
             catch (ServerException e)
             {

@@ -77,10 +77,18 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> AssignCommunities([FromBody] IEnumerable<string> communityCodes)
         {
-            await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
-            return Ok();
+            try
+            {
+                await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
+                return Ok();
+            }
+            catch (CommunitiesAlreadyAssignedException)
+            {
+                return Conflict(communityCodes);
+            }
         }
 
         /// <summary>

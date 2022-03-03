@@ -48,7 +48,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
 
-            if (file == null) return NotFound();
+            if (file == null) return NotFound(fileId);
 
             foreach (var note in file.Notes)
             {
@@ -231,7 +231,7 @@ namespace EMBC.Responders.API.Controllers
                 FileId = fileId
             })).Items.FirstOrDefault();
 
-            if (file == null) return NotFound();
+            if (file == null) return NotFound(fileId);
 
             return Ok(new GetSecurityPhraseResponse { SecurityPhrase = file.SecurityPhrase });
         }
