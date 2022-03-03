@@ -14,18 +14,22 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.Utilities.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace EMBC.ESS.Utilities.Cache
+namespace EMBC.Utilities.Caching
 {
-    public class Configuration : IConfigureComponentServices
+    public interface ICache
     {
-        public void ConfigureServices(ConfigurationServices configurationServices)
-        {
-            configurationServices.Services.AddSingleton(sp => new CacheSyncManager(sp.GetRequiredService<ILogger<CacheSyncManager>>()));
-            configurationServices.Services.AddSingleton<ICache, Cache>();
-        }
+        Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default);
+
+        Task<T?> Get<T>(string key, CancellationToken cancellationToken = default);
+
+        Task Set<T>(string key, T value, TimeSpan expiration, CancellationToken cancellationToken = default);
+
+        Task Remove(string key, CancellationToken cancellationToken = default);
+
+        Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default);
     }
 }

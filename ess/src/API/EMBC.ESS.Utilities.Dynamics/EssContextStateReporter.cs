@@ -16,7 +16,7 @@
 
 using System;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Cache;
+using EMBC.Utilities.Caching;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
