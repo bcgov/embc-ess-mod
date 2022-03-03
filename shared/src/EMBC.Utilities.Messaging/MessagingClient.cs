@@ -47,6 +47,10 @@ namespace EMBC.Utilities.Messaging
                 var response = await dispatcherClient.DispatchAsync<string>(command);
                 return response;
             }
+            catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
+            {
+                throw new NotFoundException(e.Message, e.CorrelationId);
+            }
             catch (ServerException e)
             {
                 logger.LogError(e, "Server error when sending command {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
@@ -69,7 +73,7 @@ namespace EMBC.Utilities.Messaging
             }
             catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
             {
-                return default;
+                throw new NotFoundException(e.Message, e.CorrelationId);
             }
             catch (ServerException e)
             {

@@ -253,7 +253,7 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpPost("files/{fileId}/link")]
-        public async Task<ActionResult> LinkRegistrantToHouseholdMember(string fileId, RegistrantLinkRequest request)
+        public async Task<ActionResult<string>> LinkRegistrantToHouseholdMember(string fileId, RegistrantLinkRequest request)
         {
             var res = await messagingClient.Send(new LinkRegistrantCommand { FileId = fileId, RegistantId = request.RegistantId, HouseholdMemberId = request.HouseholdMemberId });
             return Ok(res);

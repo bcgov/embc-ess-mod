@@ -21,9 +21,9 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.Utilities.Extensions;
-using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -127,16 +127,9 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
-            catch (ServerException ex)
+            catch (NotFoundException e)
             {
-                if (ex.Type.Equals("EMBC.ESS.Shared.Contracts.NotFoundException"))
-                    return NotFound(ex.Message);
-                else
-                    return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+                return NotFound(new ProblemDetails { Title = e.Message });
             }
         }
 
