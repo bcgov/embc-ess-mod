@@ -28,8 +28,9 @@
 
 	respond /version 200 {
 		body: {
-			version: {$VERSION}
+			version: '{$VERSION}'
 		}
+		close
 	}
 
 	route {
