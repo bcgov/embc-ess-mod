@@ -12,6 +12,28 @@
           <p class="subsection-heading">Evacuation Details</p>
         </div>
       </div>
+      <ng-container *ngIf="essFile?.isPaper">
+        <div class="row row-align">
+          <div class="col-md-4">Paper ESS File Number</div>
+          <div class="col-md-8 bold">
+            {{ essFile?.externalReferenceId }}
+          </div>
+        </div>
+        <div class="row row-align">
+          <div class="col-md-4">Paper ESS File Created by</div>
+          <div class="col-md-8 bold">
+            {{ essFile?.completedBy }}
+          </div>
+        </div>
+        <div class="row row-align">
+          <div class="col-md-4">Paper ESS File Created on</div>
+          <div class="col-md-8 bold" *ngIf="essFile?.completedOn">
+            {{ essFile?.completedOn | date: 'dd-MMM-yyyy' }}
+            at
+            {{ essFile?.completedOn | date: 'shortTime' }}
+          </div>
+        </div>
+      </ng-container>
       <div class="row row-align">
         <div class="col-md-4">Evacuated From</div>
         <div class="col-md-8">
