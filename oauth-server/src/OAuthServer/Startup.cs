@@ -257,6 +257,12 @@ namespace OAuthServer
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
+                endpoints.Map("/version", async ctx =>
+                {
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.StatusCode = (int)HttpStatusCode.OK;
+                    await ctx.Response.WriteAsJsonAsync(new { version = Environment.GetEnvironmentVariable("VERSION") ?? "Unknown" });
+                });
             });
         }
 
