@@ -18,9 +18,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
-using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Caching;
+using EMBC.Utilities.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Resources.Metadata

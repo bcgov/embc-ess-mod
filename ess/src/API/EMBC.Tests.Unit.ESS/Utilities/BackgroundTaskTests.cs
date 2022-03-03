@@ -2,8 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Cache;
-using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Caching;
 using EMBC.Utilities.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
