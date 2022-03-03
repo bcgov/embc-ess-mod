@@ -17,14 +17,16 @@ export class DateConversionService {
   }
 
   createDateTimeString(date: string, time: string) {
-    const dateToDate = new Date(date);
-    const hours = +time.split(':', 1).pop();
-    const minutes = +time.split(':', 2).pop();
+    if (time && date) {
+      const dateToDate = new Date(date);
+      const hours = +time.split(':', 1).pop();
+      const minutes = +time.split(':', 2).pop();
 
-    dateToDate.setTime(dateToDate.getTime() + hours * 60 * 60 * 1000);
-    dateToDate.setTime(dateToDate.getTime() + minutes * 60 * 1000);
+      dateToDate.setTime(dateToDate.getTime() + hours * 60 * 60 * 1000);
+      dateToDate.setTime(dateToDate.getTime() + minutes * 60 * 1000);
 
-    return dateToDate.toISOString();
+      return dateToDate.toISOString();
+    }
   }
 
   /**
