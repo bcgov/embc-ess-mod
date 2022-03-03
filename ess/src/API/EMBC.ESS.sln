@@ -29,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{228A3FDB-BAD6-4EBF-A625-11E22938E1A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Caching", "EMBC.Utilities.Caching\EMBC.Utilities.Caching.csproj", "{827BC8E3-E64F-4E0D-A001-AB85DDF461F5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,10 +79,6 @@ Global
 		{A4D4C18C-5D20-423F-ADBA-29790276C142}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4D4C18C-5D20-423F-ADBA-29790276C142}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4D4C18C-5D20-423F-ADBA-29790276C142}.Release|Any CPU.Build.0 = Release|Any CPU
-		{827BC8E3-E64F-4E0D-A001-AB85DDF461F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{827BC8E3-E64F-4E0D-A001-AB85DDF461F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{827BC8E3-E64F-4E0D-A001-AB85DDF461F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{827BC8E3-E64F-4E0D-A001-AB85DDF461F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,7 +92,6 @@ Global
 		{0C90507C-DE99-47F8-BDC5-4153B61A1DA8} = {E5EDC676-4A91-48C0-BF38-D91F005ECD1A}
 		{518CBA05-C425-4190-82F7-84E8915A1C5B} = {E5EDC676-4A91-48C0-BF38-D91F005ECD1A}
 		{A4D4C18C-5D20-423F-ADBA-29790276C142} = {E5EDC676-4A91-48C0-BF38-D91F005ECD1A}
-		{827BC8E3-E64F-4E0D-A001-AB85DDF461F5} = {E5EDC676-4A91-48C0-BF38-D91F005ECD1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7030F633-EA46-4604-948A-65037D5A39B2}

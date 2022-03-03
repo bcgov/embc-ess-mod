@@ -24,7 +24,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Metadata;
-using EMBC.Utilities.Caching;
+using EMBC.ESS.Utilities.Cache;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;

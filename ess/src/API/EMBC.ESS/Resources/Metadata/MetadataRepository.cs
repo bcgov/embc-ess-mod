@@ -18,8 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
-using EMBC.Utilities.Caching;
 
 namespace EMBC.ESS.Resources.Metadata
 {

@@ -15,6 +15,10 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,5 +56,24 @@ namespace EMBC.Utilities.Configuration
     public interface IHaveGrpcServices
     {
         Type[] GetGrpcServiceTypes();
+    }
+
+    public interface IBackgroundTask
+    {
+        public string Schedule { get; }
+        public int DegreeOfParallelism { get; }
+        public TimeSpan InitialDelay { get; }
+        TimeSpan InactivityTimeout { get; }
+
+        public Task ExecuteAsync(CancellationToken cancellationToken);
+    }
+
+    public static class DiscoveryEx
+    {
+        public static Type[] Discover<I>(this Assembly assembly) =>
+            assembly.DefinedTypes.Where(t => t.IsClass && !t.IsAbstract && t.IsPublic && typeof(I).IsAssignableFrom(t)).ToArray();
+
+        public static I[] CreateInstancesOf<I>(this Assembly assembly) =>
+            assembly.Discover<I>().Select(t => (I)Activator.CreateInstance(t)).ToArray();
     }
 }

@@ -29,7 +29,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\EMBC.ESS\EMBC.ESS.csproj" />
-        <ProjectReference Include="..\EMBC.Utilities.Caching\EMBC.Utilities.Caching.csproj" />
         <ProjectReference Include="..\EMBC.Utilities.Hosting\EMBC.Utilities.Hosting.csproj" />
     </ItemGroup>
 </Project>

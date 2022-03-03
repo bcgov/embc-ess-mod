@@ -22,8 +22,21 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.Utilities.Caching
+namespace EMBC.ESS.Utilities.Cache
 {
+    public interface ICache
+    {
+        Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default);
+
+        Task<T?> Get<T>(string key, CancellationToken cancellationToken = default);
+
+        Task Set<T>(string key, T value, TimeSpan expiration, CancellationToken cancellationToken = default);
+
+        Task Remove(string key, CancellationToken cancellationToken = default);
+
+        Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default);
+    }
+
     internal class Cache : ICache
     {
         private readonly IDistributedCache cache;

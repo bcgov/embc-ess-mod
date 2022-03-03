@@ -24,7 +24,6 @@ using System.Reflection;
 using System.Runtime;
 using System.Text.Json;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Extensions;
 using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
