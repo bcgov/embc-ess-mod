@@ -77,7 +77,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AssignCommunities([FromBody] IEnumerable<string> communityCodes)
         {
             try
@@ -87,7 +87,7 @@ namespace EMBC.Responders.API.Controllers
             }
             catch (CommunitiesAlreadyAssignedException)
             {
-                return Conflict(communityCodes);
+                return BadRequest(communityCodes);
             }
         }
 

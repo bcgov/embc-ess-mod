@@ -151,7 +151,7 @@ namespace EMBC.Responders.API.Controllers
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            if (registrant == null || registrant == null) return NotFound(registrantId);
+            if (registrant == null) return NotFound(registrantId);
 
             return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.SecurityQuestions) });
         }

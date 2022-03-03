@@ -71,7 +71,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("members")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TeamMemberResult>> CreateTeamMember([FromBody] TeamMember teamMember)
         {
             try
@@ -85,7 +85,7 @@ namespace EMBC.Responders.API.Controllers
             }
             catch (UsernameAlreadyExistsException e)
             {
-                return Conflict(e.Message);
+                return BadRequest(e.Message);
             }
         }
 
@@ -98,7 +98,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("members/{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TeamMemberResult>> UpdateTeamMember(string memberId, [FromBody] TeamMember teamMember)
         {
             try
@@ -113,7 +113,7 @@ namespace EMBC.Responders.API.Controllers
             }
             catch (UsernameAlreadyExistsException e)
             {
-                return Conflict(e.Message);
+                return BadRequest(e.Message);
             }
         }
 
