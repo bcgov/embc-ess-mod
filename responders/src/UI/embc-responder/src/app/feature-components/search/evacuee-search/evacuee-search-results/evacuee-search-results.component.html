@@ -282,5 +282,5 @@
 </ng-template>
 
 <app-overlay-loader
-  [showLoader]="evacueeSearchResultsService.overlayIsLoading"
+  [showLoader]="evacueeSearchResultsService.getloadingOverlay() | async"
 ></app-overlay-loader>

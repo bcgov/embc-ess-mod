@@ -97,20 +97,21 @@ export class EssFilesResultsComponent
       } else if (
         !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {
-        this.evacueeSearchResultsService.overlayIsLoading =
-          !this.evacueeSearchResultsService.overlayIsLoading;
+        this.evacueeSearchResultsService.setloadingOverlay(true);
         this.essFileSecurityPhraseService
           .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
           .subscribe({
             next: (results) => {
-              this.evacueeSearchResultsService.overlayIsLoading =
-                !this.evacueeSearchResultsService.overlayIsLoading;
+              this.evacueeSearchResultsService.setloadingOverlay(false);
               this.essFileSecurityPhraseService.securityPhrase = results;
-              this.router.navigate(['responder-access/search/security-phrase']);
+              setTimeout(() => {
+                this.router.navigate([
+                  'responder-access/search/security-phrase'
+                ]);
+              }, 200);
             },
             error: (error) => {
-              this.evacueeSearchResultsService.overlayIsLoading =
-                !this.evacueeSearchResultsService.overlayIsLoading;
+              this.evacueeSearchResultsService.setloadingOverlay(false);
               this.alertService.clearAlert();
               this.alertService.setAlert(
                 'danger',

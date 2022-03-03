@@ -18,7 +18,7 @@
           The answers are not case sensitive and do not include any special
           characters.
         </p>
-        <form [formGroup]="securityQuestionsForm">
+        <form [formGroup]="securityQuestionsForm" *ngIf="securityQuestions">
           <div class="row row-space">
             <div class="col-md-8">
               <app-security-question-card
