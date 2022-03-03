@@ -20,6 +20,7 @@ using System.IO.Abstractions;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
@@ -242,6 +243,12 @@ namespace EMBC.Suppliers.API
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
+                endpoints.Map("/version", async ctx =>
+                {
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.StatusCode = (int)HttpStatusCode.OK;
+                    await ctx.Response.WriteAsync(JsonSerializer.Serialize(new { version = Environment.GetEnvironmentVariable("VERSION") ?? "Unknown" }));
+                });
             });
         }
 
