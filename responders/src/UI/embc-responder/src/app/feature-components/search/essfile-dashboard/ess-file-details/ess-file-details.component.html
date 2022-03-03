@@ -16,21 +16,21 @@
         <div class="row row-align">
           <div class="col-md-4">Paper ESS File Number</div>
           <div class="col-md-8 bold">
-            {{ essFile?.id }}
+            {{ essFile?.externalReferenceId }}
           </div>
         </div>
         <div class="row row-align">
           <div class="col-md-4">Paper ESS File Created by</div>
           <div class="col-md-8 bold">
-            {{ essFile?.needsAssessment.reviewingTeamMemberDisplayName }}
+            {{ essFile?.completedBy }}
           </div>
         </div>
         <div class="row row-align">
           <div class="col-md-4">Paper ESS File Created on</div>
-          <div class="col-md-8 bold">
-            {{ essFile?.needsAssessment.createdOn | date: 'dd-MMM-yyyy' }}
+          <div class="col-md-8 bold" *ngIf="essFile?.completedOn">
+            {{ essFile?.completedOn | date: 'dd-MMM-yyyy' }}
             at
-            {{ essFile?.needsAssessment.createdOn | date: 'shortTime' }}
+            {{ essFile?.completedOn | date: 'shortTime' }}
           </div>
         </div>
       </ng-container>
