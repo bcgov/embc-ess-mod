@@ -30,8 +30,8 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
-import { DatePipe } from '@angular/common';
 import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
+import { DateConversionService } from 'src/app/core/services/dateConversion.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -57,9 +57,9 @@ export class StepSupportsService {
     private locationService: LocationsService,
     private dialog: MatDialog,
     private referralService: ReferralCreationService,
-    private datePipe: DatePipe,
     private evacueeSearchService: EvacueeSearchService,
-    private registrationsService: RegistrationsService
+    private registrationsService: RegistrationsService,
+    private dateConversionService: DateConversionService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -259,14 +259,14 @@ export class StepSupportsService {
     const support: Support = {
       issuedBy: this.supportDetails.issuedBy,
       issuedOn: this.supportDetails.issuedOn,
-      from: this.convertDateTimeToString(
+      from: this.dateConversionService.createDateTimeString(
         this.supportDetails.fromDate,
         this.supportDetails.fromTime
       ),
       includedHouseholdMembers: members,
       needsAssessmentId: this.evacFile.id,
       status: SupportStatus.Draft,
-      to: this.convertDateTimeToString(
+      to: this.dateConversionService.createDateTimeString(
         this.supportDetails.toDate,
         this.supportDetails.toTime
       ),
@@ -373,53 +373,6 @@ export class StepSupportsService {
     } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {
       return globalConst.clothingRateSheet;
     }
-  }
-
-  /**
-   * Converts dates strings to ISOString
-   *
-   * @param date the date to convert
-   * @param time the time to add to the ISOString
-   * @returns a ISOString with a valid Date format
-   */
-  convertDateTimeToString(date: string, time: string): string {
-    const dateToDate = new Date(date);
-    const hours = +time.split(':', 1).pop();
-    const minutes = +time.split(':', 2).pop();
-
-    dateToDate.setTime(dateToDate.getTime() + hours * 60 * 60 * 1000);
-    dateToDate.setTime(dateToDate.getTime() + minutes * 60 * 1000);
-
-    return dateToDate.toISOString();
-  }
-
-  /**
-   * Converts Date object into a valid date format for datepickers
-   *
-   * @param date the date object
-   * @returns a valid date format for datepicker
-   */
-  convertStringToDate(date: any): Date {
-    if (typeof date === 'object') {
-      date = this.datePipe.transform(date, 'dd-MMM-yyyy');
-    }
-
-    const months = {
-      jan: 0,
-      feb: 1,
-      mar: 2,
-      apr: 3,
-      may: 4,
-      jun: 5,
-      jul: 6,
-      aug: 7,
-      sep: 8,
-      oct: 9,
-      nov: 10,
-      dec: 11
-    };
-    const p = date.split('-');
-    return new Date(p[2], months[p[1].toLowerCase()], p[0]);
   }
 
   getNeedsAssessmentInfo(
