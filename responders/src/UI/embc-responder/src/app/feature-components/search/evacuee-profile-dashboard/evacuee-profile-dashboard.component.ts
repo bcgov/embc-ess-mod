@@ -90,7 +90,6 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Verifies the evacuee
    */
   verifyEvacuee(): void {
-    this.isLoading = !this.isLoading;
     this.dialog
       .open(DialogComponent, {
         data: {
@@ -212,12 +211,13 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Calls the API to verify the Registrant Profile
    */
   private verifyProfile(): void {
+    this.isLoading = !this.isLoading;
     this.evacueeProfileService
       .setVerifiedStatus(this.evacueeProfileId, true)
       .subscribe({
         next: (evacueeProfile) => {
           this.evacueeProfile = evacueeProfile;
-          console.log(this.evacueeProfile);
+          // console.log(this.evacueeProfile);
           this.isLoading = !this.isLoading;
           this.openSuccessModal(globalConst.successfulVerification);
         },
