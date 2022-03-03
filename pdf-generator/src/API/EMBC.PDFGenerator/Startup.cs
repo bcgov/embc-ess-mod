@@ -14,13 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using EMBC.PDFGenerator.Utilities.PdfGenerator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -85,7 +88,12 @@ namespace EMBC.PDFGenerator
                 endpoints.MapGrpcService<PdfService>();
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
-                endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
+                endpoints.Map("/version", async ctx =>
+                {
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.StatusCode = (int)HttpStatusCode.OK;
+                    await ctx.Response.WriteAsJsonAsync(new { version = Environment.GetEnvironmentVariable("VERSION") ?? "Unknown" });
+                });
             });
         }
     }

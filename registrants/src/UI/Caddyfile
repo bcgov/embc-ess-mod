@@ -26,11 +26,12 @@
 
 	encode zstd gzip
 
-	respond /version 200 {
-		body: {
-			version: {$VERSION}
-		}
-	}
+	# respond /version 200 {
+	# 	body: {
+	# 		version: '{$VERSION}'
+	# 	}
+	# 	close
+	# }
 
 	route {
 		reverse_proxy /api* {$API_URL}
