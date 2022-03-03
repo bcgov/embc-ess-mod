@@ -1,4 +1,4 @@
-name: cd-registrants-portal-ui
+name: cd-registrants-portal-api
 
 on:
   push:
@@ -6,12 +6,12 @@ on:
       - master
 
     paths:
-      - "registrants/src/UI/**"
-      - ".github/workflows/cd-registrants-portal-ui.yml"
+      - "registrants/src/API/**"
+      - ".github/workflows/cd-registrants-portal-api.yml"
 
 env:
-  IMAGE_NAME: registrants-portal-ui
-  WORKING_DIRECTORY: ./registrants/src/UI
+  IMAGE_NAME: registrants-portal-api
+  WORKING_DIRECTORY: ./registrants/src/API
 
 jobs:
   build:
@@ -57,7 +57,7 @@ jobs:
           echo DOCKER_REPOSITORY=${{ env.DOCKER_REPOSITORY }}
           echo VERSION=$VERSION          
  
-          tar -czh . | docker build --tag ${{ env.DOCKER_REPOSITORY }}:latest --cache-from=${{ env.DOCKER_REPOSITORY }}:latest --build-arg VERSION=$TAG -
+          tar -czh . | docker build --tag ${{ env.DOCKER_REPOSITORY }}:latest --cache-from=${{ env.DOCKER_REPOSITORY }}:latest --build-arg VERSION=$VERSION -
           docker tag ${{ env.DOCKER_REPOSITORY }}:latest ${{ env.DOCKER_REPOSITORY }}:$VERSION
 
       - name: Push image
