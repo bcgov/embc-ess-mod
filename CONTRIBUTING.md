@@ -62,3 +62,10 @@ All csproj files must have the following settings:
 *TBD: describe how to link .editorconfig and stylecop.json*
 
 ### Angular applications
+
+## Versioning
+
+Each component has its own semantic versioning scheme. The version is maintained  by git  tags in the format `<image name>=v<version>`.
+The individual CD workflow automatically promote the version of each component using [Angular commit message conventions](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines).
+
+The version will be set as an environment variable in the generated container image, and the image will also be tagged with the version when pushed to the image registry.
