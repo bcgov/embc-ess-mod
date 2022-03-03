@@ -3,6 +3,8 @@ WORKDIR /app
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://*:8080;
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+ARG VERSION
+ENV VERSION=$VERSION
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 # install diagnostics tools

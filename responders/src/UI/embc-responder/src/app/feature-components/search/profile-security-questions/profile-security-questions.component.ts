@@ -31,7 +31,6 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   correctAnswerFlag = false;
   showLoader = false;
   color = '#169BD5';
-  // isLoading = true;
 
   constructor(
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
@@ -52,10 +51,29 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
       this.profileSecurityQuestionsService.shuffledSecurityQuestions;
 
     if (
-      this.securityQuestions === undefined ||
+      this.evacueeSessionService.profileId === undefined &&
       this.securityQuestions === undefined
     ) {
       this.router.navigate(['responder-access/search/evacuee']);
+    } else if (this.securityQuestions === undefined) {
+      this.profileSecurityQuestionsService
+        .getSecurityQuestions(this.evacueeSessionService.profileId)
+        .subscribe({
+          next: (results) => {
+            this.profileSecurityQuestionsService.shuffleSecurityQuestions(
+              results?.questions
+            );
+            this.securityQuestions =
+              this.profileSecurityQuestionsService.shuffledSecurityQuestions;
+          },
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.securityQuestionsError
+            );
+          }
+        });
     }
   }
 
