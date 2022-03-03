@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -23,7 +22,6 @@ import {
 import { RegistrationsService } from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
-import * as moment from 'moment';
 import {
   Billeting,
   Clothing,
@@ -41,6 +39,7 @@ import {
   Community,
   LocationsService
 } from 'src/app/core/services/locations.service';
+import { DateConversionService } from 'src/app/core/services/dateConversion.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExistingSupportDetailsService {
@@ -48,7 +47,7 @@ export class ExistingSupportDetailsService {
     private registrationService: RegistrationsService,
     private locationService: LocationsService,
     public stepSupportsService: StepSupportsService,
-    public datePipe: DatePipe
+    private dateConversionService: DateConversionService
   ) {}
 
   voidSupport(
@@ -106,12 +105,6 @@ export class ExistingSupportDetailsService {
         return this.mapMember(id, needsAssessmentForSupport);
       });
 
-    const milliseconds = moment(
-      this.datePipe.transform(selectedSupport.to, 'yyyy-MM-dd')
-    ).diff(this.datePipe.transform(selectedSupport.from, 'yyy-MM-dd'));
-
-    const days = milliseconds / 86400000;
-
     const referralDelivery = selectedSupport as Referral;
     const name = referralDelivery.issuedToPersonName.split(',');
     const issuedToVal = needsAssessmentForSupport.householdMembers.find(
@@ -145,10 +138,17 @@ export class ExistingSupportDetailsService {
       issuedOn: selectedSupport.issuedOn,
       fromDate: selectedSupport.from,
       toDate: selectedSupport.to,
-      toTime: this.datePipe.transform(selectedSupport.to, 'HH:mm'),
-      fromTime: this.datePipe.transform(selectedSupport.from, 'HH:mm'),
+      toTime: this.dateConversionService.convertDateTimeToTime(
+        selectedSupport.to
+      ),
+      fromTime: this.dateConversionService.convertDateTimeToTime(
+        selectedSupport.from
+      ),
       members,
-      noOfDays: days,
+      noOfDays: this.dateConversionService.getNoOfDays(
+        selectedSupport.to,
+        selectedSupport.from
+      ),
       referral: this.createReferral(selectedSupport)
     };
 

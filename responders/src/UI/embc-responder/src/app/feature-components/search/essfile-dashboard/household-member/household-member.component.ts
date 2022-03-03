@@ -80,6 +80,7 @@ export class HouseholdMemberComponent implements OnInit {
         )
         .subscribe({
           next: (value: LinkRegistrantProfileModel[]) => {
+            console.log(value);
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
             if (value.length > 0) {

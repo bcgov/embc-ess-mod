@@ -12,6 +12,7 @@
         formControlName="verified"
         aria-labelledby="verified-radio-group-label"
         class="primary-radio-group"
+        (change)="isVerified($event)"
         required
       >
         <mat-radio-button [value]="'Yes'"
@@ -39,6 +40,13 @@
       >
         Please make a selection
       </div>
+
+      <div
+        class="field-error"
+        *ngIf="!noIdFlag && evacueeSessionService?.isPaperBased"
+      >
+        Evacuee identification must be provided to access the profile
+      </div>
     </form>
   </div>
 </div>
@@ -49,7 +57,7 @@
       {{ content?.cancelButton }}
     </button>
   </div>
-  <div class="col-md-6">
+  <div *ngIf="noIdFlag" class="col-md-6">
     <button class="button-p button-width" mat-button (click)="verify()">
       {{ content?.confirmButton }}
     </button>

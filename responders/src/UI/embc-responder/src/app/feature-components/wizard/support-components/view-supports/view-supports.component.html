@@ -12,7 +12,12 @@
       <p>
         <span class="bold p-margin">{{ supportList?.length }} support(s)</span>
         have been recorded for Evacuation File #
-        {{ stepSupportsService?.evacFile?.id }} within the ERA Tool.
+        {{
+          evacueeSessionService?.isPaperBased
+            ? stepSupportsService?.evacFile?.externalReferenceId
+            : stepSupportsService?.evacFile?.id
+        }}
+        within the ERA Tool.
       </p>
     </div>
   </div>
