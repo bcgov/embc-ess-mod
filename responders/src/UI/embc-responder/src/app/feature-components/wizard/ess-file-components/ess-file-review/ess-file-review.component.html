@@ -31,7 +31,8 @@
             <div *ngIf="evacueeSessionService?.isPaperBased" class="row">
               <div class="col-4">Paper ESS File Created on</div>
               <div class="col-8 bold">
-                {{ stepEssFileService?.completedOn }}
+                {{ stepEssFileService?.completedOn | date: 'dd-MMM-yyyy' }} at
+                {{ stepEssFileService?.completedOn | date: 'hh:mm a' }}
               </div>
             </div>
 

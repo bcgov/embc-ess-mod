@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { MatRadioChange } from '@angular/material/radio';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -21,16 +22,17 @@ export class FileDashboardVerifyDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();
   verificationForm: FormGroup;
   hasSecurityQues = false;
+  noIdFlag = true;
 
   constructor(
     private formBuilder: FormBuilder,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService
   ) {}
 
   ngOnInit(): void {
     this.createVerificationForm();
-    this.checkForSecurityQues(this.profileData.id);
+    this.checkForSecurityQues(this.profileData.linkedRegistrantId);
   }
 
   createVerificationForm(): void {
@@ -77,6 +79,19 @@ export class FileDashboardVerifyDialogComponent implements OnInit {
       if (this.verificationForm.get('verified').value) {
         this.outputEvent.emit(this.verificationForm.get('verified').value);
       }
+    }
+  }
+
+  /**
+   * Enables message flag is no identification is provided
+   *
+   * @param $event radio button change event
+   */
+  isVerified($event: MatRadioChange): void {
+    if ($event.value === 'No') {
+      this.noIdFlag = false;
+    } else {
+      this.noIdFlag = true;
     }
   }
 }

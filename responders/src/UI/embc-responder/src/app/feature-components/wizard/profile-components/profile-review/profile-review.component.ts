@@ -20,6 +20,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { SecurityQuestion } from 'src/app/core/api/models';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { EvacueeMetaDataModel } from 'src/app/core/models/evacuee-metadata.model';
 
 @Component({
   selector: 'app-profile-review',
@@ -136,6 +137,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         next: (profile: RegistrantProfileModel) => {
           this.disableButton = true;
           this.saveLoader = false;
+          this.setProfileMetaData(profile.id);
           this.createNewProfileDialog(profile);
         },
         error: (error) => {
@@ -160,6 +162,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         next: (profile) => {
           this.disableButton = true;
           this.saveLoader = false;
+          this.setProfileMetaData(this.evacueeSessionService.profileId); //TODO-Sue
           this.memberProfileDialog();
         },
         error: (error) => {
@@ -202,6 +205,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
           this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
           this.disableButton = true;
           this.saveLoader = false;
+          this.setProfileMetaData(profile.id);
 
           switch (this.evacueeSessionService.getWizardType()) {
             case WizardType.NewRegistration:
@@ -280,5 +284,15 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
+  }
+
+  private setProfileMetaData(registrantId: string) {
+    const metaData: EvacueeMetaDataModel = {
+      firstName: this.stepEvacueeProfileService?.personalDetails?.firstName,
+      lastName: this.stepEvacueeProfileService?.personalDetails?.lastName,
+      registrantId,
+      fileId: null
+    };
+    this.evacueeSessionService.evacueeMetaData = metaData;
   }
 }
