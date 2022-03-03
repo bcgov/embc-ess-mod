@@ -26,12 +26,12 @@
 
 	encode zstd gzip
 
-	respond /version 200 {
-		body: {
-			version: '{$VERSION}'
-		}
-		close
-	}
+	# respond /version 200 {
+	# 	body: {
+	# 		version: '{$VERSION}'
+	# 	}
+	# 	close
+	# }
 
 	file_server
 }
