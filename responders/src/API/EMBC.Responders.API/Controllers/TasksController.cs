@@ -72,9 +72,9 @@ namespace EMBC.Responders.API.Controllers
                 var suppliers = (await messagingClient.Send(new SuppliersListQuery { TaskId = taskId })).Items;
                 return Ok(mapper.Map<IEnumerable<SuppliersListItem>>(suppliers));
             }
-            catch (NotFoundException e)
+            catch (NotFoundException)
             {
-                return NotFound(new ProblemDetails { Title = e.Message });
+                return NotFound(taskId);
             }
         }
     }

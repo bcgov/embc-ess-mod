@@ -16,6 +16,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace EMBC.ESS.Shared.Contracts.Team
 {
@@ -132,23 +134,30 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public bool IsActive { get; set; }
     }
 
+    [Serializable]
     public class CommunitiesAlreadyAssignedException : BusinessValidationException
     {
+        public CommunitiesAlreadyAssignedException(string message) : base(message) { }
         public CommunitiesAlreadyAssignedException(IEnumerable<string> communities) : base("Communitie are already assigned to another team")
         {
             Communities = communities;
         }
 
-        public IEnumerable<string> Communities { get; }
+        public IEnumerable<string> Communities { get; } = Array.Empty<string>();
+
+        protected CommunitiesAlreadyAssignedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
+    [Serializable]
     public class UsernameAlreadyExistsException : BusinessValidationException
     {
-        public UsernameAlreadyExistsException(string userName) : base($"Another user is already using username '{userName}'")
+        public UsernameAlreadyExistsException(string message) : base(message)
         {
-            UserName = userName;
+            UserName = message;
         }
 
         public string UserName { get; }
+
+        protected UsernameAlreadyExistsException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }
