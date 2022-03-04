@@ -53,11 +53,6 @@ namespace EMBC.Utilities.Messaging
             {
                 throw new NotFoundException(e.Message, e.CorrelationId);
             }
-            catch (ServerException e) when (e.Type == typeof(CommunitiesAlreadyAssignedException).FullName)
-            {
-                //TODO - already assigned communities are not making it here
-                throw new CommunitiesAlreadyAssignedException(Enumerable.Empty<string>());
-            }
             catch (ServerException e)
             {
                 logger.LogError(e, "Server error when sending command {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
