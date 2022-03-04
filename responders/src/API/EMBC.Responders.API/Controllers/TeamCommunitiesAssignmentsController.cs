@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Team;
@@ -85,9 +86,9 @@ namespace EMBC.Responders.API.Controllers
                 await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
                 return Ok();
             }
-            catch (Exception)
+            catch (CommunitiesAlreadyAssignedException e)
             {
-                return BadRequest(communityCodes);
+                return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = string.Join(',', e.Communities) });
             }
         }
 

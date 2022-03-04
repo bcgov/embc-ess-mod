@@ -83,9 +83,9 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
-            catch (Exception e)
+            catch (UsernameAlreadyExistsException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(e.UserName);
             }
         }
 
@@ -111,9 +111,9 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = updatedMemberId });
             }
-            catch (Exception e)
+            catch (UsernameAlreadyExistsException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(e.UserName);
             }
         }
 

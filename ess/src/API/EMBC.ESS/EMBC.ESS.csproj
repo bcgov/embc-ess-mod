@@ -11,7 +11,7 @@
         <PackageLicenseExpression></PackageLicenseExpression>
         <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
         <RepositoryType>GIT</RepositoryType>
-        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 

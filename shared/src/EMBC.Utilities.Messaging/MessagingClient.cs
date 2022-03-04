@@ -49,14 +49,9 @@ namespace EMBC.Utilities.Messaging
                 var response = await dispatcherClient.DispatchAsync<string>(command);
                 return response;
             }
-            catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
+            catch (EssApplicationException e)
             {
-                throw new NotFoundException(e.Message, e.CorrelationId);
-            }
-            catch (ServerException e)
-            {
-                logger.LogError(e, "Server error when sending command {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
-                throw;
+                throw e;
             }
             catch (Exception e)
             {
@@ -73,14 +68,9 @@ namespace EMBC.Utilities.Messaging
                 var response = await dispatcherClient.DispatchAsync<TResponse>(command);
                 return response;
             }
-            catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
+            catch (EssApplicationException e)
             {
-                throw new NotFoundException(e.Message, e.CorrelationId);
-            }
-            catch (ServerException e)
-            {
-                logger.LogError(e, "Server error when sending query {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
-                throw;
+                throw e;
             }
             catch (Exception e)
             {

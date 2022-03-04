@@ -19,6 +19,8 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
+using EMBC.ESS.Shared.Contracts;
 using Google.Protobuf;
 using Grpc.Core;
 
@@ -35,25 +37,25 @@ namespace EMBC.Utilities.Messaging
                 Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(content))
             };
             var response = await dispatcherClient.DispatchAsync(request, new CallOptions(deadline: DateTime.UtcNow.AddSeconds(118)));
-            if (response.Error) throw new ServerException(response.CorrelationId, response.ErrorType, response.ErrorMessage, response.ErrorDetails);
-            if (response.Empty || string.IsNullOrEmpty(response.Type)) return default;
-            var responseType = Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
-            using var ms = new MemoryStream(response.Data.ToByteArray());
-            return (TReply?)JsonSerializer.Deserialize(ms, responseType);
+            if (response.Error)
+            {
+                var errorType = Type.GetType(response.ErrorType, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
+                var exception = (Exception)(Activator.CreateInstance(errorType, response.ErrorMessage) ?? null!);
+                throw exception;
+                //var serializer = new System.Runtime.Serialization.DataContractSerializer(errorType);
+                //using var ms = new MemoryStream(response.Data.ToByteArray());
+                //ms.Position = 0;
+                //var reader = XmlDictionaryReader.CreateTextReader(ms, XmlDictionaryReaderQuotas.Max);
+                //var exception = (Exception)(serializer.ReadObject(reader) ?? null!);
+                //throw exception;
+            }
+            else
+            {
+                if (response.Empty || string.IsNullOrEmpty(response.Type)) return default;
+                var responseType = Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
+                using var ms = new MemoryStream(response.Data.ToByteArray());
+                return (TReply?)JsonSerializer.Deserialize(ms, responseType);
+            }
         }
-    }
-
-    public class ServerException : Exception
-    {
-        public ServerException(string correlationId, string type, string message, string details) : base(message)
-        {
-            CorrelationId = correlationId;
-            Type = type;
-            Details = details;
-        }
-
-        public string CorrelationId { get; }
-        public string Type { get; }
-        public string Details { get; }
     }
 }
