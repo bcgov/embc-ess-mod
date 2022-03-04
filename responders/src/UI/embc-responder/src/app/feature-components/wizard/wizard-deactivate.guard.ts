@@ -24,12 +24,4 @@ export class WizardDeactivateGuard implements CanDeactivate<WizardComponent> {
     //this.clearCachedServices();
     return true;
   }
-
-  private clearCachedServices() {
-    this.cacheService.remove('wizardMenu');
-    this.cacheService.remove('wizardType');
-    this.cacheService.remove('wizardOpenedFrom');
-    this.evacueeSessionService.setMemberFlag(null);
-    this.evacueeSessionService.setEditWizardFlag(null);
-  }
 }
