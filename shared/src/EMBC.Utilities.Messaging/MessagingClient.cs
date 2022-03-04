@@ -49,9 +49,9 @@ namespace EMBC.Utilities.Messaging
                 var response = await dispatcherClient.DispatchAsync<string>(command);
                 return response;
             }
-            catch (EssApplicationException e)
+            catch (EssApplicationException)
             {
-                throw e;
+                throw;
             }
             catch (Exception e)
             {
@@ -68,9 +68,9 @@ namespace EMBC.Utilities.Messaging
                 var response = await dispatcherClient.DispatchAsync<TResponse>(command);
                 return response;
             }
-            catch (EssApplicationException e)
+            catch (EssApplicationException)
             {
-                throw e;
+                throw;
             }
             catch (Exception e)
             {

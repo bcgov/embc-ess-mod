@@ -71,7 +71,6 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("members")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TeamMemberResult>> CreateTeamMember([FromBody] TeamMember teamMember)
         {
             try
@@ -98,11 +97,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("members/{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMemberResult>> UpdateTeamMember(string memberId, [FromBody] TeamMember teamMember)
         {
             try
             {
+                teamMember.Id = memberId;
                 teamMember.TeamId = teamId;
                 var member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember);
                 var updatedMemberId = await client.Send(new SaveTeamMemberCommand
@@ -110,6 +110,10 @@ namespace EMBC.Responders.API.Controllers
                     Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
                 });
                 return Ok(new TeamMemberResult { Id = updatedMemberId });
+            }
+            catch (NotFoundException)
+            {
+                return NotFound(memberId);
             }
             catch (UsernameAlreadyExistsException e)
             {

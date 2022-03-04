@@ -72,6 +72,11 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<string> Handle(SaveTeamMemberCommand cmd)
         {
+            if (!string.IsNullOrEmpty(cmd.Member.Id))
+            {
+                var existingMember = (await teamRepository.GetMembers(null, null, cmd.Member.Id)).SingleOrDefault();
+                if (existingMember == null) throw new NotFoundException(cmd.Member.Id);
+            }
             var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName, includeStatuses: activeAndInactiveStatus);
             //filter this user if exists
             if (cmd.Member.Id != null) teamMembersWithSameUserName = teamMembersWithSameUserName.Where(m => m.Id != cmd.Member.Id);

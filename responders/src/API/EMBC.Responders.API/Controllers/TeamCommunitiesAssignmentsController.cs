@@ -78,7 +78,6 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AssignCommunities([FromBody] IEnumerable<string> communityCodes)
         {
             try
