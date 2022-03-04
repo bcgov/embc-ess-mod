@@ -14,7 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace EMBC.ESS.Utilities.Extensions
@@ -32,5 +34,11 @@ namespace EMBC.ESS.Utilities.Extensions
                 }
             }
         }
+
+        public static Type[] Discover<I>(this Assembly assembly) =>
+         assembly.DefinedTypes.Where(t => t.IsClass && !t.IsAbstract && t.IsPublic && typeof(I).IsAssignableFrom(t)).ToArray();
+
+        public static I[] CreateInstancesOf<I>(this Assembly assembly) =>
+            assembly.Discover<I>().Select(t => (I)Activator.CreateInstance(t)).ToArray();
     }
 }

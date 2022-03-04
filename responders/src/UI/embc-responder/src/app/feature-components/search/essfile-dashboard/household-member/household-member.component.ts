@@ -18,8 +18,6 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
-import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
 import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
 
 @Component({
@@ -37,7 +35,8 @@ export class HouseholdMemberComponent implements OnInit {
   matchedProfiles: LinkRegistrantProfileModel[];
   linkedFlag = false;
   public color = '#169BD5';
-  hasSecurityQues = false;
+  selectedHouseholdMember: LinkRegistrantProfileModel;
+  displayLinks: string;
 
   constructor(
     private dialog: MatDialog,
@@ -82,13 +81,16 @@ export class HouseholdMemberComponent implements OnInit {
           next: (value: LinkRegistrantProfileModel[]) => {
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
-            if (value.length > 0) {
-              this.linkedFlag = !this.linkedFlag;
+            if (value.length > 1) {
+              this.linkedFlag = true;
             }
             if (value.length === 1) {
-              this.hasSecurityQues = value[0].hasSecurityQuestions;
+              this.selectedHouseholdMember = value[0];
             }
-            this.isLoading = !this.isLoading;
+            setTimeout(() => {
+              this.linkedProfileDisplay(houseHoldMember);
+              this.isLoading = !this.isLoading;
+            }, 500);
           },
           error: (error) => {
             this.isLoading = !this.isLoading;
@@ -97,6 +99,11 @@ export class HouseholdMemberComponent implements OnInit {
           }
         });
     } else {
+      this.linkedFlag = false;
+      this.selectedHouseholdMember = undefined;
+      this.displayLinks = null;
+      this.matchedProfileCount = 0;
+      this.matchedProfiles = undefined;
       this.isLoading = !this.isLoading;
     }
   }
@@ -154,6 +161,32 @@ export class HouseholdMemberComponent implements OnInit {
       this.multipleMatchedRegistrantLink(
         this.createMultipleRegistrantModel(memberDetails)
       );
+    }
+  }
+
+  linkedProfileDisplay(file: EvacuationFileHouseholdMember): void {
+    if (
+      !this.evacueeSessionService?.isPaperBased &&
+      file?.linkedRegistrantId === null &&
+      !file?.isUnder19
+    ) {
+      if (this.matchedProfileCount === 0) {
+        this.displayLinks = 'create-profile';
+      } else if (
+        this.selectedHouseholdMember?.hasSecurityQuestions &&
+        this.matchedProfileCount === 1
+      ) {
+        this.displayLinks = 'link-profile';
+      } else if (this.linkedFlag) {
+        this.displayLinks = 'link-profile';
+      } else if (
+        !this.selectedHouseholdMember?.hasSecurityQuestions &&
+        this.matchedProfileCount === 1
+      ) {
+        this.displayLinks = 'no-security-questions';
+      }
+    } else {
+      this.displayLinks = null;
     }
   }
 

@@ -18,10 +18,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.ESS.Utilities.Cache
+namespace EMBC.Utilities.Caching
 {
     internal class CacheSyncManager : ConcurrentDictionary<string, SemaphoreSlim>, IBackgroundTask
     {
