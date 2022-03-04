@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
@@ -30,7 +31,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             this.essContextFactory = essContextFactory;
         }
 
-        public async Task<VersionInformation> Get()
+        public async Task<IEnumerable<VersionInformation>> Get()
         {
             await Task.CompletedTask;
             string? version = null;
@@ -43,10 +44,9 @@ namespace EMBC.ESS.Utilities.Dynamics
             {
             }
 
-            return new VersionInformation
+            return new[]
             {
-                Name = "Dynamics:ERAEntitySolution",
-                Version = version == null ? null : Version.Parse(version)
+                new VersionInformation { Name = "Dynamics:ERAEntitySolution", Version = version == null ? null : Version.Parse(version) }
             };
         }
     }

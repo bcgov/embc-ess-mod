@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
@@ -23,15 +24,14 @@ namespace EMBC.Utilities.Hosting
 {
     public class HostVersionInformationProvider : IVersionInformationProvider
     {
-        public async Task<VersionInformation> Get()
+        public async Task<IEnumerable<VersionInformation>> Get()
         {
             await Task.CompletedTask;
             var name = Environment.GetEnvironmentVariable("APP_NAME") ?? Assembly.GetEntryAssembly()?.GetName().Name;
             var version = Environment.GetEnvironmentVariable("VERSION");
-            return new VersionInformation
+            return new[]
             {
-                Name = name ?? null!,
-                Version = version == null ? null : Version.Parse(version)
+                new VersionInformation { Name = name ?? null!, Version = version == null ? null : Version.Parse(version) }
             };
         }
     }

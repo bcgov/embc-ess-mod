@@ -154,7 +154,7 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithSpan()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
 #if DEBUG
-                .WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
+            //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
 #endif
             ;
 
@@ -308,7 +308,7 @@ namespace EMBC.Utilities.Hosting
                 {
                     var versionInformationProviders = ctx.RequestServices.GetServices<IVersionInformationProvider>();
                     var versions = new List<VersionInformation>();
-                    await versionInformationProviders.ForEachAsync(10, async p => { versions.Add(await p.Get()); });
+                    await versionInformationProviders.ForEachAsync(10, async p => { versions.AddRange(await p.Get()); });
 
                     ctx.Response.ContentType = "application/json";
                     ctx.Response.StatusCode = (int)HttpStatusCode.OK;

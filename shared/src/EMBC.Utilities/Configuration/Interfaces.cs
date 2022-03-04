@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +58,7 @@ namespace EMBC.Utilities.Configuration
 
     public interface IVersionInformationProvider
     {
-        Task<VersionInformation> Get();
+        Task<IEnumerable<VersionInformation>> Get();
     }
 
     public class VersionInformation
