@@ -431,12 +431,14 @@ export class StepEssFileService {
    * @param status of the tab
    */
   public setTabStatus(name: string, status: string): void {
-    this.essTabs.map((tab) => {
-      if (tab.name === name) {
-        tab.status = status;
-      }
-      return tab;
-    });
+    if (this.essTabs !== undefined) {
+      this.essTabs.map((tab) => {
+        if (tab.name === name) {
+          tab.status = status;
+        }
+        return tab;
+      });
+    }
   }
 
   /**
@@ -969,7 +971,9 @@ export class StepEssFileService {
   }
 
   getNavLinks(name: string): TabModel {
-    return this.essTabs.find((tab) => tab.name === name);
+    if (this.essTabs !== undefined) {
+      return this.essTabs.find((tab) => tab.name === name);
+    }
   }
 
   updateEditedFormStatus() {

@@ -94,6 +94,30 @@ export class UserService {
     this.cacheService.remove('communityList');
     this.cacheService.remove('supportCategory');
     this.cacheService.remove('supportSubCategory');
+
+    this.cacheService.remove('registrantProfileId');
+    this.cacheService.remove('memberRegistration');
+    this.cacheService.remove('fileNumber');
+    this.cacheService.remove('securityQuestionsOpenedFrom');
+    this.cacheService.remove('fileLinkStatus');
+    this.cacheService.remove('fileLinkFlag');
+    this.cacheService.remove('fileLinkMetaData');
+    this.cacheService.remove('wizardType');
+    this.cacheService.remove('editWizardFlag');
+    this.cacheService.remove('memberFlag');
+    this.cacheService.remove('selectedSupplier');
+    this.cacheService.remove('essTeams');
+    this.cacheService.remove('selectedTeamMember');
+    this.cacheService.remove('wizardMenu');
+
+    this.cacheService.remove('groceriesReferral');
+    this.cacheService.remove('mealReferral');
+    this.cacheService.remove('taxiReferral');
+    this.cacheService.remove('otherReferral');
+    this.cacheService.remove('hotelMotelReferral');
+    this.cacheService.remove('billetingReferral');
+    this.cacheService.remove('groupReferral');
+    this.cacheService.remove('supportType');
     this.clearLocalStorage();
   }
 
