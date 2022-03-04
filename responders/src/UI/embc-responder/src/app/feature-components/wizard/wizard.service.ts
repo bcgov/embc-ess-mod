@@ -250,14 +250,16 @@ export class WizardService {
     const q1 = form.question1.value;
     const q2 = form.question2.value;
     const q3 = form.question3.value;
-    if (
-      q1 === initialValue[0].question &&
-      q2 === initialValue[1].question &&
-      q3 === initialValue[2].question
-    ) {
-      return false;
-    } else {
-      return true;
+    if (initialValue.length > 0) {
+      if (
+        q1 === initialValue[0].question &&
+        q2 === initialValue[1].question &&
+        q3 === initialValue[2].question
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
