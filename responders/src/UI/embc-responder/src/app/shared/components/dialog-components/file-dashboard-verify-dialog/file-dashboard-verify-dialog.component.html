@@ -41,10 +41,7 @@
         Please make a selection
       </div>
 
-      <div
-        class="field-error"
-        *ngIf="!noIdFlag && evacueeSessionService?.isPaperBased"
-      >
+      <div class="field-error" *ngIf="!noIdFlag">
         Evacuee identification must be provided to access the profile
       </div>
     </form>
