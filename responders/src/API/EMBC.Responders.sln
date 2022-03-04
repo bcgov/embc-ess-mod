@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Hosting", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Messaging", "EMBC.Utilities.Messaging\EMBC.Utilities.Messaging.csproj", "{B24977AD-4BE1-435F-ABB1-DB3DCB4817D9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Caching", "EMBC.Utilities.Caching\EMBC.Utilities.Caching.csproj", "{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,18 @@ Global
 		{B24977AD-4BE1-435F-ABB1-DB3DCB4817D9}.Release|x64.Build.0 = Release|Any CPU
 		{B24977AD-4BE1-435F-ABB1-DB3DCB4817D9}.Release|x86.ActiveCfg = Release|Any CPU
 		{B24977AD-4BE1-435F-ABB1-DB3DCB4817D9}.Release|x86.Build.0 = Release|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Debug|x64.Build.0 = Debug|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Debug|x86.Build.0 = Debug|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Release|x64.ActiveCfg = Release|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Release|x64.Build.0 = Release|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Release|x86.ActiveCfg = Release|Any CPU
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +121,7 @@ Global
 		{F597E63A-29DC-4580-B0DE-A1A653C07CDA} = {3ECB36C2-8031-4BFE-A9ED-E52083C52D12}
 		{DCCAFA88-D929-4174-9F96-6F5CBFB4853C} = {3ECB36C2-8031-4BFE-A9ED-E52083C52D12}
 		{B24977AD-4BE1-435F-ABB1-DB3DCB4817D9} = {3ECB36C2-8031-4BFE-A9ED-E52083C52D12}
+		{205D37E9-C2B9-461E-81C1-8C9F1A4583E1} = {3ECB36C2-8031-4BFE-A9ED-E52083C52D12}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {840E65EA-3E13-4EBF-968F-0780B9C62E2C}
