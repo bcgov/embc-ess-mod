@@ -26,12 +26,13 @@
 
 	encode zstd gzip
 
-	# respond /version 200 {
-	# 	body: {
-	# 		version: '{$VERSION}'
-	# 	}
-	# 	close
-	# }
+	route /version {
+		header content-type "application/json"
+		respond 200 {
+			body `{"version": "{$VERSION}"}`
+			close
+		}
+	}
 
 	file_server
 }
