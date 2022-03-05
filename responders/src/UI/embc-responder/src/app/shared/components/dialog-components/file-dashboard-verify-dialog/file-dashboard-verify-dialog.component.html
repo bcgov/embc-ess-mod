@@ -12,6 +12,7 @@
         formControlName="verified"
         aria-labelledby="verified-radio-group-label"
         class="primary-radio-group"
+        (change)="isVerified($event)"
         required
       >
         <mat-radio-button [value]="'Yes'"
@@ -22,7 +23,7 @@
           ><span class="radio-text"><b>No</b></span> - I did not see government
           issued identification.</mat-radio-button
         >
-        <mat-radio-button [value]="'answered'"
+        <mat-radio-button [disabled]="isOptionDisabled()" [value]="'answered'"
           ><span class="radio-text"><b>No</b></span> - I did not see government
           issued identification, but the evacuee has answered their security
           questions correctly.</mat-radio-button
@@ -39,6 +40,10 @@
       >
         Please make a selection
       </div>
+
+      <div class="field-error" *ngIf="!noIdFlag">
+        Evacuee identification must be provided to access the profile
+      </div>
     </form>
   </div>
 </div>
@@ -49,7 +54,7 @@
       {{ content?.cancelButton }}
     </button>
   </div>
-  <div class="col-md-6">
+  <div *ngIf="noIdFlag" class="col-md-6">
     <button class="button-p button-width" mat-button (click)="verify()">
       {{ content?.confirmButton }}
     </button>

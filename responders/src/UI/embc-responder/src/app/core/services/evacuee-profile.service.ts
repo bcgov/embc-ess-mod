@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
 import {
   EvacuationFileSearchResult,
@@ -167,25 +167,27 @@ export class EvacueeProfileService {
     regProfile: RegistrantProfile,
     memberId: string,
     essFileId: string
-  ): Observable<void> {
+  ): Observable<Blob> {
     const profile$ =
       this.registrationsService.registrationsCreateRegistrantProfile({
         body: regProfile
       });
+
     const $result = profile$.pipe(
-      mergeMap((regResult) =>
-        this.linkMemberProfile({
+      mergeMap((regResult: RegistrationResult) => {
+        this.evacueeSessionService.profileId = regResult.id;
+        return this.linkMemberProfile({
           fileId: essFileId,
           linkRequest: {
             householdMemberId: memberId,
             registantId: regResult.id
           }
-        })
-      ),
-      withLatestFrom(profile$),
-      map(([blob, regResult]) => {
-        this.evacueeSessionService.profileId = regResult.id;
+        });
       })
+      // withLatestFrom(profile$),
+      // map(([blob, regResult]) => {
+      //   this.evacueeSessionService.profileId = regResult.id;
+      // })
     );
     return $result;
   }

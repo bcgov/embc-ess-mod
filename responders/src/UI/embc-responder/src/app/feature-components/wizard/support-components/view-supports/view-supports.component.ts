@@ -49,7 +49,7 @@ export class ViewSupportsComponent implements OnInit {
     public referralService: ReferralCreationService,
     private wizardService: WizardService,
     private cd: ChangeDetectorRef,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private locationsService: LocationsService
   ) {
     if (this.router.getCurrentNavigation() !== null) {

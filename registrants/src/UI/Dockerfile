@@ -8,6 +8,8 @@ RUN npm run test -- --no-watch --no-progress
 RUN npm run build -- --configuration production
 
 FROM caddy:alpine as final
+ARG VERSION
+ENV VERSION=$VERSION
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-registrant/ /site
 ENV API_URL=

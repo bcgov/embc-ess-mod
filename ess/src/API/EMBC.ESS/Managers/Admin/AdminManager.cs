@@ -72,6 +72,11 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<string> Handle(SaveTeamMemberCommand cmd)
         {
+            if (!string.IsNullOrEmpty(cmd.Member.Id))
+            {
+                var existingMember = (await teamRepository.GetMembers(null, null, cmd.Member.Id)).SingleOrDefault();
+                if (existingMember == null) throw new NotFoundException(cmd.Member.Id);
+            }
             var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName, includeStatuses: activeAndInactiveStatus);
             //filter this user if exists
             if (cmd.Member.Id != null) teamMembersWithSameUserName = teamMembersWithSameUserName.Where(m => m.Id != cmd.Member.Id);
@@ -221,7 +226,7 @@ namespace EMBC.ESS.Managers.Admin
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
 
-            supplier.Team.Id = null;
+            if (supplier.Team != null && supplier.Team.Id != null) supplier.Team.Id = null;
             supplier.SharedWithTeams = Array.Empty<Resources.Suppliers.Team>();
             var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
 
@@ -296,7 +301,7 @@ namespace EMBC.ESS.Managers.Admin
                 SupplierId = cmd.SupplierId,
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
-            if (supplier.Team.Id == cmd.TeamId) throw new BusinessLogicException("Can not remove primary team");
+            if (supplier.Team?.Id == cmd.TeamId) throw new BusinessLogicException("Can not remove primary team");
             if (!supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new BusinessLogicException("Not shared with this team");
 
             supplier.SharedWithTeams = supplier.SharedWithTeams.Where(t => t.Id != cmd.TeamId);

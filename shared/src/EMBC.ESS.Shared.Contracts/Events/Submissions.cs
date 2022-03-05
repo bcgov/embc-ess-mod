@@ -154,6 +154,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
 
     public class PrintRequestQueryResult
     {
+        public string FileName { get; set; }
         public string ContentType { get; set; }
         public byte[] Content { get; set; }
         public DateTime PrintedOn { get; set; }

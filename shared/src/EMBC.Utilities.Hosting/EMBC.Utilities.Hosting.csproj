@@ -42,7 +42,7 @@
         <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
         <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
-        <PackageReference Include="Serilog.Enrichers.Span" Version="2.1.0" />
+        <PackageReference Include="Serilog.Enrichers.Span" Version="2.2.0" />
         <PackageReference Include="Serilog.Exceptions" Version="8.1.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
         <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
@@ -55,6 +55,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>EMBC.Tests.Unit.ESS</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
 
 </Project>

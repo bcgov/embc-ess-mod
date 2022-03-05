@@ -14,6 +14,28 @@
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Evacuation Details</label>
 
+            <div *ngIf="evacueeSessionService?.isPaperBased" class="row">
+              <div class="col-4">Paper ESS File Number</div>
+              <div class="col-8 bold">
+                {{ stepEssFileService?.paperESSFile }}
+              </div>
+            </div>
+
+            <div *ngIf="evacueeSessionService?.isPaperBased" class="row">
+              <div class="col-4">Paper ESS File Created by</div>
+              <div class="col-8 bold">
+                {{ stepEssFileService?.completedBy }}
+              </div>
+            </div>
+
+            <div *ngIf="evacueeSessionService?.isPaperBased" class="row">
+              <div class="col-4">Paper ESS File Created on</div>
+              <div class="col-8 bold">
+                {{ stepEssFileService?.completedOn | date: 'dd-MMM-yyyy' }} at
+                {{ stepEssFileService?.completedOn | date: 'hh:mm a' }}
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-4">Evacuated From</div>
               <div
@@ -362,7 +384,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div *ngIf="!evacueeSessionService?.isPaperBased" class="row">
         <div class="col-12">
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Security Phrase</label>

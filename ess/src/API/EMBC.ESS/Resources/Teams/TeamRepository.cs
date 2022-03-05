@@ -106,32 +106,24 @@ namespace EMBC.ESS.Resources.Teams
             var essTeam = EssTeam(Guid.Parse(teamMember.TeamId));
             if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new ArgumentException($"team {teamMember.TeamId} not found");
 
-            era_essteamuser essTeamUser;
-            if (teamMember.Id == null)
+            var essTeamUser = mapper.Map<era_essteamuser>(teamMember);
+
+            var existingMember = essTeamUser.era_essteamuserid.HasValue ? context.era_essteamusers
+                    .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == essTeamUser.era_essteamuserid.Value)
+                    .SingleOrDefault()
+                    : null;
+
+            context.DetachAll();
+
+            if (existingMember == null)
             {
-                essTeamUser = new era_essteamuser { era_essteamuserid = Guid.NewGuid() };
+                essTeamUser.era_essteamuserid = Guid.NewGuid();
                 context.AddToera_essteamusers(essTeamUser);
             }
             else
             {
-                essTeamUser = context.era_essteamusers
-                    .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == Guid.Parse(teamMember.Id))
-                    .SingleOrDefault();
-                if (essTeamUser == null) throw new ArgumentException($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
+                context.AttachTo(nameof(EssContext.era_essteamusers), essTeamUser);
             }
-
-            //TODO: move to automapper profile
-            essTeamUser.era_firstname = teamMember.FirstName;
-            essTeamUser.era_lastname = teamMember.LastName;
-            essTeamUser.era_email = teamMember.Email;
-            essTeamUser.era_phone = teamMember.Phone;
-            essTeamUser.era_externalsystemuser = teamMember.ExternalUserId;
-            essTeamUser.era_externalsystemtype = (int)ExternalSystemOptionSet.Bceid;
-            essTeamUser.era_externalsystemusername = teamMember.UserName;
-            essTeamUser.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
-            essTeamUser.era_label = string.IsNullOrEmpty(teamMember.Label) ? (int?)null : (int)Enum.Parse<TeamUserLabelOptionSet>(teamMember.Label);
-            essTeamUser.era_role = string.IsNullOrEmpty(teamMember.Role) ? (int?)null : (int)Enum.Parse<TeamUserRoleOptionSet>(teamMember.Role);
-            essTeamUser.era_lastsuccessfullogin = teamMember.LastSuccessfulLogin;
 
             if (teamMember.IsActive)
             {
@@ -143,6 +135,7 @@ namespace EMBC.ESS.Resources.Teams
             }
 
             context.UpdateObject(essTeamUser);
+            context.AttachTo(nameof(EssContext.era_essteams), essTeam);
             context.AddLink(essTeam, nameof(era_essteam.era_essteamuser_ESSTeamId), essTeamUser);
             await context.SaveChangesAsync();
 
@@ -159,20 +152,19 @@ namespace EMBC.ESS.Resources.Teams
 
             await context.LoadPropertyAsync(essTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
 
-            //delete current assigned communities
-            foreach (var community in essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID)
+            //delete assigned communities not in updated list
+            foreach (var community in essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.Where(ta => !team.AssignedCommunities.Any(c => c.Code == ta._era_jurisdictionid_value.ToString())))
             {
                 context.DeleteObject(community);
             }
 
-            //add all assigned communities
-            foreach (var community in team.AssignedCommunities)
+            //add newly assigned communities
+            foreach (var community in team.AssignedCommunities.Where(c => !essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.Any(ta => ta._era_jurisdictionid_value.ToString() == c.Code)))
             {
                 var teamArea = new era_essteamarea
                 {
                     era_essteamareaid = Guid.NewGuid(),
-                    era_ESSTeamID = essTeam,
-                    createdon = community.DateAssigned
+                    era_ESSTeamID = essTeam
                 };
                 context.AddToera_essteamareas(teamArea);
                 context.AddLink(essTeam, nameof(essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID), teamArea);

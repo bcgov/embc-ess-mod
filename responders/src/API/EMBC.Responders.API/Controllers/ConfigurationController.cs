@@ -23,7 +23,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Metadata;
-using EMBC.ESS.Utilities.Cache;
+using EMBC.Utilities.Caching;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
@@ -46,7 +46,7 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
         private readonly ICache cache;
-        private const int cacheDuration = 60 * 5; //5 minutes
+        private const int cacheDuration = 60 * 1; //1 minute
 
         public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache)
         {
@@ -68,7 +68,7 @@ namespace EMBC.Responders.API.Controllers
             var outageInfo = await cache.GetOrSet(
                 "outageInfo",
                 async () => (await client.Send(new OutageQuery { PortalType = PortalType.Responders })).OutageInfo,
-                TimeSpan.FromMinutes(5));
+                TimeSpan.FromSeconds(30));
 
             var config = new Configuration
             {
@@ -104,7 +104,7 @@ namespace EMBC.Responders.API.Controllers
             if (!string.IsNullOrEmpty(forEnumType))
             {
                 var type = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.Name.Equals(forEnumType, StringComparison.OrdinalIgnoreCase) && t.IsEnum).FirstOrDefault();
-                if (type == null) return NotFound(new ProblemDetails { Detail = $"enum '{forEnumType}' not found" });
+                if (type == null) return NotFound(forEnumType);
                 var values = EnumDescriptionHelper.GetEnumDescriptions(type);
                 return Ok(values.Select(e => new Code { Type = type.Name, Value = e.Value, Description = e.Description }).ToArray());
             }
@@ -176,7 +176,7 @@ namespace EMBC.Responders.API.Controllers
             var outageInfo = await cache.GetOrSet(
                 "outageInfo",
                 async () => (await client.Send(new OutageQuery { PortalType = PortalType.Responders })).OutageInfo,
-                TimeSpan.FromMinutes(5));
+                TimeSpan.FromSeconds(30));
             return Ok(mapper.Map<OutageInformation>(outageInfo));
         }
 

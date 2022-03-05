@@ -18,8 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
+using EMBC.Utilities.Caching;
 
 namespace EMBC.ESS.Resources.Metadata
 {
@@ -64,7 +64,7 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<OutageInformation>> GetPlannedOutages(OutageQuery query)
         {
-            return await cache.GetOrSet($"{PlannedOutagesCacheKey}:{query.PortalType}", () => internalRepository.GetPlannedOutages(query), TimeSpan.FromMinutes(5));
+            return await cache.GetOrSet($"{PlannedOutagesCacheKey}:{query.PortalType}", () => internalRepository.GetPlannedOutages(query), CacheEntryLifetime);
         }
     }
 }

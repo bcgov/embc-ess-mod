@@ -44,6 +44,8 @@ export class StepEssFileService {
 
   // Evacuation Details tab
   private paperESSFileVal: string;
+  private completedByVal?: string;
+  private completedOnVal?: string;
   private evacuatedFromPrimaryVal: string;
   private evacAddressVal: AddressModel;
   private facilityNameVal: string;
@@ -153,6 +155,20 @@ export class StepEssFileService {
   }
   public set paperESSFile(paperESSFileVal: string) {
     this.paperESSFileVal = paperESSFileVal;
+  }
+
+  public get completedBy(): string {
+    return this.completedByVal;
+  }
+  public set completedBy(completedByVal: string) {
+    this.completedByVal = completedByVal;
+  }
+
+  public get completedOn(): string {
+    return this.completedOnVal;
+  }
+  public set completedOn(completedOnVal: string) {
+    this.completedOnVal = completedOnVal;
   }
 
   public get evacuatedFromPrimary(): string {
@@ -415,12 +431,14 @@ export class StepEssFileService {
    * @param status of the tab
    */
   public setTabStatus(name: string, status: string): void {
-    this.essTabs.map((tab) => {
-      if (tab.name === name) {
-        tab.status = status;
-      }
-      return tab;
-    });
+    if (this.essTabs !== undefined) {
+      this.essTabs.map((tab) => {
+        if (tab.name === name) {
+          tab.status = status;
+        }
+        return tab;
+      });
+    }
   }
 
   /**
@@ -496,6 +514,8 @@ export class StepEssFileService {
     // Map out into DTO object and return
     return {
       primaryRegistrantId: this.evacueeSession.profileId,
+      completedBy: this.completedBy,
+      completedOn: this.completedOn,
       externalReferenceId: this.evacueeSession.isPaperBased
         ? this.evacueeSearchService.paperBasedEssFile
         : null,
@@ -583,25 +603,13 @@ export class StepEssFileService {
       canProvideIncidentals: needsIncidentalsDTO
     };
 
-    console.log({
-      primaryRegistrantId: this.evacueeSession.profileId,
-
-      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-        this.evacAddress
-      ),
-      registrationLocation: this.facilityName,
-
-      needsAssessment: needsObject,
-      securityPhrase: this.securityPhrase,
-      securityPhraseEdited: this.editedSecurityPhrase,
-      task: {
-        taskNumber:
-          this.taskNumber ?? this.userService.currentProfile?.taskNumber
-      }
-    });
-
     // Map out into DTO object and return
     return {
+      completedBy: this.completedBy,
+      completedOn: this.completedOn,
+      externalReferenceId: this.evacueeSession.isPaperBased
+        ? this.evacueeSearchService.paperBasedEssFile
+        : null,
       evacuationFileDate: this.evacuationFileDate,
       primaryRegistrantId: this.evacueeSession.profileId,
 
@@ -638,6 +646,8 @@ export class StepEssFileService {
 
     // Evacuation Details tab
     this.paperESSFile = undefined;
+    this.completedBy = undefined;
+    this.completedOnVal = undefined;
     this.evacuatedFromPrimary = undefined;
     this.evacAddress = undefined;
     this.facilityName = undefined;
@@ -703,6 +713,8 @@ export class StepEssFileService {
     this.evacueeSession.essFileNumber = essFile.id;
 
     // Evacuation Details tab
+    this.completedOn = essFile.completedOn;
+    this.completedBy = essFile.completedBy;
     this.evacAddress = essFile.evacuatedFromAddress;
     this.facilityName = essFile.registrationLocation;
 
@@ -923,6 +935,15 @@ export class StepEssFileService {
       if (tab.name === 'household-members') {
         tab.status = 'incomplete';
       }
+      if (
+        this.securityPhrase === null ||
+        this.securityPhrase === undefined ||
+        this.securityPhrase === ''
+      ) {
+        if (tab.name === 'security-phrase') {
+          tab.status = 'not-started';
+        }
+      }
       return tab;
     });
   }
@@ -950,7 +971,9 @@ export class StepEssFileService {
   }
 
   getNavLinks(name: string): TabModel {
-    return this.essTabs.find((tab) => tab.name === name);
+    if (this.essTabs !== undefined) {
+      return this.essTabs.find((tab) => tab.name === name);
+    }
   }
 
   updateEditedFormStatus() {

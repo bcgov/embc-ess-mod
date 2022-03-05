@@ -40,6 +40,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
+      <ProjectReference Include="..\EMBC.Utilities.Caching\EMBC.Utilities.Caching.csproj" />
       <ProjectReference Include="..\EMBC.Utilities.Hosting\EMBC.Utilities.Hosting.csproj" />
       <ProjectReference Include="..\EMBC.Utilities.Messaging\EMBC.Utilities.Messaging.csproj" />
     </ItemGroup>

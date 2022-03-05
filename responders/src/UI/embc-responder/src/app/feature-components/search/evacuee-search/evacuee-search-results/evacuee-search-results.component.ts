@@ -53,7 +53,9 @@ export class EvacueeSearchResultsComponent implements OnInit {
     this.searchForEvacuee(
       (this.evacueeSearchContext =
         this.evacueeSearchService.evacueeSearchContext),
-      (this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile)
+      (this.paperBasedEssFile = this.evacueeSessionService.isPaperBased
+        ? this.evacueeSearchService.paperBasedEssFile
+        : null)
     );
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
   }
@@ -90,8 +92,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
     evacueeSearchContext: EvacueeSearchContextModel,
     paperEssFile?: string
   ): void {
-    this.evacueeSearchResultsService.overlayIsLoading =
-      !this.evacueeSearchResultsService.overlayIsLoading;
+    this.evacueeSearchResultsService.setloadingOverlay(true);
     this.evacueeSearchResultsService
       .searchForEvacuee(
         evacueeSearchContext?.evacueeSearchParameters,
@@ -99,8 +100,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
       )
       .subscribe({
         next: (results) => {
-          this.evacueeSearchResultsService.overlayIsLoading =
-            !this.evacueeSearchResultsService.overlayIsLoading;
+          this.evacueeSearchResultsService.setloadingOverlay(false);
           this.fileResults = results?.files?.sort(
             (a, b) =>
               new Date(b.modifiedOn).valueOf() -
@@ -113,8 +113,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
           );
         },
         error: (errorEvacuee) => {
-          this.evacueeSearchResultsService.overlayIsLoading =
-            !this.evacueeSearchResultsService.overlayIsLoading;
+          this.evacueeSearchResultsService.setloadingOverlay(false);
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.evacueeSearchError);
         }

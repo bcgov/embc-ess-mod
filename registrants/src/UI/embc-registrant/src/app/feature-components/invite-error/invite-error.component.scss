@@ -8,13 +8,11 @@
     max-height: 100%;
   }
 }
-.text-content {
-  text-align: center;
-}
 
 .heading-padding {
   padding: 25px;
-  color: red;
+  font-size: 50px;
+  color: #234075;
 }
 
 @media screen and (max-width: 900px) {
@@ -50,7 +48,7 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 376px;
+  min-height: 250px;
   border: 1px solid #ccc;
   box-shadow: 0px 0px 15px -7px rgba(0, 0, 0, 0.76);
   padding: 45px 22px 40px 22px;
@@ -68,10 +66,8 @@ p {
   padding: 0 18px;
 }
 
-.register-without-card-title {
-  text-align: center;
-  font-size: 30px;
-  margin-bottom: 76px;
+.content-margin {
+  margin-bottom: 70px;
 }
 
 .btn-width {
@@ -80,7 +76,7 @@ p {
 
 @media screen and (min-width: 769px) {
   .register-without-card {
-    min-height: 376px;
+    min-height: 250px;
     border: 1px solid #ccc;
   }
 }

@@ -18,8 +18,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
+using EMBC.ESS.Shared.Contracts;
 using Google.Protobuf;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +45,6 @@ namespace EMBC.Utilities.Messaging
                 var messageHandler = serviceRegistry.Resolve(requestType);
                 if (messageHandler == null) throw new InvalidOperationException($"Message handler for {requestType} not found");
                 var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType ?? null!);
-                //var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType) ?? null!;
                 using var ms = new MemoryStream(request.Data.ToByteArray());
                 var requestMessage = await JsonSerializer.DeserializeAsync(ms, requestType) ?? null!;
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
@@ -52,11 +54,8 @@ namespace EMBC.Utilities.Messaging
                 {
                     CorrelationId = request.CorrelationId,
                     Type = replyType?.AssemblyQualifiedName ?? string.Empty,
-                    //Content = replyMessage == null
-                    //    ? Value.ForNull()
-                    //    : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
                     Data = replyMessage == null
-                        ? null
+                        ? ByteString.Empty
                         : UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(replyMessage)),
                     Empty = replyMessage == null
                 };
@@ -67,13 +66,19 @@ namespace EMBC.Utilities.Messaging
             }
             catch (Exception e)
             {
+                //var serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(EssApplicationException));
+                //using var ms = new MemoryStream();
+                //var writer = XmlDictionaryWriter.CreateTextWriter(ms);
+                //serializer.WriteObject(writer, e);
+
                 var reply = new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
                     Error = true,
-                    ErrorType = e.GetType().FullName,
+                    ErrorType = e.GetType().AssemblyQualifiedName,
                     ErrorMessage = e.Message,
-                    ErrorDetails = e.ToString()
+                    ErrorDetails = e.ToString(),
+                    //Data = UnsafeByteOperations.UnsafeWrap(ms.ToArray())
                 };
                 sw.Stop();
 

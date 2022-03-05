@@ -48,7 +48,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
 
-            if (file == null) return NotFound();
+            if (file == null) return NotFound(fileId);
 
             foreach (var note in file.Notes)
             {
@@ -231,7 +231,7 @@ namespace EMBC.Responders.API.Controllers
                 FileId = fileId
             })).Items.FirstOrDefault();
 
-            if (file == null) return NotFound();
+            if (file == null) return NotFound(fileId);
 
             return Ok(new GetSecurityPhraseResponse { SecurityPhrase = file.SecurityPhrase });
         }
@@ -253,7 +253,7 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpPost("files/{fileId}/link")]
-        public async Task<ActionResult> LinkRegistrantToHouseholdMember(string fileId, RegistrantLinkRequest request)
+        public async Task<ActionResult<string>> LinkRegistrantToHouseholdMember(string fileId, RegistrantLinkRequest request)
         {
             var res = await messagingClient.Send(new LinkRegistrantCommand { FileId = fileId, RegistantId = request.RegistantId, HouseholdMemberId = request.HouseholdMemberId });
             return Ok(res);
@@ -275,6 +275,10 @@ namespace EMBC.Responders.API.Controllers
     {
         public string? Id { get; set; } = null!;
         public string? ExternalReferenceId { get; set; }
+
+        public string? CompletedOn { get; set; }
+
+        public string? CompletedBy { get; set; }
         public bool? IsPaper { get; set; }
 
         [Required]

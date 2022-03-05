@@ -19,9 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.Utilities.Caching;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Tasks

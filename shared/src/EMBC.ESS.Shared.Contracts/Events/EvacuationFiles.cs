@@ -23,6 +23,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
     {
         public string Id { get; set; }
         public string ExternalReferenceId { get; set; }
+        public string CompletedOn { get; set; }
+        public string CompletedBy { get; set; }
         public IncidentTask RelatedTask { get; set; }
         public bool IsPaper { get; set; }
         public EvacuationFileStatus Status { get; set; }

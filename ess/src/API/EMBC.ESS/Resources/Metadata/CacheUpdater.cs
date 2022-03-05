@@ -18,9 +18,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
-using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Caching;
+using EMBC.Utilities.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Resources.Metadata
@@ -53,6 +53,16 @@ namespace EMBC.ESS.Resources.Metadata
             await cache.Refresh(MetadataRepository.CountriesCacheKey, metadataRepository.GetCountries, MetadataRepository.CacheEntryLifetime, cancellationToken);
             await cache.Refresh(MetadataRepository.StatesProvincesCacheKey, metadataRepository.GetStateProvinces, MetadataRepository.CacheEntryLifetime, cancellationToken);
             await cache.Refresh(MetadataRepository.SecurityQuestionsCacheKey, metadataRepository.GetSecurityQuestions, MetadataRepository.CacheEntryLifetime, cancellationToken);
+
+            foreach (var portalType in Enum.GetValues<PortalType>())
+            {
+                var cacheKey = $"{MetadataRepository.PlannedOutagesCacheKey}:{portalType}";
+                await cache.Refresh(cacheKey, () => metadataRepository.GetPlannedOutages(new OutageQuery
+                {
+                    PortalType = portalType,
+                    DisplayDate = DateTime.UtcNow
+                }), MetadataRepository.CacheEntryLifetime, cancellationToken);
+            }
             logger.LogInformation("End metadata cache refresh");
         }
     }

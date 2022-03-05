@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Runtime;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EMBC.ESS.Utilities.Extensions;
 using EMBC.Utilities.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -285,6 +286,7 @@ namespace EMBC.Utilities.Hosting
 
             app.UseSerilogRequestLogging(opts =>
             {
+                opts.IncludeQueryInRequestPath = true;
                 opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
@@ -300,6 +302,12 @@ namespace EMBC.Utilities.Hosting
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
+                endpoints.Map("/version", async ctx =>
+                {
+                    ctx.Response.ContentType = "application/json";
+                    ctx.Response.StatusCode = (int)HttpStatusCode.OK;
+                    await ctx.Response.WriteAsJsonAsync(new { version = (string?)(Environment.GetEnvironmentVariable("VERSION") ?? "Unknown") });
+                });
 
                 //map gRPC services
                 var grpcServices = assemblies.SelectMany(a => a.CreateInstancesOf<IHaveGrpcServices>()).SelectMany(p => p.GetGrpcServiceTypes()).ToArray();

@@ -45,6 +45,8 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
                 .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
                 .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ExternalReferenceId))
+                .ForMember(d => d.era_registrationcompleteddate, opts => opts.MapFrom(s => s.CompletedOn))
+                .ForMember(d => d.era_interviewername, opts => opts.MapFrom(s => s.CompletedBy))
                 .AfterMap((s, d) =>
                 {
                     //set link to primary registrant's household member entity
@@ -274,7 +276,7 @@ namespace EMBC.ESS.Resources.Evacuations
             if (string.IsNullOrEmpty(sourceMember))
                 return string.Empty;
             else
-                return string.Concat(sourceMember[..1], "****", sourceMember.AsSpan(sourceMember.Length - 1));
+                return string.Concat(sourceMember.AsSpan()[..1], "****", sourceMember.AsSpan(sourceMember.Length - 1));
         }
 
         public static bool ShouldMaskSecretPhrase(ResolutionContext ctx) =>

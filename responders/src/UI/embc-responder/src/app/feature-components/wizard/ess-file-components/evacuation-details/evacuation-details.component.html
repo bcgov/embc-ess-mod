@@ -12,21 +12,155 @@
       <form [formGroup]="evacDetailsForm">
         <div class="row">
           <div class="col-8">
-            <div class="row">
-              <div
-                *ngIf="evacueeSessionService?.isPaperBased"
-                class="col-12 paper-box"
-              >
-                <label class="tab-subtitle">Paper Based ESS File #</label>
-                <p class="tab-subtitle bold">
-                  {{ evacueeSearchService?.paperBasedEssFile }}
-                </p>
+            <div *ngIf="evacueeSessionService?.isPaperBased" class="row">
+              <div class="col-12 paper-box">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label class="tab-subtitle">Paper Based ESS File #</label>
+                    <p class="tab-subtitle bold">
+                      {{ stepEssFileService?.paperESSFile }}
+                    </p>
 
-                <p>
-                  If you need to update the Paper ESS File Number, please start
-                  a new search using the correct information.
-                </p>
+                    <p>
+                      If you need to update the Paper ESS File Number, please
+                      start a new search using the correct information.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label class="tab-subtitle requiredField"
+                      >Paper ESS File Created by</label
+                    >
+                  </div>
+                </div>
+
+                <div class="row" formGroupName="paperIssuedBy">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Interviewer first name</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        maxlength="100"
+                        formControlName="firstName"
+                        required
+                      />
+                      <mat-error
+                        *ngIf="
+                          evacDetailsFormControl?.paperIssuedBy?.get(
+                            'firstName'
+                          ).invalid &&
+                          evacDetailsFormControl?.paperIssuedBy
+                            ?.get('firstName')
+                            .hasError('whitespaceError')
+                        "
+                      >
+                        Interviewer first name is required</mat-error
+                      >
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Initial of their last name</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="lastNameInitial"
+                        maxlength="1"
+                        required
+                      />
+                      <mat-error
+                        *ngIf="
+                          evacDetailsFormControl?.paperIssuedBy?.get(
+                            'lastNameInitial'
+                          ).invalid &&
+                          evacDetailsFormControl?.paperIssuedBy
+                            ?.get('lastNameInitial')
+                            .hasError('whitespaceError')
+                        "
+                      >
+                        Initial is required</mat-error
+                      >
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <label class="tab-subtitle requiredField"
+                      >Paper ESS File Completed On</label
+                    >
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        [matDatepicker]="paperPicker"
+                        formControlName="paperCompletedOn"
+                        placeholder="File Completed On"
+                        required
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="paperPicker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #paperPicker></mat-datepicker>
+
+                      <mat-error
+                        *ngIf="
+                          evacDetailsFormControl?.paperCompletedOn?.invalid &&
+                          evacDetailsFormControl?.paperCompletedOn?.hasError(
+                            'invalidDate'
+                          )
+                        "
+                      >
+                        Please enter a valid date</mat-error
+                      >
+
+                      <mat-error
+                        *ngIf="
+                          evacDetailsFormControl?.paperCompletedOn?.invalid &&
+                          evacDetailsFormControl?.paperCompletedOn?.hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Completed on date is required</mat-error
+                      >
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Time</mat-label>
+                      <input
+                        type="time"
+                        formControlName="paperCompletedTime"
+                        matInput
+                        placeholder="Time"
+                        required
+                      />
+                      <mat-error
+                        *ngIf="
+                          evacDetailsFormControl.paperCompletedTime.invalid &&
+                          evacDetailsFormControl.paperCompletedTime.hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Time is required</mat-error
+                      >
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
+            </div>
+            <div class="row">
               <ng-container *ngIf="!essFileNumber; else editEssFile">
                 <div class="col-12">
                   <label

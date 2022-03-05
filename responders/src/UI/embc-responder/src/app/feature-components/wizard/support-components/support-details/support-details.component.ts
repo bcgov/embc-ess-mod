@@ -25,6 +25,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { SupportSummary } from 'src/app/core/api/models/support-summary';
+import { DateConversionService } from 'src/app/core/services/dateConversion.service';
 
 @Component({
   selector: 'app-support-details',
@@ -32,7 +33,6 @@ import { SupportSummary } from 'src/app/core/api/models/support-summary';
   styleUrls: ['./support-details.component.scss']
 })
 export class SupportDetailsComponent implements OnInit {
-  currentDate: string;
   currentTime: string;
   now = Date.now();
   toggle = false;
@@ -55,7 +55,8 @@ export class SupportDetailsComponent implements OnInit {
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
     private alertService: AlertService,
-    private referralCreationService: ReferralCreationService
+    private referralCreationService: ReferralCreationService,
+    private dateConversionService: DateConversionService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -65,7 +66,6 @@ export class SupportDetailsComponent implements OnInit {
         }
       }
     }
-    this.currentDate = this.datePipe.transform(Date.now(), 'dd-MMM-yyyy');
     this.currentTime = this.datePipe.transform(Date.now(), 'HH:mm');
   }
 
@@ -173,53 +173,6 @@ export class SupportDetailsComponent implements OnInit {
    */
   nextDetails() {
     this.isVisible = !this.isVisible;
-  }
-
-  /**
-   * Hides the override form
-   *
-   * @param $event true/false
-   */
-  collapse($event: boolean) {
-    this.toggle = false;
-  }
-
-  /**
-   * Sets the time and date value from override form
-   *
-   * @param $event form group
-   */
-  setDateTime($event: FormGroup) {
-    this.currentDate = this.datePipe.transform(
-      $event.get('date').value,
-      'dd-MMM-yyyy'
-    );
-    const updatedSupportStartDate = new Date(
-      this.datePipe.transform($event.get('date').value, 'yyyy-MM-dd') +
-        'T' +
-        $event.get('time').value +
-        ':00'
-    );
-    this.now = updatedSupportStartDate.getTime();
-    this.currentTime = this.datePipe.transform(
-      updatedSupportStartDate,
-      'hh:mm'
-    );
-    this.toggle = false;
-
-    const nextDay = new Date();
-    nextDay.setDate($event.get('date').value.getDate() + 1);
-
-    this.supportDetailsForm
-      .get('fromDate')
-      .patchValue($event.get('date').value);
-    this.supportDetailsForm
-      .get('fromTime')
-      .patchValue($event.get('time').value);
-    this.supportDetailsForm
-      .get('toDate')
-      .patchValue(this.datePipe.transform(nextDay, 'MM/dd/yyyy'));
-    this.supportDetailsForm.get('toTime').patchValue($event.get('time').value);
   }
 
   addExistingMembers() {
@@ -346,8 +299,10 @@ export class SupportDetailsComponent implements OnInit {
    */
   updateToDate(event: MatDatepickerInputEvent<Date>) {
     const days = this.supportDetailsForm.get('noOfDays').value;
+    const currentVal = this.supportDetailsForm.get('fromDate').value;
+    const date = new Date(currentVal);
     const finalValue = this.datePipe.transform(
-      event.value.setDate(event.value.getDate() + days),
+      date.setDate(date.getDate() + days),
       'MM/dd/yyyy'
     );
     this.supportDetailsForm.get('toDate').patchValue(new Date(finalValue));
@@ -483,7 +438,7 @@ export class SupportDetailsComponent implements OnInit {
       return this.stepSupportsService?.supportDetails?.fromDate
         ? this.stepSupportsService?.supportDetails?.fromDate
         : new Date(
-            this.stepSupportsService.convertStringToDate(
+            this.dateConversionService.convertStringToDate(
               this.datePipe.transform(Date.now(), 'dd-MMM-yyyy')
             )
           );

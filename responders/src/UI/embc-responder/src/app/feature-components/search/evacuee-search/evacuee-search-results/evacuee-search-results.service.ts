@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { AddressModel } from 'src/app/core/models/address.model';
@@ -11,18 +11,23 @@ import { LocationsService } from 'src/app/core/services/locations.service';
   providedIn: 'root'
 })
 export class EvacueeSearchResultsService {
-  private overlayIsLoadingVal = false;
+  public isLoadingOverlay: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+
+  public isLoadingOverlay$: Observable<boolean> =
+    this.isLoadingOverlay.asObservable();
 
   constructor(
     private registrationService: RegistrationsService,
     private locationsService: LocationsService
   ) {}
 
-  public get overlayIsLoading(): boolean {
-    return this.overlayIsLoadingVal;
+  public setloadingOverlay(isLoading: boolean): void {
+    return this.isLoadingOverlay.next(isLoading);
   }
-  public set overlayIsLoading(value: boolean) {
-    this.overlayIsLoadingVal = value;
+
+  public getloadingOverlay(): Observable<boolean> {
+    return this.isLoadingOverlay$;
   }
 
   /**

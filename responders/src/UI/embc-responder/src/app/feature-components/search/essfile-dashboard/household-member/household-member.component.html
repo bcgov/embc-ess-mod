@@ -6,7 +6,6 @@
       </p>
     </div>
   </div>
-
   <mat-accordion>
     <mat-expansion-panel
       class="expansion-divider"
@@ -88,9 +87,11 @@
         </div>
         <div
           *ngIf="
-            file?.type === 'Registrant' ||
+            (file?.type === 'Registrant' &&
+              !evacueeSessionService?.isPaperBased) ||
             (file?.type === 'HouseholdMember' &&
-              file?.linkedRegistrantId !== null)
+              file?.linkedRegistrantId !== null &&
+              !evacueeSessionService?.isPaperBased)
           "
           class="row button-div"
         >
@@ -98,30 +99,41 @@
             View Profile
           </button>
         </div>
+
         <div
           *ngIf="
-            matchedProfileCount === 0 &&
-            file?.type === 'HouseholdMember' &&
-            !file?.isUnder19
+            file?.type === 'Registrant' &&
+            evacueeSessionService?.isPaperBased &&
+            file?.id === evacueeSessionService?.evacueeMetaData?.registrantId
           "
           class="row button-div"
         >
+          <button class="button-p proceed-button" (click)="viewProfile(file)">
+            View Profile
+          </button>
+        </div>
+
+        <div *ngIf="displayLinks === 'create-profile'" class="row button-div">
           <button class="button-p proceed-button" (click)="createProfile(file)">
             Create Profile
           </button>
         </div>
-        <div
-          *ngIf="
-            matchedProfileCount > 0 &&
-            file?.type === 'HouseholdMember' &&
-            file?.linkedRegistrantId === null &&
-            !file?.isUnder19
-          "
-          class="row button-div"
-        >
+
+        <div *ngIf="displayLinks === 'link-profile'" class="row button-div">
           <button class="button-p proceed-button" (click)="linkToProfile(file)">
             Link to this Profile
           </button>
+          <a (click)="createProfile(file)" class="no-match"
+            >Not a Match? Create Profile</a
+          >
+        </div>
+        <div
+          *ngIf="displayLinks === 'no-security-questions'"
+          class="row button-div"
+        >
+          <p class="cannot-link">
+            Cannot link to a profile without security questions.
+          </p>
           <a (click)="createProfile(file)" class="no-match"
             >Not a Match? Create Profile</a
           >

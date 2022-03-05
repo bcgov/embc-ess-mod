@@ -18,6 +18,7 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
 
 @Component({
   selector: 'app-household-member',
@@ -31,16 +32,18 @@ export class HouseholdMemberComponent implements OnInit {
   registrantId: string;
   isLoading = false;
   matchedProfileCount: number;
-  matchedProfiles: RegistrantProfile[];
+  matchedProfiles: LinkRegistrantProfileModel[];
   linkedFlag = false;
   public color = '#169BD5';
+  selectedHouseholdMember: LinkRegistrantProfileModel;
+  displayLinks: string;
 
   constructor(
     private dialog: MatDialog,
     private alertService: AlertService,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private cacheService: CacheService
   ) {}
 
@@ -75,13 +78,19 @@ export class HouseholdMemberComponent implements OnInit {
           houseHoldMember.dateOfBirth
         )
         .subscribe({
-          next: (value) => {
+          next: (value: LinkRegistrantProfileModel[]) => {
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
-            if (value.length > 0) {
-              this.linkedFlag = !this.linkedFlag;
+            if (value.length > 1) {
+              this.linkedFlag = true;
             }
-            this.isLoading = !this.isLoading;
+            if (value.length === 1) {
+              this.selectedHouseholdMember = value[0];
+            }
+            setTimeout(() => {
+              this.linkedProfileDisplay(houseHoldMember);
+              this.isLoading = !this.isLoading;
+            }, 500);
           },
           error: (error) => {
             this.isLoading = !this.isLoading;
@@ -90,6 +99,11 @@ export class HouseholdMemberComponent implements OnInit {
           }
         });
     } else {
+      this.linkedFlag = false;
+      this.selectedHouseholdMember = undefined;
+      this.displayLinks = null;
+      this.matchedProfileCount = 0;
+      this.matchedProfiles = undefined;
       this.isLoading = !this.isLoading;
     }
   }
@@ -110,7 +124,8 @@ export class HouseholdMemberComponent implements OnInit {
       .open(DialogComponent, {
         data: {
           component: FileDashboardVerifyDialogComponent,
-          content: globalConst.dashboardViewProfile
+          content: globalConst.dashboardViewProfile,
+          profileData: memberDetails
         },
         height: '450px',
         width: '720px'
@@ -149,6 +164,32 @@ export class HouseholdMemberComponent implements OnInit {
     }
   }
 
+  linkedProfileDisplay(file: EvacuationFileHouseholdMember): void {
+    if (
+      !this.evacueeSessionService?.isPaperBased &&
+      file?.linkedRegistrantId === null &&
+      !file?.isUnder19
+    ) {
+      if (this.matchedProfileCount === 0) {
+        this.displayLinks = 'create-profile';
+      } else if (
+        this.selectedHouseholdMember?.hasSecurityQuestions &&
+        this.matchedProfileCount === 1
+      ) {
+        this.displayLinks = 'link-profile';
+      } else if (this.linkedFlag) {
+        this.displayLinks = 'link-profile';
+      } else if (
+        !this.selectedHouseholdMember?.hasSecurityQuestions &&
+        this.matchedProfileCount === 1
+      ) {
+        this.displayLinks = 'no-security-questions';
+      }
+    } else {
+      this.displayLinks = null;
+    }
+  }
+
   private createMultipleRegistrantModel(
     memberDetails: EvacuationFileHouseholdMember
   ): MultipleLinkRegistrantModel {
@@ -170,8 +211,8 @@ export class HouseholdMemberComponent implements OnInit {
    * @returns sorted array
    */
   private sortByAuthenticationFactor(
-    matchedProfiles: RegistrantProfile[]
-  ): RegistrantProfile[] {
+    matchedProfiles: LinkRegistrantProfileModel[]
+  ): LinkRegistrantProfileModel[] {
     return matchedProfiles.sort((a, b) =>
       a.authenticatedUser === b.authenticatedUser
         ? 0
@@ -188,8 +229,8 @@ export class HouseholdMemberComponent implements OnInit {
    * @returns sorted array
    */
   private sortByVerificationFactor(
-    matchedProfiles: RegistrantProfile[]
-  ): RegistrantProfile[] {
+    matchedProfiles: LinkRegistrantProfileModel[]
+  ): LinkRegistrantProfileModel[] {
     return matchedProfiles.sort((a, b) =>
       a.verifiedUser === b.verifiedUser ? 0 : a.verifiedUser ? -1 : 1
     );

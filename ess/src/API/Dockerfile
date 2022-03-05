@@ -4,6 +4,8 @@ EXPOSE 8080
 ENV ASPNETCORE_URLS=https://*:8080;
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 ENV DOTNET_gcServer=1
+ARG VERSION
+ENV VERSION=$VERSION
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
@@ -21,6 +23,7 @@ COPY ["EMBC.ESS.Utilities.BceidWS/EMBC.ESS.Utilities.BceidWS.csproj", "EMBC.ESS.
 COPY ["EMBC.Utilities.PdfGenerator/EMBC.Utilities.PdfGenerator.csproj", "EMBC.Utilities.PdfGenerator/"]
 COPY ["EMBC.Utilities.Messaging/EMBC.Utilities.Messaging.csproj", "EMBC.Utilities.Messaging/"]
 COPY ["EMBC.Utilities.Hosting/EMBC.Utilities.Hosting.csproj", "EMBC.Utilities.Hosting/"]
+COPY ["EMBC.Utilities.Caching/EMBC.Utilities.Caching.csproj", "EMBC.Utilities.Caching/"]
 COPY ["EMBC.Utilities/EMBC.Utilities.csproj", "EMBC.Utilities/"]
 COPY ["EMBC.Tests.Unit.ESS/EMBC.Tests.Unit.ESS.csproj", "EMBC.Tests.Unit.ESS/"]
 COPY ["EMBC.Tests.Integration.ESS/EMBC.Tests.Integration.ESS.csproj", "EMBC.Tests.Integration.ESS/"]

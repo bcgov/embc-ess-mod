@@ -35,9 +35,14 @@ export class UserService {
             this.cacheService.get('loggedInTaskNumber') === null || undefined
               ? null
               : this.cacheService.get('loggedInTaskNumber');
+          const taskCommunity =
+            this.cacheService.get('loggedInTaskCommunity') === null || undefined
+              ? null
+              : this.cacheService.get('loggedInTaskCommunity');
           this.currentProfileVal = {
             ...response,
             taskNumber,
+            taskCommunity,
             claims: [...userClaims]
           };
           return this.currentProfileVal;
@@ -60,17 +65,24 @@ export class UserService {
     );
   }
 
-  public updateTaskNumber(taskNumber: string, taskStatus: string): void {
+  public updateTaskNumber(
+    taskNumber: string,
+    taskStatus: string,
+    taskCommunity: string
+  ): void {
     this.cacheService.set('loggedInTaskNumber', taskNumber);
+    this.cacheService.set('loggedInTaskCommunity', taskCommunity);
     this.currentProfileVal = {
       ...this.currentProfileVal,
       taskNumber,
-      taskStatus
+      taskStatus,
+      taskCommunity
     };
   }
 
   public clearAppStorage(): void {
     this.cacheService.remove('loggedInTaskNumber');
+    this.cacheService.remove('loggedInTaskCommunity');
     this.cacheService.remove('memberRoles');
     this.cacheService.remove('memberLabels');
     this.cacheService.remove('allTeamCommunityList');
@@ -82,6 +94,30 @@ export class UserService {
     this.cacheService.remove('communityList');
     this.cacheService.remove('supportCategory');
     this.cacheService.remove('supportSubCategory');
+
+    this.cacheService.remove('registrantProfileId');
+    this.cacheService.remove('memberRegistration');
+    this.cacheService.remove('fileNumber');
+    this.cacheService.remove('securityQuestionsOpenedFrom');
+    this.cacheService.remove('fileLinkStatus');
+    this.cacheService.remove('fileLinkFlag');
+    this.cacheService.remove('fileLinkMetaData');
+    this.cacheService.remove('wizardType');
+    this.cacheService.remove('editWizardFlag');
+    this.cacheService.remove('memberFlag');
+    this.cacheService.remove('selectedSupplier');
+    this.cacheService.remove('essTeams');
+    this.cacheService.remove('selectedTeamMember');
+    this.cacheService.remove('wizardMenu');
+
+    this.cacheService.remove('groceriesReferral');
+    this.cacheService.remove('mealReferral');
+    this.cacheService.remove('taxiReferral');
+    this.cacheService.remove('otherReferral');
+    this.cacheService.remove('hotelMotelReferral');
+    this.cacheService.remove('billetingReferral');
+    this.cacheService.remove('groupReferral');
+    this.cacheService.remove('supportType');
     this.clearLocalStorage();
   }
 
@@ -93,5 +129,6 @@ export class UserService {
 export interface LoggedInUserProfile extends UserProfile {
   taskNumber?: string;
   taskStatus?: string;
+  taskCommunity?: string;
   claims: ClaimModel[];
 }
