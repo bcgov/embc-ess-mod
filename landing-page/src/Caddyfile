@@ -3,9 +3,7 @@
 }
 
 :2015 {
-	log {
-		level {$LOG_LEVEL}
-	}
+	log
 
 	root * /site
 
@@ -26,7 +24,7 @@
 
 	encode zstd gzip
 
-	route /version {
+	handle /version {
 		header content-type "application/json"
 		respond 200 {
 			body `{"version": "{$VERSION}"}`
