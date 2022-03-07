@@ -12,7 +12,7 @@
       <form [formGroup]="evacDetailsForm">
         <div class="row">
           <div class="col-8">
-            <div *ngIf="evacueeSessionService?.isPaperBased" class="row">
+            <div *ngIf="stepEssFileService?.paperESSFile" class="row">
               <div class="col-12 paper-box">
                 <div class="row">
                   <div class="col-md-12">
