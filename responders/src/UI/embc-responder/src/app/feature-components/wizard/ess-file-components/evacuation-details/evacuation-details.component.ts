@@ -58,7 +58,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.wizardType = this.evacueeSessionService.getWizardType();
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
     this.stepEssFileService.paperESSFile =
-      this.evacueeSearchService.paperBasedEssFile;
+      this.stepEssFileService.selectedEssFile.externalReferenceId;
 
     this.createEvacDetailsForm();
     this.checkAddress();
@@ -451,7 +451,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    if (this.evacueeSessionService.isPaperBased) {
+    if (
+      this.evacueeSessionService.isPaperBased ||
+      this.stepEssFileService.paperESSFile
+    ) {
       this.savePaperFields();
     }
     this.stepEssFileService.evacuatedFromPrimary = this.evacDetailsForm.get(
