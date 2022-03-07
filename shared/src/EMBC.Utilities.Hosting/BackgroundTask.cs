@@ -69,21 +69,31 @@ namespace EMBC.Utilities.Hosting
                 now = DateTime.UtcNow;
                 if (now >= nextExecutionDate)
                 {
-                    if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
+                    try
                     {
-                        logger.LogDebug("skipping {0}", nextExecutionDate);
-                    }
-                    else
-                    {
-                        logger.LogDebug("running {0}", nextExecutionDate);
-                        using (var executionScope = serviceProvider.CreateScope())
+                        if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
                         {
-                            var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                            await task.ExecuteAsync(stoppingToken);
+                            logger.LogDebug("skipping {0}", nextExecutionDate);
+                        }
+                        else
+                        {
+                            logger.LogInformation("running {0}", nextExecutionDate);
+                            using (var executionScope = serviceProvider.CreateScope())
+                            {
+                                var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                                await task.ExecuteAsync(stoppingToken);
+                            }
                         }
                     }
-                    nextExecutionDate = schedule.GetNextOccurrence(now);
-                    logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "error running {0}: {1}", nextExecutionDate, e.Message);
+                    }
+                    finally
+                    {
+                        nextExecutionDate = schedule.GetNextOccurrence(now);
+                        logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
+                    }
                 }
                 await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }

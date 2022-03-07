@@ -15,6 +15,8 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,5 +54,16 @@ namespace EMBC.Utilities.Configuration
     public interface IHaveGrpcServices
     {
         Type[] GetGrpcServiceTypes();
+    }
+
+    public interface IVersionInformationProvider
+    {
+        Task<IEnumerable<VersionInformation>> Get();
+    }
+
+    public class VersionInformation
+    {
+        public string Name { get; set; } = null!;
+        public Version? Version { get; set; }
     }
 }

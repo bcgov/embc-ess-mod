@@ -96,6 +96,11 @@ namespace EMBC.Utilities.Messaging
                 }).EnableCallContextPropagation(opts => opts.SuppressContextNotFoundErrors = true);
 
                 configurationServices.Services.AddTransient<IMessagingClient, MessagingClient>();
+
+                if (options.Mode == MessagingMode.Client)
+                {
+                    configurationServices.Services.AddTransient<IVersionInformationProvider, VersionInformationProvider>();
+                }
             }
         }
 
