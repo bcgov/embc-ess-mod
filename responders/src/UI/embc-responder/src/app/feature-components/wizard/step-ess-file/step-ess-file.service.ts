@@ -7,11 +7,9 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { Subject } from 'rxjs';
 import {
   EvacuationFile,
-  EvacuationFileHouseholdMember,
   HouseholdMemberType,
   InsuranceOption,
   NeedsAssessment,
-  PersonDetails,
   Pet,
   ReferralServices
 } from 'src/app/core/api/models';
@@ -26,6 +24,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import * as _ from 'lodash';
 import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -946,6 +945,14 @@ export class StepEssFileService {
       }
       return tab;
     });
+  }
+
+  public getTaskEndDate(): string {
+    if (this.evacueeSession.getWizardType() === WizardType.NewEssFile) {
+      return this.userService?.currentProfile?.taskStartDate;
+    } else {
+      return this.selectedEssFileVal?.task?.from;
+    }
   }
 
   /**

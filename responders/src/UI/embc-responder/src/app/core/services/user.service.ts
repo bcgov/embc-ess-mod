@@ -68,7 +68,9 @@ export class UserService {
   public updateTaskNumber(
     taskNumber: string,
     taskStatus: string,
-    taskCommunity: string
+    taskCommunity: string,
+    taskStartDate: string,
+    taskEndDate: string
   ): void {
     this.cacheService.set('loggedInTaskNumber', taskNumber);
     this.cacheService.set('loggedInTaskCommunity', taskCommunity);
@@ -76,7 +78,9 @@ export class UserService {
       ...this.currentProfileVal,
       taskNumber,
       taskStatus,
-      taskCommunity
+      taskCommunity,
+      taskStartDate,
+      taskEndDate
     };
   }
 
@@ -131,4 +135,6 @@ export interface LoggedInUserProfile extends UserProfile {
   taskStatus?: string;
   taskCommunity?: string;
   claims: ClaimModel[];
+  taskStartDate?: string;
+  taskEndDate?: string;
 }

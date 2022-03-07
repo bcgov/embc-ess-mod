@@ -14,6 +14,8 @@ export class TaskDetailsComponent implements OnInit {
   taskNumber: string;
   taskStatus: string;
   taskCommunity: string;
+  taskStartDate: string;
+  taskEndDate: string;
 
   constructor(private router: Router, private userService: UserService) {
     if (this.router.getCurrentNavigation() !== null) {
@@ -24,6 +26,8 @@ export class TaskDetailsComponent implements OnInit {
         this.taskNumber = state.id;
         this.taskStatus = state.status;
         this.taskCommunity = state.communityName;
+        this.taskStartDate = state.startDate;
+        this.taskEndDate = state.endDate;
       }
     }
   }
@@ -45,7 +49,9 @@ export class TaskDetailsComponent implements OnInit {
     this.userService.updateTaskNumber(
       this.taskNumber,
       this.taskStatus,
-      this.taskCommunity
+      this.taskCommunity,
+      this.taskStartDate,
+      this.taskEndDate
     );
     this.router.navigate(['/responder-access/search/evacuee']);
   }
