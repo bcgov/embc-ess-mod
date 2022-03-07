@@ -107,6 +107,22 @@ namespace EMBC.Tests
             using var ms = new MemoryStream(response.Data.ToByteArray());
             JsonSerializer.Deserialize(ms, responseType).ShouldBeOfType<TestQueryReply>().Value.ShouldBe(query.Value);
         }
+
+        [Fact]
+        public async Task CanSerializeErrors()
+        {
+            var serverCallContext = TestServerCallContextFactory.Create();
+            serverCallContext.UserState["__HttpContext"] = httpContextFactory();
+            var dispatcher = new DispatcherService();
+            var request = new RequestEnvelope()
+            {
+                Type = typeof(TestThrowErrorCommand).AssemblyQualifiedName,
+                Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(new TestThrowErrorCommand()))
+            };
+            var response = await dispatcher.Dispatch(request, serverCallContext);
+
+            response.ShouldNotBeNull();
+        }
     }
 
     public static class TestServerCallContextFactory
@@ -136,6 +152,12 @@ namespace EMBC.Tests
                 Value = query.Value
             });
         }
+
+        public async Task<string> Handle(TestThrowErrorCommand cmd)
+        {
+            await Task.CompletedTask;
+            throw new NotFoundException("not found", "id");
+        }
     }
 
     public class TestCommand : Command
@@ -156,4 +178,6 @@ namespace EMBC.Tests
     {
         public string Value { get; set; } = null!;
     }
+
+    public class TestThrowErrorCommand : Command { }
 }

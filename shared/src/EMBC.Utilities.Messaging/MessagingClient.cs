@@ -15,8 +15,10 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
+using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.Utilities.Messaging
@@ -47,9 +49,8 @@ namespace EMBC.Utilities.Messaging
                 var response = await dispatcherClient.DispatchAsync<string>(command);
                 return response;
             }
-            catch (ServerException e)
+            catch (EssApplicationException)
             {
-                logger.LogError(e, "Server error when sending command {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
                 throw;
             }
             catch (Exception e)
@@ -67,13 +68,8 @@ namespace EMBC.Utilities.Messaging
                 var response = await dispatcherClient.DispatchAsync<TResponse>(command);
                 return response;
             }
-            catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
+            catch (EssApplicationException)
             {
-                return default;
-            }
-            catch (ServerException e)
-            {
-                logger.LogError(e, "Server error when sending query {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
                 throw;
             }
             catch (Exception e)

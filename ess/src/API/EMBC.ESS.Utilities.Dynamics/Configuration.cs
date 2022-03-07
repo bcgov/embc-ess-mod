@@ -89,6 +89,7 @@ namespace EMBC.ESS.Utilities.Dynamics
             services.AddSingleton<IEssContextFactory, EssContextFactory>();
             services.AddTransient(sp => sp.GetRequiredService<IEssContextFactory>().Create());
             services.AddTransient<IEssContextStateReporter, EssContextStateReporter>();
+            services.AddTransient<IVersionInformationProvider, DynamicSchemasVersionInformationProvider>();
         }
 
         private static void OnBreak(DelegateResult<HttpResponseMessage> r, TimeSpan time, Context ctx)

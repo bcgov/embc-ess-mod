@@ -86,7 +86,7 @@ namespace EMBC.Responders.API.Controllers
                 SupplierId = supplierId,
             })).Items.FirstOrDefault();
 
-            if (supplier == null) return NotFound();
+            if (supplier == null) return NotFound(supplierId);
 
             return Ok(mapper.Map<Supplier>(supplier));
         }

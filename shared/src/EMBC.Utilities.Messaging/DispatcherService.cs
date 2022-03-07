@@ -18,8 +18,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
+using EMBC.ESS.Shared.Contracts;
 using Google.Protobuf;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,13 +66,19 @@ namespace EMBC.Utilities.Messaging
             }
             catch (Exception e)
             {
+                //var serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(EssApplicationException));
+                //using var ms = new MemoryStream();
+                //var writer = XmlDictionaryWriter.CreateTextWriter(ms);
+                //serializer.WriteObject(writer, e);
+
                 var reply = new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
                     Error = true,
-                    ErrorType = e.GetType().FullName,
+                    ErrorType = e.GetType().AssemblyQualifiedName,
                     ErrorMessage = e.Message,
-                    ErrorDetails = e.ToString()
+                    ErrorDetails = e.ToString(),
+                    //Data = UnsafeByteOperations.UnsafeWrap(ms.ToArray())
                 };
                 sw.Stop();
 

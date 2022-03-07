@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Team;
@@ -79,8 +80,15 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AssignCommunities([FromBody] IEnumerable<string> communityCodes)
         {
-            await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
-            return Ok();
+            try
+            {
+                await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
+                return Ok();
+            }
+            catch (CommunitiesAlreadyAssignedException e)
+            {
+                return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = string.Join(',', e.Communities) });
+            }
         }
 
         /// <summary>

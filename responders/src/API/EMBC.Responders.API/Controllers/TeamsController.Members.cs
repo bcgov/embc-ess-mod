@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -72,12 +73,19 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TeamMemberResult>> CreateTeamMember([FromBody] TeamMember teamMember)
         {
-            teamMember.TeamId = teamId;
-            var memberId = await client.Send(new SaveTeamMemberCommand
+            try
             {
-                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
-            });
-            return Ok(new TeamMemberResult { Id = memberId });
+                teamMember.TeamId = teamId;
+                var memberId = await client.Send(new SaveTeamMemberCommand
+                {
+                    Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
+                });
+                return Ok(new TeamMemberResult { Id = memberId });
+            }
+            catch (UsernameAlreadyExistsException e)
+            {
+                return BadRequest(e.UserName);
+            }
         }
 
         /// <summary>
@@ -92,16 +100,25 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMemberResult>> UpdateTeamMember(string memberId, [FromBody] TeamMember teamMember)
         {
-            if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
-
-            teamMember.TeamId = teamId;
-            var member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember);
-            var updatedMemberId = await client.Send(new SaveTeamMemberCommand
+            try
             {
-                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
-            });
-            if (updatedMemberId == null) return NotFound(updatedMemberId);
-            return Ok(new TeamMemberResult { Id = updatedMemberId });
+                teamMember.Id = memberId;
+                teamMember.TeamId = teamId;
+                var member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember);
+                var updatedMemberId = await client.Send(new SaveTeamMemberCommand
+                {
+                    Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
+                });
+                return Ok(new TeamMemberResult { Id = updatedMemberId });
+            }
+            catch (NotFoundException)
+            {
+                return NotFound(memberId);
+            }
+            catch (UsernameAlreadyExistsException e)
+            {
+                return BadRequest(e.UserName);
+            }
         }
 
         /// <summary>
@@ -115,15 +132,19 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMemberResult>> DeleteTeamMember(string memberId)
         {
-            if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
-
-            var reply = await client.Send(new DeleteTeamMemberCommand
+            try
             {
-                TeamId = teamId,
-                MemberId = memberId
-            });
-            if (reply == null) return NotFound(memberId);
-            return Ok(new TeamMemberResult { Id = memberId });
+                var reply = await client.Send(new DeleteTeamMemberCommand
+                {
+                    TeamId = teamId,
+                    MemberId = memberId
+                });
+                return Ok(new TeamMemberResult { Id = memberId });
+            }
+            catch (NotFoundException)
+            {
+                return NotFound(memberId);
+            }
         }
 
         /// <summary>
