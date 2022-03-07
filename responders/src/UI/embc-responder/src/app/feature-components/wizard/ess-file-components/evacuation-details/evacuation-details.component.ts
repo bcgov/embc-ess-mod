@@ -451,7 +451,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    if (this.evacueeSessionService.isPaperBased || this.stepEssFileService.paperESSFile) {
+    if (
+      this.evacueeSessionService.isPaperBased ||
+      this.stepEssFileService.paperESSFile
+    ) {
       this.savePaperFields();
     }
     this.stepEssFileService.evacuatedFromPrimary = this.evacDetailsForm.get(
