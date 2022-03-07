@@ -1,16 +1,21 @@
 FROM trion/ng-cli-karma AS ng-builder
 WORKDIR /src
 COPY ./embc-supplier/package*.json ./
-RUN npm install
+RUN npm install --ignore-scripts
 COPY ./embc-supplier/ .
 # RUN npm run lint (TODO: need to fix current linter issues before enabling in CI/CD)
 RUN npm run test -- --no-watch --no-progress
 RUN npm run build -- --prod
 
-FROM caddy:alpine as final
+FROM caddy:2-builder AS builder
+RUN xcaddy build \
+    --with github.com/caddyserver/replace-response
+
+FROM caddy:2 as final
 ARG VERSION
 ENV VERSION=$VERSION
+ENV API_URL=
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-supplier/ /site
-ENV API_URL=
 EXPOSE 2015 2016

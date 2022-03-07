@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -153,7 +154,7 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithSpan()
                 .WriteTo.Console(outputTemplate: logOutputTemplate)
 #if DEBUG
-                .WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
+            //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
 #endif
             ;
 
@@ -260,6 +261,7 @@ namespace EMBC.Utilities.Hosting
 
             // add background tasks
             services.AddBackgroundTasks(logger, assemblies);
+            services.AddTransient<IVersionInformationProvider, HostVersionInformationProvider>();
         }
 
         protected virtual void Configure(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, params Assembly[] assemblies)
@@ -304,9 +306,13 @@ namespace EMBC.Utilities.Hosting
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
                 endpoints.Map("/version", async ctx =>
                 {
+                    var versionInformationProviders = ctx.RequestServices.GetServices<IVersionInformationProvider>();
+                    var versions = new List<VersionInformation>();
+                    await versionInformationProviders.ForEachAsync(10, async p => { versions.AddRange(await p.Get()); });
+
                     ctx.Response.ContentType = "application/json";
                     ctx.Response.StatusCode = (int)HttpStatusCode.OK;
-                    await ctx.Response.WriteAsJsonAsync(new { version = (string?)(Environment.GetEnvironmentVariable("VERSION") ?? "Unknown") });
+                    await ctx.Response.WriteAsJsonAsync(versions.ToArray());
                 });
 
                 //map gRPC services
