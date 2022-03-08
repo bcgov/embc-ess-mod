@@ -21,9 +21,11 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.Serialization;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Services;
 using EMBC.Utilities.Messaging;
@@ -85,11 +87,18 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
-            var userId = currentUserId;
-            var files = await evacuationSearchService.GetFiles(userId,
-                new[] { ESS.Shared.Contracts.Events.EvacuationFileStatus.Active, ESS.Shared.Contracts.Events.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Events.EvacuationFileStatus.Expired });
+            try
+            {
+                var userId = currentUserId;
+                var files = await evacuationSearchService.GetFiles(userId,
+                    new[] { ESS.Shared.Contracts.Events.EvacuationFileStatus.Active, ESS.Shared.Contracts.Events.EvacuationFileStatus.Pending, ESS.Shared.Contracts.Events.EvacuationFileStatus.Expired });
 
-            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
+                return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         /// <summary>
@@ -271,6 +280,7 @@ namespace EMBC.Registrants.API.Controllers
         Assessed
     }
 
+    [JsonConverter(typeof(SupportJsonConverter))]
     [KnownType(typeof(Referral))]
     public abstract class Support
     {
@@ -304,6 +314,8 @@ namespace EMBC.Registrants.API.Controllers
     [KnownType(typeof(TransportationTaxiReferral))]
     public abstract class Referral : Support
     {
+        public string? ExternalReferenceId { get; set; }
+
         public override SupportMethod Method => SupportMethod.Referral;
 
         public string SupplierId { get; set; }
@@ -535,5 +547,107 @@ namespace EMBC.Registrants.API.Controllers
 
         [Description("Evacuee Lost Referral")]
         EvacueeLostReferral
+    }
+
+    public class SupportJsonConverter : JsonConverter<Support>
+    {
+        private string FirstLetterCapital(string str) => char.ToUpper(str[0]) + str.Remove(0, 1);
+
+        public override Support Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            //parse the support meta properties to identify the support type (method, category, sub category)
+            var clonedReader = reader;
+            SupportMethod method = SupportMethod.Unknown;
+            SupportCategory category = SupportCategory.Unknown;
+            SupportSubCategory subCategory = SupportSubCategory.None;
+
+            if (clonedReader.TokenType != JsonTokenType.StartObject) throw new JsonException();
+
+            while (clonedReader.Read())
+            {
+                if (clonedReader.TokenType == JsonTokenType.EndObject) break;
+                if (clonedReader.TokenType != JsonTokenType.PropertyName) continue;
+                var propertyName = FirstLetterCapital(clonedReader.GetString());
+
+                clonedReader.Read();
+                if (clonedReader.TokenType != JsonTokenType.String || clonedReader.TokenType == JsonTokenType.Null) continue;
+                var propertyValue = clonedReader.GetString();
+                switch (propertyName)
+                {
+                    case nameof(Support.Method):
+                        if (!Enum.TryParse(propertyValue, out method)) throw new JsonException();
+                        break;
+
+                    case nameof(Support.Category):
+                        if (!Enum.TryParse(propertyValue, out category)) throw new JsonException();
+                        break;
+
+                    case nameof(Support.SubCategory):
+                        if (!Enum.TryParse(propertyValue, out subCategory)) throw new JsonException();
+                        break;
+                }
+            }
+
+            if (method == SupportMethod.Unknown || category == SupportCategory.Unknown) throw new JsonException($"Could not determine the support method or category");
+
+            //Dserialize to the correct type
+            return category switch
+            {
+                SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingReferral>(ref reader, options),
+                SupportCategory.Incidentals => JsonSerializer.Deserialize<IncidentalsReferral>(ref reader, options),
+                SupportCategory.Food when subCategory == SupportSubCategory.Food_Groceries => JsonSerializer.Deserialize<FoodGroceriesReferral>(ref reader, options),
+                SupportCategory.Food when subCategory == SupportSubCategory.Food_Restaurant => JsonSerializer.Deserialize<FoodRestaurantReferral>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelReferral>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingReferral>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupReferral>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiReferral>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherReferral>(ref reader, options),
+                _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
+            };
+        }
+
+        public override void Write(Utf8JsonWriter writer, Support value, JsonSerializerOptions options)
+        {
+            switch (value.Category)
+            {
+                case SupportCategory.Clothing:
+                    JsonSerializer.Serialize(writer, (ClothingReferral)value, options);
+                    break;
+
+                case SupportCategory.Incidentals:
+                    JsonSerializer.Serialize(writer, (IncidentalsReferral)value, options);
+                    break;
+
+                case SupportCategory.Food when value.SubCategory == SupportSubCategory.Food_Groceries:
+                    JsonSerializer.Serialize(writer, (FoodGroceriesReferral)value, options);
+                    break;
+
+                case SupportCategory.Food when value.SubCategory == SupportSubCategory.Food_Restaurant:
+                    JsonSerializer.Serialize(writer, (FoodRestaurantReferral)value, options);
+                    break;
+
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Hotel:
+                    JsonSerializer.Serialize(writer, (LodgingHotelReferral)value, options);
+                    break;
+
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Billeting:
+                    JsonSerializer.Serialize(writer, (LodgingBilletingReferral)value, options);
+                    break;
+
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Group:
+                    JsonSerializer.Serialize(writer, (LodgingGroupReferral)value, options);
+                    break;
+
+                case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Taxi:
+                    JsonSerializer.Serialize(writer, (TransportationTaxiReferral)value, options);
+                    break;
+
+                case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Other:
+                    JsonSerializer.Serialize(writer, (TransportationOtherReferral)value, options);
+                    break;
+
+                default: throw new NotSupportedException($"Support with method {value.Method}, category {value.Category}, sub category {value.SubCategory}");
+            }
+        }
     }
 }
