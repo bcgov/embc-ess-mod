@@ -86,3 +86,5 @@ export const pastEvacError =
   'Unable to retrieve past evacuations at this time. Please try again later';
 export const bcscInviteError =
   'Unable to send BC Services Card invitation at this time. Please try again later';
+export const supportCategoryListError =
+  'Unable to retrieve support categories at this time. Please try again later';
