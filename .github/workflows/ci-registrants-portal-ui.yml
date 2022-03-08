@@ -1,7 +1,7 @@
 name: ci-registrants-portal-ui
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, edited, synchronize]
     paths:
       - "registrants/src/UI/**"
@@ -34,7 +34,7 @@ jobs:
         env:
           DOCKER_REPOSITORY: ${{ steps.set_image_repository.outputs.docker-repository }}
         run: docker pull $DOCKER_REPOSITORY:latest || true
-        
+
       - name: Build image
         working-directory: ./registrants/src/UI
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
