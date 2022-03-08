@@ -347,6 +347,83 @@
             </form>
           </div>
         </div>
+
+        <div
+          class="col-12"
+          *ngIf="
+            !evacueeSessionService?.isPaperBased &&
+            !this.evacueeSessionService.profileId &&
+            this.evacueeSessionService.getWizardType() ===
+              wizardType.NewRegistration
+          "
+        >
+          <div class="e-transfer-panel">
+            <label class="tab-subtitle"
+              >e-Transfer Eligibility - Connect Profile to BC Services
+              Card</label
+            >
+
+            <p>
+              <strong>
+                Send an email invitation to the evacuee to connect their profile
+                to BC Services Card to be e-Transfer eligible.
+              </strong>
+            </p>
+
+            <form [formGroup]="inviteEmailGroup">
+              <div class="row">
+                <div class="col-md-5">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Email Address</mat-label>
+                    <input
+                      formControlName="email"
+                      matInput
+                      placeholder="Email Address"
+                    />
+                    <mat-error
+                      *ngIf="
+                        inviteEmailControl?.email.invalid &&
+                        inviteEmailControl?.email.hasError('email')
+                      "
+                      >Invalid email</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="inviteEmailControl?.email.value">
+                <div class="col-md-5">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Confirm Email Address</mat-label>
+                    <input
+                      formControlName="confirmEmail"
+                      matInput
+                      placeholder="Confirm Email Address"
+                      [errorStateMatcher]="emailMatcher"
+                    />
+                    <mat-error
+                      *ngIf="
+                        inviteEmailControl?.confirmEmail.invalid &&
+                        inviteEmailControl?.confirmEmail.hasError('email')
+                      "
+                    >
+                      Invalid email</mat-error
+                    >
+                    <mat-error
+                      *ngIf="
+                        inviteEmailControl?.confirmEmail?.parent?.hasError(
+                          'emailMatch'
+                        )
+                      "
+                    >
+                      Email address mismatch</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
       <div class="row">
