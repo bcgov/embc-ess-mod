@@ -111,6 +111,8 @@ export class UserService {
     this.cacheService.remove('communityList');
     this.cacheService.remove('supportCategory');
     this.cacheService.remove('supportSubCategory');
+    this.cacheService.remove('taskStartDate');
+    this.cacheService.remove('taskEndDate');
 
     this.cacheService.remove('registrantProfileId');
     this.cacheService.remove('memberRegistration');
