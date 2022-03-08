@@ -10,6 +10,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import * as moment from 'moment';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -53,6 +54,16 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     public evacueeSearchService: EvacueeSearchService,
     private dateConversionService: DateConversionService
   ) {}
+
+  paperCompletedDateFilter = (d: Date | null): boolean => {
+    const date = d || new Date();
+    return moment(date).isBetween(
+      moment(this.stepEssFileService?.getTaskEndDate()),
+      moment(new Date()),
+      'D',
+      '[]'
+    );
+  };
 
   ngOnInit(): void {
     this.wizardType = this.evacueeSessionService.getWizardType();
