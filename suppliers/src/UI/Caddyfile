@@ -4,7 +4,9 @@
 }
 
 :2015 {
-	log
+	log {
+		format console
+	}
 
 	root * /site
 
@@ -30,7 +32,7 @@
 			header_up Accept-Encoding identity
 		}
 		replace stream {
-			 "[" `[{"name": "EMBC.Suppliers.UI","version":"{$VERSION}"},`
+			"[" `[{"name": "EMBC.Suppliers.UI","version":"{$VERSION}"},`
 		}
 	}
 
