@@ -24,8 +24,7 @@ export class AppComponent implements OnInit {
     private alertService: AlertService,
     private bootstrapService: BootstrapService,
     private loginService: LoginService,
-    private configService: ConfigService,
-    private router: Router
+    private configService: ConfigService
   ) {}
 
   public async ngOnInit(): Promise<void> {
