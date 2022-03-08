@@ -30,7 +30,7 @@
 			header_up Accept-Encoding identity
 		}
 		replace stream {
-			 "[" `[{"name": "EMBC.Suppliers.UI","version":"{$VERSION}"},`
+			"[" `[{"name": "EMBC.Suppliers.UI","version":"{$VERSION}"},`
 		}
 	}
 
