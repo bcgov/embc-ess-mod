@@ -18,6 +18,7 @@ import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { DateConversionService } from 'src/app/core/services/dateConversion.service';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -68,8 +69,13 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.wizardType = this.evacueeSessionService.getWizardType();
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
-    this.stepEssFileService.paperESSFile =
-      this.stepEssFileService.selectedEssFile.externalReferenceId;
+    if (
+      this.evacueeSessionService.getWizardType() !== WizardType.NewEssFile &&
+      this.evacueeSessionService.getWizardType() !== WizardType.NewRegistration
+    ) {
+      this.stepEssFileService.paperESSFile =
+        this.stepEssFileService?.selectedEssFile?.externalReferenceId;
+    }
 
     this.createEvacDetailsForm();
     this.checkAddress();

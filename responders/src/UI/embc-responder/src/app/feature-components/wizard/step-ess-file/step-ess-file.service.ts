@@ -948,7 +948,10 @@ export class StepEssFileService {
   }
 
   public getTaskEndDate(): string {
-    if (this.evacueeSession.getWizardType() === WizardType.NewEssFile) {
+    if (
+      this.evacueeSession.getWizardType() === WizardType.NewEssFile ||
+      this.evacueeSession.getWizardType() === WizardType.NewRegistration
+    ) {
       return this.userService?.currentProfile?.taskStartDate;
     } else {
       return this.selectedEssFileVal?.task?.from;
