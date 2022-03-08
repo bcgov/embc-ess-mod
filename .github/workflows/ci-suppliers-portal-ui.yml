@@ -18,4 +18,4 @@ jobs:
 
       - name: Build image
         working-directory: ./suppliers/src/UI
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: DOCKER_BUILDKIT=1 docker build . --file Dockerfile --tag $IMAGE_NAME
