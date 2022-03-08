@@ -15,7 +15,7 @@ FROM caddy:2 as final
 ARG VERSION
 ENV VERSION=$VERSION
 ENV API_URL=
-RUN chmod +w /config/caddy
+RUN chmod +rw /config/caddy
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-registrant/ /site

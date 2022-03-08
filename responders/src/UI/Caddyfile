@@ -4,7 +4,9 @@
 }
 
 :2015 {
-	log
+	log {
+		format console
+	}
 
 	root * /site
 
