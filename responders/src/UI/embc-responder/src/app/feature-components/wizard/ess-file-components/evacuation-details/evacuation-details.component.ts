@@ -58,7 +58,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.wizardType = this.evacueeSessionService.getWizardType();
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
     this.stepEssFileService.paperESSFile =
-      this.stepEssFileService.selectedEssFile.externalReferenceId;
+      this.stepEssFileService.selectedEssFile?.externalReferenceId || null;
 
     this.createEvacDetailsForm();
     this.checkAddress();
