@@ -70,7 +70,9 @@ export class EvacueeSearchComponent implements OnInit {
         this.userService.updateTaskNumber(
           result.id,
           result.status,
-          result.communityName
+          result.communityName,
+          result.startDate,
+          result.endDate
         );
         this.evacueeSessionService.isPaperBased =
           result.status === 'Expired' ? true : false;
