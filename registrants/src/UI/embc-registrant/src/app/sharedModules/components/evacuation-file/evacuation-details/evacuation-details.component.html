@@ -6,7 +6,13 @@
         evacuationFileDataService.currentEvacuationFileCount$ | async
       }}) &nbsp;</a
     >
-    <span> / &nbsp; ESS File #{{ evacuationFileDataService?.essFileId }}</span>
+    <span>
+      / &nbsp; ESS File #{{
+        evacuationFileDataService?.isPaper
+          ? evacuationFileDataService.externalReferenceId
+          : evacuationFileDataService?.essFileId
+      }}</span
+    >
   </div>
 </div>
 <mat-card class="detailsCard">
@@ -21,7 +27,11 @@
         <img [src]="backArrowImgSrc" height="28" width="31" />
       </button>
       <span class="evacFileSpan"
-        >ESS File #{{ evacuationFileDataService?.essFileId }}</span
+        >ESS File #{{
+          evacuationFileDataService?.isPaper
+            ? evacuationFileDataService.externalReferenceId
+            : evacuationFileDataService?.essFileId
+        }}</span
       >
     </div>
 

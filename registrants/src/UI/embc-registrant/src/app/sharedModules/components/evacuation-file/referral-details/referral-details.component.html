@@ -40,10 +40,7 @@
           Support Type
         </th>
         <td mat-cell *matCellDef="let element" style="width: 220px">
-          <p *ngIf="element.subCategory !== 'None'">
-            {{ element.subCategory }}
-          </p>
-          <p *ngIf="element.subCategory === 'None'">{{ element.category }}</p>
+          <p>{{ generateSupportType(element) }}</p>
         </td>
       </ng-container>
 
@@ -62,7 +59,11 @@
           Support #
         </th>
         <td mat-cell *matCellDef="let element" style="width: 105px">
-          {{ element.id }}
+          {{
+            element.externalReferenceId !== null
+              ? element.externalReferenceId
+              : element.id
+          }}
         </td>
       </ng-container>
 
@@ -114,7 +115,7 @@
               <div class="col-md-5"><b>Support Provided to</b></div>
               <div class="col-md-5">
                 <p *ngFor="let member of element.includedHouseholdMembers">
-                  {{ getMemberFullName(member) }}
+                  {{ getMemberFullName(member) | titlecase }}
                 </p>
               </div>
             </div>

@@ -20,15 +20,13 @@ export class BootstrapService {
     private securityQuestionsService: SecurityQuestionsService,
     private timeoutService: TimeoutService,
     private outageService: OutageService,
-    private alertService: AlertService,
-    private router: Router
+    private alertService: AlertService
   ) {}
 
   public async init(): Promise<void> {
     try {
       //load server config
       const config = await this.configService.loadConfig();
-      console.log(config);
       this.timeoutService.timeOutInfo = config.timeoutInfo;
       this.outageService.outageInfo = config.outageInfo;
       this.outageService.setOutageInformation(config.outageInfo);
@@ -44,7 +42,7 @@ export class BootstrapService {
         //load metadata lists
         await this.locationService.loadStaticLocationLists();
         await this.securityQuestionsService.loadSecurityQuesList();
-
+        this.locationService.loadSupportCodes();
         //configure and load oauth module configuration
         this.oauthService.configure(this.configService.getOAuthConfig());
         await this.oauthService.loadDiscoveryDocument();
