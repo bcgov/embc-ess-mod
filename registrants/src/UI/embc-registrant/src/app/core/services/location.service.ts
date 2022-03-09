@@ -34,6 +34,8 @@ export class LocationService {
   private stateProvinceList: StateProvince[];
   private countriesList: Country[];
   private regionalDistricts: string[];
+  private supportCategoryVal: Code[] = [];
+  private supportSubCategoryVal: Code[] = [];
 
   constructor(
     private configService: ConfigurationService,
@@ -69,6 +71,37 @@ export class LocationService {
     return this.regionalDistricts
       ? this.regionalDistricts
       : JSON.parse(this.cacheService.get('regionalDistrictsList'));
+  }
+
+  get supportCategory(): Code[] {
+    return this.supportCategoryVal.length > 0
+      ? this.supportCategoryVal
+      : JSON.parse(this.cacheService.get('supportCategory'))
+      ? JSON.parse(this.cacheService.get('supportCategory'))
+      : this.getCategoryList();
+  }
+
+  set supportCategory(supportCategoryVal: Code[]) {
+    this.supportCategoryVal = supportCategoryVal;
+    this.cacheService.set('supportCategory', supportCategoryVal);
+  }
+
+  set supportSubCategory(supportSubCategoryVal: Code[]) {
+    this.supportSubCategoryVal = supportSubCategoryVal;
+    this.cacheService.set('supportSubCategory', supportSubCategoryVal);
+  }
+
+  get supportSubCategory() {
+    return this.supportSubCategoryVal.length > 0
+      ? this.supportSubCategoryVal
+      : JSON.parse(this.cacheService.get('supportSubCategory'))
+      ? JSON.parse(this.cacheService.get('supportSubCategory'))
+      : this.getSubCategoryList();
+  }
+
+  public loadSupportCodes() {
+    this.getCategoryList();
+    this.getSubCategoryList();
   }
 
   public async loadStaticLocationLists(): Promise<void> {
@@ -248,5 +281,43 @@ export class LocationService {
       }
     );
     return this.countriesList || [];
+  }
+
+  private getCategoryList(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportCategory' })
+      .subscribe({
+        next: (categories: Code[]) => {
+          this.supportCategory = categories.filter(
+            (category) => category.description
+          );
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      });
+  }
+
+  private getSubCategoryList(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
+      .subscribe({
+        next: (subCategories: Code[]) => {
+          this.supportSubCategory = subCategories.filter(
+            (subCategory) => subCategory.description
+          );
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      });
   }
 }

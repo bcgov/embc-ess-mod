@@ -29,5 +29,11 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/version": {
+    "target": "http://localhost:5020",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }

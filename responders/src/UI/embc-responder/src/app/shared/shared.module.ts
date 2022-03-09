@@ -24,7 +24,6 @@ import { OverlayLoaderComponent } from './components/overlay-loader/overlay-load
 import { FileStatusDefinitionComponent } from './components/dialog-components/file-status-definition/file-status-definition.component';
 import { FileDashboardVerifyDialogComponent } from './components/dialog-components/file-dashboard-verify-dialog/file-dashboard-verify-dialog.component';
 import { RegistrantLinkDialogComponent } from './components/dialog-components/registrant-link-dialog/registrant-link-dialog.component';
-import { AppVersionDialogComponent } from './components/dialog-components/app-version-dialog/app-version-dialog.component';
 import { CustomGstFieldComponent } from './components/custom-gst-field/custom-gst-field.component';
 import { ViewAssessmentDialogComponent } from './components/dialog-components/view-assessment-dialog/view-assessment-dialog.component';
 import { CustomPipeModule } from './pipes/customPipe.module';
@@ -59,7 +58,6 @@ import { EssFileExistsComponent } from './components/dialog-components/ess-file-
     FileStatusDefinitionComponent,
     FileDashboardVerifyDialogComponent,
     RegistrantLinkDialogComponent,
-    AppVersionDialogComponent,
     CustomGstFieldComponent,
     ViewAssessmentDialogComponent,
     VoidReferralDialogComponent,

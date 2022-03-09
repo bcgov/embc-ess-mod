@@ -33,5 +33,11 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/version": {
+    "target": "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
