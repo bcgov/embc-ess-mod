@@ -82,10 +82,8 @@
         </div>
 
         <div class="col-md-2">
-          <span *ngIf="appVersion" class="app-version">
-            <a (click)="openAppVersionDetails()"
-              >{{ appVersion[0]?.version }}.{{ appVersion[0]?.build }}</a
-            >
+          <span class="app-version" (click)="openVersionsModal()">
+            Version Information
           </span>
         </div>
       </div>

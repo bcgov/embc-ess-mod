@@ -35,17 +35,22 @@ namespace EMBC.Utilities.Messaging
 
         public async Task<IEnumerable<VersionInformation>> Get()
         {
-            var url = configuration.GetValue<Uri>("messaging:Url");
-            var handler = new HttpClientHandler();
-            if (configuration.GetValue("messaging:AllowInvalidServerCertificate", false))
-            {
-                handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            }
-            using var client = new HttpClient(handler);
-            client.BaseAddress = url;
-
             try
             {
+                var url = configuration.GetValue<Uri>("messaging:Url");
+                if (url.Scheme == "dns")
+                {
+                    var parts = url.LocalPath.Trim('/').Split(':');
+                    url = new UriBuilder { Scheme = "https", Host = parts[0], Port = int.Parse(parts[1]) }.Uri;
+                }
+                var handler = new HttpClientHandler();
+                if (configuration.GetValue("messaging:AllowInvalidServerCertificate", false))
+                {
+                    handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                }
+                using var client = new HttpClient(handler);
+                client.BaseAddress = url;
+
                 var response = await client.GetAsync("/version");
                 response.EnsureSuccessStatusCode();
 
@@ -60,7 +65,7 @@ namespace EMBC.Utilities.Messaging
             {
                 return new[]
                 {
-                    new VersionInformation { Name = "EMBC.Utilities.Messaging.VersionInformationProvider", Version = null }
+                    new VersionInformation { Name = $"{this.GetType().FullName}:error", Version = null }
                 };
             }
         }
