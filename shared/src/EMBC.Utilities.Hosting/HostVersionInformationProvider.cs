@@ -27,7 +27,7 @@ namespace EMBC.Utilities.Hosting
         public async Task<IEnumerable<VersionInformation>> Get()
         {
             await Task.CompletedTask;
-            var name = Environment.GetEnvironmentVariable("APP_NAME") ?? Assembly.GetEntryAssembly()?.GetName().Name;
+            var name = Assembly.GetEntryAssembly()?.GetName().Name;
             var version = Environment.GetEnvironmentVariable("VERSION");
             return new[]
             {
