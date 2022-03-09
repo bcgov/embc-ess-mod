@@ -10,6 +10,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import * as moment from 'moment';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -17,6 +18,7 @@ import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { DateConversionService } from 'src/app/core/services/dateConversion.service';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -54,11 +56,26 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     private dateConversionService: DateConversionService
   ) {}
 
+  paperCompletedDateFilter = (d: Date | null): boolean => {
+    const date = d || new Date();
+    return moment(date).isBetween(
+      moment(this.stepEssFileService?.getTaskEndDate()),
+      moment(new Date()),
+      'D',
+      '[]'
+    );
+  };
+
   ngOnInit(): void {
     this.wizardType = this.evacueeSessionService.getWizardType();
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
-    this.stepEssFileService.paperESSFile =
-      this.stepEssFileService.selectedEssFile.externalReferenceId;
+    if (
+      this.evacueeSessionService.getWizardType() !== WizardType.NewEssFile &&
+      this.evacueeSessionService.getWizardType() !== WizardType.NewRegistration
+    ) {
+      this.stepEssFileService.paperESSFile =
+        this.stepEssFileService?.selectedEssFile?.externalReferenceId;
+    }
 
     this.createEvacDetailsForm();
     this.checkAddress();

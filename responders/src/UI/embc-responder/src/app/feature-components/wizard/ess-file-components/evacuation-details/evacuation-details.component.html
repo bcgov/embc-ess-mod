@@ -12,7 +12,13 @@
       <form [formGroup]="evacDetailsForm">
         <div class="row">
           <div class="col-8">
-            <div *ngIf="stepEssFileService?.paperESSFile" class="row">
+            <div
+              *ngIf="
+                stepEssFileService?.paperESSFile ||
+                evacueeSessionService?.isPaperBased
+              "
+              class="row"
+            >
               <div class="col-12 paper-box">
                 <div class="row">
                   <div class="col-md-12">
@@ -102,6 +108,7 @@
                       <input
                         matInput
                         [matDatepicker]="paperPicker"
+                        [matDatepickerFilter]="paperCompletedDateFilter"
                         formControlName="paperCompletedOn"
                         placeholder="File Completed On"
                         required

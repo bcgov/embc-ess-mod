@@ -3,8 +3,7 @@ import {
   OnInit,
   Input,
   ViewEncapsulation,
-  Output,
-  EventEmitter
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   animate,
@@ -20,6 +19,7 @@ import {
   Support
 } from 'src/app/core/api/models';
 import { NeedsAssessmentService } from 'src/app/feature-components/needs-assessment/needs-assessment.service';
+import { LocationService } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-referral-details',
@@ -46,10 +46,14 @@ export class ReferralDetailsComponent implements OnInit {
   columnsToDisplay = ['provider', 'type', 'issuedTo', 'referral', 'amount'];
   expandedElement: Support | null;
 
-  constructor(private needsAssessmentService: NeedsAssessmentService) {}
+  constructor(
+    private needsAssessmentService: NeedsAssessmentService,
+    private locationService: LocationService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    console.log(this.referralDataSource);
+    this.cd.detectChanges();
   }
 
   getReferral(support: Support): Referral {
@@ -79,5 +83,19 @@ export class ReferralDetailsComponent implements OnInit {
     ).details?.firstName;
 
     return firstName + ', ' + lastName;
+  }
+
+  generateSupportType(element: Support): string {
+    if (element?.subCategory === 'None') {
+      const category = this.locationService.supportCategory.find(
+        (value) => value.value === element?.category
+      );
+      return category?.description;
+    } else {
+      const subCategory = this.locationService.supportSubCategory.find(
+        (value) => value.value === element?.subCategory
+      );
+      return subCategory?.description;
+    }
   }
 }

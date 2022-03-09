@@ -36,6 +36,8 @@ export class EvacuationFileDataService {
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
   private essFileIdVal: string;
+  private externalReferenceIdVal: string;
+  private isPaperVal: boolean;
 
   private secretPhraseVal: string;
   private secretPhraseEditedVal: boolean;
@@ -71,6 +73,20 @@ export class EvacuationFileDataService {
   }
   public set essFileId(value: string) {
     this.essFileIdVal = value;
+  }
+
+  public get externalReferenceId(): string {
+    return this.externalReferenceIdVal;
+  }
+  public set externalReferenceId(value: string) {
+    this.externalReferenceIdVal = value;
+  }
+
+  public get isPaper(): boolean {
+    return this.isPaperVal;
+  }
+  public set isPaper(value: boolean) {
+    this.isPaperVal = value;
   }
 
   public get secretPhrase(): string {

@@ -63,7 +63,7 @@ jobs:
           echo DOCKER_REPOSITORY=${{ env.DOCKER_REPOSITORY }}
           echo VERSION=$VERSION          
  
-          tar -czh . | docker build --tag ${{ env.DOCKER_REPOSITORY }}:latest --cache-from=${{ env.DOCKER_REPOSITORY }}:latest --build-arg VERSION=$VERSION -
+          tar -czh . | docker build --load --tag ${{ env.DOCKER_REPOSITORY }}:latest --cache-from=${{ env.DOCKER_REPOSITORY }}:latest --build-arg VERSION=$VERSION -
           docker tag ${{ env.DOCKER_REPOSITORY }}:latest ${{ env.DOCKER_REPOSITORY }}:$VERSION
 
       - name: Push image

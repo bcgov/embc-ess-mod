@@ -39,10 +39,21 @@ export class UserService {
             this.cacheService.get('loggedInTaskCommunity') === null || undefined
               ? null
               : this.cacheService.get('loggedInTaskCommunity');
+          const taskStartDate =
+            this.cacheService.get('taskStartDate') === null || undefined
+              ? null
+              : this.cacheService.get('taskStartDate');
+
+          const taskEndDate =
+            this.cacheService.get('taskEndDate') === null || undefined
+              ? null
+              : this.cacheService.get('taskEndDate');
           this.currentProfileVal = {
             ...response,
             taskNumber,
             taskCommunity,
+            taskStartDate,
+            taskEndDate,
             claims: [...userClaims]
           };
           return this.currentProfileVal;
@@ -68,15 +79,21 @@ export class UserService {
   public updateTaskNumber(
     taskNumber: string,
     taskStatus: string,
-    taskCommunity: string
+    taskCommunity: string,
+    taskStartDate: string,
+    taskEndDate: string
   ): void {
     this.cacheService.set('loggedInTaskNumber', taskNumber);
     this.cacheService.set('loggedInTaskCommunity', taskCommunity);
+    this.cacheService.set('taskStartDate', taskStartDate);
+    this.cacheService.set('taskEndDate', taskEndDate);
     this.currentProfileVal = {
       ...this.currentProfileVal,
       taskNumber,
       taskStatus,
-      taskCommunity
+      taskCommunity,
+      taskStartDate,
+      taskEndDate
     };
   }
 
@@ -94,6 +111,8 @@ export class UserService {
     this.cacheService.remove('communityList');
     this.cacheService.remove('supportCategory');
     this.cacheService.remove('supportSubCategory');
+    this.cacheService.remove('taskStartDate');
+    this.cacheService.remove('taskEndDate');
 
     this.cacheService.remove('registrantProfileId');
     this.cacheService.remove('memberRegistration');
@@ -131,4 +150,6 @@ export interface LoggedInUserProfile extends UserProfile {
   taskStatus?: string;
   taskCommunity?: string;
   claims: ClaimModel[];
+  taskStartDate?: string;
+  taskEndDate?: string;
 }

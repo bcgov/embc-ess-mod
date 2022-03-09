@@ -1,6 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import {
+  Component,
+  OnInit,
+  Input,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  AfterViewInit
+} from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
@@ -10,9 +17,10 @@ import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-evacuation-details',
   templateUrl: './evacuation-details.component.html',
-  styleUrls: ['./evacuation-details.component.scss']
+  styleUrls: ['./evacuation-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EvacuationDetailsComponent implements OnInit {
+export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
   @Input() allExpandState = false;
   previousUrl: string;
   evacuationFileTab: string;
@@ -31,7 +39,8 @@ export class EvacuationDetailsComponent implements OnInit {
     public evacuationFilesService: EvacuationFileService,
     private router: Router,
     public evacuationFileDataService: EvacuationFileDataService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private cd: ChangeDetectorRef
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -42,20 +51,21 @@ export class EvacuationDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.previousUrl.includes('current')) {
+    if (this.previousUrl?.includes('current')) {
       this.evacuationFileTab = 'Current';
     } else {
       this.evacuationFileTab = 'Past';
     }
 
     if (this.evacuationFileDataService?.supports?.length > 0) {
-      // this.referralData = this.evacuationFileDataService.supports;
       this.referralData = this.splitReferralsByDate(
         this.evacuationFileDataService?.supports
       );
-      console.log(this.referralData);
-      console.log(this.referralData.size);
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.cd.detectChanges();
   }
 
   changeStatusColor(): string {
