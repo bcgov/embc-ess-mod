@@ -82,8 +82,8 @@
         </div>
 
         <div class="col-md-2">
-          <span *ngIf="appVersion" class="app-version">
-            {{ appVersion }}
+          <span class="app-version" (click)="openVersionsModal()">
+            Version Information
           </span>
         </div>
       </div>
