@@ -216,6 +216,30 @@ export class CustomValidationService {
   }
 
   /**
+   * If email has value, checks if the email and confirm email fields match
+   */
+  confirmEmailIsOptionalValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const email = control.get('email').value;
+        const confirmEmail = control.get('confirmEmail').value;
+        if (email !== undefined && email !== null && email !== '') {
+          if (
+            confirmEmail === undefined ||
+            confirmEmail === null ||
+            confirmEmail === ''
+          ) {
+            return { emailMatch: true };
+          }
+          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+            return { emailMatch: true };
+          }
+        }
+      }
+    };
+  }
+
+  /**
    * Group minimum length validation for custom gst field
    *
    * @returns validation errors

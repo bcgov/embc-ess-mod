@@ -78,6 +78,17 @@
   color: white;
 }
 
+.e-transfer-panel {
+  @extend .wizard-panel;
+
+  .tab-subtitle {
+    color: black;
+  }
+
+  background-color: #feba2c;
+  color: black;
+}
+
 .nav-buttons {
   margin-top: 3em;
 }

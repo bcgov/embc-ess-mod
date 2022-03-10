@@ -61,6 +61,8 @@ export class StepEvacueeProfileService {
 
   // Review & Save tab
   private verifiedProfileVal: boolean;
+  private inviteEmailVal?: null | string;
+  private confirmInviteEmailVal: string;
 
   constructor(
     private dialog: MatDialog,
@@ -225,6 +227,20 @@ export class StepEvacueeProfileService {
     this.verifiedProfileVal = verifiedProfileVal;
   }
 
+  public get inviteEmail(): string {
+    return this.inviteEmailVal;
+  }
+  public set inviteEmail(inviteEmailVal: string) {
+    this.inviteEmailVal = inviteEmailVal;
+  }
+
+  public get confirmInviteEmail(): string {
+    return this.confirmInviteEmailVal;
+  }
+  public set confirmInviteEmail(confirmInviteEmailVal: string) {
+    this.confirmInviteEmailVal = confirmInviteEmailVal;
+  }
+
   public setTabStatus(name: string, status: string): void {
     this.profileTabs.map((tab) => {
       if (tab.name === name) {
@@ -382,6 +398,8 @@ export class StepEvacueeProfileService {
 
     // Review & Save tab
     this.verifiedProfile = undefined;
+    this.inviteEmail = undefined;
+    this.confirmInviteEmail = undefined;
   }
 
   /**

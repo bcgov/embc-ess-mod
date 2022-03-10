@@ -3,6 +3,7 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
+  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,6 +22,8 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { SecurityQuestion } from 'src/app/core/api/models';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeMetaDataModel } from 'src/app/core/models/evacuee-metadata.model';
+import { CustomErrorMailMatcher } from '../contact/contact.component';
+import { CustomValidationService } from '../../../../core/services/customValidation.service';
 
 @Component({
   selector: 'app-profile-review',
@@ -39,12 +42,16 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   primaryCommunity: string;
   mailingCommunity: string;
   tabMetaData: TabModel;
+  inviteEmailGroup: FormGroup = null;
+  emailMatcher = new CustomErrorMailMatcher();
+  wizardType = WizardType;
 
   constructor(
     private router: Router,
     private wizardService: WizardService,
     private wizardAdapterService: WizardAdapterService,
     private evacueeProfileService: EvacueeProfileService,
+    private customValidationService: CustomValidationService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     public stepEvacueeProfileService: StepEvacueeProfileService,
@@ -89,10 +96,29 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.updateTabStatus();
       });
     this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('review');
+
+    this.inviteEmailGroup = this.formBuilder.group(
+      {
+        email: [this.stepEvacueeProfileService.inviteEmail, Validators.email],
+        confirmEmail: [
+          this.stepEvacueeProfileService.confirmInviteEmail,
+          Validators.email
+        ]
+      },
+      {
+        validators: [
+          this.customValidationService.confirmEmailIsOptionalValidator()
+        ]
+      }
+    );
   }
 
   get verifiedProfileControl(): { [key: string]: AbstractControl } {
     return this.verifiedProfileGroup.controls;
+  }
+
+  get inviteEmailControl(): { [key: string]: AbstractControl } {
+    return this.inviteEmailGroup.controls;
   }
 
   /**
@@ -107,7 +133,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    */
   save(): void {
     this.stepEvacueeProfileService.nextTabUpdate.next();
-    if (this.verifiedProfileGroup.valid) {
+    if (this.verifiedProfileGroup.valid && this.inviteEmailGroup.valid) {
       this.saveLoader = true;
 
       if (
@@ -127,6 +153,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       }
     } else {
       this.verifiedProfileControl.verifiedProfile.markAsTouched();
+      this.inviteEmailControl.email.markAsTouched();
+      this.inviteEmailControl.confirmEmail.markAsTouched();
     }
   }
 
@@ -134,7 +162,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     this.evacueeProfileService
       .createProfile(this.stepEvacueeProfileService.createProfileDTO())
       .subscribe({
-        next: (profile: RegistrantProfileModel) => {
+        next: async (profile: RegistrantProfileModel) => {
+          if (this.inviteEmailControl.email.value) {
+            await this.sendEmailInvite(
+              this.inviteEmailControl.email.value,
+              profile.id
+            );
+          }
           this.disableButton = true;
           this.saveLoader = false;
           this.setProfileMetaData(profile.id);
@@ -151,6 +185,24 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       });
   }
 
+  sendEmailInvite(email: string, profileId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.evacueeProfileService
+        .inviteProfileByEmail(email, profileId)
+        .subscribe({
+          next: () => {
+            resolve();
+          },
+          error: (error) => {
+            this.saveLoader = false;
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.bcscInviteError);
+            reject();
+          }
+        });
+    });
+  }
+
   createMemberRegistration() {
     this.evacueeProfileService
       .createMemberRegistration(
@@ -159,7 +211,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.essFileNumber
       )
       .subscribe({
-        next: (profile) => {
+        next: async (profile) => {
+          if (this.inviteEmailControl.email.value) {
+            await this.sendEmailInvite(
+              this.inviteEmailControl.email.value,
+              this.evacueeSessionService.profileId
+            );
+          }
           this.disableButton = true;
           this.saveLoader = false;
           this.setProfileMetaData(this.evacueeSessionService.profileId); //TODO-Sue
@@ -276,6 +334,12 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
 
     this.stepEvacueeProfileService.verifiedProfile =
       this.verifiedProfileGroup.get('verifiedProfile').value;
+
+    this.stepEvacueeProfileService.inviteEmail =
+      this.inviteEmailGroup.get('email').value;
+
+    this.stepEvacueeProfileService.confirmInviteEmail =
+      this.inviteEmailGroup.get('confirmEmail').value;
   }
 
   /**
