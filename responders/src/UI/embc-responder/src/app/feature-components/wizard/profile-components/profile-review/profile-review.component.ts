@@ -23,7 +23,7 @@ import { SecurityQuestion } from 'src/app/core/api/models';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeMetaDataModel } from 'src/app/core/models/evacuee-metadata.model';
 import { CustomErrorMailMatcher } from '../contact/contact.component';
-import { RegistrationsService } from '../../../../core/api/services/registrations.service';
+import { CustomValidationService } from '../../../../core/services/customValidation.service';
 
 @Component({
   selector: 'app-profile-review',
@@ -51,7 +51,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private wizardAdapterService: WizardAdapterService,
     private evacueeProfileService: EvacueeProfileService,
-    private registrationsService: RegistrationsService,
+    private customValidationService: CustomValidationService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     public stepEvacueeProfileService: StepEvacueeProfileService,
@@ -105,7 +105,11 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
           Validators.email
         ]
       },
-      { validators: [this.confirmEmailValidator()] }
+      {
+        validators: [
+          this.customValidationService.confirmEmailIsOptionalValidator()
+        ]
+      }
     );
   }
 
@@ -158,15 +162,17 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     this.evacueeProfileService
       .createProfile(this.stepEvacueeProfileService.createProfileDTO())
       .subscribe({
-        next: (profile: RegistrantProfileModel) => {
+        next: async (profile: RegistrantProfileModel) => {
           if (this.inviteEmailControl.email.value) {
-            this.sendEmailInvite(profile);
-          } else {
-            this.disableButton = true;
-            this.saveLoader = false;
-            this.setProfileMetaData(profile.id);
-            this.createNewProfileDialog(profile);
+            await this.sendEmailInvite(
+              this.inviteEmailControl.email.value,
+              profile.id
+            );
           }
+          this.disableButton = true;
+          this.saveLoader = false;
+          this.setProfileMetaData(profile.id);
+          this.createNewProfileDialog(profile);
         },
         error: (error) => {
           this.saveLoader = false;
@@ -179,25 +185,22 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       });
   }
 
-  sendEmailInvite(profile: RegistrantProfileModel) {
-    this.registrationsService
-      .registrationsInviteToRegistrantPortal({
-        registrantId: profile.id,
-        body: { email: this.inviteEmailControl.email.value }
-      })
-      .subscribe({
-        next: () => {
-          this.disableButton = true;
-          this.saveLoader = false;
-          this.setProfileMetaData(profile.id);
-          this.createNewProfileDialog(profile);
-        },
-        error: (error) => {
-          this.saveLoader = false;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.bcscInviteError);
-        }
-      });
+  sendEmailInvite(email: string, profileId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.evacueeProfileService
+        .inviteProfileByEmail(email, profileId)
+        .subscribe({
+          next: () => {
+            resolve();
+          },
+          error: (error) => {
+            this.saveLoader = false;
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.bcscInviteError);
+            reject();
+          }
+        });
+    });
   }
 
   createMemberRegistration() {
@@ -208,7 +211,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.essFileNumber
       )
       .subscribe({
-        next: (profile) => {
+        next: async (profile) => {
+          if (this.inviteEmailControl.email.value) {
+            await this.sendEmailInvite(
+              this.inviteEmailControl.email.value,
+              this.evacueeSessionService.profileId
+            );
+          }
           this.disableButton = true;
           this.saveLoader = false;
           this.setProfileMetaData(this.evacueeSessionService.profileId); //TODO-Sue
@@ -313,30 +322,6 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
           globalConst.evacueeProfileUpdatedMessage
         )
       );
-  }
-
-  /**
-   * Checks if the email and confirm email field matches
-   */
-  confirmEmailValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      if (control) {
-        const email = control.get('email').value;
-        const confirmEmail = control.get('confirmEmail').value;
-        if (email !== undefined && email !== null && email !== '') {
-          if (
-            confirmEmail === undefined ||
-            confirmEmail === null ||
-            confirmEmail === ''
-          ) {
-            return { emailMatch: true };
-          }
-          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
-            return { emailMatch: true };
-          }
-        }
-      }
-    };
   }
 
   /**

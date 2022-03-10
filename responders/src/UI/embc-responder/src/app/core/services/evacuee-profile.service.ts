@@ -232,4 +232,14 @@ export class EvacueeProfileService {
         )
       );
   }
+
+  public inviteProfileByEmail(
+    email: string,
+    registrantId: string
+  ): Observable<void> {
+    return this.registrationsService.registrationsInviteToRegistrantPortal({
+      registrantId,
+      body: { email }
+    });
+  }
 }

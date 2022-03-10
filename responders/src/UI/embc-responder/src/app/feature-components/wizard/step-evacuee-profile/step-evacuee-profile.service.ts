@@ -398,6 +398,8 @@ export class StepEvacueeProfileService {
 
     // Review & Save tab
     this.verifiedProfile = undefined;
+    this.inviteEmail = undefined;
+    this.confirmInviteEmail = undefined;
   }
 
   /**

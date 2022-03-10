@@ -353,8 +353,10 @@
           *ngIf="
             !evacueeSessionService?.isPaperBased &&
             !this.evacueeSessionService.profileId &&
-            this.evacueeSessionService.getWizardType() ===
-              wizardType.NewRegistration
+            (this.evacueeSessionService.getWizardType() ===
+              wizardType.NewRegistration ||
+              this.evacueeSessionService.getWizardType() ===
+                wizardType.MemberRegistration)
           "
         >
           <div class="e-transfer-panel">
