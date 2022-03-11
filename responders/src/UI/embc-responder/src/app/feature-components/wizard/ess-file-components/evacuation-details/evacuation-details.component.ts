@@ -75,6 +75,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     ) {
       this.stepEssFileService.paperESSFile =
         this.stepEssFileService?.selectedEssFile?.externalReferenceId;
+    } else {
+      this.stepEssFileService.paperESSFile =
+        this.evacueeSearchService?.paperBasedEssFile;
     }
 
     this.createEvacDetailsForm();
