@@ -16,7 +16,7 @@
 
             <div
               *ngIf="
-                stepEssFileService?.paperESSFile ||
+                stepEssFileService?.paperESSFile !== 'undefined' ||
                 evacueeSessionService?.isPaperBased
               "
               class="row"
@@ -29,7 +29,7 @@
 
             <div
               *ngIf="
-                stepEssFileService?.paperESSFile ||
+                stepEssFileService?.paperESSFile !== 'undefined' ||
                 evacueeSessionService?.isPaperBased
               "
               class="row"
@@ -42,7 +42,7 @@
 
             <div
               *ngIf="
-                stepEssFileService?.paperESSFile ||
+                stepEssFileService?.paperESSFile !== 'undefined' ||
                 evacueeSessionService?.isPaperBased
               "
               class="row"
