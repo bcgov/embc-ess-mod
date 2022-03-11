@@ -83,6 +83,8 @@ export class HouseholdMemberComponent implements OnInit {
             this.matchedProfiles = value;
             if (value.length > 1) {
               this.linkedFlag = true;
+            } else {
+              this.linkedFlag = false;
             }
             if (value.length === 1) {
               this.selectedHouseholdMember = value[0];
