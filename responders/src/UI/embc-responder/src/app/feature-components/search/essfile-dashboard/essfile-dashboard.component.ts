@@ -40,7 +40,7 @@ export class EssfileDashboardComponent implements OnInit {
     private alertService: AlertService,
     private stepNotesService: StepNotesService,
     private cacheService: CacheService,
-    private evacueeSearchService: EvacueeSearchService
+    public evacueeSearchService: EvacueeSearchService
   ) {}
 
   ngOnInit(): void {
