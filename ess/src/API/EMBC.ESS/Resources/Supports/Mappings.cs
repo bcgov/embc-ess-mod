@@ -95,10 +95,10 @@ namespace EMBC.ESS.Resources.Supports
                 .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.ExtremeWinterConditions, opts => opts.MapFrom(s => s.era_extremewinterconditions == (int)EraTwoOptions.Yes))
+                .ForMember(d => d.ApproverName, opts => opts.MapFrom(s => s.era_supportoverrideauthority))
                 .ReverseMap()
                 .ForMember(d => d.era_extremewinterconditions, opts => opts.MapFrom(s => s.ExtremeWinterConditions ? EraTwoOptions.Yes : EraTwoOptions.No))
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Clothing))
-                .ForMember(d => d.era_supportoverrideauthority, opts => opts.MapFrom(s => s.ApproverName))
                 .ForMember(d => d.era_amountoverride, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ApproverName)))
                 ;
 
@@ -106,9 +106,9 @@ namespace EMBC.ESS.Resources.Supports
                 .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_approveditems))
+                .ForMember(d => d.ApproverName, opts => opts.MapFrom(s => s.era_supportoverrideauthority))
                 .ReverseMap()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Incidentals))
-                .ForMember(d => d.era_supportoverrideauthority, opts => opts.MapFrom(s => s.ApproverName))
                 .ForMember(d => d.era_amountoverride, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ApproverName)))
                 ;
 
@@ -116,9 +116,9 @@ namespace EMBC.ESS.Resources.Supports
                 .IncludeBase<era_evacueesupport, Referral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.era_numberofmeals))
+                .ForMember(d => d.ApproverName, opts => opts.MapFrom(s => s.era_supportoverrideauthority))
                 .ReverseMap()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.FoodGroceries))
-                .ForMember(d => d.era_supportoverrideauthority, opts => opts.MapFrom(s => s.ApproverName))
                 .ForMember(d => d.era_amountoverride, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ApproverName)))
                 ;
 
