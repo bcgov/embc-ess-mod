@@ -72,8 +72,13 @@
         >
       </mat-form-field>
       <span *ngIf="validateUserTotalAmount()" class="total-amount-error">
-        <mat-icon class="amount-warning-icon">warning</mat-icon> Total monetary
-        value exceeds the recommended ESS rate.
+        <img
+          src="../../../../../assets/images/warning-red.svg"
+          width="25px"
+          height="27px"
+          class="amount-warning-icon"
+        />
+        Total monetary value exceeds the recommended ESS rate.
       </span>
     </div>
   </div>
@@ -81,7 +86,7 @@
     <div class="row">
       <div class="col">
         <div class="requiredField">
-          Autrhorization to exceed ESS rates given by (name of EMBC Expense
+          Authorization to exceed ESS rates given by (name of EMBC Expense
           Authority)
         </div>
         <div>
@@ -93,17 +98,12 @@
     <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline">
-          <input
-            formControlName="approverName"
-            maxlength="100"
-            matInput
-            required
-          />
+          <input formControlName="approverName" maxlength="100" matInput />
 
           <mat-error
             *ngIf="
               referralFormControl?.approverName.invalid &&
-              referralFormControl?.approverName.hasError('required')
+              referralFormControl?.approverName.hasError('whitespaceError')
             "
           >
             Approver name is required</mat-error

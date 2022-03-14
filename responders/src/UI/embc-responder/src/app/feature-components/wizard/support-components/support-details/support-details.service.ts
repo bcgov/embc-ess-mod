@@ -73,7 +73,7 @@ export class SupportDetailsService {
   }
 
   groceriesForm(): FormGroup {
-    return this.formBuilder.group({
+    const groceriesForm = this.formBuilder.group({
       noOfMeals: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
           ?.noOfMeals ?? '',
@@ -90,9 +90,23 @@ export class SupportDetailsService {
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
-          ?.approverName ?? ''
+          ?.approverName ?? '',
+        this.customValidation
+          .conditionalValidation(
+            () =>
+              groceriesForm.get('userTotalAmount').value &&
+              Number(
+                groceriesForm
+                  .get('userTotalAmount')
+                  .value.toString()
+                  .replace(/,/g, '')
+              ) > Number(groceriesForm.get('totalAmount').value),
+            this.customValidation.whitespaceValidator()
+          )
+          .bind(this.customValidation)
       ]
     });
+    return groceriesForm;
   }
 
   taxiForm(): FormGroup {
@@ -161,7 +175,7 @@ export class SupportDetailsService {
   }
 
   incidentalsForm(): FormGroup {
-    return this.formBuilder.group({
+    const incidentalsForm = this.formBuilder.group({
       approvedItems: [
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)
           ?.approvedItems ?? '',
@@ -179,13 +193,28 @@ export class SupportDetailsService {
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
-          ?.approverName ?? ''
+          ?.approverName ?? '',
+        this.customValidation
+          .conditionalValidation(
+            () =>
+              incidentalsForm.get('userTotalAmount').value &&
+              Number(
+                incidentalsForm
+                  .get('userTotalAmount')
+                  .value.toString()
+                  .replace(/,/g, '')
+              ) > Number(incidentalsForm.get('totalAmount').value),
+            this.customValidation.whitespaceValidator()
+          )
+          .bind(this.customValidation)
       ]
     });
+
+    return incidentalsForm;
   }
 
   clothingForm(): FormGroup {
-    return this.formBuilder.group({
+    const clothingForm = this.formBuilder.group({
       extremeWinterConditions: [
         (this.stepSupportsService?.supportDetails?.referral as Clothing)
           ?.extremeWinterConditions ?? null,
@@ -203,9 +232,23 @@ export class SupportDetailsService {
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
-          ?.approverName ?? ''
+          ?.approverName ?? '',
+        this.customValidation
+          .conditionalValidation(
+            () =>
+              Number(
+                clothingForm
+                  .get('userTotalAmount')
+                  .value.toString()
+                  .replace(/,/g, '')
+              ) > Number(clothingForm.get('totalAmount').value),
+            this.customValidation.whitespaceValidator()
+          )
+          .bind(this.customValidation)
       ]
     });
+
+    return clothingForm;
   }
 
   checkUniqueReferralNumber(externalReferenceId: string) {

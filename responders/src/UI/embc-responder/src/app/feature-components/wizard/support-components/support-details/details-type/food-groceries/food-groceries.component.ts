@@ -4,10 +4,12 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
@@ -17,7 +19,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   styleUrls: ['./food-groceries.component.scss']
 })
 export class FoodGroceriesComponent
-  implements OnInit, OnChanges, AfterViewInit
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfDays: number;
@@ -26,6 +28,7 @@ export class FoodGroceriesComponent
   days: number;
   totalAmount = 0;
   isPaperBased = false;
+  userTotalAmountSubscription: Subscription;
   constructor(
     private cd: ChangeDetectorRef,
     public evacueeSessionService: EvacueeSessionService
@@ -53,6 +56,16 @@ export class FoodGroceriesComponent
       this.updateTotalAmount();
     });
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
+
+    this.userTotalAmountSubscription = this.referralForm
+      .get('userTotalAmount')
+      .valueChanges.subscribe((value) => {
+        this.referralForm.get('approverName').updateValueAndValidity();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.userTotalAmountSubscription.unsubscribe();
   }
 
   /**
@@ -76,14 +89,15 @@ export class FoodGroceriesComponent
   validateUserTotalAmount() {
     const exceedsTotal =
       !this.isPaperBased &&
-      this.referralForm.get('userTotalAmount').value > this.totalAmount;
+      Number(
+        this.referralForm
+          .get('userTotalAmount')
+          .value.toString()
+          .replace(/,/g, '')
+      ) > this.totalAmount;
 
-    if (exceedsTotal) {
-      this.referralForm.get('approverName').addValidators(Validators.required);
-    } else {
-      this.referralForm.get('approverName').setErrors(null);
-      this.referralForm.get('approverName').clearValidators();
-      this.referralForm.get('approverName').updateValueAndValidity();
+    if (!exceedsTotal && this.referralForm.get('approverName').value) {
+      this.referralForm.get('approverName').patchValue('');
     }
 
     return exceedsTotal;

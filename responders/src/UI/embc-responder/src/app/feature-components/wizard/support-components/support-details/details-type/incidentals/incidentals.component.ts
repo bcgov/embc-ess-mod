@@ -4,10 +4,12 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
@@ -16,12 +18,15 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   templateUrl: './incidentals.component.html',
   styleUrls: ['./incidentals.component.scss']
 })
-export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit {
+export class IncidentalsComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
+{
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfHouseholdMembers: number;
   referralForm: FormGroup;
   totalAmount = 0;
   isPaperBased = false;
+  userTotalAmountSubscription: Subscription;
   constructor(
     private cd: ChangeDetectorRef,
     public evacueeSessionService: EvacueeSessionService
@@ -29,6 +34,12 @@ export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
+
+    this.userTotalAmountSubscription = this.referralForm
+      .get('userTotalAmount')
+      .valueChanges.subscribe((value) => {
+        this.referralForm.get('approverName').updateValueAndValidity();
+      });
   }
 
   ngAfterViewInit(): void {
@@ -42,6 +53,10 @@ export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit {
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.userTotalAmountSubscription.unsubscribe();
   }
 
   /**
@@ -62,14 +77,15 @@ export class IncidentalsComponent implements OnInit, OnChanges, AfterViewInit {
   validateUserTotalAmount() {
     const exceedsTotal =
       !this.isPaperBased &&
-      this.referralForm.get('userTotalAmount').value > this.totalAmount;
+      Number(
+        this.referralForm
+          .get('userTotalAmount')
+          .value.toString()
+          .replace(/,/g, '')
+      ) > this.totalAmount;
 
-    if (exceedsTotal) {
-      this.referralForm.get('approverName').addValidators(Validators.required);
-    } else {
-      this.referralForm.get('approverName').setErrors(null);
-      this.referralForm.get('approverName').clearValidators();
-      this.referralForm.get('approverName').updateValueAndValidity();
+    if (!exceedsTotal && this.referralForm.get('approverName').value) {
+      this.referralForm.get('approverName').patchValue('');
     }
 
     return exceedsTotal;
