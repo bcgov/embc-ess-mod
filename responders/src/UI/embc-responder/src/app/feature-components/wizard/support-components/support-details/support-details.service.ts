@@ -87,6 +87,10 @@ export class SupportDetailsService {
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
           ?.userTotalAmount ?? '',
         [Validators.required, Validators.pattern(globalConst.currencyPattern)]
+      ],
+      approverName: [
+        (this.stepSupportsService?.supportDetails?.referral as Groceries)
+          ?.approverName ?? ''
       ]
     });
   }
@@ -172,6 +176,10 @@ export class SupportDetailsService {
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)
           ?.userTotalAmount ?? '',
         [Validators.required, Validators.pattern(globalConst.currencyPattern)]
+      ],
+      approverName: [
+        (this.stepSupportsService?.supportDetails?.referral as Groceries)
+          ?.approverName ?? ''
       ]
     });
   }
@@ -192,6 +200,10 @@ export class SupportDetailsService {
         (this.stepSupportsService?.supportDetails?.referral as Clothing)
           ?.userTotalAmount ?? '',
         [Validators.required, Validators.pattern(globalConst.currencyPattern)]
+      ],
+      approverName: [
+        (this.stepSupportsService?.supportDetails?.referral as Groceries)
+          ?.approverName ?? ''
       ]
     });
   }

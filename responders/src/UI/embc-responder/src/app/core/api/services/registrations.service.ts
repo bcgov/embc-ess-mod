@@ -1167,7 +1167,7 @@ export class RegistrationsService extends BaseService {
   registrationsLinkRegistrantToHouseholdMember$Response(params: {
     fileId: string;
     body: RegistrantLinkRequest
-  }): Observable<StrictHttpResponse<Blob>> {
+  }): Observable<StrictHttpResponse<string>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsLinkRegistrantToHouseholdMemberPath, 'post');
     if (params) {
@@ -1176,12 +1176,12 @@ export class RegistrationsService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
+        return r as StrictHttpResponse<string>;
       })
     );
   }
@@ -1195,10 +1195,10 @@ export class RegistrationsService extends BaseService {
   registrationsLinkRegistrantToHouseholdMember(params: {
     fileId: string;
     body: RegistrantLinkRequest
-  }): Observable<Blob> {
+  }): Observable<string> {
 
     return this.registrationsLinkRegistrantToHouseholdMember$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+      map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 

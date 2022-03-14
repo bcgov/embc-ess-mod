@@ -7,7 +7,8 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -20,7 +21,11 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() noOfHouseholdMembers: number;
   referralForm: FormGroup;
   totalAmount = 0;
-  constructor(private cd: ChangeDetectorRef) {}
+  isPaperBased = false;
+  constructor(
+    private cd: ChangeDetectorRef,
+    public evacueeSessionService: EvacueeSessionService
+  ) {}
 
   ngOnInit(): void {
     this.referralForm
@@ -28,6 +33,7 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit {
       .valueChanges.subscribe((value) => {
         this.updateTotalAmount();
       });
+    this.isPaperBased = this.evacueeSessionService?.isPaperBased;
   }
 
   ngAfterViewInit(): void {
@@ -64,5 +70,21 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
+  }
+
+  validateUserTotalAmount() {
+    const exceedsTotal =
+      !this.isPaperBased &&
+      this.referralForm.get('userTotalAmount').value > this.totalAmount;
+
+    if (exceedsTotal) {
+      this.referralForm.get('approverName').addValidators(Validators.required);
+    } else {
+      this.referralForm.get('approverName').setErrors(null);
+      this.referralForm.get('approverName').clearValidators();
+      this.referralForm.get('approverName').updateValueAndValidity();
+    }
+
+    return exceedsTotal;
   }
 }

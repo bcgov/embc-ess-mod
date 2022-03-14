@@ -214,7 +214,8 @@ export class ExistingSupportDetailsService {
       return {
         noOfMeals: (selectedSupport as FoodGroceriesReferral).numberOfDays,
         totalAmount: (selectedSupport as FoodGroceriesReferral).totalAmount,
-        userTotalAmount: (selectedSupport as FoodGroceriesReferral).totalAmount
+        userTotalAmount: (selectedSupport as FoodGroceriesReferral).totalAmount,
+        approverName: (selectedSupport as FoodGroceriesReferral).approverName
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi
@@ -256,14 +257,16 @@ export class ExistingSupportDetailsService {
       return {
         approvedItems: (selectedSupport as IncidentalsReferral).approvedItems,
         totalAmount: (selectedSupport as IncidentalsReferral).totalAmount,
-        userTotalAmount: (selectedSupport as IncidentalsReferral).totalAmount
+        userTotalAmount: (selectedSupport as IncidentalsReferral).totalAmount,
+        approverName: (selectedSupport as FoodGroceriesReferral).approverName
       };
     } else if (selectedSupport.category === SupportCategory.Clothing) {
       return {
         extremeWinterConditions: (selectedSupport as ClothingReferral)
           .extremeWinterConditions,
         totalAmount: (selectedSupport as ClothingReferral).totalAmount,
-        userTotalAmount: (selectedSupport as ClothingReferral).totalAmount
+        userTotalAmount: (selectedSupport as ClothingReferral).totalAmount,
+        approverName: (selectedSupport as FoodGroceriesReferral).approverName
       };
     }
   }

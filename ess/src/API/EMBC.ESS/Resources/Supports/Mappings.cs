@@ -98,6 +98,8 @@ namespace EMBC.ESS.Resources.Supports
                 .ReverseMap()
                 .ForMember(d => d.era_extremewinterconditions, opts => opts.MapFrom(s => s.ExtremeWinterConditions ? EraTwoOptions.Yes : EraTwoOptions.No))
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Clothing))
+                .ForMember(d => d.era_supportoverrideauthority, opts => opts.MapFrom(s => s.ApproverName))
+                .ForMember(d => d.era_amountoverride, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ApproverName)))
                 ;
 
             CreateMap<era_evacueesupport, IncidentalsReferral>()
@@ -106,6 +108,8 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_approveditems))
                 .ReverseMap()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Incidentals))
+                .ForMember(d => d.era_supportoverrideauthority, opts => opts.MapFrom(s => s.ApproverName))
+                .ForMember(d => d.era_amountoverride, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ApproverName)))
                 ;
 
             CreateMap<era_evacueesupport, FoodGroceriesReferral>()
@@ -114,6 +118,8 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.era_numberofmeals))
                 .ReverseMap()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.FoodGroceries))
+                .ForMember(d => d.era_supportoverrideauthority, opts => opts.MapFrom(s => s.ApproverName))
+                .ForMember(d => d.era_amountoverride, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ApproverName)))
                 ;
 
             CreateMap<era_evacueesupport, FoodRestaurantReferral>()

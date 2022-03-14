@@ -196,7 +196,8 @@ export class ReferralCreationService {
         (supportDetails.referral as Groceries).userTotalAmount
           ? (supportDetails.referral as Groceries).userTotalAmount
           : (supportDetails.referral as Groceries).totalAmount
-      )
+      ),
+      approverName: (supportDetails.referral as Groceries).approverName
     };
     this.groceriesReferral = groceriesReferral;
   }
@@ -297,6 +298,7 @@ export class ReferralCreationService {
           ? (supportDetails.referral as Clothing).userTotalAmount
           : (supportDetails.referral as Clothing).totalAmount
       ),
+      approverName: (supportDetails.referral as Groceries).approverName,
       subCategory: SupportSubCategory.None
     };
     this.clothingReferral = clothingReferral;
@@ -315,6 +317,7 @@ export class ReferralCreationService {
           ? (supportDetails.referral as Incidentals).userTotalAmount
           : (supportDetails.referral as Incidentals).totalAmount
       ),
+      approverName: (supportDetails.referral as Groceries).approverName,
       subCategory: SupportSubCategory.None
     };
     this.incidentalsReferral = incidentalsReferral;

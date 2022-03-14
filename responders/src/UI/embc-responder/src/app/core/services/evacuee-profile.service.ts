@@ -167,7 +167,7 @@ export class EvacueeProfileService {
     regProfile: RegistrantProfile,
     memberId: string,
     essFileId: string
-  ): Observable<Blob> {
+  ): Observable<string> {
     const profile$ =
       this.registrationsService.registrationsCreateRegistrantProfile({
         body: regProfile

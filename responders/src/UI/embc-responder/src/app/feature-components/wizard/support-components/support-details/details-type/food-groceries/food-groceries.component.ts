@@ -7,7 +7,8 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -24,7 +25,11 @@ export class FoodGroceriesComponent
   referralForm: FormGroup;
   days: number;
   totalAmount = 0;
-  constructor(private cd: ChangeDetectorRef) {}
+  isPaperBased = false;
+  constructor(
+    private cd: ChangeDetectorRef,
+    public evacueeSessionService: EvacueeSessionService
+  ) {}
 
   ngAfterViewInit(): void {
     this.cd.detectChanges();
@@ -47,6 +52,7 @@ export class FoodGroceriesComponent
     this.referralForm.get('noOfMeals').valueChanges.subscribe((value) => {
       this.updateTotalAmount();
     });
+    this.isPaperBased = this.evacueeSessionService?.isPaperBased;
   }
 
   /**
@@ -65,5 +71,21 @@ export class FoodGroceriesComponent
       this.referralForm.get('noOfMeals').value *
       this.noOfHouseholdMembers;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
+  }
+
+  validateUserTotalAmount() {
+    const exceedsTotal =
+      !this.isPaperBased &&
+      this.referralForm.get('userTotalAmount').value > this.totalAmount;
+
+    if (exceedsTotal) {
+      this.referralForm.get('approverName').addValidators(Validators.required);
+    } else {
+      this.referralForm.get('approverName').setErrors(null);
+      this.referralForm.get('approverName').clearValidators();
+      this.referralForm.get('approverName').updateValueAndValidity();
+    }
+
+    return exceedsTotal;
   }
 }

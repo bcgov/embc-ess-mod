@@ -71,6 +71,45 @@
           Invalid amount</mat-error
         >
       </mat-form-field>
+      <span *ngIf="validateUserTotalAmount()" class="total-amount-error">
+        <mat-icon class="amount-warning-icon">warning</mat-icon> Total monetary
+        value exceeds the recommended ESS rate.
+      </span>
+    </div>
+  </div>
+  <div *ngIf="validateUserTotalAmount()" class="approver-time-box">
+    <div class="row">
+      <div class="col">
+        <div class="requiredField">
+          Autrhorization to exceed ESS rates given by (name of EMBC Expense
+          Authority)
+        </div>
+        <div>
+          (If you are unsure who this is, please ask your supervison or EMBC
+          Regional Manager)
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <input
+            formControlName="approverName"
+            maxlength="100"
+            matInput
+            required
+          />
+
+          <mat-error
+            *ngIf="
+              referralFormControl?.approverName.invalid &&
+              referralFormControl?.approverName.hasError('required')
+            "
+          >
+            Approver name is required</mat-error
+          >
+        </mat-form-field>
+      </div>
     </div>
   </div>
 </form>
