@@ -5,4 +5,5 @@ import { AddressModel } from './address.model';
 export interface EvacuationFileModel extends EvacuationFile {
   evacuatedFromAddress: AddressModel;
   assignedTaskCommunity?: Community;
+  isEtransferEligible?: boolean;
 }

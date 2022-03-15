@@ -1,5 +1,5 @@
 .dashboard-subheading {
-  font-size: 21px;
+  font-size: 18px;
   padding-bottom: 18px;
 }
 
@@ -161,4 +161,9 @@ a:not(.btn):focus {
   width: 375px;
   background-color: white;
   border-left: 0px !important;
+}
+
+.vline {
+  height: 108px;
+  border-right: 0.7px solid rgba(0, 0, 0, 0.2);
 }
