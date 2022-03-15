@@ -77,6 +77,16 @@ namespace EMBC.Responders.API.Controllers
                 return NotFound(taskId);
             }
         }
+
+        [HttpPost("signin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> SignIn(string taskId)
+        {
+            var task = (await messagingClient.Send(new TasksSearchQuery { TaskId = taskId })).Items.SingleOrDefault();
+            if (task == null) return NotFound(taskId);
+            return Ok();
+        }
     }
 
     public class ESSTask
@@ -87,6 +97,13 @@ namespace EMBC.Responders.API.Controllers
         public string CommunityCode { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
+        public IEnumerable<TaskWorkflow> Workflows { get; set; } = Array.Empty<TaskWorkflow>();
+    }
+
+    public class TaskWorkflow
+    {
+        public string Name { get; set; }
+        public bool Enabled { get; set; }
     }
 
     public class SuppliersListItem
@@ -100,9 +117,26 @@ namespace EMBC.Responders.API.Controllers
 
     public class TaskMapping : Profile
     {
+        private static void SetTaskWorkflows(ESSTask task, IncidentTask incidentTask)
+        {
+            var workflows = new[]
+            {
+                new TaskWorkflow { Name = "digital-processing",  Enabled = incidentTask.Status == IncidentTaskStatus.Active },
+                new TaskWorkflow { Name = "paper-data-entry",  Enabled = true },
+                new TaskWorkflow { Name = "remote-extensions",  Enabled = false },
+            };
+            task.Workflows = workflows;
+        }
+
         public TaskMapping()
         {
-            CreateMap<IncidentTask, ESSTask>();
+            CreateMap<IncidentTask, ESSTask>()
+                .ForMember(d => d.Workflows, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
+                {
+                    SetTaskWorkflows(d, s);
+                })
+                ;
             CreateMap<SupplierDetails, SuppliersListItem>()
                 ;
         }
