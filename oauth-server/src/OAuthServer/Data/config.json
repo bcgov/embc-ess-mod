@@ -72,6 +72,39 @@
         "offline_access",
         "registrants-portal-api"
       ]
+    },
+    {
+      "ClientId": "registrants-portal-api",
+      "ClientSecrets": [
+        {
+          "Value": "EjuRF+sIxWuqxAgN+XgG157CmIANcfYcpv09mI2dg70="
+        }
+      ],
+      "AccessTokenType": "Reference",
+      "AllowedGrantTypes": [
+        "password"
+      ],
+      "AllowedScopes": [
+        "openid",
+        "offline_access",
+        "ess-backend"
+      ]
+    },
+    {
+      "ClientId": "responders-portal-api",
+      "ClientSecrets": [
+        {
+          "Value": "EjuRF+sIxWuqxAgN+XgG157CmIANcfYcpv09mI2dg70="
+        }
+      ],
+      "AccessTokenType": "Reference",
+      "AllowedGrantTypes": [
+        "password"
+      ],
+      "AllowedScopes": [
+        "openid",
+        "ess-backend"
+      ]
     }
   ]
 }

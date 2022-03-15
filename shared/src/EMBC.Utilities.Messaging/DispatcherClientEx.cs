@@ -19,8 +19,6 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml;
-using EMBC.ESS.Shared.Contracts;
 using Google.Protobuf;
 using Grpc.Core;
 
@@ -36,7 +34,7 @@ namespace EMBC.Utilities.Messaging
                 Type = content.GetType().AssemblyQualifiedName,
                 Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(content))
             };
-            var response = await dispatcherClient.DispatchAsync(request, new CallOptions(deadline: DateTime.UtcNow.AddSeconds(118)));
+            var response = await dispatcherClient.DispatchAsync(request, new CallOptions(deadline: DateTime.UtcNow.AddSeconds(118), headers: new Metadata()));
             if (response.Error)
             {
                 var errorType = Type.GetType(response.ErrorType, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
