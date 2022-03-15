@@ -52,6 +52,7 @@ export class Groceries {
   noOfMeals: number;
   totalAmount: number;
   userTotalAmount: number;
+  approverName: string;
 }
 
 export class Taxi {
@@ -81,10 +82,12 @@ export class Incidentals {
   approvedItems: string;
   totalAmount: number;
   userTotalAmount: number;
+  approverName: string;
 }
 
 export class Clothing {
   extremeWinterConditions: boolean;
   totalAmount: number;
   userTotalAmount: number;
+  approverName: string;
 }

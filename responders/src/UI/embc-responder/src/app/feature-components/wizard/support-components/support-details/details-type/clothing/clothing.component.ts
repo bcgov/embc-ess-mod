@@ -4,10 +4,13 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -15,18 +18,32 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   templateUrl: './clothing.component.html',
   styleUrls: ['./clothing.component.scss']
 })
-export class ClothingComponent implements OnInit, OnChanges, AfterViewInit {
+export class ClothingComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
+{
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfHouseholdMembers: number;
   referralForm: FormGroup;
   totalAmount = 0;
-  constructor(private cd: ChangeDetectorRef) {}
+  isPaperBased = false;
+  userTotalAmountSubscription: Subscription;
+  constructor(
+    private cd: ChangeDetectorRef,
+    public evacueeSessionService: EvacueeSessionService
+  ) {}
 
   ngOnInit(): void {
     this.referralForm
       .get('extremeWinterConditions')
       .valueChanges.subscribe((value) => {
         this.updateTotalAmount();
+      });
+    this.isPaperBased = this.evacueeSessionService?.isPaperBased;
+
+    this.userTotalAmountSubscription = this.referralForm
+      .get('userTotalAmount')
+      .valueChanges.subscribe((value) => {
+        this.referralForm.get('approverName').updateValueAndValidity();
       });
   }
 
@@ -41,6 +58,10 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit {
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.userTotalAmountSubscription.unsubscribe();
   }
 
   /**
@@ -64,5 +85,22 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
+  }
+
+  validateUserTotalAmount() {
+    const exceedsTotal =
+      !this.isPaperBased &&
+      Number(
+        this.referralForm
+          .get('userTotalAmount')
+          .value.toString()
+          .replace(/,/g, '')
+      ) > this.totalAmount;
+
+    if (!exceedsTotal && this.referralForm.get('approverName').value) {
+      this.referralForm.get('approverName').patchValue('');
+    }
+
+    return exceedsTotal;
   }
 }

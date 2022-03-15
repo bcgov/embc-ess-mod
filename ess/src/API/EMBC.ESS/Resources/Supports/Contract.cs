@@ -92,18 +92,21 @@ namespace EMBC.ESS.Resources.Supports
     {
         public bool ExtremeWinterConditions { get; set; }
         public double TotalAmount { get; set; }
+        public string? ApproverName { get; set; }
     }
 
     public class IncidentalsReferral : Referral
     {
         public string ApprovedItems { get; set; }
         public double TotalAmount { get; set; }
+        public string? ApproverName { get; set; }
     }
 
     public class FoodGroceriesReferral : Referral
     {
         public int NumberOfDays { get; set; }
         public double TotalAmount { get; set; }
+        public string? ApproverName { get; set; }
     }
 
     public class FoodRestaurantReferral : Referral

@@ -290,6 +290,8 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         [Range(0, double.MaxValue)]
         public double TotalAmount { get; set; }
+
+        public string ApproverName { get; set; }
     }
 
     public class IncidentalsReferral : Referral
@@ -306,6 +308,8 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         [Range(0, double.MaxValue)]
         public double TotalAmount { get; set; }
+
+        public string ApproverName { get; set; }
     }
 
     public class FoodGroceriesReferral : Referral
@@ -323,6 +327,8 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         [Range(0, double.MaxValue)]
         public double TotalAmount { get; set; }
+
+        public string ApproverName { get; set; }
     }
 
     public class FoodRestaurantReferral : Referral

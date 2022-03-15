@@ -28,3 +28,24 @@ input.amount-right-align {
 ::ng-deep .mat-form-field-prefix {
   top: 0 !important;
 }
+
+.total-amount-error {
+  color: red;
+  position: absolute;
+  padding-top: 20px;
+  padding-left: 20px;
+
+  .amount-warning-icon {
+    vertical-align: bottom;
+  }
+}
+
+.approver-time-box {
+  background-color: #f2f2f2;
+  box-shadow: none !important;
+  padding: 16px;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  background-color: white;
+}

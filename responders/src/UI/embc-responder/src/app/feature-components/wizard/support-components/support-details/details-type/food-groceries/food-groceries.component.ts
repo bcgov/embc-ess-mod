@@ -4,10 +4,13 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -16,7 +19,7 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   styleUrls: ['./food-groceries.component.scss']
 })
 export class FoodGroceriesComponent
-  implements OnInit, OnChanges, AfterViewInit
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfDays: number;
@@ -24,7 +27,12 @@ export class FoodGroceriesComponent
   referralForm: FormGroup;
   days: number;
   totalAmount = 0;
-  constructor(private cd: ChangeDetectorRef) {}
+  isPaperBased = false;
+  userTotalAmountSubscription: Subscription;
+  constructor(
+    private cd: ChangeDetectorRef,
+    public evacueeSessionService: EvacueeSessionService
+  ) {}
 
   ngAfterViewInit(): void {
     this.cd.detectChanges();
@@ -47,6 +55,17 @@ export class FoodGroceriesComponent
     this.referralForm.get('noOfMeals').valueChanges.subscribe((value) => {
       this.updateTotalAmount();
     });
+    this.isPaperBased = this.evacueeSessionService?.isPaperBased;
+
+    this.userTotalAmountSubscription = this.referralForm
+      .get('userTotalAmount')
+      .valueChanges.subscribe((value) => {
+        this.referralForm.get('approverName').updateValueAndValidity();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.userTotalAmountSubscription.unsubscribe();
   }
 
   /**
@@ -65,5 +84,22 @@ export class FoodGroceriesComponent
       this.referralForm.get('noOfMeals').value *
       this.noOfHouseholdMembers;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
+  }
+
+  validateUserTotalAmount() {
+    const exceedsTotal =
+      !this.isPaperBased &&
+      Number(
+        this.referralForm
+          .get('userTotalAmount')
+          .value.toString()
+          .replace(/,/g, '')
+      ) > this.totalAmount;
+
+    if (!exceedsTotal && this.referralForm.get('approverName').value) {
+      this.referralForm.get('approverName').patchValue('');
+    }
+
+    return exceedsTotal;
   }
 }

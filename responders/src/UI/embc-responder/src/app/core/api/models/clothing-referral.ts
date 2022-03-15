@@ -4,6 +4,7 @@ import { Referral } from './referral';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
 export interface ClothingReferral extends Referral {
+  approverName?: string;
   category: SupportCategory;
   extremeWinterConditions?: boolean;
   subCategory: SupportSubCategory;
