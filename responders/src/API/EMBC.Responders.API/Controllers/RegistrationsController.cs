@@ -204,7 +204,7 @@ namespace EMBC.Responders.API.Controllers
 
             if (registrant == null) return NotFound(registrantId);
 
-            return Ok(new RegistrantFeaturesResponse { etransfer = registrant.AuthenticatedUser });
+            return Ok(new RegistrantFeaturesResponse { ETransfer = registrant.AuthenticatedUser });
         }
     }
 
@@ -254,7 +254,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class RegistrantFeaturesResponse
     {
-        public bool etransfer { get; set; }
+        public bool ETransfer { get; set; }
     }
 
     /// <summary>

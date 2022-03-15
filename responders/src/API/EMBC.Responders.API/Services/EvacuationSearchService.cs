@@ -188,7 +188,6 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
-                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
                ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.ProfileSearchResult, RegistrantProfileSearchResult>()

@@ -44,29 +44,10 @@ export class EssFileService {
           assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
             file?.task?.communityCode
           ),
-          isEtransferEligible: registrantFeaturesResponse.etransfer
+          isEtransferEligible: registrantFeaturesResponse.eTransfer
         };
       })
     );
-    // return this.registrationsService
-    //   .registrationsGetFile({
-    //     fileId
-    //   })
-    //   .pipe(
-    //     map((file: EvacuationFile): EvacuationFileModel => {
-    //       returnedFile = {
-    //         ...file,
-    //         evacuatedFromAddress:
-    //           this.locationsService.getAddressModelFromAddress(
-    //             file.evacuatedFromAddress
-    //           ),
-    //         assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
-    //           file?.task?.communityCode
-    //         )
-    //       };
-    //       return returnedFile;
-    //     })
-    //   );
   }
 
   /**

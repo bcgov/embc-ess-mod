@@ -1,5 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export interface RegistrantFeaturesResponse {
-  etransfer?: boolean;
+  eTransfer?: boolean;
 }
