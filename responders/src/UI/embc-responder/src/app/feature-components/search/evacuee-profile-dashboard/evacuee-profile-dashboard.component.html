@@ -16,7 +16,7 @@
 <div class="row">
   <div class="col-md-12 no-margin">
     <span class="dashboard-subheading">{{
-      evacueeProfile?.personalDetails?.dateOfBirth | date: 'dd-MMM-YYYY'
+      evacueeProfile?.personalDetails?.dateOfBirth | date: 'dd-MMM-yyyy'
     }}</span>
   </div>
 </div>
@@ -81,7 +81,7 @@
     <img src="/assets/images/calendar.svg" height="31" width="34" />
     <span class="status"
       >Created:
-      <b>{{ evacueeProfile?.createdOn | date: 'dd-MMM-YYYY' }}</b></span
+      <b>{{ evacueeProfile?.createdOn | date: 'dd-MMM-yyyy' }}</b></span
     >
   </div>
 </div>
@@ -216,7 +216,7 @@
                       <td>
                         <b>{{
                           evacueeProfile?.personalDetails?.dateOfBirth
-                            | date: 'dd-MMM-YYYY'
+                            | date: 'dd-MMM-yyyy'
                         }}</b>
                       </td>
                     </tr>
