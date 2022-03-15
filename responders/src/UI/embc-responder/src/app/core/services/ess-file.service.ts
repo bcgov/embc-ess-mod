@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-import { EvacuationFileSearchResult, RegistrationResult } from '../api/models';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { RegistrantFeaturesResponse, RegistrationResult } from '../api/models';
 import { EvacuationFile } from '../api/models/evacuation-file';
 import { RegistrationsService } from '../api/services';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
+import { EvacueeSessionService } from './evacuee-session.service';
 import { LocationsService } from './locations.service';
 
 @Injectable({
@@ -13,7 +14,8 @@ import { LocationsService } from './locations.service';
 export class EssFileService {
   constructor(
     private registrationsService: RegistrationsService,
-    private locationsService: LocationsService
+    private locationsService: LocationsService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   /**
@@ -23,24 +25,29 @@ export class EssFileService {
    * @returns ESS File record
    */
   public getFileFromId(fileId: string): Observable<EvacuationFileModel> {
-    return this.registrationsService
-      .registrationsGetFile({
-        fileId
+    const file$ = this.registrationsService.registrationsGetFile({
+      fileId
+    });
+    const eligibility$ = this.getEtransferEligibility(
+      this.evacueeSessionService?.evacueeMetaData?.registrantId
+    );
+
+    return file$.pipe(
+      withLatestFrom(eligibility$),
+      map(([file, registrantFeaturesResponse]) => {
+        return {
+          ...file,
+          evacuatedFromAddress:
+            this.locationsService.getAddressModelFromAddress(
+              file.evacuatedFromAddress
+            ),
+          assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
+            file?.task?.communityCode
+          ),
+          isEtransferEligible: registrantFeaturesResponse.eTransfer
+        };
       })
-      .pipe(
-        map((file: EvacuationFile): EvacuationFileModel => {
-          return {
-            ...file,
-            evacuatedFromAddress:
-              this.locationsService.getAddressModelFromAddress(
-                file.evacuatedFromAddress
-              ),
-            assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
-              file?.task?.communityCode
-            )
-          };
-        })
-      );
+    );
   }
 
   /**
@@ -58,6 +65,14 @@ export class EssFileService {
           this.getFileFromId(fileResult.id)
         )
       );
+  }
+
+  public getEtransferEligibility(
+    registrantId: string
+  ): Observable<RegistrantFeaturesResponse> {
+    return this.registrationsService.registrationsGetRegistrantFeatures({
+      registrantId
+    });
   }
 
   /**
