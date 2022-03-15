@@ -16,6 +16,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { RegistrationsService } from 'src/app/core/api/services';
+import { EvacueeSessionService } from '../../../../core/services/evacuee-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class SupportDetailsService {
@@ -23,7 +24,8 @@ export class SupportDetailsService {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     public stepSupportsService: StepSupportsService,
-    private registrationService: RegistrationsService
+    private registrationService: RegistrationsService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   generateDynamicForm(supportType: string): FormGroup {
@@ -94,6 +96,7 @@ export class SupportDetailsService {
         this.customValidation
           .conditionalValidation(
             () =>
+              !this.evacueeSessionService?.isPaperBased &&
               groceriesForm.get('userTotalAmount').value &&
               Number(
                 groceriesForm
@@ -197,6 +200,7 @@ export class SupportDetailsService {
         this.customValidation
           .conditionalValidation(
             () =>
+              !this.evacueeSessionService?.isPaperBased &&
               incidentalsForm.get('userTotalAmount').value &&
               Number(
                 incidentalsForm
@@ -236,6 +240,7 @@ export class SupportDetailsService {
         this.customValidation
           .conditionalValidation(
             () =>
+              !this.evacueeSessionService?.isPaperBased &&
               Number(
                 clothingForm
                   .get('userTotalAmount')

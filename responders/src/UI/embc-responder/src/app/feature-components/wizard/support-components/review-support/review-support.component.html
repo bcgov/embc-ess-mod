@@ -192,16 +192,27 @@
                       | number: '1.2-2':'en-CA'
                   }}
                 </div>
-                <div
-                  *ngIf="!checkGroceryMaxRate(support)"
-                  class="col-md-4 warning"
-                >
+              </div>
+              <div
+                class="row row-padding"
+                *ngIf="!checkGroceryMaxRate(support)"
+              >
+                <div class="col warning">
                   <img
                     src="../../../../../assets/images/warning-red.svg"
                     width="25px"
                     height="27px"
+                    class="warning-icon"
                   />
-                  Total monetary value exceeds the recommended ESS rate
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
+                  <span *ngIf="!evacueeSessionService.isPaperBased">
+                    Authorization to exceed recommended ESS rate provided by:
+                    <strong>{{
+                      getGroceryReferral(support)?.approverName
+                    }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
@@ -325,16 +336,27 @@
                       | number: '1.2-2':'en-CA'
                   }}
                 </div>
-                <div
-                  *ngIf="!checkClothingMaxRate(support)"
-                  class="col-md-4 warning"
-                >
+              </div>
+              <div
+                class="row row-padding"
+                *ngIf="!checkClothingMaxRate(support)"
+              >
+                <div class="col warning">
                   <img
                     src="../../../../../assets/images/warning-red.svg"
                     width="25px"
                     height="27px"
+                    class="warning-icon"
                   />
-                  Total monetary value exceeds the recommended ESS rate
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
+                  <span *ngIf="!evacueeSessionService.isPaperBased">
+                    Authorization to exceed recommended ESS rate provided by:
+                    <strong>{{
+                      getClothingReferral(support)?.approverName
+                    }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
@@ -357,16 +379,27 @@
                       | number: '1.2-2':'en-CA'
                   }}
                 </div>
-                <div
-                  *ngIf="!checkIncidentalMaxRate(support)"
-                  class="col-md-4 warning"
-                >
+              </div>
+              <div
+                class="row row-padding"
+                *ngIf="!checkIncidentalMaxRate(support)"
+              >
+                <div class="col warning">
                   <img
                     src="../../../../../assets/images/warning-red.svg"
                     width="25px"
                     height="27px"
+                    class="warning-icon"
                   />
-                  Total monetary value exceeds the recommended ESS rate
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
+                  <span *ngIf="!evacueeSessionService.isPaperBased">
+                    Authorization to exceed recommended ESS rate provided by:
+                    <strong>{{
+                      getIncidentalReferral(support)?.approverName
+                    }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
