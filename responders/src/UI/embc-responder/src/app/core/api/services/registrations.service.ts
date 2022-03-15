@@ -9,7 +9,6 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { EtransferEligiblityResponse } from '../models/etransfer-eligiblity-response';
 import { EvacuationFile } from '../models/evacuation-file';
 import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
 import { EvacuationFileSummary } from '../models/evacuation-file-summary';
@@ -20,6 +19,7 @@ import { Note } from '../models/note';
 import { ProcessDigitalSupportsRequest } from '../models/process-digital-supports-request';
 import { ProcessPaperReferralsRequest } from '../models/process-paper-referrals-request';
 import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
+import { RegistrantFeaturesResponse } from '../models/registrant-features-response';
 import { RegistrantLinkRequest } from '../models/registrant-link-request';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
@@ -498,9 +498,9 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Path part for operation registrationsGetEtransferEligiblity
+   * Path part for operation registrationsGetRegistrantFeatures
    */
-  static readonly RegistrationsGetEtransferEligiblityPath = '/api/Registrations/registrants/{registrantId}/etransfer';
+  static readonly RegistrationsGetRegistrantFeaturesPath = '/api/Registrations/registrants/{registrantId}/features';
 
   /**
    * Get security questions for a registrant.
@@ -508,19 +508,19 @@ export class RegistrationsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsGetEtransferEligiblity()` instead.
+   * To access only the response body, use `registrationsGetRegistrantFeatures()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetEtransferEligiblity$Response(params: {
+  registrationsGetRegistrantFeatures$Response(params: {
 
     /**
      * registrant id
      */
     registrantId: string;
-  }): Observable<StrictHttpResponse<EtransferEligiblityResponse>> {
+  }): Observable<StrictHttpResponse<RegistrantFeaturesResponse>> {
 
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetEtransferEligiblityPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetRegistrantFeaturesPath, 'get');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
     }
@@ -531,7 +531,7 @@ export class RegistrationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<EtransferEligiblityResponse>;
+        return r as StrictHttpResponse<RegistrantFeaturesResponse>;
       })
     );
   }
@@ -542,20 +542,20 @@ export class RegistrationsService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsGetEtransferEligiblity$Response()` instead.
+   * To access the full response (for headers, for example), `registrationsGetRegistrantFeatures$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsGetEtransferEligiblity(params: {
+  registrationsGetRegistrantFeatures(params: {
 
     /**
      * registrant id
      */
     registrantId: string;
-  }): Observable<EtransferEligiblityResponse> {
+  }): Observable<RegistrantFeaturesResponse> {
 
-    return this.registrationsGetEtransferEligiblity$Response(params).pipe(
-      map((r: StrictHttpResponse<EtransferEligiblityResponse>) => r.body as EtransferEligiblityResponse)
+    return this.registrationsGetRegistrantFeatures$Response(params).pipe(
+      map((r: StrictHttpResponse<RegistrantFeaturesResponse>) => r.body as RegistrantFeaturesResponse)
     );
   }
 

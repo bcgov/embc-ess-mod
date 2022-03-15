@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import {
-  EtransferEligiblityResponse,
-  EvacuationFileSearchResult,
-  RegistrationResult
-} from '../api/models';
+import { RegistrantFeaturesResponse, RegistrationResult } from '../api/models';
 import { EvacuationFile } from '../api/models/evacuation-file';
 import { RegistrationsService } from '../api/services';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
@@ -38,7 +34,7 @@ export class EssFileService {
 
     return file$.pipe(
       withLatestFrom(eligibility$),
-      map(([file, etransferEligiblityResponse]) => {
+      map(([file, registrantFeaturesResponse]) => {
         return {
           ...file,
           evacuatedFromAddress:
@@ -48,7 +44,7 @@ export class EssFileService {
           assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
             file?.task?.communityCode
           ),
-          isEtransferEligible: etransferEligiblityResponse.authenticatedUser
+          isEtransferEligible: registrantFeaturesResponse.etransfer
         };
       })
     );
@@ -92,9 +88,9 @@ export class EssFileService {
 
   public getEtransferEligibility(
     registrantId: string
-  ): Observable<EtransferEligiblityResponse> {
-    return this.registrationsService.registrationsGetEtransferEligiblity({
-      registrantId: registrantId
+  ): Observable<RegistrantFeaturesResponse> {
+    return this.registrationsService.registrationsGetRegistrantFeatures({
+      registrantId
     });
   }
 

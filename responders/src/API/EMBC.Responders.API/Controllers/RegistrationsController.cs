@@ -192,10 +192,10 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="registrantId">registrant id</param>
         /// <returns>list of security questions and masked answers</returns>
-        [HttpGet("registrants/{registrantId}/etransfer")]
+        [HttpGet("registrants/{registrantId}/features")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EtransferEligiblityResponse>> GetEtransferEligiblity(string registrantId)
+        public async Task<ActionResult<RegistrantFeaturesResponse>> GetRegistrantFeatures(string registrantId)
         {
             var registrant = (await messagingClient.Send(new RegistrantsQuery
             {
@@ -204,7 +204,7 @@ namespace EMBC.Responders.API.Controllers
 
             if (registrant == null) return NotFound(registrantId);
 
-            return Ok(new EtransferEligiblityResponse { AuthenticatedUser = registrant.AuthenticatedUser });
+            return Ok(new RegistrantFeaturesResponse { etransfer = registrant.AuthenticatedUser });
         }
     }
 
@@ -252,9 +252,9 @@ namespace EMBC.Responders.API.Controllers
         public int NumberOfCorrectAnswers { get; set; }
     }
 
-    public class EtransferEligiblityResponse
+    public class RegistrantFeaturesResponse
     {
-        public bool AuthenticatedUser { get; set; }
+        public bool etransfer { get; set; }
     }
 
     /// <summary>
