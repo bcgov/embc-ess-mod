@@ -131,6 +131,7 @@ namespace EMBC.Responders.API.Controllers
         public TaskMapping()
         {
             CreateMap<IncidentTask, ESSTask>()
+                .ForMember(d => d.Workflows, opts => opts.Ignore())
                 .AfterMap((s, d, ctx) =>
                 {
                     SetTaskWorkflows(d, s);
