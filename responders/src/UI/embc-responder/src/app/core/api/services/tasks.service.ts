@@ -131,4 +131,50 @@ export class TasksService extends BaseService {
     );
   }
 
+  /**
+   * Path part for operation tasksSignIn
+   */
+  static readonly TasksSignInPath = '/api/Tasks/signin';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `tasksSignIn()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  tasksSignIn$Response(params?: {
+    taskId?: string;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, TasksService.TasksSignInPath, 'post');
+    if (params) {
+      rb.query('taskId', params.taskId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `tasksSignIn$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  tasksSignIn(params?: {
+    taskId?: string;
+  }): Observable<void> {
+
+    return this.tasksSignIn$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
 }

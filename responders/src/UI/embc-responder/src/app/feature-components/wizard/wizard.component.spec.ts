@@ -118,6 +118,7 @@ describe('WizardComponent-Test for New Registration', () => {
       spyOn(router, 'navigate').and.stub();
       component.sideNavMenu = wizardDataService.newESSFileMenu;
       fixture.detectChanges();
+      component.ngOnInit();
       expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard/ess-file'], {
         state: { step: 'STEP 1', title: 'Create ESS File' }
       });
