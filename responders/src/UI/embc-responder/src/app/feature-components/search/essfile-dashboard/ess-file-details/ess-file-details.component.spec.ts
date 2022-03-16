@@ -74,7 +74,7 @@ describe('EssFileDetailsComponent', () => {
           type: HouseholdMemberType.Registrant,
           isPrimaryRegistrant: true,
           isHouseholdMember: false,
-          isUnder19: false,
+          isMinor: false,
           isRestricted: false,
           isVerified: true
         },
@@ -90,7 +90,7 @@ describe('EssFileDetailsComponent', () => {
           type: HouseholdMemberType.HouseholdMember,
           isPrimaryRegistrant: false,
           isHouseholdMember: true,
-          isUnder19: false,
+          isMinor: false,
           isRestricted: null,
           isVerified: null
         }
@@ -127,7 +127,7 @@ describe('EssFileDetailsComponent', () => {
         type: HouseholdMemberType.Registrant,
         isPrimaryRegistrant: true,
         isHouseholdMember: false,
-        isUnder19: false,
+        isMinor: false,
         isRestricted: false,
         isVerified: true
       },
@@ -143,7 +143,7 @@ describe('EssFileDetailsComponent', () => {
         type: HouseholdMemberType.HouseholdMember,
         isPrimaryRegistrant: false,
         isHouseholdMember: true,
-        isUnder19: false,
+        isMinor: false,
         isRestricted: null,
         isVerified: null
       }

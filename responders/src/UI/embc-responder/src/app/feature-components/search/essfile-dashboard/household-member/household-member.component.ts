@@ -170,7 +170,7 @@ export class HouseholdMemberComponent implements OnInit {
     if (
       !this.evacueeSessionService?.isPaperBased &&
       file?.linkedRegistrantId === null &&
-      !file?.isUnder19
+      !file?.isMinor
     ) {
       if (this.matchedProfileCount === 0) {
         this.displayLinks = 'create-profile';

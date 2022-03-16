@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { TaskWorkflow } from './task-workflow';
 export interface EssTask {
   communityCode?: string;
   description?: string;
@@ -7,4 +8,5 @@ export interface EssTask {
   id?: string;
   startDate?: string;
   status?: string;
+  workflows?: Array<TaskWorkflow>;
 }
