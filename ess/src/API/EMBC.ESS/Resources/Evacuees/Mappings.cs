@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Evacuees
@@ -86,6 +86,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.era_verified))
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.era_authenticated))
+                .ForMember(d => d.Minor, opts => opts.MapFrom(s => s.birthdate.HasValue ? ((DateTime)s.birthdate.Value).CalculatetAge() < 19 : false))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
                 .ForMember(d => d.SecurityQuestions, opts => opts.ConvertUsing<SecurityQuestionConverter, contact>(s => s))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initial))

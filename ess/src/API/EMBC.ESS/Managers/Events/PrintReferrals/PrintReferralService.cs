@@ -21,7 +21,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 using HandlebarsDotNet;
 
 namespace EMBC.ESS.Managers.Events.PrintReferrals

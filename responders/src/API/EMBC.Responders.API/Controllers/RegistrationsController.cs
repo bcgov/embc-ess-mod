@@ -287,6 +287,8 @@ namespace EMBC.Responders.API.Controllers
 
         public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
+
+        public bool IsMinor { get; set; }
     }
 
     public class InviteRequest

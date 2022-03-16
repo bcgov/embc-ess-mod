@@ -90,7 +90,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string Initials { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
-        public bool IsUnder19 { get; set; }
+        public bool IsMinor { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public string LinkedRegistrantId { get; set; }
         public bool? RestrictedAccess { get; set; }

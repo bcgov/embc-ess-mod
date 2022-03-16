@@ -16,7 +16,7 @@
 
 using System;
 
-namespace EMBC.ESS.Utilities.Extensions
+namespace EMBC.Utilities.Extensions
 {
     public static class DateTimeEx
     {
@@ -43,6 +43,19 @@ namespace EMBC.ESS.Utilities.Extensions
                 PlatformID.Unix => "Etc/UTC",
                 _ => throw new NotSupportedException()
             };
+        }
+
+        public static int CalculatetAge(this DateTime dob) => dob.CalculatetAge(null);
+
+        public static int CalculatetAge(this DateTime dob, DateTime? referenceDate)
+        {
+            var now = referenceDate ?? DateTime.Now;
+            var age = now.Year - dob.Year;
+            //Handle leap years
+            if (dob > now.AddYears(-age))
+                age--;
+
+            return age;
         }
     }
 }
