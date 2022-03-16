@@ -43,6 +43,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; } = Array.Empty<SecurityQuestion>();
         public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
+        public bool IsMinor { get; set; }
     }
 
     public class Address

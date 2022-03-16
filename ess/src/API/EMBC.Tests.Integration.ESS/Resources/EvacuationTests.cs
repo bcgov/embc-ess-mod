@@ -212,7 +212,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 householdMember.LastName.ShouldBe(originalHouseholdMember.LastName);
                 householdMember.Gender.ShouldBe(originalHouseholdMember.Gender);
                 householdMember.Initials.ShouldBe(originalHouseholdMember.Initials);
-                householdMember.IsUnder19.ShouldBe(originalHouseholdMember.IsUnder19);
+                householdMember.IsMinor.ShouldBe(originalHouseholdMember.IsMinor);
                 householdMember.Id.ShouldNotBeNull();
                 householdMember.LinkedRegistrantId.ShouldBe(originalHouseholdMember.LinkedRegistrantId);
                 if (householdMember.LinkedRegistrantId != null)
@@ -285,7 +285,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 Initials = primaryContact.Initials,
                                 Gender = primaryContact.Gender,
                                 DateOfBirth = primaryContact.DateOfBirth,
-                                IsUnder19 = false,
+                                IsMinor = false,
                                 IsPrimaryRegistrant = true,
                                 LinkedRegistrantId = primaryContact.Id,
                                 HasAccessRestriction = false,
@@ -298,7 +298,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 Initials = $"{uniqueSignature}_1",
                                 Gender = "Female",
                                 DateOfBirth = "03/11/2000",
-                                IsUnder19 = false,
+                                IsMinor = false,
                                 IsPrimaryRegistrant = false
                             },
                              new HouseholdMember
@@ -308,7 +308,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 Initials = $"{uniqueSignature}_2",
                                 Gender = "Male",
                                 DateOfBirth = "03/12/2010",
-                                IsUnder19 = true,
+                                IsMinor = true,
                                 IsPrimaryRegistrant = false
                             }
                         },

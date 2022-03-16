@@ -99,10 +99,12 @@ namespace EMBC.ESS.Managers.Events
             CreateMap<Shared.Contracts.Events.RegistrantProfile, Evacuee>()
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.AuthenticatedUser))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.VerifiedUser))
+                .ForMember(d => d.Minor, opts => opts.Ignore())
                 ;
             CreateMap<Evacuee, Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.Verified))
+                .ForMember(d => d.IsMinor, opts => opts.MapFrom(s => s.Minor))
                 ;
 
             CreateMap<Shared.Contracts.Events.Address, Address>()
@@ -131,6 +133,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.RegistrationDate, opts => opts.MapFrom(s => s.CreatedOn))
                 .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
                 .ForMember(d => d.IsAuthenticated, opts => opts.MapFrom(s => s.Authenticated))
+                .ForMember(d => d.IsMinor, opts => opts.MapFrom(s => s.Minor))
                 ;
 
             CreateMap<HouseholdMember, Shared.Contracts.Events.EvacuationFileSearchResultHouseholdMember>()
@@ -333,7 +336,7 @@ namespace EMBC.ESS.Managers.Events
             Func<Shared.Contracts.Events.HouseholdMember, string> mapEvacueeTType = m =>
                 m.IsPrimaryRegistrant
                     ? "M" //main
-                    : m.IsUnder19
+                    : m.IsMinor
                         ? "C" //child
                         : "A"; //adult
 

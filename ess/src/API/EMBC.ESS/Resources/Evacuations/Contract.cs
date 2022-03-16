@@ -141,7 +141,7 @@ namespace EMBC.ESS.Resources.Evacuations
     public class HouseholdMember
     {
         public string Id { get; set; }
-        public bool IsUnder19 { get; set; }
+        public bool IsMinor { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }

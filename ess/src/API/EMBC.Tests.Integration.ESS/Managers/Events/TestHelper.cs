@@ -61,7 +61,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                                 Initials = $"{uniqueSignature}-1",
                                 Gender = "X",
                                 DateOfBirth = "03/15/2000",
-                                IsUnder19 = false,
+                                IsMinor = false,
                                 IsPrimaryRegistrant = false
                             },
                              new HouseholdMember
@@ -71,7 +71,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                                 Initials = $"{uniqueSignature}-2",
                                 Gender = "M",
                                 DateOfBirth = "03/16/2010",
-                                IsUnder19 = true,
+                                IsMinor = true,
                                 IsPrimaryRegistrant = false
                             }
                         },

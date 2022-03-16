@@ -44,5 +44,18 @@ namespace EMBC.ESS.Utilities.Extensions
                 _ => throw new NotSupportedException()
             };
         }
+
+        public static int CalculatetAge(this DateTime dob) => CalculatetAge(dob, null);
+
+        public static int CalculatetAge(this DateTime dob, DateTime? referenceDate)
+        {
+            var now = referenceDate ?? DateTime.Now;
+            var age = now.Year - dob.Year;
+            //Handle leap years
+            if (dob > now.AddYears(-age))
+                age--;
+
+            return age;
+        }
     }
 }

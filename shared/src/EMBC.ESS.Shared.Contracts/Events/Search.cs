@@ -99,6 +99,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public IEnumerable<EvacuationFileSearchResult> RecentEvacuationFiles { get; set; }
         public bool IsVerified { get; set; }
         public bool IsAuthenticated { get; set; }
+        public bool IsMinor { get; set; }
     }
 
     public class EvacuationFileSearchResult

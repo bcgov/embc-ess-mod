@@ -122,6 +122,7 @@ namespace EMBC.ESS.Resources.Evacuees
         public string LastModifiedDisplayName { get; set; }
         public bool Authenticated { get; set; }
         public bool Verified { get; set; }
+        public bool Minor { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
