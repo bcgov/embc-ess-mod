@@ -17,7 +17,7 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Managers.Events.Notifications
 {
