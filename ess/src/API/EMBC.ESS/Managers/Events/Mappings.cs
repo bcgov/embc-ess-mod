@@ -22,7 +22,7 @@ using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Supports;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Managers.Events
 {

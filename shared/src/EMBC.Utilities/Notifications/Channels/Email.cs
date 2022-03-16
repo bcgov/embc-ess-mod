@@ -17,7 +17,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Notifications;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
@@ -25,7 +24,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 
-namespace EMBC.ESS.Utilities.NotificationSender.Channels
+namespace EMBC.Utilities.Notifications.Channels
 {
     public class Email : INotificationChannel
     {

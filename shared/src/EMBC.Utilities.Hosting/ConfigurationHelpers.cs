@@ -16,8 +16,8 @@
 
 using System.Linq;
 using System.Reflection;
-using EMBC.ESS.Utilities.Extensions;
 using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

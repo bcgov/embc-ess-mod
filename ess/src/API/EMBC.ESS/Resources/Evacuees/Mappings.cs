@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Evacuees

@@ -16,7 +16,7 @@
 
 using System;
 
-namespace EMBC.ESS.Utilities.Extensions
+namespace EMBC.Utilities.Extensions
 {
     public static class DateTimeEx
     {
@@ -45,7 +45,7 @@ namespace EMBC.ESS.Utilities.Extensions
             };
         }
 
-        public static int CalculatetAge(this DateTime dob) => CalculatetAge(dob, null);
+        public static int CalculatetAge(this DateTime dob) => dob.CalculatetAge(null);
 
         public static int CalculatetAge(this DateTime dob, DateTime? referenceDate)
         {
