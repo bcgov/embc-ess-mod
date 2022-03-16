@@ -201,7 +201,7 @@ namespace EMBC.Registrants.API.Controllers
         public string? Id { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public PersonDetails Details { get; set; }
-        public bool IsUnder19 { get; set; }
+        public bool IsMinor { get; set; }
     }
 
     /// <summary>

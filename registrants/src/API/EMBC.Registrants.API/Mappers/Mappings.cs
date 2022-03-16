@@ -27,6 +27,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
+                .ForMember(d => d.IsMinor, opts => opts.Ignore())
                 .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
@@ -100,6 +101,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.Verified, opts => opts.Ignore())
                 .ForMember(d => d.Authenticated, opts => opts.Ignore())
+                .ForMember(d => d.IsMinor, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Events.HouseholdMember, HouseholdMember>()
