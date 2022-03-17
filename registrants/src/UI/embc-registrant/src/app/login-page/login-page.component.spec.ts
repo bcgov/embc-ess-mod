@@ -11,24 +11,22 @@ describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      let loginService: jasmine.SpyObj<LoginService>;
-      TestBed.configureTestingModule({
-        declarations: [LoginPageComponent],
-        imports: [
-          RouterTestingModule,
-          ReactiveFormsModule,
-          HttpClientTestingModule,
-          OAuthModule.forRoot()
-        ],
-        providers: [
-          FormBuilder,
-          { provides: LoginService, useValue: loginService }
-        ]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    let loginService: jasmine.SpyObj<LoginService>;
+    TestBed.configureTestingModule({
+      declarations: [LoginPageComponent],
+      imports: [
+        RouterTestingModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        OAuthModule.forRoot()
+      ],
+      providers: [
+        FormBuilder,
+        { provides: LoginService, useValue: loginService }
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginPageComponent);

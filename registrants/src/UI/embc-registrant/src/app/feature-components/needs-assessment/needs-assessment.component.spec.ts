@@ -8,15 +8,13 @@ describe('NeedsAssessmentComponent', () => {
   let component: NeedsAssessmentComponent;
   let fixture: ComponentFixture<NeedsAssessmentComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [NeedsAssessmentComponent],
-        imports: [RouterTestingModule],
-        providers: [ComponentCreationService, FormCreationService]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [NeedsAssessmentComponent],
+      imports: [RouterTestingModule],
+      providers: [ComponentCreationService, FormCreationService]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NeedsAssessmentComponent);

@@ -22,29 +22,27 @@ describe('VerifiedRegistrationComponent', () => {
   let component: VerifiedRegistrationComponent;
   let timeoutService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [VerifiedRegistrationComponent],
-        imports: [
-          ReactiveFormsModule,
-          HttpClientTestingModule,
-          RouterTestingModule,
-          NgIdleKeepaliveModule.forRoot(),
-          MatDialogModule,
-          OAuthModule.forRoot()
-        ],
-        providers: [
-          FormBuilder,
-          VerifiedRegistrationComponent,
-          {
-            provide: TimeoutService,
-            useClass: MockTimeoutService
-          }
-        ]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [VerifiedRegistrationComponent],
+      imports: [
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        NgIdleKeepaliveModule.forRoot(),
+        MatDialogModule,
+        OAuthModule.forRoot()
+      ],
+      providers: [
+        FormBuilder,
+        VerifiedRegistrationComponent,
+        {
+          provide: TimeoutService,
+          useClass: MockTimeoutService
+        }
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(VerifiedRegistrationComponent);

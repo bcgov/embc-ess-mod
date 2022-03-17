@@ -29,36 +29,34 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let bannerService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          HttpClientTestingModule,
-          RouterTestingModule,
-          OAuthModule.forRoot(),
-          NgIdleKeepaliveModule.forRoot(),
-          MatDialogModule
-        ],
-        declarations: [
-          AppComponent,
-          HeaderStubComponent,
-          FooterStubComponent
-          // EnvironmentBannerStubComponent
-        ],
-        schemas: [NO_ERRORS_SCHEMA],
-        providers: [
-          AppComponent,
-          { provides: LoginService, useValue: loginService },
-          { provides: BootstrapService, useValue: bootstrapService },
-          { provide: APP_BASE_HREF, useValue: '/' },
-          {
-            provide: ConfigService,
-            useClass: MockEnvironmentBannerService
-          }
-        ]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        OAuthModule.forRoot(),
+        NgIdleKeepaliveModule.forRoot(),
+        MatDialogModule
+      ],
+      declarations: [
+        AppComponent,
+        HeaderStubComponent,
+        FooterStubComponent
+        // EnvironmentBannerStubComponent
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        AppComponent,
+        { provides: LoginService, useValue: loginService },
+        { provides: BootstrapService, useValue: bootstrapService },
+        { provide: APP_BASE_HREF, useValue: '/' },
+        {
+          provide: ConfigService,
+          useClass: MockEnvironmentBannerService
+        }
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
@@ -84,91 +82,76 @@ describe('AppComponent', () => {
     expect(footerElem).toBeDefined();
   });
 
-  it(
-    'should have environment name',
-    waitForAsync(() => {
-      bannerService.environmentBanner = {
-        envName: 'dev',
-        bannerTitle:
-          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-        bannerSubTitle:
-          'All information entered here will be treated as **dev** data.',
-        bannerColor: '#097d8c'
-      };
-      fixture.detectChanges();
-      component.ngOnInit();
-      fixture.whenStable().then(() => {
-        expect(component.environment.envName).toContain(
-          bannerService.getEnvironmentBanner().envName
-        );
-      });
-    })
-  );
+  it('should have environment name', waitForAsync(() => {
+    bannerService.environmentBanner = {
+      envName: 'dev',
+      bannerTitle:
+        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle:
+        'All information entered here will be treated as **dev** data.',
+      bannerColor: '#097d8c'
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.environment.envName).toContain(
+        bannerService.getEnvironmentBanner().envName
+      );
+    });
+  }));
 
-  it(
-    'should have environment banner subtitle',
-    waitForAsync(() => {
-      bannerService.environmentBanner = {
-        envName: 'dev',
-        bannerTitle:
-          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-        bannerSubTitle:
-          'All information entered here will be treated as **dev** data.',
-        bannerColor: '#097d8c'
-      };
-      fixture.detectChanges();
-      component.ngOnInit();
-      fixture.whenStable().then(() => {
-        expect(component.environment.bannerSubTitle).toContain(
-          bannerService.getEnvironmentBanner().bannerSubTitle
-        );
-      });
-    })
-  );
+  it('should have environment banner subtitle', waitForAsync(() => {
+    bannerService.environmentBanner = {
+      envName: 'dev',
+      bannerTitle:
+        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle:
+        'All information entered here will be treated as **dev** data.',
+      bannerColor: '#097d8c'
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.environment.bannerSubTitle).toContain(
+        bannerService.getEnvironmentBanner().bannerSubTitle
+      );
+    });
+  }));
 
-  it(
-    'should have environment banner title',
-    waitForAsync(() => {
-      bannerService.environmentBanner = {
-        envName: 'dev',
-        bannerTitle:
-          'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
-        bannerSubTitle:
-          'All information entered here will be treated as **dev** data.',
-        bannerColor: '#097d8c'
-      };
-      fixture.detectChanges();
-      component.ngOnInit();
-      fixture.whenStable().then(() => {
-        expect(component.environment.bannerTitle).toContain(
-          bannerService.getEnvironmentBanner().bannerTitle
-        );
-      });
-    })
-  );
+  it('should have environment banner title', waitForAsync(() => {
+    bannerService.environmentBanner = {
+      envName: 'dev',
+      bannerTitle:
+        'You are in the **DEV** version of the **Evacuee Registration & Assistance Tool**.',
+      bannerSubTitle:
+        'All information entered here will be treated as **dev** data.',
+      bannerColor: '#097d8c'
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.environment.bannerTitle).toContain(
+        bannerService.getEnvironmentBanner().bannerTitle
+      );
+    });
+  }));
 
-  it(
-    'should not display environment banner if environment value is undefined',
-    waitForAsync(() => {
-      fixture.detectChanges();
-      component.ngOnInit();
-      fixture.whenStable().then(() => {
-        expect(component.environment).toBeUndefined();
-      });
-    })
-  );
+  it('should not display environment banner if environment value is undefined', waitForAsync(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.environment).toBeUndefined();
+    });
+  }));
 
-  it(
-    'should not display environment banner if environment value is null',
-    waitForAsync(() => {
-      bannerService.environmentBanner = null;
-      fixture.detectChanges();
-      component.ngOnInit();
-      fixture.whenStable().then(() => {
-        expect(component.environment).toBeNull();
-      });
-    })
-  );
+  it('should not display environment banner if environment value is null', waitForAsync(() => {
+    bannerService.environmentBanner = null;
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.environment).toBeNull();
+    });
+  }));
 
   it('should display environment banner', () => {
     bannerService.environmentBanner = {
