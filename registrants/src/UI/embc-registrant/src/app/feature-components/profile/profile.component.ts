@@ -221,17 +221,17 @@ export class ProfileComponent
     this.alertService.clearAlert();
     this.profileService
       .upsertProfile(this.profileDataService.createProfileDTO())
-      .subscribe(
-        (profileId) => {
+      .subscribe({
+        next: (profileId) => {
           this.profileDataService.setProfileId(profileId);
           this.router.navigate(['/verified-registration/dashboard']);
         },
-        (error) => {
+        error: (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', globalConst.saveProfileError);
         }
-      );
+      });
   }
 
   private saveSecurityQuestions(questionForm: FormGroup) {

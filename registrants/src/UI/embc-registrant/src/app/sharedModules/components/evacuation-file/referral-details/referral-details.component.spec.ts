@@ -8,15 +8,13 @@ describe('ReferralDetailsComponent', () => {
   let component: ReferralDetailsComponent;
   let fixture: ComponentFixture<ReferralDetailsComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ReferralDetailsComponent],
-        imports: [RouterTestingModule],
-        providers: [HttpClient, HttpHandler]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ReferralDetailsComponent],
+      imports: [RouterTestingModule],
+      providers: [HttpClient, HttpHandler]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ReferralDetailsComponent);

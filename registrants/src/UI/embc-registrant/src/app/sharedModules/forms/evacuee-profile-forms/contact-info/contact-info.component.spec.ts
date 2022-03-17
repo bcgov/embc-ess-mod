@@ -9,15 +9,13 @@ describe('ContactInfoComponent', () => {
   let component: ContactInfoComponent;
   let fixture: ComponentFixture<ContactInfoComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ContactInfoComponent],
-        imports: [ReactiveFormsModule],
-        providers: [FormCreationService, FormBuilder]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ContactInfoComponent],
+      imports: [ReactiveFormsModule],
+      providers: [FormCreationService, FormBuilder]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContactInfoComponent);

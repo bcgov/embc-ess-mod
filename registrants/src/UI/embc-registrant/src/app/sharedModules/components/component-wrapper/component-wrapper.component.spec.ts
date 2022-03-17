@@ -6,13 +6,11 @@ describe('ComponentWrapperComponent', () => {
   let component: ComponentWrapperComponent;
   let fixture: ComponentFixture<ComponentWrapperComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ComponentWrapperComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ComponentWrapperComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ComponentWrapperComponent);

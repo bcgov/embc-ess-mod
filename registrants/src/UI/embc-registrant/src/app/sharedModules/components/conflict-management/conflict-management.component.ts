@@ -52,8 +52,8 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   }
 
   ngOnInit(): void {
-    this.conflictService.getConflicts().subscribe(
-      (bcscConflicts) => {
+    this.conflictService.getConflicts().subscribe({
+      next: (bcscConflicts) => {
         this.conflicts = bcscConflicts;
         this.nameConflict = bcscConflicts.find(
           (element) => element.dataElementName === 'NameDataConflict'
@@ -68,11 +68,11 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
           this.loadAddressForm();
         }
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.genericError);
       }
-    );
+    });
   }
 
   loadAddressForm(): void {
@@ -157,15 +157,15 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.profileService.upsertProfile(this.profile).subscribe(
-      (profileId) => {
+    this.profileService.upsertProfile(this.profile).subscribe({
+      next: (profileId) => {
         this.router.navigate(['/verified-registration/dashboard']);
       },
-      (error) => {
+      error: (error) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         this.alertService.setAlert('danger', globalConst.editProfileError);
       }
-    );
+    });
   }
 }
