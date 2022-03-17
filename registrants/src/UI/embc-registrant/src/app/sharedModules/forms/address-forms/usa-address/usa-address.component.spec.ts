@@ -8,14 +8,12 @@ describe('UsaAddressComponent', () => {
   let component: UsaAddressComponent;
   let fixture: ComponentFixture<UsaAddressComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, MatAutocompleteModule],
-        declarations: [UsaAddressComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, MatAutocompleteModule],
+      declarations: [UsaAddressComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UsaAddressComponent);

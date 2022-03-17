@@ -20,22 +20,20 @@ describe('CollectionNoticeComponent', () => {
   let fixture: ComponentFixture<CollectionNoticeComponent>;
   let router: Router;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [CollectionNoticeComponent],
-        imports: [
-          RouterTestingModule.withRoutes([]),
-          ReactiveFormsModule,
-          MatDialogModule,
-          MatCheckboxModule,
-          BrowserAnimationsModule,
-          CoreModule
-        ],
-        providers: [FormBuilder]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [CollectionNoticeComponent],
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatCheckboxModule,
+        BrowserAnimationsModule,
+        CoreModule
+      ],
+      providers: [FormBuilder]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CollectionNoticeComponent);

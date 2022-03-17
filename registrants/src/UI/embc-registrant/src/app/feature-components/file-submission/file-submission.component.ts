@@ -79,12 +79,12 @@ export class FileSubmissionComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.fileSubmissionService
             .inviteByEmail(emailId, this.referenceNumber)
-            .subscribe(
-              (value) => {
+            .subscribe({
+              next: (value) => {
                 this.showLoader = !this.showLoader;
                 this.openSuccessModal(globalConst.successfulBcscInvite);
               },
-              (error) => {
+              error: (error) => {
                 this.showLoader = !this.showLoader;
                 this.alertService.clearAlert();
                 this.alertService.setAlert(
@@ -92,7 +92,7 @@ export class FileSubmissionComponent implements OnInit {
                   globalConst.bcscInviteError
                 );
               }
-            );
+            });
         }
       });
   }

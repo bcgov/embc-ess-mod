@@ -6,13 +6,11 @@ describe('EvacuationCardComponent', () => {
   let component: EvacuationCardComponent;
   let fixture: ComponentFixture<EvacuationCardComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [EvacuationCardComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [EvacuationCardComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EvacuationCardComponent);
