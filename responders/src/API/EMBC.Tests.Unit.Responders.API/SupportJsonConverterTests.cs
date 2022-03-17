@@ -16,15 +16,15 @@ namespace EMBC.Tests.Unit.Responders.API
             var supplierAddress = new Address { AddressLine1 = "12 meh st.", CommunityCode = "226adfaf-9f97-ea11-b813-005056830319", PostalCode = "V1V 1V1", StateProvinceCode = "BC", CountryCode = "CAN" };
             var supports = new Support[]
             {
-              new ClothingReferral { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-              new IncidentalsReferral { Id = "2", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 2", SupplierId = "2", SupplierName = "sup 2", SupplierAddress = supplierAddress, Status = SupportStatus.Expired },
-              new FoodGroceriesReferral { Id = "3", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Void },
-              new FoodRestaurantReferral { Id = "4", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-              new LodgingHotelReferral { Id = "5", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-              new LodgingBilletingReferral { Id = "6", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-              new LodgingGroupReferral { Id = "7", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-              new TransportationTaxiReferral { Id = "8", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-              new TransportationOtherReferral { Id = "9", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+              new ClothingSupport { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress }, Status = SupportStatus.Active },
+              new IncidentalsSupport { Id = "2", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 2", SupplierId = "2", SupplierName = "sup 2", SupplierAddress = supplierAddress }, Status = SupportStatus.Expired },
+              new FoodGroceriesSupport { Id = "3", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress }, Status = SupportStatus.Void },
+              new FoodRestaurantSupport { Id = "4", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress }, Status = SupportStatus.Active },
+              new LodgingHotelSupport { Id = "5", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress }, Status = SupportStatus.Active },
+              new LodgingBilletingSupport { Id = "6", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress }, Status = SupportStatus.Active },
+              new LodgingGroupSupport { Id = "7", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress }, Status = SupportStatus.Active },
+              new TransportationTaxiSupport { Id = "8", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress }, Status = SupportStatus.Active },
+              new TransportationOtherSupport { Id = "9", From = DateTime.Now, To = DateTime.Now.AddDays(3), SupportDelivery = new Referral{ IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress }, Status = SupportStatus.Active },
             };
 
             var serializedSupports = JsonSerializer.Serialize(supports);
@@ -273,7 +273,7 @@ namespace EMBC.Tests.Unit.Responders.API
 ]"
             ;
 
-            var supports = JsonSerializer.Deserialize<IEnumerable<ClothingReferral>>(serializedSupports);
+            var supports = JsonSerializer.Deserialize<IEnumerable<ClothingSupport>>(serializedSupports);
             supports.Count().ShouldBe(9);
         }
     }

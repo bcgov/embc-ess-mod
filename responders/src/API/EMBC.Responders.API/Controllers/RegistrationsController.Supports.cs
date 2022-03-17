@@ -50,6 +50,17 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ReferralPrintRequestResponse>> ProcessSupports(string fileId, ProcessDigitalSupportsRequest request)
         {
+            var noDeliveryMethod = request.Supports.Where(s => s.Method == SupportMethod.Unknown).ToArray();
+            if (noDeliveryMethod.Any())
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Title = "Some supports delivery methods are not defined",
+                    Detail = string.Join(',', noDeliveryMethod.Select(r => $"{r.Category}-{r.SubCategory}"))
+                });
+            }
+
             var userId = currentUserId;
             var mappedSupports = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Events.Support>>(request.Supports);
             foreach (var support in mappedSupports)
@@ -81,8 +92,18 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> ProcessPaperReferrals(string fileId, ProcessPaperReferralsRequest request)
         {
+            var noneReferrals = request.Referrals.Where(r => r.Method != SupportMethod.Referral).ToArray();
+            if (noneReferrals.Any())
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Title = "Some supports delivery methods is not referrals",
+                    Detail = string.Join(',', noneReferrals.Select(r => $"{r.Category}-{r.SubCategory}"))
+                });
+            }
             var userId = currentUserId;
-            var referrals = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Events.Referral>>(request.Referrals);
+            var referrals = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Events.Support>>(request.Referrals);
             foreach (var referral in referrals)
             {
                 referral.CreatedBy = new EMBC.ESS.Shared.Contracts.Events.TeamMember { Id = userId };
@@ -183,6 +204,7 @@ namespace EMBC.Responders.API.Controllers
     }
 
     [KnownType(typeof(ReferralSummary))]
+    [KnownType(typeof(ETransferSummary))]
     [JsonConverter(typeof(PolymorphicJsonConverter<SupportSummary>))]
     public abstract class SupportSummary
     {
@@ -201,6 +223,10 @@ namespace EMBC.Responders.API.Controllers
         public string? ExternalReferenceId { get; set; }
     }
 
+    public class ETransferSummary : SupportSummary
+    {
+    }
+
     public class ProcessDigitalSupportsRequest
     {
         public bool IncludeSummaryInPrintRequest { get; set; }
@@ -213,7 +239,15 @@ namespace EMBC.Responders.API.Controllers
     }
 
     [JsonConverter(typeof(SupportJsonConverter))]
-    [KnownType(typeof(Referral))]
+    [KnownType(typeof(ClothingSupport))]
+    [KnownType(typeof(IncidentalsSupport))]
+    [KnownType(typeof(FoodGroceriesSupport))]
+    [KnownType(typeof(FoodRestaurantSupport))]
+    [KnownType(typeof(LodgingBilletingSupport))]
+    [KnownType(typeof(LodgingGroupSupport))]
+    [KnownType(typeof(LodgingHotelSupport))]
+    [KnownType(typeof(TransportationOtherSupport))]
+    [KnownType(typeof(TransportationTaxiSupport))]
     public abstract class Support
     {
         public string? Id { get; set; }
@@ -237,8 +271,10 @@ namespace EMBC.Responders.API.Controllers
 
         public SupportStatus Status { get; set; }
 
+        public SupportMethod Method => SupportDelivery?.Method ?? SupportMethod.Unknown;
+
         [Required]
-        public abstract SupportMethod Method { get; }
+        public SupportDelivery SupportDelivery { get; set; }
 
         [Required]
         public abstract SupportCategory Category { get; }
@@ -249,35 +285,7 @@ namespace EMBC.Responders.API.Controllers
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
     }
 
-    [KnownType(typeof(ClothingReferral))]
-    [KnownType(typeof(IncidentalsReferral))]
-    [KnownType(typeof(FoodGroceriesReferral))]
-    [KnownType(typeof(FoodRestaurantReferral))]
-    [KnownType(typeof(FoodRestaurantReferral))]
-    [KnownType(typeof(LodgingBilletingReferral))]
-    [KnownType(typeof(LodgingGroupReferral))]
-    [KnownType(typeof(LodgingHotelReferral))]
-    [KnownType(typeof(TransportationOtherReferral))]
-    [KnownType(typeof(TransportationTaxiReferral))]
-    public abstract class Referral : Support
-    {
-        public string? ExternalReferenceId { get; set; }
-
-        [Required]
-        public override SupportMethod Method => SupportMethod.Referral;
-
-        [Required]
-        public string SupplierId { get; set; }
-
-        public string SupplierName { get; set; }
-        public Address SupplierAddress { get; set; }
-        public string SupplierNotes { get; set; }
-
-        [Required]
-        public string IssuedToPersonName { get; set; }
-    }
-
-    public class ClothingReferral : Referral
+    public class ClothingSupport : Support
     {
         public bool ExtremeWinterConditions { get; set; }
 
@@ -294,7 +302,7 @@ namespace EMBC.Responders.API.Controllers
         public string ApproverName { get; set; }
     }
 
-    public class IncidentalsReferral : Referral
+    public class IncidentalsSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Incidentals;
@@ -312,7 +320,7 @@ namespace EMBC.Responders.API.Controllers
         public string ApproverName { get; set; }
     }
 
-    public class FoodGroceriesReferral : Referral
+    public class FoodGroceriesSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Food;
@@ -331,7 +339,7 @@ namespace EMBC.Responders.API.Controllers
         public string ApproverName { get; set; }
     }
 
-    public class FoodRestaurantReferral : Referral
+    public class FoodRestaurantSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Food;
@@ -356,7 +364,7 @@ namespace EMBC.Responders.API.Controllers
         public double TotalAmount { get; set; }
     }
 
-    public class LodgingHotelReferral : Referral
+    public class LodgingHotelSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
@@ -373,7 +381,7 @@ namespace EMBC.Responders.API.Controllers
         public int NumberOfRooms { get; set; }
     }
 
-    public class LodgingBilletingReferral : Referral
+    public class LodgingBilletingSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
@@ -392,7 +400,7 @@ namespace EMBC.Responders.API.Controllers
         public string HostPhone { get; set; }
     }
 
-    public class LodgingGroupReferral : Referral
+    public class LodgingGroupSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
@@ -411,7 +419,7 @@ namespace EMBC.Responders.API.Controllers
         public string FacilityContactPhone { get; set; }
     }
 
-    public class TransportationTaxiReferral : Referral
+    public class TransportationTaxiSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Transportation;
@@ -426,7 +434,7 @@ namespace EMBC.Responders.API.Controllers
         public string ToAddress { get; set; }
     }
 
-    public class TransportationOtherReferral : Referral
+    public class TransportationOtherSupport : Support
     {
         [Required]
         public override SupportCategory Category => SupportCategory.Transportation;
@@ -440,6 +448,47 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public string TransportMode { get; set; }
+    }
+
+    [KnownType(typeof(ETransfer))]
+    [KnownType(typeof(Referral))]
+    public abstract class SupportDelivery
+    {
+        public abstract SupportMethod Method { get; }
+    }
+
+    [KnownType(typeof(Interac))]
+    public abstract class ETransfer : SupportDelivery
+    {
+        [Required]
+        public override SupportMethod Method => SupportMethod.ETransfer;
+    }
+
+    public class Interac : ETransfer
+    {
+        [Required]
+        public string ReceivingRegistrantId { get; set; }
+
+        public string? NotificationEmail { get; set; }
+        public string? NotificationMobile { get; set; }
+    }
+
+    public class Referral : SupportDelivery
+    {
+        public string? ManualReferralId { get; set; }
+
+        [Required]
+        public override SupportMethod Method => SupportMethod.Referral;
+
+        [Required]
+        public string SupplierId { get; set; }
+
+        public string SupplierName { get; set; }
+        public Address SupplierAddress { get; set; }
+        public string SupplierNotes { get; set; }
+
+        [Required]
+        public string IssuedToPersonName { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -464,7 +513,10 @@ namespace EMBC.Responders.API.Controllers
         Unknown,
 
         [Description("Referral")]
-        Referral
+        Referral,
+
+        [Description("e-Transfer")]
+        ETransfer
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -590,15 +642,15 @@ namespace EMBC.Responders.API.Controllers
             //Dserialize to the correct type
             return category switch
             {
-                SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingReferral>(ref reader, options),
-                SupportCategory.Incidentals => JsonSerializer.Deserialize<IncidentalsReferral>(ref reader, options),
-                SupportCategory.Food when subCategory == SupportSubCategory.Food_Groceries => JsonSerializer.Deserialize<FoodGroceriesReferral>(ref reader, options),
-                SupportCategory.Food when subCategory == SupportSubCategory.Food_Restaurant => JsonSerializer.Deserialize<FoodRestaurantReferral>(ref reader, options),
-                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelReferral>(ref reader, options),
-                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingReferral>(ref reader, options),
-                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupReferral>(ref reader, options),
-                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiReferral>(ref reader, options),
-                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherReferral>(ref reader, options),
+                SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingSupport>(ref reader, options),
+                SupportCategory.Incidentals => JsonSerializer.Deserialize<IncidentalsSupport>(ref reader, options),
+                SupportCategory.Food when subCategory == SupportSubCategory.Food_Groceries => JsonSerializer.Deserialize<FoodGroceriesSupport>(ref reader, options),
+                SupportCategory.Food when subCategory == SupportSubCategory.Food_Restaurant => JsonSerializer.Deserialize<FoodRestaurantSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupSupport>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiSupport>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherSupport>(ref reader, options),
                 _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
             };
         }
@@ -608,39 +660,39 @@ namespace EMBC.Responders.API.Controllers
             switch (value.Category)
             {
                 case SupportCategory.Clothing:
-                    JsonSerializer.Serialize(writer, (ClothingReferral)value, options);
+                    JsonSerializer.Serialize(writer, (ClothingSupport)value, options);
                     break;
 
                 case SupportCategory.Incidentals:
-                    JsonSerializer.Serialize(writer, (IncidentalsReferral)value, options);
+                    JsonSerializer.Serialize(writer, (IncidentalsSupport)value, options);
                     break;
 
                 case SupportCategory.Food when value.SubCategory == SupportSubCategory.Food_Groceries:
-                    JsonSerializer.Serialize(writer, (FoodGroceriesReferral)value, options);
+                    JsonSerializer.Serialize(writer, (FoodGroceriesSupport)value, options);
                     break;
 
                 case SupportCategory.Food when value.SubCategory == SupportSubCategory.Food_Restaurant:
-                    JsonSerializer.Serialize(writer, (FoodRestaurantReferral)value, options);
+                    JsonSerializer.Serialize(writer, (FoodRestaurantSupport)value, options);
                     break;
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Hotel:
-                    JsonSerializer.Serialize(writer, (LodgingHotelReferral)value, options);
+                    JsonSerializer.Serialize(writer, (LodgingHotelSupport)value, options);
                     break;
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Billeting:
-                    JsonSerializer.Serialize(writer, (LodgingBilletingReferral)value, options);
+                    JsonSerializer.Serialize(writer, (LodgingBilletingSupport)value, options);
                     break;
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Group:
-                    JsonSerializer.Serialize(writer, (LodgingGroupReferral)value, options);
+                    JsonSerializer.Serialize(writer, (LodgingGroupSupport)value, options);
                     break;
 
                 case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Taxi:
-                    JsonSerializer.Serialize(writer, (TransportationTaxiReferral)value, options);
+                    JsonSerializer.Serialize(writer, (TransportationTaxiSupport)value, options);
                     break;
 
                 case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Other:
-                    JsonSerializer.Serialize(writer, (TransportationOtherReferral)value, options);
+                    JsonSerializer.Serialize(writer, (TransportationOtherSupport)value, options);
                     break;
 
                 default: throw new NotSupportedException($"Support with method {value.Method}, category {value.Category}, sub category {value.SubCategory}");
@@ -659,12 +711,14 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.CreatedByTeam, opts => opts.MapFrom(s => s.CreatedBy.TeamName))
                 .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => s.IssuedBy.DisplayName))
                 .ForMember(d => d.IssuedByTeam, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
+                .ForMember(d => d.SupportDelivery, opts => opts.MapFrom((s, d, m, ctx) => new SupportDeliveryTypeConverter().Convert(s.SupportDelivery, m, ctx)))
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.CreatedBy, opts => opts.Ignore())
                 .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => new EMBC.ESS.Shared.Contracts.Events.TeamMember { DisplayName = s.IssuedBy }))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
+                .ForMember(d => d.SupportDelivery, opts => opts.MapFrom((s, d, m, ctx) => new SupportDeliveryTypeConverter().Convert(s.SupportDelivery, m, ctx)))
                 ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.Referral, Referral>()
@@ -678,56 +732,70 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SupplierDetails, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.SupplierId) ? null : new SupplierDetails { Id = s.SupplierId }))
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.ClothingReferral, ClothingReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ETransfer, ETransfer>()
+                .IncludeAllDerived()
+                .ReverseMap()
+                .IncludeAllDerived()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.Interac, Interac>()
+                .IncludeAllDerived()
+                .ReverseMap()
+                .IncludeAllDerived()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ClothingSupport, ClothingSupport>()
 
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.IncidentalsReferral, IncidentalsReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.IncidentalsSupport, IncidentalsSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodGroceriesReferral, FoodGroceriesReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodGroceriesSupport, FoodGroceriesSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodRestaurantReferral, FoodRestaurantReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodRestaurantSupport, FoodRestaurantSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingBilletingReferral, LodgingBilletingReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingBilletingSupport, LodgingBilletingSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingGroupReferral, LodgingGroupReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingGroupSupport, LodgingGroupSupport>()
 
                     .ReverseMap()
 
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingHotelReferral, LodgingHotelReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingHotelSupport, LodgingHotelSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationOtherReferral, TransportationOtherReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationOtherSupport, TransportationOtherSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationTaxiReferral, TransportationTaxiReferral>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationTaxiSupport, TransportationTaxiSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
@@ -735,16 +803,41 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<IEnumerable<Support>, IEnumerable<SupportSummary>>()
                 .ConvertUsing((s, d, ctx) =>
-                    s.Select(i => i is Referral r
-                        ? ctx.Mapper.Map<ReferralSummary>(r)
-                        : ctx.Mapper.Map<SupportSummary>(i)));
+                    s.Select(i => i.Method switch
+                    {
+                        SupportMethod.Referral => ctx.Mapper.Map<ReferralSummary>(i.SupportDelivery),
+                        SupportMethod.ETransfer => ctx.Mapper.Map<ETransferSummary>(i.SupportDelivery),
+                        _ => ctx.Mapper.Map<SupportSummary>(i.SupportDelivery)
+                    }));
 
-            CreateMap<Support, SupportSummary>()
+            CreateMap<Support, SupportSummary>();
+
+            CreateMap<Support, ReferralSummary>()
+                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => ((Referral)s.SupportDelivery).ManualReferralId))
             ;
 
-            CreateMap<Referral, ReferralSummary>()
-                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => s.ExternalReferenceId))
-            ;
+            CreateMap<Support, ETransferSummary>();
         }
+    }
+
+    public class SupportDeliveryTypeConverter :
+        ITypeConverter<SupportDelivery, EMBC.ESS.Shared.Contracts.Events.SupportDelivery>,
+        ITypeConverter<EMBC.ESS.Shared.Contracts.Events.SupportDelivery, SupportDelivery>
+    {
+        public ESS.Shared.Contracts.Events.SupportDelivery Convert(SupportDelivery source, ESS.Shared.Contracts.Events.SupportDelivery destination, ResolutionContext context) =>
+            source.Method switch
+            {
+                SupportMethod.Referral => context.Mapper.Map<EMBC.ESS.Shared.Contracts.Events.Referral>(source),
+                SupportMethod.ETransfer => context.Mapper.Map<EMBC.ESS.Shared.Contracts.Events.ETransfer>(source),
+                _ => throw new NotImplementedException()
+            };
+
+        public SupportDelivery Convert(ESS.Shared.Contracts.Events.SupportDelivery source, SupportDelivery destination, ResolutionContext context) =>
+                        source switch
+                        {
+                            ESS.Shared.Contracts.Events.Referral r => context.Mapper.Map<Referral>(r),
+                            ESS.Shared.Contracts.Events.ETransfer e => context.Mapper.Map<ETransfer>(e),
+                            _ => throw new NotImplementedException()
+                        };
     }
 }

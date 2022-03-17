@@ -99,7 +99,7 @@ namespace EMBC.ESS.Managers.Events
                     if (support.IssuedBy == null) support.IssuedBy = support.CreatedBy;
                 }
             }
-            if (support is Shared.Contracts.Events.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
+            if (support.SupportDelivery is Shared.Contracts.Events.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
             {
                 var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
                 if (supplier != null)
