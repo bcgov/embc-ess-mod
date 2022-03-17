@@ -49,7 +49,7 @@ export class ReferralDetailsComponent implements OnInit {
     private needsAssessmentService: NeedsAssessmentService,
     private locationService: LocationService,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
