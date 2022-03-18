@@ -148,7 +148,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   get referral(): Referral {
-    return this.selectedSupport.supportDelivery as Referral;
+    return this.selectedSupport?.supportDelivery as Referral;
   }
 
   get supplierAddress(): AddressModel {
