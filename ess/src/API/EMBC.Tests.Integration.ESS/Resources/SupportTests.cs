@@ -43,6 +43,20 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    IssuedOn = now
                },
                new IncidentalsSupport {
+                   SupportDelivery = new Interac
+                   {
+                       NotificationEmail = "test@test.test",
+                       NotificationMobile = "+000-000-0000",
+                       ReceivingRegistrantId = TestData.ContactId
+                   },
+                   TotalAmount = 100.00,
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(5),
+                   IssuedOn = now
+               },
+               new TransportationTaxiSupport {
                    SupportDelivery = new Referral
                    {
                         SupplierId = TestData.SupplierAId,
@@ -52,8 +66,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IncludedHouseholdMembers = householdMembers,
                    From = now,
-                   To = now.AddDays(5),
-                   IssuedOn = now
+                   To = now.AddDays(3),
+                   IssuedOn = now,
                }
             };
 
@@ -67,14 +81,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             foreach (var support in supports)
             {
                 var sourceSupport = newSupports.Where(s => s.GetType() == support.GetType()).Single();
-                var sourceReferral = (Referral)sourceSupport.SupportDelivery;
-
-                var referral = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
-
                 support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
 
-                if (sourceReferral.SupplierId != null)
-                    referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
                 if (sourceSupport.IncludedHouseholdMembers.Any())
                     support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
                 if (sourceSupport.CreatedByTeamMemberId != null)
@@ -86,11 +94,25 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
                 support.CreatedOn.ShouldBeInRange(now, DateTime.UtcNow);
                 support.IssuedOn.ShouldBe(support.CreatedOn);
-                referral.IssuedToPersonName.ShouldBe(sourceReferral.IssuedToPersonName);
-                referral.SupplierNotes.ShouldBe(sourceReferral.SupplierNotes);
-                referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
-                referral.ManualReferralId.ShouldBeNull();
-                referral.IssuedByDisplayName.ShouldBeNull();
+
+                if (sourceSupport.SupportDelivery is Referral sourceReferral)
+                {
+                    var referral = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                    referral.IssuedToPersonName.ShouldBe(sourceReferral.IssuedToPersonName);
+                    referral.SupplierNotes.ShouldBe(sourceReferral.SupplierNotes);
+                    referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
+                    referral.ManualReferralId.ShouldBeNull();
+                    referral.IssuedByDisplayName.ShouldBeNull();
+                    if (sourceReferral.SupplierId != null)
+                        referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
+                }
+                if (sourceSupport.SupportDelivery is Interac sourceETransfer)
+                {
+                    var etransfer = support.SupportDelivery.ShouldBeAssignableTo<Interac>().ShouldNotBeNull();
+                    etransfer.NotificationEmail.ShouldBe(sourceETransfer.NotificationEmail);
+                    etransfer.NotificationMobile.ShouldBe(sourceETransfer.NotificationMobile);
+                    etransfer.ReceivingRegistrantId.ShouldBe(sourceETransfer.ReceivingRegistrantId);
+                }
             }
         }
 
@@ -172,7 +194,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
                 referral.ManualReferralId.ShouldNotBeNull().ShouldBe(sourceReferral.ManualReferralId);
                 referral.IssuedByDisplayName.ShouldNotBeNull().ShouldBe(sourceReferral.IssuedByDisplayName);
-                support.CreatedOn.ShouldBeInRange(now, DateTime.UtcNow);
+                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-10), DateTime.UtcNow);
                 support.IssuedOn.ShouldBe(sourceSupport.IssuedOn);
             }
         }

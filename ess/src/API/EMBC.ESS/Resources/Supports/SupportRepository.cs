@@ -161,8 +161,9 @@ namespace EMBC.ESS.Resources.Supports
             var teamMember = essContext.era_essteamusers.Where(tu => tu.era_essteamuserid == support._era_issuedbyid_value).SingleOrDefault();
             essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
 
-            AssignSupplierToSupport(support);
             AssignHouseholdMembersToSupport(support, support.era_era_householdmember_era_evacueesupport);
+            AssignSupplierToSupport(support);
+            AssignETransferRecipientToSupport(support);
         }
 
         private void UpdateSupport(era_evacuationfile file, era_evacueesupport support)
@@ -194,6 +195,7 @@ namespace EMBC.ESS.Resources.Supports
             // add household members to support
             AssignHouseholdMembersToSupport(support, support.era_era_householdmember_era_evacueesupport.Where(m => !currentHouseholdMembers.Any(im => im.era_householdmemberid == m.era_householdmemberid)));
             AssignSupplierToSupport(support);
+            AssignETransferRecipientToSupport(support);
         }
 
         public async Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason)
@@ -238,6 +240,16 @@ namespace EMBC.ESS.Resources.Supports
                 var supplier = essContext.era_suppliers.Where(s => s.era_supplierid == support._era_supplierid_value && s.statecode == (int)EntityState.Active).SingleOrDefault();
                 if (supplier == null) throw new ArgumentException($"Supplier id {support._era_supplierid_value} not found or is not active");
                 essContext.SetLink(support, nameof(era_evacueesupport.era_SupplierId), supplier);
+            }
+        }
+
+        private void AssignETransferRecipientToSupport(era_evacueesupport support)
+        {
+            if (support._era_payeeid_value.HasValue)
+            {
+                var registrant = essContext.contacts.Where(s => s.contactid == support._era_payeeid_value && s.statecode == (int)EntityState.Active).SingleOrDefault();
+                if (registrant == null) throw new ArgumentException($"Registrant id {support._era_payeeid_value} not found or is not active");
+                essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), registrant);
             }
         }
     }

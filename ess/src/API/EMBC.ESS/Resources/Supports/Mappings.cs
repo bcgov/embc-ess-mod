@@ -24,15 +24,6 @@ namespace EMBC.ESS.Resources.Supports
 {
     public class Mappings : Profile
     {
-        private static SupportDelivery SupportDeliveryConstructor(era_evacueesupport s, ResolutionContext context) =>
-           (SupportMethod)s.era_supportdeliverytype.Value switch
-           {
-               SupportMethod.Referral => new Referral(),
-               SupportMethod.ETransfer => new Interac(),
-
-               _ => throw new NotImplementedException($"No known type for SupportMethod value {s.era_supportdeliverytype.Value}")
-           };
-
         public Mappings()
         {
             CreateMap<IEnumerable<era_evacueesupport>, IEnumerable<Support>>()
@@ -59,12 +50,21 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom(s => s))
                 ;
 
+            Func<SupportDelivery, SupportMethod?> resolveSupportDelieveryType = sd => sd switch
+            {
+                Referral => SupportMethod.Referral,
+                Interac => SupportMethod.ETransfer,
+
+                _ => null
+            };
             CreateMap<Support, era_evacueesupport>(MemberList.Source)
                 .IgnoreAllSourcePropertiesWithAnInaccessibleSetter()
                 .IncludeAllDerived()
                 // this is a trick to include support delivery flattening mappings when mapping to Dynamics
                 // more support deliveries should be also included here
                 .IncludeMembers(s => s.SupportDelivery as Referral, s => s.SupportDelivery as Interac)
+                // support delivery must happend at this level, can't be at the included mapping
+                .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => resolveSupportDelieveryType(s.SupportDelivery)))
                 .ForSourceMember(s => s.SupportDelivery, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.IncludedHouseholdMembers, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.Status, opts => opts.DoNotValidate())
@@ -83,9 +83,6 @@ namespace EMBC.ESS.Resources.Supports
             CreateMap<era_evacueesupport, SupportDelivery>()
                 .ConvertUsing<SupportDeliveryTypeConverter>();
 
-            CreateMap<SupportDelivery, era_evacueesupport>()
-                .ConvertUsing<SupportDeliveryTypeConverter>();
-
             CreateMap<era_evacueesupport, Referral>()
                 .ForMember(d => d.IssuedToPersonName, opts => opts.MapFrom(s => s.era_purchaserofgoods))
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s._era_supplierid_value))
@@ -95,15 +92,10 @@ namespace EMBC.ESS.Resources.Supports
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
                 .ForSourceMember(s => s.IssuedByDisplayName, opts => opts.DoNotValidate())
-                .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => SupportMethod.Referral))
                 .ForMember(d => d._era_supplierid_value, opts => opts.MapFrom(s => s.SupplierId))
                 .ForMember(d => d.era_suppliernote, opts => opts.MapFrom(s => s.SupplierNotes))
                 .ForMember(d => d.era_manualsupport, opts => opts.MapFrom(s => s.ManualReferralId))
                 .ForMember(d => d.era_paperissuedby, opts => opts.MapFrom(s => s.ManualReferralId != null ? s.IssuedByDisplayName : null))
-                ;
-
-            CreateMap<era_evacueesupport, ETransfer>()
-                .IncludeAllDerived()
                 ;
 
             CreateMap<era_evacueesupport, Interac>()
@@ -112,9 +104,9 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.ReceivingRegistrantId, opts => opts.MapFrom(s => s._era_payeeid_value))
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
-                .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => SupportMethod.ETransfer))
                 .ForMember(d => d.era_notificationemailaddress, opts => opts.MapFrom(s => s.NotificationEmail))
                 .ForMember(d => d.era_notificationphonenumber, opts => opts.MapFrom(s => s.NotificationMobile))
+                .ForMember(d => d._era_payeeid_value, opts => opts.MapFrom(s => s.ReceivingRegistrantId))
                 ;
 
             CreateMap<era_evacueesupport, ClothingSupport>()
