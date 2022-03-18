@@ -7,8 +7,12 @@
   padding-top: 15px;
 }
 
+::ng-deep .fill-body > .ng-star-inserted {
+  height: 100%;
+}
+
 .div-container {
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
