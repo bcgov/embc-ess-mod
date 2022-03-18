@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  ClothingReferral,
-  FoodGroceriesReferral,
-  FoodRestaurantReferral,
-  IncidentalsReferral,
+  ClothingSupport,
+  FoodGroceriesSupport,
+  FoodRestaurantSupport,
+  IncidentalsSupport,
   Support,
-  TransportationTaxiReferral,
-  TransportationOtherReferral,
-  LodgingHotelReferral,
-  LodgingBilletingReferral,
-  LodgingGroupReferral,
+  TransportationTaxiSupport,
+  TransportationOtherSupport,
+  LodgingHotelSupport,
+  LodgingBilletingSupport,
+  LodgingGroupSupport,
   Referral
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -80,10 +80,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
   checkGroceryMaxRate(): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
-      (this.selectedSupport as FoodGroceriesReferral).numberOfDays *
-      (this.selectedSupport as FoodGroceriesReferral).includedHouseholdMembers
+      (this.selectedSupport as FoodGroceriesSupport).numberOfDays *
+      (this.selectedSupport as FoodGroceriesSupport).includedHouseholdMembers
         .length;
-    return maxRate < (this.selectedSupport as FoodGroceriesReferral).totalAmount
+    return maxRate < (this.selectedSupport as FoodGroceriesSupport).totalAmount
       ? false
       : true;
   }
@@ -91,65 +91,65 @@ export class ExistingSupportDetailsComponent implements OnInit {
   checkIncidentalMaxRate(): boolean {
     const maxRate =
       globalConst.incidentals.rate *
-      (this.selectedSupport as IncidentalsReferral).includedHouseholdMembers
+      (this.selectedSupport as IncidentalsSupport).includedHouseholdMembers
         .length;
-    return maxRate < (this.selectedSupport as IncidentalsReferral).totalAmount
+    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount
       ? false
       : true;
   }
 
   checkClothingMaxRate(): boolean {
-    const rate = (this.selectedSupport as ClothingReferral)
+    const rate = (this.selectedSupport as ClothingSupport)
       .extremeWinterConditions
       ? globalConst.extremeConditions.rate
       : globalConst.normalConditions.rate;
     const maxRate =
       rate *
-      (this.selectedSupport as ClothingReferral).includedHouseholdMembers
+      (this.selectedSupport as ClothingSupport).includedHouseholdMembers
         .length;
-    return maxRate < (this.selectedSupport as IncidentalsReferral).totalAmount
+    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount
       ? false
       : true;
   }
 
-  get groceryReferral(): FoodGroceriesReferral {
-    return this.selectedSupport as FoodGroceriesReferral;
+  get groceryReferral(): FoodGroceriesSupport {
+    return this.selectedSupport as FoodGroceriesSupport;
   }
 
-  get mealReferral(): FoodRestaurantReferral {
-    return this.selectedSupport as FoodRestaurantReferral;
+  get mealReferral(): FoodRestaurantSupport {
+    return this.selectedSupport as FoodRestaurantSupport;
   }
 
-  get taxiReferral(): TransportationTaxiReferral {
-    return this.selectedSupport as TransportationTaxiReferral;
+  get taxiReferral(): TransportationTaxiSupport {
+    return this.selectedSupport as TransportationTaxiSupport;
   }
 
-  get otherReferral(): TransportationOtherReferral {
-    return this.selectedSupport as TransportationOtherReferral;
+  get otherReferral(): TransportationOtherSupport {
+    return this.selectedSupport as TransportationOtherSupport;
   }
 
-  get hotelReferral(): LodgingHotelReferral {
-    return this.selectedSupport as LodgingHotelReferral;
+  get hotelReferral(): LodgingHotelSupport {
+    return this.selectedSupport as LodgingHotelSupport;
   }
 
-  get billetingReferral(): LodgingBilletingReferral {
-    return this.selectedSupport as LodgingBilletingReferral;
+  get billetingReferral(): LodgingBilletingSupport {
+    return this.selectedSupport as LodgingBilletingSupport;
   }
 
-  get groupReferral(): LodgingGroupReferral {
-    return this.selectedSupport as LodgingGroupReferral;
+  get groupReferral(): LodgingGroupSupport {
+    return this.selectedSupport as LodgingGroupSupport;
   }
 
-  get incidentalReferral(): IncidentalsReferral {
-    return this.selectedSupport as IncidentalsReferral;
+  get incidentalReferral(): IncidentalsSupport {
+    return this.selectedSupport as IncidentalsSupport;
   }
 
-  get clothingReferral(): ClothingReferral {
-    return this.selectedSupport as ClothingReferral;
+  get clothingReferral(): ClothingSupport {
+    return this.selectedSupport as ClothingSupport;
   }
 
   get referral(): Referral {
-    return this.selectedSupport as Referral;
+    return this.selectedSupport.supportDelivery as Referral;
   }
 
   get supplierAddress(): AddressModel {

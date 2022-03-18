@@ -1,12 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Referral } from './referral';
+import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface FoodGroceriesReferral extends Referral {
-  approverName?: string;
+export interface TransportationTaxiSupport extends Support {
   category: SupportCategory;
-  numberOfDays: number;
+  fromAddress: string;
   subCategory: SupportSubCategory;
-  totalAmount: number;
+  toAddress: string;
 }

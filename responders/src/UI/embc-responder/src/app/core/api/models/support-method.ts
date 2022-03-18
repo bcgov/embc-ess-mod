@@ -2,5 +2,6 @@
 /* eslint-disable */
 export enum SupportMethod {
   Unknown = 'Unknown',
-  Referral = 'Referral'
+  Referral = 'Referral',
+  ETransfer = 'ETransfer'
 }

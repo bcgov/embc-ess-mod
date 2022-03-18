@@ -256,6 +256,25 @@ export class StepSupportsService {
     const members: Array<string> = this.supportDetails.members.map((value) => {
       return value.id;
     });
+
+    const referral: Referral = {
+      manualReferralId:
+        this.supportDetails.externalReferenceId !== undefined
+          ? 'R' + this.supportDetails.externalReferenceId
+          : '',
+      issuedToPersonName:
+        this.supportDelivery.issuedTo !== 'Someone else'
+          ? this.supportDelivery.issuedTo.lastName +
+            ',' +
+            this.supportDelivery.issuedTo.firstName
+          : this.supportDelivery.name,
+      supplierAddress: this.supportDelivery.supplier.address,
+      supplierId: this.supportDelivery.supplier.id,
+      supplierName: this.supportDelivery.supplier.name,
+      supplierNotes: this.supportDelivery.supplierNote,
+      method: SupportMethod.Referral
+    };
+
     const support: Support = {
       issuedBy: this.supportDetails.issuedBy,
       issuedOn: this.supportDetails.issuedOn,
@@ -271,49 +290,40 @@ export class StepSupportsService {
         this.supportDetails.toTime
       ),
       category: null,
-      method: null,
-      subCategory: null
-    };
-    const referral: Referral = {
-      ...support,
-      externalReferenceId:
-        this.supportDetails.externalReferenceId !== undefined
-          ? 'R' + this.supportDetails.externalReferenceId
-          : '',
-      issuedToPersonName:
-        this.supportDelivery.issuedTo !== 'Someone else'
-          ? this.supportDelivery.issuedTo.lastName +
-            ',' +
-            this.supportDelivery.issuedTo.firstName
-          : this.supportDelivery.name,
       method: SupportMethod.Referral,
-      supplierAddress: this.supportDelivery.supplier.address,
-      supplierId: this.supportDelivery.supplier.id,
-      supplierName: this.supportDelivery.supplier.name,
-      supplierNotes: this.supportDelivery.supplierNote
+      subCategory: null,
+      supportDelivery: referral,
     };
+
+
+
+    // const support: Support = {
+    //   ...support,
+    //   method: SupportMethod.Referral,
+    //   supportDelivery: referral
+    // };
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
-      this.referralService.createMealReferral(referral, this.supportDetails);
+      this.referralService.createMealReferral(support, this.supportDetails);
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries
     ) {
       this.referralService.createGroceriesReferral(
-        referral,
+        support,
         this.supportDetails
       );
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi
     ) {
-      this.referralService.createTaxiReferral(referral, this.supportDetails);
+      this.referralService.createTaxiReferral(support, this.supportDetails);
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other
     ) {
-      this.referralService.createOtherReferral(referral, this.supportDetails);
+      this.referralService.createOtherReferral(support, this.supportDetails);
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting
     ) {
       this.referralService.createBilletingReferral(
-        referral,
+        support,
         this.supportDetails,
         this.supportDelivery
       );
@@ -321,7 +331,7 @@ export class StepSupportsService {
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group
     ) {
       this.referralService.createGroupLodgingReferral(
-        referral,
+        support,
         this.supportDetails,
         this.supportDelivery
       );
@@ -329,17 +339,17 @@ export class StepSupportsService {
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
     ) {
       this.referralService.createHotelMotelReferral(
-        referral,
+        support,
         this.supportDetails
       );
     } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
       this.referralService.createIncidentalsReferral(
-        referral,
+        support,
         this.supportDetails
       );
     } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {
       this.referralService.createClothingReferral(
-        referral,
+        support,
         this.supportDetails
       );
     }

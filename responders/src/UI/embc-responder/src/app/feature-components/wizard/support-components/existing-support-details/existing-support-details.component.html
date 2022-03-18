@@ -13,9 +13,9 @@
   <div class="row row-padding">
     <div class="col-md-12 needs-box">
       <div class="row">
-        <div class="col-md-8" *ngIf="referral?.externalReferenceId">
+        <div class="col-md-8" *ngIf="referral?.manualReferralId">
           <p class="question-heading">
-            Support #{{ referral?.externalReferenceId }}
+            Support #{{ referral?.manualReferralId }}
           </p>
           <div class="row">
             <div class="col-md-1">
@@ -112,7 +112,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="!referral?.externalReferenceId" class="col-md-8">
+        <div *ngIf="!referral?.manualReferralId" class="col-md-8">
           <p
             *ngIf="selectedSupport?.status !== 'Draft'"
             class="question-heading"
