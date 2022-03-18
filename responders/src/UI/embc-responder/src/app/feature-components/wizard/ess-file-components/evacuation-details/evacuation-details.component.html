@@ -14,7 +14,7 @@
           <div class="col-8">
             <div
               *ngIf="
-                stepEssFileService?.paperESSFile !== 'undefined' ||
+                stepEssFileService?.paperESSFile ||
                 evacueeSessionService?.isPaperBased
               "
               class="row"
