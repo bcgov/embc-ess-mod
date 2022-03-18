@@ -34,7 +34,7 @@ namespace EMBC.ESS.Shared.Contracts
                     {
                         clonedReader.Read();
                         type = Type.GetType(clonedReader.GetString());
-                        break;
+                        if (typeToConvert.IsAssignableFrom(type)) break;
                     }
                 }
             }

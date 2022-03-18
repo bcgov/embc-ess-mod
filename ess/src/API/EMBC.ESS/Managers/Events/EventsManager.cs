@@ -469,9 +469,8 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             //verify no paper supports included
-            var paperReferrals = cmd.Supports.Where(s => s is Shared.Contracts.Events.Referral r && r.IsPaperReferral)
-                .Cast<Shared.Contracts.Events.Referral>()
-                .Select(r => r.ExternalReferenceId)
+            var paperReferrals = cmd.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && r.IsPaperReferral)
+                .Select(r => ((Shared.Contracts.Events.Referral)r.SupportDelivery).ManualReferralId)
                 .ToArray();
             if (paperReferrals.Any())
                 throw new BusinessValidationException($"file {cmd.FileId} error: cannot process paper referrals {string.Join(',', paperReferrals)} as digital");
@@ -523,12 +522,12 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
             //validate only paper referrals were passed in the command
-            if (!cmd.Supports.All(s => s is Shared.Contracts.Events.Referral r && r.IsPaperReferral))
+            if (!cmd.Supports.All(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && r.IsPaperReferral))
                 throw new BusinessValidationException($"file {cmd.FileId} error: {nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
 
-            var referrals = cmd.Supports.Cast<Shared.Contracts.Events.Referral>().ToArray();
+            var supports = cmd.Supports.ToArray();
             //validate paper id and support types are unique
-            var duplicates = referrals.GroupBy(s => s.ExternalReferenceId).Where(g => g.GroupBy(e => e.GetType()).Any(gt => gt.Count() != 1));
+            var duplicates = supports.GroupBy(s => ((Shared.Contracts.Events.Referral)s.SupportDelivery).ManualReferralId).Where(g => g.GroupBy(e => e.GetType()).Any(gt => gt.Count() != 1));
             if (duplicates.Any())
             {
                 throw new BusinessValidationException($"file {cmd.FileId} error: duplicate referral: "
@@ -537,7 +536,7 @@ namespace EMBC.ESS.Managers.Events
 
             var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
 
-            foreach (var referral in referrals)
+            foreach (var referral in supports)
             {
                 referral.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
                 referral.CreatedOn = DateTime.UtcNow;

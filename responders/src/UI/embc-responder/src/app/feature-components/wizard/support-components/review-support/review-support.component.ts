@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import {
-  FoodGroceriesReferral,
-  FoodRestaurantReferral,
-  TransportationTaxiReferral,
-  TransportationOtherReferral,
-  LodgingHotelReferral,
-  LodgingBilletingReferral,
-  LodgingGroupReferral,
-  IncidentalsReferral,
-  ClothingReferral,
+  FoodGroceriesSupport,
+  FoodRestaurantSupport,
+  TransportationTaxiSupport,
+  TransportationOtherSupport,
+  LodgingHotelSupport,
+  LodgingBilletingSupport,
+  LodgingGroupSupport,
+  IncidentalsSupport,
+  ClothingSupport,
   Referral,
   Support
 } from 'src/app/core/api/models';
@@ -84,9 +84,9 @@ export class ReviewSupportComponent implements OnInit {
   checkGroceryMaxRate(support: Support): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
-      (support as FoodGroceriesReferral).numberOfDays *
-      (support as FoodGroceriesReferral).includedHouseholdMembers.length;
-    return maxRate < (support as FoodGroceriesReferral).totalAmount
+      (support as FoodGroceriesSupport).numberOfDays *
+      (support as FoodGroceriesSupport).includedHouseholdMembers.length;
+    return maxRate < (support as FoodGroceriesSupport).totalAmount
       ? false
       : true;
   }
@@ -100,10 +100,8 @@ export class ReviewSupportComponent implements OnInit {
   checkIncidentalMaxRate(support: Support): boolean {
     const maxRate =
       globalConst.incidentals.rate *
-      (support as IncidentalsReferral).includedHouseholdMembers.length;
-    return maxRate < (support as IncidentalsReferral).totalAmount
-      ? false
-      : true;
+      (support as IncidentalsSupport).includedHouseholdMembers.length;
+    return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
   /**
@@ -113,14 +111,12 @@ export class ReviewSupportComponent implements OnInit {
    * @returns if the current support surpasses the max rate allow or not
    */
   checkClothingMaxRate(support: Support): boolean {
-    const rate = (support as ClothingReferral).extremeWinterConditions
+    const rate = (support as ClothingSupport).extremeWinterConditions
       ? globalConst.extremeConditions.rate
       : globalConst.normalConditions.rate;
     const maxRate =
-      rate * (support as ClothingReferral).includedHouseholdMembers.length;
-    return maxRate < (support as IncidentalsReferral).totalAmount
-      ? false
-      : true;
+      rate * (support as ClothingSupport).includedHouseholdMembers.length;
+    return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
   /**
@@ -129,8 +125,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as FoodGroceriesReferral
    * @returns a FoodGroceriesReferral object
    */
-  getGroceryReferral(support: Support): FoodGroceriesReferral {
-    return support as FoodGroceriesReferral;
+  getGroceryReferral(support: Support): FoodGroceriesSupport {
+    return support as FoodGroceriesSupport;
   }
 
   /**
@@ -139,8 +135,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as FoodRestaurantReferral
    * @returns a FoodRestaurantReferral object
    */
-  getMealReferral(support: Support): FoodRestaurantReferral {
-    return support as FoodRestaurantReferral;
+  getMealReferral(support: Support): FoodRestaurantSupport {
+    return support as FoodRestaurantSupport;
   }
 
   /**
@@ -149,8 +145,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as TransportationTaxiReferral
    * @returns a TransportationTaxiReferral object
    */
-  getTaxiReferral(support: Support): TransportationTaxiReferral {
-    return support as TransportationTaxiReferral;
+  getTaxiReferral(support: Support): TransportationTaxiSupport {
+    return support as TransportationTaxiSupport;
   }
 
   /**
@@ -159,8 +155,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as TransportationOtherReferral
    * @returns a TransportationOtherReferral object
    */
-  getOtherReferral(support: Support): TransportationOtherReferral {
-    return support as TransportationOtherReferral;
+  getOtherReferral(support: Support): TransportationOtherSupport {
+    return support as TransportationOtherSupport;
   }
 
   /**
@@ -169,8 +165,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as LodgingHotelReferral
    * @returns a LodgingHotelReferral object
    */
-  getHotelReferral(support: Support): LodgingHotelReferral {
-    return support as LodgingHotelReferral;
+  getHotelReferral(support: Support): LodgingHotelSupport {
+    return support as LodgingHotelSupport;
   }
 
   /**
@@ -179,8 +175,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as LodgingBilletingReferral
    * @returns a LodgingBilletingReferral object
    */
-  getBilletingReferral(support: Support): LodgingBilletingReferral {
-    return support as LodgingBilletingReferral;
+  getBilletingReferral(support: Support): LodgingBilletingSupport {
+    return support as LodgingBilletingSupport;
   }
 
   /**
@@ -189,8 +185,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as LodgingGroupReferral
    * @returns a LodgingGroupReferral object
    */
-  getGroupReferral(support: Support): LodgingGroupReferral {
-    return support as LodgingGroupReferral;
+  getGroupReferral(support: Support): LodgingGroupSupport {
+    return support as LodgingGroupSupport;
   }
 
   /**
@@ -199,8 +195,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as IncidentalsReferral
    * @returns a IncidentalsReferral object
    */
-  getIncidentalReferral(support: Support): IncidentalsReferral {
-    return support as IncidentalsReferral;
+  getIncidentalReferral(support: Support): IncidentalsSupport {
+    return support as IncidentalsSupport;
   }
 
   /**
@@ -209,8 +205,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as ClothingReferral
    * @returns a ClothingReferral object
    */
-  getClothingReferral(support: Support): ClothingReferral {
-    return support as ClothingReferral;
+  getClothingReferral(support: Support): ClothingSupport {
+    return support as ClothingSupport;
   }
 
   /**
@@ -220,7 +216,7 @@ export class ReviewSupportComponent implements OnInit {
    * @returns a Referral object
    */
   getReferral(support: Support): Referral {
-    return support as Referral;
+    return support.supportDelivery as Referral;
   }
 
   /**
@@ -230,7 +226,7 @@ export class ReviewSupportComponent implements OnInit {
    * @returns a AddressModel object
    */
   getSupplierAddress(support: Support): AddressModel {
-    const referral = support as Referral;
+    const referral = support?.supportDelivery as Referral;
     return this.locationService.getAddressModelFromAddress(
       referral?.supplierAddress
     );
@@ -315,8 +311,7 @@ export class ReviewSupportComponent implements OnInit {
 
   private saveDraftSupports() {
     this.showLoader = !this.showLoader;
-    const supportsDraft: Referral[] =
-      this.referralService.getDraftSupport() as Referral[];
+    const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService
       .savePaperSupports(fileId, supportsDraft)

@@ -13,9 +13,8 @@ import {
   trigger
 } from '@angular/animations';
 import {
-  LodgingBilletingReferral,
-  LodgingGroupReferral,
-  Referral,
+  LodgingBilletingSupport,
+  LodgingGroupSupport,
   Support
 } from 'src/app/core/api/models';
 import { NeedsAssessmentService } from 'src/app/feature-components/needs-assessment/needs-assessment.service';
@@ -56,16 +55,12 @@ export class ReferralDetailsComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  getReferral(support: Support): Referral {
-    return support as Referral;
+  getBilletingReferral(support: Support): LodgingBilletingSupport {
+    return support as LodgingBilletingSupport;
   }
 
-  getBilletingReferral(support: Support): LodgingBilletingReferral {
-    return support as LodgingBilletingReferral;
-  }
-
-  getGroupReferral(support: Support): LodgingGroupReferral {
-    return support as LodgingGroupReferral;
+  getGroupReferral(support: Support): LodgingGroupSupport {
+    return support as LodgingGroupSupport;
   }
 
   /**

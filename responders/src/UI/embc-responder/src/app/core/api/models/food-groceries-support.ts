@@ -1,12 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Referral } from './referral';
+import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface ClothingReferral extends Referral {
+export interface FoodGroceriesSupport extends Support {
   approverName?: string;
   category: SupportCategory;
-  extremeWinterConditions?: boolean;
+  numberOfDays: number;
   subCategory: SupportSubCategory;
   totalAmount: number;
 }

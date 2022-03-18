@@ -144,40 +144,63 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<ESS.Shared.Contracts.Events.Support, Support>()
                 .IncludeAllDerived()
                 .ForMember(d => d.IssuingMemberTeamName, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
+                .ForMember(d => d.Method, opts => opts.Ignore())
+                .ForMember(d => d.SupplierId, opts => opts.Ignore())
+                .ForMember(d => d.SupplierName, opts => opts.Ignore())
+                .ForMember(d => d.SupplierAddress, opts => opts.Ignore())
+                .ForMember(d => d.IssuedToPersonName, opts => opts.Ignore())
+                .ForMember(d => d.ManualReferralId, opts => opts.Ignore())
+                .ForMember(d => d.NotificationEmail, opts => opts.Ignore())
+                .ForMember(d => d.NofificationMobile, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
+                {
+                    if (s.SupportDelivery is ESS.Shared.Contracts.Events.Referral referral)
+                    {
+                        d.Method = SupportMethod.Referral;
+                        d.SupplierId = referral.SupplierDetails?.Id;
+                        d.SupplierName = referral.SupplierDetails?.Name;
+                        d.SupplierAddress = ctx.Mapper.Map<Address>(referral.SupplierDetails?.Address);
+                        d.IssuedToPersonName = referral.IssuedToPersonName;
+                        d.ManualReferralId = referral.ManualReferralId;
+                    }
+                    else if (s.SupportDelivery is ESS.Shared.Contracts.Events.Interac eTransfer)
+                    {
+                        d.Method = SupportMethod.ETransfer;
+                        d.NofificationMobile = eTransfer.NotificationMobile;
+                        d.NotificationEmail = eTransfer.NotificationEmail;
+                    }
+                    else
+                    {
+                        d.Method = SupportMethod.Unknown;
+                    }
+                })
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.Referral, Referral>()
-                .IncludeAllDerived()
-                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
-                .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
-                .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
+            CreateMap<ESS.Shared.Contracts.Events.ClothingSupport, ClothingSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.ClothingReferral, ClothingReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.IncidentalsSupport, IncidentalsSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.IncidentalsReferral, IncidentalsReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.FoodGroceriesSupport, FoodGroceriesSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodGroceriesReferral, FoodGroceriesReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.FoodRestaurantSupport, FoodRestaurantSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.FoodRestaurantReferral, FoodRestaurantReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.LodgingBilletingSupport, LodgingBilletingSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingBilletingReferral, LodgingBilletingReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.LodgingGroupSupport, LodgingGroupSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingGroupReferral, LodgingGroupReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.LodgingHotelSupport, LodgingHotelSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingHotelReferral, LodgingHotelReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.TransportationOtherSupport, TransportationOtherSupport>()
                 ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationOtherReferral, TransportationOtherReferral>()
-                ;
-
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationTaxiReferral, TransportationTaxiReferral>()
+            CreateMap<ESS.Shared.Contracts.Events.TransportationTaxiSupport, TransportationTaxiSupport>()
                 ;
         }
     }

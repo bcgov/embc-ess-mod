@@ -281,7 +281,16 @@ namespace EMBC.Registrants.API.Controllers
     }
 
     [JsonConverter(typeof(SupportJsonConverter))]
-    [KnownType(typeof(Referral))]
+    [KnownType(typeof(ClothingSupport))]
+    [KnownType(typeof(IncidentalsSupport))]
+    [KnownType(typeof(FoodGroceriesSupport))]
+    [KnownType(typeof(FoodRestaurantSupport))]
+    [KnownType(typeof(FoodRestaurantSupport))]
+    [KnownType(typeof(LodgingBilletingSupport))]
+    [KnownType(typeof(LodgingGroupSupport))]
+    [KnownType(typeof(LodgingHotelSupport))]
+    [KnownType(typeof(TransportationOtherSupport))]
+    [KnownType(typeof(TransportationTaxiSupport))]
     public abstract class Support
     {
         public string Id { get; set; }
@@ -293,40 +302,26 @@ namespace EMBC.Registrants.API.Controllers
 
         public SupportStatus Status { get; set; }
 
-        public abstract SupportMethod Method { get; }
-
         public abstract SupportCategory Category { get; }
 
         public abstract SupportSubCategory SubCategory { get; }
 
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+        public string? ManualReferralId { get; set; }
+
+        public SupportMethod Method { get; set; }
+
+        public string? SupplierId { get; set; }
+
+        public string? SupplierName { get; set; }
+        public Address? SupplierAddress { get; set; }
+
+        public string? IssuedToPersonName { get; set; }
+        public string? NotificationEmail { get; set; }
+        public string? NofificationMobile { get; set; }
     }
 
-    [KnownType(typeof(ClothingReferral))]
-    [KnownType(typeof(IncidentalsReferral))]
-    [KnownType(typeof(FoodGroceriesReferral))]
-    [KnownType(typeof(FoodRestaurantReferral))]
-    [KnownType(typeof(FoodRestaurantReferral))]
-    [KnownType(typeof(LodgingBilletingReferral))]
-    [KnownType(typeof(LodgingGroupReferral))]
-    [KnownType(typeof(LodgingHotelReferral))]
-    [KnownType(typeof(TransportationOtherReferral))]
-    [KnownType(typeof(TransportationTaxiReferral))]
-    public abstract class Referral : Support
-    {
-        public string? ExternalReferenceId { get; set; }
-
-        public override SupportMethod Method => SupportMethod.Referral;
-
-        public string SupplierId { get; set; }
-
-        public string SupplierName { get; set; }
-        public Address SupplierAddress { get; set; }
-
-        public string IssuedToPersonName { get; set; }
-    }
-
-    public class ClothingReferral : Referral
+    public class ClothingSupport : Support
     {
         public bool ExtremeWinterConditions { get; set; }
 
@@ -338,7 +333,7 @@ namespace EMBC.Registrants.API.Controllers
         public double TotalAmount { get; set; }
     }
 
-    public class IncidentalsReferral : Referral
+    public class IncidentalsSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Incidentals;
 
@@ -350,7 +345,7 @@ namespace EMBC.Registrants.API.Controllers
         public double TotalAmount { get; set; }
     }
 
-    public class FoodGroceriesReferral : Referral
+    public class FoodGroceriesSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Food;
 
@@ -363,7 +358,7 @@ namespace EMBC.Registrants.API.Controllers
         public double TotalAmount { get; set; }
     }
 
-    public class FoodRestaurantReferral : Referral
+    public class FoodRestaurantSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Food;
 
@@ -382,7 +377,7 @@ namespace EMBC.Registrants.API.Controllers
         public double TotalAmount { get; set; }
     }
 
-    public class LodgingHotelReferral : Referral
+    public class LodgingHotelSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Lodging;
 
@@ -395,7 +390,7 @@ namespace EMBC.Registrants.API.Controllers
         public int NumberOfRooms { get; set; }
     }
 
-    public class LodgingBilletingReferral : Referral
+    public class LodgingBilletingSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Lodging;
 
@@ -411,7 +406,7 @@ namespace EMBC.Registrants.API.Controllers
         public string HostPhone { get; set; }
     }
 
-    public class LodgingGroupReferral : Referral
+    public class LodgingGroupSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Lodging;
 
@@ -427,7 +422,7 @@ namespace EMBC.Registrants.API.Controllers
         public string FacilityContactPhone { get; set; }
     }
 
-    public class TransportationTaxiReferral : Referral
+    public class TransportationTaxiSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Transportation;
 
@@ -438,7 +433,7 @@ namespace EMBC.Registrants.API.Controllers
         public string ToAddress { get; set; }
     }
 
-    public class TransportationOtherReferral : Referral
+    public class TransportationOtherSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Transportation;
 
@@ -472,7 +467,10 @@ namespace EMBC.Registrants.API.Controllers
         Unknown,
 
         [Description("Referral")]
-        Referral
+        Referral,
+
+        [Description("e-transfer")]
+        ETransfer
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -593,15 +591,15 @@ namespace EMBC.Registrants.API.Controllers
             //Dserialize to the correct type
             return category switch
             {
-                SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingReferral>(ref reader, options),
-                SupportCategory.Incidentals => JsonSerializer.Deserialize<IncidentalsReferral>(ref reader, options),
-                SupportCategory.Food when subCategory == SupportSubCategory.Food_Groceries => JsonSerializer.Deserialize<FoodGroceriesReferral>(ref reader, options),
-                SupportCategory.Food when subCategory == SupportSubCategory.Food_Restaurant => JsonSerializer.Deserialize<FoodRestaurantReferral>(ref reader, options),
-                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelReferral>(ref reader, options),
-                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingReferral>(ref reader, options),
-                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupReferral>(ref reader, options),
-                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiReferral>(ref reader, options),
-                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherReferral>(ref reader, options),
+                SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingSupport>(ref reader, options),
+                SupportCategory.Incidentals => JsonSerializer.Deserialize<IncidentalsSupport>(ref reader, options),
+                SupportCategory.Food when subCategory == SupportSubCategory.Food_Groceries => JsonSerializer.Deserialize<FoodGroceriesSupport>(ref reader, options),
+                SupportCategory.Food when subCategory == SupportSubCategory.Food_Restaurant => JsonSerializer.Deserialize<FoodRestaurantSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupSupport>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiSupport>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherSupport>(ref reader, options),
                 _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
             };
         }
@@ -611,39 +609,39 @@ namespace EMBC.Registrants.API.Controllers
             switch (value.Category)
             {
                 case SupportCategory.Clothing:
-                    JsonSerializer.Serialize(writer, (ClothingReferral)value, options);
+                    JsonSerializer.Serialize(writer, (ClothingSupport)value, options);
                     break;
 
                 case SupportCategory.Incidentals:
-                    JsonSerializer.Serialize(writer, (IncidentalsReferral)value, options);
+                    JsonSerializer.Serialize(writer, (IncidentalsSupport)value, options);
                     break;
 
                 case SupportCategory.Food when value.SubCategory == SupportSubCategory.Food_Groceries:
-                    JsonSerializer.Serialize(writer, (FoodGroceriesReferral)value, options);
+                    JsonSerializer.Serialize(writer, (FoodGroceriesSupport)value, options);
                     break;
 
                 case SupportCategory.Food when value.SubCategory == SupportSubCategory.Food_Restaurant:
-                    JsonSerializer.Serialize(writer, (FoodRestaurantReferral)value, options);
+                    JsonSerializer.Serialize(writer, (FoodRestaurantSupport)value, options);
                     break;
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Hotel:
-                    JsonSerializer.Serialize(writer, (LodgingHotelReferral)value, options);
+                    JsonSerializer.Serialize(writer, (LodgingHotelSupport)value, options);
                     break;
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Billeting:
-                    JsonSerializer.Serialize(writer, (LodgingBilletingReferral)value, options);
+                    JsonSerializer.Serialize(writer, (LodgingBilletingSupport)value, options);
                     break;
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Group:
-                    JsonSerializer.Serialize(writer, (LodgingGroupReferral)value, options);
+                    JsonSerializer.Serialize(writer, (LodgingGroupSupport)value, options);
                     break;
 
                 case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Taxi:
-                    JsonSerializer.Serialize(writer, (TransportationTaxiReferral)value, options);
+                    JsonSerializer.Serialize(writer, (TransportationTaxiSupport)value, options);
                     break;
 
                 case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Other:
-                    JsonSerializer.Serialize(writer, (TransportationOtherReferral)value, options);
+                    JsonSerializer.Serialize(writer, (TransportationOtherSupport)value, options);
                     break;
 
                 default: throw new NotSupportedException($"Support with method {value.Method}, category {value.Category}, sub category {value.SubCategory}");

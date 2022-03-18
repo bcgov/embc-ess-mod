@@ -98,7 +98,7 @@ export class ViewSupportsComponent implements OnInit {
               const value = {
                 ...support,
                 hostAddress: this.locationsService.getAddressModelFromAddress(
-                  (support as Referral).supplierAddress
+                  (support.supportDelivery as Referral).supplierAddress
                 )
               };
               supportModel.push(value);
