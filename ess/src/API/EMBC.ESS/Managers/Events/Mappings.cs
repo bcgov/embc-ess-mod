@@ -394,27 +394,4 @@ namespace EMBC.ESS.Managers.Events
 
         private static Shared.Contracts.Events.Referral GetReferralOrNull(Shared.Contracts.Events.Support support) => support.SupportDelivery as Shared.Contracts.Events.Referral;
     }
-
-    //public class SupportDeliveryTypeConverter :
-    //    ITypeConverter<SupportDelivery, Shared.Contracts.Events.SupportDelivery>,
-    //    ITypeConverter<Shared.Contracts.Events.SupportDelivery, SupportDelivery>
-    //{
-    //    public Shared.Contracts.Events.SupportDelivery Convert(SupportDelivery source, Shared.Contracts.Events.SupportDelivery destination, ResolutionContext context)
-    //    {
-    //        return source switch
-    //        {
-    //            Referral r => context.Mapper.Map<Shared.Contracts.Events.Referral>(r),
-    //            Interac e => context.Mapper.Map<Shared.Contracts.Events.ETransfer>(e),
-    //            _ => throw new NotImplementedException($"No known type for {source.GetType().FullName}")
-    //        };
-    //    }
-
-    //    public SupportDelivery Convert(Shared.Contracts.Events.SupportDelivery source, SupportDelivery destination, ResolutionContext context) =>
-    //        source switch
-    //        {
-    //            Shared.Contracts.Events.Referral r => context.Mapper.Map<Referral>(r),
-    //            Shared.Contracts.Events.ETransfer e => context.Mapper.Map<ETransfer>(e),
-    //            _ => throw new NotImplementedException($"No known type for {source.GetType().FullName}")
-    //        };
-    //}
 }
