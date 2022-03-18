@@ -450,6 +450,7 @@ namespace EMBC.Responders.API.Controllers
         public string TransportMode { get; set; }
     }
 
+    [JsonConverter(typeof(SupportDeliveryJsonConverter))]
     [KnownType(typeof(ETransfer))]
     [KnownType(typeof(Referral))]
     public abstract class SupportDelivery
@@ -696,6 +697,51 @@ namespace EMBC.Responders.API.Controllers
                     break;
 
                 default: throw new NotSupportedException($"Support with method {value.Method}, category {value.Category}, sub category {value.SubCategory}");
+            }
+        }
+    }
+
+    public class SupportDeliveryJsonConverter : JsonConverter<SupportDelivery>
+    {
+        public override SupportDelivery? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var clonedReader = reader;
+            while (clonedReader.Read())
+            {
+                if (clonedReader.TokenType == JsonTokenType.PropertyName)
+                {
+                    if (clonedReader.GetString().Equals(nameof(SupportDelivery.Method), StringComparison.OrdinalIgnoreCase))
+                    {
+                        clonedReader.Read();
+                        var method = clonedReader.GetString();
+                        if (!Enum.TryParse<SupportMethod>(method, true, out var deliveryMethod)) throw new JsonException($"Failed to parse method {method}");
+                        return deliveryMethod switch
+                        {
+                            SupportMethod.Referral => JsonSerializer.Deserialize<Referral>(ref reader, options),
+                            SupportMethod.ETransfer => JsonSerializer.Deserialize<Interac>(ref reader, options),
+
+                            _ => throw new JsonException($"Don't know how to deserialize SupportMethod {deliveryMethod}")
+                        };
+                    }
+                }
+            }
+            throw new JsonException("SupportDelivery doesn't have a Method property");
+        }
+
+        public override void Write(Utf8JsonWriter writer, SupportDelivery value, JsonSerializerOptions options)
+        {
+            switch (value.Method)
+            {
+                case SupportMethod.Referral:
+                    JsonSerializer.Serialize(writer, (Referral)value, options);
+                    break;
+
+                case SupportMethod.ETransfer:
+                    JsonSerializer.Serialize(writer, (Interac)value, options);
+                    break;
+
+                default:
+                    throw new JsonException($"Don't know how to serialize SupportMethod {value.Method}");
             }
         }
     }
