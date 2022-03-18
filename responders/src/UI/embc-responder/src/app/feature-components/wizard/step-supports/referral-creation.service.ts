@@ -45,7 +45,7 @@ export class ReferralCreationService {
   private incidentalsReferralVal: IncidentalsSupport;
   private draftSupportVal: Support[] = [];
 
-  constructor(private cacheService: CacheService) { }
+  constructor(private cacheService: CacheService) {}
 
   setDraftSupport(draftSupportVal: Support) {
     if (draftSupportVal !== null) {

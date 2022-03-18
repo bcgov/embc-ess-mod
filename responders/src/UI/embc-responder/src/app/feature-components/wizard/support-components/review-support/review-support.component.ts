@@ -52,7 +52,7 @@ export class ReviewSupportComponent implements OnInit {
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
     private downloadService: DownloadService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     console.log(this.referralService.getDraftSupport());
@@ -101,9 +101,7 @@ export class ReviewSupportComponent implements OnInit {
     const maxRate =
       globalConst.incidentals.rate *
       (support as IncidentalsSupport).includedHouseholdMembers.length;
-    return maxRate < (support as IncidentalsSupport).totalAmount
-      ? false
-      : true;
+    return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
   /**
@@ -118,9 +116,7 @@ export class ReviewSupportComponent implements OnInit {
       : globalConst.normalConditions.rate;
     const maxRate =
       rate * (support as ClothingSupport).includedHouseholdMembers.length;
-    return maxRate < (support as IncidentalsSupport).totalAmount
-      ? false
-      : true;
+    return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
   /**

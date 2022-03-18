@@ -292,10 +292,8 @@ export class StepSupportsService {
       category: null,
       method: SupportMethod.Referral,
       subCategory: null,
-      supportDelivery: referral,
+      supportDelivery: referral
     };
-
-
 
     // const support: Support = {
     //   ...support,
@@ -348,10 +346,7 @@ export class StepSupportsService {
         this.supportDetails
       );
     } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {
-      this.referralService.createClothingReferral(
-        support,
-        this.supportDetails
-      );
+      this.referralService.createClothingReferral(support, this.supportDetails);
     }
   }
 

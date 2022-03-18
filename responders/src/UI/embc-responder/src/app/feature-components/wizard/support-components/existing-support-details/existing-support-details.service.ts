@@ -180,8 +180,7 @@ export class ExistingSupportDetailsService {
         hostCity: this.parseCommunityString(
           (selectedSupport as LodgingGroupSupport).facilityCommunityCode
         ),
-        hostPhone: (selectedSupport as LodgingGroupSupport)
-          .facilityContactPhone
+        hostPhone: (selectedSupport as LodgingGroupSupport).facilityContactPhone
       };
     }
   }
@@ -221,8 +220,7 @@ export class ExistingSupportDetailsService {
       selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi
     ) {
       return {
-        fromAddress: (selectedSupport as TransportationTaxiSupport)
-          .fromAddress,
+        fromAddress: (selectedSupport as TransportationTaxiSupport).fromAddress,
         toAddress: (selectedSupport as TransportationTaxiSupport).toAddress
       };
     } else if (
@@ -231,8 +229,7 @@ export class ExistingSupportDetailsService {
       return {
         transportMode: (selectedSupport as TransportationOtherSupport)
           .transportMode,
-        totalAmount: (selectedSupport as TransportationOtherSupport)
-          .totalAmount
+        totalAmount: (selectedSupport as TransportationOtherSupport).totalAmount
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting

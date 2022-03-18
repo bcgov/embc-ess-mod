@@ -105,8 +105,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
       : globalConst.normalConditions.rate;
     const maxRate =
       rate *
-      (this.selectedSupport as ClothingSupport).includedHouseholdMembers
-        .length;
+      (this.selectedSupport as ClothingSupport).includedHouseholdMembers.length;
     return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount
       ? false
       : true;
