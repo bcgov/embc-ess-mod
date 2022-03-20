@@ -19,6 +19,8 @@ import { CacheService } from 'src/app/core/services/cache.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -37,6 +39,7 @@ export class EssfileDashboardComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
+    private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private stepNotesService: StepNotesService,
     private cacheService: CacheService,
@@ -45,6 +48,9 @@ export class EssfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEssFile();
+    this.getEvacueeProfile(
+      this.evacueeSessionService.evacueeMetaData.registrantId
+    );
     this.evacueeSearchService.getCategoryList();
     this.evacueeSearchService.getSubCategoryList();
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
@@ -194,6 +200,16 @@ export class EssfileDashboardComponent implements OnInit {
         content: displayMessage
       },
       width: '530px'
+    });
+  }
+
+  private getEvacueeProfile(evacueeProfileId): void {
+    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
+      next: (profile: RegistrantProfileModel) => {},
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.getProfileError);
+      }
     });
   }
 }
