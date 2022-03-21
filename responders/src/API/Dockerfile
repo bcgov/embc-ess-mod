@@ -21,7 +21,7 @@ COPY ["EMBC.Utilities.Hosting/EMBC.Utilities.Hosting.csproj", "EMBC.Utilities.Ho
 COPY ["EMBC.Utilities.Caching/EMBC.Utilities.Caching.csproj", "EMBC.Utilities.Caching/"]
 COPY ["EMBC.Utilities.Messaging/EMBC.Utilities.Messaging.csproj", "EMBC.Utilities.Messaging/"]
 COPY ["EMBC.Tests.Unit.Responders.API/EMBC.Tests.Unit.Responders.API.csproj", "EMBC.Tests.Unit.Responders.API/"]
-COPY ["EMBC.Responders.sln", "stylecop.json", ".editorconfig", "./"]
+COPY ["EMBC.Responders.sln", ".editorconfig", "./"]
 RUN dotnet restore .
 COPY . .
 
