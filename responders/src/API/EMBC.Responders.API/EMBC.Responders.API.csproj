@@ -19,10 +19,6 @@
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <UserSecretsId>53250042-ca59-4400-b4aa-80f4757b5d02</UserSecretsId>
     </PropertyGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
-    </ItemGroup>
   
     <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig" />

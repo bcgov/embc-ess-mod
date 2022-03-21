@@ -1,20 +1,4 @@
-﻿// -------------------------------------------------------------------------
-//  Copyright © 2021 Province of British Columbia
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  https://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// -------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -161,8 +145,9 @@ namespace EMBC.ESS.Resources.Supports
             var teamMember = essContext.era_essteamusers.Where(tu => tu.era_essteamuserid == support._era_issuedbyid_value).SingleOrDefault();
             essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
 
-            AssignSupplierToSupport(support);
             AssignHouseholdMembersToSupport(support, support.era_era_householdmember_era_evacueesupport);
+            AssignSupplierToSupport(support);
+            AssignETransferRecipientToSupport(support);
         }
 
         private void UpdateSupport(era_evacuationfile file, era_evacueesupport support)
@@ -194,6 +179,7 @@ namespace EMBC.ESS.Resources.Supports
             // add household members to support
             AssignHouseholdMembersToSupport(support, support.era_era_householdmember_era_evacueesupport.Where(m => !currentHouseholdMembers.Any(im => im.era_householdmemberid == m.era_householdmemberid)));
             AssignSupplierToSupport(support);
+            AssignETransferRecipientToSupport(support);
         }
 
         public async Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason)
@@ -238,6 +224,16 @@ namespace EMBC.ESS.Resources.Supports
                 var supplier = essContext.era_suppliers.Where(s => s.era_supplierid == support._era_supplierid_value && s.statecode == (int)EntityState.Active).SingleOrDefault();
                 if (supplier == null) throw new ArgumentException($"Supplier id {support._era_supplierid_value} not found or is not active");
                 essContext.SetLink(support, nameof(era_evacueesupport.era_SupplierId), supplier);
+            }
+        }
+
+        private void AssignETransferRecipientToSupport(era_evacueesupport support)
+        {
+            if (support._era_payeeid_value.HasValue)
+            {
+                var registrant = essContext.contacts.Where(s => s.contactid == support._era_payeeid_value && s.statecode == (int)EntityState.Active).SingleOrDefault();
+                if (registrant == null) throw new ArgumentException($"Registrant id {support._era_payeeid_value} not found or is not active");
+                essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), registrant);
             }
         }
     }

@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
-using EMBC.ESS;
 using EMBC.ESS.Managers.Reports;
 using EMBC.ESS.Shared.Contracts.Reports;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
