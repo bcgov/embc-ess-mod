@@ -28,8 +28,8 @@
         </mat-select>
         <mat-error
           *ngIf="
-            supportDeliveryFormControl.issuedTo.invalid &&
-            supportDeliveryFormControl.issuedTo.hasError('required')
+            supportDeliveryFormControl?.issuedTo.invalid &&
+            supportDeliveryFormControl?.issuedTo.hasError('required')
           "
         >
           Required</mat-error

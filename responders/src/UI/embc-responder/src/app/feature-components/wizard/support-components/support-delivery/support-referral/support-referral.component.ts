@@ -33,14 +33,14 @@ export class SupportReferralComponent implements OnInit {
   ngOnInit(): void {
     this.supplierList = this.stepSupportsService.supplierList;
     this.referralDeliveryForm
-      .get('issuedTo')
-      .valueChanges.subscribe((value) => {
+      ?.get('issuedTo')
+      ?.valueChanges.subscribe((value) => {
         this.referralDeliveryForm.get('name').updateValueAndValidity();
       });
 
     this.filteredOptions = this.referralDeliveryForm
-      .get('supplier')
-      .valueChanges.pipe(
+      ?.get('supplier')
+      ?.valueChanges.pipe(
         startWith(''),
         map((value) =>
           value
@@ -64,7 +64,7 @@ export class SupportReferralComponent implements OnInit {
    * Returns the control of the form
    */
   get supportDeliveryFormControl(): { [key: string]: AbstractControl } {
-    return this.referralDeliveryForm.controls;
+    return this.referralDeliveryForm?.controls;
   }
 
   /**
@@ -81,12 +81,12 @@ export class SupportReferralComponent implements OnInit {
    * Checks if the city value exists in the list
    */
   validateSupplier(): boolean {
-    const currentSupplier = this.referralDeliveryForm.get('supplier').value;
+    const currentSupplier = this.referralDeliveryForm?.get('supplier')?.value;
     let invalidSupplier = false;
-    if (currentSupplier !== null && currentSupplier.name === undefined) {
+    if (currentSupplier !== null && currentSupplier?.name === undefined) {
       invalidSupplier = !invalidSupplier;
       this.referralDeliveryForm
-        .get('supplier')
+        ?.get('supplier')
         .setErrors({ invalidSupplier: true });
     }
     return invalidSupplier;
@@ -102,9 +102,9 @@ export class SupportReferralComponent implements OnInit {
           (mem) =>
             mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
         );
-        this.referralDeliveryForm.get('issuedTo').setValue(valueToSet);
+        this.referralDeliveryForm?.get('issuedTo').setValue(valueToSet);
       } else {
-        this.referralDeliveryForm.get('issuedTo').setValue('Someone else');
+        this.referralDeliveryForm?.get('issuedTo').setValue('Someone else');
         this.showTextField = true;
       }
     } else {
@@ -114,9 +114,9 @@ export class SupportReferralComponent implements OnInit {
             mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
         );
         if (valueToSet !== undefined) {
-          this.referralDeliveryForm.get('issuedTo').setValue(valueToSet);
+          this.referralDeliveryForm?.get('issuedTo').setValue(valueToSet);
         } else {
-          this.referralDeliveryForm.get('issuedTo').setValue('Someone else');
+          this.referralDeliveryForm?.get('issuedTo').setValue('Someone else');
           this.showTextField = true;
         }
       }
