@@ -27,7 +27,7 @@ import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DownloadService } from 'src/app/core/services/download.service';
+import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 
 @Component({

@@ -28,7 +28,7 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
-import { DownloadService } from 'src/app/core/services/download.service';
+import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 
 @Component({

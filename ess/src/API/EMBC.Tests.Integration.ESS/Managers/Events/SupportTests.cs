@@ -42,15 +42,15 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var supports = new Support[]
             {
-                new ClothingSupport { SupportDelivery = new Referral{ SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
-                new IncidentalsSupport(),
-                new FoodGroceriesSupport {  SupportDelivery = new Referral{ SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
-                new FoodRestaurantSupport {  SupportDelivery = new Referral{ SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport() { NumberOfNights = 1 },
-                new LodgingGroupSupport() { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity },
-                new LodgingHotelSupport() { NumberOfNights = 1, NumberOfRooms = 1 },
-                new TransportationOtherSupport(),
-                new TransportationTaxiSupport(),
+                new ClothingSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new IncidentalsSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new FoodGroceriesSupport {TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new FoodRestaurantSupport { TotalAmount = 100, SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
             };
 
             foreach (var s in supports)
@@ -97,14 +97,14 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var supports = new Support[]
             {
                 new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
-                new IncidentalsSupport(),
-                new FoodGroceriesSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
-                new FoodRestaurantSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport() { NumberOfNights = 1 },
-                new LodgingGroupSupport() { NumberOfNights = 1 },
-                new LodgingHotelSupport() { NumberOfNights = 1, NumberOfRooms = 1 },
-                new TransportationOtherSupport(),
-                new TransportationTaxiSupport(),
+                new IncidentalsSupport { SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };
 
             foreach (var s in supports)
@@ -207,14 +207,14 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var supports = new Support[]
             {
                 new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
-                new IncidentalsSupport { SupportDelivery = new Referral() },
-                new FoodGroceriesSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
-                new FoodRestaurantSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport { NumberOfNights = 1, SupportDelivery = new Referral() },
-                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral() },
-                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral() },
-                new TransportationOtherSupport { SupportDelivery = new Referral()},
-                new TransportationTaxiSupport { SupportDelivery = new Referral() },
+                new IncidentalsSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };
 
             foreach (var s in supports)
@@ -297,14 +297,14 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var newSupports = new Support[]
             {
                 new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
-                new IncidentalsSupport { SupportDelivery = new Referral() },
-                new FoodGroceriesSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
-                new FoodRestaurantSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport { NumberOfNights = 1, SupportDelivery = new Referral() },
-                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral() },
-                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral() },
-                new TransportationOtherSupport { SupportDelivery = new Referral()},
-                new TransportationTaxiSupport { SupportDelivery = new Referral() },
+                new IncidentalsSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };
 
             var uniqueId = Guid.NewGuid().ToString().Substring(0, 4);
