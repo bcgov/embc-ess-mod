@@ -25,7 +25,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { SupportSummary } from 'src/app/core/api/models/support-summary';
-import { DateConversionService } from 'src/app/core/services/dateConversion.service';
+import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 
 @Component({
   selector: 'app-support-details',
