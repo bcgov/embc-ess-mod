@@ -20,10 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 

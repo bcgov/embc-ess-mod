@@ -179,5 +179,6 @@ namespace EMBC.Tests
         public string Value { get; set; } = null!;
     }
 
-    public class TestThrowErrorCommand : Command { }
+    public class TestThrowErrorCommand : Command
+    { }
 }
