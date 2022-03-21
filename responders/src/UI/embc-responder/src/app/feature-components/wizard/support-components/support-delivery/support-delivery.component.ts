@@ -4,26 +4,14 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatSelectChange } from '@angular/material/select';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-support-delivery',
@@ -32,13 +20,6 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: FormGroup;
-  showTextField = false;
-  filteredOptions: Observable<SupplierListItemModel[]>;
-  supplierList: SupplierListItemModel[];
-  selectedSupplierItem: SupplierListItemModel;
-  showSupplierFlag = false;
-  showLoader = false;
-  color = '#169BD5';
   editFlag = false;
 
   constructor(
@@ -46,7 +27,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private alertService: AlertService,
     private dialog: MatDialog,
     private cd: ChangeDetectorRef
   ) {
@@ -62,50 +42,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   ngOnInit(): void {
     this.createSupportDeliveryForm();
-    this.supplierList = this.stepSupportsService.supplierList;
-    this.supportDeliveryForm.get('issuedTo').valueChanges.subscribe((value) => {
-      this.supportDeliveryForm.get('name').updateValueAndValidity();
-    });
-
-    this.filteredOptions = this.supportDeliveryForm
-      .get('supplier')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) =>
-          value
-            ? this.filter(value)
-            : this.supplierList !== undefined
-            ? this.supplierList.slice()
-            : null
-        )
-      );
-
-    this.populateExistingIssuedTo();
   }
 
   ngAfterViewChecked(): void {
     this.cd.detectChanges();
-  }
-
-  displaySupplier(item: SupplierListItemModel) {
-    if (item) {
-      return item.name;
-    }
-  }
-
-  /**
-   * Checks if the city value exists in the list
-   */
-  validateSupplier(): boolean {
-    const currentSupplier = this.supportDeliveryForm.get('supplier').value;
-    let invalidSupplier = false;
-    if (currentSupplier !== null && currentSupplier.name === undefined) {
-      invalidSupplier = !invalidSupplier;
-      this.supportDeliveryForm
-        .get('supplier')
-        .setErrors({ invalidSupplier: true });
-    }
-    return invalidSupplier;
   }
 
   /**
@@ -120,37 +60,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
           this.router.navigate(['/ess-wizard/add-supports/view']);
         }
       });
-  }
-
-  populateExistingIssuedTo() {
-    const allMembers: EvacuationFileHouseholdMember[] =
-      this.stepSupportsService?.evacFile?.needsAssessment?.householdMembers;
-
-    if (this.editFlag) {
-      if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
-        const valueToSet = allMembers.find(
-          (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
-        );
-        this.supportDeliveryForm.get('issuedTo').setValue(valueToSet);
-      } else {
-        this.supportDeliveryForm.get('issuedTo').setValue('Someone else');
-        this.showTextField = true;
-      }
-    } else {
-      if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
-        const valueToSet = allMembers.find(
-          (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
-        );
-        if (valueToSet !== undefined) {
-          this.supportDeliveryForm.get('issuedTo').setValue(valueToSet);
-        } else {
-          this.supportDeliveryForm.get('issuedTo').setValue('Someone else');
-          this.showTextField = true;
-        }
-      }
-    }
   }
 
   /**
@@ -210,13 +119,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   /**
-   * Returns the control of the form
-   */
-  get supportDeliveryFormControl(): { [key: string]: AbstractControl } {
-    return this.supportDeliveryForm.controls;
-  }
-
-  /**
    * Navigates to details page
    */
   backToDetails() {
@@ -266,54 +168,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   /**
-   * Toggles the select field based on event
-   *
-   * @param $event select change event
-   */
-  memberSelect($event: MatSelectChange) {
-    if ($event.value === 'Someone else') {
-      this.showTextField = true;
-    } else {
-      this.showTextField = false;
-    }
-  }
-
-  /**
-   * Shows the supplier details box
-   *
-   * @param $event auto complete event
-   */
-  showDetails($event: MatAutocompleteSelectedEvent) {
-    this.selectedSupplierItem = $event.option.value;
-    this.showSupplierFlag = true;
-  }
-
-  /**
-   * Refreshes the supplier list
-   */
-  refreshList() {
-    this.showLoader = !this.showLoader;
-    this.stepSupportsService.getSupplierList().subscribe({
-      next: (value) => {
-        this.showLoader = !this.showLoader;
-        this.stepSupportsService.supplierList = value;
-        this.supplierList = value;
-        this.filteredOptions = this.supportDeliveryForm
-          .get('supplier')
-          .valueChanges.pipe(
-            startWith(''),
-            map((input) => this.filter(input))
-          );
-      },
-      error: (error) => {
-        this.showLoader = !this.showLoader;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.supplierRefresherror);
-      }
-    });
-  }
-
-  /**
    * Open support rate sheet
    */
   openRateSheet() {
@@ -324,15 +178,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       },
       width: '720px'
     });
-  }
-
-  private filter(value?: string): SupplierListItemModel[] {
-    if (value !== null && value !== undefined && typeof value === 'string') {
-      const filterValue = value.toLowerCase();
-      return this.supplierList.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
-    }
   }
 
   private billetingSupplierForm(): FormGroup {

@@ -49,7 +49,7 @@ export class EssfileDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.getEssFile();
     this.getEvacueeProfile(
-      this.evacueeSessionService.evacueeMetaData.registrantId
+      this.evacueeSessionService?.evacueeMetaData?.registrantId
     );
     this.evacueeSearchService.getCategoryList();
     this.evacueeSearchService.getSubCategoryList();

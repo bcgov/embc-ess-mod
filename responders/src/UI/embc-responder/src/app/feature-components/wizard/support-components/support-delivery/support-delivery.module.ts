@@ -10,12 +10,14 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { TextMaskModule } from 'angular2-text-mask';
 import { BilletingDeliveryComponent } from './delivery-types/billeting-delivery/billeting-delivery.component';
 import { GroupLodgingDeliveryComponent } from './delivery-types/group-lodging-delivery/group-lodging-delivery.component';
+import { SupportReferralComponent } from './support-referral/support-referral.component';
 
 @NgModule({
   declarations: [
     SupportDeliveryComponent,
     BilletingDeliveryComponent,
-    GroupLodgingDeliveryComponent
+    GroupLodgingDeliveryComponent,
+    SupportReferralComponent
   ],
   imports: [
     CommonModule,
