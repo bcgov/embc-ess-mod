@@ -39,7 +39,7 @@ import {
   Community,
   LocationsService
 } from 'src/app/core/services/locations.service';
-import { DateConversionService } from 'src/app/core/services/dateConversion.service';
+import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExistingSupportDetailsService {

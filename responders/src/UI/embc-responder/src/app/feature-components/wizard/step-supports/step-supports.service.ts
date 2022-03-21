@@ -31,7 +31,9 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
-import { DateConversionService } from 'src/app/core/services/dateConversion.service';
+import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
+import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -59,7 +61,9 @@ export class StepSupportsService {
     private referralService: ReferralCreationService,
     private evacueeSearchService: EvacueeSearchService,
     private registrationsService: RegistrationsService,
-    private dateConversionService: DateConversionService
+    private dateConversionService: DateConversionService,
+    private featureService: EtransferFeaturesService,
+    private computeState: ComputeRulesService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -129,6 +133,8 @@ export class StepSupportsService {
   set supportTypeToAdd(supportTypeToAddVal: Code) {
     this.supportTypeToAddVal = supportTypeToAddVal;
     this.cacheService.set('supportType', JSON.stringify(supportTypeToAddVal));
+    this.featureService.selectedSupport = supportTypeToAddVal;
+    this.computeState.triggerEvent();
   }
 
   get supportTypeToAdd(): Code {
