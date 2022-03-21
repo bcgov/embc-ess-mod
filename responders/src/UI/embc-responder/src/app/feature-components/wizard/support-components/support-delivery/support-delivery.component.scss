@@ -53,8 +53,82 @@
   min-width: 500px !important;
 }
 
-@media(max-width: 800px) {
+@media (max-width: 800px) {
   ::ng-deep .mat-autocomplete-panel {
     min-width: 400px !important;
   }
+}
+
+.support-delivery-card {
+  cursor: pointer;
+  height: 100%;
+}
+
+.support-delivery-card-header {
+  height: 150px;
+  p {
+    text-align: center;
+    color: #234075;
+  }
+}
+
+.selected {
+  background-color: rgba(242, 242, 242, 1);
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgba(252, 186, 25, 1);
+}
+
+.selected-icon-container {
+  position: absolute;
+  right: -13px;
+  top: -13px;
+}
+
+.selected-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.subtitle-icon-container {
+  height: 55px;
+}
+
+.subtitle-name {
+  p {
+    margin: -5px;
+    font-size: 21px;
+    text-align: center;
+    color: #169bd5;
+    font-weight: bold;
+  }
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+  }
+}
+
+.etransfer-ineligible {
+  background-color: rgba(227, 2, 2, 1);
+  height: 24px;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 135px;
+  p {
+    text-align: center;
+    font-weight: bold;
+    color: white;
+  }
+}
+
+.disabled {
+  cursor: default !important;
+  background-color: rgba(242, 242, 242, 1);
+  // text-decoration: none;
+  pointer-events: none;
 }

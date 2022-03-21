@@ -12,6 +12,10 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { ComputeRulesService } from '../../../../core/services/computeRules.service';
+import { ETransferStatus } from '../../../../core/models/appBase.model';
+import { SupportMethod } from '../../../../core/api/models/support-method';
+import { EtransferFeaturesService } from '../../../../core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-support-delivery',
@@ -20,13 +24,19 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: FormGroup;
+  etransferDeliveryForm: FormGroup;
   editFlag = false;
+  selectedSupportMethod: SupportMethod;
+  SupportMethod = SupportMethod;
+  ETransferStatus = ETransferStatus;
 
   constructor(
     public stepSupportsService: StepSupportsService,
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
+    public featureService: EtransferFeaturesService,
+    private computeState: ComputeRulesService,
     private dialog: MatDialog,
     private cd: ChangeDetectorRef
   ) {
@@ -42,6 +52,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   ngOnInit(): void {
     this.createSupportDeliveryForm();
+    this.createEtransferDeliveryForm();
+    this.computeState.triggerEvent();
+    console.log(this.featureService);
   }
 
   ngAfterViewChecked(): void {
@@ -60,6 +73,19 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
           this.router.navigate(['/ess-wizard/add-supports/view']);
         }
       });
+  }
+
+  createEtransferDeliveryForm(): void {
+    this.etransferDeliveryForm = this.formBuilder.group({
+      recipientFirstName: [this.featureService?.selectedEvacueeInContext?.personalDetails?.firstName  || ''],
+      recipientLastName: [this.featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()  || ''],
+      notificationPreference: [
+        '',
+        [Validators.required]
+      ],
+      email: [''],
+      mobile: [''],
+    });
   }
 
   /**
@@ -91,9 +117,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             .conditionalValidation(
               () =>
                 this.stepSupportsService.supportTypeToAdd.value !==
-                  'Lodging_Billeting' &&
+                'Lodging_Billeting' &&
                 this.stepSupportsService.supportTypeToAdd.value !==
-                  'Lodging_Group',
+                'Lodging_Group',
               Validators.required
             )
             .bind(this.customValidation)
@@ -204,9 +230,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 this.supportDeliveryForm.get('details.emailAddress') === null ||
                 this.supportDeliveryForm.get('details.emailAddress').value ===
-                  '' ||
+                '' ||
                 this.supportDeliveryForm.get('details.emailAddress').value ===
-                  undefined,
+                undefined,
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
@@ -221,9 +247,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 this.supportDeliveryForm.get('details.hostPhone') === null ||
                 this.supportDeliveryForm.get('details.hostPhone').value ===
-                  '' ||
+                '' ||
                 this.supportDeliveryForm.get('details.hostPhone').value ===
-                  undefined,
+                undefined,
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
@@ -258,5 +284,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         ]
       ]
     });
+  }
+
+  setSupportMethod(method: SupportMethod) {
+    this.selectedSupportMethod = method;
   }
 }
