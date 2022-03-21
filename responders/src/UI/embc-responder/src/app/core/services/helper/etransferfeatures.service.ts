@@ -12,6 +12,13 @@ import { RegistrantProfileModel } from '../../models/registrant-profile.model';
   providedIn: 'root'
 })
 export class EtransferFeaturesService extends AppBaseModel {
+  public static etransferRequirementDefault?: EtransferRequirementStatus[] = [
+    { statement: EtransferContent.bcServicesCard, status: false },
+    { statement: EtransferContent.isNotMinor, status: false },
+    { statement: EtransferContent.acceptTransfer, status: true },
+    { statement: EtransferContent.window, status: true }
+  ];
+
   private isRegistrantEtransferEligibleVal?: boolean;
   private etransferStatusVal?: ETransferStatus;
   private selectedSupportVal?: Code; //temp
@@ -19,13 +26,6 @@ export class EtransferFeaturesService extends AppBaseModel {
   private selectedEvacueeInContextVal?: RegistrantProfileModel; //temporary placeholder
 
   private etransferRequirementVal?: Array<EtransferRequirementStatus>;
-
-  public static etransferRequirementDefault?: EtransferRequirementStatus[] = [
-    { statement: EtransferContent.BCServicesCard, status: false },
-    { statement: EtransferContent.IsNotMinor, status: false },
-    { statement: EtransferContent.AcceptTransfer, status: true },
-    { statement: EtransferContent.Window, status: true }
-  ];
 
   public set isRegistrantEtransferEligible(value: boolean) {
     this.isRegistrantEtransferEligibleVal = value;

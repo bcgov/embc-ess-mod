@@ -44,7 +44,7 @@ export class EvacueeProfileService {
       })
       .pipe(
         map((profile: RegistrantProfile): RegistrantProfileModel => {
-          let profileModel = {
+          const profileModel = {
             ...profile,
             primaryAddress: this.locationsService.getAddressModelFromAddress(
               profile.primaryAddress

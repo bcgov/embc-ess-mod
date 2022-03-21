@@ -8,23 +8,23 @@ export class AppBaseModel {
 }
 
 export enum SelectedPathType {
-  PaperBased = 'paperBased',
-  Digital = 'digital',
-  RemoteExtensions = 'remoteExtensions'
+  paperBased = 'paperBased',
+  digital = 'digital',
+  remoteExtensions = 'remoteExtensions'
 }
 
 export enum ETransferStatus {
-  Available = 'available',
-  NotAllowed = 'notAllowed',
-  InEligible = 'ineligible',
-  Unavailable = 'unavailable'
+  available = 'available',
+  notAllowed = 'notAllowed',
+  inEligible = 'ineligible',
+  unavailable = 'unavailable'
 }
 
 export enum EtransferContent {
-  BCServicesCard = 'Profile linked to BC Services Card',
-  IsNotMinor = 'Evacuee is over 19 years of age',
-  AcceptTransfer = 'Ability to accept e-Transfer',
-  Window = '4-hr window to receive money'
+  bcServicesCard = 'Profile linked to BC Services Card',
+  isNotMinor = 'Evacuee is over 19 years of age',
+  acceptTransfer = 'Ability to accept e-Transfer',
+  window = '4-hr window to receive money'
 }
 
 export class EtransferRequirementStatus {

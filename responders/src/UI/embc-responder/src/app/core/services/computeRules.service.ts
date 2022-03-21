@@ -6,7 +6,7 @@ import { ComputeFeaturesService } from './helper/computeFeatures.service';
   providedIn: 'root'
 })
 export class ComputeRulesService {
-  private eventSubject = new Subject<void>();
+  public eventSubject = new Subject<void>();
   public readonly eventSubject$: Observable<void> =
     this.eventSubject.asObservable();
 

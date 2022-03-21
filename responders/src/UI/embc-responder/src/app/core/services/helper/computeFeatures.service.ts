@@ -6,7 +6,6 @@ import {
   EtransferRequirementStatus,
   EtransferContent
 } from '../../models/appBase.model';
-import { ComputeRulesService } from '../computeRules.service';
 import { EtransferFeaturesService } from './etransferfeatures.service';
 
 @Injectable({
@@ -31,10 +30,10 @@ export class ComputeFeaturesService {
   private computeEtransferStatus() {
     if (
       this.featuresService?.selectedUserPathway ===
-        SelectedPathType.PaperBased ||
+        SelectedPathType.paperBased ||
       !this.featuresService.interacAllowed
     ) {
-      this.featuresService.etransferStatus = ETransferStatus.Unavailable;
+      this.featuresService.etransferStatus = ETransferStatus.unavailable;
     } else if (
       this.featuresService?.selectedSupport?.value ===
         SupportSubCategory.Lodging_Hotel ||
@@ -47,30 +46,30 @@ export class ComputeFeaturesService {
       this.featuresService?.selectedSupport?.value ===
         SupportSubCategory.Transportation_Taxi
     ) {
-      this.featuresService.etransferStatus = ETransferStatus.NotAllowed;
+      this.featuresService.etransferStatus = ETransferStatus.notAllowed;
     } else if (!this.featuresService?.isRegistrantEtransferEligible) {
-      this.featuresService.etransferStatus = ETransferStatus.InEligible;
+      this.featuresService.etransferStatus = ETransferStatus.inEligible;
     } else {
-      this.featuresService.etransferStatus = ETransferStatus.Available;
+      this.featuresService.etransferStatus = ETransferStatus.available;
     }
   }
 
   private computeEtransferRequirementContent() {
-    let requirementContent: Array<EtransferRequirementStatus> =
+    const requirementContent: Array<EtransferRequirementStatus> =
       new Array<EtransferRequirementStatus>();
 
     for (const defaultVal of EtransferFeaturesService.etransferRequirementDefault) {
-      if (defaultVal.statement === EtransferContent.IsNotMinor) {
+      if (defaultVal.statement === EtransferContent.isNotMinor) {
         requirementContent.push(
           Object.assign(new EtransferRequirementStatus(), {
-            statement: EtransferContent.IsNotMinor,
+            statement: EtransferContent.isNotMinor,
             status: !this.featuresService?.selectedEvacueeInContext?.isMinor
           })
         );
-      } else if (defaultVal.statement === EtransferContent.BCServicesCard) {
+      } else if (defaultVal.statement === EtransferContent.bcServicesCard) {
         requirementContent.push(
           Object.assign(new EtransferRequirementStatus(), {
-            statement: EtransferContent.BCServicesCard,
+            statement: EtransferContent.bcServicesCard,
             status:
               this.featuresService?.selectedEvacueeInContext?.authenticatedUser
           })
