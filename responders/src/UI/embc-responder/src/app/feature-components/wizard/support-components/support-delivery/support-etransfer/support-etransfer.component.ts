@@ -55,9 +55,8 @@ export class SupportEtransferComponent {
   }
 
   showMobile(): boolean {
-    const notificationPreference = this.etransferDeliveryForm.get(
-      'notificationPreference'
-    ).value;
+    const notificationPreference =
+      this.etransferDeliveryForm?.get('notificationPreference')?.value || '';
     return (
       notificationPreference === 'Mobile' ||
       notificationPreference === 'Email & Mobile'
