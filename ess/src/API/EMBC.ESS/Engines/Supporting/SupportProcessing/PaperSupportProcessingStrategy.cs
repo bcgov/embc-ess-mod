@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Supports;
 
-namespace EMBC.ESS.Engines.Supporting.Strategies
+namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 {
     internal class PaperSupportProcessingStrategy : ISupportProcessingStrategy
     {
