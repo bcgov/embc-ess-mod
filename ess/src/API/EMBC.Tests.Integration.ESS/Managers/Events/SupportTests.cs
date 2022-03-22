@@ -226,9 +226,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
             }
 
-            var printRequestId = await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
-
-            printRequestId.ShouldBeNullOrEmpty();
+            await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
             refreshedFile.Supports.ShouldNotBeEmpty();
