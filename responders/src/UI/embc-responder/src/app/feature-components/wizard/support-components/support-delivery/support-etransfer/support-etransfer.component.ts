@@ -23,9 +23,7 @@ export class SupportEtransferComponent {
 
   notificationPreferences = ['Email', 'Mobile', 'Email & Mobile'];
 
-  constructor(
-    public stepSupportsService: StepSupportsService,
-  ) {}
+  constructor(public stepSupportsService: StepSupportsService) {}
 
   /**
    * Returns the control of the form
@@ -48,9 +46,8 @@ export class SupportEtransferComponent {
   }
 
   showEmail(): boolean {
-    const notificationPreference = this.etransferDeliveryForm?.get(
-      'notificationPreference'
-    )?.value || "";
+    const notificationPreference =
+      this.etransferDeliveryForm?.get('notificationPreference')?.value || '';
     return (
       notificationPreference === 'Email' ||
       notificationPreference === 'Email & Mobile'
