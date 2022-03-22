@@ -92,7 +92,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
                 support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
                 support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
-                support.CreatedOn.ShouldBeInRange(now, DateTime.UtcNow);
+                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-5), DateTime.UtcNow);
                 support.IssuedOn.ShouldBe(support.CreatedOn);
 
                 if (sourceSupport.SupportDelivery is Referral sourceReferral)

@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
+using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.ESS.Resources.Evacuations;
@@ -49,6 +50,7 @@ namespace EMBC.ESS.Managers.Events
         private readonly IMetadataRepository metadataRepository;
         private readonly IDataProtectionProvider dataProtectionProvider;
         private readonly IConfiguration configuration;
+        private readonly ISupportingEngine supportingEngine;
         private readonly EvacuationFileLoader evacuationFileLoader;
         private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
@@ -72,7 +74,8 @@ namespace EMBC.ESS.Managers.Events
             IWebHostEnvironment env,
             IMetadataRepository metadataRepository,
             IDataProtectionProvider dataProtectionProvider,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ISupportingEngine supportingEngine)
         {
             this.mapper = mapper;
             this.evacueesRepository = contactRepository;
@@ -92,6 +95,7 @@ namespace EMBC.ESS.Managers.Events
             this.metadataRepository = metadataRepository;
             this.dataProtectionProvider = dataProtectionProvider;
             this.configuration = configuration;
+            this.supportingEngine = supportingEngine;
             this.env = env;
             evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository);
         }
@@ -452,14 +456,8 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
-            //verify no paper supports included
-            var paperReferrals = cmd.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && r.IsPaperReferral)
-                .Select(r => ((Shared.Contracts.Events.Referral)r.SupportDelivery).ManualReferralId)
-                .ToArray();
-            if (paperReferrals.Any())
-                throw new BusinessValidationException($"file {cmd.FileId} error: cannot process paper referrals {string.Join(',', paperReferrals)} as digital");
-
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault();
+            if (requestingUser == null) throw new BusinessValidationException($"User {cmd.RequestingUserId} not found");
 
             foreach (var support in cmd.Supports)
             {
@@ -467,73 +465,46 @@ namespace EMBC.ESS.Managers.Events
                 support.CreatedOn = DateTime.UtcNow;
             }
 
-            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports);
+
+            var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest { FileId = cmd.FileId, Supports = supports });
+            if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
+
+            var response = (ProcessDigitalSupportsResponse)await supportingEngine.Process(new ProcessDigitalSupportsRequest
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
-            })).Ids;
+                Supports = supports,
+                RequestingUserId = requestingUser.Id,
+                IncludeSummaryInReferralsPrintout = cmd.IncludeSummaryInReferralsPrintout
+            });
 
-            try
-            {
-                var printRequestId = await printingRepository.Manage(new SavePrintRequest
-                {
-                    PrintRequest = new ReferralPrintRequest
-                    {
-                        FileId = cmd.FileId,
-                        SupportIds = supportIds,
-                        IncludeSummary = cmd.IncludeSummaryInReferralsPrintout,
-                        RequestingUserId = requestingUser.Id,
-                        Type = ReferralPrintType.New,
-                        Comments = "Process supports"
-                    }
-                });
-                return printRequestId;
-            }
-            catch (Exception)
-            {
-                //try to deactivate the supports if failed to create the print request
-                foreach (var id in supportIds)
-                {
-                    await supportRepository.Manage(new VoidEvacuationFileSupportCommand { FileId = cmd.FileId, SupportId = id, VoidReason = Resources.Supports.SupportVoidReason.ErrorOnPrintedReferral });
-                }
-                throw;
-            }
+            return response.PrintRequestId;
         }
 
-        public async Task<string> Handle(ProcessPaperSupportsCommand cmd)
+        public async System.Threading.Tasks.Task Handle(ProcessPaperSupportsCommand cmd)
         {
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
-            //validate only paper referrals were passed in the command
-            if (!cmd.Supports.All(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && r.IsPaperReferral))
-                throw new BusinessValidationException($"file {cmd.FileId} error: {nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault();
+            if (requestingUser == null) throw new BusinessValidationException($"User {cmd.RequestingUserId} not found");
 
-            var supports = cmd.Supports.ToArray();
-            //validate paper id and support types are unique
-            var duplicates = supports.GroupBy(s => ((Shared.Contracts.Events.Referral)s.SupportDelivery).ManualReferralId).Where(g => g.GroupBy(e => e.GetType()).Any(gt => gt.Count() != 1));
-            if (duplicates.Any())
-            {
-                throw new BusinessValidationException($"file {cmd.FileId} error: duplicate referral: "
-                    + $"{string.Join(',', duplicates.Select(d => $"{d.Key}: {string.Join(',', d.Select(id => id.GetType().Name))}"))}");
-            }
-
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
-
-            foreach (var referral in supports)
+            foreach (var referral in cmd.Supports)
             {
                 referral.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
                 referral.CreatedOn = DateTime.UtcNow;
             }
-            //save referrals
-            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+
+            var supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports);
+
+            var validationResponse = (PaperSupportsValidationResponse)await supportingEngine.Validate(new PaperSupportsValidationRequest
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
-            })).Ids;
+                Supports = supports
+            });
+            if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
-            // no print request is returned
-            return string.Empty;
+            await supportingEngine.Process(new ProcessPaperSupportsRequest { FileId = cmd.FileId, Supports = supports });
         }
 
         public async Task<string> Handle(VoidSupportCommand cmd)
