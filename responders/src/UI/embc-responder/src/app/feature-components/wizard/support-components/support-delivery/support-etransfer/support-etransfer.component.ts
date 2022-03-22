@@ -1,20 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { map, Observable, startWith } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
-import * as globalConst from '../../../../../core/services/global-constants';
-import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 import { MatSelectChange } from '@angular/material/select';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-support-etransfer',
   templateUrl: './support-etransfer.component.html',
   styleUrls: ['./support-etransfer.component.scss']
 })
-export class SupportEtransferComponent implements OnInit {
+export class SupportEtransferComponent {
   @Input() etransferDeliveryForm: FormGroup;
   @Input() editFlag: boolean;
   supplierList: SupplierListItemModel[];
@@ -29,10 +25,7 @@ export class SupportEtransferComponent implements OnInit {
 
   constructor(
     public stepSupportsService: StepSupportsService,
-    private alertService: AlertService
   ) {}
-
-  ngOnInit(): void {}
 
   /**
    * Returns the control of the form
@@ -55,9 +48,9 @@ export class SupportEtransferComponent implements OnInit {
   }
 
   showEmail(): boolean {
-    const notificationPreference = this.etransferDeliveryForm.get(
+    const notificationPreference = this.etransferDeliveryForm?.get(
       'notificationPreference'
-    ).value;
+    )?.value || "";
     return (
       notificationPreference === 'Email' ||
       notificationPreference === 'Email & Mobile'
