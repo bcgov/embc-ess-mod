@@ -11,7 +11,8 @@ import {
   LodgingHotelSupport,
   LodgingBilletingSupport,
   LodgingGroupSupport,
-  Referral
+  Referral,
+  Interac
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -149,6 +150,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
 
   get referral(): Referral {
     return this.selectedSupport?.supportDelivery as Referral;
+  }
+
+  get interac(): Interac {
+    return this.selectedSupport?.supportDelivery as Interac;
   }
 
   get supplierAddress(): AddressModel {
@@ -309,4 +314,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
       state: { action: 'edit' }
     });
   }
+
+  cancelEtransfer(): void {}
 }

@@ -202,9 +202,9 @@ export const unableAccessFileMessage: DialogContent = {
   text: '<p>This file can only be viewed if the evacuee presented govenment-issued identification.</p>',
   cancelButton: 'Close'
 };
-export const alreadyExistESSFileMessage: DialogContent = {
-  title: 'Paper ESS File Already Exists',
-  text: '<p>ESS File # <b>T12345</b> already exists in the ERA Tool. Please continue to that ESS File to proceed with paper-based entry. Speak to your supervisor if no results are displaying and you are still seeing this message, as the file might be restricted.</p><p>Alternatively, go back and search again.</p>',
+
+export const cancelEtransferConfirmation: DialogContent = {
+  text: '<p>e-Transfer support successfully cancelled.</p>',
   cancelButton: 'Close'
 };
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
