@@ -1,12 +1,3 @@
-export class AppBaseModel {
-  //TODO: convert to service
-  taskStatus?: string;
-  allowDigitalFiling?: boolean;
-  allowPaperFiling?: boolean;
-  allowRemoteExtensions?: boolean;
-  selectedUserPathway?: SelectedPathType;
-}
-
 export enum SelectedPathType {
   paperBased = 'paperBased',
   digital = 'digital',

@@ -72,9 +72,15 @@
           class="button-p submit"
           type="button"
           mat-button
+          [disabled]="isSubmitted"
           (click)="signInTask()"
         >
           Sign in to Task
+          <app-loader
+            [strokeWidth]="3"
+            [diameter]="25"
+            [showLoader]="showLoader"
+          ></app-loader>
         </button>
       </div>
       <div class="col-md-4">
