@@ -8,6 +8,7 @@ import { FormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SupportEtransferComponent', () => {
   let component: SupportEtransferComponent;
@@ -23,7 +24,8 @@ describe('SupportEtransferComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [SupportEtransferComponent],
-      providers: [FormBuilder, DatePipe]
+      providers: [FormBuilder, DatePipe],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });
 
