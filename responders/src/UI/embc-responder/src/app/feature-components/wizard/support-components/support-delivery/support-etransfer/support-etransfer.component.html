@@ -1,14 +1,15 @@
 <form [formGroup]="etransferDeliveryForm">
   <div class="row">
     <div class="col-md-12">
-      <p class="question-heading">
-        e-Transfer Recipient
-      </p>
+      <p class="question-heading">e-Transfer Recipient</p>
     </div>
   </div>
   <div class="row">
     <div class="col-md-4">
-      <p>{{etransferDeliveryFormControl?.recipientLastName.value}}, {{etransferDeliveryFormControl?.recipientFirstName.value}}</p>
+      <p>
+        {{ etransferDeliveryFormControl?.recipientLastName.value }},
+        {{ etransferDeliveryFormControl?.recipientFirstName.value }}
+      </p>
     </div>
   </div>
 
@@ -22,19 +23,29 @@
   <div class="row">
     <div class="col-md-4">
       <mat-form-field appearance="outline">
-        <mat-select formControlName="notificationPreference" (selectionChange)="preferenceSelect($event)" required>
-          <mat-option [value]="">
-            Select--
-          </mat-option>
-          <mat-option *ngFor="let preference of notificationPreferences" [value]="preference">
+        <mat-select
+          formControlName="notificationPreference"
+          (selectionChange)="preferenceSelect($event)"
+          required
+        >
+          <mat-option [value]=""> Select-- </mat-option>
+          <mat-option
+            *ngFor="let preference of notificationPreferences"
+            [value]="preference"
+          >
             {{ preference }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="
-        etransferDeliveryFormControl?.notificationPreference.invalid &&
-        etransferDeliveryFormControl?.notificationPreference.hasError('required')
-          ">
-          Required</mat-error>
+        <mat-error
+          *ngIf="
+            etransferDeliveryFormControl?.notificationPreference.invalid &&
+            etransferDeliveryFormControl?.notificationPreference.hasError(
+              'required'
+            )
+          "
+        >
+          Required</mat-error
+        >
       </mat-form-field>
     </div>
   </div>
@@ -42,21 +53,27 @@
   <ng-container *ngIf="showEmail()">
     <div class="row">
       <div class="col-md-12">
-        <p class="question-heading requiredField">
-          Email Address
-        </p>
+        <p class="question-heading requiredField">Email Address</p>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline">
           <mat-label>Email address</mat-label>
-          <input formControlName="email" maxlength="100" matInput placeholder="" />
-          <mat-error *ngIf="
-            etransferDeliveryFormControl?.email.invalid &&
-            etransferDeliveryFormControl?.email.hasError('required')
-          ">
-            Required</mat-error>
+          <input
+            formControlName="email"
+            maxlength="100"
+            matInput
+            placeholder=""
+          />
+          <mat-error
+            *ngIf="
+              etransferDeliveryFormControl?.email.invalid &&
+              etransferDeliveryFormControl?.email.hasError('required')
+            "
+          >
+            Required</mat-error
+          >
         </mat-form-field>
       </div>
     </div>
@@ -65,25 +82,29 @@
   <ng-container *ngIf="showMobile()">
     <div class="row">
       <div class="col-md-12">
-        <p class="question-heading requiredField">
-          Mobile Number (Canadian)
-        </p>
+        <p class="question-heading requiredField">Mobile Number (Canadian)</p>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline">
           <mat-label>Mobile Number</mat-label>
-          <input formControlName="mobile" maxlength="100" matInput placeholder="" />
-          <mat-error *ngIf="
-            etransferDeliveryFormControl?.email.invalid &&
-            etransferDeliveryFormControl?.email.hasError('required')
-          ">
-            Required</mat-error>
+          <input
+            formControlName="mobile"
+            maxlength="100"
+            matInput
+            placeholder=""
+          />
+          <mat-error
+            *ngIf="
+              etransferDeliveryFormControl?.email.invalid &&
+              etransferDeliveryFormControl?.email.hasError('required')
+            "
+          >
+            Required</mat-error
+          >
         </mat-form-field>
       </div>
     </div>
   </ng-container>
-
-
 </form>

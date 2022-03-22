@@ -1,7 +1,12 @@
 <div class="container container-frame">
   <div class="row row-padding">
     <div class="col-md-12">
-      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span class="back-link">Supports</span></a>
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
+          class="back-link"
+          >Supports</span
+        ></a
+      >
     </div>
   </div>
 
@@ -10,18 +15,23 @@
       <div class="col-md-8">
         <span class="wizard-tab-heading">Support Details</span>
       </div>
-      <div *ngIf="
+      <div
+        *ngIf="
           stepSupportsService?.supportTypeToAdd?.description !== 'Group Lodging'
-        " class="col-md-4">
+        "
+        class="col-md-4"
+      >
         <img src="/assets/images/rate-card.svg" width="23" height="23" />
-        <a (click)="openRateSheet()"><span class="back-link rate-link">ESS Rate sheet</span></a>
+        <a (click)="openRateSheet()"
+          ><span class="back-link rate-link">ESS Rate sheet</span></a
+        >
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <span class="wizard-support-type">{{
           stepSupportsService?.supportTypeToAdd?.description
-          }}</span>
+        }}</span>
       </div>
     </div>
   </div>
@@ -37,16 +47,35 @@
 
   <div class="row">
     <div class="col-md-12">
-      <p class="question-heading requiredField">Select Support Delivery Method</p>
+      <p class="question-heading requiredField">
+        Select Support Delivery Method
+      </p>
     </div>
   </div>
 
   <div class="row pb-4">
     <div class="col-md-4">
-      <mat-card class="support-delivery-card" [class.selected]="selectedSupportMethod == SupportMethod.Referral" (click)="setSupportMethod(SupportMethod.Referral)">
-        <div class="selected-icon-container" *ngIf="selectedSupportMethod == SupportMethod.Referral">
-          <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-          <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+      <mat-card
+        class="support-delivery-card"
+        [class.selected]="selectedSupportMethod === supportMethod.Referral"
+        (click)="setSupportMethod(supportMethod.Referral)"
+      >
+        <div
+          class="selected-icon-container"
+          *ngIf="selectedSupportMethod === supportMethod.Referral"
+        >
+          <img
+            src="/assets/images/wizard/white-background.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
+          />
+          <img
+            src="/assets/images/wizard/method-selected.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
+          />
         </div>
         <div class="support-delivery-card-header">
           <div class="row">
@@ -65,20 +94,45 @@
         </div>
 
         <p><b>Requirements:</b></p>
-        <img src="/assets/images/wizard/eligible.svg" height="10" width="10" /> None
+        <img src="/assets/images/wizard/eligible.svg" height="10" width="10" />
+        None
       </mat-card>
     </div>
     <div class="col-md-4">
-      <mat-card class="support-delivery-card" [class.disabled]="featureService?.etransferStatus != ETransferStatus.available" [class.selected]="selectedSupportMethod == SupportMethod.ETransfer" (click)="setSupportMethod(SupportMethod.ETransfer)">
-        <div class="selected-icon-container" *ngIf="selectedSupportMethod == SupportMethod.ETransfer">
-          <img src="/assets/images/wizard/white-background.svg" height="23" width="23" class="selected-icon" />
-          <img src="/assets/images/wizard/method-selected.svg" height="23" width="23" class="selected-icon" />
+      <mat-card
+        class="support-delivery-card"
+        [class.disabled]="
+          featureService?.etransferStatus !== eTransferStatus.available
+        "
+        [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
+        (click)="setSupportMethod(supportMethod.ETransfer)"
+      >
+        <div
+          class="selected-icon-container"
+          *ngIf="selectedSupportMethod === supportMethod.ETransfer"
+        >
+          <img
+            src="/assets/images/wizard/white-background.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
+          />
+          <img
+            src="/assets/images/wizard/method-selected.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
+          />
         </div>
         <div class="support-delivery-card-header">
           <div class="row">
             <div class="col subtitle-name">
               <div class="subtitle-icon-container">
-                <img src="/assets/images/etransfer.svg" height="40" width="60" />
+                <img
+                  src="/assets/images/etransfer.svg"
+                  height="40"
+                  width="60"
+                />
               </div>
               <p>Interac e-Transfer</p>
             </div>
@@ -90,16 +144,29 @@
           </div>
         </div>
 
-        <div *ngIf="featureService?.etransferStatus != ETransferStatus.available" class="etransfer-ineligible">
+        <div
+          *ngIf="featureService?.etransferStatus !== eTransferStatus.available"
+          class="etransfer-ineligible"
+        >
           <p>Evacuee Ineligible</p>
         </div>
 
         <div class="requirements">
           <p><b>Requirements:</b></p>
           <div *ngFor="let req of featureService.etransferRequirement">
-            <img *ngIf="req.status" src="/assets/images/wizard/eligible.svg" height="10" width="10" />
-            <img *ngIf="!req.status" src="/assets/images/wizard/ineligible.svg" height="10" width="10" />
-            {{req.statement}}
+            <img
+              *ngIf="req.status"
+              src="/assets/images/wizard/eligible.svg"
+              height="10"
+              width="10"
+            />
+            <img
+              *ngIf="!req.status"
+              src="/assets/images/wizard/ineligible.svg"
+              height="10"
+              width="10"
+            />
+            {{ req.statement }}
           </div>
         </div>
       </mat-card>
@@ -107,8 +174,16 @@
   </div>
 
   <!--Dynamic form-->
-  <app-support-referral [referralDeliveryForm]="supportDeliveryForm" [editFlag]="editFlag" *ngIf="selectedSupportMethod == SupportMethod.Referral"></app-support-referral>
-  <app-support-etransfer [etransferDeliveryForm]="etransferDeliveryForm" [editFlag]="editFlag" *ngIf="selectedSupportMethod == SupportMethod.ETransfer"></app-support-etransfer>
+  <app-support-referral
+    [referralDeliveryForm]="supportDeliveryForm"
+    [editFlag]="editFlag"
+    *ngIf="selectedSupportMethod === supportMethod.Referral"
+  ></app-support-referral>
+  <app-support-etransfer
+    [etransferDeliveryForm]="etransferDeliveryForm"
+    [editFlag]="editFlag"
+    *ngIf="selectedSupportMethod === supportMethod.ETransfer"
+  ></app-support-etransfer>
 
   <div class="row">
     <div class="col-md-6">

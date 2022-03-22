@@ -12,7 +12,8 @@ import {
   IncidentalsSupport,
   ClothingSupport,
   Referral,
-  Support
+  Support,
+  SupportMethod
 } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
@@ -40,6 +41,7 @@ export class ReviewSupportComponent implements OnInit {
   showErrorMsg = false;
   draftSupports: Support[] = [];
   showLoader = false;
+  supportMethod = SupportMethod;
 
   constructor(
     private router: Router,

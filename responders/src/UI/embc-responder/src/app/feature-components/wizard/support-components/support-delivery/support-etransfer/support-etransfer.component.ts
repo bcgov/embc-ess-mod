@@ -30,15 +30,13 @@ export class SupportEtransferComponent implements OnInit {
   constructor(
     public stepSupportsService: StepSupportsService,
     private alertService: AlertService
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   /**
- * Returns the control of the form
- */
+   * Returns the control of the form
+   */
   get etransferDeliveryFormControl(): { [key: string]: AbstractControl } {
     return this.etransferDeliveryForm?.controls;
   }
@@ -57,12 +55,22 @@ export class SupportEtransferComponent implements OnInit {
   }
 
   showEmail(): boolean {
-    let notificationPreference = this.etransferDeliveryForm.get('notificationPreference').value;
-    return notificationPreference == "Email" || notificationPreference == "Email & Mobile";
+    const notificationPreference = this.etransferDeliveryForm.get(
+      'notificationPreference'
+    ).value;
+    return (
+      notificationPreference === 'Email' ||
+      notificationPreference === 'Email & Mobile'
+    );
   }
 
   showMobile(): boolean {
-    let notificationPreference = this.etransferDeliveryForm.get('notificationPreference').value;
-    return notificationPreference == "Mobile" || notificationPreference == "Email & Mobile";
+    const notificationPreference = this.etransferDeliveryForm.get(
+      'notificationPreference'
+    ).value;
+    return (
+      notificationPreference === 'Mobile' ||
+      notificationPreference === 'Email & Mobile'
+    );
   }
 }

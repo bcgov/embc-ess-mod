@@ -27,8 +27,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   etransferDeliveryForm: FormGroup;
   editFlag = false;
   selectedSupportMethod: SupportMethod;
-  SupportMethod = SupportMethod;
-  ETransferStatus = ETransferStatus;
+  supportMethod = SupportMethod;
+  eTransferStatus = ETransferStatus;
 
   constructor(
     public stepSupportsService: StepSupportsService,
@@ -77,14 +77,17 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   createEtransferDeliveryForm(): void {
     this.etransferDeliveryForm = this.formBuilder.group({
-      recipientFirstName: [this.featureService?.selectedEvacueeInContext?.personalDetails?.firstName  || ''],
-      recipientLastName: [this.featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()  || ''],
-      notificationPreference: [
-        '',
-        [Validators.required]
+      recipientFirstName: [
+        this.featureService?.selectedEvacueeInContext?.personalDetails
+          ?.firstName || ''
       ],
+      recipientLastName: [
+        this.featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+          ''
+      ],
+      notificationPreference: ['', [Validators.required]],
       email: [''],
-      mobile: [''],
+      mobile: ['']
     });
   }
 
@@ -117,9 +120,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             .conditionalValidation(
               () =>
                 this.stepSupportsService.supportTypeToAdd.value !==
-                'Lodging_Billeting' &&
+                  'Lodging_Billeting' &&
                 this.stepSupportsService.supportTypeToAdd.value !==
-                'Lodging_Group',
+                  'Lodging_Group',
               Validators.required
             )
             .bind(this.customValidation)
@@ -206,6 +209,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     });
   }
 
+  setSupportMethod(method: SupportMethod) {
+    this.selectedSupportMethod = method;
+  }
+
   private billetingSupplierForm(): FormGroup {
     return this.formBuilder.group({
       hostName: [
@@ -230,9 +237,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 this.supportDeliveryForm.get('details.emailAddress') === null ||
                 this.supportDeliveryForm.get('details.emailAddress').value ===
-                '' ||
+                  '' ||
                 this.supportDeliveryForm.get('details.emailAddress').value ===
-                undefined,
+                  undefined,
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
@@ -247,9 +254,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               () =>
                 this.supportDeliveryForm.get('details.hostPhone') === null ||
                 this.supportDeliveryForm.get('details.hostPhone').value ===
-                '' ||
+                  '' ||
                 this.supportDeliveryForm.get('details.hostPhone').value ===
-                undefined,
+                  undefined,
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
@@ -284,9 +291,5 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         ]
       ]
     });
-  }
-
-  setSupportMethod(method: SupportMethod) {
-    this.selectedSupportMethod = method;
   }
 }
