@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Resources.Supports;
+using EMBC.ESS.Shared.Contracts.Events;
 
 namespace EMBC.ESS.Engines.Supporting
 {
@@ -11,6 +11,8 @@ namespace EMBC.ESS.Engines.Supporting
         Task<ValidationResponse> Validate(ValidationRequest request);
 
         Task<ProcessResponse> Process(ProcessRequest request);
+
+        Task<GenerateResponse> Generate(GenerateRequest request);
     }
 
     public abstract class ValidationRequest
@@ -79,5 +81,26 @@ namespace EMBC.ESS.Engines.Supporting
         public override bool IsValid => !Errors.Any();
 
         public IEnumerable<string> Errors { get; set; } = Array.Empty<string>();
+    }
+
+    public abstract class GenerateRequest
+    { }
+
+    public abstract class GenerateResponse
+    { }
+
+    public class GenerateReferralsRequest : GenerateRequest
+    {
+        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
+        public bool AddSummary { get; set; }
+        public bool AddWatermark { get; set; }
+        public string RequestingUserId { get; set; }
+        public TeamMember PrintingMember { get; set; }
+        public EvacuationFile File { get; set; }
+    }
+
+    public class GenerateReferralsResponse : GenerateResponse
+    {
+        public byte[] Content { get; set; }
     }
 }

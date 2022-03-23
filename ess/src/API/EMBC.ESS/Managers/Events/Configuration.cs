@@ -1,6 +1,5 @@
 ﻿using System;
 using EMBC.ESS.Managers.Events.Notifications;
-using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +15,6 @@ namespace EMBC.ESS.Managers.Events
             services.AddTransient<EventsManager>();
             services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(EventsManager)));
             services.AddTransient<EmailTemplateProvider>();
-            services.AddTransient<IPrintReferralService, PrintReferralService>();
             services.AddTransient<ITemplateProviderResolver>(sp =>
             {
                 Func<NotificationChannelType, ITemplateProvider> resolverFunc = (type) => type switch
