@@ -163,29 +163,6 @@ namespace EMBC.Responders.API.Controllers
                 TimeSpan.FromSeconds(30));
             return Ok(mapper.Map<OutageInformation>(outageInfo));
         }
-
-        [HttpGet("version-info")]
-        public async Task<ActionResult<IEnumerable<VersionInformation>>> GetApplicationVersionInfo()
-        {
-            List<VersionInformation> ret = new List<VersionInformation>
-            {
-                new VersionInformation
-                {
-                    Name = "Responders API",
-                    Version = "0.0.1",
-                    Build = "0001"
-                },
-
-                new VersionInformation
-                {
-                    Name = "ESS Backend",
-                    Version = "0.0.1",
-                    Build = "0001"
-                }
-            };
-
-            return Ok(await Task.FromResult(ret));
-        }
     }
 
     public class Configuration
@@ -291,8 +268,8 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.CountryCode, Type = nameof(Country) }))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Metadata.Community, CommunityCode>()
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(ESS.Shared.Contracts.Metadata.Community)))
+            CreateMap<Community, CommunityCode>()
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(Community)))
                 .ForMember(d => d.Value, opts => opts.MapFrom(s => s.Code))
                 .ForMember(d => d.Description, opts => opts.MapFrom(s => s.Name))
                 .ForMember(d => d.DistrictName, opts => opts.MapFrom(s => s.DistrictName))

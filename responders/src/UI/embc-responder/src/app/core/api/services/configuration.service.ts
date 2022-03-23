@@ -14,7 +14,6 @@ import { CommunityCode } from '../models/community-code';
 import { CommunityType } from '../models/community-type';
 import { Configuration } from '../models/configuration';
 import { OutageInformation } from '../models/outage-information';
-import { VersionInformation } from '../models/version-information';
 
 @Injectable({
   providedIn: 'root',
@@ -364,49 +363,6 @@ export class ConfigurationService extends BaseService {
 
     return this.configurationGetOutageInfo$Response(params).pipe(
       map((r: StrictHttpResponse<OutageInformation>) => r.body as OutageInformation)
-    );
-  }
-
-  /**
-   * Path part for operation configurationGetApplicationVersionInfo
-   */
-  static readonly ConfigurationGetApplicationVersionInfoPath = '/api/Configuration/version-info';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `configurationGetApplicationVersionInfo()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  configurationGetApplicationVersionInfo$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<VersionInformation>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetApplicationVersionInfoPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<VersionInformation>>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `configurationGetApplicationVersionInfo$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  configurationGetApplicationVersionInfo(params?: {
-  }): Observable<Array<VersionInformation>> {
-
-    return this.configurationGetApplicationVersionInfo$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<VersionInformation>>) => r.body as Array<VersionInformation>)
     );
   }
 
