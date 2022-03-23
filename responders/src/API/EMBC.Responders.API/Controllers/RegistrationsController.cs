@@ -306,12 +306,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.IncidentTask, EvacuationFileTask>()
-                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
-                ;
-
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))

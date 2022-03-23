@@ -6,7 +6,6 @@ export { ProblemDetails } from './models/problem-details';
 export { Code } from './models/code';
 export { CommunityCode } from './models/community-code';
 export { CommunityType } from './models/community-type';
-export { VersionInformation } from './models/version-information';
 export { UserProfile } from './models/user-profile';
 export { UpdateUserProfileRequest } from './models/update-user-profile-request';
 export { RegistrantProfile } from './models/registrant-profile';
@@ -49,6 +48,7 @@ export { TransportationOtherSupport } from './models/transportation-other-suppor
 export { TransportationTaxiSupport } from './models/transportation-taxi-support';
 export { EvacuationFileStatus } from './models/evacuation-file-status';
 export { EvacuationFileTask } from './models/evacuation-file-task';
+export { EvacuationFileTaskFeature } from './models/evacuation-file-task-feature';
 export { EvacuationFileSummary } from './models/evacuation-file-summary';
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
 export { VerifySecurityPhraseResponse } from './models/verify-security-phrase-response';

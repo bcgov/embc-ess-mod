@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { VersionInformation } from './core/api/models/version-information';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
 import { LocationsService } from './core/services/locations.service';
@@ -23,7 +22,6 @@ export class AppComponent implements OnInit {
   public isLoading = true;
   public color = '#169BD5';
   public show = true;
-  public version: Array<VersionInformation>;
   public environment: EnvironmentInformation;
   public pollingInterval: Subscription;
 
@@ -72,7 +70,6 @@ export class AppComponent implements OnInit {
         const userProfile = await this.userService.loadUserProfile();
         const location = await this.locationService.loadStaticLocationLists();
         const team = await this.loadTeamListService.loadStaticTeamLists();
-        this.getBackendVersionInfo();
         const nextRoute = decodeURIComponent(
           userProfile.requiredToSignAgreement
             ? 'electronic-agreement'
@@ -101,9 +98,4 @@ export class AppComponent implements OnInit {
     this.outageService.closeBannerbyUser = !$event;
   }
 
-  private getBackendVersionInfo(): void {
-    this.configService.getVersionInfo().subscribe((version) => {
-      this.version = version;
-    });
-  }
 }

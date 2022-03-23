@@ -318,6 +318,14 @@ namespace EMBC.Responders.API.Controllers
         public string? CommunityCode { get; set; } = null!;
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
+        public string Status { get; set; } = null!;
+        public IEnumerable<EvacuationFileTaskFeature> Features { get; set; } = Array.Empty<EvacuationFileTaskFeature>();
+    }
+
+    public class EvacuationFileTaskFeature
+    {
+        public string Name { get; set; }
+        public bool Enabled { get; set; }
     }
 
     /// <summary>
@@ -543,13 +551,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.PrimaryRegistrantFirstName, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantLastName, opts => opts.Ignore())
-                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask
-                {
-                    TaskNumber = s.RelatedTask.Id,
-                    CommunityCode = s.RelatedTask.CommunityCode,
-                    From = s.RelatedTask.StartDate,
-                    To = s.RelatedTask.EndDate
-                }))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask))
                 .AfterMap((s, d) =>
                 {
                     var primaryRegistrant = s.HouseholdMembers.SingleOrDefault(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == s.PrimaryRegistrantId);
@@ -557,6 +559,13 @@ namespace EMBC.Responders.API.Controllers
                     d.PrimaryRegistrantFirstName = primaryRegistrant.FirstName;
                     d.PrimaryRegistrantLastName = primaryRegistrant.LastName;
                 })
+                ;
+
+            CreateMap<IncidentTask, EvacuationFileTask>()
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
+                .ForMember(d => d.Features, opts => opts.Ignore())
                 ;
 
             CreateMap<NeedsAssessment, EMBC.ESS.Shared.Contracts.Events.NeedsAssessment>()

@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { VersionInformation } from '../../api/models/version-information';
 import { DialogContent } from '../../models/dialog-content.model';
 
 @Component({
@@ -12,9 +11,8 @@ import { DialogContent } from '../../models/dialog-content.model';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-  @Input() appVersion: Array<VersionInformation>;
 
-  constructor(private httpClient: HttpClient, private dialog: MatDialog) {}
+  constructor(private httpClient: HttpClient, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     // this.appVersion = environment.version;

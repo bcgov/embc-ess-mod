@@ -5,8 +5,7 @@ import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import {
   Configuration,
-  OutageInformation,
-  VersionInformation
+  OutageInformation
 } from '../api/models';
 import { ConfigurationService } from '../api/services';
 
@@ -16,7 +15,7 @@ import { ConfigurationService } from '../api/services';
 export class ConfigService {
   public config?: Configuration = null;
 
-  constructor(private configurationService: ConfigurationService) {}
+  constructor(private configurationService: ConfigurationService) { }
 
   public async load(): Promise<Configuration> {
     if (this.config !== null) {
@@ -50,15 +49,6 @@ export class ConfigService {
 
   public isConfigured(): boolean {
     return this.config === null;
-  }
-
-  /**
-   * Gets the current versions manage on the BackEnd
-   *
-   * @returns an array with details of services and its current versions
-   **/
-  public getVersionInfo(): Observable<Array<VersionInformation>> {
-    return this.configurationService.configurationGetApplicationVersionInfo();
   }
 
   public getOutageConfig(): Observable<OutageInformation> {
