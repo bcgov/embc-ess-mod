@@ -410,7 +410,8 @@
           class="col-md-4"
           *ngIf="
             support.subCategory !== 'Lodging_Group' &&
-            support.subCategory !== 'Lodging_Billeting'
+            support.subCategory !== 'Lodging_Billeting' &&
+            support.method !== supportMethod.ETransfer
           "
         >
           <mat-card class="support-card">
@@ -427,7 +428,10 @@
         <!-- Lodging-Billeting Support Delivery -->
         <div
           class="col-md-4"
-          *ngIf="support.subCategory === 'Lodging_Billeting'"
+          *ngIf="
+            support.subCategory === 'Lodging_Billeting' &&
+            support.method !== supportMethod.ETransfer
+          "
         >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
@@ -443,7 +447,13 @@
           </mat-card>
         </div>
         <!-- Lodging-Group Support Delivery -->
-        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Group'">
+        <div
+          class="col-md-4"
+          *ngIf="
+            support.subCategory === 'Lodging_Group' &&
+            support.method !== supportMethod.ETransfer
+          "
+        >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -457,6 +467,29 @@
             </p>
             <p class="no-margin"><b>Supplier Notes</b></p>
             <p>{{ getReferral(support)?.supplierNotes }}</p>
+          </mat-card>
+        </div>
+
+        <div
+          class="col-md-4"
+          *ngIf="support.method === supportMethod.ETransfer"
+        >
+          <mat-card class="support-card">
+            <span class="support-subtitle"
+              >Support Delivery - <b>e-Transfer</b></span
+            >
+
+            <p class="no-margin"><b>e-Transfer Recipient</b></p>
+            <p>name</p>
+
+            <p class="no-margin"><b>Notification Preference</b></p>
+            <p>pref</p>
+
+            <p class="no-margin"><b>Email Address</b></p>
+            <p>email</p>
+
+            <p class="no-margin"><b>Mobile Number</b></p>
+            <p>mobile</p>
           </mat-card>
         </div>
       </div>
