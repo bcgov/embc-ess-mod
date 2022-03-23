@@ -9,7 +9,7 @@ using HandlebarsDotNet;
 
 namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 {
-    internal class HtmlGenerator
+    internal class ReferralHtmlGenerator
     {
         public static readonly string PageBreak = $@"{Environment.NewLine}<div class=""page-break""></div>{Environment.NewLine}";
 
@@ -39,7 +39,24 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return handleBars;
         }
 
-        public static string CreateDocument(string html)
+        public static string CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, bool includeSummary, bool displayWatermark)
+        {
+            var html = new StringBuilder();
+            if (includeSummary)
+            {
+                html.Append(CreateReferalHtmlSummary(referrals, printingUser, displayWatermark));
+                html.Append(PageBreak);
+            }
+            foreach (var referral in referrals)
+            {
+                html.Append(CreateReferralHtmlPage(referral));
+                html.Append(PageBreak);
+            }
+
+            return CreateDocument(html.ToString());
+        }
+
+        private static string CreateDocument(string html)
         {
             var handlebars = CreateHandleBars();
             handlebars.RegisterTemplate("stylePartial", GetCSSPartialView());

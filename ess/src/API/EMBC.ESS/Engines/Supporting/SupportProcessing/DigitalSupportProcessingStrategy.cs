@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Supports;
 
@@ -8,11 +10,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 {
     internal class DigitalSupportProcessingStrategy : ISupportProcessingStrategy
     {
+        private readonly IMapper mapper;
         private readonly ISupportRepository supportRepository;
         private readonly IPrintRequestsRepository printRequestsRepository;
 
-        public DigitalSupportProcessingStrategy(ISupportRepository supportRepository, IPrintRequestsRepository printRequestsRepository)
+        public DigitalSupportProcessingStrategy(IMapper mapper, ISupportRepository supportRepository, IPrintRequestsRepository printRequestsRepository)
         {
+            this.mapper = mapper;
             this.supportRepository = supportRepository;
             this.printRequestsRepository = printRequestsRepository;
         }
@@ -36,10 +40,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             if (r.FileId == null) throw new ArgumentNullException(nameof(r.FileId));
             if (r.RequestingUserId == null) throw new ArgumentNullException(nameof(r.RequestingUserId));
 
+            var supports = mapper.Map<IEnumerable<Support>>(r.Supports);
+
             var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = r.FileId,
-                Supports = r.Supports
+                Supports = supports
             })).Ids.ToArray();
 
             try
@@ -78,8 +84,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             await Task.CompletedTask;
             //verify no paper supports included
-            var paperReferrals = r.Supports.Where(s => s.IsPaperReferral)
-                .Select(r => ((Referral)r.SupportDelivery).ManualReferralId)
+            var paperReferrals = r.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && r.ManualReferralId != null)
+                .Select(r => ((Shared.Contracts.Events.Referral)r.SupportDelivery).ManualReferralId)
                 .ToArray();
             if (paperReferrals.Any())
             {

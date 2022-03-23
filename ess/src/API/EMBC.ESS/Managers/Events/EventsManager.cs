@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
-using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
@@ -464,13 +463,13 @@ namespace EMBC.ESS.Managers.Events
 
             var supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports);
 
-            var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest { FileId = cmd.FileId, Supports = supports });
+            var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest { FileId = cmd.FileId, Supports = cmd.Supports });
             if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
             var response = (ProcessDigitalSupportsResponse)await supportingEngine.Process(new ProcessDigitalSupportsRequest
             {
                 FileId = cmd.FileId,
-                Supports = supports,
+                Supports = cmd.Supports,
                 RequestingUserId = requestingUser.Id,
                 IncludeSummaryInReferralsPrintout = cmd.IncludeSummaryInReferralsPrintout
             });
@@ -492,16 +491,14 @@ namespace EMBC.ESS.Managers.Events
                 referral.CreatedOn = DateTime.UtcNow;
             }
 
-            var supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports);
-
             var validationResponse = (PaperSupportsValidationResponse)await supportingEngine.Validate(new PaperSupportsValidationRequest
             {
                 FileId = cmd.FileId,
-                Supports = supports
+                Supports = cmd.Supports
             });
             if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
-            await supportingEngine.Process(new ProcessPaperSupportsRequest { FileId = cmd.FileId, Supports = supports });
+            await supportingEngine.Process(new ProcessPaperSupportsRequest { FileId = cmd.FileId, Supports = cmd.Supports });
         }
 
         public async Task<string> Handle(VoidSupportCommand cmd)
@@ -541,7 +538,7 @@ namespace EMBC.ESS.Managers.Events
 
             //get requesting user
             if (printRequest.RequestingUserId != query.RequestingUserId) throw new BusinessLogicException($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
-            var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault();
+            var requestingUser = mapper.Map<Shared.Contracts.Events.TeamMember>((await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault());
             if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
             //load the file
@@ -553,30 +550,20 @@ namespace EMBC.ESS.Managers.Events
             await evacuationFileLoader.Load(file);
 
             //Find referrals to print
-            var referrals = mapper.Map<IEnumerable<PrintReferral>>(file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)), opts => opts.Items.Add("evacuationFile", file)).ToArray();
+            var referrals = file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)).ToArray();
             if (referrals.Length != printRequest.SupportIds.Count())
                 throw new BusinessLogicException($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
-
-            //replace community codes with readable name
-            var communities = await metadataRepository.GetCommunities();
-            foreach (var referral in referrals)
-            {
-                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault()?.Name;
-                if (!string.IsNullOrEmpty(referral.Supplier?.Community))
-                {
-                    referral.Supplier.City = communities.Where(c => c.Code == referral.Supplier.Community).SingleOrDefault()?.Name;
-                }
-            }
 
             var isProduction = env.IsProduction();
 
             //convert referrals to html
             var generatedReferrals = (GenerateReferralsResponse)await supportingEngine.Generate(new GenerateReferralsRequest()
             {
-                Referrals = referrals,
+                File = file,
+                Supports = referrals,
                 AddSummary = printRequest.IncludeSummary,
                 AddWatermark = !isProduction,
-                RequestingUser = new PrintRequestingUser { Id = requestingUser.Id, FirstName = requestingUser.FirstName, LastName = requestingUser.LastName }
+                PrintingMember = requestingUser
             });
 
             //convert to pdf
