@@ -445,6 +445,9 @@ namespace EMBC.Registrants.API.Controllers
         Void,
 
         [Description("Pending Approval")]
+        PendingApproval,
+
+        [Description("Pending Approval")]
         UnderReview,
 
         [Description("Approved")]
