@@ -492,7 +492,7 @@ namespace EMBC.Responders.API.Controllers
         Void,
 
         [Description("Pending Approval")]
-        PendingApproval,
+        UnderReview,
 
         [Description("Approved")]
         Approved,
