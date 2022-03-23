@@ -479,17 +479,20 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum SupportStatus
     {
-        [Description("Draft")]
-        Draft,
-
         [Description("Active")]
         Active,
 
         [Description("Expired")]
         Expired,
 
-        [Description("Void")]
-        Void
+        [Description("Pending Approval")]
+        PendingApproval,
+
+        [Description("Approved")]
+        Approved,
+
+        [Description("Under Review")]
+        UnderReview
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
