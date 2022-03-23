@@ -7,9 +7,9 @@ namespace EMBC.ESS.Engines.Supporting
 {
     internal interface ISupportProcessingStrategy
     {
-        Task<ProcessResponse> Handle(ProcessRequest request);
+        Task<ProcessResponse> Process(ProcessRequest request);
 
-        Task<ValidationResponse> Handle(ValidationRequest request);
+        Task<ValidationResponse> Validate(ValidationRequest request);
     }
 
     internal class SupportProcessingStrategyFactory

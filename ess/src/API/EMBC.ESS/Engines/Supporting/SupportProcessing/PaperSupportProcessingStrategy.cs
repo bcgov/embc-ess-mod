@@ -17,14 +17,14 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             this.printRequestsRepository = printRequestsRepository;
         }
 
-        public async Task<ProcessResponse> Handle(ProcessRequest request)
+        public async Task<ProcessResponse> Process(ProcessRequest request)
         {
             if (!(request is ProcessPaperSupportsRequest r))
                 throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(PaperSupportProcessingStrategy)} can only handle {nameof(ProcessPaperSupportsRequest)} request types");
             return await HandleInternal(r);
         }
 
-        public async Task<ValidationResponse> Handle(ValidationRequest request)
+        public async Task<ValidationResponse> Validate(ValidationRequest request)
         {
             if (!(request is PaperSupportsValidationRequest r))
                 throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(PaperSupportProcessingStrategy)} can only handle {nameof(PaperSupportsValidationRequest)} request types");

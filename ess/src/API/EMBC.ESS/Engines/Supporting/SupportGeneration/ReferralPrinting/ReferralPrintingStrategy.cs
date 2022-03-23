@@ -7,7 +7,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 {
     internal class ReferralPrintingStrategy : ISupportGenerationStrategy
     {
-        public async Task<GenerateResponse> Handle(GenerateRequest request)
+        public async Task<GenerateResponse> Generate(GenerateRequest request)
         {
             if (!(request is GenerateReferralsRequest r))
                 throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(ReferralPrintingStrategy)} can only handle {nameof(GenerateReferralsRequest)} request types");

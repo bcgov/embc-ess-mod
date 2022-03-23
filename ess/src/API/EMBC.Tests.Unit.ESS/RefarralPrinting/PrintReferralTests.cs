@@ -32,7 +32,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 1)
             };
 
-            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Generate(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfFile.html", content);
@@ -50,7 +50,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 5)
             };
 
-            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Generate(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsFile.html", content);
@@ -68,7 +68,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 1)
             };
 
-            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Generate(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfWithSummaryFile.html", content);
@@ -86,7 +86,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 10)
             };
 
-            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Generate(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsWithSummaryFile.html", content);

@@ -18,7 +18,7 @@ namespace EMBC.ESS.Engines.Supporting
         public async Task<GenerateResponse> Generate(GenerateRequest request) =>
             request switch
             {
-                GenerateReferralsRequest r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.Pdf).Handle(r),
+                GenerateReferralsRequest r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.Pdf).Generate(r),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };
@@ -26,8 +26,8 @@ namespace EMBC.ESS.Engines.Supporting
         public async Task<ProcessResponse> Process(ProcessRequest request) =>
             request switch
             {
-                ProcessDigitalSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Handle(r),
-                ProcessPaperSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Handle(r),
+                ProcessDigitalSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Process(r),
+                ProcessPaperSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Process(r),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };
@@ -35,8 +35,8 @@ namespace EMBC.ESS.Engines.Supporting
         public async Task<ValidationResponse> Validate(ValidationRequest request) =>
             request switch
             {
-                DigitalSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Handle(r),
-                PaperSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Handle(r),
+                DigitalSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Validate(r),
+                PaperSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Validate(r),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };
