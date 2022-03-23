@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using EMBC.Utilities.Extensions;
 using HandlebarsDotNet;
 
@@ -68,10 +69,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public static string CreateReferalHtmlSummary(IEnumerable<PrintReferral> supports, PrintRequestingUser requestingUser, bool displayWatermark)
         {
             var handlebars = CreateHandleBars();
-            var result = string.Empty;
-            var itemsHtml = string.Empty;
+
             var summaryBreakCount = 0;
             var printedCount = 0;
+            var html = new StringBuilder();
+            var items = new StringBuilder();
             foreach (var printReferral in supports)
             {
                 summaryBreakCount += 1;
@@ -96,21 +98,21 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 var volunteerFirstName = requestingUser.FirstName;
                 var volunteerLastName = requestingUser.LastName;
                 var itemResult = template(printReferral);
-                itemsHtml = $"{itemsHtml}{itemResult}";
+                items.Append(itemResult);
 
                 if (summaryBreakCount == 3 || printedCount == supports.Count())
                 {
                     summaryBreakCount = 0;
-                    handlebars.RegisterTemplate("summaryItemsPartial", itemsHtml);
+                    handlebars.RegisterTemplate("summaryItemsPartial", items.ToString());
 
                     var mainTemplate = handlebars.Compile(LoadTemplate(ReferalMainViews.Summary.ToString()));
                     var data = new { volunteerFirstName, volunteerLastName, purchaserName, displayWatermark };
-                    result = $"{result}{mainTemplate(data)}{PageBreak}";
-                    itemsHtml = string.Empty;
+                    html.Append(mainTemplate(data));
+                    html.Append(PageBreak);
+                    items.Clear();
                 }
             }
-
-            return $"{result}{PageBreak}";
+            return html.ToString();
         }
 
         private static string GetCSSPartialView()

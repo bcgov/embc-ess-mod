@@ -30,6 +30,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             if (includeSummary)
             {
                 html.Append(HtmlGenerator.CreateReferalHtmlSummary(referrals, requestingUser, displayWatermark));
+                html.Append(HtmlGenerator.PageBreak);
             }
             foreach (var referral in referrals)
             {
@@ -37,6 +38,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 referral.VolunteerLastName = requestingUser.LastName;
                 referral.DisplayWatermark = displayWatermark;
                 html.Append(HtmlGenerator.CreateReferralHtmlPage(referral));
+                html.Append(HtmlGenerator.PageBreak);
             }
 
             return await Task.FromResult(HtmlGenerator.CreateDocument(html.ToString()));
