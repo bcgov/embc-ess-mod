@@ -3,10 +3,7 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 import { lastValueFrom, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import {
-  Configuration,
-  OutageInformation
-} from '../api/models';
+import { Configuration, OutageInformation } from '../api/models';
 import { ConfigurationService } from '../api/services';
 
 @Injectable({
@@ -15,7 +12,7 @@ import { ConfigurationService } from '../api/services';
 export class ConfigService {
   public config?: Configuration = null;
 
-  constructor(private configurationService: ConfigurationService) { }
+  constructor(private configurationService: ConfigurationService) {}
 
   public async load(): Promise<Configuration> {
     if (this.config !== null) {

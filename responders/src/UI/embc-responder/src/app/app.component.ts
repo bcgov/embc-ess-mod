@@ -97,5 +97,4 @@ export class AppComponent implements OnInit {
     this.outageService.setShowOutageBanner($event);
     this.outageService.closeBannerbyUser = !$event;
   }
-
 }
