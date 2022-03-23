@@ -11,6 +11,8 @@ namespace EMBC.ESS.Engines.Supporting
         Task<ValidationResponse> Validate(ValidationRequest request);
 
         Task<ProcessResponse> Process(ProcessRequest request);
+
+        Task<GenerateResponse> Generate(GenerateRequest request);
     }
 
     public abstract class ValidationRequest
@@ -80,4 +82,10 @@ namespace EMBC.ESS.Engines.Supporting
 
         public IEnumerable<string> Errors { get; set; } = Array.Empty<string>();
     }
+
+    public abstract class GenerateRequest
+    { }
+
+    public abstract class GenerateResponse
+    { }
 }

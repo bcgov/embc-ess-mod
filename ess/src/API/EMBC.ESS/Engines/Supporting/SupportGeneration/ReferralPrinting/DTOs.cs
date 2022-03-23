@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace EMBC.ESS.Managers.Events.PrintReferrals
+namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 {
-    public interface IPrintReferralService
-    {
-        Task<string> GetReferralHtmlPagesAsync(SupportsToPrint printSupports);
-    }
-
-    public class SupportsToPrint
+    public class GenerateReferralsRequest : GenerateRequest
     {
         public IEnumerable<PrintReferral> Referrals { get; set; }
 
         public bool AddSummary { get; set; }
         public bool AddWatermark { get; set; }
         public PrintRequestingUser RequestingUser { get; set; }
+    }
+
+    public class GenerateReferralsResponse : GenerateResponse
+    {
+        public byte[] Content { get; set; }
     }
 
     public class PrintReferral

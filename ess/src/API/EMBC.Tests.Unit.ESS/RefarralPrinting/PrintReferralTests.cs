@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Bogus;
-using EMBC.ESS.Managers.Events.PrintReferrals;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using Shouldly;
 using Xunit;
 
@@ -12,18 +13,18 @@ namespace EMBC.Tests.Unit.ESS.Prints
 {
     public class PrintReferralTests
     {
-        private readonly PrintReferralService supportsService;
+        private readonly ReferralPrintingStrategy referralPrinting;
 
         public PrintReferralTests()
         {
-            supportsService = new PrintReferralService();
+            referralPrinting = new ReferralPrintingStrategy();
         }
 
         [Fact]
         public async Task CreateSupportPdfWithoutSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
+            var request = new GenerateReferralsRequest
             {
                 AddSummary = false,
                 AddWatermark = false,
@@ -31,7 +32,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 1)
             };
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfFile.html", content);
@@ -41,7 +42,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         public async Task CreateMultipleSupportsPdfsWithoutSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
+            var request = new GenerateReferralsRequest
             {
                 AddSummary = false,
                 AddWatermark = false,
@@ -49,7 +50,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 5)
             };
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsFile.html", content);
@@ -59,7 +60,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         public async Task CreateSupportPdfWithSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
+            var request = new GenerateReferralsRequest
             {
                 AddSummary = true,
                 AddWatermark = true,
@@ -67,7 +68,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 1)
             };
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfWithSummaryFile.html", content);
@@ -77,7 +78,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
         public async Task CreateMultipleSupportsPdfsWithSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
+            var request = new GenerateReferralsRequest
             {
                 AddSummary = true,
                 AddWatermark = true,
@@ -85,7 +86,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 Referrals = GeneratePrintReferral(requestingUser, 10)
             };
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = Encoding.UTF8.GetString(((GenerateReferralsResponse)await referralPrinting.Handle(request)).Content);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsWithSummaryFile.html", content);

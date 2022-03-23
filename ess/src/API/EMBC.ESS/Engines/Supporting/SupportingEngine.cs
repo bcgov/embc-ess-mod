@@ -1,63 +1,44 @@
 ﻿using System;
 using System.Threading.Tasks;
-using EMBC.ESS.Engines.Supporting.SupportProcessing;
-using Microsoft.Extensions.DependencyInjection;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 
 namespace EMBC.ESS.Engines.Supporting
 {
     internal class SupportingEngine : ISupportingEngine
     {
-        private readonly SupportingStragetyFactory factory;
+        private readonly SupportProcessingStrategyFactory supportProcessingStrategyFactory;
+        private readonly SupportGenerationStrategyStragetyFactory supportGenerationStrategyStragetyFactory;
 
-        public SupportingEngine(SupportingStragetyFactory factory)
+        public SupportingEngine(SupportProcessingStrategyFactory supportProcessingStrategyFactory, SupportGenerationStrategyStragetyFactory supportGenerationStrategyStragetyFactory)
         {
-            this.factory = factory;
+            this.supportProcessingStrategyFactory = supportProcessingStrategyFactory;
+            this.supportGenerationStrategyStragetyFactory = supportGenerationStrategyStragetyFactory;
         }
 
-        public async Task<ProcessResponse> Process(ProcessRequest request)
-        {
-            return request switch
+        public async Task<GenerateResponse> Generate(GenerateRequest request) =>
+            request switch
             {
-                ProcessDigitalSupportsRequest r => await factory.Create(ProcessingStragetyType.Digital).Handle(r),
-                ProcessPaperSupportsRequest r => await factory.Create(ProcessingStragetyType.Paper).Handle(r),
+                GenerateReferralsRequest r => await supportGenerationStrategyStragetyFactory.Create(SupportGenerationStrategyType.Pdf).Handle(r),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };
-        }
 
-        public async Task<ValidationResponse> Validate(ValidationRequest request)
-        {
-            return request switch
+        public async Task<ProcessResponse> Process(ProcessRequest request) =>
+            request switch
             {
-                DigitalSupportsValidationRequest r => await factory.Create(ProcessingStragetyType.Digital).Handle(r),
-                PaperSupportsValidationRequest r => await factory.Create(ProcessingStragetyType.Paper).Handle(r),
+                ProcessDigitalSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Handle(r),
+                ProcessPaperSupportsRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Handle(r),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };
-        }
-    }
 
-    internal class SupportingStragetyFactory
-    {
-        private IServiceProvider services;
+        public async Task<ValidationResponse> Validate(ValidationRequest request) =>
+            request switch
+            {
+                DigitalSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Handle(r),
+                PaperSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Handle(r),
 
-        public SupportingStragetyFactory(IServiceProvider services)
-        {
-            this.services = services;
-        }
-
-        public ISupportProcessingStrategy Create(ProcessingStragetyType type) => type switch
-        {
-            ProcessingStragetyType.Digital => services.GetRequiredService<DigitalSupportProcessingStrategy>(),
-            ProcessingStragetyType.Paper => services.GetRequiredService<PaperSupportProcessingStrategy>(),
-
-            _ => throw new NotImplementedException($"{type}")
-        };
-    }
-
-    internal enum ProcessingStragetyType
-    {
-        Digital,
-        Paper
+                _ => throw new NotImplementedException(request.GetType().Name)
+            };
     }
 }

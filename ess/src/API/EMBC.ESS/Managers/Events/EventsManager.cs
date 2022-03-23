@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Engines.Supporting;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using EMBC.ESS.Managers.Events.Notifications;
-using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Metadata;
@@ -44,7 +44,6 @@ namespace EMBC.ESS.Managers.Events
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
-        private readonly IPrintReferralService referralPrintingService;
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly IMetadataRepository metadataRepository;
@@ -68,7 +67,6 @@ namespace EMBC.ESS.Managers.Events
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
             ISearchEngine searchEngine,
-            IPrintReferralService referralPrintingService,
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator,
             IWebHostEnvironment env,
@@ -89,7 +87,6 @@ namespace EMBC.ESS.Managers.Events
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
-            this.referralPrintingService = referralPrintingService;
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
             this.metadataRepository = metadataRepository;
@@ -574,7 +571,7 @@ namespace EMBC.ESS.Managers.Events
             var isProduction = env.IsProduction();
 
             //convert referrals to html
-            var printedReferrals = await referralPrintingService.GetReferralHtmlPagesAsync(new SupportsToPrint()
+            var generatedReferrals = (GenerateReferralsResponse)await supportingEngine.Generate(new GenerateReferralsRequest()
             {
                 Referrals = referrals,
                 AddSummary = printRequest.IncludeSummary,
@@ -583,7 +580,7 @@ namespace EMBC.ESS.Managers.Events
             });
 
             //convert to pdf
-            var content = await pdfGenerator.Generate(printedReferrals);
+            var content = await pdfGenerator.Generate(generatedReferrals.Content);
             var contentType = "application/pdf";
 
             await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });

@@ -1,4 +1,5 @@
-﻿using EMBC.ESS.Engines.Supporting.SupportProcessing;
+﻿using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.ESS.Engines.Supporting.SupportProcessing;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,9 +11,11 @@ namespace EMBC.ESS.Engines.Supporting
         {
             configurationServices.Services
                 .AddTransient<ISupportingEngine, SupportingEngine>()
-                .AddTransient<SupportingStragetyFactory>()
+                .AddTransient<SupportProcessingStrategyFactory>()
                 .AddTransient<DigitalSupportProcessingStrategy>()
                 .AddTransient<PaperSupportProcessingStrategy>()
+                .AddTransient<SupportGenerationStrategyStragetyFactory>()
+                .AddTransient<ReferralPrintingStrategy>()
                 ;
         }
     }
