@@ -1,18 +1,34 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
 import { MatSelectChange } from '@angular/material/select';
+import { CustomErrorMailMatcher } from '../../../profile-components/contact/contact.component';
 
 @Component({
   selector: 'app-support-etransfer',
   templateUrl: './support-etransfer.component.html',
   styleUrls: ['./support-etransfer.component.scss']
 })
-export class SupportEtransferComponent {
-  @Input() etransferDeliveryForm: FormGroup;
+export class SupportEtransferComponent implements OnInit, OnDestroy {
+  @Input() supportDeliveryForm: FormGroup;
   @Input() editFlag: boolean;
+  readonly phoneMask = [
+    /\d/,
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/
+  ];
+
   supplierList: SupplierListItemModel[];
   filteredOptions: Observable<SupplierListItemModel[]>;
   showTextField = false;
@@ -22,14 +38,46 @@ export class SupportEtransferComponent {
   color = '#169BD5';
 
   notificationPreferences = ['Email', 'Mobile', 'Email & Mobile'];
+  emailMatcher = new CustomErrorMailMatcher();
+
+  preferenceSubscription: Subscription;
 
   constructor(public stepSupportsService: StepSupportsService) {}
+
+  ngOnInit(): void {
+    this.preferenceSubscription = this.supportDeliveryForm
+      .get('notificationPreference')
+      .valueChanges.subscribe((pref) => {
+        if (!pref.includes('Email')) {
+          this.supportDeliveryForm.get('notificationEmail').patchValue('');
+          this.supportDeliveryForm
+            .get('notificationConfirmEmail')
+            .patchValue('');
+        }
+        if (!pref.includes('Mobile')) {
+          this.supportDeliveryForm.get('notificationMobile').patchValue('');
+        }
+        this.supportDeliveryForm
+          .get('notificationEmail')
+          .updateValueAndValidity();
+        this.supportDeliveryForm
+          .get('notificationConfirmEmail')
+          .updateValueAndValidity();
+        this.supportDeliveryForm
+          .get('notificationMobile')
+          .updateValueAndValidity();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.preferenceSubscription.unsubscribe();
+  }
 
   /**
    * Returns the control of the form
    */
-  get etransferDeliveryFormControl(): { [key: string]: AbstractControl } {
-    return this.etransferDeliveryForm?.controls;
+  get supportDeliveryFormControl(): { [key: string]: AbstractControl } {
+    return this.supportDeliveryForm?.controls;
   }
 
   /**
@@ -47,7 +95,7 @@ export class SupportEtransferComponent {
 
   showEmail(): boolean {
     const notificationPreference =
-      this.etransferDeliveryForm?.get('notificationPreference')?.value || '';
+      this.supportDeliveryForm?.get('notificationPreference')?.value || '';
     return (
       notificationPreference === 'Email' ||
       notificationPreference === 'Email & Mobile'
@@ -56,7 +104,7 @@ export class SupportEtransferComponent {
 
   showMobile(): boolean {
     const notificationPreference =
-      this.etransferDeliveryForm?.get('notificationPreference')?.value || '';
+      this.supportDeliveryForm?.get('notificationPreference')?.value || '';
     return (
       notificationPreference === 'Mobile' ||
       notificationPreference === 'Email & Mobile'

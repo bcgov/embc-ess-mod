@@ -100,7 +100,7 @@ export class SupportReferralComponent implements OnInit {
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
         const valueToSet = allMembers.find(
           (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
+            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo?.id
         );
         this.referralDeliveryForm?.get('issuedTo').setValue(valueToSet);
       } else {
@@ -111,7 +111,7 @@ export class SupportReferralComponent implements OnInit {
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
         const valueToSet = allMembers.find(
           (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
+            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo?.id
         );
         if (valueToSet !== undefined) {
           this.referralDeliveryForm?.get('issuedTo').setValue(valueToSet);
