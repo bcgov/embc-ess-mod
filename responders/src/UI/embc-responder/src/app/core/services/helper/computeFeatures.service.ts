@@ -18,7 +18,7 @@ export class ComputeFeaturesService {
     this.computeEtransferStatus();
     this.computeEtransferEligibility();
     this.computeEtransferRequirementContent();
-    console.log(this.featuresService);
+    // console.log(this.featuresService);
   }
 
   private computeEtransferEligibility() {

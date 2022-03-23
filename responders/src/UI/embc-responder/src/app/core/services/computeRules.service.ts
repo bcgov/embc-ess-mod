@@ -21,7 +21,7 @@ export class ComputeRulesService {
   listener() {
     this.eventSubject$.subscribe({
       next: () => {
-        console.log('here');
+        // console.log('here');
         this.computeFeaturesService.execute();
       }
     });

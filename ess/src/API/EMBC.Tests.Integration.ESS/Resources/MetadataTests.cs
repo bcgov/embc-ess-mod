@@ -23,7 +23,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var reply = await metadataRepository.GetPlannedOutages(new OutageQuery { PortalType = PortalType.Suppliers, DisplayDate = DateTime.UtcNow });
 
             var outage = reply.ShouldHaveSingleItem();
-            outage.OutageStartDate.ShouldBe(DateTime.Parse("2022/1/1T17:30:00Z").ToUniversalTime());
+            outage.OutageStartDate.ShouldBe(DateTime.Parse("2022/1/1T17:45:00Z").ToUniversalTime());
             outage.OutageEndDate.ShouldBe(DateTime.Parse("2024/1/1T06:30:00Z").ToUniversalTime());
             outage.Content.ShouldBe("autotest-suppliers-outage-donotdelete");
         }

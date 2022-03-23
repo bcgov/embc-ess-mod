@@ -489,7 +489,22 @@ namespace EMBC.Responders.API.Controllers
         Expired,
 
         [Description("Void")]
-        Void
+        Void,
+
+        [Description("Pending Approval")]
+        PendingApproval,
+
+        [Description("Pending Approval")]
+        UnderReview,
+
+        [Description("Approved")]
+        Approved,
+
+        [Description("Paid")]
+        Paid,
+
+        [Description("Cancelled")]
+        Cancelled
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
