@@ -229,6 +229,10 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.Contact == null ? null : s.Contact.Phone))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.LegalName))
                 ;
+
+            CreateMap<Resources.Teams.TeamMember, Shared.Contracts.Events.TeamMember>()
+                .ForMember(d => d.DisplayName, opts => opts.MapFrom(s => $"{s.LastName}, {s.FirstName}"))
+                ;
         }
 
         private static Referral GetReferralOrNull(Support support) => support.SupportDelivery as Referral;
