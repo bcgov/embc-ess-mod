@@ -46,25 +46,25 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.preferenceSubscription = this.supportDeliveryForm
-      .get('notificationPreference')
+      ?.get('notificationPreference')
       .valueChanges.subscribe((pref) => {
         if (!pref.includes('Email')) {
-          this.supportDeliveryForm.get('notificationEmail').patchValue('');
+          this.supportDeliveryForm?.get('notificationEmail').patchValue('');
           this.supportDeliveryForm
-            .get('notificationConfirmEmail')
+            ?.get('notificationConfirmEmail')
             .patchValue('');
         }
         if (!pref.includes('Mobile')) {
-          this.supportDeliveryForm.get('notificationMobile').patchValue('');
+          this.supportDeliveryForm?.get('notificationMobile').patchValue('');
         }
         this.supportDeliveryForm
-          .get('notificationEmail')
+          ?.get('notificationEmail')
           .updateValueAndValidity();
         this.supportDeliveryForm
-          .get('notificationConfirmEmail')
+          ?.get('notificationConfirmEmail')
           .updateValueAndValidity();
         this.supportDeliveryForm
-          .get('notificationMobile')
+          ?.get('notificationMobile')
           .updateValueAndValidity();
       });
   }
