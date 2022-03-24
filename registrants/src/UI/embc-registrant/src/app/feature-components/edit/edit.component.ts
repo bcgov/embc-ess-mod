@@ -129,8 +129,6 @@ export class EditComponent implements OnInit, OnDestroy {
       this.form,
       this.currentFlow
     );
-    console.log(this.currentFlow);
-    console.log(this.parentPageName);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {

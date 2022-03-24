@@ -62,8 +62,6 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
         this.evacuationFileDataService?.supports
       );
     }
-
-    console.log(this.referralData);
   }
 
   ngAfterViewInit(): void {

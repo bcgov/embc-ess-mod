@@ -13,7 +13,6 @@ export class DisableBackGuard
   constructor(public dialog: MatDialog) {}
 
   canDeactivate(): boolean {
-    console.log(window.location.pathname);
     if (
       window.location.pathname === '/non-verified-registration/file-submission'
     ) {
