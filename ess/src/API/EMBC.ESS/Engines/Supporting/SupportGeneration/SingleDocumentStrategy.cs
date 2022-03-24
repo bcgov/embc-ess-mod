@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using EMBC.ESS.Resources.Metadata;
+using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 {
@@ -43,7 +44,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
                 if (!string.IsNullOrEmpty(referral.Supplier?.Community)) referral.Supplier.City = communities.GetValueOrDefault(referral.Supplier.Community);
             }
 
-            var referralsHtml = ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, request.AddSummary, request.AddWatermark);
+            var title = $"supports-{request.File.Id}-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
+            var referralsHtml = ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, request.AddSummary, request.AddWatermark, title);
 
             return new GenerateReferralsResponse
             {

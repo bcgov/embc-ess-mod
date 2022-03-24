@@ -39,7 +39,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return handleBars;
         }
 
-        public static string CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, bool includeSummary, bool displayWatermark)
+        public static string CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, bool includeSummary, bool displayWatermark, string title)
         {
             var html = new StringBuilder();
             if (includeSummary)
@@ -53,17 +53,17 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 html.Append(PageBreak);
             }
 
-            return CreateDocument(html.ToString());
+            return CreateDocument(html.ToString(), title);
         }
 
-        private static string CreateDocument(string html)
+        private static string CreateDocument(string html, string documentTitle)
         {
             var handlebars = CreateHandleBars();
             handlebars.RegisterTemplate("stylePartial", GetCSSPartialView());
             handlebars.RegisterTemplate("bodyPartial", html);
             var template = handlebars.Compile(LoadTemplate("MasterLayout"));
 
-            return template(string.Empty);
+            return template(new { documentTitle });
         }
 
         public static string CreateReferralHtmlPage(PrintReferral referral)
