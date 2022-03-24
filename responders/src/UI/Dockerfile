@@ -11,7 +11,6 @@ FROM node-builder as tester
 RUN npm run test -- --no-watch --no-progress --configuration production
 
 FROM node-builder as ng-builder
-RUN npm run test -- --no-watch --no-progress --configuration production
 RUN npm run build -- --configuration production
 
 FROM caddy:2-builder AS caddy-builder

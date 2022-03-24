@@ -1,10 +1,16 @@
-FROM trion/ng-cli-karma AS ng-builder
+FROM trion/ng-cli-karma AS node-builder
 WORKDIR /src
 COPY ./embc-registrant/package*.json ./
 RUN npm install --ignore-scripts
 COPY ./embc-registrant/ .
+
+FROM node-builder as linter
 RUN npm run lint
-RUN npm run test -- --no-watch --no-progress
+
+FROM node-builder as tester
+RUN npm run test -- --no-watch --no-progress --configuration production
+
+FROM node-builder as ng-builder
 RUN npm run build -- --configuration production
 
 FROM caddy:2-builder AS builder
