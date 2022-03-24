@@ -5,7 +5,7 @@ export interface EvacuationFileTask {
   communityCode?: null | string;
   features?: Array<EvacuationFileTaskFeature>;
   from?: null | string;
-  status?: string;
+  status?: null | string;
   taskNumber: string;
   to?: null | string;
 }
