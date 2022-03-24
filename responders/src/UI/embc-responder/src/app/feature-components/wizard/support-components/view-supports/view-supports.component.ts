@@ -83,6 +83,7 @@ export class ViewSupportsComponent implements OnInit {
       .getEvacFile(this.evacueeSessionService.essFileNumber)
       .subscribe({
         next: (file) => {
+          console.log(file);
           this.showLoader = !this.showLoader;
           this.stepSupportsService.currentNeedsAssessment =
             file.needsAssessment;
@@ -91,7 +92,8 @@ export class ViewSupportsComponent implements OnInit {
           file.supports.forEach((support) => {
             if (
               support.subCategory === 'Lodging_Group' ||
-              support.subCategory === 'Lodging_Billeting'
+              support.subCategory === 'Lodging_Billeting' ||
+              support.method === 'ETransfer'
             ) {
               supportModel.push(support);
             } else {
