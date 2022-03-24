@@ -12,7 +12,8 @@ import {
   LodgingBilletingSupport,
   LodgingGroupSupport,
   Referral,
-  Interac
+  Interac,
+  Code
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -316,4 +317,20 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   cancelEtransfer(): void {}
+
+  getStatusTextToDisplay(enumToText: string): string {
+    console.log(enumToText);
+    console.log(this.stepSupportsService.supportStatus);
+    return this.stepSupportsService.supportStatus.filter(
+      (statusValue) => statusValue.value === enumToText
+    )[0]?.description;
+  }
+
+  getMethodTextToDisplay(enumToText: string): string {
+    console.log(enumToText);
+    console.log(this.stepSupportsService.supportMethods);
+    return this.stepSupportsService.supportMethods.filter(
+      (method) => method.value === enumToText
+    )[0]?.description;
+  }
 }

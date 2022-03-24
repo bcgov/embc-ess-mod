@@ -27,10 +27,16 @@
                   'active-status': selectedSupport?.status === 'Active',
                   'void-status': selectedSupport?.status === 'Void',
                   'expired-status': selectedSupport?.status === 'Expired',
-                  'draft-status': selectedSupport?.status === 'Draft'
+                  'draft-status': selectedSupport?.status === 'Draft',
+                  'review-status': selectedSupport?.status === 'UnderReview',
+                  'pending-status':
+                    selectedSupport?.status === 'PendingApproval',
+                  'cancel-status': selectedSupport?.status === 'Cancelled',
+                  'paid-status': selectedSupport?.status === 'Paid',
+                  'approved-status': selectedSupport?.status === 'Approved'
                 }"
               >
-                {{ selectedSupport?.status }}
+                {{ getStatusTextToDisplay(selectedSupport?.status) }}
               </p>
             </div>
           </div>
@@ -140,10 +146,16 @@
                   'active-status': selectedSupport?.status === 'Active',
                   'void-status': selectedSupport?.status === 'Void',
                   'expired-status': selectedSupport?.status === 'Expired',
-                  'draft-status': selectedSupport?.status === 'Draft'
+                  'draft-status': selectedSupport?.status === 'Draft',
+                  'review-status': selectedSupport?.status === 'UnderReview',
+                  'pending-status':
+                    selectedSupport?.status === 'PendingApproval',
+                  'cancel-status': selectedSupport?.status === 'Cancelled',
+                  'paid-status': selectedSupport?.status === 'Paid',
+                  'approved-status': selectedSupport?.status === 'Approved'
                 }"
               >
-                {{ selectedSupport?.status }}
+                {{ getStatusTextToDisplay(selectedSupport?.status) }}
               </p>
             </div>
           </div>
@@ -476,7 +488,9 @@
 
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Method:</div>
-    <div class="col-md-4 bold">{{ selectedSupport?.method }}</div>
+    <div class="col-md-4 bold">
+      {{ getMethodTextToDisplay(selectedSupport?.method) }}
+    </div>
   </div>
 
   <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral'">
