@@ -19,6 +19,7 @@ import {
 } from 'src/app/core/api/models';
 import { NeedsAssessmentService } from 'src/app/feature-components/needs-assessment/needs-assessment.service';
 import { LocationService } from 'src/app/core/services/location.service';
+import { SupportsService } from 'src/app/core/services/supports.service';
 
 @Component({
   selector: 'app-referral-details',
@@ -48,7 +49,8 @@ export class ReferralDetailsComponent implements OnInit {
   constructor(
     private needsAssessmentService: NeedsAssessmentService,
     private locationService: LocationService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private supportService: SupportsService
   ) {}
 
   ngOnInit(): void {
@@ -92,5 +94,11 @@ export class ReferralDetailsComponent implements OnInit {
       );
       return subCategory?.description;
     }
+  }
+
+  getStatusTextToDisplay(enumToText: string): string {
+    return this.supportService.supportStatus.find(
+      (statusValue) => statusValue.value === enumToText
+    ).description;
   }
 }
