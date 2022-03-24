@@ -4,7 +4,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -24,7 +24,6 @@ import { EtransferFeaturesService } from '../../../../core/services/helper/etran
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: FormGroup;
-  etransferDeliveryForm: FormGroup;
   editFlag = false;
   selectedSupportMethod: SupportMethod;
   supportMethod = SupportMethod;
@@ -51,8 +50,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
+    this.selectedSupportMethod =
+      this.stepSupportsService?.supportDelivery?.method || null;
     this.createSupportDeliveryForm();
-    this.createEtransferDeliveryForm();
     this.computeState.triggerEvent();
     console.log(this.featureService);
   }
@@ -76,32 +76,20 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   /**
-   * Placeholder to have something for now - need official API changes
-   */
-  createEtransferDeliveryForm(): void {
-    this.etransferDeliveryForm = this.formBuilder.group({
-      recipientFirstName: [
-        this.featureService?.selectedEvacueeInContext?.personalDetails
-          ?.firstName || ''
-      ],
-      recipientLastName: [
-        this.featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
-          ''
-      ],
-      notificationPreference: ['', [Validators.required]],
-      email: [''],
-      mobile: ['']
-    });
-  }
-
-  /**
    * Creates support delivery form
    */
   createSupportDeliveryForm(): void {
     this.supportDeliveryForm = this.formBuilder.group({
       issuedTo: [
         this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
-        [Validators.required]
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.selectedSupportMethod === SupportMethod.Referral,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
       ],
       name: [
         this.stepSupportsService?.supportDelivery?.name ?? '',
@@ -109,8 +97,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
           this.customValidation
             .conditionalValidation(
               () =>
+                this.selectedSupportMethod === SupportMethod.Referral &&
                 this.supportDeliveryForm.get('issuedTo').value ===
-                'Someone else',
+                  'Someone else',
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
@@ -122,6 +111,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
           this.customValidation
             .conditionalValidation(
               () =>
+                this.selectedSupportMethod === SupportMethod.Referral &&
                 this.stepSupportsService.supportTypeToAdd.value !==
                   'Lodging_Billeting' &&
                 this.stepSupportsService.supportTypeToAdd.value !==
@@ -134,8 +124,84 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       supplierNote: [
         this.stepSupportsService?.supportDelivery?.supplierNote ?? ''
       ],
-      details: this.createSupplierDetailsForm()
+      details: this.createSupplierDetailsForm(),
+      recipientFirstName: [
+        this.featureService?.selectedEvacueeInContext?.personalDetails
+          ?.firstName || ''
+      ],
+      recipientLastName: [
+        this.featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+          ''
+      ],
+      receivingRegistrantId: [
+        this.featureService?.selectedEvacueeInContext?.id || ''
+      ],
+      notificationPreference: [
+        this.getExistingPreference(),
+        this.customValidation
+          .conditionalValidation(
+            () => this.selectedSupportMethod === SupportMethod.ETransfer,
+            Validators.required
+          )
+          .bind(this.customValidation)
+      ],
+      notificationEmail: [
+        this.stepSupportsService?.supportDelivery?.notificationEmail ?? '',
+        [
+          Validators.email,
+          this.customValidation.conditionalValidation(
+            () =>
+              this.selectedSupportMethod === SupportMethod.ETransfer &&
+              (this.supportDeliveryForm.get('notificationPreference').value ===
+                'Email' ||
+                this.supportDeliveryForm.get('notificationPreference').value ===
+                  'Email & Mobile'),
+            this.customValidation.whitespaceValidator()
+          )
+        ]
+      ],
+      notificationConfirmEmail: [
+        '',
+        [
+          Validators.email,
+          this.customValidation.conditionalValidation(
+            () =>
+              this.selectedSupportMethod === SupportMethod.ETransfer &&
+              (this.supportDeliveryForm.get('notificationPreference').value ===
+                'Email' ||
+                this.supportDeliveryForm.get('notificationPreference').value ===
+                  'Email & Mobile'),
+            this.customValidation.whitespaceValidator()
+          )
+        ]
+      ],
+      notificationMobile: [
+        this.stepSupportsService?.supportDelivery?.notificationMobile ?? '',
+        [
+          this.customValidation
+            .maskedNumberLengthValidator()
+            .bind(this.customValidation),
+          this.customValidation.conditionalValidation(
+            () =>
+              this.selectedSupportMethod === SupportMethod.ETransfer &&
+              (this.supportDeliveryForm.get('notificationPreference').value ===
+                'Mobile' ||
+                this.supportDeliveryForm.get('notificationPreference').value ===
+                  'Email & Mobile'),
+            this.customValidation.whitespaceValidator()
+          )
+        ]
+      ]
     });
+  }
+
+  getExistingPreference() {
+    const pref = [];
+    if (this.stepSupportsService?.supportDelivery?.notificationEmail)
+      pref.push('Email');
+    if (this.stepSupportsService?.supportDelivery?.notificationMobile)
+      pref.push('Mobile');
+    return pref.join(' & ');
   }
 
   createSupplierDetailsForm() {
@@ -176,7 +242,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
       console.log(this.stepSupportsService.supportDelivery);
-      this.stepSupportsService.saveAsDraft();
+      this.stepSupportsService.saveAsDraft(this.selectedSupportMethod);
       const stateIndicator = { action: 'save' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
         state: stateIndicator
@@ -191,7 +257,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
       console.log(this.stepSupportsService.supportDelivery);
-      this.stepSupportsService.editDraft();
+      this.stepSupportsService.editDraft(this.selectedSupportMethod);
       const stateIndicator = { action: 'edit' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
         state: stateIndicator
@@ -214,6 +280,19 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   setSupportMethod(method: SupportMethod) {
     this.selectedSupportMethod = method;
+
+    if (method === SupportMethod.Referral) {
+      this.supportDeliveryForm.get('notificationPreference').patchValue('');
+      this.supportDeliveryForm.get('notificationEmail').patchValue('');
+      this.supportDeliveryForm.get('notificationConfirmEmail').patchValue('');
+      this.supportDeliveryForm.get('notificationMobile').patchValue('');
+    }
+    if (method === SupportMethod.ETransfer) {
+      this.supportDeliveryForm.get('issuedTo').patchValue('');
+      this.supportDeliveryForm.get('name').patchValue('');
+      this.supportDeliveryForm.get('supplier').patchValue('');
+      this.supportDeliveryForm.get('supplierNote').patchValue('');
+    }
   }
 
   private billetingSupplierForm(): FormGroup {

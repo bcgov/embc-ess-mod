@@ -13,7 +13,8 @@ import {
   ClothingSupport,
   Referral,
   Support,
-  SupportMethod
+  SupportMethod,
+  Interac
 } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
@@ -30,6 +31,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
+import { EtransferFeaturesService } from '../../../../core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-review-support',
@@ -53,6 +55,7 @@ export class ReviewSupportComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
+    public featureService: EtransferFeaturesService,
     private downloadService: DownloadService
   ) {}
 
@@ -221,6 +224,24 @@ export class ReviewSupportComponent implements OnInit {
     return support.supportDelivery as Referral;
   }
 
+  getInterac(support: Support): Interac {
+    return support.supportDelivery as Interac;
+  }
+
+  getNotificationPreference(interac: Interac) {
+    const types = [];
+    if (interac.notificationEmail) types.push('Email');
+    if (interac.notificationMobile) types.push('Mobile');
+    return types.join(' & ');
+  }
+
+  includesEtranfer() {
+    return (
+      this.draftSupports.filter((s) => s.method === SupportMethod.ETransfer)
+        .length > 0
+    );
+  }
+
   /**
    * Returns the current support Address as a AddressModel
    *
@@ -296,7 +317,8 @@ export class ReviewSupportComponent implements OnInit {
         this.dialog
           .open(DialogComponent, {
             data: {
-              component: ProcessSupportsDialogComponent
+              component: ProcessSupportsDialogComponent,
+              includesEtranfer: this.includesEtranfer()
             },
             height: '400px',
             width: '630px'
