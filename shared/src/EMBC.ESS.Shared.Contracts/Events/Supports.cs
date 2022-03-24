@@ -126,7 +126,10 @@ namespace EMBC.ESS.Shared.Contracts.Events
     {
         Active,
         Expired,
-        Void
+        Void,
+        PendingApproval,
+        Approved,
+        UnderReview
     }
 
     public enum SupportVoidReason

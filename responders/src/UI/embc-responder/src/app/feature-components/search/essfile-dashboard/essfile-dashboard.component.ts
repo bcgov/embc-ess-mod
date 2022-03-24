@@ -53,6 +53,7 @@ export class EssfileDashboardComponent implements OnInit {
     );
     this.evacueeSearchService.getCategoryList();
     this.evacueeSearchService.getSubCategoryList();
+    this.evacueeSearchService.getStatusList();
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog(globalConst.profileLinkMessage)
         .afterClosed()

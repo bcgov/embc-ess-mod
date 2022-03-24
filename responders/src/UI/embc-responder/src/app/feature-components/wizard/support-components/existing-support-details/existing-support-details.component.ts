@@ -11,7 +11,9 @@ import {
   LodgingHotelSupport,
   LodgingBilletingSupport,
   LodgingGroupSupport,
-  Referral
+  Referral,
+  Interac,
+  Code
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -149,6 +151,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
 
   get referral(): Referral {
     return this.selectedSupport?.supportDelivery as Referral;
+  }
+
+  get interac(): Interac {
+    return this.selectedSupport?.supportDelivery as Interac;
   }
 
   get supplierAddress(): AddressModel {
@@ -322,5 +328,23 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/details'], {
       state: { action: 'edit' }
     });
+  }
+
+  cancelEtransfer(): void {}
+
+  getStatusTextToDisplay(enumToText: string): string {
+    console.log(enumToText);
+    console.log(this.stepSupportsService.supportStatus);
+    return this.stepSupportsService.supportStatus.filter(
+      (statusValue) => statusValue.value === enumToText
+    )[0]?.description;
+  }
+
+  getMethodTextToDisplay(enumToText: string): string {
+    console.log(enumToText);
+    console.log(this.stepSupportsService.supportMethods);
+    return this.stepSupportsService.supportMethods.filter(
+      (method) => method.value === enumToText
+    )[0]?.description;
   }
 }

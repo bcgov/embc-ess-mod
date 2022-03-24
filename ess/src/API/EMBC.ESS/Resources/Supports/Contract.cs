@@ -162,7 +162,10 @@ namespace EMBC.ESS.Resources.Supports
     {
         Active = 1,
         Expired = 174360000,
-        Void = 2
+        Void = 2,
+        PendingApproval = 174360001,
+        Approved = 174360002,
+        UnderReview = 174360005
     }
 
     public enum SupportVoidReason
