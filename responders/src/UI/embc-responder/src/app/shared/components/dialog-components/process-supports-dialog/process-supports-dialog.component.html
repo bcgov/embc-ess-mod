@@ -9,7 +9,7 @@
     </p>
   </div>
 </div>
-<form [formGroup]="addEvacForm">
+<form [formGroup]="addEvacForm" *ngIf="!includesEtranfer">
   <div class="row checkbox-section">
     <div class="col-md-12">
       <mat-checkbox

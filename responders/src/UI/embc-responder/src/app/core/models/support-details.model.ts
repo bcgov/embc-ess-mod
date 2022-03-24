@@ -1,4 +1,4 @@
-import { EvacuationFileHouseholdMember } from '../api/models';
+import { EvacuationFileHouseholdMember, SupportMethod } from '../api/models';
 import { Community } from '../services/locations.service';
 import { SupplierListItemModel } from './supplier-list-item.model';
 
@@ -30,6 +30,9 @@ export class SupportDeliveryModel {
   supplier: SupplierListItemModel;
   supplierNote: string;
   details?: SupplierDetailsModel;
+  method: SupportMethod;
+  notificationEmail?: string;
+  notificationMobile?: string;
 }
 
 export class SupplierDetailsModel {

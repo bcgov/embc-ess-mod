@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReviewSupportService } from 'src/app/feature-components/wizard/support-components/review-support/review-support.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-process-supports-dialog',
@@ -11,13 +12,16 @@ import { ReviewSupportService } from 'src/app/feature-components/wizard/support-
 export class ProcessSupportsDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();
   addEvacForm: FormGroup;
+  includesEtranfer = false;
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
     private reviewSupportService: ReviewSupportService
   ) {}
 
   ngOnInit(): void {
+    this.includesEtranfer = this.data.includesEtranfer;
     this.createAddEvacueeSummForm();
   }
 
@@ -29,6 +33,8 @@ export class ProcessSupportsDialogComponent implements OnInit {
     if (this.addEvacForm.get('addSummary').value === undefined) {
       this.reviewSupportService.includeEvacueeSummary = false;
     }
+    if (this.includesEtranfer)
+      this.reviewSupportService.includeEvacueeSummary = true;
     this.outputEvent.emit('confirm');
   }
 

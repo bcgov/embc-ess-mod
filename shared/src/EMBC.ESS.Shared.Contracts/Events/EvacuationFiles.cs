@@ -29,6 +29,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class TeamMember
     {
         public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string DisplayName { get; set; }
         public string TeamId { get; set; }
         public string TeamName { get; set; }
