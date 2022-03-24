@@ -8,6 +8,7 @@ import { LocationService } from './location.service';
 import { SecurityQuestionsService } from './security-questions.service';
 import { TimeoutService } from './timeout.service';
 import * as globalConst from './globalConstants';
+import { SupportsService } from './supports.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class BootstrapService {
     private securityQuestionsService: SecurityQuestionsService,
     private timeoutService: TimeoutService,
     private outageService: OutageService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private supportsService: SupportsService
   ) {}
 
   public async init(): Promise<void> {
@@ -42,6 +44,7 @@ export class BootstrapService {
         //load metadata lists
         await this.locationService.loadStaticLocationLists();
         await this.securityQuestionsService.loadSecurityQuesList();
+        await this.supportsService.getSupportStatusList();
         this.locationService.loadSupportCodes();
         //configure and load oauth module configuration
         this.oauthService.configure(this.configService.getOAuthConfig());
