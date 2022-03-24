@@ -15,7 +15,11 @@ import {
   Interac
 } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
-import { RegistrationsService, TasksService } from 'src/app/core/api/services';
+import {
+  ConfigurationService,
+  RegistrationsService,
+  TasksService
+} from 'src/app/core/api/services';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
@@ -35,11 +39,14 @@ import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
+  private supportStatusVal: Code[] = [];
+  private supportMethodVal: Code[] = [];
   private currentNeedsAssessmentVal: NeedsAssessment;
   private existingSupportListVal: BehaviorSubject<Support[]> =
     new BehaviorSubject<Support[]>([]);
@@ -64,7 +71,9 @@ export class StepSupportsService {
     private registrationsService: RegistrationsService,
     private dateConversionService: DateConversionService,
     private featureService: EtransferFeaturesService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private configService: ConfigurationService,
+    private alertService: AlertService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -105,6 +114,22 @@ export class StepSupportsService {
 
   get supportSubCategory() {
     return this.supportSubCategoryVal;
+  }
+
+  get supportStatus() {
+    return this.supportStatusVal;
+  }
+
+  set supportStatus(supportStatusVal: Code[]) {
+    this.supportStatusVal = supportStatusVal;
+  }
+
+  get supportMethods() {
+    return this.supportMethodVal;
+  }
+
+  set supportMethods(supportMethodVal: Code[]) {
+    this.supportMethodVal = supportMethodVal;
   }
 
   set currentNeedsAssessment(currentNeedsAssessmentVal: NeedsAssessment) {
@@ -190,6 +215,44 @@ export class StepSupportsService {
     //       );
     //     }
     //   );
+  }
+
+  public getSupportStatusList(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportStatus' })
+      .subscribe({
+        next: (supStatus: Code[]) => {
+          this.supportStatus = supStatus.filter(
+            (status) => status.description !== null
+          );
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      });
+  }
+
+  public getSupportMethodList(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportMethod' })
+      .subscribe({
+        next: (methods: Code[]) => {
+          this.supportMethods = methods.filter(
+            (method) => method.description !== null
+          );
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportCategoryListError
+          );
+        }
+      });
   }
 
   public getSupportTypeList(): Code[] {
