@@ -504,6 +504,8 @@ export const processSupportDraftsError =
   'Unable to process draft supports at this time. Please try again later';
 export const supportCategoryListError =
   'Unable to retrieve support categories at this time. Please try again later';
+export const supportStatusListError =
+  'Unable to retrieve support statuses at this time. Please try again later';
 export const securityPhraseError =
   'Unable to retrieve security phrase at this time. Please try again later';
 export const verifySecurityPhraseError =

@@ -32,16 +32,40 @@
   text-align: right;
 }
 
+.support-draft {
+  color: #F48605;
+}
+
 .support-active {
   color: #3c9d0f;
+}
+
+.support-expired {
+  color: red;
 }
 
 .support-void {
   color: #696969;
 }
 
-.support-expired {
-  color: red;
+.support-pending-approval {
+  color: #1EAEAA;
+}
+
+.support-under-review {
+  color: #1EAEAA;
+}
+
+.support-approved {
+  color: #1F00B5;
+}
+
+.support-paid {
+  color: #169BD5;
+}
+
+.support-cancelled {
+  color: #DB1087;
 }
 
 .support-card {
