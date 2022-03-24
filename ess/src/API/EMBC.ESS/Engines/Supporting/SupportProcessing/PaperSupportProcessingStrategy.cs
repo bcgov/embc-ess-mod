@@ -52,7 +52,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             await Task.CompletedTask;
             //validate only paper referrals were passed in the command
-            var nonePaperReferrals = r.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && r.ManualReferralId == null);
+            var nonePaperReferrals = r.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && string.IsNullOrEmpty(r.ManualReferralId));
             if (nonePaperReferrals.Any())
             {
                 return new PaperSupportsValidationResponse
