@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.PdfGenerator;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +58,7 @@ body>
             var tasks = Enumerable.Range(0, 50).Select(i =>
             {
                 var generator = services.GetRequiredService<IPdfGenerator>();
-                return generator.Generate(template());
+                return generator.Generate(Encoding.UTF8.GetBytes(template()));
             });
             await Task.WhenAll(tasks.ToArray());
             //for (int i = 0; i < 50; i++)

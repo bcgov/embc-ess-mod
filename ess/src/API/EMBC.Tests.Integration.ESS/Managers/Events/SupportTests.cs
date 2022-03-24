@@ -276,7 +276,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var supports = new Support[]
             {
                 new IncidentalsSupport() { SupportDelivery = new Referral { ManualReferralId = $"{TestData.TestPrefix}-paperreferral" } },
-                new IncidentalsSupport()
+                new IncidentalsSupport(){ SupportDelivery = new Referral() }
             };
 
             await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand

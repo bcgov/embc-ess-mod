@@ -6,6 +6,7 @@ import {
   FoodGroceriesSupport,
   FoodRestaurantSupport,
   IncidentalsSupport,
+  Interac,
   LodgingBilletingSupport,
   LodgingGroupSupport,
   LodgingHotelSupport,
@@ -13,6 +14,7 @@ import {
   ReferralPrintRequestResponse,
   Support,
   SupportCategory,
+  SupportMethod,
   SupportReprintReason,
   SupportSubCategory,
   SupportVoidReason,
@@ -106,14 +108,15 @@ export class ExistingSupportDetailsService {
       });
 
     const referralDelivery = selectedSupport.supportDelivery as Referral;
-    const name = referralDelivery.issuedToPersonName.split(',');
-    const issuedToVal = needsAssessmentForSupport.householdMembers.find(
-      (member) => {
-        if (member.lastName === name[0] && member.firstName === name[1]) {
-          return member;
-        }
-      }
-    );
+    const name = referralDelivery.issuedToPersonName?.split(',');
+    const issuedToVal = name
+      ? needsAssessmentForSupport.householdMembers.find((member) => {
+          if (member.lastName === name[0] && member.firstName === name[1]) {
+            return member;
+          }
+        })
+      : null;
+
     const supplierValue = this.stepSupportsService.supplierList.find(
       (supplier) => supplier.id === referralDelivery.supplierId
     );
@@ -133,7 +136,7 @@ export class ExistingSupportDetailsService {
     this.stepSupportsService.supportDetails = {
       externalReferenceId: (
         selectedSupport.supportDelivery as Referral
-      ).manualReferralId.substr(1),
+      ).manualReferralId?.substr(1),
       issuedBy: selectedSupport.issuedBy,
       issuedOn: selectedSupport.issuedOn,
       fromDate: selectedSupport.from,
@@ -152,13 +155,21 @@ export class ExistingSupportDetailsService {
       referral: this.createReferral(selectedSupport)
     };
 
+    let interac: Interac;
+    if (selectedSupport.method === SupportMethod.ETransfer) {
+      interac = selectedSupport.supportDelivery as Interac;
+    }
+
     this.stepSupportsService.supportDelivery = {
       issuedTo: issuedToVal !== null ? issuedToVal : null,
       name:
         issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
       supplier: supplierValue,
       supplierNote: referralDelivery.supplierNotes,
-      details: this.createDeliveryDetails(selectedSupport)
+      details: this.createDeliveryDetails(selectedSupport),
+      method: selectedSupport.method,
+      notificationEmail: interac?.notificationEmail,
+      notificationMobile: interac?.notificationMobile
     };
   }
 
