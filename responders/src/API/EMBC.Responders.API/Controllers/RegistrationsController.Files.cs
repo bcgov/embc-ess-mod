@@ -315,10 +315,10 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string TaskNumber { get; set; } = null!;
 
-        public string? CommunityCode { get; set; } = null!;
+        public string? CommunityCode { get; set; }
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
-        public string Status { get; set; } = null!;
+        public string? Status { get; set; }
         public IEnumerable<EvacuationFileTaskFeature> Features { get; set; } = Array.Empty<EvacuationFileTaskFeature>();
     }
 

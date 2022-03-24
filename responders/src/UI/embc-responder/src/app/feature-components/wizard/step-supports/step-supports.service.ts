@@ -11,7 +11,8 @@ import {
   SupportStatus,
   SupportMethod,
   SupportCategory,
-  EvacuationFile
+  EvacuationFile,
+  Interac
 } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
 import { RegistrationsService, TasksService } from 'src/app/core/api/services';
@@ -253,34 +254,42 @@ export class StepSupportsService {
     });
   }
 
-  public editDraft() {
+  public editDraft(method: SupportMethod) {
     this.referralService.updateDraftSupports(this.selectedSupportDetail);
-    this.saveAsDraft();
+    this.saveAsDraft(method);
   }
 
-  public saveAsDraft() {
+  public saveAsDraft(method: SupportMethod) {
     const members: Array<string> = this.supportDetails.members.map((value) => {
       return value.id;
     });
 
-    const referral: Referral = {
-      manualReferralId:
-        this.supportDetails.externalReferenceId !== undefined
-          ? 'R' + this.supportDetails.externalReferenceId
-          : '',
-      issuedToPersonName:
-        this.supportDelivery.issuedTo !== 'Someone else'
-          ? this.supportDelivery.issuedTo.lastName +
-            ',' +
-            this.supportDelivery.issuedTo.firstName
-          : this.supportDelivery.name,
-      supplierAddress: this.supportDelivery.supplier.address,
-      supplierId: this.supportDelivery.supplier.id,
-      supplierName: this.supportDelivery.supplier.name,
-      supplierNotes: this.supportDelivery.supplierNote,
-      method: SupportMethod.Referral
-    };
-
+    const referral: Referral | Interac =
+      method === SupportMethod.Referral
+        ? {
+            manualReferralId:
+              this.supportDetails.externalReferenceId !== undefined
+                ? 'R' + this.supportDetails.externalReferenceId
+                : '',
+            issuedToPersonName:
+              this.supportDelivery.issuedTo !== 'Someone else'
+                ? this.supportDelivery.issuedTo.lastName +
+                  ',' +
+                  this.supportDelivery.issuedTo.firstName
+                : this.supportDelivery.name,
+            supplierAddress: this.supportDelivery.supplier.address,
+            supplierId: this.supportDelivery.supplier.id,
+            supplierName: this.supportDelivery.supplier.name,
+            supplierNotes: this.supportDelivery.supplierNote,
+            method: SupportMethod.Referral
+          }
+        : {
+            method: SupportMethod.ETransfer,
+            notificationEmail: this.supportDelivery.notificationEmail,
+            notificationMobile: this.supportDelivery.notificationMobile,
+            receivingRegistrantId:
+              this.featureService?.selectedEvacueeInContext?.id
+          };
     const support: Support = {
       issuedBy: this.supportDetails.issuedBy,
       issuedOn: this.supportDetails.issuedOn,
@@ -296,7 +305,7 @@ export class StepSupportsService {
         this.supportDetails.toTime
       ),
       category: null,
-      method: SupportMethod.Referral,
+      method,
       subCategory: null,
       supportDelivery: referral
     };

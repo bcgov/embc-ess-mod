@@ -1,4 +1,4 @@
-<form [formGroup]="etransferDeliveryForm">
+<form [formGroup]="supportDeliveryForm">
   <div class="row">
     <div class="col-md-12">
       <p class="question-heading">e-Transfer Recipient</p>
@@ -7,8 +7,8 @@
   <div class="row">
     <div class="col-md-4">
       <p>
-        {{ etransferDeliveryFormControl?.recipientLastName.value }},
-        {{ etransferDeliveryFormControl?.recipientFirstName.value }}
+        {{ supportDeliveryFormControl?.recipientLastName.value }},
+        {{ supportDeliveryFormControl?.recipientFirstName.value }}
       </p>
     </div>
   </div>
@@ -28,7 +28,7 @@
           (selectionChange)="preferenceSelect($event)"
           required
         >
-          <mat-option [value]=""> Select-- </mat-option>
+          <mat-option value=""> Select-- </mat-option>
           <mat-option
             *ngFor="let preference of notificationPreferences"
             [value]="preference"
@@ -38,8 +38,8 @@
         </mat-select>
         <mat-error
           *ngIf="
-            etransferDeliveryFormControl?.notificationPreference.invalid &&
-            etransferDeliveryFormControl?.notificationPreference.hasError(
+            supportDeliveryFormControl?.notificationPreference.invalid &&
+            supportDeliveryFormControl?.notificationPreference.hasError(
               'required'
             )
           "
@@ -59,20 +59,71 @@
     <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline">
-          <mat-label>Email address</mat-label>
+          <mat-label>Email Address</mat-label>
           <input
-            formControlName="email"
-            maxlength="100"
+            formControlName="notificationEmail"
             matInput
-            placeholder=""
+            placeholder="Email Address"
           />
           <mat-error
             *ngIf="
-              etransferDeliveryFormControl?.email.invalid &&
-              etransferDeliveryFormControl?.email.hasError('required')
+              supportDeliveryFormControl.notificationEmail.invalid &&
+              supportDeliveryFormControl.notificationEmail.hasError(
+                'whitespaceError'
+              )
             "
           >
-            Required</mat-error
+            Email is required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl.notificationEmail.invalid &&
+              supportDeliveryFormControl.notificationEmail.hasError('email')
+            "
+            >Invalid email</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Email Address</mat-label>
+          <input
+            formControlName="notificationConfirmEmail"
+            matInput
+            placeholder="Confirm Email Address"
+            [errorStateMatcher]="emailMatcher"
+          />
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl.notificationConfirmEmail.invalid &&
+              supportDeliveryFormControl.notificationConfirmEmail.hasError(
+                'whitespaceError'
+              )
+            "
+          >
+            Confirm Email is required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl.notificationConfirmEmail.invalid &&
+              supportDeliveryFormControl.notificationConfirmEmail.hasError(
+                'email'
+              )
+            "
+          >
+            Invalid email</mat-error
+          >
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl?.notificationConfirmEmail?.parent?.hasError(
+                'emailMatch'
+              )
+            "
+          >
+            Email address mismatch</mat-error
           >
         </mat-form-field>
       </div>
@@ -85,23 +136,36 @@
         <p class="question-heading requiredField">Mobile Number (Canadian)</p>
       </div>
     </div>
+
     <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline">
           <mat-label>Mobile Number</mat-label>
           <input
-            formControlName="mobile"
-            maxlength="100"
+            formControlName="notificationMobile"
             matInput
-            placeholder=""
+            placeholder="Mobile Number"
+            [textMask]="{ mask: phoneMask, keepCharPositions: true }"
           />
           <mat-error
             *ngIf="
-              etransferDeliveryFormControl?.email.invalid &&
-              etransferDeliveryFormControl?.email.hasError('required')
+              supportDeliveryFormControl.notificationMobile.invalid &&
+              supportDeliveryFormControl.notificationMobile.hasError(
+                'whitespaceError'
+              )
             "
           >
-            Required</mat-error
+            Mobile Number is required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl.notificationMobile.invalid &&
+              supportDeliveryFormControl.notificationMobile.hasError(
+                'incorrectLength'
+              )
+            "
+          >
+            Mobile number must have 10 digits</mat-error
           >
         </mat-form-field>
       </div>
