@@ -45,12 +45,19 @@
             <div class="col-md-1">
               <p
                 [ngClass]="{
+                  'support-draft': support?.status === 'Draft',
                   'support-active': support?.status === 'Active',
+                  'support-expired': support?.status === 'Expired',
                   'support-void': support?.status === 'Void',
-                  'support-expired': support?.status === 'Expired'
+                  'support-pending-approval':
+                    support?.status === 'PendingApproval',
+                  'support-under-review': support?.status === 'UnderReview',
+                  'support-approved': support?.status === 'Approved',
+                  'support-paid': support?.status === 'Paid',
+                  'support-cancelled': support?.status === 'Cancelled'
                 }"
               >
-                {{ support?.status }}
+                {{ getStatusDescription(support?.status) }}
               </p>
             </div>
             <div class="col">
@@ -61,7 +68,13 @@
                 "
                 class="bold supplier-align"
               >
-                {{ getReferral(support)?.supplierName }}
+                {{
+                  getReferral(support)?.method === supportMethod.Referral
+                    ? getReferral(support)?.supplierName
+                    : getReferral(support)?.method === supportMethod.ETransfer
+                    ? 'e-Transfer'
+                    : ''
+                }}
               </p>
 
               <p

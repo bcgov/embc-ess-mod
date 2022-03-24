@@ -14,14 +14,18 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   ClothingSupport,
+  Code,
   FoodGroceriesSupport,
   FoodRestaurantSupport,
   IncidentalsSupport,
+  Interac,
   LodgingBilletingSupport,
   LodgingGroupSupport,
   LodgingHotelSupport,
   Referral,
   Support,
+  SupportMethod,
+  SupportStatus,
   TransportationOtherSupport,
   TransportationTaxiSupport
 } from 'src/app/core/api/models';
@@ -44,6 +48,8 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   supports$: Observable<Support[]>;
   essFile: EvacuationFileModel;
   filtersToLoad: TableFilterModel;
+  supportMethod = SupportMethod;
+  supportStatus: Code[] = [];
 
   constructor(
     private router: Router,
@@ -70,6 +76,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     this.supports.paginator = this.paginator;
     this.supports$ = this.supports.connect();
     this.filtersToLoad = this.essFileSupportsService.load();
+    this.supportStatus = this.evacueeSearchService.supportStatus;
   }
 
   ngAfterViewInit(): void {
@@ -96,6 +103,10 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getStatusDescription(status: SupportStatus) {
+    return this.supportStatus?.find((s) => s.value === status)?.description;
+  }
+
   getExternalReferralId(element: Support): string {
     return (element.supportDelivery as Referral).manualReferralId;
   }
@@ -117,11 +128,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   supportFilterPredicate = (data: any, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'status') {
+      //Two statuses have the same description, but different values
+      //filter workaround so that the description selected can include multiple status values with the same description
+      const possibleValues = this.supportStatus
+        ?.filter((s) => s.description === searchString.value)
+        .map((a) => a.value.trim().toLowerCase());
       if (
-        data.status
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        possibleValues.length === 0 ||
+        possibleValues.includes(data.status.trim().toLowerCase())
       ) {
         return true;
       }

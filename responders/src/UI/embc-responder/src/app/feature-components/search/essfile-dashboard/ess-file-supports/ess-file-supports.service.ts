@@ -31,7 +31,12 @@ export class EssFileSupportsService {
         {
           type: 'status',
           label: this.defaultStatus,
-          values: this.statusList()
+          values: this.evacueeSearchService.supportStatus?.filter(
+            (category, index, self) =>
+              category.description &&
+              self.findIndex((s) => s.description === category.description) ===
+                index
+          )
         }
       ]
     };
