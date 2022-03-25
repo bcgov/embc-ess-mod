@@ -43,6 +43,7 @@ namespace EMBC.ESS.Resources.Print
         public string Comments { get; set; }
         public IEnumerable<string> SupportIds { get; set; }
         public string RequestingUserId { get; set; }
+        public string Title { get; set; }
     }
 
 #pragma warning disable CA1008 // Enums should have zero value

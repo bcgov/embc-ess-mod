@@ -84,7 +84,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             await Task.CompletedTask;
             //verify no paper supports included
-            var paperReferrals = r.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && r.ManualReferralId != null)
+            var paperReferrals = r.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral r && !string.IsNullOrEmpty(r.ManualReferralId))
                 .Select(r => ((Shared.Contracts.Events.Referral)r.SupportDelivery).ManualReferralId)
                 .ToArray();
             if (paperReferrals.Any())

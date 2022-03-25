@@ -10,6 +10,7 @@ namespace EMBC.ESS.Resources.Print
         {
             CreateMap<era_referralprint, ReferralPrintRequest>()
              .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_referralprintid))
+             .ForMember(d => d.Title, opts => opts.MapFrom(s => s.era_name))
              .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_ESSFileId.era_name))
              .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
              .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_type))

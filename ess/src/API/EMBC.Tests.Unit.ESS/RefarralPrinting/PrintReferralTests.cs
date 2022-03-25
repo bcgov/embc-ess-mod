@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.Utilities.Extensions;
 using Shouldly;
 using Xunit;
 
@@ -17,8 +18,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 1, false);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfFile.html", content);
@@ -29,8 +31,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 5, false);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsFile.html", content);
@@ -41,8 +44,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 1, true);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfWithSummaryFile.html", content);
@@ -53,12 +57,32 @@ namespace EMBC.Tests.Unit.ESS.Prints
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 10, true);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsWithSummaryFile.html", content);
         }
+
+        [Fact]
+        public void MultipleHtmlGenerationLoadTest()
+        {
+            Parallel.For(0, 10, new ParallelOptions { MaxDegreeOfParallelism = 10 }, i =>
+             {
+                 var requestingUser = GeneratePrintRequestingUser();
+                 var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
+                 var title = $"supportstest-{i}";
+                 ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
+             });
+        }
+
+        private PrintRequestingUser GeneratePrintRequestingUser() =>
+            new Faker<PrintRequestingUser>()
+                .RuleFor(o => o.FirstName, f => f.Person.FirstName)
+                .RuleFor(o => o.LastName, f => f.Person.LastName)
+                .RuleFor(o => o.Id, f => f.Random.Number(1000, 9999).ToString())
+            ;
 
         private IEnumerable<PrintReferral> GeneratePrintReferral(PrintRequestingUser requestingUser, int numberOfReferrals, bool displayWatermark) =>
             Enumerable.Range(0, numberOfReferrals).Select(i =>

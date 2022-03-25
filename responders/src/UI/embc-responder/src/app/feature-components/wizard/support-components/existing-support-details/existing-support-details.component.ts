@@ -244,15 +244,29 @@ export class ExistingSupportDetailsComponent implements OnInit {
               )
               .subscribe({
                 next: (response) => {
-                  const blob = new Blob([response], { type: response.type });
-                  this.downloadService.downloadFile(
-                    window,
-                    blob,
-                    `support-${
-                      this.selectedSupport.id
-                    }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
-                  );
-                  this.isLoading = !this.isLoading;
+                  response
+                    .text()
+                    .then((text) => {
+                      const printWindow = document.createElement('iframe');
+                      printWindow.style.display = 'none';
+                      document.body.appendChild(printWindow);
+                      printWindow.contentDocument.write(text);
+                      printWindow.contentWindow.print();
+                      document.body.removeChild(printWindow);
+
+                      // const blob = new Blob([response], { type: response.type });
+                      // this.downloadService.downloadFile(
+                      //   window,
+                      //   blob,
+                      //   `support-${
+                      //     this.selectedSupport.id
+                      //   }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
+                      // );
+                      this.isLoading = !this.isLoading;
+                    })
+                    .catch((error) => {
+                      throw error;
+                    });
                 },
                 error: (error) => {
                   this.isLoading = !this.isLoading;
