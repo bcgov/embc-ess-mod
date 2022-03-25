@@ -61,6 +61,7 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.stepSupportsService.getSupportStatusList();
     this.loadSupportList();
     this.filtersToLoad = this.viewSupportsService.load();
     this.supportListEvent.subscribe((values) => {

@@ -50,7 +50,11 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
         Amount
       </th>
-      <td mat-cell *matCellDef="let element">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [class.warning]="checkExceedsRate(element)"
+      >
         {{
           element?.totalAmount !== '' && element?.totalAmount !== undefined
             ? '$' + [element?.totalAmount | number: '1.2-2':'en-CA']
@@ -68,11 +72,16 @@
           active: element.status === 'Active',
           draft: element.status === 'Draft',
           void: element.status === 'Void',
-          expired: element.status === 'Expired'
+          expired: element.status === 'Expired',
+          'pending-approval': element?.status === 'PendingApproval',
+          'under-review': element?.status === 'UnderReview',
+          approved: element?.status === 'Approved',
+          paid: element?.status === 'Paid',
+          cancelled: element?.status === 'Cancelled'
         }"
         *matCellDef="let element"
       >
-        {{ element?.status }}
+        {{ getStatusDescription(element?.status) }}
       </td>
     </ng-container>
 
