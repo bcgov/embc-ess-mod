@@ -88,3 +88,5 @@ export const bcscInviteError =
   'Unable to send BC Services Card invitation at this time. Please try again later';
 export const supportCategoryListError =
   'Unable to retrieve support categories at this time. Please try again later';
+export const supportStatusListError =
+  'Unable to retrieve support status at this time. Please try again later';
