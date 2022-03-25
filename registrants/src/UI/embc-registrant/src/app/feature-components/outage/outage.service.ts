@@ -187,7 +187,7 @@ export class OutageService {
       )
       .subscribe({
         next: (response) => {
-          console.log(response);
+          // console.log(response);
           // this.outageInfo = response;
 
           if (response !== null) {

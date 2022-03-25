@@ -32,6 +32,7 @@
           <p *ngIf="element.subCategory === 'Lodging_Group'">
             {{ getGroupReferral(element).facilityName }}
           </p>
+          <p *ngIf="element.method === 'ETransfer'">e-Transfer</p>
         </td>
       </ng-container>
 
@@ -106,10 +107,16 @@
                 [ngClass]="{
                   'support-active': element?.status === 'Active',
                   'support-void': element?.status === 'Void',
-                  'support-expired': element?.status === 'Expired'
+                  'support-expired': element?.status === 'Expired',
+                  'support-under-review': element?.status === 'UnderReview',
+                  'support-pending-approval':
+                    element?.status === 'PendingApproval',
+                  'support-cancel': element?.status === 'Cancelled',
+                  'support-paid': element?.status === 'Paid',
+                  'support-approved': element?.status === 'Approved'
                 }"
               >
-                {{ element.status }}
+                {{ getStatusTextToDisplay(element.status) }}
               </div>
 
               <div class="col-md-5"><b>Support Provided to</b></div>
@@ -119,7 +126,11 @@
                 </p>
               </div>
             </div>
-            <div class="row info-detail" style="width: 45%; padding-top: 15px">
+            <div
+              *ngIf="element.method === 'Referral'"
+              class="row info-detail"
+              style="width: 45%; padding-top: 15px"
+            >
               <div class="col-md-5"><b>Support Provider</b></div>
               <div
                 class="col-md-5"
@@ -154,6 +165,28 @@
 
               <!-- <div class="col-md-5"><b>Support Issued By</b></div>
               <div class="col-md-5">{{ element.issuingMemberTeamName }}</div> -->
+            </div>
+
+            <div
+              *ngIf="element.method === 'ETransfer'"
+              class="row info-detail"
+              style="width: 50%; padding-top: 15px"
+            >
+              <div class="col-md-5"><b>e-Transfer Recipient</b></div>
+              <div class="col-md-5">
+                <p>{{ element.issuedToPersonName }}</p>
+              </div>
+
+              <div class="col-md-5"><b>e-Transfer Notification</b></div>
+              <div class="col-md-5">
+                <p style="margin: 0px">{{ element.notificationEmail }}</p>
+                <p>{{ element.nofificationMobile }}</p>
+              </div>
+
+              <div class="col-md-5"><b>e-Transfer Security Answer</b></div>
+              <div class="col-md-5">
+                <p></p>
+              </div>
             </div>
           </div>
         </td>
