@@ -1,20 +1,4 @@
-﻿// -------------------------------------------------------------------------
-//  Copyright © 2021 Province of British Columbia
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  https://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// -------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Events;
-using EMBC.ESS.Utilities.Extensions;
+using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -276,7 +260,7 @@ namespace EMBC.Responders.API.Controllers
         public string? Id { get; set; } = null!;
         public string? ExternalReferenceId { get; set; }
 
-        public string? CompletedOn { get; set; }
+        public DateTime? CompletedOn { get; set; }
 
         public string? CompletedBy { get; set; }
         public bool? IsPaper { get; set; }
@@ -331,9 +315,17 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string TaskNumber { get; set; } = null!;
 
-        public string? CommunityCode { get; set; } = null!;
+        public string? CommunityCode { get; set; }
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
+        public string? Status { get; set; }
+        public IEnumerable<EvacuationFileTaskFeature> Features { get; set; } = Array.Empty<EvacuationFileTaskFeature>();
+    }
+
+    public class EvacuationFileTaskFeature
+    {
+        public string Name { get; set; }
+        public bool Enabled { get; set; }
     }
 
     /// <summary>
@@ -482,7 +474,7 @@ namespace EMBC.Responders.API.Controllers
         public HouseholdMemberType Type { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public bool IsHouseholdMember => !IsPrimaryRegistrant;
-        public bool IsUnder19 { get; set; }
+        public bool IsMinor { get; set; }
         public bool? IsRestricted { get; set; }
         public bool? IsVerified { get; set; }
     }
@@ -559,13 +551,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.PrimaryRegistrantFirstName, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantLastName, opts => opts.Ignore())
-                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask
-                {
-                    TaskNumber = s.RelatedTask.Id,
-                    CommunityCode = s.RelatedTask.CommunityCode,
-                    From = s.RelatedTask.StartDate,
-                    To = s.RelatedTask.EndDate
-                }))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask))
                 .AfterMap((s, d) =>
                 {
                     var primaryRegistrant = s.HouseholdMembers.SingleOrDefault(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == s.PrimaryRegistrantId);
@@ -573,6 +559,13 @@ namespace EMBC.Responders.API.Controllers
                     d.PrimaryRegistrantFirstName = primaryRegistrant.FirstName;
                     d.PrimaryRegistrantLastName = primaryRegistrant.LastName;
                 })
+                ;
+
+            CreateMap<IncidentTask, EvacuationFileTask>()
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
+                .ForMember(d => d.Features, opts => opts.Ignore())
                 ;
 
             CreateMap<NeedsAssessment, EMBC.ESS.Shared.Contracts.Events.NeedsAssessment>()
@@ -587,7 +580,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.ReviewingTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.ReviewingTeamMemberDisplayName, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.DisplayName))
-                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationImpact, n => n.Content)))
+                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Events.NoteType.EvacuationImpact, n => n.Content)))
                 .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationExternalReferrals, n => n.Content)))
                 .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.PetCarePlans, n => n.Content)))
                 .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.RecoveryPlan, n => n.Content)))

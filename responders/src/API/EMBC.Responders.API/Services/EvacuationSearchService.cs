@@ -1,28 +1,11 @@
-﻿// -------------------------------------------------------------------------
-//  Copyright © 2021 Province of British Columbia
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  https://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// -------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.Responders.API.Controllers;
 using EMBC.Utilities.Messaging;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace EMBC.Responders.API.Services
 {
@@ -92,17 +75,15 @@ namespace EMBC.Responders.API.Services
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
-        private readonly IHttpContextAccessor httpContext;
+        private readonly IConfiguration configuration;
         private static EvacuationFileStatus[] tier1FileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired };
         private static EvacuationFileStatus[] tier2andAboveFileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired, EvacuationFileStatus.Completed };
 
-        private ClaimsPrincipal User => httpContext?.HttpContext?.User;
-
-        public EvacuationSearchService(IMessagingClient messagingClient, IMapper mapper, IHttpContextAccessor httpContext)
+        public EvacuationSearchService(IMessagingClient messagingClient, IMapper mapper, IConfiguration configuration)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
-            this.httpContext = httpContext;
+            this.configuration = configuration;
         }
 
         public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string externalReferenceId, MemberRole userRole)
@@ -128,7 +109,10 @@ namespace EMBC.Responders.API.Services
         {
             var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = needsAssessmentId })).Items.SingleOrDefault();
 
-            return mapper.Map<EvacuationFile>(file);
+            var mappedFile = mapper.Map<EvacuationFile>(file);
+
+            mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile);
+            return mappedFile;
         }
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByExternalReferenceId(string externalFileId)
@@ -177,6 +161,19 @@ namespace EMBC.Responders.API.Services
             });
             return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles);
         }
+
+        private IEnumerable<EvacuationFileTaskFeature> GetEvacuationFileFeatures(EvacuationFile file)
+        {
+            // temporary toggle feature for e-transfer
+            var etransferEnabled = configuration.GetValue("features:eTransferEnabled", true);
+
+            return new[]
+            {
+                new EvacuationFileTaskFeature { Name = "digital-support-referrals", Enabled = file.Task.To >= DateTime.UtcNow },
+                new EvacuationFileTaskFeature { Name = "digital-support-etransfer", Enabled = etransferEnabled && file.Task.To >= DateTime.UtcNow },
+                new EvacuationFileTaskFeature { Name = "paper-support-referrals", Enabled = file.ExternalReferenceId != null },
+            };
+        }
     }
 
     public class EvacuationSearchMapping : Profile
@@ -217,6 +214,7 @@ namespace EMBC.Responders.API.Services
               ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.LinkedRegistrantId == null ? null : s.LinkedRegistrantId))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.LinkedRegistrantId) ? HouseholdMemberType.HouseholdMember : HouseholdMemberType.Registrant))
                 .ForMember(d => d.IsMainApplicant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))

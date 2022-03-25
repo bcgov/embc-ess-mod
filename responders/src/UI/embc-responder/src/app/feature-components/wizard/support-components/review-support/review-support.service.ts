@@ -57,7 +57,7 @@ export class ReviewSupportService {
 
   savePaperSupports(
     fileId: string,
-    supportsDraft: Referral[]
+    supportsDraft: Support[]
   ): Observable<void> {
     return this.registrationService.registrationsProcessPaperReferrals({
       fileId,
@@ -87,7 +87,7 @@ export class ReviewSupportService {
               const value = {
                 ...support,
                 hostAddress: this.locationsService.getAddressModelFromAddress(
-                  (support as Referral).supplierAddress
+                  (support.supportDelivery as Referral).supplierAddress
                 )
               };
               supportModel.push(value);

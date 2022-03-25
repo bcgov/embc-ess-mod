@@ -84,13 +84,13 @@ export class LocationsService {
     const stateProvinces = this.getStateProvinceList();
 
     const addressCommunity = communities.find(
-      (comm) => comm.code === addressObject.communityCode
+      (comm) => comm.code === addressObject?.communityCode
     );
     const addressCountry = countries.find(
-      (coun) => coun.code === addressObject.countryCode
+      (coun) => coun.code === addressObject?.countryCode
     );
     const addressStateProvince = stateProvinces.find(
-      (sp) => sp.code === addressObject.stateProvinceCode
+      (sp) => sp.code === addressObject?.stateProvinceCode
     );
 
     return {

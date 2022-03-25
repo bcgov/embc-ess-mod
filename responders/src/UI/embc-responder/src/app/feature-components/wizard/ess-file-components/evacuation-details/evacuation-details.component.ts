@@ -17,7 +17,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
-import { DateConversionService } from 'src/app/core/services/dateConversion.service';
+import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Component({
@@ -77,7 +77,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         this.stepEssFileService?.selectedEssFile?.externalReferenceId;
     } else {
       this.stepEssFileService.paperESSFile =
-        this.evacueeSearchService?.paperBasedEssFile;
+        this.evacueeSearchService?.paperBasedEssFile !== 'undefined'
+          ? this.evacueeSearchService?.paperBasedEssFile
+          : '';
     }
 
     this.createEvacDetailsForm();

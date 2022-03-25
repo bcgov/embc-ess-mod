@@ -79,21 +79,21 @@ export class EditComponent implements OnInit, OnDestroy {
         this.showLoader = !this.showLoader;
         this.profileService
           .upsertProfile(this.profileDataService.createProfileDTO())
-          .subscribe(
-            (profileId) => {
+          .subscribe({
+            next: (profileId) => {
               this.showLoader = !this.showLoader;
               this.router.navigate([
                 '/verified-registration/dashboard/profile'
               ]);
             },
-            (error) => {
+            error: (error) => {
               this.showLoader = !this.showLoader;
               this.alertService.setAlert(
                 'danger',
                 globalConst.editProfileError
               );
             }
-          );
+          });
       } else if (this.parentPageName === 'needs-assessment') {
         if (this.evacuationFileDataService.essFileId === undefined) {
           this.router.navigate(
@@ -102,18 +102,18 @@ export class EditComponent implements OnInit, OnDestroy {
           );
         } else {
           this.showLoader = !this.showLoader;
-          this.evacuationFileService.updateEvacuationFile().subscribe(
-            (essFileId) => {
+          this.evacuationFileService.updateEvacuationFile().subscribe({
+            next: (essFileId) => {
               this.showLoader = !this.showLoader;
               this.router.navigate([
                 '/verified-registration/dashboard/current/' + essFileId
               ]);
             },
-            (error) => {
+            error: (error) => {
               this.showLoader = !this.showLoader;
               this.alertService.setAlert('danger', globalConst.editNeedsError);
             }
-          );
+          });
         }
       }
     }
@@ -129,8 +129,6 @@ export class EditComponent implements OnInit, OnDestroy {
       this.form,
       this.currentFlow
     );
-    console.log(this.currentFlow);
-    console.log(this.parentPageName);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {

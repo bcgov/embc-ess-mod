@@ -14,6 +14,7 @@ export class EvacueeSearchService {
   private paperBasedEssFileVal: string;
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
+  private supportStatusVal: Code[] = [];
 
   constructor(
     private cacheService: CacheService,
@@ -105,6 +106,38 @@ export class EvacueeSearchService {
           this.alertService.setAlert(
             'danger',
             globalConst.supportCategoryListError
+          );
+        }
+      });
+  }
+
+  get supportStatus(): Code[] {
+    return this.supportStatusVal.length > 0
+      ? this.supportStatusVal
+      : JSON.parse(this.cacheService.get('supportStatus'))
+      ? JSON.parse(this.cacheService.get('supportStatus'))
+      : this.getStatusList();
+  }
+
+  set supportStatus(supportStatusVal: Code[]) {
+    this.supportStatusVal = supportStatusVal;
+    this.cacheService.set('supportStatus', supportStatusVal);
+  }
+
+  public getStatusList(): void {
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportStatus' })
+      .subscribe({
+        next: (categories: Code[]) => {
+          this.supportStatus = categories.filter(
+            (category, index, self) => category.description
+          );
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportStatusListError
           );
         }
       });

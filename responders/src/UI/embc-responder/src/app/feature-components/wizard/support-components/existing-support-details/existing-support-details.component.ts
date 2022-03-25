@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  ClothingReferral,
-  FoodGroceriesReferral,
-  FoodRestaurantReferral,
-  IncidentalsReferral,
+  ClothingSupport,
+  FoodGroceriesSupport,
+  FoodRestaurantSupport,
+  IncidentalsSupport,
   Support,
-  TransportationTaxiReferral,
-  TransportationOtherReferral,
-  LodgingHotelReferral,
-  LodgingBilletingReferral,
-  LodgingGroupReferral,
-  Referral
+  TransportationTaxiSupport,
+  TransportationOtherSupport,
+  LodgingHotelSupport,
+  LodgingBilletingSupport,
+  LodgingGroupSupport,
+  Referral,
+  Interac,
+  Code
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -28,7 +30,7 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
-import { DownloadService } from 'src/app/core/services/download.service';
+import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 
 @Component({
@@ -80,10 +82,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
   checkGroceryMaxRate(): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
-      (this.selectedSupport as FoodGroceriesReferral).numberOfDays *
-      (this.selectedSupport as FoodGroceriesReferral).includedHouseholdMembers
+      (this.selectedSupport as FoodGroceriesSupport).numberOfDays *
+      (this.selectedSupport as FoodGroceriesSupport).includedHouseholdMembers
         .length;
-    return maxRate < (this.selectedSupport as FoodGroceriesReferral).totalAmount
+    return maxRate < (this.selectedSupport as FoodGroceriesSupport).totalAmount
       ? false
       : true;
   }
@@ -91,65 +93,68 @@ export class ExistingSupportDetailsComponent implements OnInit {
   checkIncidentalMaxRate(): boolean {
     const maxRate =
       globalConst.incidentals.rate *
-      (this.selectedSupport as IncidentalsReferral).includedHouseholdMembers
+      (this.selectedSupport as IncidentalsSupport).includedHouseholdMembers
         .length;
-    return maxRate < (this.selectedSupport as IncidentalsReferral).totalAmount
+    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount
       ? false
       : true;
   }
 
   checkClothingMaxRate(): boolean {
-    const rate = (this.selectedSupport as ClothingReferral)
+    const rate = (this.selectedSupport as ClothingSupport)
       .extremeWinterConditions
       ? globalConst.extremeConditions.rate
       : globalConst.normalConditions.rate;
     const maxRate =
       rate *
-      (this.selectedSupport as ClothingReferral).includedHouseholdMembers
-        .length;
-    return maxRate < (this.selectedSupport as IncidentalsReferral).totalAmount
+      (this.selectedSupport as ClothingSupport).includedHouseholdMembers.length;
+    return maxRate < (this.selectedSupport as IncidentalsSupport).totalAmount
       ? false
       : true;
   }
 
-  get groceryReferral(): FoodGroceriesReferral {
-    return this.selectedSupport as FoodGroceriesReferral;
+  get groceryReferral(): FoodGroceriesSupport {
+    return this.selectedSupport as FoodGroceriesSupport;
   }
 
-  get mealReferral(): FoodRestaurantReferral {
-    return this.selectedSupport as FoodRestaurantReferral;
+  get mealReferral(): FoodRestaurantSupport {
+    return this.selectedSupport as FoodRestaurantSupport;
   }
 
-  get taxiReferral(): TransportationTaxiReferral {
-    return this.selectedSupport as TransportationTaxiReferral;
+  get taxiReferral(): TransportationTaxiSupport {
+    return this.selectedSupport as TransportationTaxiSupport;
   }
 
-  get otherReferral(): TransportationOtherReferral {
-    return this.selectedSupport as TransportationOtherReferral;
+  get otherReferral(): TransportationOtherSupport {
+    return this.selectedSupport as TransportationOtherSupport;
   }
 
-  get hotelReferral(): LodgingHotelReferral {
-    return this.selectedSupport as LodgingHotelReferral;
+  get hotelReferral(): LodgingHotelSupport {
+    return this.selectedSupport as LodgingHotelSupport;
   }
 
-  get billetingReferral(): LodgingBilletingReferral {
-    return this.selectedSupport as LodgingBilletingReferral;
+  get billetingReferral(): LodgingBilletingSupport {
+    return this.selectedSupport as LodgingBilletingSupport;
   }
 
-  get groupReferral(): LodgingGroupReferral {
-    return this.selectedSupport as LodgingGroupReferral;
+  get groupReferral(): LodgingGroupSupport {
+    return this.selectedSupport as LodgingGroupSupport;
   }
 
-  get incidentalReferral(): IncidentalsReferral {
-    return this.selectedSupport as IncidentalsReferral;
+  get incidentalReferral(): IncidentalsSupport {
+    return this.selectedSupport as IncidentalsSupport;
   }
 
-  get clothingReferral(): ClothingReferral {
-    return this.selectedSupport as ClothingReferral;
+  get clothingReferral(): ClothingSupport {
+    return this.selectedSupport as ClothingSupport;
   }
 
   get referral(): Referral {
-    return this.selectedSupport as Referral;
+    return this.selectedSupport?.supportDelivery as Referral;
+  }
+
+  get interac(): Interac {
+    return this.selectedSupport?.supportDelivery as Interac;
   }
 
   get supplierAddress(): AddressModel {
@@ -239,15 +244,29 @@ export class ExistingSupportDetailsComponent implements OnInit {
               )
               .subscribe({
                 next: (response) => {
-                  const blob = new Blob([response], { type: response.type });
-                  this.downloadService.downloadFile(
-                    window,
-                    blob,
-                    `support-${
-                      this.selectedSupport.id
-                    }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
-                  );
-                  this.isLoading = !this.isLoading;
+                  response
+                    .text()
+                    .then((text) => {
+                      const printWindow = document.createElement('iframe');
+                      printWindow.style.display = 'none';
+                      document.body.appendChild(printWindow);
+                      printWindow.contentDocument.write(text);
+                      printWindow.contentWindow.print();
+                      document.body.removeChild(printWindow);
+
+                      // const blob = new Blob([response], { type: response.type });
+                      // this.downloadService.downloadFile(
+                      //   window,
+                      //   blob,
+                      //   `support-${
+                      //     this.selectedSupport.id
+                      //   }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
+                      // );
+                      this.isLoading = !this.isLoading;
+                    })
+                    .catch((error) => {
+                      throw error;
+                    });
                 },
                 error: (error) => {
                   this.isLoading = !this.isLoading;
@@ -309,5 +328,23 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/details'], {
       state: { action: 'edit' }
     });
+  }
+
+  cancelEtransfer(): void {}
+
+  getStatusTextToDisplay(enumToText: string): string {
+    console.log(enumToText);
+    console.log(this.stepSupportsService.supportStatus);
+    return this.stepSupportsService.supportStatus.filter(
+      (statusValue) => statusValue.value === enumToText
+    )[0]?.description;
+  }
+
+  getMethodTextToDisplay(enumToText: string): string {
+    console.log(enumToText);
+    console.log(this.stepSupportsService.supportMethods);
+    return this.stepSupportsService.supportMethods.filter(
+      (method) => method.value === enumToText
+    )[0]?.description;
   }
 }

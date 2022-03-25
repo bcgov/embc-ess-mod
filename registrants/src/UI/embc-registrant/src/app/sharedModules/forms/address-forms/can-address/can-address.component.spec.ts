@@ -8,14 +8,12 @@ describe('CanAddressComponent', () => {
   let component: CanAddressComponent;
   let fixture: ComponentFixture<CanAddressComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, MatAutocompleteModule],
-        declarations: [CanAddressComponent]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, MatAutocompleteModule],
+      declarations: [CanAddressComponent]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CanAddressComponent);

@@ -13,9 +13,9 @@
   <div class="row row-padding">
     <div class="col-md-12 needs-box">
       <div class="row">
-        <div class="col-md-8" *ngIf="referral?.externalReferenceId">
+        <div class="col-md-8" *ngIf="referral?.manualReferralId">
           <p class="question-heading">
-            Support #{{ referral?.externalReferenceId }}
+            Support #{{ referral?.manualReferralId }}
           </p>
           <div class="row">
             <div class="col-md-1">
@@ -27,15 +27,26 @@
                   'active-status': selectedSupport?.status === 'Active',
                   'void-status': selectedSupport?.status === 'Void',
                   'expired-status': selectedSupport?.status === 'Expired',
-                  'draft-status': selectedSupport?.status === 'Draft'
+                  'draft-status': selectedSupport?.status === 'Draft',
+                  'review-status': selectedSupport?.status === 'UnderReview',
+                  'pending-status':
+                    selectedSupport?.status === 'PendingApproval',
+                  'cancel-status': selectedSupport?.status === 'Cancelled',
+                  'paid-status': selectedSupport?.status === 'Paid',
+                  'approved-status': selectedSupport?.status === 'Approved'
                 }"
               >
-                {{ selectedSupport?.status }}
+                {{ getStatusTextToDisplay(selectedSupport?.status) }}
               </p>
             </div>
           </div>
 
-          <div *ngIf="selectedSupport?.status === 'Draft'">
+          <div
+            *ngIf="
+              selectedSupport?.status === 'Draft' &&
+              selectedSupport?.method === 'Referral'
+            "
+          >
             <div class="row">
               <div class="col-md-2">
                 <p class="box-text-color">Paper Support Completed On:</p>
@@ -112,7 +123,7 @@
             </div>
           </div>
         </div>
-        <div *ngIf="!referral?.externalReferenceId" class="col-md-8">
+        <div *ngIf="!referral?.manualReferralId" class="col-md-8">
           <p
             *ngIf="selectedSupport?.status !== 'Draft'"
             class="question-heading"
@@ -135,10 +146,16 @@
                   'active-status': selectedSupport?.status === 'Active',
                   'void-status': selectedSupport?.status === 'Void',
                   'expired-status': selectedSupport?.status === 'Expired',
-                  'draft-status': selectedSupport?.status === 'Draft'
+                  'draft-status': selectedSupport?.status === 'Draft',
+                  'review-status': selectedSupport?.status === 'UnderReview',
+                  'pending-status':
+                    selectedSupport?.status === 'PendingApproval',
+                  'cancel-status': selectedSupport?.status === 'Cancelled',
+                  'paid-status': selectedSupport?.status === 'Paid',
+                  'approved-status': selectedSupport?.status === 'Approved'
                 }"
               >
-                {{ selectedSupport?.status }}
+                {{ getStatusTextToDisplay(selectedSupport?.status) }}
               </p>
             </div>
           </div>
@@ -166,7 +183,10 @@
         </div>
 
         <div
-          *ngIf="selectedSupport?.status !== 'Draft'"
+          *ngIf="
+            selectedSupport?.status !== 'Draft' &&
+            selectedSupport?.method === 'Referral'
+          "
           class="col-md-4 link-padding"
         >
           <div class="row">
@@ -209,6 +229,42 @@
                   width="18"
                   height="18"
                 /><span class="back-link img-padding">Void Referral</span></a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="
+            selectedSupport?.status !== 'Draft' &&
+            selectedSupport?.method === 'ETransfer'
+          "
+          class="col-md-4 link-padding"
+        >
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="openAssessment()"
+                ><img
+                  src="/assets/images/view-assessment.svg"
+                  width="7"
+                  height="21"
+                /><span class="back-link needs-padding"
+                  >View Needs Assessment</span
+                ></a
+              >
+            </div>
+          </div>
+
+          <div class="row" *ngIf="selectedSupport?.status !== 'Void'">
+            <div class="col-md-12">
+              <a (click)="cancelEtransfer()"
+                ><img
+                  src="/assets/images/void.svg"
+                  width="18"
+                  height="18"
+                /><span class="back-link img-padding"
+                  >Cancel e-Transfer</span
+                ></a
               >
             </div>
           </div>
@@ -432,10 +488,12 @@
 
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Method:</div>
-    <div class="col-md-4 bold">{{ selectedSupport?.method }}</div>
+    <div class="col-md-4 bold">
+      {{ getMethodTextToDisplay(selectedSupport?.method) }}
+    </div>
   </div>
 
-  <div class="row row-padding">
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral'">
     <div class="col-md-4 box-text-color">
       Person Responsible for Purchasing Goods:
     </div>
@@ -447,7 +505,8 @@
   <div
     *ngIf="
       selectedSupport?.subCategory !== 'Lodging_Billeting' &&
-      selectedSupport?.subCategory !== 'Lodging_Group'
+      selectedSupport?.subCategory !== 'Lodging_Group' &&
+      selectedSupport?.method === 'Referral'
     "
     class="row row-padding"
   >
@@ -474,7 +533,8 @@
   <div
     *ngIf="
       selectedSupport?.subCategory !== 'Lodging_Billeting' &&
-      selectedSupport?.subCategory !== 'Lodging_Group'
+      selectedSupport?.subCategory !== 'Lodging_Group' &&
+      selectedSupport?.method === 'Referral'
     "
     class="row row-padding"
   >
@@ -538,9 +598,35 @@
     </div>
   </div>
 
-  <div class="row row-padding">
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral'">
     <div class="col-md-4 box-text-color">Notes for Supplier:</div>
     <div class="col-md-4 bold">{{ referral?.supplierNotes }}</div>
+  </div>
+
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
+    <div class="col-md-4 box-text-color">e-transfer Recipient:</div>
+    <div class="col-md-4 bold">
+      {{ interac?.receivingRegistrantId }}
+    </div>
+  </div>
+
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
+    <div class="col-md-4 box-text-color">Notification Preference:</div>
+    <div class="col-md-4 bold"></div>
+  </div>
+
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
+    <div class="col-md-4 box-text-color">Email Address:</div>
+    <div class="col-md-4 bold">
+      {{ interac?.notificationEmail }}
+    </div>
+  </div>
+
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
+    <div class="col-md-4 box-text-color">Mobile Number:</div>
+    <div class="col-md-4 bold">
+      {{ interac?.notificationMobile }}
+    </div>
   </div>
 </div>
 

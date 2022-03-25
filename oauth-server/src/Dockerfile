@@ -14,7 +14,7 @@ RUN dotnet tool install --tool-path /tools dotnet-dump
 
 WORKDIR /src
 COPY ["OAuthServer/OAuthServer.csproj", "OAuthServer/"]
-COPY ["oauth-server.sln", "stylecop.json", ".editorconfig", "./"]
+COPY ["oauth-server.sln", ".editorconfig", "./"]
 RUN dotnet restore .
 COPY . .
 

@@ -9,15 +9,13 @@ describe('ConfirmRestrictionComponent', () => {
   let component: ConfirmRestrictionComponent;
   let fixture: ComponentFixture<ConfirmRestrictionComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ConfirmRestrictionComponent],
-        imports: [RouterTestingModule, ReactiveFormsModule],
-        providers: [FormBuilder, FormCreationService]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ConfirmRestrictionComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule],
+      providers: [FormBuilder, FormCreationService]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConfirmRestrictionComponent);

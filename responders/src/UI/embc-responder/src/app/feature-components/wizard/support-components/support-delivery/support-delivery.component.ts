@@ -4,26 +4,18 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatSelectChange } from '@angular/material/select';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
+import { ComputeRulesService } from '../../../../core/services/computeRules.service';
+import { ETransferStatus } from '../../../../core/models/appBase.model';
+import { SupportMethod } from '../../../../core/api/models/support-method';
+import { EtransferFeaturesService } from '../../../../core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-support-delivery',
@@ -32,21 +24,18 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: FormGroup;
-  showTextField = false;
-  filteredOptions: Observable<SupplierListItemModel[]>;
-  supplierList: SupplierListItemModel[];
-  selectedSupplierItem: SupplierListItemModel;
-  showSupplierFlag = false;
-  showLoader = false;
-  color = '#169BD5';
   editFlag = false;
+  selectedSupportMethod: SupportMethod;
+  supportMethod = SupportMethod;
+  eTransferStatus = ETransferStatus;
 
   constructor(
     public stepSupportsService: StepSupportsService,
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private alertService: AlertService,
+    public featureService: EtransferFeaturesService,
+    private computeState: ComputeRulesService,
     private dialog: MatDialog,
     private cd: ChangeDetectorRef
   ) {
@@ -61,51 +50,15 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
+    this.selectedSupportMethod =
+      this.stepSupportsService?.supportDelivery?.method || null;
     this.createSupportDeliveryForm();
-    this.supplierList = this.stepSupportsService.supplierList;
-    this.supportDeliveryForm.get('issuedTo').valueChanges.subscribe((value) => {
-      this.supportDeliveryForm.get('name').updateValueAndValidity();
-    });
-
-    this.filteredOptions = this.supportDeliveryForm
-      .get('supplier')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) =>
-          value
-            ? this.filter(value)
-            : this.supplierList !== undefined
-            ? this.supplierList.slice()
-            : null
-        )
-      );
-
-    this.populateExistingIssuedTo();
+    this.computeState.triggerEvent();
+    console.log(this.featureService);
   }
 
   ngAfterViewChecked(): void {
     this.cd.detectChanges();
-  }
-
-  displaySupplier(item: SupplierListItemModel) {
-    if (item) {
-      return item.name;
-    }
-  }
-
-  /**
-   * Checks if the city value exists in the list
-   */
-  validateSupplier(): boolean {
-    const currentSupplier = this.supportDeliveryForm.get('supplier').value;
-    let invalidSupplier = false;
-    if (currentSupplier !== null && currentSupplier.name === undefined) {
-      invalidSupplier = !invalidSupplier;
-      this.supportDeliveryForm
-        .get('supplier')
-        .setErrors({ invalidSupplier: true });
-    }
-    return invalidSupplier;
   }
 
   /**
@@ -122,37 +75,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       });
   }
 
-  populateExistingIssuedTo() {
-    const allMembers: EvacuationFileHouseholdMember[] =
-      this.stepSupportsService?.evacFile?.needsAssessment?.householdMembers;
-
-    if (this.editFlag) {
-      if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
-        const valueToSet = allMembers.find(
-          (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
-        );
-        this.supportDeliveryForm.get('issuedTo').setValue(valueToSet);
-      } else {
-        this.supportDeliveryForm.get('issuedTo').setValue('Someone else');
-        this.showTextField = true;
-      }
-    } else {
-      if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {
-        const valueToSet = allMembers.find(
-          (mem) =>
-            mem.id === this.stepSupportsService?.supportDelivery?.issuedTo.id
-        );
-        if (valueToSet !== undefined) {
-          this.supportDeliveryForm.get('issuedTo').setValue(valueToSet);
-        } else {
-          this.supportDeliveryForm.get('issuedTo').setValue('Someone else');
-          this.showTextField = true;
-        }
-      }
-    }
-  }
-
   /**
    * Creates support delivery form
    */
@@ -160,7 +82,14 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     this.supportDeliveryForm = this.formBuilder.group({
       issuedTo: [
         this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
-        [Validators.required]
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.selectedSupportMethod === SupportMethod.Referral,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
       ],
       name: [
         this.stepSupportsService?.supportDelivery?.name ?? '',
@@ -168,8 +97,9 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
           this.customValidation
             .conditionalValidation(
               () =>
+                this.selectedSupportMethod === SupportMethod.Referral &&
                 this.supportDeliveryForm.get('issuedTo').value ===
-                'Someone else',
+                  'Someone else',
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
@@ -181,6 +111,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
           this.customValidation
             .conditionalValidation(
               () =>
+                this.selectedSupportMethod === SupportMethod.Referral &&
                 this.stepSupportsService.supportTypeToAdd.value !==
                   'Lodging_Billeting' &&
                 this.stepSupportsService.supportTypeToAdd.value !==
@@ -193,8 +124,84 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       supplierNote: [
         this.stepSupportsService?.supportDelivery?.supplierNote ?? ''
       ],
-      details: this.createSupplierDetailsForm()
+      details: this.createSupplierDetailsForm(),
+      recipientFirstName: [
+        this.featureService?.selectedEvacueeInContext?.personalDetails
+          ?.firstName || ''
+      ],
+      recipientLastName: [
+        this.featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+          ''
+      ],
+      receivingRegistrantId: [
+        this.featureService?.selectedEvacueeInContext?.id || ''
+      ],
+      notificationPreference: [
+        this.getExistingPreference(),
+        this.customValidation
+          .conditionalValidation(
+            () => this.selectedSupportMethod === SupportMethod.ETransfer,
+            Validators.required
+          )
+          .bind(this.customValidation)
+      ],
+      notificationEmail: [
+        this.stepSupportsService?.supportDelivery?.notificationEmail ?? '',
+        [
+          Validators.email,
+          this.customValidation.conditionalValidation(
+            () =>
+              this.selectedSupportMethod === SupportMethod.ETransfer &&
+              (this.supportDeliveryForm.get('notificationPreference').value ===
+                'Email' ||
+                this.supportDeliveryForm.get('notificationPreference').value ===
+                  'Email & Mobile'),
+            this.customValidation.whitespaceValidator()
+          )
+        ]
+      ],
+      notificationConfirmEmail: [
+        '',
+        [
+          Validators.email,
+          this.customValidation.conditionalValidation(
+            () =>
+              this.selectedSupportMethod === SupportMethod.ETransfer &&
+              (this.supportDeliveryForm.get('notificationPreference').value ===
+                'Email' ||
+                this.supportDeliveryForm.get('notificationPreference').value ===
+                  'Email & Mobile'),
+            this.customValidation.whitespaceValidator()
+          )
+        ]
+      ],
+      notificationMobile: [
+        this.stepSupportsService?.supportDelivery?.notificationMobile ?? '',
+        [
+          this.customValidation
+            .maskedNumberLengthValidator()
+            .bind(this.customValidation),
+          this.customValidation.conditionalValidation(
+            () =>
+              this.selectedSupportMethod === SupportMethod.ETransfer &&
+              (this.supportDeliveryForm.get('notificationPreference').value ===
+                'Mobile' ||
+                this.supportDeliveryForm.get('notificationPreference').value ===
+                  'Email & Mobile'),
+            this.customValidation.whitespaceValidator()
+          )
+        ]
+      ]
     });
+  }
+
+  getExistingPreference() {
+    const pref = [];
+    if (this.stepSupportsService?.supportDelivery?.notificationEmail)
+      pref.push('Email');
+    if (this.stepSupportsService?.supportDelivery?.notificationMobile)
+      pref.push('Mobile');
+    return pref.join(' & ');
   }
 
   createSupplierDetailsForm() {
@@ -207,13 +214,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     ) {
       return this.groupLodgingSupplierForm();
     }
-  }
-
-  /**
-   * Returns the control of the form
-   */
-  get supportDeliveryFormControl(): { [key: string]: AbstractControl } {
-    return this.supportDeliveryForm.controls;
   }
 
   /**
@@ -242,7 +242,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
       console.log(this.stepSupportsService.supportDelivery);
-      this.stepSupportsService.saveAsDraft();
+      this.stepSupportsService.saveAsDraft(this.selectedSupportMethod);
       const stateIndicator = { action: 'save' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
         state: stateIndicator
@@ -257,60 +257,12 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
       console.log(this.stepSupportsService.supportDelivery);
-      this.stepSupportsService.editDraft();
+      this.stepSupportsService.editDraft(this.selectedSupportMethod);
       const stateIndicator = { action: 'edit' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
         state: stateIndicator
       });
     }
-  }
-
-  /**
-   * Toggles the select field based on event
-   *
-   * @param $event select change event
-   */
-  memberSelect($event: MatSelectChange) {
-    if ($event.value === 'Someone else') {
-      this.showTextField = true;
-    } else {
-      this.showTextField = false;
-    }
-  }
-
-  /**
-   * Shows the supplier details box
-   *
-   * @param $event auto complete event
-   */
-  showDetails($event: MatAutocompleteSelectedEvent) {
-    this.selectedSupplierItem = $event.option.value;
-    this.showSupplierFlag = true;
-  }
-
-  /**
-   * Refreshes the supplier list
-   */
-  refreshList() {
-    this.showLoader = !this.showLoader;
-    this.stepSupportsService.getSupplierList().subscribe({
-      next: (value) => {
-        this.showLoader = !this.showLoader;
-        this.stepSupportsService.supplierList = value;
-        this.supplierList = value;
-        this.filteredOptions = this.supportDeliveryForm
-          .get('supplier')
-          .valueChanges.pipe(
-            startWith(''),
-            map((input) => this.filter(input))
-          );
-      },
-      error: (error) => {
-        this.showLoader = !this.showLoader;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.supplierRefresherror);
-      }
-    });
   }
 
   /**
@@ -326,12 +278,20 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  private filter(value?: string): SupplierListItemModel[] {
-    if (value !== null && value !== undefined && typeof value === 'string') {
-      const filterValue = value.toLowerCase();
-      return this.supplierList.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
+  setSupportMethod(method: SupportMethod) {
+    this.selectedSupportMethod = method;
+
+    if (method === SupportMethod.Referral) {
+      this.supportDeliveryForm.get('notificationPreference').patchValue('');
+      this.supportDeliveryForm.get('notificationEmail').patchValue('');
+      this.supportDeliveryForm.get('notificationConfirmEmail').patchValue('');
+      this.supportDeliveryForm.get('notificationMobile').patchValue('');
+    }
+    if (method === SupportMethod.ETransfer) {
+      this.supportDeliveryForm.get('issuedTo').patchValue('');
+      this.supportDeliveryForm.get('name').patchValue('');
+      this.supportDeliveryForm.get('supplier').patchValue('');
+      this.supportDeliveryForm.get('supplierNote').patchValue('');
     }
   }
 

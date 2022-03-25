@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
-using EMBC.ESS.Managers.Events.PrintReferrals;
+using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.Utilities.Extensions;
 using Shouldly;
 using Xunit;
 
@@ -12,26 +13,14 @@ namespace EMBC.Tests.Unit.ESS.Prints
 {
     public class PrintReferralTests
     {
-        private readonly PrintReferralService supportsService;
-
-        public PrintReferralTests()
-        {
-            supportsService = new PrintReferralService();
-        }
-
         [Fact]
         public async Task CreateSupportPdfWithoutSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
-            {
-                AddSummary = false,
-                AddWatermark = false,
-                RequestingUser = requestingUser,
-                Referrals = GeneratePrintReferral(requestingUser, 1)
-            };
+            var referrals = GeneratePrintReferral(requestingUser, 1, false);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfFile.html", content);
@@ -41,15 +30,10 @@ namespace EMBC.Tests.Unit.ESS.Prints
         public async Task CreateMultipleSupportsPdfsWithoutSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
-            {
-                AddSummary = false,
-                AddWatermark = false,
-                RequestingUser = requestingUser,
-                Referrals = GeneratePrintReferral(requestingUser, 5)
-            };
+            var referrals = GeneratePrintReferral(requestingUser, 5, false);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsFile.html", content);
@@ -59,15 +43,10 @@ namespace EMBC.Tests.Unit.ESS.Prints
         public async Task CreateSupportPdfWithSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
-            {
-                AddSummary = true,
-                AddWatermark = true,
-                RequestingUser = requestingUser,
-                Referrals = GeneratePrintReferral(requestingUser, 1)
-            };
+            var referrals = GeneratePrintReferral(requestingUser, 1, true);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfWithSummaryFile.html", content);
@@ -77,23 +56,40 @@ namespace EMBC.Tests.Unit.ESS.Prints
         public async Task CreateMultipleSupportsPdfsWithSummary()
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
-            var request = new SupportsToPrint
-            {
-                AddSummary = true,
-                AddWatermark = true,
-                RequestingUser = requestingUser,
-                Referrals = GeneratePrintReferral(requestingUser, 10)
-            };
+            var referrals = GeneratePrintReferral(requestingUser, 10, true);
+            var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = await supportsService.GetReferralHtmlPagesAsync(request);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsWithSummaryFile.html", content);
         }
 
-        private IEnumerable<PrintReferral> GeneratePrintReferral(PrintRequestingUser requestingUser, int numberOfReferrals) =>
+        [Fact]
+        public void MultipleHtmlGenerationLoadTest()
+        {
+            Parallel.For(0, 10, new ParallelOptions { MaxDegreeOfParallelism = 10 }, i =>
+             {
+                 var requestingUser = GeneratePrintRequestingUser();
+                 var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
+                 var title = $"supportstest-{i}";
+                 ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
+             });
+        }
+
+        private PrintRequestingUser GeneratePrintRequestingUser() =>
+            new Faker<PrintRequestingUser>()
+                .RuleFor(o => o.FirstName, f => f.Person.FirstName)
+                .RuleFor(o => o.LastName, f => f.Person.LastName)
+                .RuleFor(o => o.Id, f => f.Random.Number(1000, 9999).ToString())
+            ;
+
+        private IEnumerable<PrintReferral> GeneratePrintReferral(PrintRequestingUser requestingUser, int numberOfReferrals, bool displayWatermark) =>
             Enumerable.Range(0, numberOfReferrals).Select(i =>
                  new Faker<PrintReferral>()
+                    .RuleFor(o => o.VolunteerFirstName, f => requestingUser.FirstName)
+                    .RuleFor(o => o.VolunteerLastName, f => requestingUser.FirstName)
+                    .RuleFor(o => o.DisplayWatermark, f => displayWatermark)
                     .RuleFor(o => o.Type, f => f.Random.Enum<PrintReferralType>())
                     .RuleFor(o => o.Id, f => string.Join("", f.Random.Digits(6)))
                     .RuleFor(o => o.FromDate, f => f.Date.Soon().Date.ToShortDateString())
@@ -126,6 +122,11 @@ namespace EMBC.Tests.Unit.ESS.Prints
                         .RuleFor(o => o.Telephone, f => f.Phone.PhoneNumber())
                         .RuleFor(o => o.Province, f => f.Address.State())
                         .Generate())
+                    .RuleFor(o => o.Evacuees, f => f.Make(f.Random.Number(20), () => new Faker<PrintEvacuee>()
+                        .RuleFor(o => o.EvacueeTypeCode, f => f.PickRandom(new[] { "M", "A", "C" }))
+                        .RuleFor(o => o.FirstName, f => f.Person.FirstName)
+                        .RuleFor(o => o.LastName, f => f.Person.LastName)
+                        .Generate()))
                     .Generate()
             );
     }

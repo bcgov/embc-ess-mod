@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  ClothingReferral,
+  ClothingSupport,
   EvacuationFileHouseholdMember,
-  FoodGroceriesReferral,
-  FoodRestaurantReferral,
-  IncidentalsReferral,
-  LodgingBilletingReferral,
-  LodgingGroupReferral,
-  LodgingHotelReferral,
+  FoodGroceriesSupport,
+  FoodRestaurantSupport,
+  IncidentalsSupport,
+  Interac,
+  LodgingBilletingSupport,
+  LodgingGroupSupport,
+  LodgingHotelSupport,
   Referral,
   ReferralPrintRequestResponse,
   Support,
   SupportCategory,
+  SupportMethod,
   SupportReprintReason,
   SupportSubCategory,
   SupportVoidReason,
-  TransportationOtherReferral,
-  TransportationTaxiReferral
+  TransportationOtherSupport,
+  TransportationTaxiSupport
 } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
@@ -39,7 +41,7 @@ import {
   Community,
   LocationsService
 } from 'src/app/core/services/locations.service';
-import { DateConversionService } from 'src/app/core/services/dateConversion.service';
+import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExistingSupportDetailsService {
@@ -105,15 +107,16 @@ export class ExistingSupportDetailsService {
         return this.mapMember(id, needsAssessmentForSupport);
       });
 
-    const referralDelivery = selectedSupport as Referral;
-    const name = referralDelivery.issuedToPersonName.split(',');
-    const issuedToVal = needsAssessmentForSupport.householdMembers.find(
-      (member) => {
-        if (member.lastName === name[0] && member.firstName === name[1]) {
-          return member;
-        }
-      }
-    );
+    const referralDelivery = selectedSupport.supportDelivery as Referral;
+    const name = referralDelivery.issuedToPersonName?.split(',');
+    const issuedToVal = name
+      ? needsAssessmentForSupport.householdMembers.find((member) => {
+          if (member.lastName === name[0] && member.firstName === name[1]) {
+            return member;
+          }
+        })
+      : null;
+
     const supplierValue = this.stepSupportsService.supplierList.find(
       (supplier) => supplier.id === referralDelivery.supplierId
     );
@@ -132,8 +135,8 @@ export class ExistingSupportDetailsService {
         : subCategory;
     this.stepSupportsService.supportDetails = {
       externalReferenceId: (
-        selectedSupport as Referral
-      ).externalReferenceId.substr(1),
+        selectedSupport.supportDelivery as Referral
+      ).manualReferralId?.substr(1),
       issuedBy: selectedSupport.issuedBy,
       issuedOn: selectedSupport.issuedOn,
       fromDate: selectedSupport.from,
@@ -152,36 +155,43 @@ export class ExistingSupportDetailsService {
       referral: this.createReferral(selectedSupport)
     };
 
+    let interac: Interac;
+    if (selectedSupport.method === SupportMethod.ETransfer) {
+      interac = selectedSupport.supportDelivery as Interac;
+    }
+
     this.stepSupportsService.supportDelivery = {
       issuedTo: issuedToVal !== null ? issuedToVal : null,
       name:
         issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
       supplier: supplierValue,
       supplierNote: referralDelivery.supplierNotes,
-      details: this.createDeliveryDetails(selectedSupport)
+      details: this.createDeliveryDetails(selectedSupport),
+      method: selectedSupport.method,
+      notificationEmail: interac?.notificationEmail,
+      notificationMobile: interac?.notificationMobile
     };
   }
 
   createDeliveryDetails(selectedSupport: Support): SupplierDetailsModel {
     if (selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting) {
       return {
-        hostName: (selectedSupport as LodgingBilletingReferral).hostName,
-        hostAddress: (selectedSupport as LodgingBilletingReferral).hostAddress,
-        hostCity: (selectedSupport as LodgingBilletingReferral).hostCity,
-        hostPhone: (selectedSupport as LodgingBilletingReferral).hostPhone,
-        emailAddress: (selectedSupport as LodgingBilletingReferral).hostEmail
+        hostName: (selectedSupport as LodgingBilletingSupport).hostName,
+        hostAddress: (selectedSupport as LodgingBilletingSupport).hostAddress,
+        hostCity: (selectedSupport as LodgingBilletingSupport).hostCity,
+        hostPhone: (selectedSupport as LodgingBilletingSupport).hostPhone,
+        emailAddress: (selectedSupport as LodgingBilletingSupport).hostEmail
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Group
     ) {
       return {
-        hostName: (selectedSupport as LodgingGroupReferral).facilityName,
-        hostAddress: (selectedSupport as LodgingGroupReferral).facilityAddress,
+        hostName: (selectedSupport as LodgingGroupSupport).facilityName,
+        hostAddress: (selectedSupport as LodgingGroupSupport).facilityAddress,
         hostCity: this.parseCommunityString(
-          (selectedSupport as LodgingGroupReferral).facilityCommunityCode
+          (selectedSupport as LodgingGroupSupport).facilityCommunityCode
         ),
-        hostPhone: (selectedSupport as LodgingGroupReferral)
-          .facilityContactPhone
+        hostPhone: (selectedSupport as LodgingGroupSupport).facilityContactPhone
       };
     }
   }
@@ -200,70 +210,71 @@ export class ExistingSupportDetailsService {
     | Clothing {
     if (selectedSupport.subCategory === SupportSubCategory.Food_Restaurant) {
       return {
-        noOfBreakfast: (selectedSupport as FoodRestaurantReferral)
+        noOfBreakfast: (selectedSupport as FoodRestaurantSupport)
           .numberOfBreakfastsPerPerson,
-        noOfLunches: (selectedSupport as FoodRestaurantReferral)
+        noOfLunches: (selectedSupport as FoodRestaurantSupport)
           .numberOfLunchesPerPerson,
-        noOfDinners: (selectedSupport as FoodRestaurantReferral)
+        noOfDinners: (selectedSupport as FoodRestaurantSupport)
           .numberOfDinnersPerPerson,
-        totalAmount: (selectedSupport as FoodRestaurantReferral).totalAmount
+        totalAmount: (selectedSupport as FoodRestaurantSupport).totalAmount
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Food_Groceries
     ) {
       return {
-        noOfMeals: (selectedSupport as FoodGroceriesReferral).numberOfDays,
-        totalAmount: (selectedSupport as FoodGroceriesReferral).totalAmount,
-        userTotalAmount: (selectedSupport as FoodGroceriesReferral).totalAmount
+        noOfMeals: (selectedSupport as FoodGroceriesSupport).numberOfDays,
+        totalAmount: (selectedSupport as FoodGroceriesSupport).totalAmount,
+        userTotalAmount: (selectedSupport as FoodGroceriesSupport).totalAmount,
+        approverName: (selectedSupport as FoodGroceriesSupport).approverName
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi
     ) {
       return {
-        fromAddress: (selectedSupport as TransportationTaxiReferral)
-          .fromAddress,
-        toAddress: (selectedSupport as TransportationTaxiReferral).toAddress
+        fromAddress: (selectedSupport as TransportationTaxiSupport).fromAddress,
+        toAddress: (selectedSupport as TransportationTaxiSupport).toAddress
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Transportation_Other
     ) {
       return {
-        transportMode: (selectedSupport as TransportationOtherReferral)
+        transportMode: (selectedSupport as TransportationOtherSupport)
           .transportMode,
-        totalAmount: (selectedSupport as TransportationOtherReferral)
-          .totalAmount
+        totalAmount: (selectedSupport as TransportationOtherSupport).totalAmount
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting
     ) {
       return {
-        noOfNights: (selectedSupport as LodgingBilletingReferral).numberOfNights
+        noOfNights: (selectedSupport as LodgingBilletingSupport).numberOfNights
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Group
     ) {
       return {
-        noOfNights: (selectedSupport as LodgingGroupReferral).numberOfNights
+        noOfNights: (selectedSupport as LodgingGroupSupport).numberOfNights
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel
     ) {
       return {
-        noOfNights: (selectedSupport as LodgingHotelReferral).numberOfNights,
-        noOfRooms: (selectedSupport as LodgingHotelReferral).numberOfRooms
+        noOfNights: (selectedSupport as LodgingHotelSupport).numberOfNights,
+        noOfRooms: (selectedSupport as LodgingHotelSupport).numberOfRooms
       };
     } else if (selectedSupport.category === SupportCategory.Incidentals) {
       return {
-        approvedItems: (selectedSupport as IncidentalsReferral).approvedItems,
-        totalAmount: (selectedSupport as IncidentalsReferral).totalAmount,
-        userTotalAmount: (selectedSupport as IncidentalsReferral).totalAmount
+        approvedItems: (selectedSupport as IncidentalsSupport).approvedItems,
+        totalAmount: (selectedSupport as IncidentalsSupport).totalAmount,
+        userTotalAmount: (selectedSupport as IncidentalsSupport).totalAmount,
+        approverName: (selectedSupport as FoodGroceriesSupport).approverName
       };
     } else if (selectedSupport.category === SupportCategory.Clothing) {
       return {
-        extremeWinterConditions: (selectedSupport as ClothingReferral)
+        extremeWinterConditions: (selectedSupport as ClothingSupport)
           .extremeWinterConditions,
-        totalAmount: (selectedSupport as ClothingReferral).totalAmount,
-        userTotalAmount: (selectedSupport as ClothingReferral).totalAmount
+        totalAmount: (selectedSupport as ClothingSupport).totalAmount,
+        userTotalAmount: (selectedSupport as ClothingSupport).totalAmount,
+        approverName: (selectedSupport as FoodGroceriesSupport).approverName
       };
     }
   }

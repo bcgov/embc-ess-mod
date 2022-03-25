@@ -9,14 +9,12 @@ describe('FileSubmissionComponent', () => {
   let component: FileSubmissionComponent;
   let fixture: ComponentFixture<FileSubmissionComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [FileSubmissionComponent],
-        imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [FileSubmissionComponent],
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FileSubmissionComponent);

@@ -29,25 +29,45 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var newSupports = new Support[]
             {
-               new ClothingReferral {
-                   SupplierId = TestData.SupplierAId,
-                   SupplierNotes = $"{uniqueId}-notes",
+               new ClothingSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
                    CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = householdMembers,
                    From = now,
                    To = now.AddDays(3),
                    IssuedOn = now
                },
-               new IncidentalsReferral {
-                   SupplierId = TestData.SupplierAId,
-                   SupplierNotes = $"{uniqueId}-notes",
+               new IncidentalsSupport {
+                   SupportDelivery = new Interac
+                   {
+                       NotificationEmail = "test@test.test",
+                       NotificationMobile = "+000-000-0000",
+                       ReceivingRegistrantId = TestData.ContactId
+                   },
+                   TotalAmount = 100.00,
                    CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = householdMembers,
                    From = now,
                    To = now.AddDays(5),
                    IssuedOn = now
+               },
+               new TransportationTaxiSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now,
                }
             };
 
@@ -55,35 +75,44 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newSupportIds.Count().ShouldBe(newSupports.Length);
 
             var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
-                .Items.Where(s => s is Referral r && (r.SupplierNotes ?? string.Empty).StartsWith(uniqueId))
-                .ToArray();
-            supports.Length.ShouldBeGreaterThanOrEqualTo(newSupports.Length);
+                .Items.Where(s => newSupportIds.Contains(s.Id)).ToArray();
+            supports.Length.ShouldBe(newSupports.Length);
+
             foreach (var support in supports)
             {
-                var sourceSupport = (Referral)newSupports.Where(s => s.GetType() == support.GetType()).Single();
+                var sourceSupport = newSupports.Where(s => s.GetType() == support.GetType()).Single();
+                support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
 
-                var referral = support.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
-
-                referral.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
-
-                if (sourceSupport.SupplierId != null)
-                    referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
                 if (sourceSupport.IncludedHouseholdMembers.Any())
-                    referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
+                    support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
                 if (sourceSupport.CreatedByTeamMemberId != null)
-                    referral.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
+                    support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
 
-                referral.To.ShouldBe(sourceSupport.To);
-                referral.IssuedToPersonName.ShouldBe(sourceSupport.IssuedToPersonName);
-                referral.SupplierNotes.ShouldBe(sourceSupport.SupplierNotes);
-                referral.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
-                referral.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
-                referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
-                referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
-                referral.ExternalReferenceId.ShouldBeNull();
-                referral.IssuedByDisplayName.ShouldBeNull();
-                referral.CreatedOn.ShouldBeInRange(now, DateTime.UtcNow);
-                referral.IssuedOn.ShouldBe(referral.CreatedOn);
+                support.To.ShouldBe(sourceSupport.To);
+                support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
+                support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
+                support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
+                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-5), DateTime.UtcNow);
+                support.IssuedOn.ShouldBe(support.CreatedOn);
+
+                if (sourceSupport.SupportDelivery is Referral sourceReferral)
+                {
+                    var referral = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                    referral.IssuedToPersonName.ShouldBe(sourceReferral.IssuedToPersonName);
+                    referral.SupplierNotes.ShouldBe(sourceReferral.SupplierNotes);
+                    referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
+                    referral.ManualReferralId.ShouldBeNull();
+                    referral.IssuedByDisplayName.ShouldBeNull();
+                    if (sourceReferral.SupplierId != null)
+                        referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
+                }
+                if (sourceSupport.SupportDelivery is Interac sourceETransfer)
+                {
+                    var etransfer = support.SupportDelivery.ShouldBeAssignableTo<Interac>().ShouldNotBeNull();
+                    etransfer.NotificationEmail.ShouldBe(sourceETransfer.NotificationEmail);
+                    etransfer.NotificationMobile.ShouldBe(sourceETransfer.NotificationMobile);
+                    etransfer.ReceivingRegistrantId.ShouldBe(sourceETransfer.ReceivingRegistrantId);
+                }
             }
         }
 
@@ -99,31 +128,37 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var paperSupports = new Support[]
             {
-               new ClothingReferral
+               new ClothingSupport
                {
-                   SupplierId = TestData.SupplierAId,
-                   SupplierNotes = $"{uniqueId}-paper-notes",
+                   SupportDelivery = new Referral
+                   {
+                       SupplierId = TestData.SupplierAId,
+                       SupplierNotes = $"{uniqueId}-paper-notes",
+                       IssuedToPersonName = "test person",
+                       ManualReferralId = $"{uniqueId}-paperreferral",
+                       IssuedByDisplayName =   "autotest R"
+                   },
                    CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = householdMembers,
                    From = issueDate.AddDays(-10),
                    To = issueDate.AddDays(-3),
                    IssuedOn = issueDate,
-                   ExternalReferenceId = $"{uniqueId}-paperreferral",
-                   IssuedByDisplayName =   "autotest R"
                },
-               new IncidentalsReferral
+               new IncidentalsSupport
                {
-                   SupplierId = TestData.SupplierAId,
-                   SupplierNotes = $"{uniqueId}-paper-notes",
+                   SupportDelivery = new Referral
+                   {
+                       SupplierId = TestData.SupplierAId,
+                       SupplierNotes = $"{uniqueId}-paper-notes",
+                       IssuedToPersonName = "test person",
+                       ManualReferralId = $"{uniqueId}-paperreferral",
+                       IssuedByDisplayName =   "autotest R"
+                   },
                    CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IssuedToPersonName = "test person",
                    IncludedHouseholdMembers = householdMembers,
                    From = issueDate.AddDays(-10),
                    To = issueDate.AddDays(-3),
                    IssuedOn = issueDate,
-                   ExternalReferenceId = $"{uniqueId}-paperreferral",
-                   IssuedByDisplayName =   "autotest R"
                }
             };
 
@@ -131,35 +166,36 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newSupportIds.Count().ShouldBe(paperSupports.Length);
 
             var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
-                .Items.Where(s => s is Referral r && (r.SupplierNotes ?? string.Empty).StartsWith(uniqueId))
-                .ToArray();
+                .Items.Where(s => newSupportIds.Contains(s.Id)).ToArray();
             supports.Length.ShouldBeGreaterThanOrEqualTo(paperSupports.Length);
+
             foreach (var support in supports)
             {
-                var sourceSupport = (Referral)paperSupports.Where(s => s.GetType() == support.GetType()).Single();
+                var sourceSupport = paperSupports.Where(s => s.GetType() == support.GetType()).Single();
+                var sourceReferral = (Referral)sourceSupport.SupportDelivery;
 
-                var referral = support.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                var referral = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
 
-                referral.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
+                support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
 
-                if (sourceSupport.SupplierId != null)
-                    referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
+                if (sourceReferral.SupplierId != null)
+                    referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
                 if (sourceSupport.IncludedHouseholdMembers.Any())
-                    referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
+                    support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
                 if (sourceSupport.CreatedByTeamMemberId != null)
-                    referral.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
+                    support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
 
-                referral.To.ShouldBe(sourceSupport.To);
-                referral.IssuedToPersonName.ShouldBe(sourceSupport.IssuedToPersonName);
-                referral.SupplierNotes.ShouldBe(sourceSupport.SupplierNotes);
-                referral.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
-                referral.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
-                referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
-                referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
-                referral.ExternalReferenceId.ShouldNotBeNull().ShouldBe(sourceSupport.ExternalReferenceId);
-                referral.IssuedByDisplayName.ShouldNotBeNull().ShouldBe(sourceSupport.IssuedByDisplayName);
-                referral.CreatedOn.ShouldBeInRange(now, DateTime.UtcNow);
-                referral.IssuedOn.ShouldBe(sourceSupport.IssuedOn);
+                support.To.ShouldBe(sourceSupport.To);
+                referral.IssuedToPersonName.ShouldBe(sourceReferral.IssuedToPersonName);
+                referral.SupplierNotes.ShouldBe(sourceReferral.SupplierNotes);
+                support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
+                support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
+                support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
+                referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
+                referral.ManualReferralId.ShouldNotBeNull().ShouldBe(sourceReferral.ManualReferralId);
+                referral.IssuedByDisplayName.ShouldNotBeNull().ShouldBe(sourceReferral.IssuedByDisplayName);
+                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-10), DateTime.UtcNow);
+                support.IssuedOn.ShouldBe(sourceSupport.IssuedOn);
             }
         }
     }

@@ -2,17 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 import {
-  FoodGroceriesReferral,
-  FoodRestaurantReferral,
-  TransportationTaxiReferral,
-  TransportationOtherReferral,
-  LodgingHotelReferral,
-  LodgingBilletingReferral,
-  LodgingGroupReferral,
-  IncidentalsReferral,
-  ClothingReferral,
+  FoodGroceriesSupport,
+  FoodRestaurantSupport,
+  TransportationTaxiSupport,
+  TransportationOtherSupport,
+  LodgingHotelSupport,
+  LodgingBilletingSupport,
+  LodgingGroupSupport,
+  IncidentalsSupport,
+  ClothingSupport,
   Referral,
-  Support
+  Support,
+  SupportMethod,
+  Interac
 } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
@@ -27,8 +29,9 @@ import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DownloadService } from 'src/app/core/services/download.service';
+import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
+import { EtransferFeaturesService } from '../../../../core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-review-support',
@@ -40,6 +43,7 @@ export class ReviewSupportComponent implements OnInit {
   showErrorMsg = false;
   draftSupports: Support[] = [];
   showLoader = false;
+  supportMethod = SupportMethod;
 
   constructor(
     private router: Router,
@@ -51,6 +55,7 @@ export class ReviewSupportComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
+    public featureService: EtransferFeaturesService,
     private downloadService: DownloadService
   ) {}
 
@@ -84,9 +89,9 @@ export class ReviewSupportComponent implements OnInit {
   checkGroceryMaxRate(support: Support): boolean {
     const maxRate =
       globalConst.groceriesRate.rate *
-      (support as FoodGroceriesReferral).numberOfDays *
-      (support as FoodGroceriesReferral).includedHouseholdMembers.length;
-    return maxRate < (support as FoodGroceriesReferral).totalAmount
+      (support as FoodGroceriesSupport).numberOfDays *
+      (support as FoodGroceriesSupport).includedHouseholdMembers.length;
+    return maxRate < (support as FoodGroceriesSupport).totalAmount
       ? false
       : true;
   }
@@ -100,10 +105,8 @@ export class ReviewSupportComponent implements OnInit {
   checkIncidentalMaxRate(support: Support): boolean {
     const maxRate =
       globalConst.incidentals.rate *
-      (support as IncidentalsReferral).includedHouseholdMembers.length;
-    return maxRate < (support as IncidentalsReferral).totalAmount
-      ? false
-      : true;
+      (support as IncidentalsSupport).includedHouseholdMembers.length;
+    return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
   /**
@@ -113,14 +116,12 @@ export class ReviewSupportComponent implements OnInit {
    * @returns if the current support surpasses the max rate allow or not
    */
   checkClothingMaxRate(support: Support): boolean {
-    const rate = (support as ClothingReferral).extremeWinterConditions
+    const rate = (support as ClothingSupport).extremeWinterConditions
       ? globalConst.extremeConditions.rate
       : globalConst.normalConditions.rate;
     const maxRate =
-      rate * (support as ClothingReferral).includedHouseholdMembers.length;
-    return maxRate < (support as IncidentalsReferral).totalAmount
-      ? false
-      : true;
+      rate * (support as ClothingSupport).includedHouseholdMembers.length;
+    return maxRate < (support as IncidentalsSupport).totalAmount ? false : true;
   }
 
   /**
@@ -129,8 +130,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as FoodGroceriesReferral
    * @returns a FoodGroceriesReferral object
    */
-  getGroceryReferral(support: Support): FoodGroceriesReferral {
-    return support as FoodGroceriesReferral;
+  getGroceryReferral(support: Support): FoodGroceriesSupport {
+    return support as FoodGroceriesSupport;
   }
 
   /**
@@ -139,8 +140,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as FoodRestaurantReferral
    * @returns a FoodRestaurantReferral object
    */
-  getMealReferral(support: Support): FoodRestaurantReferral {
-    return support as FoodRestaurantReferral;
+  getMealReferral(support: Support): FoodRestaurantSupport {
+    return support as FoodRestaurantSupport;
   }
 
   /**
@@ -149,8 +150,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as TransportationTaxiReferral
    * @returns a TransportationTaxiReferral object
    */
-  getTaxiReferral(support: Support): TransportationTaxiReferral {
-    return support as TransportationTaxiReferral;
+  getTaxiReferral(support: Support): TransportationTaxiSupport {
+    return support as TransportationTaxiSupport;
   }
 
   /**
@@ -159,8 +160,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as TransportationOtherReferral
    * @returns a TransportationOtherReferral object
    */
-  getOtherReferral(support: Support): TransportationOtherReferral {
-    return support as TransportationOtherReferral;
+  getOtherReferral(support: Support): TransportationOtherSupport {
+    return support as TransportationOtherSupport;
   }
 
   /**
@@ -169,8 +170,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as LodgingHotelReferral
    * @returns a LodgingHotelReferral object
    */
-  getHotelReferral(support: Support): LodgingHotelReferral {
-    return support as LodgingHotelReferral;
+  getHotelReferral(support: Support): LodgingHotelSupport {
+    return support as LodgingHotelSupport;
   }
 
   /**
@@ -179,8 +180,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as LodgingBilletingReferral
    * @returns a LodgingBilletingReferral object
    */
-  getBilletingReferral(support: Support): LodgingBilletingReferral {
-    return support as LodgingBilletingReferral;
+  getBilletingReferral(support: Support): LodgingBilletingSupport {
+    return support as LodgingBilletingSupport;
   }
 
   /**
@@ -189,8 +190,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as LodgingGroupReferral
    * @returns a LodgingGroupReferral object
    */
-  getGroupReferral(support: Support): LodgingGroupReferral {
-    return support as LodgingGroupReferral;
+  getGroupReferral(support: Support): LodgingGroupSupport {
+    return support as LodgingGroupSupport;
   }
 
   /**
@@ -199,8 +200,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as IncidentalsReferral
    * @returns a IncidentalsReferral object
    */
-  getIncidentalReferral(support: Support): IncidentalsReferral {
-    return support as IncidentalsReferral;
+  getIncidentalReferral(support: Support): IncidentalsSupport {
+    return support as IncidentalsSupport;
   }
 
   /**
@@ -209,8 +210,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as ClothingReferral
    * @returns a ClothingReferral object
    */
-  getClothingReferral(support: Support): ClothingReferral {
-    return support as ClothingReferral;
+  getClothingReferral(support: Support): ClothingSupport {
+    return support as ClothingSupport;
   }
 
   /**
@@ -220,7 +221,25 @@ export class ReviewSupportComponent implements OnInit {
    * @returns a Referral object
    */
   getReferral(support: Support): Referral {
-    return support as Referral;
+    return support.supportDelivery as Referral;
+  }
+
+  getInterac(support: Support): Interac {
+    return support.supportDelivery as Interac;
+  }
+
+  getNotificationPreference(interac: Interac) {
+    const types = [];
+    if (interac.notificationEmail) types.push('Email');
+    if (interac.notificationMobile) types.push('Mobile');
+    return types.join(' & ');
+  }
+
+  includesEtranfer() {
+    return (
+      this.draftSupports.filter((s) => s.method === SupportMethod.ETransfer)
+        .length > 0
+    );
   }
 
   /**
@@ -230,7 +249,7 @@ export class ReviewSupportComponent implements OnInit {
    * @returns a AddressModel object
    */
   getSupplierAddress(support: Support): AddressModel {
-    const referral = support as Referral;
+    const referral = support?.supportDelivery as Referral;
     return this.locationService.getAddressModelFromAddress(
       referral?.supplierAddress
     );
@@ -298,7 +317,8 @@ export class ReviewSupportComponent implements OnInit {
         this.dialog
           .open(DialogComponent, {
             data: {
-              component: ProcessSupportsDialogComponent
+              component: ProcessSupportsDialogComponent,
+              includesEtranfer: this.includesEtranfer()
             },
             height: '400px',
             width: '630px'
@@ -315,8 +335,7 @@ export class ReviewSupportComponent implements OnInit {
 
   private saveDraftSupports() {
     this.showLoader = !this.showLoader;
-    const supportsDraft: Referral[] =
-      this.referralService.getDraftSupport() as Referral[];
+    const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService
       .savePaperSupports(fileId, supportsDraft)
@@ -344,22 +363,37 @@ export class ReviewSupportComponent implements OnInit {
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
       next: (response) => {
-        const blob = new Blob([response], { type: response.type });
-        this.downloadService.downloadFile(
-          window,
-          blob,
-          `supports-${fileId}-${new FlatDateFormatPipe().transform(
-            new Date()
-          )}.pdf`
-        );
+        response
+          .text()
+          .then((text) => {
+            const printWindow = document.createElement('iframe');
+            printWindow.style.display = 'none';
+            document.body.appendChild(printWindow);
+            printWindow.contentDocument.write(text);
+            printWindow.contentWindow.print();
+            document.body.removeChild(printWindow);
 
-        //Clearing Draft supports array and updating the supports list for the selected ESS File
-        this.referralService.clearDraftSupport();
-        this.reviewSupportService.updateExistingSupportsList();
-        this.showLoader = !this.showLoader;
-        this.router.navigate(['/ess-wizard/add-supports']);
+            //const blob = new Blob([response], { type: response.type });
+            // this.downloadService.downloadFile(
+            //   window,
+            //   blob,
+            //   `supports-${fileId}-${new FlatDateFormatPipe().transform(
+            //     new Date()
+            //   )}.pdf`
+            //);
+
+            //Clearing Draft supports array and updating the supports list for the selected ESS File
+            this.referralService.clearDraftSupport();
+            this.reviewSupportService.updateExistingSupportsList();
+            this.showLoader = !this.showLoader;
+            this.router.navigate(['/ess-wizard/add-supports']);
+          })
+          .catch((error) => {
+            throw error;
+          });
       },
       error: (error) => {
+        console.error('error when processing supports: ', error);
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(

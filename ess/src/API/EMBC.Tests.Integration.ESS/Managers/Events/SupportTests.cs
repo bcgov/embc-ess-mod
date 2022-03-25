@@ -42,15 +42,15 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
-                new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
-                new LodgingBilletingReferral() { NumberOfNights = 1 },
-                new LodgingGroupReferral() { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity },
-                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
-                new TransportationOtherReferral(),
-                new TransportationTaxiReferral(),
+                new ClothingSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new IncidentalsSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new FoodGroceriesSupport {TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new FoodRestaurantSupport { TotalAmount = 100, SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
             };
 
             foreach (var s in supports)
@@ -66,15 +66,15 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
             refreshedFile.Supports.ShouldNotBeEmpty();
             refreshedFile.Supports.Count().ShouldBe(supports.Length);
-            foreach (var support in refreshedFile.Supports.Cast<Referral>())
+            foreach (var support in refreshedFile.Supports)
             {
-                var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
-                if (sourceSupport.SupplierDetails != null)
+                var sourceSupport = supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
+                if (support.SupportDelivery is Referral r && sourceSupport.SupportDelivery is Referral sourceReferral && r.SupplierDetails != null)
                 {
-                    support.SupplierDetails.ShouldNotBeNull();
-                    support.SupplierDetails.Id.ShouldBe(sourceSupport.SupplierDetails.Id);
-                    support.SupplierDetails.Name.ShouldNotBeNull();
-                    support.SupplierDetails.Address.ShouldNotBeNull();
+                    r.SupplierDetails.ShouldNotBeNull();
+                    r.SupplierDetails.Id.ShouldBe(sourceReferral.SupplierDetails.Id);
+                    r.SupplierDetails.Name.ShouldNotBeNull();
+                    r.SupplierDetails.Address.ShouldNotBeNull();
                 }
                 support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
                 support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
@@ -96,15 +96,15 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
-                new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
-                new LodgingBilletingReferral() { NumberOfNights = 1 },
-                new LodgingGroupReferral() { NumberOfNights = 1 },
-                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
-                new TransportationOtherReferral(),
-                new TransportationTaxiReferral(),
+                new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
+                new IncidentalsSupport { SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };
 
             foreach (var s in supports)
@@ -178,10 +178,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var fileId = TestData.PaperEvacuationFileId;
 
-            var supports = new Referral[]
+            var supports = new Support[]
             {
-                new IncidentalsReferral() {ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral"},
-                new IncidentalsReferral()
+                new IncidentalsSupport() { SupportDelivery = new Referral { ManualReferralId = $"{TestData.TestPrefix}-paperreferral"} },
+                new IncidentalsSupport() { SupportDelivery = new Referral() }
             };
 
             await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessSupportsCommand
@@ -204,17 +204,17 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = paperFile });
 
-            var supports = new Referral[]
+            var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
-                new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
-                new LodgingBilletingReferral() { NumberOfNights = 1 },
-                new LodgingGroupReferral() { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity },
-                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
-                new TransportationOtherReferral(),
-                new TransportationTaxiReferral(),
+                new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
+                new IncidentalsSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };
 
             foreach (var s in supports)
@@ -222,28 +222,26 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 s.From = DateTime.UtcNow;
                 s.To = DateTime.UtcNow.AddDays(3);
                 s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
-                s.ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral";
+                ((Referral)s.SupportDelivery).ManualReferralId = $"{TestData.TestPrefix}-paperreferral";
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
             }
 
-            var printRequestId = await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
-
-            printRequestId.ShouldBeNullOrEmpty();
+            await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
             var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
             refreshedFile.Supports.ShouldNotBeEmpty();
             refreshedFile.Supports.Count().ShouldBe(supports.Length);
-            foreach (var support in refreshedFile.Supports.Cast<Referral>())
+            foreach (var support in refreshedFile.Supports)
             {
                 var sourceSupport = supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
-                if (sourceSupport.SupplierDetails != null)
+                if (support.SupportDelivery is Referral r && sourceSupport.SupportDelivery is Referral sourceReferral && r.SupplierDetails != null)
                 {
-                    support.SupplierDetails.ShouldNotBeNull();
-                    support.SupplierDetails.Id.ShouldBe(sourceSupport.SupplierDetails.Id);
-                    support.SupplierDetails.Name.ShouldNotBeNull();
-                    support.SupplierDetails.Address.ShouldNotBeNull();
+                    r.SupplierDetails.ShouldNotBeNull();
+                    r.SupplierDetails.Id.ShouldBe(sourceReferral.SupplierDetails.Id);
+                    r.SupplierDetails.Name.ShouldNotBeNull();
+                    r.SupplierDetails.Address.ShouldNotBeNull();
+                    r.ManualReferralId.ShouldBe(sourceReferral.ManualReferralId);
                 }
-                support.ExternalReferenceId.ShouldBe(sourceSupport.ExternalReferenceId);
                 support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
                 support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
                 support.IssuedBy.ShouldNotBeNull().DisplayName.ShouldBe(sourceSupport.IssuedBy.DisplayName);
@@ -256,10 +254,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var fileId = TestData.PaperEvacuationFileId;
 
-            var supports = new Referral[]
+            var supports = new Support[]
             {
-                new IncidentalsReferral() { ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" },
-                new IncidentalsReferral() {  ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" }
+                new IncidentalsSupport() { SupportDelivery = new Referral { ManualReferralId = $"{TestData.TestPrefix}-paperreferral" } },
+                new IncidentalsSupport() {  SupportDelivery = new Referral { ManualReferralId = $"{TestData.TestPrefix}-paperreferral" } }
             };
 
             await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
@@ -275,10 +273,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var fileId = TestData.PaperEvacuationFileId;
 
-            var supports = new Referral[]
+            var supports = new Support[]
             {
-                new IncidentalsReferral() { ExternalReferenceId = $"{TestData.TestPrefix}-paperreferral" },
-                new IncidentalsReferral()
+                new IncidentalsSupport() { SupportDelivery = new Referral { ManualReferralId = $"{TestData.TestPrefix}-paperreferral" } },
+                new IncidentalsSupport(){ SupportDelivery = new Referral() }
             };
 
             await Should.ThrowAsync<BusinessValidationException>(async () => await manager.Handle(new ProcessPaperSupportsCommand
@@ -294,41 +292,42 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var fileId = TestData.PaperEvacuationFileId;
 
-            var newSupports = new Referral[]
+            var newSupports = new Support[]
             {
-                     new ClothingReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } },
-                     new IncidentalsReferral(),
-                     new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } },
-                     new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } },
-                     new LodgingBilletingReferral() { NumberOfNights = 1 },
-                     new LodgingGroupReferral() { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity },
-                     new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
-                     new TransportationOtherReferral(),
-                     new TransportationTaxiReferral(),
+                new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
+                new IncidentalsSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };
 
-            var externalReferenceId = $"{TestData.TestPrefix}-paperreferral";
+            var uniqueId = Guid.NewGuid().ToString().Substring(0, 4);
+            var paperReferralId = $"{TestData.TestPrefix}-paperreferral-{uniqueId}";
 
             foreach (var s in newSupports)
             {
                 s.From = DateTime.UtcNow;
                 s.To = DateTime.UtcNow.AddDays(3);
                 s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
-                s.ExternalReferenceId = externalReferenceId;
+                ((Referral)s.SupportDelivery).ManualReferralId = paperReferralId;
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
             }
 
             await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, RequestingUserId = TestData.Tier4TeamMemberId, Supports = newSupports });
 
-            var supports = (await manager.Handle(new SearchSupportsQuery { ExternalReferenceId = externalReferenceId })).Items;
+            var supports = (await manager.Handle(new SearchSupportsQuery { ExternalReferenceId = paperReferralId })).Items;
             supports.ShouldNotBeEmpty();
             supports.Count().ShouldBe(newSupports.Length);
             foreach (var support in supports)
             {
-                var referral = support.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
-                referral.FileId.ShouldBe(fileId);
-                referral.ExternalReferenceId.ShouldBe(externalReferenceId);
-                referral.OriginatingNeedsAssessmentId.ShouldBe(TestData.PaperEvacuationFileNeedsAssessmentId);
+                var referral = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                support.FileId.ShouldBe(fileId);
+                support.OriginatingNeedsAssessmentId.ShouldBe(TestData.PaperEvacuationFileNeedsAssessmentId);
+                referral.ManualReferralId.ShouldBe(paperReferralId);
             }
         }
     }

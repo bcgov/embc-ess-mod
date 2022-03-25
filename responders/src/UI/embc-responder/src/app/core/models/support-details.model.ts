@@ -1,4 +1,4 @@
-import { EvacuationFileHouseholdMember } from '../api/models';
+import { EvacuationFileHouseholdMember, SupportMethod } from '../api/models';
 import { Community } from '../services/locations.service';
 import { SupplierListItemModel } from './supplier-list-item.model';
 
@@ -30,6 +30,9 @@ export class SupportDeliveryModel {
   supplier: SupplierListItemModel;
   supplierNote: string;
   details?: SupplierDetailsModel;
+  method: SupportMethod;
+  notificationEmail?: string;
+  notificationMobile?: string;
 }
 
 export class SupplierDetailsModel {
@@ -52,6 +55,7 @@ export class Groceries {
   noOfMeals: number;
   totalAmount: number;
   userTotalAmount: number;
+  approverName: string;
 }
 
 export class Taxi {
@@ -81,10 +85,12 @@ export class Incidentals {
   approvedItems: string;
   totalAmount: number;
   userTotalAmount: number;
+  approverName: string;
 }
 
 export class Clothing {
   extremeWinterConditions: boolean;
   totalAmount: number;
   userTotalAmount: number;
+  approverName: string;
 }

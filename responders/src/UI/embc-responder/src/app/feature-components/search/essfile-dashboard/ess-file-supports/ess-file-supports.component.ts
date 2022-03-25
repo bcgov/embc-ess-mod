@@ -13,17 +13,21 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
-  ClothingReferral,
-  FoodGroceriesReferral,
-  FoodRestaurantReferral,
-  IncidentalsReferral,
-  LodgingBilletingReferral,
-  LodgingGroupReferral,
-  LodgingHotelReferral,
+  ClothingSupport,
+  Code,
+  FoodGroceriesSupport,
+  FoodRestaurantSupport,
+  IncidentalsSupport,
+  Interac,
+  LodgingBilletingSupport,
+  LodgingGroupSupport,
+  LodgingHotelSupport,
   Referral,
   Support,
-  TransportationOtherReferral,
-  TransportationTaxiReferral
+  SupportMethod,
+  SupportStatus,
+  TransportationOtherSupport,
+  TransportationTaxiSupport
 } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -44,6 +48,8 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   supports$: Observable<Support[]>;
   essFile: EvacuationFileModel;
   filtersToLoad: TableFilterModel;
+  supportMethod = SupportMethod;
+  supportStatus: Code[] = [];
 
   constructor(
     private router: Router,
@@ -70,6 +76,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     this.supports.paginator = this.paginator;
     this.supports$ = this.supports.connect();
     this.filtersToLoad = this.essFileSupportsService.load();
+    this.supportStatus = this.evacueeSearchService.supportStatus;
   }
 
   ngAfterViewInit(): void {
@@ -96,8 +103,12 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getStatusDescription(status: SupportStatus) {
+    return this.supportStatus?.find((s) => s.value === status)?.description;
+  }
+
   getExternalReferralId(element: Support): string {
-    return (element as Referral).externalReferenceId;
+    return (element.supportDelivery as Referral).manualReferralId;
   }
 
   /**
@@ -117,11 +128,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   supportFilterPredicate = (data: any, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'status') {
+      //Two statuses have the same description, but different values
+      //filter workaround so that the description selected can include multiple status values with the same description
+      const possibleValues = this.supportStatus
+        ?.filter((s) => s.description === searchString.value)
+        .map((a) => a.value.trim().toLowerCase());
       if (
-        data.status
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        possibleValues.length === 0 ||
+        possibleValues.includes(data.status.trim().toLowerCase())
       ) {
         return true;
       }
@@ -137,44 +151,44 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     }
   };
 
-  getGroceryReferral(selectedSupport: Support): FoodGroceriesReferral {
-    return selectedSupport as FoodGroceriesReferral;
+  getGroceryReferral(selectedSupport: Support): FoodGroceriesSupport {
+    return selectedSupport as FoodGroceriesSupport;
   }
 
-  getMealReferral(selectedSupport: Support): FoodRestaurantReferral {
-    return selectedSupport as FoodRestaurantReferral;
+  getMealReferral(selectedSupport: Support): FoodRestaurantSupport {
+    return selectedSupport as FoodRestaurantSupport;
   }
 
-  getTaxiReferral(selectedSupport: Support): TransportationTaxiReferral {
-    return selectedSupport as TransportationTaxiReferral;
+  getTaxiReferral(selectedSupport: Support): TransportationTaxiSupport {
+    return selectedSupport as TransportationTaxiSupport;
   }
 
-  getOtherReferral(selectedSupport: Support): TransportationOtherReferral {
-    return selectedSupport as TransportationOtherReferral;
+  getOtherReferral(selectedSupport: Support): TransportationOtherSupport {
+    return selectedSupport as TransportationOtherSupport;
   }
 
-  getHotelReferral(selectedSupport: Support): LodgingHotelReferral {
-    return selectedSupport as LodgingHotelReferral;
+  getHotelReferral(selectedSupport: Support): LodgingHotelSupport {
+    return selectedSupport as LodgingHotelSupport;
   }
 
-  getBilletingReferral(selectedSupport: Support): LodgingBilletingReferral {
-    return selectedSupport as LodgingBilletingReferral;
+  getBilletingReferral(selectedSupport: Support): LodgingBilletingSupport {
+    return selectedSupport as LodgingBilletingSupport;
   }
 
-  getGroupReferral(selectedSupport: Support): LodgingGroupReferral {
-    return selectedSupport as LodgingGroupReferral;
+  getGroupReferral(selectedSupport: Support): LodgingGroupSupport {
+    return selectedSupport as LodgingGroupSupport;
   }
 
-  getIncidentalReferral(selectedSupport: Support): IncidentalsReferral {
-    return selectedSupport as IncidentalsReferral;
+  getIncidentalReferral(selectedSupport: Support): IncidentalsSupport {
+    return selectedSupport as IncidentalsSupport;
   }
 
-  getClothingReferral(selectedSupport: Support): ClothingReferral {
-    return selectedSupport as ClothingReferral;
+  getClothingReferral(selectedSupport: Support): ClothingSupport {
+    return selectedSupport as ClothingSupport;
   }
 
   getReferral(selectedSupport: Support): Referral {
-    return selectedSupport as Referral;
+    return selectedSupport.supportDelivery as Referral;
   }
 
   mapMemberName(memberId: string): string {

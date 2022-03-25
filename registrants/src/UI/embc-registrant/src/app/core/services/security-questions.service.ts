@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { AlertService } from './alert.service';
@@ -34,25 +35,24 @@ export class SecurityQuestionsService {
    * @returns string[] list of security questions
    */
   getSecurityQuestionList(): void {
-    this.configurationService.configurationGetSecurityQuestions().subscribe(
-      (list) => {
+    this.configurationService.configurationGetSecurityQuestions().subscribe({
+      next: (list) => {
         this.securityQuestionOptions = list;
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.securityQuesError);
       }
-    );
+    });
   }
 
   public async loadSecurityQuesList(): Promise<void> {
-    return this.configurationService
-      .configurationGetSecurityQuestions()
-      .pipe(
+    return await lastValueFrom(
+      this.configurationService.configurationGetSecurityQuestions().pipe(
         map((results) => {
           this.securityQuestionOptions = results;
         })
       )
-      .toPromise();
+    );
   }
 }

@@ -1,20 +1,4 @@
-﻿// -------------------------------------------------------------------------
-//  Copyright © 2021 Province of British Columbia
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  https://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// -------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +6,8 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
+using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events.Notifications;
-using EMBC.ESS.Managers.Events.PrintReferrals;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Metadata;
@@ -34,10 +18,10 @@ using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
-using EMBC.ESS.Utilities.Extensions;
-using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.PdfGenerator;
-using EMBC.ESS.Utilities.Transformation;
+using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Notifications;
+using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -59,12 +43,12 @@ namespace EMBC.ESS.Managers.Events
         private readonly ITeamRepository teamRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
-        private readonly IPrintReferralService referralPrintingService;
         private readonly IPrintRequestsRepository printingRepository;
         private readonly IPdfGenerator pdfGenerator;
         private readonly IMetadataRepository metadataRepository;
         private readonly IDataProtectionProvider dataProtectionProvider;
         private readonly IConfiguration configuration;
+        private readonly ISupportingEngine supportingEngine;
         private readonly EvacuationFileLoader evacuationFileLoader;
         private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
@@ -82,13 +66,13 @@ namespace EMBC.ESS.Managers.Events
             ITeamRepository teamRepository,
             ISupplierRepository supplierRepository,
             ISearchEngine searchEngine,
-            IPrintReferralService referralPrintingService,
             IPrintRequestsRepository printingRepository,
             IPdfGenerator pdfGenerator,
             IWebHostEnvironment env,
             IMetadataRepository metadataRepository,
             IDataProtectionProvider dataProtectionProvider,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ISupportingEngine supportingEngine)
         {
             this.mapper = mapper;
             this.evacueesRepository = contactRepository;
@@ -102,12 +86,12 @@ namespace EMBC.ESS.Managers.Events
             this.teamRepository = teamRepository;
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
-            this.referralPrintingService = referralPrintingService;
             this.printingRepository = printingRepository;
             this.pdfGenerator = pdfGenerator;
             this.metadataRepository = metadataRepository;
             this.dataProtectionProvider = dataProtectionProvider;
             this.configuration = configuration;
+            this.supportingEngine = supportingEngine;
             this.env = env;
             evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository);
         }
@@ -468,15 +452,8 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
-            //verify no paper supports included
-            var paperReferrals = cmd.Supports.Where(s => s is Shared.Contracts.Events.Referral r && r.IsPaperReferral)
-                .Cast<Shared.Contracts.Events.Referral>()
-                .Select(r => r.ExternalReferenceId)
-                .ToArray();
-            if (paperReferrals.Any())
-                throw new BusinessValidationException($"file {cmd.FileId} error: cannot process paper referrals {string.Join(',', paperReferrals)} as digital");
-
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault();
+            if (requestingUser == null) throw new BusinessValidationException($"User {cmd.RequestingUserId} not found");
 
             foreach (var support in cmd.Supports)
             {
@@ -484,73 +461,44 @@ namespace EMBC.ESS.Managers.Events
                 support.CreatedOn = DateTime.UtcNow;
             }
 
-            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports);
+
+            var validationResponse = (DigitalSupportsValidationResponse)await supportingEngine.Validate(new DigitalSupportsValidationRequest { FileId = cmd.FileId, Supports = cmd.Supports });
+            if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
+
+            var response = (ProcessDigitalSupportsResponse)await supportingEngine.Process(new ProcessDigitalSupportsRequest
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
-            })).Ids;
+                Supports = cmd.Supports,
+                RequestingUserId = requestingUser.Id,
+                IncludeSummaryInReferralsPrintout = cmd.IncludeSummaryInReferralsPrintout
+            });
 
-            try
-            {
-                var printRequestId = await printingRepository.Manage(new SavePrintRequest
-                {
-                    PrintRequest = new ReferralPrintRequest
-                    {
-                        FileId = cmd.FileId,
-                        SupportIds = supportIds,
-                        IncludeSummary = cmd.IncludeSummaryInReferralsPrintout,
-                        RequestingUserId = requestingUser.Id,
-                        Type = ReferralPrintType.New,
-                        Comments = "Process supports"
-                    }
-                });
-                return printRequestId;
-            }
-            catch (Exception)
-            {
-                //try to deactivate the supports if failed to create the print request
-                foreach (var id in supportIds)
-                {
-                    await supportRepository.Manage(new VoidEvacuationFileSupportCommand { FileId = cmd.FileId, SupportId = id, VoidReason = Resources.Supports.SupportVoidReason.ErrorOnPrintedReferral });
-                }
-                throw;
-            }
+            return response.PrintRequestId;
         }
 
-        public async Task<string> Handle(ProcessPaperSupportsCommand cmd)
+        public async System.Threading.Tasks.Task Handle(ProcessPaperSupportsCommand cmd)
         {
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException(nameof(cmd.FileId));
             if (string.IsNullOrEmpty(cmd.RequestingUserId)) throw new ArgumentNullException(nameof(cmd.RequestingUserId));
 
-            //validate only paper referrals were passed in the command
-            if (!cmd.Supports.All(s => s is Shared.Contracts.Events.Referral r && r.IsPaperReferral))
-                throw new BusinessValidationException($"file {cmd.FileId} error: {nameof(ProcessPaperSupportsCommand)} can handle only referrals with paper details, but some supports are not");
+            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault();
+            if (requestingUser == null) throw new BusinessValidationException($"User {cmd.RequestingUserId} not found");
 
-            var referrals = cmd.Supports.Cast<Shared.Contracts.Events.Referral>().ToArray();
-            //validate paper id and support types are unique
-            var duplicates = referrals.GroupBy(s => s.ExternalReferenceId).Where(g => g.GroupBy(e => e.GetType()).Any(gt => gt.Count() != 1));
-            if (duplicates.Any())
-            {
-                throw new BusinessValidationException($"file {cmd.FileId} error: duplicate referral: "
-                    + $"{string.Join(',', duplicates.Select(d => $"{d.Key}: {string.Join(',', d.Select(id => id.GetType().Name))}"))}");
-            }
-
-            var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
-
-            foreach (var referral in referrals)
+            foreach (var referral in cmd.Supports)
             {
                 referral.CreatedBy = new Shared.Contracts.Events.TeamMember { Id = requestingUser.Id };
                 referral.CreatedOn = DateTime.UtcNow;
             }
-            //save referrals
-            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+
+            var validationResponse = (PaperSupportsValidationResponse)await supportingEngine.Validate(new PaperSupportsValidationRequest
             {
                 FileId = cmd.FileId,
-                Supports = mapper.Map<IEnumerable<Resources.Supports.Support>>(cmd.Supports)
-            })).Ids;
+                Supports = cmd.Supports
+            });
+            if (!validationResponse.IsValid) throw new BusinessValidationException(string.Join(',', validationResponse.Errors));
 
-            // no print request is returned
-            return string.Empty;
+            await supportingEngine.Process(new ProcessPaperSupportsRequest { FileId = cmd.FileId, Supports = cmd.Supports });
         }
 
         public async Task<string> Handle(VoidSupportCommand cmd)
@@ -590,7 +538,7 @@ namespace EMBC.ESS.Managers.Events
 
             //get requesting user
             if (printRequest.RequestingUserId != query.RequestingUserId) throw new BusinessLogicException($"User {query.RequestingUserId} cannot query print for another user ({printRequest.RequestingUserId})");
-            var requestingUser = (await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault();
+            var requestingUser = mapper.Map<Shared.Contracts.Events.TeamMember>((await teamRepository.GetMembers(userId: printRequest.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().SingleOrDefault());
             if (requestingUser == null) throw new NotFoundException($"User {printRequest.RequestingUserId} not found", printRequest.RequestingUserId);
 
             //load the file
@@ -602,45 +550,36 @@ namespace EMBC.ESS.Managers.Events
             await evacuationFileLoader.Load(file);
 
             //Find referrals to print
-            var referrals = mapper.Map<IEnumerable<PrintReferral>>(file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)), opts => opts.Items.Add("evacuationFile", file)).ToArray();
+            var referrals = file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)).ToArray();
             if (referrals.Length != printRequest.SupportIds.Count())
                 throw new BusinessLogicException($"Print request {printRequest.Id} has {printRequest.SupportIds.Count()} linked supports, but evacuation file {printRequest.FileId} doesn't have all of them");
-
-            //replace community codes with readable name
-            var communities = await metadataRepository.GetCommunities();
-            foreach (var referral in referrals)
-            {
-                referral.HostCommunity = communities.Where(c => c.Code == referral.HostCommunity).SingleOrDefault()?.Name;
-                if (!string.IsNullOrEmpty(referral.Supplier?.Community))
-                {
-                    referral.Supplier.City = communities.Where(c => c.Code == referral.Supplier.Community).SingleOrDefault()?.Name;
-                }
-            }
 
             var isProduction = env.IsProduction();
 
             //convert referrals to html
-            var printedReferrals = await referralPrintingService.GetReferralHtmlPagesAsync(new SupportsToPrint()
+            var generatedReferrals = (GenerateReferralsResponse)await supportingEngine.Generate(new GenerateReferralsRequest()
             {
-                Referrals = referrals,
+                File = file,
+                Supports = referrals,
                 AddSummary = printRequest.IncludeSummary,
                 AddWatermark = !isProduction,
-                RequestingUser = new PrintRequestingUser { Id = requestingUser.Id, FirstName = requestingUser.FirstName, LastName = requestingUser.LastName }
+                PrintingMember = requestingUser
             });
 
             //convert to pdf
-            var content = await pdfGenerator.Generate(printedReferrals);
-            var contentType = "application/pdf";
+            //var content = await pdfGenerator.Generate(generatedReferrals.Content);
+            //var contentType = "application/pdf";
+
+            var content = generatedReferrals.Content;
+            var contentType = "text/html";
 
             await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });
 
-            var now = DateTime.UtcNow;
             return new PrintRequestQueryResult
             {
                 Content = content,
                 ContentType = contentType,
-                PrintedOn = now,
-                FileName = $"supports-{file.Id}-{now:yyyyMMddhhmmss:R}.pdf"
+                PrintedOn = printRequest.CreatedOn
             };
         }
 
@@ -652,6 +591,7 @@ namespace EMBC.ESS.Managers.Events
 
             var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
 
+            var now = DateTime.UtcNow;
             var referralPrintId = await printingRepository.Manage(new SavePrintRequest
             {
                 PrintRequest = new ReferralPrintRequest
@@ -661,7 +601,8 @@ namespace EMBC.ESS.Managers.Events
                     IncludeSummary = false,
                     RequestingUserId = requestingUser.Id,
                     Type = ReferralPrintType.Reprint,
-                    Comments = cmd.ReprintReason
+                    Comments = cmd.ReprintReason,
+                    Title = $"referral-{cmd.SupportId}-{now:yyyyMMddhhmmss:R}"
                 }
             });
 

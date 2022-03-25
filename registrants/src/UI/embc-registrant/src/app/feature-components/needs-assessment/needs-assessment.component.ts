@@ -221,49 +221,49 @@ export class NeedsAssessmentComponent
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.nonVerifiedRegistrationService.submitRegistration().subscribe(
-      (response: RegistrationResult) => {
+    this.nonVerifiedRegistrationService.submitRegistration().subscribe({
+      next: (response: RegistrationResult) => {
         this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
         this.router.navigate(['/non-verified-registration/file-submission']);
       },
-      (error: any) => {
+      error: (error: any) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         this.alertService.setAlert('danger', globalConst.submissionError);
       }
-    );
+    });
   }
 
   submitVerified(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.evacuationFileDataService.updateRestriction().subscribe(
-      (updated) => {
+    this.evacuationFileDataService.updateRestriction().subscribe({
+      next: (updated) => {
         if (updated !== null) {
           this.mapAndNavigate();
         }
       },
-      (error: any) => {
+      error: (error: any) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         this.alertService.setAlert('danger', globalConst.submissionError);
       }
-    );
+    });
   }
 
   mapAndNavigate() {
-    this.evacuationFileDataService.createEvacuationFile().subscribe(
-      (value) => {
+    this.evacuationFileDataService.createEvacuationFile().subscribe({
+      next: (value) => {
         this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
         this.router.navigate(['/verified-registration/dashboard']);
       },
-      (error: any) => {
+      error: (error: any) => {
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         this.alertService.setAlert('danger', globalConst.submissionError);
       }
-    );
+    });
   }
 
   allowSubmit($event: boolean): void {

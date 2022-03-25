@@ -26,7 +26,7 @@ RUN apt-get update \
 WORKDIR /src
 COPY ["EMBC.PDFGenerator/EMBC.PDFGenerator.csproj", "EMBC.PDFGenerator/"]
 COPY ["EMBC.Tests.Unit.PDFGenerator/EMBC.Tests.Unit.PDFGenerator.csproj", "EMBC.Tests.Unit.PDFGenerator/"]
-COPY ["EMBC.PDFGenerator.sln", "stylecop.json", ".editorconfig", "./"]
+COPY ["EMBC.PDFGenerator.sln", ".editorconfig", "./"]
 RUN dotnet restore .
 COPY . .
 

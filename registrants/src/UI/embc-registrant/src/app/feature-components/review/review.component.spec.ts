@@ -9,15 +9,13 @@ describe('ReviewComponent', () => {
   let component: ReviewComponent;
   let fixture: ComponentFixture<ReviewComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ReviewComponent],
-        imports: [RouterTestingModule, ReactiveFormsModule],
-        providers: [FormBuilder, FormCreationService]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ReviewComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule],
+      providers: [FormBuilder, FormCreationService]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ReviewComponent);

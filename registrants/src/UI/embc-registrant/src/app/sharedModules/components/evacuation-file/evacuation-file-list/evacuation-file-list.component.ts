@@ -62,8 +62,8 @@ export class EvacuationFileListComponent implements OnInit {
       });
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
       this.showLoading = true;
-      this.evacuationFileService.getPastEvacuationFiles().subscribe(
-        (files) => {
+      this.evacuationFileService.getPastEvacuationFiles().subscribe({
+        next: (files) => {
           this.dataSourceInactive = files;
           this.dataSourceInactive.sort(
             (a, b) =>
@@ -72,11 +72,11 @@ export class EvacuationFileListComponent implements OnInit {
           );
           this.showLoading = false;
         },
-        (error) => {
+        error: (error) => {
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.pastEvacError);
         }
-      );
+      });
     }
   }
 

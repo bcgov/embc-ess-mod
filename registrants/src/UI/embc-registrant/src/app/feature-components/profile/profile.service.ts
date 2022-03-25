@@ -20,27 +20,27 @@ export class ProfileService {
   }
 
   public getLoginProfile(): void {
-    this.profileService.profileGetProfile().subscribe(
-      (loginProfile) => {
+    this.profileService.profileGetProfile().subscribe({
+      next: (loginProfile) => {
         this.profileMapping.mapLoginProfile(loginProfile);
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.getProfileError);
       }
-    );
+    });
   }
 
   public getProfile(): void {
-    this.profileService.profileGetProfile().subscribe(
-      (profile) => {
+    this.profileService.profileGetProfile().subscribe({
+      next: (profile) => {
         this.profileMapping.mapProfile(profile);
       },
-      (error) => {
+      error: (error) => {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.getProfileError);
       }
-    );
+    });
   }
 
   public getConflicts(): Observable<ProfileDataConflict[]> {

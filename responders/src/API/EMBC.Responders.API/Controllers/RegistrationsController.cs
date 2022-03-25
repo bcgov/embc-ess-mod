@@ -1,20 +1,4 @@
-﻿// -------------------------------------------------------------------------
-//  Copyright © 2021 Province of British Columbia
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  https://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// -------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -186,6 +170,26 @@ namespace EMBC.Responders.API.Controllers
             var inviteId = await messagingClient.Send(inviteRequest);
             return Ok(inviteId);
         }
+
+        /// <summary>
+        /// Get security questions for a registrant
+        /// </summary>
+        /// <param name="registrantId">registrant id</param>
+        /// <returns>list of security questions and masked answers</returns>
+        [HttpGet("registrants/{registrantId}/features")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<RegistrantFeaturesResponse>> GetRegistrantFeatures(string registrantId)
+        {
+            var registrant = (await messagingClient.Send(new RegistrantsQuery
+            {
+                Id = registrantId
+            })).Items.FirstOrDefault();
+
+            if (registrant == null) return NotFound(registrantId);
+
+            return Ok(new RegistrantFeaturesResponse { ETransfer = registrant.AuthenticatedUser });
+        }
     }
 
     public class RegistrationResult
@@ -232,6 +236,11 @@ namespace EMBC.Responders.API.Controllers
         public int NumberOfCorrectAnswers { get; set; }
     }
 
+    public class RegistrantFeaturesResponse
+    {
+        public bool ETransfer { get; set; }
+    }
+
     /// <summary>
     /// Registrant profile
     /// </summary>
@@ -262,6 +271,8 @@ namespace EMBC.Responders.API.Controllers
 
         public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
+
+        public bool IsMinor { get; set; }
     }
 
     public class InviteRequest
@@ -293,12 +304,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
                 .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
                 .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Events.IncidentTask, EvacuationFileTask>()
-                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
                 ;
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Events.RegistrantProfile>()

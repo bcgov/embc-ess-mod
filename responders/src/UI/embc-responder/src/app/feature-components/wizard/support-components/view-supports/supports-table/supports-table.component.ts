@@ -17,8 +17,8 @@ import {
   Support,
   Referral,
   SupportSubCategory,
-  LodgingBilletingReferral,
-  LodgingGroupReferral
+  LodgingBilletingSupport,
+  LodgingGroupSupport
 } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
@@ -132,7 +132,7 @@ export class SupportsTableComponent
   }
 
   getExternalReferralId(element: Support): string {
-    return (element as Referral).externalReferenceId;
+    return (element.supportDelivery as Referral).manualReferralId;
   }
 
   generateSupportType(element: Support): string {
@@ -151,11 +151,11 @@ export class SupportsTableComponent
 
   displaySupplierName(element: Support): string {
     if (element.subCategory === SupportSubCategory.Lodging_Billeting) {
-      return (element as LodgingBilletingReferral).hostName;
+      return (element as LodgingBilletingSupport).hostName;
     } else if (element.subCategory === SupportSubCategory.Lodging_Group) {
-      return (element as LodgingGroupReferral).facilityName;
+      return (element as LodgingGroupSupport).facilityName;
     } else {
-      return (element as Referral).supplierName;
+      return (element.supportDelivery as Referral).supplierName;
     }
   }
 }

@@ -1,23 +1,8 @@
-﻿// -------------------------------------------------------------------------
-//  Copyright © 2021 Province of British Columbia
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  https://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// -------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.Utilities.Extensions;
 using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Evacuations
@@ -159,16 +144,6 @@ namespace EMBC.ESS.Resources.Evacuations
                     }.Where(r => r != null).ToArray()))
                ;
 
-            Func<DateTime, int> getAge = dob =>
-            {
-                var now = DateTime.Now;
-                var age = now.Year - dob.Year;
-                //Handle leap years
-                if (dob > now.AddYears(-age))
-                    age--;
-
-                return age;
-            };
             CreateMap<era_householdmember, HouseholdMember>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.contactid))
@@ -176,7 +151,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.IsVerifiedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_verified))
                 .ForMember(d => d.IsAuthenticatedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_authenticated))
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
-                .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.era_isunder19))
+                .ForMember(d => d.IsMinor, opts => opts.MapFrom(s => s.era_isunder19))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname.ToString()))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname.ToString()))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => !s.era_dateofbirth.HasValue
@@ -189,7 +164,7 @@ namespace EMBC.ESS.Resources.Evacuations
 
                 .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : (Guid?)null))
                 .ForMember(d => d.era_isprimaryregistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
-                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => getAge(DateTime.Parse(s.DateOfBirth)) < 19))
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => DateTime.Parse(s.DateOfBirth).CalculatetAge() < 19))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.era_initials, opts => opts.MapFrom(s => s.Initials))

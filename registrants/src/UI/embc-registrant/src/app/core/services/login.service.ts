@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { Subject } from 'rxjs';
+import { lastValueFrom, Subject } from 'rxjs';
 import { Profile } from '../api/models';
 import { ProfileService } from '../api/services';
 
@@ -46,7 +46,9 @@ export class LoginService {
   }
 
   public async getUserProfile(): Promise<Profile> {
-    const profile = await this.profileService.profileGetProfile().toPromise();
+    const profile = await lastValueFrom(
+      this.profileService.profileGetProfile()
+    );
     return profile;
   }
   public async tryLogin(): Promise<void> {

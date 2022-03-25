@@ -40,219 +40,150 @@
     <div class="col-md-12">
       <p>
         This support can be provisioned to the evacuee by means of a
-        <span class="bold">referral.</span>
+        <b>referral</b> or <b>e-Transfer.</b>
       </p>
-      <p>Please enter the referral details below.</p>
     </div>
   </div>
 
-  <form [formGroup]="supportDeliveryForm">
-    <div class="row">
-      <div class="col-md-12">
-        <p class="question-heading requiredField">
-          Who will be responsible for the purchasing of goods?
-        </p>
-      </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="question-heading requiredField">
+        Select Support Delivery Method
+      </p>
     </div>
-    <div class="row">
-      <div class="col-md-4">
-        <mat-form-field appearance="outline">
-          <mat-select
-            formControlName="issuedTo"
-            (selectionChange)="memberSelect($event)"
-            required
-          >
-            <mat-option
-              *ngFor="
-                let member of stepSupportsService?.evacFile?.needsAssessment
-                  ?.householdMembers
-              "
-              [value]="member"
-            >
-              {{ member.lastName | uppercase }},
-              {{ member.firstName }}
-            </mat-option>
-            <mat-option [value]="'Someone else'">Someone else</mat-option>
-          </mat-select>
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl.issuedTo.invalid &&
-              supportDeliveryFormControl.issuedTo.hasError('required')
-            "
-          >
-            Required</mat-error
-          >
-        </mat-form-field>
-      </div>
+  </div>
 
-      <div *ngIf="showTextField" class="col-md-4">
-        <mat-form-field appearance="outline">
-          <mat-label>Enter Name</mat-label>
-          <input
-            formControlName="name"
-            maxlength="100"
-            matInput
-            placeholder="Enter Name"
+  <div class="row pb-4">
+    <div class="col-md-4">
+      <mat-card
+        class="support-delivery-card"
+        [class.selected]="selectedSupportMethod === supportMethod.Referral"
+        (click)="setSupportMethod(supportMethod.Referral)"
+      >
+        <div
+          class="selected-icon-container"
+          *ngIf="selectedSupportMethod === supportMethod.Referral"
+        >
+          <img
+            src="/assets/images/wizard/white-background.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
           />
-          <mat-error
-            class="custom-mat-error"
-            *ngIf="
-              supportDeliveryFormControl?.name.invalid &&
-              supportDeliveryFormControl?.name.hasError('whitespaceError')
-            "
-          >
-            Name is required</mat-error
-          >
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div
-      *ngIf="
-        stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Billeting' &&
-        stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Group'
-      "
-    >
-      <div class="row">
-        <div class="col-md-12">
-          <p class="question-heading requiredField">Select Supplier</p>
+          <img
+            src="/assets/images/wizard/method-selected.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
+          />
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <mat-form-field appearance="outline">
-            <mat-label>Supplier</mat-label>
-            <input
-              maxlength="100"
-              type="text"
-              formControlName="supplier"
-              matInput
-              placeholder="Supplier"
-              [matAutocomplete]="auto"
-              required
-            />
-            <mat-autocomplete
-              (optionSelected)="showDetails($event)"
-              #auto="matAutocomplete"
-              [displayWith]="displaySupplier"
-            >
-              <mat-option
-                *ngFor="let option of filteredOptions | async"
-                [value]="option"
-              >
-                <div class="row">
-                  <div class="col-md-6">
-                    <b>{{ option?.name }}</b>
-                  </div>
-                  <div class="col-md-4">
-                    {{ option?.address?.addressLine1 }}
-                    <span *ngIf="option?.address?.addressLine2">
-                      , {{ option?.address?.addressLine2 }}
-                    </span>
-                  </div>
-                </div>
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error
-              *ngIf="
-                supportDeliveryFormControl?.supplier.invalid &&
-                supportDeliveryFormControl?.supplier.hasError('required')
-              "
-            >
-              Supplier is required</mat-error
-            >
-            <mat-error *ngIf="validateSupplier()">
-              Supplier is invalid</mat-error
-            >
-          </mat-form-field>
+        <div class="support-delivery-card-header">
+          <div class="row">
+            <div class="col subtitle-name">
+              <div class="subtitle-icon-container">
+                <img src="/assets/images/file.svg" height="55" width="40" />
+              </div>
+              <p>Referral</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Immediate support provision to an authorized supplier</p>
+            </div>
+          </div>
         </div>
 
-        <div class="col-md-4">
-          <button
-            class="search-button button-transparent"
-            mat-button
-            (click)="refreshList()"
-          >
-            <img src="/assets/images/reset.svg" height="20" width="20" /><span
-              class="reset-img"
-              >Refresh Supplier List</span
-            >
-          </button>
-        </div>
-        <div class="col-md-4">
-          <app-loader
-            [strokeWidth]="3"
-            [diameter]="25"
-            [showLoader]="showLoader"
-            [color]="color"
-          >
-          </app-loader>
-        </div>
-      </div>
-
-      <mat-card *ngIf="showSupplierFlag" class="supplier-box">
-        <p class="bold">{{ selectedSupplierItem?.name }}</p>
-        <p
-          [innerHTML]="selectedSupplierItem?.address | maskEvacuatedaddress"
-        ></p>
+        <p><b>Requirements:</b></p>
+        <img src="/assets/images/wizard/eligible.svg" height="10" width="10" />
+        None
       </mat-card>
     </div>
+    <div class="col-md-4">
+      <mat-card
+        class="support-delivery-card"
+        [class.disabled]="
+          featureService?.etransferStatus !== eTransferStatus.available
+        "
+        [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
+        (click)="setSupportMethod(supportMethod.ETransfer)"
+      >
+        <div
+          class="selected-icon-container"
+          *ngIf="selectedSupportMethod === supportMethod.ETransfer"
+        >
+          <img
+            src="/assets/images/wizard/white-background.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
+          />
+          <img
+            src="/assets/images/wizard/method-selected.svg"
+            height="23"
+            width="23"
+            class="selected-icon"
+          />
+        </div>
+        <div class="support-delivery-card-header">
+          <div class="row">
+            <div class="col subtitle-name">
+              <div class="subtitle-icon-container">
+                <img
+                  src="/assets/images/etransfer.svg"
+                  height="40"
+                  width="60"
+                />
+              </div>
+              <p>Interac e-Transfer</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Money in bank account</p>
+            </div>
+          </div>
+        </div>
 
-    <!--Lodging Billeting-->
+        <div
+          *ngIf="featureService?.etransferStatus !== eTransferStatus.available"
+          class="etransfer-ineligible"
+        >
+          <p>Evacuee Ineligible</p>
+        </div>
 
-    <div
-      *ngIf="
-        stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Billeting'
-      "
-    >
-      <app-billeting-delivery
-        [supportDeliveryForm]="supportDeliveryForm"
-      ></app-billeting-delivery>
+        <div class="requirements">
+          <p><b>Requirements:</b></p>
+          <div *ngFor="let req of featureService.etransferRequirement">
+            <img
+              *ngIf="req.status"
+              src="/assets/images/wizard/eligible.svg"
+              height="10"
+              width="10"
+            />
+            <img
+              *ngIf="!req.status"
+              src="/assets/images/wizard/ineligible.svg"
+              height="10"
+              width="10"
+            />
+            {{ req.statement }}
+          </div>
+        </div>
+      </mat-card>
     </div>
+  </div>
 
-    <!--Group Lodging-->
-    <div
-      *ngIf="stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group'"
-    >
-      <app-group-lodging-delivery
-        [supportDeliveryForm]="supportDeliveryForm"
-      ></app-group-lodging-delivery>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <p class="question-heading">Supplier Support Notes</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">
-        <p>
-          These notes are for the supplier, and will be visible on the referral.
-          Support notes privacy piece.
-        </p>
-        <mat-form-field appearance="outline">
-          <textarea
-            rows="10"
-            formControlName="supplierNote"
-            placeholder="Add Notes"
-            maxlength="250"
-            matInput
-          ></textarea>
-          <!-- <mat-error
-            *ngIf="
-              supportDeliveryFormControl?.supplierNote.touched &&
-              supportDeliveryFormControl?.supplierNote.invalid &&
-              supportDeliveryFormControl?.supplierNote.hasError(
-                'whitespaceError'
-              )
-            "
-          >
-            Required
-          </mat-error> -->
-        </mat-form-field>
-      </div>
-    </div>
-  </form>
+  <!--Dynamic form-->
+  <app-support-referral
+    [referralDeliveryForm]="supportDeliveryForm"
+    [editFlag]="editFlag"
+    *ngIf="selectedSupportMethod === supportMethod.Referral"
+  ></app-support-referral>
+  <app-support-etransfer
+    [supportDeliveryForm]="supportDeliveryForm"
+    [editFlag]="editFlag"
+    *ngIf="selectedSupportMethod === supportMethod.ETransfer"
+  ></app-support-etransfer>
 
   <div class="row">
     <div class="col-md-6">

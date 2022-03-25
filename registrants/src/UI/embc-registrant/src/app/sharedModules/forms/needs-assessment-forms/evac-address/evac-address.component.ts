@@ -71,7 +71,6 @@ export default class EvacAddressComponent implements OnInit {
       this.evacuatedForm
         .get('evacuatedFromAddress.country')
         .setValue(globalConst.defaultCountry);
-      console.log(this.evacuatedForm.get('evacuatedFromAddress'));
     }
   }
 

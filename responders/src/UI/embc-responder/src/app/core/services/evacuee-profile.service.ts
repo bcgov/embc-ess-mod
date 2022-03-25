@@ -12,7 +12,9 @@ import { EvacuationFileSearchResultModel } from '../models/evacuation-file-searc
 import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
+import { ComputeRulesService } from './computeRules.service';
 import { EvacueeSessionService } from './evacuee-session.service';
+import { EtransferFeaturesService } from './helper/etransferfeatures.service';
 import { LocationsService } from './locations.service';
 
 @Injectable({
@@ -22,7 +24,9 @@ export class EvacueeProfileService {
   constructor(
     private registrationsService: RegistrationsService,
     private locationsService: LocationsService,
-    public evacueeSessionService: EvacueeSessionService
+    public evacueeSessionService: EvacueeSessionService,
+    private featureService: EtransferFeaturesService,
+    private computeState: ComputeRulesService
   ) {}
 
   /**
@@ -40,7 +44,7 @@ export class EvacueeProfileService {
       })
       .pipe(
         map((profile: RegistrantProfile): RegistrantProfileModel => {
-          return {
+          const profileModel = {
             ...profile,
             primaryAddress: this.locationsService.getAddressModelFromAddress(
               profile.primaryAddress
@@ -49,6 +53,9 @@ export class EvacueeProfileService {
               profile.mailingAddress
             )
           };
+          this.featureService.selectedEvacueeInContext = profileModel;
+          this.computeState.triggerEvent();
+          return profileModel;
         })
       );
   }
@@ -167,7 +174,7 @@ export class EvacueeProfileService {
     regProfile: RegistrantProfile,
     memberId: string,
     essFileId: string
-  ): Observable<Blob> {
+  ): Observable<string> {
     const profile$ =
       this.registrationsService.registrationsCreateRegistrantProfile({
         body: regProfile

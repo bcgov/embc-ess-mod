@@ -136,7 +136,7 @@
 
       <div *ngIf="evacueeSessionService.isPaperBased" class="row">
         <div class="col-md-12 paper-referral-number">
-          # {{ getReferral(support)?.externalReferenceId }}
+          # {{ getReferral(support)?.manualReferralId }}
         </div>
       </div>
 
@@ -192,16 +192,27 @@
                       | number: '1.2-2':'en-CA'
                   }}
                 </div>
-                <div
-                  *ngIf="!checkGroceryMaxRate(support)"
-                  class="col-md-4 warning"
-                >
+              </div>
+              <div
+                class="row row-padding"
+                *ngIf="!checkGroceryMaxRate(support)"
+              >
+                <div class="col warning">
                   <img
                     src="../../../../../assets/images/warning-red.svg"
                     width="25px"
                     height="27px"
+                    class="warning-icon"
                   />
-                  Total monetary value exceeds the recommended ESS rate
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
+                  <span *ngIf="!evacueeSessionService.isPaperBased">
+                    Authorization to exceed recommended ESS rate provided by:
+                    <strong>{{
+                      getGroceryReferral(support)?.approverName
+                    }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
@@ -325,16 +336,27 @@
                       | number: '1.2-2':'en-CA'
                   }}
                 </div>
-                <div
-                  *ngIf="!checkClothingMaxRate(support)"
-                  class="col-md-4 warning"
-                >
+              </div>
+              <div
+                class="row row-padding"
+                *ngIf="!checkClothingMaxRate(support)"
+              >
+                <div class="col warning">
                   <img
                     src="../../../../../assets/images/warning-red.svg"
                     width="25px"
                     height="27px"
+                    class="warning-icon"
                   />
-                  Total monetary value exceeds the recommended ESS rate
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
+                  <span *ngIf="!evacueeSessionService.isPaperBased">
+                    Authorization to exceed recommended ESS rate provided by:
+                    <strong>{{
+                      getClothingReferral(support)?.approverName
+                    }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
@@ -357,16 +379,27 @@
                       | number: '1.2-2':'en-CA'
                   }}
                 </div>
-                <div
-                  *ngIf="!checkIncidentalMaxRate(support)"
-                  class="col-md-4 warning"
-                >
+              </div>
+              <div
+                class="row row-padding"
+                *ngIf="!checkIncidentalMaxRate(support)"
+              >
+                <div class="col warning">
                   <img
                     src="../../../../../assets/images/warning-red.svg"
                     width="25px"
                     height="27px"
+                    class="warning-icon"
                   />
-                  Total monetary value exceeds the recommended ESS rate
+                  <span *ngIf="evacueeSessionService.isPaperBased">
+                    Total monetary value exceeds the recommended ESS rate</span
+                  >
+                  <span *ngIf="!evacueeSessionService.isPaperBased">
+                    Authorization to exceed recommended ESS rate provided by:
+                    <strong>{{
+                      getIncidentalReferral(support)?.approverName
+                    }}</strong></span
+                  >
                 </div>
               </div>
             </ng-container>
@@ -377,7 +410,8 @@
           class="col-md-4"
           *ngIf="
             support.subCategory !== 'Lodging_Group' &&
-            support.subCategory !== 'Lodging_Billeting'
+            support.subCategory !== 'Lodging_Billeting' &&
+            support.method !== supportMethod.ETransfer
           "
         >
           <mat-card class="support-card">
@@ -394,7 +428,10 @@
         <!-- Lodging-Billeting Support Delivery -->
         <div
           class="col-md-4"
-          *ngIf="support.subCategory === 'Lodging_Billeting'"
+          *ngIf="
+            support.subCategory === 'Lodging_Billeting' &&
+            support.method !== supportMethod.ETransfer
+          "
         >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
@@ -410,7 +447,13 @@
           </mat-card>
         </div>
         <!-- Lodging-Group Support Delivery -->
-        <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Group'">
+        <div
+          class="col-md-4"
+          *ngIf="
+            support.subCategory === 'Lodging_Group' &&
+            support.method !== supportMethod.ETransfer
+          "
+        >
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -426,8 +469,73 @@
             <p>{{ getReferral(support)?.supplierNotes }}</p>
           </mat-card>
         </div>
+
+        <div
+          class="col-md-4"
+          *ngIf="support.method === supportMethod.ETransfer"
+        >
+          <mat-card class="support-card">
+            <span class="support-subtitle"
+              >Support Delivery - <b>e-Transfer</b></span
+            >
+
+            <p class="no-margin"><b>e-Transfer Recipient</b></p>
+            <p>
+              {{
+                featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
+              }},
+              {{
+                featureService?.selectedEvacueeInContext?.personalDetails
+                  ?.firstName
+              }}
+            </p>
+
+            <p class="no-margin"><b>Notification Preference</b></p>
+            <p>{{ getNotificationPreference(getInterac(support)) }}</p>
+
+            <div *ngIf="getInterac(support)?.notificationEmail">
+              <p class="no-margin"><b>Email Address</b></p>
+              <p>{{ getInterac(support)?.notificationEmail }}</p>
+            </div>
+
+            <div *ngIf="getInterac(support)?.notificationMobile">
+              <p class="no-margin"><b>Mobile Number</b></p>
+              <p>{{ getInterac(support)?.notificationMobile }}</p>
+            </div>
+          </mat-card>
+        </div>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="includesEtranfer()">
+    <mat-card class="etransfer-review">
+      <p>
+        <b
+          >Responder to please read the following paragraph to the evacuee prior
+          to processing:</b
+        >
+      </p>
+      <p>
+        You are being provided with a one-time digital payment for supports.
+        EMBC has a responsibility to ensure that funds are used for the sole
+        purpose of meeting essential needs of individuals and their household
+        members.
+      </p>
+      <p>
+        By your acceptance of the digital payment, you agree to only spend these
+        funds to meet your basic needs, such as food, clothing, or essential
+        goods and services, based on the needs assessment conducted by your
+        responder.
+      </p>
+
+      Therefore, the following purchases are not permissible:
+      <ul>
+        <li>Alcohol, tobacco or cannabis products;</li>
+        <li>Entertainment goods or services (e.g. online gaming)</li>
+        <li>Luxury items (e.g. jewelry)</li>
+      </ul>
+    </mat-card>
   </div>
 
   <div *ngIf="!evacueeSessionService.isPaperBased" class="row">

@@ -1,20 +1,4 @@
-﻿// -------------------------------------------------------------------------
-//  Copyright © 2021 Province of British Columbia
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  https://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-// -------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -77,36 +61,56 @@ namespace EMBC.ESS.Resources.Supports
         public DateTime To { get; set; }
         public SupportStatus Status { get; set; } = SupportStatus.Active;
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+        public SupportDelivery SupportDelivery { get; set; }
+        public bool IsPaperReferral => SupportDelivery is Referral r && r.ManualReferralId != null;
+        public bool IsReferral => SupportDelivery is Referral;
+        public bool IsEtransfer => SupportDelivery is ETransfer;
     }
 
-    public abstract class Referral : Support
+    public abstract class SupportDelivery
+    { }
+
+    public class Referral : SupportDelivery
     {
         public string? SupplierId { get; set; }
         public string? SupplierNotes { get; set; }
         public string IssuedToPersonName { get; set; }
-        public string? ExternalReferenceId { get; set; }
-        public string IssuedByDisplayName { get; set; }
+        public string? ManualReferralId { get; set; }
+        public string? IssuedByDisplayName { get; set; }
     }
 
-    public class ClothingReferral : Referral
+    public abstract class ETransfer : SupportDelivery
+    { }
+
+    public class Interac : ETransfer
+    {
+        public string? NotificationEmail { get; set; }
+        public string? NotificationMobile { get; set; }
+        public string ReceivingRegistrantId { get; set; }
+    }
+
+    public class ClothingSupport : Support
     {
         public bool ExtremeWinterConditions { get; set; }
         public double TotalAmount { get; set; }
+        public string? ApproverName { get; set; }
     }
 
-    public class IncidentalsReferral : Referral
+    public class IncidentalsSupport : Support
     {
         public string ApprovedItems { get; set; }
         public double TotalAmount { get; set; }
+        public string? ApproverName { get; set; }
     }
 
-    public class FoodGroceriesReferral : Referral
+    public class FoodGroceriesSupport : Support
     {
         public int NumberOfDays { get; set; }
         public double TotalAmount { get; set; }
+        public string? ApproverName { get; set; }
     }
 
-    public class FoodRestaurantReferral : Referral
+    public class FoodRestaurantSupport : Support
     {
         public int NumberOfBreakfastsPerPerson { get; set; }
         public int NumberOfLunchesPerPerson { get; set; }
@@ -114,13 +118,13 @@ namespace EMBC.ESS.Resources.Supports
         public double TotalAmount { get; set; }
     }
 
-    public class LodgingHotelReferral : Referral
+    public class LodgingHotelSupport : Support
     {
         public int NumberOfNights { get; set; }
         public int NumberOfRooms { get; set; }
     }
 
-    public class LodgingBilletingReferral : Referral
+    public class LodgingBilletingSupport : Support
     {
         public int NumberOfNights { get; set; }
         public string HostName { get; set; }
@@ -130,7 +134,7 @@ namespace EMBC.ESS.Resources.Supports
         public string HostPhone { get; set; }
     }
 
-    public class LodgingGroupReferral : Referral
+    public class LodgingGroupSupport : Support
     {
         public int NumberOfNights { get; set; }
         public string FacilityName { get; set; }
@@ -140,13 +144,13 @@ namespace EMBC.ESS.Resources.Supports
         public string FacilityContactPhone { get; set; }
     }
 
-    public class TransportationTaxiReferral : Referral
+    public class TransportationTaxiSupport : Support
     {
         public string FromAddress { get; set; }
         public string ToAddress { get; set; }
     }
 
-    public class TransportationOtherReferral : Referral
+    public class TransportationOtherSupport : Support
     {
         public double TotalAmount { get; set; }
         public string TransportMode { get; set; }
@@ -158,7 +162,10 @@ namespace EMBC.ESS.Resources.Supports
     {
         Active = 1,
         Expired = 174360000,
-        Void = 2
+        Void = 2,
+        PendingApproval = 174360001,
+        Approved = 174360002,
+        UnderReview = 174360005
     }
 
     public enum SupportVoidReason
@@ -176,7 +183,8 @@ namespace EMBC.ESS.Resources.Supports
 
     public enum SupportMethod
     {
-        Referral = 174360000
+        Referral = 174360000,
+        ETransfer = 174360001
     }
 
     public enum SupportType
