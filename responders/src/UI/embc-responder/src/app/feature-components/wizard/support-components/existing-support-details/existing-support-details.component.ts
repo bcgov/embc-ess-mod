@@ -32,6 +32,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -53,7 +54,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private referralCreationService: ReferralCreationService,
     private alertService: AlertService,
     public evacueeSessionService: EvacueeSessionService,
-    private downloadService: DownloadService
+    private downloadService: DownloadService,
+    private loadEvacueeListService: LoadEvacueeListService
   ) {}
 
   ngOnInit(): void {
@@ -67,14 +69,14 @@ export class ExistingSupportDetailsComponent implements OnInit {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.stepSupportsService.supportCategory.find(
-        (value) => value.value === element?.category
-      );
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.stepSupportsService.supportSubCategory.find(
-        (value) => value.value === element?.subCategory
-      );
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
@@ -244,15 +246,29 @@ export class ExistingSupportDetailsComponent implements OnInit {
               )
               .subscribe({
                 next: (response) => {
-                  const blob = new Blob([response], { type: response.type });
-                  this.downloadService.downloadFile(
-                    window,
-                    blob,
-                    `support-${
-                      this.selectedSupport.id
-                    }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
-                  );
-                  this.isLoading = !this.isLoading;
+                  response
+                    .text()
+                    .then((text) => {
+                      const printWindow = document.createElement('iframe');
+                      printWindow.style.display = 'none';
+                      document.body.appendChild(printWindow);
+                      printWindow.contentDocument.write(text);
+                      printWindow.contentWindow.print();
+                      document.body.removeChild(printWindow);
+
+                      // const blob = new Blob([response], { type: response.type });
+                      // this.downloadService.downloadFile(
+                      //   window,
+                      //   blob,
+                      //   `support-${
+                      //     this.selectedSupport.id
+                      //   }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
+                      // );
+                      this.isLoading = !this.isLoading;
+                    })
+                    .catch((error) => {
+                      throw error;
+                    });
                 },
                 error: (error) => {
                   this.isLoading = !this.isLoading;
@@ -319,18 +335,14 @@ export class ExistingSupportDetailsComponent implements OnInit {
   cancelEtransfer(): void {}
 
   getStatusTextToDisplay(enumToText: string): string {
-    console.log(enumToText);
-    console.log(this.stepSupportsService.supportStatus);
-    return this.stepSupportsService.supportStatus.filter(
-      (statusValue) => statusValue.value === enumToText
-    )[0]?.description;
+    return this.loadEvacueeListService
+      .getSupportStatus()
+      .find((statusValue) => statusValue.value === enumToText)?.description;
   }
 
   getMethodTextToDisplay(enumToText: string): string {
-    console.log(enumToText);
-    console.log(this.stepSupportsService.supportMethods);
-    return this.stepSupportsService.supportMethods.filter(
-      (method) => method.value === enumToText
-    )[0]?.description;
+    return this.loadEvacueeListService
+      .getSupportMethods()
+      .find((method) => method.value === enumToText)?.description;
   }
 }

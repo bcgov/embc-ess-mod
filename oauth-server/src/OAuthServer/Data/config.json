@@ -13,6 +13,9 @@
   "ApiScopes": [
     {
       "Name": "registrants-portal-api"
+    },
+    {
+      "Name": "ess-backend"
     }
   ],
   "ApiResources": [
@@ -71,6 +74,36 @@
         "openid",
         "offline_access",
         "registrants-portal-api"
+      ]
+    },
+    {
+      "ClientId": "registrants-portal-api",
+      "ClientSecrets": [
+        {
+          "Value": "CaMNFhnp1U3SUwvpae8GLAVBMzzOSQ/fxeCV37hFdSo="
+        }
+      ],
+      "AccessTokenType": "Jwt",
+      "AllowedGrantTypes": [
+        "client_credentials"
+      ],
+      "AllowedScopes": [
+        "ess-backend"
+      ]
+    },
+    {
+      "ClientId": "responders-portal-api",
+      "ClientSecrets": [
+        {
+          "Value": "CaMNFhnp1U3SUwvpae8GLAVBMzzOSQ/fxeCV37hFdSo="
+        }
+      ],
+      "AccessTokenType": "Jwt",
+      "AllowedGrantTypes": [
+        "client_credentials"
+      ],
+      "AllowedScopes": [
+        "ess-backend"
       ]
     }
   ]

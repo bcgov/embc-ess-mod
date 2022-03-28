@@ -363,22 +363,37 @@ export class ReviewSupportComponent implements OnInit {
     const fileId: string = this.stepSupportsServices.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
       next: (response) => {
-        const blob = new Blob([response], { type: response.type });
-        this.downloadService.downloadFile(
-          window,
-          blob,
-          `supports-${fileId}-${new FlatDateFormatPipe().transform(
-            new Date()
-          )}.pdf`
-        );
+        response
+          .text()
+          .then((text) => {
+            const printWindow = document.createElement('iframe');
+            printWindow.style.display = 'none';
+            document.body.appendChild(printWindow);
+            printWindow.contentDocument.write(text);
+            printWindow.contentWindow.print();
+            document.body.removeChild(printWindow);
 
-        //Clearing Draft supports array and updating the supports list for the selected ESS File
-        this.referralService.clearDraftSupport();
-        this.reviewSupportService.updateExistingSupportsList();
-        this.showLoader = !this.showLoader;
-        this.router.navigate(['/ess-wizard/add-supports']);
+            //const blob = new Blob([response], { type: response.type });
+            // this.downloadService.downloadFile(
+            //   window,
+            //   blob,
+            //   `supports-${fileId}-${new FlatDateFormatPipe().transform(
+            //     new Date()
+            //   )}.pdf`
+            //);
+
+            //Clearing Draft supports array and updating the supports list for the selected ESS File
+            this.referralService.clearDraftSupport();
+            this.reviewSupportService.updateExistingSupportsList();
+            this.showLoader = !this.showLoader;
+            this.router.navigate(['/ess-wizard/add-supports']);
+          })
+          .catch((error) => {
+            throw error;
+          });
       },
       error: (error) => {
+        console.error('error when processing supports: ', error);
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(

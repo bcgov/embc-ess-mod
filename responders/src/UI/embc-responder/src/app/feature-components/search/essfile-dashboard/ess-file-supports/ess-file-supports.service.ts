@@ -4,6 +4,7 @@ import {
   ObjectWrapper,
   TableFilterModel
 } from 'src/app/core/models/table-filter.model';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Injectable({ providedIn: 'root' })
@@ -18,7 +19,10 @@ export class EssFileSupportsService {
     description: 'All Status'
   };
 
-  constructor(private evacueeSearchService: EvacueeSearchService) {}
+  constructor(
+    private evacueeSearchService: EvacueeSearchService,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) {}
 
   public load(): TableFilterModel {
     return {
@@ -26,32 +30,23 @@ export class EssFileSupportsService {
         {
           type: 'type',
           label: this.defaultType,
-          values: this.evacueeSearchService.supportCategory
+          values: this.loadEvacueeListService
+            .getSupportCategories()
+            .filter((category) => category.description !== '')
         },
         {
           type: 'status',
           label: this.defaultStatus,
-          values: this.evacueeSearchService.supportStatus?.filter(
-            (category, index, self) =>
-              category.description &&
-              self.findIndex((s) => s.description === category.description) ===
-                index
-          )
+          values: this.loadEvacueeListService
+            .getSupportStatus()
+            .filter(
+              (support, index, self) =>
+                support.description &&
+                self.findIndex((s) => s.description === support.description) ===
+                  index
+            )
         }
       ]
     };
-  }
-
-  statusList() {
-    const status = [];
-    for (const [propertyKey, propertyValue] of Object.entries(SupportStatus)) {
-      if (!Number.isNaN(Number(propertyKey))) {
-        continue;
-      }
-      if (propertyKey !== 'Draft') {
-        status.push({ code: propertyValue, description: propertyKey });
-      }
-    }
-    return status;
   }
 }

@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Code } from 'src/app/core/api/models';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 
 @Component({
@@ -20,12 +21,16 @@ export class SelectSupportComponent implements OnInit {
 
   constructor(
     public stepSupportsService: StepSupportsService,
+    private loadEvacueeListService: LoadEvacueeListService,
     private router: Router,
     private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.supportList = this.stepSupportsService.getSupportTypeList();
+    this.supportList = this.loadEvacueeListService
+      .getSupportTypeList()
+      .filter((element) => element.description !== '');
+    console.log(this.supportList);
     this.stepSupportsService.supportDetails = null;
     this.stepSupportsService.supportDelivery = null;
     this.createVerificationForm();

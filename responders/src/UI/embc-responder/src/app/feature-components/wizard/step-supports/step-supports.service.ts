@@ -15,11 +15,7 @@ import {
   Interac
 } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
-import {
-  ConfigurationService,
-  RegistrationsService,
-  TasksService
-} from 'src/app/core/api/services';
+import { RegistrationsService, TasksService } from 'src/app/core/api/services';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
@@ -35,18 +31,12 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
-import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
-  private supportCategoryVal: Code[] = [];
-  private supportSubCategoryVal: Code[] = [];
-  private supportStatusVal: Code[] = [];
-  private supportMethodVal: Code[] = [];
   private currentNeedsAssessmentVal: NeedsAssessment;
   private existingSupportListVal: BehaviorSubject<Support[]> =
     new BehaviorSubject<Support[]>([]);
@@ -67,13 +57,10 @@ export class StepSupportsService {
     private locationService: LocationsService,
     private dialog: MatDialog,
     private referralService: ReferralCreationService,
-    private evacueeSearchService: EvacueeSearchService,
     private registrationsService: RegistrationsService,
     private dateConversionService: DateConversionService,
     private featureService: EtransferFeaturesService,
-    private computeState: ComputeRulesService,
-    private configService: ConfigurationService,
-    private alertService: AlertService
+    private computeState: ComputeRulesService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -98,38 +85,6 @@ export class StepSupportsService {
 
   get supportDelivery(): SupportDeliveryModel {
     return this.supportDeliveryVal;
-  }
-
-  set supportCategory(supportCategoryVal: Code[]) {
-    this.supportCategoryVal = supportCategoryVal;
-  }
-
-  get supportCategory() {
-    return this.supportCategoryVal;
-  }
-
-  set supportSubCategory(supportSubCategoryVal: Code[]) {
-    this.supportSubCategoryVal = supportSubCategoryVal;
-  }
-
-  get supportSubCategory() {
-    return this.supportSubCategoryVal;
-  }
-
-  get supportStatus() {
-    return this.supportStatusVal;
-  }
-
-  set supportStatus(supportStatusVal: Code[]) {
-    this.supportStatusVal = supportStatusVal;
-  }
-
-  get supportMethods() {
-    return this.supportMethodVal;
-  }
-
-  set supportMethods(supportMethodVal: Code[]) {
-    this.supportMethodVal = supportMethodVal;
   }
 
   set currentNeedsAssessment(currentNeedsAssessmentVal: NeedsAssessment) {
@@ -175,111 +130,6 @@ export class StepSupportsService {
 
   get supplierList(): SupplierListItemModel[] {
     return this.supplierListVal;
-  }
-
-  public getCategoryList(): void {
-    this.supportCategory = this.evacueeSearchService.supportCategory;
-    // this.configService
-    //   .configurationGetCodes({ forEnumType: 'SupportCategory' })
-    //   .subscribe(
-    //     (categories: Code[]) => {
-    //       this.supportCategory = categories.filter(
-    //         (category) => category.description !== null
-    //       );
-    //     },
-    //     (error) => {
-    //       this.alertService.clearAlert();
-    //       this.alertService.setAlert(
-    //         'danger',
-    //         globalConst.supportCategoryListError
-    //       );
-    //     }
-    //   );
-  }
-
-  public getSubCategoryList(): void {
-    this.supportSubCategory = this.evacueeSearchService.supportSubCategory;
-    // this.configService
-    //   .configurationGetCodes({ forEnumType: 'SupportSubCategory' })
-    //   .subscribe(
-    //     (subCategories: Code[]) => {
-    //       this.supportSubCategory = subCategories.filter(
-    //         (subCategory) => subCategory.description !== null
-    //       );
-    //     },
-    //     (error) => {
-    //       this.alertService.clearAlert();
-    //       this.alertService.setAlert(
-    //         'danger',
-    //         globalConst.supportCategoryListError
-    //       );
-    //     }
-    //   );
-  }
-
-  public getSupportStatusList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportStatus' })
-      .subscribe({
-        next: (supStatus: Code[]) => {
-          this.supportStatus = supStatus.filter(
-            (status) => status.description !== null
-          );
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      });
-  }
-
-  public getSupportMethodList(): void {
-    this.configService
-      .configurationGetCodes({ forEnumType: 'SupportMethod' })
-      .subscribe({
-        next: (methods: Code[]) => {
-          this.supportMethods = methods.filter(
-            (method) => method.description !== null
-          );
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.supportCategoryListError
-          );
-        }
-      });
-  }
-
-  public getSupportTypeList(): Code[] {
-    let combinedList: Code[] = [];
-    const deleteCategories = new Set();
-
-    // Taking categories from subcategories that should be deleted from category list:
-    for (const subCategory of this.supportSubCategory) {
-      const categoryName = subCategory.value?.split('_', 1).pop();
-      deleteCategories.add(categoryName);
-    }
-
-    //Adding Categories to combinedList:
-    this.supportCategory.forEach((item, index) => {
-      let count = 0;
-      for (const category of deleteCategories) {
-        if (category === item.description) {
-          count++;
-        }
-      }
-      if (count === 0) {
-        combinedList.push(item);
-      }
-    });
-
-    combinedList = [...combinedList, ...this.supportSubCategory];
-    return combinedList;
   }
 
   public getEvacFile(essFileNumber: string): Observable<EvacuationFileModel> {

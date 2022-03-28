@@ -567,18 +567,19 @@ namespace EMBC.ESS.Managers.Events
             });
 
             //convert to pdf
-            var content = await pdfGenerator.Generate(generatedReferrals.Content);
-            var contentType = "application/pdf";
+            //var content = await pdfGenerator.Generate(generatedReferrals.Content);
+            //var contentType = "application/pdf";
+
+            var content = generatedReferrals.Content;
+            var contentType = "text/html";
 
             await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });
 
-            var now = DateTime.UtcNow;
             return new PrintRequestQueryResult
             {
                 Content = content,
                 ContentType = contentType,
-                PrintedOn = now,
-                FileName = $"supports-{file.Id}-{now:yyyyMMddhhmmss:R}.pdf"
+                PrintedOn = printRequest.CreatedOn
             };
         }
 
@@ -590,6 +591,7 @@ namespace EMBC.ESS.Managers.Events
 
             var requestingUser = (await teamRepository.GetMembers(userId: cmd.RequestingUserId, includeStatuses: activeOnlyStatus)).Cast<Resources.Teams.TeamMember>().Single();
 
+            var now = DateTime.UtcNow;
             var referralPrintId = await printingRepository.Manage(new SavePrintRequest
             {
                 PrintRequest = new ReferralPrintRequest
@@ -599,7 +601,8 @@ namespace EMBC.ESS.Managers.Events
                     IncludeSummary = false,
                     RequestingUserId = requestingUser.Id,
                     Type = ReferralPrintType.Reprint,
-                    Comments = cmd.ReprintReason
+                    Comments = cmd.ReprintReason,
+                    Title = $"referral-{cmd.SupportId}-{now:yyyyMMddhhmmss:R}"
                 }
             });
 
