@@ -8,8 +8,7 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
-  ViewChild,
-  ViewEncapsulation
+  ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -21,8 +20,7 @@ import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 @Component({
   selector: 'app-assigned-community-table',
   templateUrl: './assigned-community-table.component.html',
-  styleUrls: ['./assigned-community-table.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./assigned-community-table.component.scss']
 })
 export class AssignedCommunityTableComponent
   implements AfterViewInit, OnChanges
