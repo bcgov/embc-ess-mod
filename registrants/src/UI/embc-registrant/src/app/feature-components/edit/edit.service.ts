@@ -57,7 +57,6 @@ export class EditService {
         break;
       case 'contact-info':
         this.profileDataService.contactDetails = form.value;
-        console.log(this.profileDataService.contactDetails);
         break;
       case 'security-questions':
         this.saveSecurityQuestions(form.get('questions') as FormGroup);
@@ -142,7 +141,6 @@ export class EditService {
         }
         break;
       case 'security-questions':
-        console.log(this.profileDataService.securityQuestions);
         if (this.profileDataService.securityQuestions !== undefined) {
           form
             .get('questions.question1')

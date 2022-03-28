@@ -6,7 +6,7 @@
   padding-bottom: 5px;
 }
 
-.mat-expansion-panel:not([class*="mat-elevation-z"]) {
+.mat-expansion-panel:not([class*='mat-elevation-z']) {
   box-shadow: none !important;
 }
 
@@ -103,4 +103,24 @@ tr.example-element-row:not(.example-expanded-row):hover {
 }
 .support-expired {
   color: #d00000;
+}
+
+.support-paid {
+  color: #4eb0db;
+}
+
+.support-approved {
+  color: #2204b5;
+}
+
+.support-pending-approval {
+  color: #47bab8;
+}
+
+.support-under-review {
+  color: #47bab8;
+}
+
+.support-cancel {
+  color: #dc2791;
 }

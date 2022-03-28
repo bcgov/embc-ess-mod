@@ -12,6 +12,7 @@ import { TimeoutService } from './core/services/timeout.service';
 import { OutageService } from './feature-components/outage/outage.service';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { Subscription } from 'rxjs';
+import { LoadEvacueeListService } from './core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-root',
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit {
     private alertService: AlertService,
     private locationService: LocationsService,
     private loadTeamListService: LoadTeamListService,
+    private loadEvacueeListService: LoadEvacueeListService,
     private timeOutService: TimeoutService
   ) {
     this.router.events.subscribe((e) => {
@@ -69,7 +71,10 @@ export class AppComponent implements OnInit {
         const nextUrl = await this.authenticationService.login();
         const userProfile = await this.userService.loadUserProfile();
         const location = await this.locationService.loadStaticLocationLists();
+        const evacuee =
+          await this.loadEvacueeListService.loadStaticEvacueeLists();
         const team = await this.loadTeamListService.loadStaticTeamLists();
+
         const nextRoute = decodeURIComponent(
           userProfile.requiredToSignAgreement
             ? 'electronic-agreement'

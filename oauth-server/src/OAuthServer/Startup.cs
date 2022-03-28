@@ -119,7 +119,6 @@ namespace OAuthServer
             encryptionKey.Use = "enc";
             builder.AddValidationKey(new SecurityKeyInfo { Key = encryptionKey });
 
-            services.AddDistributedMemoryCache();
             services.AddResponseCompression();
 
             services.AddAuthentication()
@@ -249,6 +248,7 @@ namespace OAuthServer
             app.UseForwardedHeaders();
             app.UseRouting();
             app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

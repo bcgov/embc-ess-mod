@@ -24,10 +24,7 @@ export class EvacueeSearchComponent implements OnInit {
     private alertService: AlertService,
     private userService: UserService,
     private taskSearchService: TaskSearchService
-  ) {
-    this.evacueeSearchService.getCategoryList();
-    this.evacueeSearchService.getSubCategoryList();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.evacueeSessionService.clearEvacueeSession();

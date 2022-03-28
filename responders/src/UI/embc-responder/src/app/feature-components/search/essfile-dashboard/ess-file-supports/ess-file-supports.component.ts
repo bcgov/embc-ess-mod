@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   ClothingSupport,
+  Code,
   FoodGroceriesSupport,
   FoodRestaurantSupport,
   IncidentalsSupport,
@@ -22,13 +23,15 @@ import {
   LodgingHotelSupport,
   Referral,
   Support,
+  SupportMethod,
+  SupportStatus,
   TransportationOtherSupport,
   TransportationTaxiSupport
 } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
-import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { EssFileSupportsService } from './ess-file-supports.service';
 
 @Component({
@@ -44,12 +47,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   supports$: Observable<Support[]>;
   essFile: EvacuationFileModel;
   filtersToLoad: TableFilterModel;
+  supportMethod = SupportMethod;
+  supportStatus: Code[] = [];
 
   constructor(
     private router: Router,
     private cd: ChangeDetectorRef,
     private essFileSupportsService: EssFileSupportsService,
-    private evacueeSearchService: EvacueeSearchService
+    private loadEvacueeListService: LoadEvacueeListService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -70,6 +75,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     this.supports.paginator = this.paginator;
     this.supports$ = this.supports.connect();
     this.filtersToLoad = this.essFileSupportsService.load();
+    this.supportStatus = this.loadEvacueeListService.getSupportStatus();
   }
 
   ngAfterViewInit(): void {
@@ -96,6 +102,10 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getStatusDescription(status: SupportStatus) {
+    return this.supportStatus?.find((s) => s.value === status)?.description;
+  }
+
   getExternalReferralId(element: Support): string {
     return (element.supportDelivery as Referral).manualReferralId;
   }
@@ -117,11 +127,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
   supportFilterPredicate = (data: any, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'status') {
+      //Two statuses have the same description, but different values
+      //filter workaround so that the description selected can include multiple status values with the same description
+      const possibleValues = this.supportStatus
+        ?.filter((s) => s.description === searchString.value)
+        .map((a) => a.value.trim().toLowerCase());
       if (
-        data.status
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        possibleValues.length === 0 ||
+        possibleValues.includes(data.status.trim().toLowerCase())
       ) {
         return true;
       }
@@ -188,14 +201,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.evacueeSearchService.supportCategory.find(
-        (value) => value.value === element?.category
-      );
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.evacueeSearchService.supportSubCategory.find(
-        (value) => value.value === element?.subCategory
-      );
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
