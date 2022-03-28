@@ -20,12 +20,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace EMBC.Utilities.Messaging
 {
-    internal class AuthInterceptor : Interceptor
+    internal class ClientAuthenticationInterceptor : Interceptor
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ITokenProvider tokenProvider;
 
-        public AuthInterceptor(IHttpContextAccessor httpContextAccessor, ITokenProvider tokenProvider)
+        public ClientAuthenticationInterceptor(IHttpContextAccessor httpContextAccessor, ITokenProvider tokenProvider)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.tokenProvider = tokenProvider;
@@ -33,9 +33,13 @@ namespace EMBC.Utilities.Messaging
 
         public override AsyncUnaryCall<TResponse> AsyncUnaryCall<TRequest, TResponse>(TRequest request, ClientInterceptorContext<TRequest, TResponse> context, AsyncUnaryCallContinuation<TRequest, TResponse> continuation)
         {
-            //var token = httpContextAccessor.HttpContext?.Request?.Headers.Authorization.ToString() ?? string.Empty;
-            var token = tokenProvider.AcquireToken().GetAwaiter().GetResult();
-            if (!string.IsNullOrEmpty(token) && context.Options.Headers != null) context.Options.Headers.Add("Authorization", token);
+            var serverToken = tokenProvider.AcquireToken().GetAwaiter().GetResult();
+            var userToken = httpContextAccessor.HttpContext?.Request.Headers.Authorization;
+            if (context.Options.Headers != null)
+            {
+                if (!string.IsNullOrEmpty(serverToken)) context.Options.Headers.Add("Authorization", $"bearer {serverToken}");
+                if (!string.IsNullOrEmpty(userToken)) context.Options.Headers.Add("UserToken", $"{userToken}");
+            }
             return continuation(request, context);
         }
     }

@@ -177,7 +177,7 @@ namespace EMBC.Responders.API.Controllers
         public string Issuer { get; set; }
         public string ClientId { get; set; }
         public string PostLogoutRedirectUrl { get; set; }
-        public string Scope { get; set; } = "openid profile email offline_access ess-backend";
+        public string Scope { get; set; } = "openid profile email offline_access responders-portal-api ess-backend";
     }
 
     public class Code

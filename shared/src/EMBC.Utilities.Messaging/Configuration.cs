@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Security;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Extensions;
@@ -10,6 +11,7 @@ using Grpc.Core;
 using Grpc.Net.Client.Balancer;
 using Grpc.Net.Client.Configuration;
 using Grpc.Net.ClientFactory;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EMBC.Utilities.Messaging
@@ -35,57 +38,72 @@ namespace EMBC.Utilities.Messaging
             {
                 configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => { });
                 configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
-                configurationServices.Services.AddAuthentication(opts =>
-                {
-                    opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opts =>
-                {
-                    configurationServices.Configuration.GetSection("auth:jwt").Bind(opts);
+                configurationServices.Services
+                    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddScheme<AuthenticationSchemeOptions, AnonymousAuthenticationHandler>(AnonymousAuthenticationHandler.AuthenticationScheme, opts => { })
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opts =>
+                    {
+                        configurationServices.Configuration.GetSection("messaging:oauth").Bind(opts);
 
-                    opts.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = false,
-                        ValidateIssuer = true,
-                        RequireSignedTokens = true,
-                        RequireAudience = false,
-                        RequireExpirationTime = true,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromSeconds(60),
-                        NameClaimType = ClaimTypes.Upn,
-                        RoleClaimType = ClaimTypes.Role,
-                        ValidateActor = true,
-                        ValidateIssuerSigningKey = true,
-                    };
-                    opts.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = async c =>
+                        opts.TokenValidationParameters = new TokenValidationParameters
                         {
-                            await Task.CompletedTask;
-                            var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                            logger.LogError(c.Exception, $"Error authenticating token");
-                        },
-                        OnTokenValidated = async c =>
+                            ValidateAudience = false,
+                            ValidateIssuer = true,
+                            RequireSignedTokens = true,
+                            RequireAudience = false,
+                            RequireExpirationTime = true,
+                            ValidateLifetime = true,
+                            ClockSkew = TimeSpan.FromSeconds(60),
+                            NameClaimType = ClaimTypes.Upn,
+                            RoleClaimType = ClaimTypes.Role,
+                            ValidateActor = true,
+                            ValidateIssuerSigningKey = false,
+                        };
+                        opts.Events = new JwtBearerEvents
                         {
-                            await Task.CompletedTask;
-                            var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                            logger.LogDebug("Token validated for {0}", c.Principal?.Identity?.Name);
-                        }
-                    };
-                    opts.Validate();
-                });
-                configurationServices.Services.AddAuthorization(options =>
-                {
-                    options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
-                    {
-                        policy
-                        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                        .RequireAuthenticatedUser()
-                        .RequireScope("ess-backend")
-                        ;
+                            OnAuthenticationFailed = async c =>
+                            {
+                                await Task.CompletedTask;
+                                var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                                logger.LogError(c.Exception, $"Error authenticating token");
+                            },
+                            OnTokenValidated = async c =>
+                            {
+                                await Task.CompletedTask;
+                                var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                                logger.LogDebug("Token validated for {0}", c.Principal?.Identity?.Name);
+                            }
+                        };
+                        opts.Validate();
                     });
 
-                    options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
+                configurationServices.Services.AddAuthorization(opts =>
+                {
+                    opts.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                    {
+                        policy
+                            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                            .RequireAuthenticatedUser()
+                            .RequireScope("ess-backend")
+                            ;
+                    });
+                    opts.AddPolicy(AnonymousAuthenticationHandler.AuthenticationScheme, policy =>
+                    {
+                        policy
+                            .AddAuthenticationSchemes(AnonymousAuthenticationHandler.AuthenticationScheme)
+                            .RequireAssertion(ctx => true)
+                            ;
+                    });
+                    if (options.AuthorizationEnabled)
+                    {
+                        // JWT bearer authentication policy
+                        opts.DefaultPolicy = opts.GetPolicy(JwtBearerDefaults.AuthenticationScheme) ?? null!;
+                    }
+                    else
+                    {
+                        // anonymous authentication policy
+                        opts.DefaultPolicy = opts.GetPolicy(AnonymousAuthenticationHandler.AuthenticationScheme) ?? null!;
+                    }
                 });
             }
 
@@ -93,7 +111,7 @@ namespace EMBC.Utilities.Messaging
             {
                 configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(15)));
                 configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
-                configurationServices.Services.TryAddTransient<AuthInterceptor>();
+                configurationServices.Services.TryAddTransient<ClientAuthenticationInterceptor>();
                 if (options.Url == null) throw new Exception($"Messaging url is missing - can't configure messaging client");
                 configurationServices.Services.AddGrpcClient<Dispatcher.DispatcherClient>((sp, opts) =>
                 {
@@ -138,10 +156,19 @@ namespace EMBC.Utilities.Messaging
                             }
                         }
                     };
-                }).AddInterceptor<AuthInterceptor>(InterceptorScope.Client)
+                }).AddInterceptor<ClientAuthenticationInterceptor>(InterceptorScope.Client)
                 .EnableCallContextPropagation(opts => opts.SuppressContextNotFoundErrors = true);
 
                 configurationServices.Services
+                    .Configure<OauthTokenProviderOptions>(configurationServices.Configuration.GetSection("messaging:oauth"))
+                    .PostConfigure<OauthTokenProviderOptions>(opts =>
+                    {
+                        if (options.AuthorizationEnabled && !string.IsNullOrEmpty(opts.MetadataAddress))
+                        {
+                            // load the oidc config from the oauth server
+                            opts.OidcConfig = OpenIdConnectConfigurationRetriever.GetAsync(opts.MetadataAddress, CancellationToken.None).GetAwaiter().GetResult();
+                        }
+                    })
                     .AddTransient<ITokenProvider, OAuthTokenProvider>()
                     .AddHttpClient("messaging_token").SetHandlerLifetime(TimeSpan.FromMinutes(30));
 
@@ -185,15 +212,7 @@ namespace EMBC.Utilities.Messaging
 
         public bool AllowInvalidServerCertificate { get; set; } = false;
         public MessagingMode Mode { get; set; } = MessagingMode.Both;
-        public OAuthOptions? OAuth { get; set; }
-    }
-
-    public class OAuthOptions
-    {
-        public Uri Url { get; set; } = null!;
-        public string ClientId { get; set; } = null!;
-        public string ClientSecret { get; set; } = null!;
-        public string Scope { get; set; } = "openid ess-backend";
+        public bool AuthorizationEnabled { get; set; } = false;
     }
 
     public enum MessagingMode

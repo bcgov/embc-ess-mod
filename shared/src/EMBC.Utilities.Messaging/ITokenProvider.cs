@@ -21,6 +21,7 @@ using EMBC.Utilities.Caching;
 using IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace EMBC.Utilities.Messaging
 {
@@ -34,10 +35,10 @@ namespace EMBC.Utilities.Messaging
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ICache cache;
         private readonly ILogger<OAuthTokenProvider> logger;
-        private readonly MessagingOptions options;
+        private readonly OauthTokenProviderOptions options;
         private const string cacheKey = "messaging_token";
 
-        public OAuthTokenProvider(IHttpClientFactory httpClientFactory, ICache cache, IOptions<MessagingOptions> options, ILogger<OAuthTokenProvider> logger)
+        public OAuthTokenProvider(IHttpClientFactory httpClientFactory, ICache cache, IOptions<OauthTokenProviderOptions> options, ILogger<OAuthTokenProvider> logger)
         {
             this.httpClientFactory = httpClientFactory;
             this.cache = cache;
@@ -49,16 +50,16 @@ namespace EMBC.Utilities.Messaging
 
         private async Task<string> AcquireTokenInternal()
         {
-            if (options.OAuth == null) return string.Empty;
+            if (options.OidcConfig == null) return string.Empty;
 
             using var httpClient = httpClientFactory.CreateClient("messaging_token");
 
             var response = await httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
-                RequestUri = options.OAuth.Url,
-                ClientId = options.OAuth.ClientId,
-                ClientSecret = options.OAuth.ClientSecret,
-                Scope = options.OAuth.Scope,
+                Address = options.OidcConfig.TokenEndpoint,
+                ClientId = options.ClientId,
+                ClientSecret = options.ClientSecret,
+                Scope = options.Scope,
             });
 
             if (response.IsError) throw new Exception(response.Error);
@@ -66,5 +67,14 @@ namespace EMBC.Utilities.Messaging
             logger.LogDebug("Messaging token acquired");
             return response.AccessToken;
         }
+    }
+
+    internal class OauthTokenProviderOptions
+    {
+        public string MetadataAddress { get; set; } = null!;
+        public string ClientId { get; set; } = null!;
+        public string ClientSecret { get; set; } = null!;
+        public string Scope { get; set; } = null!;
+        public OpenIdConnectConfiguration OidcConfig { get; set; } = null!;
     }
 }
