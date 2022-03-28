@@ -130,7 +130,7 @@ export class EvacueeSearchService {
       .subscribe({
         next: (categories: Code[]) => {
           this.supportStatus = categories.filter(
-            (category, index, self) => category.description
+            (status) => status.description
           );
         },
         error: (error) => {

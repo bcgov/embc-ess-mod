@@ -33,20 +33,14 @@ export class ViewSupportsService {
         {
           type: 'status',
           label: this.defaultStatus,
-          values: this.statusList()
+          values: this.stepSupportsService.supportStatus?.filter(
+            (status, index, self) =>
+              status.description &&
+              self.findIndex((s) => s.description === status.description) ===
+                index
+          )
         }
       ]
     };
-  }
-
-  statusList() {
-    const status = [];
-    for (const [propertyKey, propertyValue] of Object.entries(SupportStatus)) {
-      if (!Number.isNaN(Number(propertyKey))) {
-        continue;
-      }
-      status.push({ code: propertyValue, description: propertyKey });
-    }
-    return status;
   }
 }

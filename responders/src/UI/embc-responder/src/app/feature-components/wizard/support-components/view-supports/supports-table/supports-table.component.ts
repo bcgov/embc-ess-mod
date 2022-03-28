@@ -18,10 +18,18 @@ import {
   Referral,
   SupportSubCategory,
   LodgingBilletingSupport,
-  LodgingGroupSupport
+  LodgingGroupSupport,
+  SupportStatus,
+  Code,
+  SupportMethod,
+  SupportCategory,
+  ClothingSupport,
+  IncidentalsSupport,
+  FoodGroceriesSupport
 } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
+import * as globalConst from '../../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-supports-table',
@@ -50,6 +58,7 @@ export class SupportsTableComponent
   dataSource = new MatTableDataSource();
   color = '#169BD5';
   data: any;
+  supportStatus: Code[] = [];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -74,7 +83,9 @@ export class SupportsTableComponent
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.supportStatus = this.stepSupportsService.supportStatus;
+  }
 
   /**
    * Sets paginator and sort on tables
@@ -102,11 +113,14 @@ export class SupportsTableComponent
   teamFilterPredicate = (data: any, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'status') {
+      //Two statuses have the same description, but different values
+      //filter workaround so that the description selected can include multiple status values with the same description
+      const possibleValues = this.supportStatus
+        ?.filter((s) => s.description === searchString.value)
+        .map((a) => a.value.trim().toLowerCase());
       if (
-        data.status
-          .trim()
-          .toLowerCase()
-          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        possibleValues.length === 0 ||
+        possibleValues.includes(data.status.trim().toLowerCase())
       ) {
         return true;
       }
@@ -150,12 +164,58 @@ export class SupportsTableComponent
   }
 
   displaySupplierName(element: Support): string {
+    if (element.method === SupportMethod.ETransfer) {
+      return 'e-Transfer';
+    }
     if (element.subCategory === SupportSubCategory.Lodging_Billeting) {
       return (element as LodgingBilletingSupport).hostName;
     } else if (element.subCategory === SupportSubCategory.Lodging_Group) {
       return (element as LodgingGroupSupport).facilityName;
     } else {
       return (element.supportDelivery as Referral).supplierName;
+    }
+  }
+
+  getStatusDescription(status: SupportStatus) {
+    return this.supportStatus?.find((s) => s.value === status)?.description;
+  }
+
+  checkExceedsRate(element: Support): boolean {
+    let rate = Number.MAX_SAFE_INTEGER;
+    switch (element?.category) {
+      case SupportCategory.Clothing: {
+        const clothingSupport = element as ClothingSupport;
+        if (clothingSupport.extremeWinterConditions) {
+          rate =
+            globalConst.extremeConditions.rate *
+            clothingSupport.includedHouseholdMembers.length;
+        } else {
+          rate =
+            globalConst.normalConditions.rate *
+            clothingSupport.includedHouseholdMembers.length;
+        }
+        return clothingSupport.totalAmount > rate;
+      }
+      case SupportCategory.Incidentals: {
+        const incidentalsSupport = element as IncidentalsSupport;
+        rate =
+          globalConst.incidentals.rate *
+          incidentalsSupport.includedHouseholdMembers.length;
+        return incidentalsSupport.totalAmount > rate;
+      }
+      case SupportCategory.Food: {
+        if (element?.subCategory === SupportSubCategory.Food_Groceries) {
+          const foodGroceriesSupport = element as FoodGroceriesSupport;
+          rate =
+            globalConst.groceriesRate.rate * foodGroceriesSupport.numberOfDays;
+          return foodGroceriesSupport.totalAmount > rate;
+        } else {
+          return false;
+        }
+      }
+      default: {
+        return false;
+      }
     }
   }
 }

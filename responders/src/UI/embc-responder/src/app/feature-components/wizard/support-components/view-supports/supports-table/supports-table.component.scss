@@ -5,15 +5,15 @@ table {
 th {
   font-size: 16px;
   background-color: rgba(113, 113, 113, 1);
-  color: white
+  color: white;
 }
 
-tr:nth-child(even){
+tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
 tr:hover {
-  background-color: #E1E1E1;
+  background-color: #e1e1e1;
   cursor: pointer;
 }
 
@@ -28,6 +28,24 @@ tr:hover {
 }
 .expired {
   color: rgba(201, 0, 0, 1);
+}
+.pending-approval {
+  color: #1eaeaa;
+}
+.under-review {
+  color: #1eaeaa;
+}
+.approved {
+  color: #1f00b5;
+}
+.paid {
+  color: #169bd5;
+}
+.cancelled {
+  color: #db1087;
+}
+.warning {
+  color: red;
 }
 
 th {
