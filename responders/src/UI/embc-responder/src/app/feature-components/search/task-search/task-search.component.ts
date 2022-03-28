@@ -5,6 +5,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TaskSearchService } from './task-search.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-task-search',
@@ -21,11 +22,13 @@ export class TaskSearchComponent implements OnInit {
     private customValidation: CustomValidationService,
     private router: Router,
     private taskSearchService: TaskSearchService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private featuresService: EtransferFeaturesService
   ) {}
 
   ngOnInit(): void {
     this.constructTaskSearchForm();
+    this.featuresService.clear();
   }
 
   /**

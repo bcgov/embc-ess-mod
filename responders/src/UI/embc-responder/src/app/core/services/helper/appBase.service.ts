@@ -16,13 +16,11 @@ export class AppBaseService {
       : JSON.parse(this.cacheService.get('appCache'));
   }
   public setAppModel(value: Partial<AppBaseModel>) {
-    this.appModelVal = { ...this.appModelVal, ...value };
+    this.appModelVal = { ...this.appModel, ...value };
   }
 
-  createModel() {
-    return {
-      selectedEssTask: null,
-      selectedUserPathway: null
-    };
+  clear() {
+    this.appModelVal = undefined;
+    this.cacheService.remove('appCache');
   }
 }
