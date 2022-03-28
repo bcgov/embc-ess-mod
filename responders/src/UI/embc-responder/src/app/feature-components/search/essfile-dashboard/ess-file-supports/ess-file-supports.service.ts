@@ -32,26 +32,13 @@ export class EssFileSupportsService {
           type: 'status',
           label: this.defaultStatus,
           values: this.evacueeSearchService.supportStatus?.filter(
-            (category, index, self) =>
-              category.description &&
-              self.findIndex((s) => s.description === category.description) ===
+            (support, index, self) =>
+              support.description &&
+              self.findIndex((s) => s.description === support.description) ===
                 index
           )
         }
       ]
     };
-  }
-
-  statusList() {
-    const status = [];
-    for (const [propertyKey, propertyValue] of Object.entries(SupportStatus)) {
-      if (!Number.isNaN(Number(propertyKey))) {
-        continue;
-      }
-      if (propertyKey !== 'Draft') {
-        status.push({ code: propertyValue, description: propertyKey });
-      }
-    }
-    return status;
   }
 }
