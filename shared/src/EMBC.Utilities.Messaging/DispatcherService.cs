@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Google.Protobuf;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -13,6 +14,7 @@ namespace EMBC.Utilities.Messaging
 {
     internal class DispatcherService : Dispatcher.DispatcherBase
     {
+        [Authorize]
         public override async Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
         {
             var serviceProvider = context.GetHttpContext().RequestServices;
