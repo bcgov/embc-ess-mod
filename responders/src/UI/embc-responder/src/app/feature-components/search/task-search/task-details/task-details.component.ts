@@ -6,6 +6,8 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TaskSearchService } from '../task-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-task-details',
@@ -15,10 +17,6 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 export class TaskDetailsComponent implements OnInit {
   essTask: EssTaskModel;
   taskNumber: string;
-  // taskStatus: string;
-  // taskCommunity: string;
-  // taskStartDate: string;
-  // taskEndDate: string;
   showLoader = false;
   isSubmitted = false;
 
@@ -27,7 +25,8 @@ export class TaskDetailsComponent implements OnInit {
     private userService: UserService,
     private taskSearchService: TaskSearchService,
     private alertService: AlertService,
-    private appBaseService: AppBaseService
+    private featuresService: EtransferFeaturesService,
+    private computeState: ComputeRulesService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -35,10 +34,6 @@ export class TaskDetailsComponent implements OnInit {
           .essTask as EssTaskModel;
         this.essTask = state;
         this.taskNumber = state.id;
-        // this.taskStatus = state.status;
-        // this.taskCommunity = state.communityName;
-        // this.taskStartDate = state.startDate;
-        // this.taskEndDate = state.endDate;
       }
     }
   }
@@ -74,7 +69,8 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   updateTaskNumberValues(): void {
-    this.appBaseService.selectedEssTask = this.essTask;
+    this.featuresService.setAppModel({ selectedEssTask: this.essTask });
+    this.computeState.triggerEvent();
     this.userService.updateTaskNumber(
       this.essTask?.id,
       this.essTask?.status,

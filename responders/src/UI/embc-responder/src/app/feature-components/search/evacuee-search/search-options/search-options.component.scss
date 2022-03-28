@@ -1,0 +1,53 @@
+.heading {
+  color: #234075;
+  font-size: 21px;
+  line-height: 30px;
+}
+
+.option-card {
+  height: 250px;
+}
+
+.option-card:hover {
+  cursor: pointer;
+}
+
+.highlight {
+  color: #169bd5;
+  font-weight: bold;
+}
+
+.text-subheading {
+  text-align: center;
+  color: #234075;
+  font-size: 21px;
+}
+
+.disabled {
+  cursor: default !important;
+  background-color: rgba(242, 242, 242, 1);
+  pointer-events: none;
+}
+
+.selected-card {
+  background-color: rgba(242, 242, 242, 1);
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgba(252, 186, 25, 1);
+}
+
+.selected-icon-container {
+  position: absolute;
+  right: -13px;
+  top: -13px;
+}
+
+.selected-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.submit {
+  width: 50%;
+}

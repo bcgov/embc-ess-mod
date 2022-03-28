@@ -18,6 +18,7 @@ export class ComputeFeaturesService {
     this.computeEtransferStatus();
     this.computeEtransferEligibility();
     this.computeEtransferRequirementContent();
+    this.triggerCaching();
     // console.log(this.featuresService);
   }
 
@@ -29,7 +30,7 @@ export class ComputeFeaturesService {
 
   private computeEtransferStatus() {
     if (
-      this.featuresService?.selectedUserPathway ===
+      this.featuresService?.appModel?.selectedUserPathway ===
         SelectedPathType.paperBased ||
       !this.featuresService.interacAllowed
     ) {
@@ -81,5 +82,9 @@ export class ComputeFeaturesService {
       }
     }
     this.featuresService.etransferRequirement = requirementContent;
+  }
+
+  private triggerCaching() {
+    this.featuresService.setCache();
   }
 }

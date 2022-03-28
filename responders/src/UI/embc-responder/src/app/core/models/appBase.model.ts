@@ -1,3 +1,10 @@
+import { EssTaskModel } from './ess-task.model';
+
+export interface AppBaseModel {
+  selectedEssTask?: EssTaskModel;
+  selectedUserPathway?: SelectedPathType;
+}
+
 export enum SelectedPathType {
   paperBased = 'paperBased',
   digital = 'digital',

@@ -78,4 +78,9 @@ export class EtransferFeaturesService extends AppBaseService {
   public get etransferRequirement(): Array<EtransferRequirementStatus> {
     return this.etransferRequirementVal;
   }
+
+  setCache() {
+    console.log(this.appModel)
+    this.cacheService.set('appCache', this.appModel);
+  }
 }
