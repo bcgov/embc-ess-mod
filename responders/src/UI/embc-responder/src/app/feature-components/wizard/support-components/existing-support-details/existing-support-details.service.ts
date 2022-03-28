@@ -42,6 +42,7 @@ import {
   LocationsService
 } from 'src/app/core/services/locations.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExistingSupportDetailsService {
@@ -49,7 +50,8 @@ export class ExistingSupportDetailsService {
     private registrationService: RegistrationsService,
     private locationService: LocationsService,
     public stepSupportsService: StepSupportsService,
-    private dateConversionService: DateConversionService
+    private dateConversionService: DateConversionService,
+    private loadEvacueeListService: LoadEvacueeListService
   ) {}
 
   voidSupport(
@@ -121,12 +123,14 @@ export class ExistingSupportDetailsService {
       (supplier) => supplier.id === referralDelivery.supplierId
     );
 
-    const category = this.stepSupportsService.supportCategory.find(
-      (supportValue) => supportValue.value === selectedSupport.category
-    );
-    const subCategory = this.stepSupportsService.supportSubCategory.find(
-      (supportValue) => supportValue.value === selectedSupport.subCategory
-    );
+    const category = this.loadEvacueeListService
+      .getSupportCategories()
+      .find((supportValue) => supportValue.value === selectedSupport.category);
+    const subCategory = this.loadEvacueeListService
+      .getSupportSubCategories()
+      .find(
+        (supportValue) => supportValue.value === selectedSupport.subCategory
+      );
 
     this.stepSupportsService.supportTypeToAdd =
       selectedSupport.category === SupportCategory.Clothing ||

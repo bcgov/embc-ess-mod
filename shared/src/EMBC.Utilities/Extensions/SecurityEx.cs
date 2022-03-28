@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EMBC.Utilities.Extensions
 {
@@ -48,5 +51,15 @@ namespace EMBC.Utilities.Extensions
             //read string
             return sr.ReadToEnd();
         }
+
+        private static readonly IEnumerable<string> scopeClaimTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "http://schemas.microsoft.com/identity/claims/scope", "scope" };
+
+        public static AuthorizationPolicyBuilder RequireScope(this AuthorizationPolicyBuilder builder, params string[] scopes) =>
+            builder.RequireAssertion(context =>
+            context.User
+                .Claims
+                .Where(c => scopeClaimTypes.Contains(c.Type))
+                .SelectMany(c => c.Value.Split(' '))
+                .Any(s => scopes.Contains(s, StringComparer.OrdinalIgnoreCase)));
     }
 }

@@ -165,7 +165,10 @@ namespace EMBC.ESS.Resources.Supports
         Void = 2,
         PendingApproval = 174360001,
         Approved = 174360002,
-        UnderReview = 174360005
+        Paid = 174360003,
+        Cancelled = 174360004,
+        UnderReview = 174360005,
+        PendingScan = 174360006
     }
 
     public enum SupportVoidReason
