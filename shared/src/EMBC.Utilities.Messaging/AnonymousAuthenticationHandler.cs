@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace EMBC.Utilities.Messaging
 {
-    public class AnonymousAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    internal class AnonymousAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         public const string AuthenticationScheme = "Anonymous";
 

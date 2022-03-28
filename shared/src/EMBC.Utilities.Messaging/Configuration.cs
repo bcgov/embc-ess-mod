@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Claims;
@@ -71,6 +72,13 @@ namespace EMBC.Utilities.Messaging
                             {
                                 await Task.CompletedTask;
                                 var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                                if (c.Request.Headers.TryGetValue("_user", out var userToken))
+                                {
+                                    var jwtHandler = new JwtSecurityTokenHandler();
+                                    userToken = userToken[0].Replace("bearer ", string.Empty, true, null);
+                                    if (!jwtHandler.CanReadToken(userToken)) throw new InvalidOperationException($"can't read user token");
+                                    //TODO: validate token and add as identity to the principal
+                                }
                                 logger.LogDebug("Token validated for {0}", c.Principal?.Identity?.Name);
                             }
                         };
