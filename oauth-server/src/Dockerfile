@@ -23,7 +23,7 @@ RUN dotnet test -c Release
 
 # build
 FROM build AS publish
-RUN dotnet publish "OAuthServer/OAuthServer.csproj" -c Release -o /app/publish --runtime linux-musl-x64 --no-self-contained
+RUN dotnet publish "OAuthServer/OAuthServer.csproj" -c Release -o /app/publish --runtime linux-x64 --no-self-contained
 
 FROM base AS final
 # copy diagnostics tools
