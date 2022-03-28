@@ -5,11 +5,11 @@ import {
   ObjectWrapper,
   TableFilterModel
 } from 'src/app/core/models/table-filter.model';
-import { StepSupportsService } from '../../step-supports/step-supports.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({ providedIn: 'root' })
 export class ViewSupportsService {
-  typesList: Code[] = this.stepSupportsService.supportCategory;
+  typesList: Code[] = this.loadEvacueeListService.getSupportCategories();
   defaultType: ObjectWrapper = {
     code: 'Support Type',
     description: 'All Support Types'
@@ -20,7 +20,7 @@ export class ViewSupportsService {
     description: 'All Status'
   };
 
-  constructor(public stepSupportsService: StepSupportsService) {}
+  constructor(public loadEvacueeListService: LoadEvacueeListService) {}
 
   public load(): TableFilterModel {
     return {
@@ -28,17 +28,19 @@ export class ViewSupportsService {
         {
           type: 'type',
           label: this.defaultType,
-          values: this.stepSupportsService.supportCategory
+          values: this.loadEvacueeListService.getSupportCategories()
         },
         {
           type: 'status',
           label: this.defaultStatus,
-          values: this.stepSupportsService.supportStatus?.filter(
-            (status, index, self) =>
-              status.description &&
-              self.findIndex((s) => s.description === status.description) ===
-                index
-          )
+          values: this.loadEvacueeListService
+            .getSupportStatus()
+            .filter(
+              (status, index, self) =>
+                status.description &&
+                self.findIndex((s) => s.description === status.description) ===
+                  index
+            )
         }
       ]
     };

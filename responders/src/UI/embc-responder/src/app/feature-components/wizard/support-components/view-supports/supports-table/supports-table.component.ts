@@ -28,7 +28,7 @@ import {
   FoodGroceriesSupport
 } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
-import { StepSupportsService } from '../../../step-supports/step-supports.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import * as globalConst from '../../../../../core/services/global-constants';
 
 @Component({
@@ -62,7 +62,7 @@ export class SupportsTableComponent
 
   constructor(
     private cd: ChangeDetectorRef,
-    private stepSupportsService: StepSupportsService
+    private loadEvacueeListService: LoadEvacueeListService
   ) {}
 
   /**
@@ -84,7 +84,7 @@ export class SupportsTableComponent
   }
 
   ngOnInit(): void {
-    this.supportStatus = this.stepSupportsService.supportStatus;
+    this.supportStatus = this.loadEvacueeListService.getSupportStatus();
   }
 
   /**
@@ -151,14 +151,14 @@ export class SupportsTableComponent
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.stepSupportsService.supportCategory.find(
-        (value) => value.value === element?.category
-      );
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.stepSupportsService.supportSubCategory.find(
-        (value) => value.value === element?.subCategory
-      );
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
