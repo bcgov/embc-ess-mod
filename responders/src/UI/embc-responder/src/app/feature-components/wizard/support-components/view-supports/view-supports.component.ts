@@ -23,6 +23,7 @@ import { WizardService } from '../../wizard.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { BehaviorSubject } from 'rxjs';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-view-supports',
@@ -50,7 +51,8 @@ export class ViewSupportsComponent implements OnInit {
     private wizardService: WizardService,
     private cd: ChangeDetectorRef,
     public evacueeSessionService: EvacueeSessionService,
-    private locationsService: LocationsService
+    private locationsService: LocationsService,
+    private loadEvacueeListService: LoadEvacueeListService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -61,7 +63,7 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stepSupportsService.getSupportStatusList();
+    this.loadEvacueeListService.getSupportStatus();
     this.loadSupportList();
     this.filtersToLoad = this.viewSupportsService.load();
     this.supportListEvent.subscribe((values) => {

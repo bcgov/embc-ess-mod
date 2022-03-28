@@ -18,7 +18,6 @@ import {
   FoodGroceriesSupport,
   FoodRestaurantSupport,
   IncidentalsSupport,
-  Interac,
   LodgingBilletingSupport,
   LodgingGroupSupport,
   LodgingHotelSupport,
@@ -32,7 +31,7 @@ import {
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
-import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { EssFileSupportsService } from './ess-file-supports.service';
 
 @Component({
@@ -55,7 +54,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     private router: Router,
     private cd: ChangeDetectorRef,
     private essFileSupportsService: EssFileSupportsService,
-    private evacueeSearchService: EvacueeSearchService
+    private loadEvacueeListService: LoadEvacueeListService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -76,7 +75,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     this.supports.paginator = this.paginator;
     this.supports$ = this.supports.connect();
     this.filtersToLoad = this.essFileSupportsService.load();
-    this.supportStatus = this.evacueeSearchService.supportStatus;
+    this.supportStatus = this.loadEvacueeListService.getSupportStatus();
   }
 
   ngAfterViewInit(): void {
@@ -202,14 +201,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
 
   generateSupportType(element: Support): string {
     if (element?.subCategory === 'None') {
-      const category = this.evacueeSearchService.supportCategory.find(
-        (value) => value.value === element?.category
-      );
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
       return category?.description;
     } else {
-      const subCategory = this.evacueeSearchService.supportSubCategory.find(
-        (value) => value.value === element?.subCategory
-      );
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
       return subCategory?.description;
     }
   }
