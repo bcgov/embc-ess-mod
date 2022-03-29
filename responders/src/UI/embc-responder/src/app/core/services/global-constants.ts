@@ -462,6 +462,8 @@ export const securityQuestionError =
   'Unable to load security questions. Please try again later';
 export const taskSearchError =
   'Unable to retrieve this task number. Please try again later';
+export const taskSignInError =
+  'Unable to signIn into task. Please try again later';
 export const evacueeSearchError =
   'Unable to complete the search at this time. Please try again later';
 export const notesListError =

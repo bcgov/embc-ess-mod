@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ComputeFeaturesService } from './helper/computeFeatures.service';
 
 @Injectable({
@@ -21,7 +21,6 @@ export class ComputeRulesService {
   listener() {
     this.eventSubject$.subscribe({
       next: () => {
-        // console.log('here');
         this.computeFeaturesService.execute();
       }
     });

@@ -1,10 +1,14 @@
 <div class="container container-frame">
   <div class="content-container">
     <ng-container *ngIf="showDataEntryComponent">
-      <app-data-entry
+      <app-search-options
         (showDataEntryComponent)="changeDataEntryComponent($event)"
         (showIDPhotoComponent)="changeVerifyIdComponent($event)"
-      ></app-data-entry>
+      ></app-search-options>
+      <!-- <app-data-entry
+        (showDataEntryComponent)="changeDataEntryComponent($event)"
+        (showIDPhotoComponent)="changeVerifyIdComponent($event)"
+      ></app-data-entry> -->
     </ng-container>
 
     <ng-container *ngIf="showPhotoIDComponent">
