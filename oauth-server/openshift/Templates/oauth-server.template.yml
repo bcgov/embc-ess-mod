@@ -163,11 +163,11 @@ objects:
             - name: oauth-server
               resources:
                 limits:
-                  cpu: 75m
-                  memory: 512Mi
-                requests:
-                  cpu: 15m
+                  cpu: 40m
                   memory: 256Mi
+                requests:
+                  cpu: 10m
+                  memory: 64Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
@@ -191,16 +191,16 @@ objects:
                   path: /hc/live
                   port: 8080
                 timeoutSeconds: 5
-                periodSeconds: 10
+                periodSeconds: 30
                 successThreshold: 1
-                failureThreshold: 3
+                failureThreshold: 5
               startupProbe:
                 httpGet:
-                  path: /hc/startup
+                  path: /hc/ready
                   port: 8080
                 initialDelaySeconds: 30
                 timeoutSeconds: 5
-                periodSeconds: 10
+                periodSeconds: 30
                 successThreshold: 1
                 failureThreshold: 5
               readinessProbe:
@@ -208,9 +208,9 @@ objects:
                   path: /hc/ready
                   port: 8080
                 timeoutSeconds: 5
-                periodSeconds: 10
+                periodSeconds: 30
                 successThreshold: 1
-                failureThreshold: 3
+                failureThreshold: 5
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -248,21 +248,21 @@ objects:
         kind: DeploymentConfig
         name: ${APP_NAME}-oauth-server
         apiVersion: apps.openshift.io/v1
-      minReplicas: 2
-      maxReplicas: 10
+      minReplicas: 3
+      maxReplicas: 6
       metrics:
         - type: Resource
           resource:
             name: cpu
             target:
               type: Utilization
-              averageUtilization: 75
+              averageUtilization: 200
         - type: Resource
           resource:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 75
+              averageUtilization: 200
 
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"

@@ -40,6 +40,10 @@ parameters:
   - description: Oauth server client secret
     name: OAUTH_API_CLIENTSECRET
     required: true
+  - description: Oauth server client secret
+    name: OAUTH_API_SCOPE
+    required: true
+    value: "ess-backend"
   - description: registrants portal client id
     name: OAUTH_UI_CLIENTID
     required: true
@@ -86,6 +90,8 @@ objects:
       auth__oidc__issuer: ${OAUTH_AUTHORITY}
       TIMEOUT__MINUTES: ${TIMEOUT_MINUTES}
       TIMEOUT__WARNINGDURATION: ${TIMEOUT_WARNINGDURATION}
+      messaging__authorizationEnabled: "true"
+      messaging__oauth__metadataAddress: ${OAUTH_AUTHORITY}/.well-known/openid-configuration
 
   - kind: Secret
     apiVersion: v1
@@ -103,6 +109,9 @@ objects:
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
       SPLUNK_URL: ${SPLUNK_URL}
       SPLUNK_TOKEN: ${SPLUNK_TOKEN}
+      messaging__oauth__clientId: ${OAUTH_API_CLIENTID}
+      messaging__oauth__clientSecret: ${OAUTH_API_CLIENTSECRET}
+      messaging__oauth__scope: ${OAUTH_API_SCOPE}
 
   - kind: Service
     apiVersion: v1
@@ -338,7 +347,7 @@ objects:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 150
+              averageUtilization: 125
 
   - apiVersion: v1
     kind: ConfigMap

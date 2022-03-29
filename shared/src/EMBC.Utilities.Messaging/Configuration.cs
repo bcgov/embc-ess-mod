@@ -111,6 +111,7 @@ namespace EMBC.Utilities.Messaging
                     {
                         // anonymous authentication policy
                         opts.DefaultPolicy = opts.GetPolicy(AnonymousAuthenticationHandler.AuthenticationScheme) ?? null!;
+                        configurationServices.Logger.LogWarning("Messaging service authentication is disabled");
                     }
                 });
             }
@@ -175,6 +176,10 @@ namespace EMBC.Utilities.Messaging
                         {
                             // load the oidc config from the oauth server
                             opts.OidcConfig = OpenIdConnectConfigurationRetriever.GetAsync(opts.MetadataAddress, CancellationToken.None).GetAwaiter().GetResult();
+                        }
+                        else
+                        {
+                            configurationServices.Logger.LogWarning("Messaging client authentication is disabled");
                         }
                     })
                     .AddTransient<ITokenProvider, OAuthTokenProvider>()
