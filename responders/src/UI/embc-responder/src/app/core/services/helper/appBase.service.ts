@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AppBaseModel } from '../../models/appBase.model';
+import { AppBaseModel, SelectedPathType } from '../../models/appBase.model';
+import { EssTaskModel } from '../../models/ess-task.model';
 import { CacheService } from '../cache.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppBaseService {
-  private appModelVal: Partial<AppBaseModel>;
+  private appModelVal: AppBaseModel;
 
   constructor(public cacheService: CacheService) {}
 
@@ -15,7 +16,8 @@ export class AppBaseService {
       ? this.appModelVal
       : JSON.parse(this.cacheService.get('appCache'));
   }
-  public setAppModel(value: Partial<AppBaseModel>) {
+
+  public set appModel(value: Partial<AppBaseModel>) {
     this.appModelVal = { ...this.appModel, ...value };
   }
 

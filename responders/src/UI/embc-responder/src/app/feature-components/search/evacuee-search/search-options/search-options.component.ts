@@ -43,9 +43,9 @@ export class SearchOptionsComponent implements OnInit {
     if (this.selectedPathway === undefined) {
       this.noSelectionFlag = true;
     } else {
-      this.appBaseService.setAppModel({
+      this.appBaseService.appModel = {
         selectedUserPathway: this.selectedPathway
-      });
+      };
       if (this.selectedPathway === SelectedPathType.paperBased) {
         this.evacueeSessionService.isPaperBased = true;
       } else {

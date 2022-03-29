@@ -68,7 +68,7 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   updateTaskNumberValues(): void {
-    this.appBaseService.setAppModel({ selectedEssTask: this.essTask });
+    this.appBaseService.appModel = { selectedEssTask: this.essTask };
     this.computeState.triggerEvent();
     this.userService.updateTaskNumber(
       this.essTask?.id,
