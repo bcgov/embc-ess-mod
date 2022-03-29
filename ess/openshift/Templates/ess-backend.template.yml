@@ -60,7 +60,10 @@ parameters:
   - description: splunk token
     name: SPLUNK_TOKEN
     required: false
-    
+  - description: Oauth/oidc server url
+    name: OAUTH_AUTHORITY
+    required: true
+
 objects:
   - kind: ConfigMap
     apiVersion: v1
@@ -81,6 +84,8 @@ objects:
       pdfGenerator__url: dns:///${APP_NAME}-pdf-generator:2020
       pdfGenerator__allowInvalidServerCertificate: "true"
       REGISTRANTS_PORTAL_BASE_URL: ${REGISTRANTS_PORTAL_BASE_URL}
+      messaging__authorizationEnabled: "true"
+      messaging__oauth__metadataAddress: ${OAUTH_AUTHORITY}/.well-known/openid-configuration
 
   - kind: Secret
     apiVersion: v1
@@ -288,7 +293,7 @@ objects:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 125
+              averageUtilization: 150
 
   # pvc shared with all .net pods for data protection keys
   - kind: "PersistentVolumeClaim"

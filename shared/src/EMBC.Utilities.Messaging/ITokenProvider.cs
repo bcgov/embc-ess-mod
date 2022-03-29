@@ -75,6 +75,6 @@ namespace EMBC.Utilities.Messaging
         public string ClientId { get; set; } = null!;
         public string ClientSecret { get; set; } = null!;
         public string Scope { get; set; } = null!;
-        public OpenIdConnectConfiguration OidcConfig { get; set; } = null!;
+        public OpenIdConnectConfiguration? OidcConfig { get; set; }
     }
 }
