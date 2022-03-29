@@ -35,6 +35,7 @@ export class TaskSearchService {
 
   /**
    * Signs into the task
+   *
    * @param taskNumber User input task number
    * @returns void observable
    */

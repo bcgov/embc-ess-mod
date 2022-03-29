@@ -5,9 +5,8 @@ import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TaskSearchService } from '../task-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
-//import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-task-details',
@@ -25,7 +24,7 @@ export class TaskDetailsComponent implements OnInit {
     private userService: UserService,
     private taskSearchService: TaskSearchService,
     private alertService: AlertService,
-    private featuresService: EtransferFeaturesService,
+    private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
@@ -69,7 +68,7 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   updateTaskNumberValues(): void {
-    this.featuresService.setAppModel({ selectedEssTask: this.essTask });
+    this.appBaseService.setAppModel({ selectedEssTask: this.essTask });
     this.computeState.triggerEvent();
     this.userService.updateTaskNumber(
       this.essTask?.id,

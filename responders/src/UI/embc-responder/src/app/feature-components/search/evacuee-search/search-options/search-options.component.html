@@ -13,7 +13,7 @@
         <div class="col-md-4">
           <mat-card
             [ngClass]="{
-              'selected-card': selectedPathway === SelectedPathType.digital,
+              'selected-card': selectedPathway === selectedPathType.digital,
               disabled: isEnabled('digital-processing')
             }"
             class="option-card"
@@ -21,7 +21,7 @@
           >
             <div
               class="selected-icon-container"
-              *ngIf="selectedPathway === SelectedPathType.digital"
+              *ngIf="selectedPathway === selectedPathType.digital"
             >
               <img
                 src="/assets/images/wizard/white-background.svg"
@@ -60,7 +60,7 @@
         <div class="col-md-4">
           <mat-card
             [ngClass]="{
-              'selected-card': selectedPathway === SelectedPathType.paperBased,
+              'selected-card': selectedPathway === selectedPathType.paperBased,
               disabled: isEnabled('paper-data-entry')
             }"
             class="option-card"
@@ -68,7 +68,7 @@
           >
             <div
               class="selected-icon-container"
-              *ngIf="selectedPathway === SelectedPathType.paperBased"
+              *ngIf="selectedPathway === selectedPathType.paperBased"
             >
               <img
                 src="/assets/images/wizard/white-background.svg"
@@ -102,7 +102,7 @@
           <mat-card
             [ngClass]="{
               'selected-card':
-                selectedPathway === SelectedPathType.remoteExtensions,
+                selectedPathway === selectedPathType.remoteExtensions,
               disabled: isEnabled('remote-extensions')
             }"
             class="option-card"
@@ -110,7 +110,7 @@
           >
             <div
               class="selected-icon-container"
-              *ngIf="selectedPathway === SelectedPathType.remoteExtensions"
+              *ngIf="selectedPathway === selectedPathType.remoteExtensions"
             >
               <img
                 src="/assets/images/wizard/white-background.svg"

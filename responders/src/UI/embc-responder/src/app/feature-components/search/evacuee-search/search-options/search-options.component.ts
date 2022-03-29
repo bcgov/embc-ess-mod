@@ -2,9 +2,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { TaskWorkflow } from 'src/app/core/api/models';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-//import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-search-options',
@@ -17,19 +16,18 @@ export class SearchOptionsComponent implements OnInit {
 
   selectedPathway: SelectedPathType;
   workflows: Array<TaskWorkflow> = new Array<TaskWorkflow>();
-  readonly SelectedPathType = SelectedPathType;
+  readonly selectedPathType = SelectedPathType;
   noSelectionFlag = false;
 
   constructor(
-    //private appBaseService: AppBaseService,
+    private appBaseService: AppBaseService,
     private evacueeSessionService: EvacueeSessionService,
-    private featuresService: EtransferFeaturesService,
     private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
-    console.log(this.featuresService?.appModel?.selectedEssTask);
-    this.workflows = this.featuresService?.appModel?.selectedEssTask?.workflows;
+    console.log(this.appBaseService?.appModel?.selectedEssTask);
+    this.workflows = this.appBaseService?.appModel?.selectedEssTask?.workflows;
   }
 
   setSelection(pathway: string) {
@@ -45,7 +43,7 @@ export class SearchOptionsComponent implements OnInit {
     if (this.selectedPathway === undefined) {
       this.noSelectionFlag = true;
     } else {
-      this.featuresService.setAppModel({
+      this.appBaseService.setAppModel({
         selectedUserPathway: this.selectedPathway
       });
       if (this.selectedPathway === SelectedPathType.paperBased) {

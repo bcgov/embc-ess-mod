@@ -7,12 +7,11 @@ import {
 } from '../../models/appBase.model';
 import { RegistrantProfileModel } from '../../models/registrant-profile.model';
 import { CacheService } from '../cache.service';
-import { AppBaseService } from './appBase.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EtransferFeaturesService extends AppBaseService {
+export class EtransferFeaturesService {
   public static etransferRequirementDefault?: EtransferRequirementStatus[] = [
     { statement: EtransferContent.bcServicesCard, status: false },
     { statement: EtransferContent.isNotMinor, status: false },
@@ -29,7 +28,7 @@ export class EtransferFeaturesService extends AppBaseService {
   private etransferRequirementVal?: Array<EtransferRequirementStatus>;
 
   constructor(public cacheService: CacheService) {
-    super(cacheService);
+    // super(cacheService);
   }
 
   public set isRegistrantEtransferEligible(value: boolean) {
@@ -77,10 +76,5 @@ export class EtransferFeaturesService extends AppBaseService {
 
   public get etransferRequirement(): Array<EtransferRequirementStatus> {
     return this.etransferRequirementVal;
-  }
-
-  setCache() {
-    console.log(this.appModel)
-    this.cacheService.set('appCache', this.appModel);
   }
 }

@@ -23,4 +23,9 @@ export class AppBaseService {
     this.appModelVal = undefined;
     this.cacheService.remove('appCache');
   }
+
+  setCache() {
+    console.log(this.appModel);
+    this.cacheService.set('appCache', this.appModel);
+  }
 }
