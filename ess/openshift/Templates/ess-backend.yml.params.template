@@ -17,3 +17,4 @@ REDIS_CONNECTIONSTRING=<optional Redis connection string>
 REGISTRANTS_PORTAL_BASE_URL=<registrants portal base url>
 SPLUNK_URL=<optional splunk logging url>
 SPLUNK_URL=<optional splunk token>
+OAUTH_AUTHORITY=<OAuth server url for service to service authentication>
