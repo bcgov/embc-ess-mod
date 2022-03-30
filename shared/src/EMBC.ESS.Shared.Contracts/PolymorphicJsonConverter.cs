@@ -28,8 +28,9 @@ namespace EMBC.ESS.Shared.Contracts
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
+            if (value == null) return;
             var type = value.GetType();
-            var serializedValue = JsonSerializer.SerializeToNode(value, type, options).AsObject();
+            var serializedValue = JsonSerializer.SerializeToNode(value, type, options)?.AsObject() ?? null!;
             serializedValue.Add("_type", type.FullName);
             serializedValue.WriteTo(writer, options);
         }
