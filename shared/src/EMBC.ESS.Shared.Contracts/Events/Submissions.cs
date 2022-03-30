@@ -115,6 +115,16 @@ namespace EMBC.ESS.Shared.Contracts.Events
     }
 
     /// <summary>
+    /// void a support in a file by id
+    /// </summary>
+    public class CancelSupportCommand : Command
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public string Reason { get; set; }
+    }
+
+    /// <summary>
     /// query the supplier list for a task
     /// </summary>
     public class SuppliersListQuery : Query<SuppliersListQueryResponse>

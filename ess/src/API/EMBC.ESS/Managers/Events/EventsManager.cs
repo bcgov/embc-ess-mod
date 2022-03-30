@@ -504,14 +504,29 @@ namespace EMBC.ESS.Managers.Events
         public async Task<string> Handle(VoidSupportCommand cmd)
         {
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
-
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new VoidEvacuationFileSupportCommand
+            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
             {
-                FileId = cmd.FileId,
-                SupportId = cmd.SupportId,
-                VoidReason = Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString())
+                Items = new[]
+                {
+                    SupportStatusTransition.VoidSupport(cmd.SupportId, Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString()))
+                }
+            })).Ids.SingleOrDefault();
+            return id;
+        }
+
+        public async Task<string> Handle(CancelSupportCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+            if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
+
+            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            {
+                Items = new[]
+                {
+                   new SupportStatusTransition { SupportId = cmd.SupportId, ToStatus = Resources.Supports.SupportStatus.Cancelled, Reason = cmd.Reason }
+                }
             })).Ids.SingleOrDefault();
             return id;
         }

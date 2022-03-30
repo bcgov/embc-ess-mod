@@ -139,6 +139,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     {
         ErrorOnPrintedReferral,
         NewSupplierRequired,
-        SupplierCouldNotMeetNeed
+        SupplierCouldNotMeetNeed,
+        UserInitiatedCancellation
     }
 }

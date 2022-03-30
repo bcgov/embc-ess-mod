@@ -84,7 +84,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanVoidSupport()
+        public async Task CanVoidReferral()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var file = CreateNewTestEvacuationFile(registrant);
@@ -115,9 +115,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
 
-            var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
-
-            var support = fileWithSupports.Supports.First();
+            var support = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.First(s => s.SupportDelivery is Referral);
 
             await manager.Handle(new VoidSupportCommand
             {
@@ -126,10 +124,55 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 VoidReason = SupportVoidReason.ErrorOnPrintedReferral
             });
 
-            var updatedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
-            var updatedSupport = updatedFile.Supports.Where(s => s.Id == support.Id).ShouldHaveSingleItem();
+            var updatedSupport = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Single(s => s.Id == support.Id);
 
             updatedSupport.Status.ShouldBe(SupportStatus.Void);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task CanCancelETransfer()
+        {
+            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
+            var file = CreateNewTestEvacuationFile(registrant);
+
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
+
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+
+            var supports = new Support[]
+            {
+                new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
+                new IncidentalsSupport { SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
+                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
+                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
+                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+            };
+
+            foreach (var s in supports)
+            {
+                s.From = DateTime.UtcNow;
+                s.To = DateTime.UtcNow.AddDays(3);
+            }
+
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+
+            var support = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.First(s => s.SupportDelivery is ETransfer);
+
+            await manager.Handle(new CancelSupportCommand
+            {
+                FileId = fileId,
+                SupportId = support.Id,
+                Reason = "need to cancel"
+            });
+
+            var updatedSupport = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Single(s => s.Id == support.Id);
+
+            updatedSupport.Status.ShouldBe(SupportStatus.Cancelled);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

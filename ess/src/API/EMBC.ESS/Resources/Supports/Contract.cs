@@ -26,11 +26,23 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<Support> Supports { get; set; }
     }
 
-    public class VoidEvacuationFileSupportCommand : ManageSupportCommand
+    public class ChangeSupportStatusCommand : ManageSupportCommand
     {
-        public string FileId { get; set; }
+        public IEnumerable<SupportStatusTransition> Items { get; set; }
+    }
+
+    public class SupportStatusTransition
+    {
+        public static SupportStatusTransition VoidSupport(string supportId, SupportVoidReason reason) => new SupportStatusTransition
+        {
+            SupportId = supportId,
+            Reason = reason.ToString(),
+            ToStatus = SupportStatus.Void
+        };
+
         public string SupportId { get; set; }
-        public SupportVoidReason VoidReason { get; set; }
+        public SupportStatus ToStatus { get; set; }
+        public string Reason { get; set; }
     }
 
     public abstract class SupportQuery

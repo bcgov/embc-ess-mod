@@ -198,5 +198,35 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 support.IssuedOn.ShouldBe(sourceSupport.IssuedOn);
             }
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ChangeStatus_Void_Success()
+        {
+            var support = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is Referral);
+
+            var voidedSupportId = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            {
+                Items = new[] { SupportStatusTransition.VoidSupport(support.Id, SupportVoidReason.NewSupplierRequired) }
+            })).Ids.ShouldHaveSingleItem();
+            voidedSupportId.ShouldBe(support.Id);
+
+            var voidedSupport = (await supportRepository.Query(new SearchSupportsQuery { ById = voidedSupportId })).Items.ShouldHaveSingleItem();
+            voidedSupport.Status.ShouldBe(SupportStatus.Void);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ChangeStatus_Cancel_Success()
+        {
+            var support = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is ETransfer);
+
+            var cancelledSupportId = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            {
+                Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Cancelled, Reason = "some reason" } }
+            })).Ids.ShouldHaveSingleItem();
+            cancelledSupportId.ShouldBe(support.Id);
+
+            var voidedSupport = (await supportRepository.Query(new SearchSupportsQuery { ById = cancelledSupportId })).Items.ShouldHaveSingleItem();
+            voidedSupport.Status.ShouldBe(SupportStatus.Cancelled);
+        }
     }
 }
