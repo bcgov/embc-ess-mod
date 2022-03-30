@@ -71,11 +71,10 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             }
             catch (Exception)
             {
-                //try to deactivate the supports if failed to create the print request
-                foreach (var id in supportIds)
+                await supportRepository.Manage(new ChangeSupportStatusCommand
                 {
-                    await supportRepository.Manage(new VoidEvacuationFileSupportCommand { FileId = r.FileId, SupportId = id, VoidReason = SupportVoidReason.ErrorOnPrintedReferral });
-                }
+                    Items = supportIds.Select(s => SupportStatusTransition.VoidSupport(s, SupportVoidReason.ErrorOnPrintedReferral)).ToArray()
+                });
                 throw;
             }
         }
