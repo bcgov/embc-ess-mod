@@ -1,9 +1,7 @@
-export class AppBaseModel {
-  //TODO: convert to service
-  taskStatus?: string;
-  allowDigitalFiling?: boolean;
-  allowPaperFiling?: boolean;
-  allowRemoteExtensions?: boolean;
+import { EssTaskModel } from './ess-task.model';
+
+export interface AppBaseModel {
+  selectedEssTask?: EssTaskModel;
   selectedUserPathway?: SelectedPathType;
 }
 

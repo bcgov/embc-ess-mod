@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Code } from '../../api/models';
 import {
-  AppBaseModel,
   EtransferContent,
   EtransferRequirementStatus,
   ETransferStatus
 } from '../../models/appBase.model';
 import { RegistrantProfileModel } from '../../models/registrant-profile.model';
+import { CacheService } from '../cache.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EtransferFeaturesService extends AppBaseModel {
+export class EtransferFeaturesService {
   public static etransferRequirementDefault?: EtransferRequirementStatus[] = [
     { statement: EtransferContent.bcServicesCard, status: false },
     { statement: EtransferContent.isNotMinor, status: false },
@@ -26,6 +26,10 @@ export class EtransferFeaturesService extends AppBaseModel {
   private selectedEvacueeInContextVal?: RegistrantProfileModel; //temporary placeholder
 
   private etransferRequirementVal?: Array<EtransferRequirementStatus>;
+
+  constructor(public cacheService: CacheService) {
+    // super(cacheService);
+  }
 
   public set isRegistrantEtransferEligible(value: boolean) {
     this.isRegistrantEtransferEligibleVal = value;

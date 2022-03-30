@@ -13,6 +13,7 @@ import { EssFilesResultsComponent } from './ess-files-results/ess-files-results.
 import { ProfileResultsComponent } from './profile-results/profile-results.component';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { DataEntryComponent } from './data-entry/data-entry.component';
+import { SearchOptionsComponent } from './search-options/search-options.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { DataEntryComponent } from './data-entry/data-entry.component';
     EvacueeSearchResultsComponent,
     EssFilesResultsComponent,
     ProfileResultsComponent,
-    DataEntryComponent
+    DataEntryComponent,
+    SearchOptionsComponent
   ],
   imports: [
     CommonModule,

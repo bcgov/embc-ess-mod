@@ -32,4 +32,14 @@ export class TaskSearchService {
       })
     );
   }
+
+  /**
+   * Signs into the task
+   *
+   * @param taskNumber User input task number
+   * @returns void observable
+   */
+  taskSignIn(taskNumber: string): Observable<void> {
+    return this.taskService.tasksSignIn({ taskId: taskNumber });
+  }
 }

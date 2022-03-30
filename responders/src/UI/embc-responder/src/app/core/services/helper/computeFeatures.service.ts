@@ -6,18 +6,23 @@ import {
   EtransferRequirementStatus,
   EtransferContent
 } from '../../models/appBase.model';
+import { AppBaseService } from './appBase.service';
 import { EtransferFeaturesService } from './etransferfeatures.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComputeFeaturesService {
-  constructor(private featuresService: EtransferFeaturesService) {}
+  constructor(
+    private featuresService: EtransferFeaturesService,
+    private appBaseService: AppBaseService
+  ) {}
 
   execute() {
     this.computeEtransferStatus();
     this.computeEtransferEligibility();
     this.computeEtransferRequirementContent();
+    this.triggerCaching();
     // console.log(this.featuresService);
   }
 
@@ -29,7 +34,7 @@ export class ComputeFeaturesService {
 
   private computeEtransferStatus() {
     if (
-      this.featuresService?.selectedUserPathway ===
+      this.appBaseService?.appModel?.selectedUserPathway ===
         SelectedPathType.paperBased ||
       !this.featuresService.interacAllowed
     ) {
@@ -81,5 +86,9 @@ export class ComputeFeaturesService {
       }
     }
     this.featuresService.etransferRequirement = requirementContent;
+  }
+
+  private triggerCaching() {
+    this.appBaseService.setCache();
   }
 }
