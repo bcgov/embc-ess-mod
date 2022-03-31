@@ -20,11 +20,7 @@
       <div>
         <div class="register-with-card-tab">Preferred Method</div>
         <div class="register-with-card-inner">
-          <img
-            src="/assets/images/services-card.png"
-            class="register-with-card-image"
-            alt="BC Services Card"
-          />
+          <img src="/assets/images/services-card-icon.png" class="register-with-card-image" alt="BC Services Card" />
           <h2 class="register-with-card-title">
             Register <strong class="--blue">with</strong> BC Services Card
           </h2>
@@ -62,24 +58,31 @@
                   events.
                 </td>
               </tr>
+              <tr>
+                <td class="icon-table">
+                  <img src="/assets/images/check-mark-icon.svg" />
+                </td>
+                <td>
+                  You may be eligible to receive supports via e-Transfer.
+                </td>
+              </tr>
             </table>
           </div>
         </div>
       </div>
       <div class="register-with-card-button-container">
         <button mat-button class="button-p btn-width" (click)="verifyUser()">
-          Self-Register using your BC Services Card
+          Log in with BC Services Card app
         </button>
+      </div>
+      <div class="learn-more-container">
+        <a class="link" href="https://www2.gov.bc.ca/gov/content?id=B2B3A21E797A421A8FD39EEA86E245D6">Learn more about the BC Services Card app</a>
       </div>
     </div>
 
     <div class="register-without-card">
       <div>
-        <img
-          src="/assets/images/person-icon.svg"
-          class="register-without-card-image"
-          alt="Person Icon"
-        />
+        <img src="/assets/images/person-icon.svg" class="register-without-card-image" alt="Person Icon" />
         <h2 class="register-without-card-title">
           Register <strong class="--blue">without</strong> BC Services Card
         </h2>
@@ -87,9 +90,12 @@
           If you <strong>don't</strong> have a BC Services Card, you can still
           self-register as an evacuee.
         </p>
+        <p class="--center pt-3">
+          You may be eligible to receive supports, but not via e-Transfer.
+        </p>
       </div>
       <div class="register-without-card__button-container">
-        <button (click)="nonVerifiedUser()" class="button-s btn-width">
+        <button mat-button (click)="nonVerifiedUser()" class="button-s btn-width">
           Self-Register
         </button>
       </div>
