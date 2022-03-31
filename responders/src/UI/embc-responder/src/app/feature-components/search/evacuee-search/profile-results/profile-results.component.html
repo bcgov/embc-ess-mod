@@ -10,7 +10,7 @@
       <div class="col-md-8">
         <a class="result-heading" (click)="openProfile(registrantResult)"
           ><b>{{ registrantResult?.lastName | uppercase }},</b>
-          {{ registrantResult?.firstName }}</a
+          {{ registrantResult?.firstName | titlecase }}</a
         >
       </div>
       <div class="col-md-4">

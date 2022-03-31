@@ -21,7 +21,7 @@ import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.servic
 export class MatchedEssfilesComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   currentlyOpenedItemIndex = -1;
-  essFiles: Array<EvacuationFileSummaryModel>;
+  essFiles: Array<EvacuationFileSummaryModel> = [];
   isPaperBased: boolean;
   paperBasedEssFile: string;
   registrantId: string;

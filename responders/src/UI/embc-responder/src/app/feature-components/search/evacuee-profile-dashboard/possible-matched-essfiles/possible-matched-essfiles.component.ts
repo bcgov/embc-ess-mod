@@ -27,7 +27,7 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Input() evacueeProfile: RegistrantProfileModel;
   currentlyOpenedItemIndex = -1;
-  essFiles: Array<EvacuationFileSearchResultModel>;
+  essFiles: Array<EvacuationFileSearchResultModel> = [];
   isLoading = false;
   public color = '#169BD5';
 
