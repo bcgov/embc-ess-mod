@@ -30,7 +30,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanProcessSupports()
+        public async Task ProcessSupports_Supports_Created()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var file = CreateNewTestEvacuationFile(registrant);
@@ -69,12 +69,27 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             foreach (var support in refreshedFile.Supports)
             {
                 var sourceSupport = supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
-                if (support.SupportDelivery is Referral r && sourceSupport.SupportDelivery is Referral sourceReferral && r.SupplierDetails != null)
+                if (sourceSupport.SupportDelivery is Referral sourceReferral)
                 {
-                    r.SupplierDetails.ShouldNotBeNull();
-                    r.SupplierDetails.Id.ShouldBe(sourceReferral.SupplierDetails.Id);
-                    r.SupplierDetails.Name.ShouldNotBeNull();
-                    r.SupplierDetails.Address.ShouldNotBeNull();
+                    var r = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                    support.Status.ShouldBe(SupportStatus.Active);
+                    r.IssuedToPersonName.ShouldBe(sourceReferral.IssuedToPersonName);
+                    r.SupplierNotes.ShouldBe(sourceReferral.SupplierNotes);
+                    if (sourceReferral.SupplierDetails != null)
+                    {
+                        r.SupplierDetails.ShouldNotBeNull();
+                        r.SupplierDetails.Id.ShouldBe(sourceReferral.SupplierDetails.Id);
+                        r.SupplierDetails.Name.ShouldNotBeNull();
+                        r.SupplierDetails.Address.ShouldNotBeNull();
+                    }
+                }
+                if (sourceSupport.SupportDelivery is Interac sourceEtransfer)
+                {
+                    var etransfer = support.SupportDelivery.ShouldBeAssignableTo<Interac>().ShouldNotBeNull();
+                    etransfer.NotificationEmail.ShouldBe(sourceEtransfer.NotificationEmail);
+                    etransfer.NotificationMobile.ShouldBe(sourceEtransfer.NotificationMobile);
+                    etransfer.ReceivingRegistrantId.ShouldBe(sourceEtransfer.ReceivingRegistrantId);
+                    support.Status.ShouldBe(SupportStatus.PendingScan);
                 }
                 support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
                 support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
@@ -236,7 +251,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanProcessPaperReferrals()
+        public async Task ProcessPaperSupports_paperSupports_Created()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var paperFile = CreateNewTestEvacuationFile(registrant);
@@ -262,8 +277,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             foreach (var s in supports)
             {
-                s.From = DateTime.UtcNow;
-                s.To = DateTime.UtcNow.AddDays(3);
+                s.From = DateTime.UtcNow.AddDays(-4);
+                s.To = DateTime.UtcNow.AddDays(-1);
                 s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
                 ((Referral)s.SupportDelivery).ManualReferralId = $"{TestData.TestPrefix}-paperreferral";
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
@@ -277,13 +292,19 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             foreach (var support in refreshedFile.Supports)
             {
                 var sourceSupport = supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
-                if (support.SupportDelivery is Referral r && sourceSupport.SupportDelivery is Referral sourceReferral && r.SupplierDetails != null)
+                if (sourceSupport.SupportDelivery is Referral sourceReferral)
                 {
-                    r.SupplierDetails.ShouldNotBeNull();
-                    r.SupplierDetails.Id.ShouldBe(sourceReferral.SupplierDetails.Id);
-                    r.SupplierDetails.Name.ShouldNotBeNull();
-                    r.SupplierDetails.Address.ShouldNotBeNull();
-                    r.ManualReferralId.ShouldBe(sourceReferral.ManualReferralId);
+                    var r = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
+                    support.Status.ShouldBe(SupportStatus.Expired);
+                    r.IssuedToPersonName.ShouldBe(sourceReferral.IssuedToPersonName);
+                    r.SupplierNotes.ShouldBe(sourceReferral.SupplierNotes);
+                    if (sourceReferral.SupplierDetails != null)
+                    {
+                        r.SupplierDetails.ShouldNotBeNull();
+                        r.SupplierDetails.Id.ShouldBe(sourceReferral.SupplierDetails.Id);
+                        r.SupplierDetails.Name.ShouldNotBeNull();
+                        r.SupplierDetails.Address.ShouldNotBeNull();
+                    }
                 }
                 support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
                 support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
