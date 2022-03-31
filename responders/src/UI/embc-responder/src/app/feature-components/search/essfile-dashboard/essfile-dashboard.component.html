@@ -83,7 +83,7 @@
         <span class="field-label">Main Applicant:</span>
         <span class="bold">
           {{ essFile?.primaryRegistrantLastName | uppercase }},
-          {{ essFile?.primaryRegistrantFirstName }}</span
+          {{ essFile?.primaryRegistrantFirstName | titlecase }}</span
         >
       </div>
     </div>
@@ -203,7 +203,7 @@
         }},
         {{
           evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-            ?.firstName
+            ?.firstName | titlecase
         }}
         is eligible for e-Transfer
       </div>
@@ -217,7 +217,7 @@
         }},
         {{
           evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-            ?.firstName
+            ?.firstName | titlecase
         }}
         must have a profile linked to BC Services Card to be eligible
       </div>

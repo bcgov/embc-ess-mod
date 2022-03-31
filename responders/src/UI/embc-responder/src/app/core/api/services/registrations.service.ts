@@ -1669,6 +1669,79 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Path part for operation registrationsCancelSupport
+   */
+  static readonly RegistrationsCancelSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/cancel';
+
+  /**
+   * Cancel a support.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsCancelSupport()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsCancelSupport$Response(params: {
+
+    /**
+     * evacuation file number
+     */
+    fileId: string;
+
+    /**
+     * support id
+     */
+    supportId: string;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCancelSupportPath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.path('supportId', params.supportId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Cancel a support.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsCancelSupport$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsCancelSupport(params: {
+
+    /**
+     * evacuation file number
+     */
+    fileId: string;
+
+    /**
+     * support id
+     */
+    supportId: string;
+  }): Observable<void> {
+
+    return this.registrationsCancelSupport$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
    * Path part for operation registrationsReprintSupport
    */
   static readonly RegistrationsReprintSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/reprint';
