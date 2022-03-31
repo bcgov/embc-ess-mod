@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Admin;
+using EMBC.ESS.Managers.Teams;
 using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
@@ -12,13 +13,13 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers
 {
-    public class AdminTests : DynamicsWebAppTestBase
+    public class TeamsManagerTests : DynamicsWebAppTestBase
     {
-        private readonly AdminManager adminManager;
+        private readonly TeamsManager manager;
 
-        public AdminTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+        public TeamsManagerTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
-            adminManager = Services.GetRequiredService<AdminManager>();
+            manager = Services.GetRequiredService<TeamsManager>();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
@@ -44,11 +45,11 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
-            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = newMember });
+            var memberId = await manager.Handle(new SaveTeamMemberCommand { Member = newMember });
 
             memberId.ShouldNotBeNull();
 
-            var existingMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId })).TeamMembers.ShouldHaveSingleItem();
+            var existingMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId })).TeamMembers.ShouldHaveSingleItem();
 
             existingMember.Id.ShouldBe(memberId);
             existingMember.TeamId.ShouldBe(TestData.TeamId);
@@ -69,11 +70,11 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanActivateTeamMember()
         {
-            var memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
 
-            await adminManager.Handle(new ActivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id });
+            await manager.Handle(new ActivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id });
 
-            var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeTrue();
         }
 
@@ -100,31 +101,31 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
-            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = newMember });
+            var memberId = await manager.Handle(new SaveTeamMemberCommand { Member = newMember });
 
             memberId.ShouldNotBeNull();
 
-            await adminManager.Handle(new DeactivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
+            await manager.Handle(new DeactivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
 
-            var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId, IncludeActiveUsersOnly = false })).TeamMembers.Single();
+            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId, IncludeActiveUsersOnly = false })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeFalse();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task RemoveLabel_TeamMemberWithLabel_LabelRemoved()
         {
-            var memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
             if (string.IsNullOrEmpty(memberToUpdate.Label))
             {
                 memberToUpdate.Label = "Volunteer";
-                await adminManager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
-                memberToUpdate = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+                await manager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
+                memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             }
             memberToUpdate.Label.ShouldNotBeNull();
             memberToUpdate.Label = null;
-            await adminManager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
+            await manager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
 
-            var updatedMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             updatedMember.Label.ShouldBeNull();
         }
 
@@ -151,21 +152,21 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
-            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = newMember });
+            var memberId = await manager.Handle(new SaveTeamMemberCommand { Member = newMember });
             memberId.ShouldNotBeNull();
 
-            await adminManager.Handle(new DeleteTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
+            await manager.Handle(new DeleteTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
 
-            var teamMembers = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId })).TeamMembers;
+            var teamMembers = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId })).TeamMembers;
             teamMembers.Where(m => m.Id == memberId).ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanValidateNewUserNameForExistingMember()
         {
-            var aMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
             aMember.UserName = Guid.NewGuid().ToString().Substring(0, 5);
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
                 TeamMember = aMember
             });
@@ -175,9 +176,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanValidateSameUserNameForExistingMember()
         {
-            var aMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
 
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
                 TeamMember = aMember
             });
@@ -187,12 +188,12 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanValidatExistingUserNameForExistingMember()
         {
-            var members = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers;
+            var members = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers;
             var aMember = members.Skip(0).First();
             var bMember = members.Skip(1).First();
 
             aMember.UserName = bMember.UserName;
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
                 TeamMember = aMember
             });
@@ -202,7 +203,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanValidateUniqueUserNameForNewMember()
         {
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
                 TeamMember = new TeamMember { UserName = Guid.NewGuid().ToString().Substring(0, 5) }
             });
@@ -212,9 +213,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanValidateDuplicateUserNameForNewMember()
         {
-            var aMember = (await adminManager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
 
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
                 TeamMember = new TeamMember { UserName = aMember.UserName }
             });
@@ -224,7 +225,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQuerySingleTeam()
         {
-            var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
             team.Id.ShouldBe(TestData.TeamId);
             team.Name.ShouldNotBeNull();
             team.AssignedCommunities.ShouldNotBeEmpty();
@@ -233,7 +234,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryTeamByCommunity()
         {
-            var teams = (await adminManager.Handle(new TeamsQuery { CommunityCode = TestData.TeamCommunityId })).Teams;
+            var teams = (await manager.Handle(new TeamsQuery { CommunityCode = TestData.TeamCommunityId })).Teams;
             teams.ShouldNotBeEmpty();
             teams.ShouldAllBe(t => t.AssignedCommunities.Any(c => c.Code == TestData.TeamCommunityId));
         }
@@ -241,7 +242,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanQueryAllTeams()
         {
-            var teams = (await adminManager.Handle(new TeamsQuery())).Teams;
+            var teams = (await manager.Handle(new TeamsQuery())).Teams;
 
             teams.ShouldNotBeEmpty();
             teams.Single(t => t.Id == TestData.TeamId).AssignedCommunities.ShouldNotBeEmpty();
@@ -250,19 +251,19 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanAssignCommunitiesToTeam()
         {
-            var manager = Services.GetRequiredService<AdminManager>();
-            var communities = (await manager.Handle(new CommunitiesQuery())).Items;
+            var adminManager = Services.GetRequiredService<AdminManager>();
+            var communities = (await adminManager.Handle(new CommunitiesQuery())).Items;
 
-            var assignedCommunities = (await adminManager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
+            var assignedCommunities = (await manager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 
-            var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
             var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code).ToList();
             if (!assignedCommunities.Any(c => c.Code == TestData.ActiveTaskCommunity) && !newCommunities.Any(c => c == TestData.ActiveTaskCommunity)) newCommunities.Add(TestData.ActiveTaskCommunity);
 
-            await adminManager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
+            await manager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
 
-            var updatedTeam = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
             updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).Concat(newCommunities).OrderBy(c => c));
         }
@@ -271,19 +272,19 @@ namespace EMBC.Tests.Integration.ESS.Managers
         public async Task AssignCommunities_Team_PreserveDateAssigned()
         {
             var now = DateTime.UtcNow;
-            var manager = Services.GetRequiredService<AdminManager>();
-            var communities = (await manager.Handle(new CommunitiesQuery())).Items;
+            var adminManager = Services.GetRequiredService<AdminManager>();
+            var communities = (await adminManager.Handle(new CommunitiesQuery())).Items;
 
-            var assignedCommunities = (await adminManager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
+            var assignedCommunities = (await manager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 
-            var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
             var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code).ToList();
             if (!assignedCommunities.Any(c => c.Code == TestData.ActiveTaskCommunity) && !newCommunities.Any(c => c == TestData.ActiveTaskCommunity)) newCommunities.Add(TestData.ActiveTaskCommunity);
 
-            await adminManager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
+            await manager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
 
-            var updatedTeam = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
             updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).Concat(newCommunities).OrderBy(c => c));
 
@@ -297,13 +298,13 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanUnassignCommunitiesToTeam()
         {
-            var team = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
             var removedCommunities = team.AssignedCommunities.Where(c => c.Code != TestData.ActiveTaskCommunity).Take(2);
 
-            await adminManager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = TestData.TeamId, Communities = removedCommunities.Select(c => c.Code) });
+            await manager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = TestData.TeamId, Communities = removedCommunities.Select(c => c.Code) });
 
-            var updatedTeam = (await adminManager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
             updatedTeam.AssignedCommunities.Where(c => removedCommunities.Contains(c)).ShouldBeEmpty();
         }
@@ -311,7 +312,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Query_Suppliers_ReturnsAllSuppliersForTeam()
         {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = TestData.TeamId });
+            var searchResults = await manager.Handle(new SuppliersQuery { TeamId = TestData.TeamId });
 
             var primarySuppliers = searchResults.Items.Where(s => s.Team.Id == TestData.TeamId);
             var mutualAidSuppliers = searchResults.Items.Where(s => s.Team.Id != TestData.TeamId);
@@ -323,7 +324,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Query_Suppliers_ReturnsSuppliersById()
         {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId });
+            var searchResults = await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId });
 
             searchResults.Items.ShouldHaveSingleItem();
             searchResults.Items.ShouldAllBe(s => s.Id == TestData.SupplierAId);
@@ -332,7 +333,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task QueryInActiveById_Suppliers_ReturnsNothing()
         {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.InactiveSupplierId });
+            var searchResults = await manager.Handle(new SuppliersQuery { SupplierId = TestData.InactiveSupplierId });
 
             searchResults.Items.ShouldBeEmpty();
         }
@@ -340,7 +341,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task QueryInActiveByName_Suppliers_ReturnsNothing()
         {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { LegalName = TestData.InactiveSupplierLegalName, GSTNumber = TestData.InactiveSupplierGST });
+            var searchResults = await manager.Handle(new SuppliersQuery { LegalName = TestData.InactiveSupplierLegalName, GSTNumber = TestData.InactiveSupplierGST });
 
             searchResults.Items.ShouldBeEmpty();
         }
@@ -348,7 +349,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Query_Suppliers_ReturnsSuppliersByLegalNameAndGSTNumber()
         {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { LegalName = TestData.SupplierALegalName, GSTNumber = TestData.SupplierAGST });
+            var searchResults = await manager.Handle(new SuppliersQuery { LegalName = TestData.SupplierALegalName, GSTNumber = TestData.SupplierAGST });
 
             searchResults.Items.ShouldAllBe(s => s.LegalName == TestData.SupplierALegalName && s.GSTNumber == TestData.SupplierAGST);
         }
@@ -384,16 +385,16 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 Status = SupplierStatus.Active
             };
 
-            var supplierId = await adminManager.Handle(new SaveSupplierCommand { Supplier = supplier });
+            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
 
-            var newSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
+            var newSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
             newSupplier.Status.ShouldBe(SupplierStatus.Active);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Update_Suppliers_ReturnsSupplierId()
         {
-            var supplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            var supplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
 
             var currentCommunity = supplier.Address.Community;
             var newCommunity = currentCommunity == TestData.TeamCommunityId
@@ -402,20 +403,20 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             supplier.Address.Community = newCommunity;
 
-            await adminManager.Handle(new SaveSupplierCommand { Supplier = supplier });
+            await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
 
-            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
             updatedSupplier.Address.Community.ShouldBe(newCommunity);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Activate_Suppliers_ReturnsSupplierId()
         {
-            var results = await adminManager.Handle(new ActivateSupplierCommand { TeamId = TestData.TeamId, SupplierId = TestData.SupplierAId });
+            var results = await manager.Handle(new ActivateSupplierCommand { TeamId = TestData.TeamId, SupplierId = TestData.SupplierAId });
 
             results.ShouldBe(TestData.SupplierAId);
 
-            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId });
+            var searchResults = await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId });
             var updatedSupplier = searchResults.Items.ShouldHaveSingleItem();
             updatedSupplier.Status.ShouldBe(SupplierStatus.Active);
         }
@@ -423,25 +424,25 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Deactivate_Suppliers_ReturnsSupplierId()
         {
-            var supplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
+            var supplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
 
             if (supplier.Team == null)
             {
-                await adminManager.Handle(new ClaimSupplierCommand { SupplierId = supplier.Id, TeamId = TestData.OtherTeamId });
+                await manager.Handle(new ClaimSupplierCommand { SupplierId = supplier.Id, TeamId = TestData.OtherTeamId });
             }
 
-            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = TestData.OtherTeamId, SupplierId = TestData.SupplierCId });
+            var results = await manager.Handle(new DeactivateSupplierCommand { TeamId = TestData.OtherTeamId, SupplierId = TestData.SupplierCId });
 
             results.ShouldBe(TestData.SupplierCId);
 
-            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
+            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
             updatedSupplier.Status.ShouldBe(SupplierStatus.Inactive);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Claim_Suppliers_ReturnsSupplierId()
         {
-            var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
 
             if (testSupplier.Team != null && testSupplier.Team.Id != null)
             {
@@ -450,15 +451,15 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
                 testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Suppliers.Team>();
 
-                await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
-                var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+                await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
                 updatedSupplier.Team.ShouldBe(null);
             }
 
-            await adminManager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });
+            await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });
 
-            var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+            var twiceUpdatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
             twiceUpdatedSupplier.Team.Id.ShouldBe(TestData.TeamId);
         }
@@ -466,9 +467,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Remove_Suppliers_ReturnsSupplierId()
         {
-            await adminManager.Handle(new RemoveSupplierCommand { SupplierId = TestData.SupplierAId });
+            await manager.Handle(new RemoveSupplierCommand { SupplierId = TestData.SupplierAId });
 
-            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
             updatedSupplier.Team.ShouldBe(null);
             updatedSupplier.SharedWithTeams.ShouldBeEmpty();
         }
@@ -476,20 +477,20 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task AddSharedWithTeam_Suppliers_ReturnsSupplierId()
         {
-            var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
 
             if (testSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId) != null)
             {
                 testSupplier.SharedWithTeams = testSupplier.SharedWithTeams.Where(t => t.Id != TestData.OtherTeamId);
-                await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
-                var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+                await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
                 updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldBe(null);
             }
 
-            await adminManager.Handle(new ShareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
+            await manager.Handle(new ShareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
 
-            var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+            var twiceUpdatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
             twiceUpdatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldNotBe(null);
         }
@@ -497,68 +498,24 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task RemoveSharedWithTeam_Suppliers_ReturnsSupplierId()
         {
-            var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
 
             if (testSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId) == null)
             {
                 var team = new EMBC.ESS.Shared.Contracts.Suppliers.Team { Id = TestData.OtherTeamId };
                 testSupplier.SharedWithTeams = testSupplier.SharedWithTeams.Concat(new[] { team });
 
-                await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
-                var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+                await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
                 updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldNotBe(null);
             }
 
-            await adminManager.Handle(new UnshareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
+            await manager.Handle(new UnshareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
 
-            var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+            var twiceUpdatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
             twiceUpdatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldBe(null);
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanGetCountries()
-        {
-            var manager = Services.GetRequiredService<AdminManager>();
-
-            var reply = await manager.Handle(new CountriesQuery());
-
-            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
-            reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null);
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanGetStateProvinces()
-        {
-            var manager = Services.GetRequiredService<AdminManager>();
-
-            var reply = await manager.Handle(new StateProvincesQuery());
-
-            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
-            reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanGetCommunities()
-        {
-            var manager = Services.GetRequiredService<AdminManager>();
-
-            var reply = await manager.Handle(new CommunitiesQuery());
-
-            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
-            reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task CanGetSecurityQuestions()
-        {
-            var manager = Services.GetRequiredService<AdminManager>();
-
-            var reply = await manager.Handle(new SecurityQuestionsQuery());
-
-            reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
-            reply.Items.ShouldAllBe(c => !string.IsNullOrEmpty(c));
         }
     }
 }

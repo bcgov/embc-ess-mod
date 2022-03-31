@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Managers.Admin;
+using EMBC.ESS.Managers.Teams;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Teams;
@@ -15,12 +15,12 @@ using Xunit;
 
 namespace EMBC.Tests.Unit.ESS.Admin
 {
-    public class AdminManagerTests
+    public class TeamsManagerTests
     {
         private TestTeamRepository teamRepository;
-        private readonly AdminManager adminManager;
+        private readonly TeamsManager adminManager;
 
-        public AdminManagerTests()
+        public TeamsManagerTests()
         {
             var mapper = new MapperConfiguration(cfg =>
             {
@@ -31,7 +31,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
             var essContextStatusReporter = A.Fake<IEssContextStateReporter>();
             var metadataRepository = A.Fake<IMetadataRepository>();
             var supplierRepository = A.Fake<ISupplierRepository>();
-            adminManager = new AdminManager(teamRepository, supplierRepository, mapper, metadataRepository, essContextStatusReporter);
+            adminManager = new TeamsManager(mapper, teamRepository, supplierRepository);
         }
 
         [Fact]
