@@ -51,7 +51,7 @@ namespace EMBC.ESS.Resources.Supports
     public class AssignSupportToQueueCommand : ManageSupportCommand
     { }
 
-    public class AssignSupportToQueueResule : ManageSupportCommandResult
+    public class AssignSupportToQueueResult : ManageSupportCommandResult
     { }
 
     public class SetFlagCommand : ManageSupportCommand
