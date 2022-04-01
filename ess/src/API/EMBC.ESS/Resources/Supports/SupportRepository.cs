@@ -32,7 +32,7 @@ namespace EMBC.ESS.Resources.Supports
             };
         }
 
-        public async Task<SupportQueryResults> Query(SupportQuery query)
+        public async Task<SupportQueryResult> Query(SupportQuery query)
         {
             return query switch
             {
@@ -61,7 +61,7 @@ namespace EMBC.ESS.Resources.Supports
             return new ChangeSupportStatusCommandResult { Ids = changesSupportIds.ToArray() };
         }
 
-        private async Task<SupportQueryResults> Handle(SearchSupportsQuery query)
+        private async Task<SearchSupportQueryResult> Handle(SearchSupportsQuery query)
         {
             var ctx = essContextFactory.Create();
             var supports = await Search(ctx, query);
@@ -70,7 +70,7 @@ namespace EMBC.ESS.Resources.Supports
                 await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_EvacuationFileId));
                 await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
             }
-            var results = new SupportQueryResults { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
+            var results = new SearchSupportQueryResult { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
 
             ctx.DetachAll();
 

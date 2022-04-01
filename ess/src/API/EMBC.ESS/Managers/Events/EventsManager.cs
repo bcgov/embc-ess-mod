@@ -685,7 +685,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(query.ExternalReferenceId) && string.IsNullOrEmpty(query.FileId))
                 throw new BusinessValidationException($"Search supports must have criteria");
 
-            var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>((await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+            var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
             {
                 ByExternalReferenceId = query.ExternalReferenceId,
                 ByEvacuationFileId = query.FileId

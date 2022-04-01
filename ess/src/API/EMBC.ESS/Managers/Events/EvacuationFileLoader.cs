@@ -61,7 +61,7 @@ namespace EMBC.ESS.Managers.Events
                 }
             }
 
-            var supports = (await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
             file.Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports);
 
             foreach (var support in file.Supports)

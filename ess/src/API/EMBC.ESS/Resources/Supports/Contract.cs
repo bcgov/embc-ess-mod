@@ -8,7 +8,7 @@ namespace EMBC.ESS.Resources.Supports
     {
         public Task<ManageSupportCommandResult> Manage(ManageSupportCommand cmd);
 
-        public Task<SupportQueryResults> Query(SupportQuery query);
+        public Task<SupportQueryResult> Query(SupportQuery query);
     }
 
     public abstract class ManageSupportCommand
@@ -16,6 +16,14 @@ namespace EMBC.ESS.Resources.Supports
     }
 
     public abstract class ManageSupportCommandResult
+    {
+    }
+
+    public abstract class SupportQuery
+    {
+    }
+
+    public abstract class SupportQueryResult
     {
     }
 
@@ -40,6 +48,18 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<string> Ids { get; set; }
     }
 
+    public class AssignSupportToQueueCommand : ManageSupportCommand
+    { }
+
+    public class AssignSupportToQueueResule : ManageSupportCommandResult
+    { }
+
+    public class SetFlagCommand : ManageSupportCommand
+    { }
+
+    public class SetFlagCommandResult : ManageSupportCommandResult
+    { }
+
     public class SupportStatusTransition
     {
         public static SupportStatusTransition VoidSupport(string supportId, SupportVoidReason reason) => new SupportStatusTransition
@@ -54,20 +74,16 @@ namespace EMBC.ESS.Resources.Supports
         public string Reason { get; set; }
     }
 
-    public abstract class SupportQuery
-    {
-    }
-
-    public class SupportQueryResults
-    {
-        public IEnumerable<Support> Items { get; set; }
-    }
-
     public class SearchSupportsQuery : SupportQuery
     {
         public string ById { get; set; }
         public string ByExternalReferenceId { get; set; }
         public string ByEvacuationFileId { get; set; }
+    }
+
+    public class SearchSupportQueryResult : SupportQueryResult
+    {
+        public IEnumerable<Support> Items { get; set; }
     }
 
     public abstract class Support
