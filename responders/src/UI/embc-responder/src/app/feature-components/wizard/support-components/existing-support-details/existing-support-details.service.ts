@@ -119,7 +119,7 @@ export class ExistingSupportDetailsService {
         })
       : null;
 
-    const supplierValue = this.stepSupportsService.supplierList.find(
+    const supplierValue = this.stepSupportsService?.supplierList?.find(
       (supplier) => supplier.id === referralDelivery.supplierId
     );
 

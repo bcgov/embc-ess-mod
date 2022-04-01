@@ -27,7 +27,7 @@ export class LoadEvacueeListService {
       : this.getCategoryList();
   }
 
-  public getSupportSubCategories() {
+  public getSupportSubCategories(): Code[] {
     return this.supportSubCategoryVal.length > 0
       ? this.supportSubCategoryVal
       : JSON.parse(this.cacheService.get('supportSubCategory'))
@@ -35,7 +35,7 @@ export class LoadEvacueeListService {
       : this.getSubCategoryList();
   }
 
-  public getSupportStatus() {
+  public getSupportStatus(): Code[] {
     return this.supportStatusVal.length > 0
       ? this.supportStatusVal
       : JSON.parse(this.cacheService.get('supportStatus'))
@@ -43,7 +43,7 @@ export class LoadEvacueeListService {
       : this.getSupportStatusList();
   }
 
-  public getSupportMethods() {
+  public getSupportMethods(): Code[] {
     return this.supportMethodVal.length > 0
       ? this.supportMethodVal
       : JSON.parse(this.cacheService.get('supportMethod'))
