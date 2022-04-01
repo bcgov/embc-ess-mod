@@ -515,6 +515,10 @@ export const supportStatusListError =
   'Unable to retrieve support status at this time. Please try again later';
 export const supportMethodListError =
   'Unable to retrieve support payment methods at this time. Please try again later';
+export const supportVoidReasonsError =
+  'Unable to retrieve support void reasons at this time. Please try again later';
+export const supportReprintReasonsError =
+  'Unable to retrieve support reprint reasons at this time. Please try again later';
 export const securityPhraseError =
   'Unable to retrieve security phrase at this time. Please try again later';
 export const verifySecurityPhraseError =
