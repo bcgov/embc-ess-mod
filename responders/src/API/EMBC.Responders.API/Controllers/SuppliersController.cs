@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Suppliers;
+using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -92,7 +92,7 @@ namespace EMBC.Responders.API.Controllers
             supplier.Team.Id = teamId;
             var id = await messagingClient.Send(new SaveSupplierCommand
             {
-                Supplier = mapper.Map<ESS.Shared.Contracts.Suppliers.Supplier>(supplier),
+                Supplier = mapper.Map<ESS.Shared.Contracts.Teams.Supplier>(supplier),
             });
             return Ok(new SupplierResult { Id = id });
         }
@@ -111,7 +111,7 @@ namespace EMBC.Responders.API.Controllers
             supplier.Id = supplierId;
             var id = await messagingClient.Send(new SaveSupplierCommand
             {
-                Supplier = mapper.Map<ESS.Shared.Contracts.Suppliers.Supplier>(supplier),
+                Supplier = mapper.Map<ESS.Shared.Contracts.Teams.Supplier>(supplier),
             });
             return Ok(new SupplierResult { Id = id });
         }
@@ -299,43 +299,43 @@ namespace EMBC.Responders.API.Controllers
     {
         public SuppliersMapping()
         {
-            CreateMap<ESS.Shared.Contracts.Suppliers.Supplier, SupplierListItem>()
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Suppliers.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
+            CreateMap<ESS.Shared.Contracts.Teams.Supplier, SupplierListItem>()
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Teams.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
                 .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null ? context.Options.Items["UserTeamId"].Equals(s.Team.Id) : false))
                 .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null ? context.Options.Items["UserTeamId"].Equals(s.Team.Id) && s.SharedWithTeams.Count() > 0 : false))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Suppliers.Supplier, Supplier>()
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Suppliers.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
+            CreateMap<ESS.Shared.Contracts.Teams.Supplier, Supplier>()
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Teams.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
                 ;
 
-            CreateMap<Supplier, ESS.Shared.Contracts.Suppliers.Supplier>()
+            CreateMap<Supplier, ESS.Shared.Contracts.Teams.Supplier>()
                 .ForMember(d => d.Verified, opts => opts.Ignore())
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Suppliers.Team, SupplierTeamDetails>()
+            CreateMap<ESS.Shared.Contracts.Teams.SupplierTeam, SupplierTeamDetails>()
                 .ForMember(d => d.IsActive, opts => opts.Ignore())
                 ;
 
-            CreateMap<SupplierTeamDetails, ESS.Shared.Contracts.Suppliers.Team>()
+            CreateMap<SupplierTeamDetails, ESS.Shared.Contracts.Teams.SupplierTeam>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Suppliers.Address, Address>()
+            CreateMap<ESS.Shared.Contracts.Teams.Address, Address>()
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
                 .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
                 .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
                 ;
 
-            CreateMap<Address, ESS.Shared.Contracts.Suppliers.Address>()
+            CreateMap<Address, ESS.Shared.Contracts.Teams.Address>()
                 .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
                 .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
                 .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Suppliers.SupplierContact, SupplierContact>()
+            CreateMap<ESS.Shared.Contracts.Teams.SupplierContact, SupplierContact>()
                 ;
 
-            CreateMap<SupplierContact, ESS.Shared.Contracts.Suppliers.SupplierContact>()
+            CreateMap<SupplierContact, ESS.Shared.Contracts.Teams.SupplierContact>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 ;
         }
