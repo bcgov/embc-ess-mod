@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
 
 @Component({
@@ -19,15 +20,15 @@ export class EvacueeIdVerifyComponent implements OnInit {
 
   idVerifyForm: FormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
-  paperBased: boolean;
 
   tipsPanel1State = false;
   tipsPanel2State = false;
+  idQuestion: string;
 
   constructor(
     private builder: FormBuilder,
-    private evacueeSessionService: EvacueeSessionService,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
+    private appBaseService: AppBaseService
   ) {}
 
   /**
@@ -35,7 +36,8 @@ export class EvacueeIdVerifyComponent implements OnInit {
    */
   ngOnInit(): void {
     this.constructIdVerifyForm();
-    this.paperBased = this.evacueeSessionService.isPaperBased;
+    this.idQuestion =
+      this.appBaseService?.appModel?.evacueeSearchType?.idQuestion;
   }
 
   /**

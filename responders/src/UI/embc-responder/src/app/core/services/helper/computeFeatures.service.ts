@@ -6,13 +6,12 @@ import {
   EtransferRequirementStatus,
   EtransferContent
 } from '../../models/appBase.model';
+import { Compute } from '../compute/compute';
 import { AppBaseService } from './appBase.service';
 import { EtransferFeaturesService } from './etransferfeatures.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ComputeFeaturesService {
+@Injectable()
+export class ComputeFeaturesService implements Compute {
   constructor(
     private featuresService: EtransferFeaturesService,
     private appBaseService: AppBaseService
@@ -24,6 +23,10 @@ export class ComputeFeaturesService {
     this.computeEtransferRequirementContent();
     this.triggerCaching();
     // console.log(this.featuresService);
+  }
+
+  triggerCaching() {
+    this.appBaseService.setCache();
   }
 
   private computeEtransferEligibility() {
@@ -86,9 +89,5 @@ export class ComputeFeaturesService {
       }
     }
     this.featuresService.etransferRequirement = requirementContent;
-  }
-
-  private triggerCaching() {
-    this.appBaseService.setCache();
   }
 }

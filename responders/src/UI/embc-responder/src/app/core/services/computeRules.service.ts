@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { computeInterfaceToken } from 'src/app/app.module';
+import { Compute } from './compute/compute';
 import { ComputeFeaturesService } from './helper/computeFeatures.service';
 
 @Injectable({
@@ -10,7 +12,7 @@ export class ComputeRulesService {
   public readonly eventSubject$: Observable<void> =
     this.eventSubject.asObservable();
 
-  constructor(private computeFeaturesService: ComputeFeaturesService) {
+  constructor(@Inject(computeInterfaceToken) private compute: Compute[]) {
     this.listener();
   }
 
@@ -21,7 +23,7 @@ export class ComputeRulesService {
   listener() {
     this.eventSubject$.subscribe({
       next: () => {
-        this.computeFeaturesService.execute();
+        this.compute.forEach((service) => service.execute());
       }
     });
   }

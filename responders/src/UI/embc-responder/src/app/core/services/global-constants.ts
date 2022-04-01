@@ -542,3 +542,8 @@ export const evacueeReportError =
   'Unable to retrieve an Evacuee Report at this time. Please try again later';
 export const supportReportError =
   'Unable to retrieve a Support Report at this time. Please try again later';
+
+export const paperIdQuestion =
+  'Did the evacuee present any <b>government-issued photo ID</b> when the paper ESS File was completed?';
+export const digitalIdQuestion =
+  'Can you present any <b>government-issued photo ID</b> to verify your identity?';

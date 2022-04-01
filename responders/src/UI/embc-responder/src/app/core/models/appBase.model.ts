@@ -3,7 +3,16 @@ import { EssTaskModel } from './ess-task.model';
 export interface AppBaseModel {
   selectedEssTask?: EssTaskModel;
   selectedUserPathway?: SelectedPathType;
+  evacueeSearchType?: DigitalFlow | PaperFlow;
 }
+
+export interface EvacueeSearch {
+  idQuestion: string;
+}
+
+export interface DigitalFlow extends EvacueeSearch {}
+
+export interface PaperFlow extends EvacueeSearch {}
 
 export enum SelectedPathType {
   paperBased = 'paperBased',
