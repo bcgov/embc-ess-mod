@@ -1,9 +1,11 @@
 import { EssTaskModel } from './ess-task.model';
+import { RegistrantProfileModel } from './registrant-profile.model';
 
 export interface AppBaseModel {
   selectedEssTask?: EssTaskModel;
   selectedUserPathway?: SelectedPathType;
   evacueeSearchType?: DigitalFlow | PaperFlow;
+  selectedProfile?: SelectedProfile;
 }
 
 export interface EvacueeSearch {
@@ -13,6 +15,11 @@ export interface EvacueeSearch {
 export interface DigitalFlow extends EvacueeSearch {}
 
 export interface PaperFlow extends EvacueeSearch {}
+
+export interface SelectedProfile {
+  selectedEvacueeInContext?: RegistrantProfileModel;
+  features?: [];
+}
 
 export enum SelectedPathType {
   paperBased = 'paperBased',

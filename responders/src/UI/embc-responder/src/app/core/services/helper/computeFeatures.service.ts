@@ -31,8 +31,10 @@ export class ComputeFeaturesService implements Compute {
 
   private computeEtransferEligibility() {
     this.featuresService.isRegistrantEtransferEligible =
-      !this.featuresService?.selectedEvacueeInContext?.isMinor &&
-      this.featuresService?.selectedEvacueeInContext?.authenticatedUser;
+      !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.isMinor &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.authenticatedUser;
   }
 
   private computeEtransferStatus() {
@@ -71,7 +73,9 @@ export class ComputeFeaturesService implements Compute {
         requirementContent.push(
           Object.assign(new EtransferRequirementStatus(), {
             statement: EtransferContent.isNotMinor,
-            status: !this.featuresService?.selectedEvacueeInContext?.isMinor
+            status:
+              !this.appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext?.isMinor
           })
         );
       } else if (defaultVal.statement === EtransferContent.bcServicesCard) {
@@ -79,7 +83,8 @@ export class ComputeFeaturesService implements Compute {
           Object.assign(new EtransferRequirementStatus(), {
             statement: EtransferContent.bcServicesCard,
             status:
-              this.featuresService?.selectedEvacueeInContext?.authenticatedUser
+              this.appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext?.authenticatedUser
           })
         );
       } else {

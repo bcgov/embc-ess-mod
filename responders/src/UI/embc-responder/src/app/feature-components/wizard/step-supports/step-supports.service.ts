@@ -34,6 +34,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -60,6 +61,7 @@ export class StepSupportsService {
     private registrationsService: RegistrationsService,
     private dateConversionService: DateConversionService,
     private featureService: EtransferFeaturesService,
+    private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
   ) {}
 
@@ -201,7 +203,8 @@ export class StepSupportsService {
             notificationEmail: this.supportDelivery.notificationEmail,
             notificationMobile: this.supportDelivery.notificationMobile,
             receivingRegistrantId:
-              this.featureService?.selectedEvacueeInContext?.id
+              this.appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext.id
           };
     const support: Support = {
       issuedBy: this.supportDetails.issuedBy,
