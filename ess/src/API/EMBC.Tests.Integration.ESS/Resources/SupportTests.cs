@@ -81,7 +81,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             foreach (var support in supports)
             {
                 var sourceSupport = newSupports.Where(s => s.GetType() == support.GetType()).Single();
-                support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
 
                 if (sourceSupport.IncludedHouseholdMembers.Any())
                     support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
@@ -90,13 +89,13 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
                 support.To.ShouldBe(sourceSupport.To);
                 support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
-                support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
                 support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
                 support.CreatedOn.ShouldBeInRange(now.AddSeconds(-5), DateTime.UtcNow);
                 support.IssuedOn.ShouldBe(support.CreatedOn);
 
                 if (sourceSupport.SupportDelivery is Referral sourceReferral)
                 {
+                    support.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
                     var referral = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
                     referral.IssuedToPersonName.ShouldBe(sourceReferral.IssuedToPersonName);
                     referral.SupplierNotes.ShouldBe(sourceReferral.SupplierNotes);
@@ -108,6 +107,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 }
                 if (sourceSupport.SupportDelivery is Interac sourceETransfer)
                 {
+                    support.Status.ShouldBe(SupportStatus.PendingScan);
                     var etransfer = support.SupportDelivery.ShouldBeAssignableTo<Interac>().ShouldNotBeNull();
                     etransfer.NotificationEmail.ShouldBe(sourceETransfer.NotificationEmail);
                     etransfer.NotificationMobile.ShouldBe(sourceETransfer.NotificationMobile);

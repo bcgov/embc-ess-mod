@@ -200,13 +200,6 @@ namespace EMBC.ESS.Managers.Events
             return caseId;
         }
 
-        public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)
-        {
-            var contact = (await evacueesRepository.Query(new EvacueeQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
-            if (contact == null) return;
-            await evacueesRepository.Manage(new DeleteEvacuee { Id = contact.Id });
-        }
-
         public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
         {
             var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();

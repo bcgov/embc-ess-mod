@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Shared.Contracts.Teams;
 
 namespace EMBC.ESS.Shared.Contracts
 {
@@ -61,6 +61,7 @@ namespace EMBC.ESS.Shared.Contracts
     }
 
     [Serializable]
+    //TODO: remove these dependencies
     [KnownType(typeof(CommunitiesAlreadyAssignedException))]
     [KnownType(typeof(UsernameAlreadyExistsException))]
     public class BusinessValidationException : EssApplicationException

@@ -3,6 +3,42 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Events
 {
+    /// <summary>
+    /// Evacuation file submission command
+    /// </summary>
+    public class SubmitEvacuationFileCommand : Command
+    {
+        public EvacuationFile File { get; set; }
+    }
+
+    /// <summary>
+    /// Evacuation file and registrant profile for anonymous file submission
+    /// </summary>
+    public class SubmitAnonymousEvacuationFileCommand : Command
+    {
+        public RegistrantProfile SubmitterProfile { get; set; }
+        public EvacuationFile File { get; set; }
+    }
+
+    /// <summary>
+    /// save a file's note
+    /// </summary>
+    public class SaveEvacuationFileNoteCommand : Command
+    {
+        public string FileId { get; set; }
+        public Note Note { get; set; }
+    }
+
+    /// <summary>
+    /// set a file note hidden status
+    /// </summary>
+    public class ChangeNoteStatusCommand : Command
+    {
+        public string FileId { get; set; }
+        public string NoteId { get; set; }
+        public bool IsHidden { get; set; }
+    }
+
     public class EvacuationFile
     {
         public string Id { get; set; }

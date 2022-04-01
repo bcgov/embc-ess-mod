@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -74,7 +74,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public TeamsMapping()
         {
-            CreateMap<ESS.Shared.Contracts.Team.Team, Team>()
+            CreateMap<ESS.Shared.Contracts.Teams.Team, Team>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Name))
                 .ForMember(d => d.IsActive, opts => opts.Ignore())

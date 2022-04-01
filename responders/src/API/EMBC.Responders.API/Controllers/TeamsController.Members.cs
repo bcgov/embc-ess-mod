@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
-using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,7 +63,7 @@ namespace EMBC.Responders.API.Controllers
                 teamMember.TeamId = teamId;
                 var memberId = await client.Send(new SaveTeamMemberCommand
                 {
-                    Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
+                    Member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(teamMember)
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
@@ -89,10 +89,10 @@ namespace EMBC.Responders.API.Controllers
             {
                 teamMember.Id = memberId;
                 teamMember.TeamId = teamId;
-                var member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember);
+                var member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(teamMember);
                 var updatedMemberId = await client.Send(new SaveTeamMemberCommand
                 {
-                    Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
+                    Member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(teamMember)
                 });
                 return Ok(new TeamMemberResult { Id = updatedMemberId });
             }
@@ -179,7 +179,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var response = await client.Send(new ValidateTeamMemberCommand
             {
-                TeamMember = new ESS.Shared.Contracts.Team.TeamMember { UserName = userName, Id = memberId, TeamId = teamId }
+                TeamMember = new ESS.Shared.Contracts.Teams.TeamMember { UserName = userName, Id = memberId, TeamId = teamId }
             });
             return Ok(!response.UniqueUserName);
         }
@@ -314,7 +314,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public TeamMemberMapping()
         {
-            CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
+            CreateMap<ESS.Shared.Contracts.Teams.TeamMember, TeamMember>()
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.Parse<MemberRole>(s.Role)))
                 .ForMember(d => d.Label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? (MemberLabel?)null : Enum.Parse<MemberLabel>(s.Label)))
                 .ForMember(d => d.IsUserNameEditable, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.ExternalUserId)))
