@@ -4,6 +4,81 @@ using System.Text.Json.Serialization;
 
 namespace EMBC.ESS.Shared.Contracts.Events
 {
+    /// <summary>
+    /// Proccess supports for a file, return a print request id
+    /// </summary>
+    public class ProcessSupportsCommand : Command
+    {
+        public string RequestingUserId { get; set; }
+        public bool IncludeSummaryInReferralsPrintout { get; set; }
+        public string FileId { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
+    }
+
+    /// <summary>
+    /// Proccess paper supports for a file without printing them
+    /// </summary>
+    public class ProcessPaperSupportsCommand : Command
+    {
+        public string RequestingUserId { get; set; }
+        public string FileId { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
+    }
+
+    /// <summary>
+    /// void a support in a file by id
+    /// </summary>
+    public class VoidSupportCommand : Command
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public SupportVoidReason VoidReason { get; set; }
+    }
+
+    /// <summary>
+    /// void a support in a file by id
+    /// </summary>
+    public class CancelSupportCommand : Command
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public string Reason { get; set; }
+    }
+
+    /// <summary>
+    /// query a print request's content
+    /// </summary>
+    public class PrintRequestQuery : Query<PrintRequestQueryResult>
+    {
+        public string PrintRequestId { get; set; }
+        public string RequestingUserId { get; set; }
+    }
+
+    public class PrintRequestQueryResult
+    {
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
+        public DateTime PrintedOn { get; set; }
+    }
+
+    /// <summary>
+    /// create a new support reprint request, returns the new print request id
+    /// </summary>
+    public class ReprintSupportCommand : Command
+    {
+        public string FileId { get; set; }
+        public string RequestingUserId { get; set; }
+        public string SupportId { get; set; }
+        public string ReprintReason { get; set; }
+    }
+
+    /// <summary>
+    /// process new supports
+    /// </summary>
+    public class ProcessPendingSupportsCommand : Command
+    { }
+
     [JsonConverter(typeof(PolymorphicJsonConverter<Support>))]
     public abstract class Support
     {

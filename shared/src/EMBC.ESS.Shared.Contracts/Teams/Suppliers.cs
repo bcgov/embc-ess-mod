@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EMBC.ESS.Shared.Contracts.Suppliers
+namespace EMBC.ESS.Shared.Contracts.Teams
 {
     public class SuppliersQuery : Query<SuppliersQueryResult>
     {
@@ -65,8 +65,8 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public bool Verified { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
-        public Team Team { get; set; }
-        public IEnumerable<Team> SharedWithTeams { get; set; }
+        public SupplierTeam Team { get; set; }
+        public IEnumerable<SupplierTeam> SharedWithTeams { get; set; }
         public SupplierStatus Status { get; set; }
     }
 
@@ -97,7 +97,7 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public string Email { get; set; }
     }
 
-    public class Team
+    public class SupplierTeam
     {
         public string Id { get; set; }
         public string Name { get; set; }

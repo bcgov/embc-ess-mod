@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Teams;
 using EMBC.ESS.Shared.Contracts.Metadata;
-using EMBC.ESS.Shared.Contracts.Suppliers;
-using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Shared.Contracts.Teams;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -378,7 +377,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
                     Phone = "6049877897",
                     Email = "suppliercontact@email.com"
                 },
-                Team = new EMBC.ESS.Shared.Contracts.Suppliers.Team
+                Team = new EMBC.ESS.Shared.Contracts.Teams.SupplierTeam
                 {
                     Id = TestData.TeamId
                 },
@@ -449,7 +448,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 testSupplier.Team.Id = null;
                 testSupplier.Team.Name = null;
 
-                testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Suppliers.Team>();
+                testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Teams.SupplierTeam>();
 
                 await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
                 var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
@@ -502,7 +501,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             if (testSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId) == null)
             {
-                var team = new EMBC.ESS.Shared.Contracts.Suppliers.Team { Id = TestData.OtherTeamId };
+                var team = new EMBC.ESS.Shared.Contracts.Teams.SupplierTeam { Id = TestData.OtherTeamId };
                 testSupplier.SharedWithTeams = testSupplier.SharedWithTeams.Concat(new[] { team });
 
                 await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });

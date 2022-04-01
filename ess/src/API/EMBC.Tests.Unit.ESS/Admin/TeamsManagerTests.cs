@@ -7,7 +7,7 @@ using EMBC.ESS.Managers.Teams;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Teams;
-using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.ESS.Utilities.Dynamics;
 using FakeItEasy;
 using Shouldly;
@@ -66,7 +66,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
         public async Task SaveMember_NewWithUniqueUserName_Added()
         {
             var team = teamRepository.stagedTeams.First().Value;
-            var teamMember = new EMBC.ESS.Shared.Contracts.Team.TeamMember
+            var teamMember = new EMBC.ESS.Shared.Contracts.Teams.TeamMember
             {
                 Id = null,
                 FirstName = "newf",
@@ -85,7 +85,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
         {
             var team = teamRepository.stagedTeams.First().Value;
             var existingTeamMember = teamRepository.stagedTeamMembers.First();
-            var teamMember = new EMBC.ESS.Shared.Contracts.Team.TeamMember
+            var teamMember = new EMBC.ESS.Shared.Contracts.Teams.TeamMember
             {
                 Id = null,
                 FirstName = "newf",

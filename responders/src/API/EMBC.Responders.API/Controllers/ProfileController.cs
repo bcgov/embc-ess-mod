@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
-using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Responders.API.Services;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
@@ -71,7 +71,7 @@ namespace EMBC.Responders.API.Controllers
             // Update current user
             await messagingClient.Send(new SaveTeamMemberCommand
             {
-                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(currentMember)
+                Member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(currentMember)
             });
 
             return Ok(mapper.Map<UserProfile>(currentMember));
@@ -107,7 +107,7 @@ namespace EMBC.Responders.API.Controllers
             // Update current user
             await messagingClient.Send(new SaveTeamMemberCommand
             {
-                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(currentMember)
+                Member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(currentMember)
             });
 
             return Ok();
@@ -139,7 +139,7 @@ namespace EMBC.Responders.API.Controllers
             // Update current user
             await messagingClient.Send(new SaveTeamMemberCommand
             {
-                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(currentMember)
+                Member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(currentMember)
             });
 
             return Ok();
@@ -175,7 +175,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public SecurityMapping()
         {
-            CreateMap<EMBC.ESS.Shared.Contracts.Team.TeamMember, UserProfile>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Teams.TeamMember, UserProfile>()
                 .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
                 .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue));
         }

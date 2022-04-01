@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Events
 {
+    /// <summary>
+    /// search suppliers list by task
+    /// </summary>
     public class TasksSearchQuery : Query<TasksSearchQueryResult>
     {
         public string TaskId { get; set; }
@@ -11,6 +14,19 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class TasksSearchQueryResult
     {
         public IEnumerable<IncidentTask> Items { get; set; }
+    }
+
+    /// <summary>
+    /// query the supplier list for a task
+    /// </summary>
+    public class SuppliersListQuery : Query<SuppliersListQueryResponse>
+    {
+        public string TaskId { get; set; }
+    }
+
+    public class SuppliersListQueryResponse
+    {
+        public IEnumerable<SupplierDetails> Items { get; set; }
     }
 
     public class IncidentTask

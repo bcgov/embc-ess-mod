@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace EMBC.ESS.Shared.Contracts.Team
+namespace EMBC.ESS.Shared.Contracts.Teams
 {
     public class TeamMembersQuery : Query<TeamMembersQueryResponse>
     {
