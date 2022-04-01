@@ -41,9 +41,9 @@ namespace EMBC.ESS.Resources.Supports
             };
         }
 
-        private async Task<ManageSupportCommandResult> Handle(SaveEvacuationFileSupportCommand cmd)
+        private async Task<SaveEvacuationFileSupportCommandResult> Handle(SaveEvacuationFileSupportCommand cmd)
         {
-            return new ManageSupportCommandResult { Ids = await SaveSupports(cmd.FileId, cmd.Supports) };
+            return new SaveEvacuationFileSupportCommandResult { Ids = await SaveSupports(cmd.FileId, cmd.Supports) };
         }
 
         private async Task<ManageSupportCommandResult> Handle(ChangeSupportStatusCommand cmd)
@@ -58,7 +58,7 @@ namespace EMBC.ESS.Resources.Supports
 
             await ctx.SaveChangesAsync();
             ctx.DetachAll();
-            return new ManageSupportCommandResult { Ids = changesSupportIds.ToArray() };
+            return new ChangeSupportStatusCommandResult { Ids = changesSupportIds.ToArray() };
         }
 
         private async Task<SupportQueryResults> Handle(SearchSupportsQuery query)

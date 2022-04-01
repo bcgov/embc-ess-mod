@@ -499,7 +499,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[]
                 {
@@ -514,7 +514,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[]
                 {
@@ -699,6 +699,11 @@ namespace EMBC.ESS.Managers.Events
             {
                 Items = supports
             };
+        }
+
+        public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand processPendingSupportsCommand)
+        {
+            await System.Threading.Tasks.Task.CompletedTask;
         }
     }
 }

@@ -71,7 +71,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = newSupports })).Ids;
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = newSupports })).Ids;
             newSupportIds.Count().ShouldBe(newSupports.Length);
 
             var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
@@ -162,7 +162,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = paperSupports })).Ids;
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = paperSupports })).Ids;
             newSupportIds.Count().ShouldBe(paperSupports.Length);
 
             var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
@@ -204,7 +204,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var support = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is Referral);
 
-            var voidedSupportId = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var voidedSupportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[] { SupportStatusTransition.VoidSupport(support.Id, SupportVoidReason.NewSupplierRequired) }
             })).Ids.ShouldHaveSingleItem();
@@ -219,7 +219,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var support = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is ETransfer);
 
-            var cancelledSupportId = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var cancelledSupportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Cancelled, Reason = "some reason" } }
             })).Ids.ShouldHaveSingleItem();

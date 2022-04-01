@@ -15,9 +15,8 @@ namespace EMBC.ESS.Resources.Supports
     {
     }
 
-    public class ManageSupportCommandResult
+    public abstract class ManageSupportCommandResult
     {
-        public IEnumerable<string> Ids { get; set; }
     }
 
     public class SaveEvacuationFileSupportCommand : ManageSupportCommand
@@ -26,9 +25,19 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<Support> Supports { get; set; }
     }
 
+    public class SaveEvacuationFileSupportCommandResult : ManageSupportCommandResult
+    {
+        public IEnumerable<string> Ids { get; set; }
+    }
+
     public class ChangeSupportStatusCommand : ManageSupportCommand
     {
         public IEnumerable<SupportStatusTransition> Items { get; set; }
+    }
+
+    public class ChangeSupportStatusCommandResult : ManageSupportCommandResult
+    {
+        public IEnumerable<string> Ids { get; set; }
     }
 
     public class SupportStatusTransition

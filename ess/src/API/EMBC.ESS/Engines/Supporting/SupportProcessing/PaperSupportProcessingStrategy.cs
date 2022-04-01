@@ -39,7 +39,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             var supports = mapper.Map<IEnumerable<Support>>(r.Supports);
 
-            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var supportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = r.FileId,
                 Supports = supports
