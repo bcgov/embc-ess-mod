@@ -29,8 +29,14 @@ export class DialogComponent implements OnInit, OnDestroy {
     this.componentRef = this.vcRef.createComponent(this.data.component);
     this.componentRef.instance.content = this.data.content;
 
+    console.log(this.data);
+
     if (this.data.profileData !== null) {
       this.componentRef.instance.profileData = this.data.profileData;
+    }
+
+    if (this.data.voidType !== null) {
+      this.componentRef.instance.voidType = this.data.voidType;
     }
 
     if (this.data.versionArray !== undefined) {

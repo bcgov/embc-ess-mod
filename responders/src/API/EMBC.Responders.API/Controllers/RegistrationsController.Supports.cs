@@ -126,6 +126,28 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
+        /// Cancel a support
+        /// </summary>
+        /// <param name="fileId">evacuation file number</param>
+        /// <param name="supportId">support id</param>
+        /// <returns>Ok if successfully voided</returns>
+        [HttpPost("files/{fileId}/supports/{supportId}/cancel")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> CancelSupport(string fileId, string supportId)
+        {
+            var result = await messagingClient.Send(new CancelSupportCommand
+            {
+                FileId = fileId,
+                SupportId = supportId,
+                Reason = "User initiated cancellation"
+            });
+
+            return Ok();
+        }
+
+        /// <summary>
         /// Reprint a referral support
         /// </summary>
         /// <param name="fileId">evacuation file number</param>

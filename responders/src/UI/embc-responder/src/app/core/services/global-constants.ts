@@ -147,12 +147,21 @@ export const supportEditMessage: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const supportCancelMessage: DialogContent = {
+  text: '<p>Support successfully updated.</p>',
+  cancelButton: 'Close'
+};
+
 export const deleteMessage: DialogContent = {
   text: '<p>User has been successfully deleted from ERA.</p>',
   cancelButton: 'Close'
 };
 export const editMessage: DialogContent = {
   text: '<p>User has been edited successfully.</p>',
+  cancelButton: 'Close'
+};
+export const cancelEtransferMessage: DialogContent = {
+  text: '<p>e-Transfer support successfully cancelled.</p>',
   cancelButton: 'Close'
 };
 export const addMessage: DialogContent = {
@@ -203,10 +212,6 @@ export const unableAccessFileMessage: DialogContent = {
   cancelButton: 'Close'
 };
 
-export const cancelEtransferConfirmation: DialogContent = {
-  text: '<p>e-Transfer support successfully cancelled.</p>',
-  cancelButton: 'Close'
-};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
@@ -510,6 +515,10 @@ export const supportStatusListError =
   'Unable to retrieve support status at this time. Please try again later';
 export const supportMethodListError =
   'Unable to retrieve support payment methods at this time. Please try again later';
+export const supportVoidReasonsError =
+  'Unable to retrieve support void reasons at this time. Please try again later';
+export const supportReprintReasonsError =
+  'Unable to retrieve support reprint reasons at this time. Please try again later';
 export const securityPhraseError =
   'Unable to retrieve security phrase at this time. Please try again later';
 export const verifySecurityPhraseError =
@@ -526,6 +535,8 @@ export const getEssFileError =
   'Unable to retrieve ESS file at this time. Please try again later';
 export const voidReferralError =
   'Unable to void referral at this time. Please try again later';
+export const cancelEtransferError =
+  'Unable to cancel transfer at this time. Please try again later';
 export const reprintReferralError =
   'Unable to reprint referral at this time. Please try again later';
 export const getSupportByIdError =

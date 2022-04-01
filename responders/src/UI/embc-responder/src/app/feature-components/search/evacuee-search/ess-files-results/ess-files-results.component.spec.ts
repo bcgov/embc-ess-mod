@@ -175,7 +175,7 @@ describe('EssFilesResultsComponent', () => {
     )[0] as HTMLElement;
 
     expect(dialogContent.textContent).toEqual(
-      'Responders doing data entry for a paper ESS File can only access ESS Files that match the paper ESS File number used during the search process.If you entered the incorrect paper ESS File Number, go back and start a new search with the correct details.'
+      'Responders doing data entry for a paper ESS File can only access ESS Files that match the paper ESS File number used during the search process.If you entered the incorrect paper ESS File Number, go back and start a new search with the correct details. Close '
     );
   });
 
@@ -215,7 +215,7 @@ describe('EssFilesResultsComponent', () => {
     )[0] as HTMLElement;
 
     expect(dialogContent.textContent).toEqual(
-      'This file can only be viewed if the evacuee presented govenment-issued identification.'
+      'This file can only be viewed if the evacuee presented govenment-issued identification. Close '
     );
   });
 

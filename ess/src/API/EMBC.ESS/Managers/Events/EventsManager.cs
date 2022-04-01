@@ -200,13 +200,6 @@ namespace EMBC.ESS.Managers.Events
             return caseId;
         }
 
-        public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)
-        {
-            var contact = (await evacueesRepository.Query(new EvacueeQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
-            if (contact == null) return;
-            await evacueesRepository.Manage(new DeleteEvacuee { Id = contact.Id });
-        }
-
         public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
         {
             var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
@@ -504,14 +497,29 @@ namespace EMBC.ESS.Managers.Events
         public async Task<string> Handle(VoidSupportCommand cmd)
         {
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
-
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new VoidEvacuationFileSupportCommand
+            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
             {
-                FileId = cmd.FileId,
-                SupportId = cmd.SupportId,
-                VoidReason = Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString())
+                Items = new[]
+                {
+                    SupportStatusTransition.VoidSupport(cmd.SupportId, Enum.Parse<Resources.Supports.SupportVoidReason>(cmd.VoidReason.ToString()))
+                }
+            })).Ids.SingleOrDefault();
+            return id;
+        }
+
+        public async Task<string> Handle(CancelSupportCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+            if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
+
+            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            {
+                Items = new[]
+                {
+                   new SupportStatusTransition { SupportId = cmd.SupportId, ToStatus = Resources.Supports.SupportStatus.Cancelled, Reason = cmd.Reason }
+                }
             })).Ids.SingleOrDefault();
             return id;
         }

@@ -3,6 +3,52 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Events
 {
+    /// <summary>
+    /// Save registrant's profile
+    /// </summary>
+    public class SaveRegistrantCommand : Command
+    {
+        public RegistrantProfile Profile { get; set; }
+    }
+
+    /// <summary>
+    /// Updated registrant's verified status
+    /// </summary>
+    public class SetRegistrantVerificationStatusCommand : Command
+    {
+        public string RegistrantId { get; set; }
+        public bool Verified { get; set; }
+    }
+
+    /// <summary>
+    /// Link Registrant and Household Member
+    /// </summary>
+    public class LinkRegistrantCommand : Command
+    {
+        public string FileId { get; set; }
+        public string RegistantId { get; set; }
+        public string HouseholdMemberId { get; set; }
+    }
+
+    /// <summary>
+    /// send an registrant an invite to join the application
+    /// </summary>
+    public class InviteRegistrantCommand : Command
+    {
+        public string RegistrantId { get; set; }
+        public string Email { get; set; }
+        public string RequestingUserId { get; set; }
+    }
+
+    /// <summary>
+    /// Link Registrant with a user
+    /// </summary>
+    public class ProcessRegistrantInviteCommand : Command
+    {
+        public string InviteId { get; set; }
+        public string LoggedInUserId { get; set; }
+    }
+
     public class RegistrantProfile
     {
         public string Id { get; set; }

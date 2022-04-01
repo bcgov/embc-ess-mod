@@ -12,8 +12,7 @@ import {
   LodgingBilletingSupport,
   LodgingGroupSupport,
   Referral,
-  Interac,
-  Code
+  Interac
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -30,8 +29,6 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
-import { DownloadService } from 'src/app/core/services/utility/download.service';
-import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Component({
@@ -49,18 +46,18 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private router: Router,
     public stepSupportsService: StepSupportsService,
     private stepEssFileService: StepEssFileService,
-    private dialog: MatDialog,
+    public dialog: MatDialog,
     private existingSupportService: ExistingSupportDetailsService,
     private referralCreationService: ReferralCreationService,
     private alertService: AlertService,
     public evacueeSessionService: EvacueeSessionService,
-    private downloadService: DownloadService,
     private loadEvacueeListService: LoadEvacueeListService
   ) {}
 
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
+    console.log(this.selectedSupport);
   }
 
   back() {
@@ -167,8 +164,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.stepSupportsService
       .getNeedsAssessmentInfo(
-        this.needsAssessmentForSupport.id,
-        this.selectedSupport.needsAssessmentId
+        this.needsAssessmentForSupport?.id,
+        this.selectedSupport?.needsAssessmentId
       )
       .subscribe((response) => {
         this.dialog.open(DialogComponent, {
@@ -188,7 +185,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .open(DialogComponent, {
         data: {
           component: VoidReferralDialogComponent,
-          profileData: this.selectedSupport.id
+          profileData: this.selectedSupport.id,
+          voidType: this.selectedSupport.method
         },
         height: '550px',
         width: '720px'
@@ -289,10 +287,12 @@ export class ExistingSupportDetailsComponent implements OnInit {
       (value) => {
         if (value?.id === memberId) {
           return value;
+        } else if (value.linkedRegistrantId === memberId) {
+          return value;
         }
       }
     );
-    return memberObject?.lastName + ',' + memberObject?.firstName;
+    return memberObject?.lastName + ', ' + memberObject?.firstName;
   }
 
   deleteDraft(): void {
@@ -332,7 +332,46 @@ export class ExistingSupportDetailsComponent implements OnInit {
     });
   }
 
-  cancelEtransfer(): void {}
+  cancelEtransfer(): void {
+    console.log(this.selectedSupport.method);
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: VoidReferralDialogComponent,
+          profileData: this.selectedSupport.id,
+          voidType: this.selectedSupport.method
+        },
+        height: '370px',
+        width: '630px'
+      })
+      .afterClosed()
+      .subscribe({
+        next: (response) => {
+          if (response === 'cancel') {
+            this.existingSupportService
+              .cancelSupport(
+                this.needsAssessmentForSupport.id,
+                this.selectedSupport.id
+              )
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'cancel' };
+                  this.router.navigate(['/ess-wizard/add-supports/view'], {
+                    state: stateIndicator
+                  });
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.cancelEtransferError
+                  );
+                }
+              });
+          }
+        }
+      });
+  }
 
   getStatusTextToDisplay(enumToText: string): string {
     return this.loadEvacueeListService
@@ -344,5 +383,18 @@ export class ExistingSupportDetailsComponent implements OnInit {
     return this.loadEvacueeListService
       .getSupportMethods()
       .find((method) => method.value === enumToText)?.description;
+  }
+
+  getNotificationPref(): string {
+    if (this.interac.notificationEmail && this.interac.notificationMobile) {
+      return 'Email & Mobile';
+    } else if (
+      this.interac.notificationEmail &&
+      !this.interac.notificationMobile
+    ) {
+      return 'Email';
+    } else {
+      return 'Mobile';
+    }
   }
 }

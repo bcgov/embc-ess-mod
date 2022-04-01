@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Http;

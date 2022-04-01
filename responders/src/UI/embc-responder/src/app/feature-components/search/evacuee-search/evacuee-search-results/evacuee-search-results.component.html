@@ -16,7 +16,10 @@
               evacueeSearchContext?.evacueeSearchParameters?.lastName
                 | uppercase
             }},
-            {{ evacueeSearchContext?.evacueeSearchParameters?.firstName }}</b
+            {{
+              evacueeSearchContext?.evacueeSearchParameters?.firstName
+                | titlecase
+            }}</b
           >" with a date of birth
           <b
             >"{{
@@ -37,7 +40,10 @@
               evacueeSearchContext?.evacueeSearchParameters?.lastName
                 | uppercase
             }},
-            {{ evacueeSearchContext?.evacueeSearchParameters?.firstName }}</b
+            {{
+              evacueeSearchContext?.evacueeSearchParameters?.firstName
+                | titlecase
+            }}</b
           >" with a date of birth
           <b
             >"{{
@@ -257,8 +263,10 @@
           {{
             evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase
           }},
-          {{ evacueeSearchContext?.evacueeSearchParameters?.firstName }} does
-          not have a Profile in the ERA Tool.
+          {{
+            evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase
+          }}
+          does not have a Profile in the ERA Tool.
         </p>
       </div>
     </div>
@@ -273,8 +281,10 @@
           {{
             evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase
           }},
-          {{ evacueeSearchContext?.evacueeSearchParameters?.firstName }} does
-          not have any ESS Files in the ERA Tool.
+          {{
+            evacueeSearchContext?.evacueeSearchParameters?.firstName | titlecase
+          }}
+          does not have any ESS Files in the ERA Tool.
         </p>
       </div>
     </div>

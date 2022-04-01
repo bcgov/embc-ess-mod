@@ -27,7 +27,7 @@ namespace EMBC.ESS.Resources.Supports
             return cmd switch
             {
                 SaveEvacuationFileSupportCommand c => await Handle(c),
-                VoidEvacuationFileSupportCommand c => await Handle(c),
+                ChangeSupportStatusCommand c => await Handle(c),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -46,9 +46,19 @@ namespace EMBC.ESS.Resources.Supports
             return new ManageSupportCommandResult { Ids = await SaveSupports(cmd.FileId, cmd.Supports) };
         }
 
-        private async Task<ManageSupportCommandResult> Handle(VoidEvacuationFileSupportCommand cmd)
+        private async Task<ManageSupportCommandResult> Handle(ChangeSupportStatusCommand cmd)
         {
-            return new ManageSupportCommandResult { Ids = new[] { await VoidSupport(cmd.FileId, cmd.SupportId, cmd.VoidReason) } };
+            var ctx = essContext;
+            var changesSupportIds = new List<string>();
+            foreach (var item in cmd.Items)
+            {
+                var supportId = await ChangeSupportStatus(ctx, item.SupportId, item.ToStatus, item.Reason);
+                if (!string.IsNullOrEmpty(supportId)) changesSupportIds.Add(supportId);
+            }
+
+            await ctx.SaveChangesAsync();
+            ctx.DetachAll();
+            return new ManageSupportCommandResult { Ids = changesSupportIds.ToArray() };
         }
 
         private async Task<SupportQueryResults> Handle(SearchSupportsQuery query)
@@ -182,23 +192,46 @@ namespace EMBC.ESS.Resources.Supports
             AssignETransferRecipientToSupport(support);
         }
 
-        public async Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason)
+        private static async Task<string> ChangeSupportStatus(EssContext ctx, string supportId, SupportStatus status, string changeReason)
         {
-            var supports = essContext.era_evacueesupports
-                .Expand(s => s.era_EvacuationFileId)
-                .Where(s => s.era_name == supportId).ToArray();
+            var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == supportId)).GetAllPagesAsync()).SingleOrDefault();
 
-            var existingSupport = supports.Where(s => s.era_EvacuationFileId.era_name == fileId).SingleOrDefault();
-
-            if (existingSupport != null)
+            var supportDeliveryType = (SupportMethod)support.era_supportdeliverytype;
+            if (support != null)
             {
-                existingSupport.era_voidreason = (int)reason;
-                essContext.DeactivateObject(existingSupport, (int)SupportStatus.Void);
-                await essContext.SaveChangesAsync();
-            }
-            essContext.DetachAll();
+                switch (status)
+                {
+                    case SupportStatus.Void when supportDeliveryType == SupportMethod.Referral:
+                        support.era_voidreason = (int)Enum.Parse<SupportVoidReason>(changeReason);
+                        ctx.DeactivateObject(support, (int)status);
+                        break;
 
-            return fileId;
+                    case SupportStatus.PendingApproval when supportDeliveryType == SupportMethod.ETransfer:
+                        support.statuscode = (int)status;
+                        break;
+
+                    case SupportStatus.Paid when supportDeliveryType == SupportMethod.ETransfer:
+                        support.statuscode = (int)status;
+                        break;
+
+                    case SupportStatus.Cancelled when supportDeliveryType == SupportMethod.ETransfer:
+                        ctx.DeactivateObject(support, (int)status);
+                        break;
+
+                    case SupportStatus.UnderReview when supportDeliveryType == SupportMethod.ETransfer:
+                        support.statuscode = (int)status;
+                        break;
+
+                    case SupportStatus.PendingScan when supportDeliveryType == SupportMethod.ETransfer:
+                        support.statuscode = (int)status;
+                        break;
+
+                    default:
+                        throw new InvalidOperationException($"Can't change status of {supportId} with delivery type {supportDeliveryType} to {status}");
+                }
+                return supportId;
+            }
+            return null;
         }
 
         private void AssignHouseholdMembersToSupport(era_evacueesupport support, IEnumerable<era_householdmember> householdMembers)

@@ -6,6 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-void-referral-dialog',
@@ -14,14 +15,19 @@ import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
 })
 export class VoidReferralDialogComponent implements OnInit {
   @Input() profileData: string;
+  @Input() voidType: string;
   @Output() outputEvent = new EventEmitter<string>();
   voidForm: FormGroup;
   reasons = SupportVoidReason;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) {}
 
   ngOnInit(): void {
     this.voidReasonForm();
+    console.log(this.voidType);
   }
 
   voidReasonForm(): void {
@@ -55,13 +61,19 @@ export class VoidReferralDialogComponent implements OnInit {
     }
   }
 
+  cancel(): void {
+    this.outputEvent.emit('cancel');
+  }
+
   /**
    * Splits the reasons into words with spaces to be displayed to the user
    *
    * @param reasonOption options to choose for reasons for reprinting
    * @returns the same reason for reprinting with spaces between words.
    */
-  splitString(reasonOption: string): string {
-    return reasonOption.split(/(?=[A-Z])/).join(' ');
+  getReasonDescription(reasonOption: string): string {
+    return this.loadEvacueeListService
+      .getVoidReasons()
+      .find((reason) => reason.value === reasonOption).description;
   }
 }

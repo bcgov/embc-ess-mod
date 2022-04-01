@@ -12,6 +12,8 @@ export class LoadEvacueeListService {
   private supportSubCategoryVal: Code[] = [];
   private supportStatusVal: Code[] = [];
   private supportMethodVal: Code[] = [];
+  private voidReasonVal: Code[] = [];
+  private reprintReasonVal: Code[] = [];
 
   constructor(
     private configService: ConfigurationService,
@@ -51,6 +53,22 @@ export class LoadEvacueeListService {
       : this.getSupportMethodList();
   }
 
+  public getVoidReasons() {
+    return this.voidReasonVal.length > 0
+      ? this.voidReasonVal
+      : JSON.parse(this.cacheService.get('voidReason'))
+      ? JSON.parse(this.cacheService.get('voidReason'))
+      : this.getVoidReasonsList();
+  }
+
+  public getReprintReasons() {
+    return this.reprintReasonVal.length > 0
+      ? this.reprintReasonVal
+      : JSON.parse(this.cacheService.get('reprintReason'))
+      ? JSON.parse(this.cacheService.get('reprintReason'))
+      : this.getReprintReasonsList();
+  }
+
   public loadStaticEvacueeLists(): Promise<void> {
     const categories: Observable<Array<Code>> =
       this.configService.configurationGetCodes({
@@ -68,13 +86,31 @@ export class LoadEvacueeListService {
       this.configService.configurationGetCodes({
         forEnumType: 'SupportMethod'
       });
+    const voidReasons: Observable<Array<Code>> =
+      this.configService.configurationGetCodes({
+        forEnumType: 'SupportVoidReason'
+      });
+    const reprintReasons: Observable<Array<Code>> =
+      this.configService.configurationGetCodes({
+        forEnumType: 'SupportReprintReason'
+      });
 
-    const list$ = forkJoin([categories, subcategories, status, methods]).pipe(
+    const list$ = forkJoin([
+      categories,
+      subcategories,
+      status,
+      methods,
+      voidReasons,
+      reprintReasons
+    ]).pipe(
       map((results) => {
+        console.log(results);
         this.setSupportCategories(results[0]);
         this.setSupportSubCategories(results[1]);
         this.setSupportStatus(results[2]);
         this.setSupportMethods(results[3]);
+        this.setVoidReasons(results[4]);
+        this.setReprintReasons(results[5]);
       })
     );
 
@@ -207,5 +243,55 @@ export class LoadEvacueeListService {
   private setSupportMethods(supportMethodVal: Code[]): void {
     this.supportMethodVal = supportMethodVal;
     this.cacheService.set('supportMethod', supportMethodVal);
+  }
+
+  private getVoidReasonsList(): Code[] {
+    let supportVoidReasonsList: Code[] = [];
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportVoidReason' })
+      .subscribe({
+        next: (voidReasons: Code[]) => {
+          supportVoidReasonsList = voidReasons;
+          this.setVoidReasons(voidReasons);
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportVoidReasonsError
+          );
+        }
+      });
+    return supportVoidReasonsList;
+  }
+
+  private setVoidReasons(voidReasonVal: Code[]): void {
+    this.voidReasonVal = voidReasonVal;
+    this.cacheService.set('voidReason', voidReasonVal);
+  }
+
+  private getReprintReasonsList(): Code[] {
+    let supportReprintReasonsList: Code[] = [];
+    this.configService
+      .configurationGetCodes({ forEnumType: 'SupportReprintReason' })
+      .subscribe({
+        next: (reprintReasons: Code[]) => {
+          supportReprintReasonsList = reprintReasons;
+          this.setReprintReasons(reprintReasons);
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportVoidReasonsError
+          );
+        }
+      });
+    return supportReprintReasonsList;
+  }
+
+  private setReprintReasons(reprintReasonVal: Code[]): void {
+    this.reprintReasonVal = reprintReasonVal;
+    this.cacheService.set('reprintReason', reprintReasonVal);
   }
 }

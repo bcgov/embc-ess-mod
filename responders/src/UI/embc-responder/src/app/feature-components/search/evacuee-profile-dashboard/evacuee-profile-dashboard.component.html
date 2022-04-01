@@ -188,13 +188,17 @@
                     <tr>
                       <th>First Name:</th>
                       <td>
-                        <b>{{ evacueeProfile?.personalDetails?.firstName }}</b>
+                        <b>{{
+                          evacueeProfile?.personalDetails?.firstName | titlecase
+                        }}</b>
                       </td>
                     </tr>
                     <tr>
                       <th>Last Name:</th>
                       <td>
-                        <b>{{ evacueeProfile?.personalDetails?.lastName }}</b>
+                        <b>{{
+                          evacueeProfile?.personalDetails?.lastName | uppercase
+                        }}</b>
                       </td>
                     </tr>
                     <tr>

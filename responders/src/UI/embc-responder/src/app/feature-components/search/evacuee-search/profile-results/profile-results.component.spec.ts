@@ -180,7 +180,7 @@ describe('ProfileResultsComponent', () => {
     )[0] as HTMLElement;
 
     expect(dialogContent.textContent).toEqual(
-      'This file can only be viewed if the evacuee presented govenment-issued identification.'
+      'This file can only be viewed if the evacuee presented govenment-issued identification. Close '
     );
   });
 
@@ -205,7 +205,7 @@ describe('ProfileResultsComponent', () => {
     )[0] as HTMLElement;
 
     expect(dialogContent.textContent).toEqual(
-      'This file can only be viewed if the evacuee presented govenment-issued identification.'
+      'This file can only be viewed if the evacuee presented govenment-issued identification. Close '
     );
   });
 

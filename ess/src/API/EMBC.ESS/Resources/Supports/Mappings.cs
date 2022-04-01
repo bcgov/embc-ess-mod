@@ -58,7 +58,10 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
-                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))
+                .ForMember(d => d.statuscode, opts => opts.MapFrom(s =>
+                    s.IsEtransfer
+                        ? SupportStatus.PendingScan
+                        : s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))
                 .ForMember(d => d.era_era_householdmember_era_evacueesupport, opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
                 .ForMember(d => d._era_issuedbyid_value, opts => opts.MapFrom(s => s.CreatedByTeamMemberId))
                 .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.IsPaperReferral ? s.IssuedOn : null))

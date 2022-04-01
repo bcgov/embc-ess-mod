@@ -250,7 +250,9 @@ describe('EvacueeProfileDashboardComponent', () => {
     const dialogContent = document.getElementsByTagName(
       'app-information-dialog'
     )[0] as HTMLElement;
-    expect(dialogContent.textContent).toEqual('ESS File Successfully Linked');
+    expect(dialogContent.textContent).toEqual(
+      'ESS File Successfully Linked Close '
+    );
   });
 
   it('should open dialog ess file error linked', () => {
@@ -264,7 +266,7 @@ describe('EvacueeProfileDashboardComponent', () => {
       'app-information-dialog'
     )[0] as HTMLElement;
     expect(dialogContent.textContent).toEqual(
-      'Error while linking the ESS File. Please try again later'
+      'Error while linking the ESS File. Please try again later Close '
     );
   });
 
@@ -278,7 +280,7 @@ describe('EvacueeProfileDashboardComponent', () => {
       'app-information-dialog'
     )[0] as HTMLElement;
     expect(dialogContent.textContent).toEqual(
-      'Please complete the evacuee profile.'
+      'Please complete the evacuee profile. Close '
     );
   });
 
