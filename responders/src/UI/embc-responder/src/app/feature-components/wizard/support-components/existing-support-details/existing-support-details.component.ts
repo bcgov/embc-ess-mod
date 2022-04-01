@@ -12,8 +12,7 @@ import {
   LodgingBilletingSupport,
   LodgingGroupSupport,
   Referral,
-  Interac,
-  Code
+  Interac
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -30,8 +29,6 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
-import { DownloadService } from 'src/app/core/services/utility/download.service';
-import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Component({
@@ -49,12 +46,11 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private router: Router,
     public stepSupportsService: StepSupportsService,
     private stepEssFileService: StepEssFileService,
-    private dialog: MatDialog,
+    public dialog: MatDialog,
     private existingSupportService: ExistingSupportDetailsService,
     private referralCreationService: ReferralCreationService,
     private alertService: AlertService,
     public evacueeSessionService: EvacueeSessionService,
-    private downloadService: DownloadService,
     private loadEvacueeListService: LoadEvacueeListService
   ) {}
 
@@ -167,8 +163,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.stepSupportsService
       .getNeedsAssessmentInfo(
-        this.needsAssessmentForSupport.id,
-        this.selectedSupport.needsAssessmentId
+        this.needsAssessmentForSupport?.id,
+        this.selectedSupport?.needsAssessmentId
       )
       .subscribe((response) => {
         this.dialog.open(DialogComponent, {

@@ -63,7 +63,12 @@
     </button>
   </div>
   <div class="col-md-6" *ngIf="voidType === 'Referral'">
-    <button class="button-p button-width" mat-button (click)="void()">
+    <button
+      class="button-p button-width"
+      mat-button
+      id="voidButton"
+      (click)="void()"
+    >
       Proceed & Void
     </button>
   </div>
