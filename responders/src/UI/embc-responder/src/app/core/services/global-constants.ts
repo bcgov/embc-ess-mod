@@ -532,7 +532,7 @@ export const getEssFileError =
 export const voidReferralError =
   'Unable to void referral at this time. Please try again later';
 export const cancelEtransferError =
-  'Unable to cancer transfer at this time. Please try again later';
+  'Unable to cancel transfer at this time. Please try again later';
 export const reprintReferralError =
   'Unable to reprint referral at this time. Please try again later';
 export const getSupportByIdError =
