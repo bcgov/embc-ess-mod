@@ -41,7 +41,7 @@ p {
     min-height: 576px;
     border: 1px solid #ccc;
     box-shadow: 0px 0px 15px -7px rgba(0, 0, 0, 0.76);
-    padding: 45px 22px 40px 22px;
+    padding: 45px 22px 73px 22px;
 }
 
 .register-with-card-image {
@@ -49,6 +49,7 @@ p {
     margin: 0 auto;
     display: block;
     margin-top: 10px;
+    margin-bottom: 36px;
 }
 
 .register-without-card-image {
@@ -66,12 +67,26 @@ p {
 }
 
 .register-with-card-inner {
-    padding: 0 22px 40px 22px;
+    padding: 45px 22px 10px 22px;
 }
 
 .register-with-card-button-container {
     padding: 0 40px;
-    margin-bottom: 40px;
+}
+
+.learn-more-container {
+    margin-bottom: 30px;
+    text-align: center;
+    padding-top: 15px;
+}
+
+a {
+    color: #169bd5;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 .register-without-card-button-container {
