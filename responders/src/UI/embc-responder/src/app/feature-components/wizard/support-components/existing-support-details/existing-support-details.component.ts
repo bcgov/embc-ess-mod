@@ -57,6 +57,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
+    console.log(this.selectedSupport);
   }
 
   back() {
@@ -286,10 +287,12 @@ export class ExistingSupportDetailsComponent implements OnInit {
       (value) => {
         if (value?.id === memberId) {
           return value;
+        } else if (value.linkedRegistrantId === memberId) {
+          return value;
         }
       }
     );
-    return memberObject?.lastName + ',' + memberObject?.firstName;
+    return memberObject?.lastName + ', ' + memberObject?.firstName;
   }
 
   deleteDraft(): void {
@@ -380,5 +383,18 @@ export class ExistingSupportDetailsComponent implements OnInit {
     return this.loadEvacueeListService
       .getSupportMethods()
       .find((method) => method.value === enumToText)?.description;
+  }
+
+  getNotificationPref(): string {
+    if (this.interac.notificationEmail && this.interac.notificationMobile) {
+      return 'Email & Mobile';
+    } else if (
+      this.interac.notificationEmail &&
+      !this.interac.notificationMobile
+    ) {
+      return 'Email';
+    } else {
+      return 'Mobile';
+    }
   }
 }
