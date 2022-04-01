@@ -33,6 +33,7 @@ import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { CancelEtransferDialogComponent } from 'src/app/shared/components/dialog-components/cancel-etransfer-dialog/cancel-etransfer-dialog.component';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -332,7 +333,44 @@ export class ExistingSupportDetailsComponent implements OnInit {
     });
   }
 
-  cancelEtransfer(): void {}
+  cancelEtransfer(): void {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: CancelEtransferDialogComponent,
+          profileData: this.selectedSupport.id
+        },
+        height: '370px',
+        width: '630px'
+      })
+      .afterClosed()
+      .subscribe({
+        next: (response) => {
+          if (response === 'cancel') {
+            this.existingSupportService
+              .cancelSupport(
+                this.needsAssessmentForSupport.id,
+                this.selectedSupport.id
+              )
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'cancel' };
+                  this.router.navigate(['/ess-wizard/add-supports/view'], {
+                    state: stateIndicator
+                  });
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.cancelEtransferError
+                  );
+                }
+              });
+          }
+        }
+      });
+  }
 
   getStatusTextToDisplay(enumToText: string): string {
     return this.loadEvacueeListService

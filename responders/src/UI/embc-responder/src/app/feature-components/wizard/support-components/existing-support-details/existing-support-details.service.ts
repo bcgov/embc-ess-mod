@@ -54,6 +54,14 @@ export class ExistingSupportDetailsService {
     private loadEvacueeListService: LoadEvacueeListService
   ) {}
 
+  /**
+   * Method that deletes Referrals from the Database
+   *
+   * @param fileId
+   * @param supportId
+   * @param voidReason
+   * @returns
+   */
   voidSupport(
     fileId: string,
     supportId: string,
@@ -66,6 +74,28 @@ export class ExistingSupportDetailsService {
     });
   }
 
+  /**
+   * Method that deletes e-Transfers from the Database
+   *
+   * @param fileId
+   * @param supportId
+   * @returns
+   */
+  cancelSupport(fileId: string, supportId: string): Observable<void> {
+    return this.registrationService.registrationsCancelSupport({
+      fileId,
+      supportId
+    });
+  }
+
+  /**
+   * Method that reprints pdf of the selected referral
+   *
+   * @param fileId
+   * @param supportId
+   * @param reprintReason
+   * @returns
+   */
   reprintSupport(
     fileId: string,
     supportId: string,
@@ -88,6 +118,13 @@ export class ExistingSupportDetailsService {
       );
   }
 
+  /**
+   * Finds the given householdmember based on the given ID
+   *
+   * @param memberId
+   * @param needsAssessmentForSupport
+   * @returns
+   */
   mapMember(
     memberId: string,
     needsAssessmentForSupport: EvacuationFileModel
@@ -99,6 +136,12 @@ export class ExistingSupportDetailsService {
     });
   }
 
+  /**
+   * Creates a temporary support as draft that the user can edit
+   *
+   * @param selectedSupport
+   * @param needsAssessmentForSupport
+   */
   createEditableDraft(
     selectedSupport: Support,
     needsAssessmentForSupport: EvacuationFileModel
@@ -177,6 +220,12 @@ export class ExistingSupportDetailsService {
     };
   }
 
+  /**
+   * Creates the delivery details for a given support, based in its subcategory
+   *
+   * @param selectedSupport
+   * @returns
+   */
   createDeliveryDetails(selectedSupport: Support): SupplierDetailsModel {
     if (selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting) {
       return {
@@ -200,6 +249,12 @@ export class ExistingSupportDetailsService {
     }
   }
 
+  /**
+   * Creates a referral based on its subcategory
+   *
+   * @param selectedSupport
+   * @returns
+   */
   createReferral(
     selectedSupport: Support
   ):
@@ -283,6 +338,12 @@ export class ExistingSupportDetailsService {
     }
   }
 
+  /**
+   * Transforms a community code into a Community object
+   *
+   * @param communityCode
+   * @returns
+   */
   parseCommunityString(communityCode: string): Community {
     const communities = this.locationService.getCommunityList();
     const community = communities.find((comm) => comm.code === communityCode);

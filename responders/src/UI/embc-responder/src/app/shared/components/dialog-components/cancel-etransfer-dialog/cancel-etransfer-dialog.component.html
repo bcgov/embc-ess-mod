@@ -1,0 +1,27 @@
+<div class="row row-padding">
+  <div class="col-md-12 heading">Cancel e-Transfer</div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p>
+      You are requesting to cancel
+      <span class="bold">e-Transfer upport #{{ profileData }}</span
+      >, a support can only be cancelled while it is in the Pending Approval
+      state.
+    </p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-6">
+    <button class="button-s button-width" mat-button (click)="close()">
+      Cancel
+    </button>
+  </div>
+  <div class="col-md-6">
+    <button class="button-p button-width" mat-button (click)="cancel()">
+      Proceed & Cancel
+    </button>
+  </div>
+</div>
