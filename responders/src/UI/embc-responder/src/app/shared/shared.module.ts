@@ -35,7 +35,6 @@ import { TimeOutDialogComponent } from './components/dialog-components/time-out-
 import { OutageDialogComponent } from './outage-components/outage-dialog/outage-dialog.component';
 import { OutageBannerComponent } from './outage-components/outage-banner/outage-banner.component';
 import { EssFileExistsComponent } from './components/dialog-components/ess-file-exists/ess-file-exists.component';
-import { CancelEtransferDialogComponent } from './components/dialog-components/cancel-etransfer-dialog/cancel-etransfer-dialog.component';
 
 @NgModule({
   declarations: [
@@ -68,8 +67,7 @@ import { CancelEtransferDialogComponent } from './components/dialog-components/c
     TimeOutDialogComponent,
     OutageBannerComponent,
     OutageDialogComponent,
-    EssFileExistsComponent,
-    CancelEtransferDialogComponent
+    EssFileExistsComponent
   ],
   imports: [
     CommonModule,

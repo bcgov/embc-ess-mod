@@ -14,6 +14,7 @@ import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
 })
 export class VoidReferralDialogComponent implements OnInit {
   @Input() profileData: string;
+  @Input() voidType: string;
   @Output() outputEvent = new EventEmitter<string>();
   voidForm: FormGroup;
   reasons = SupportVoidReason;
@@ -22,6 +23,7 @@ export class VoidReferralDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.voidReasonForm();
+    console.log(this.voidType);
   }
 
   voidReasonForm(): void {
@@ -53,6 +55,10 @@ export class VoidReferralDialogComponent implements OnInit {
         this.outputEvent.emit(this.voidForm.get('reason').value);
       }
     }
+  }
+
+  cancel(): void {
+    this.outputEvent.emit('cancel');
   }
 
   /**

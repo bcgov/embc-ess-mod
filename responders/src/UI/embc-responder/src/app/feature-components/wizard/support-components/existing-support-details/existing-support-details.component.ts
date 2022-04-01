@@ -33,7 +33,6 @@ import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { DownloadService } from 'src/app/core/services/utility/download.service';
 import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
-import { CancelEtransferDialogComponent } from 'src/app/shared/components/dialog-components/cancel-etransfer-dialog/cancel-etransfer-dialog.component';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -189,7 +188,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .open(DialogComponent, {
         data: {
           component: VoidReferralDialogComponent,
-          profileData: this.selectedSupport.id
+          profileData: this.selectedSupport.id,
+          voidType: this.selectedSupport.method
         },
         height: '550px',
         width: '720px'
@@ -334,11 +334,13 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   cancelEtransfer(): void {
+    console.log(this.selectedSupport.method);
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: CancelEtransferDialogComponent,
-          profileData: this.selectedSupport.id
+          component: VoidReferralDialogComponent,
+          profileData: this.selectedSupport.id,
+          voidType: this.selectedSupport.method
         },
         height: '370px',
         width: '630px'
