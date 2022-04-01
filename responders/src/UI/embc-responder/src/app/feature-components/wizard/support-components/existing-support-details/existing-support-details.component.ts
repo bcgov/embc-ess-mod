@@ -184,7 +184,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .open(DialogComponent, {
         data: {
           component: VoidReferralDialogComponent,
-          profileData: this.selectedSupport.id
+          profileData: this.selectedSupport.id,
+          voidType: this.selectedSupport.method
         },
         height: '550px',
         width: '720px'
@@ -328,7 +329,46 @@ export class ExistingSupportDetailsComponent implements OnInit {
     });
   }
 
-  cancelEtransfer(): void {}
+  cancelEtransfer(): void {
+    console.log(this.selectedSupport.method);
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: VoidReferralDialogComponent,
+          profileData: this.selectedSupport.id,
+          voidType: this.selectedSupport.method
+        },
+        height: '370px',
+        width: '630px'
+      })
+      .afterClosed()
+      .subscribe({
+        next: (response) => {
+          if (response === 'cancel') {
+            this.existingSupportService
+              .cancelSupport(
+                this.needsAssessmentForSupport.id,
+                this.selectedSupport.id
+              )
+              .subscribe({
+                next: (value) => {
+                  const stateIndicator = { action: 'cancel' };
+                  this.router.navigate(['/ess-wizard/add-supports/view'], {
+                    state: stateIndicator
+                  });
+                },
+                error: (error) => {
+                  this.alertService.clearAlert();
+                  this.alertService.setAlert(
+                    'danger',
+                    globalConst.cancelEtransferError
+                  );
+                }
+              });
+          }
+        }
+      });
+  }
 
   getStatusTextToDisplay(enumToText: string): string {
     return this.loadEvacueeListService
