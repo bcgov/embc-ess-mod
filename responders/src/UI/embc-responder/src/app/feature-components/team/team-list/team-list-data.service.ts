@@ -48,7 +48,7 @@ export class TeamListDataService {
       {
         type: 'label',
         label: this.defaultLabel,
-        values: this.labelsList
+        values: this.labelsList.filter((label) => label.description !== '')
       }
     ],
     loadInputFilter: {
