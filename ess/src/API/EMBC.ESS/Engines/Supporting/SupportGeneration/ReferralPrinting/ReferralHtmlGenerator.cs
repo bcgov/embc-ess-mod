@@ -47,7 +47,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 html.Append(CreateReferalHtmlSummary(referrals, printingUser, displayWatermark));
                 html.Append(PageBreak);
             }
-            foreach (var referral in referrals)
+            foreach (var referral in referrals.Where(r => !r.IsEtransfer))
             {
                 html.Append(CreateReferralHtmlPage(referral));
                 html.Append(PageBreak);

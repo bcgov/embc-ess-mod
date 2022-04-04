@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.Utilities.Extensions;
 
@@ -14,11 +15,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
     {
         private readonly IMapper mapper;
         private readonly IMetadataRepository metadataRepository;
+        private readonly IEvacueesRepository evacueesRepository;
 
-        public SingleDocumentStrategy(IMapper mapper, IMetadataRepository metadataRepository)
+        public SingleDocumentStrategy(IMapper mapper, IMetadataRepository metadataRepository, IEvacueesRepository evacueesRepository)
         {
             this.mapper = mapper;
             this.metadataRepository = metadataRepository;
+            this.evacueesRepository = evacueesRepository;
         }
 
         public async Task<GenerateResponse> Generate(GenerateRequest request)
@@ -42,6 +45,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
                 referral.DisplayWatermark = request.AddWatermark;
                 referral.HostCommunity = communities.GetValueOrDefault(referral.HostCommunity);
                 if (!string.IsNullOrEmpty(referral.Supplier?.Community)) referral.Supplier.City = communities.GetValueOrDefault(referral.Supplier.Community);
+
+                if (referral.IsEtransfer)
+                {
+                    var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = referral.NotificationInformation.RecipientId })).Items.SingleOrDefault();
+                    referral.NotificationInformation.RecipientName = contact.FirstName + ' ' + contact.LastName;
+                }
             }
 
             var title = $"supports-{request.File.Id}-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";

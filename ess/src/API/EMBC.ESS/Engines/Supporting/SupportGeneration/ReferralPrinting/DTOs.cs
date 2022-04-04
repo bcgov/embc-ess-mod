@@ -37,6 +37,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public string ToAddress { get; set; }
         public string OtherTransportModeDetails { get; set; }
         public IEnumerable<PrintEvacuee> Evacuees { get; set; } = Array.Empty<PrintEvacuee>();
+        public bool IsEtransfer { get; set; }
+        public NotificationInformation NotificationInformation { get; set; }
 
         public IEnumerable<PrintableEvacueesRow> PrintableEvacuees
         {
@@ -81,6 +83,14 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 
         public string LastName { get; set; }
         public string EvacueeTypeCode { get; set; }
+    }
+
+    public class NotificationInformation
+    {
+        public string RecipientId { get; set; }
+        public string RecipientName { get; set; }
+        public string Email { get; set; }
+        public string Mobile { get; set; }
     }
 
     public class PrintableEvacueesRow
