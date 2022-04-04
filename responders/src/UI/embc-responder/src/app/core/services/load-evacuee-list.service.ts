@@ -104,7 +104,6 @@ export class LoadEvacueeListService {
       reprintReasons
     ]).pipe(
       map((results) => {
-        console.log(results);
         this.setSupportCategories(results[0]);
         this.setSupportSubCategories(results[1]);
         this.setSupportStatus(results[2]);
