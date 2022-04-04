@@ -37,8 +37,6 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public string ToAddress { get; set; }
         public string OtherTransportModeDetails { get; set; }
         public IEnumerable<PrintEvacuee> Evacuees { get; set; } = Array.Empty<PrintEvacuee>();
-        public bool IsEtransfer { get; set; }
-        public NotificationInformation NotificationInformation { get; set; }
 
         public IEnumerable<PrintableEvacueesRow> PrintableEvacuees
         {
@@ -59,6 +57,21 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         {
             return value?.Replace("\n", "<br />")?.Replace("\r", "<br />");
         }
+    }
+
+    public class PrintSummary
+    {
+        public string Id { get; set; }
+        public PrintReferralType Type { get; set; }
+        public string PurchaserName { get; set; }
+        public string EssNumber { get; set; }
+        public string FromDate { get; set; }
+        public string FromTime { get; set; }
+        public string ToDate { get; set; }
+        public string ToTime { get; set; }
+        public PrintSupplier Supplier { get; set; }
+        public bool IsEtransfer { get; set; }
+        public NotificationInformation NotificationInformation { get; set; }
     }
 
     public class PrintSupplier

@@ -25,10 +25,6 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.Now.ToString("dd-MMM-yyyy")))
                 .ForMember(d => d.Comments, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierNotes))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
-                .ForMember(d => d.IsEtransfer, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.ETransfer))
-                .ForMember(d => d.NotificationInformation, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.ETransfer
-                    ? ((Shared.Contracts.Events.Interac)s.SupportDelivery)
-                    : null))
                 .ForMember(d => d.IncidentTaskNumber, opts => opts.Ignore())
                 .ForMember(d => d.EssNumber, opts => opts.Ignore())
                 .ForMember(d => d.HostCommunity, opts => opts.Ignore())
@@ -56,6 +52,30 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                     d.EssNumber = file.Id;
                     d.HostCommunity = file.RelatedTask.CommunityCode;
                     d.Evacuees = ctx.Mapper.Map<IEnumerable<PrintEvacuee>>(file.HouseholdMembers.Where(m => s.IncludedHouseholdMembers.Contains(m.Id)));
+                })
+                ;
+
+            CreateMap<Shared.Contracts.Events.Support, PrintSummary>()
+                .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
+                .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
+                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.Referral
+                    ? ((Shared.Contracts.Events.Referral)s.SupportDelivery).IssuedToPersonName
+                    : null))
+                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
+                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
+                .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
+                .ForMember(d => d.IsEtransfer, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.ETransfer))
+                .ForMember(d => d.NotificationInformation, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.ETransfer
+                    ? ((Shared.Contracts.Events.Interac)s.SupportDelivery)
+                    : null))
+                .ForMember(d => d.EssNumber, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
+                {
+                    var file = (Shared.Contracts.Events.EvacuationFile)ctx.Items["evacuationFile"];
+                    if (file == null) return;
+                    d.EssNumber = file.Id;
                 })
                 ;
 

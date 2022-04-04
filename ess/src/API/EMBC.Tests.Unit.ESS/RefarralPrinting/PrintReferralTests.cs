@@ -20,7 +20,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var referrals = GeneratePrintReferral(requestingUser, 1, false);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false, title);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfFile.html", content);
@@ -33,7 +33,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var referrals = GeneratePrintReferral(requestingUser, 5, false);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, false, false, title);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsFile.html", content);
@@ -44,9 +44,10 @@ namespace EMBC.Tests.Unit.ESS.Prints
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 1, true);
+            var summaryItems = GetSummaryFromReferrals(referrals);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfWithSummaryFile.html", content);
@@ -57,9 +58,10 @@ namespace EMBC.Tests.Unit.ESS.Prints
         {
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 10, true);
+            var summaryItems = GetSummaryFromReferrals(referrals);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
+            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsWithSummaryFile.html", content);
@@ -72,8 +74,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
              {
                  var requestingUser = GeneratePrintRequestingUser();
                  var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
+                 var summaryItems = GetSummaryFromReferrals(referrals);
                  var title = $"supportstest-{i}";
-                 ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, true, true, title);
+                 ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
              });
         }
 
@@ -129,5 +132,29 @@ namespace EMBC.Tests.Unit.ESS.Prints
                         .Generate()))
                     .Generate()
             );
+
+        private IEnumerable<PrintSummary> GetSummaryFromReferrals(IEnumerable<PrintReferral> referrals)
+        {
+            var summaries = new List<PrintSummary>();
+            foreach (var referral in referrals)
+            {
+                summaries.Add(new PrintSummary
+                {
+                    Id = referral.Id,
+                    Type = referral.Type,
+                    PurchaserName = referral.PurchaserName,
+                    EssNumber = referral.EssNumber,
+                    FromDate = referral.FromDate,
+                    FromTime = referral.FromTime,
+                    ToDate = referral.ToDate,
+                    ToTime = referral.ToTime,
+                    Supplier = referral.Supplier,
+                    IsEtransfer = false,
+                    NotificationInformation = new NotificationInformation()
+                });
+            }
+
+            return summaries;
+        }
     }
 }
