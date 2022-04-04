@@ -230,7 +230,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task SetFlags_TwoFlags_Success()
+        public async Task SetFlags_TwoFlags_FlagsAdded()
         {
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
 
@@ -265,6 +265,20 @@ namespace EMBC.Tests.Integration.ESS.Resources
                     af.Approver.ShouldBe(sourceFlag.Approver);
                 }
             }
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ClearFlags_NoFlags()
+        {
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
+
+            var supportWithFlags = supports.First(s => s.Flags.Any());
+
+            await supportRepository.Manage(new ClearFlagsCommand { SupportId = supportWithFlags.Id });
+
+            var supportWithoutFlags = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportWithFlags.Id })).Items.ShouldHaveSingleItem();
+
+            supportWithoutFlags.Flags.ShouldBeEmpty();
         }
     }
 }

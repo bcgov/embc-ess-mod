@@ -67,6 +67,8 @@ namespace EMBC.ESS.Resources.Supports
 
             await ctx.SaveChangesAsync();
 
+            ctx.DetachAll();
+
             return new SetFlagCommandResult();
         }
 
@@ -90,6 +92,8 @@ namespace EMBC.ESS.Resources.Supports
             }
 
             await ctx.SaveChangesAsync();
+
+            ctx.DetachAll();
 
             return new ClearFlagCommandResult();
         }
