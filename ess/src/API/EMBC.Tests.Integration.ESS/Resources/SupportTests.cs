@@ -228,5 +228,43 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var voidedSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = cancelledSupportId })).Items.ShouldHaveSingleItem();
             voidedSupport.Status.ShouldBe(SupportStatus.Cancelled);
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task SetFlags_TwoFlags_Success()
+        {
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
+
+            var flaggedSupport = supports.First(s => s.SupportDelivery is ETransfer && s.Status == SupportStatus.PendingScan);
+            var duplicateSupport = supports.First(s => s.SupportDelivery is Referral && s.Status == SupportStatus.Active);
+
+            var flags = new SupportFlag[]
+            {
+                new DuplicateSupportFlag { DuplicatedSupportId = duplicateSupport.Id },
+                new AmountOverridenSupportFlag { Approver = "test" }
+            };
+            await supportRepository.Manage(new SetFlagsCommand
+            {
+                SupportId = flaggedSupport.Id,
+                Flags = flags
+            });
+
+            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = flaggedSupport.Id })).Items.ShouldHaveSingleItem();
+
+            support.Flags.Count().ShouldBe(flags.Length);
+
+            foreach (var flag in support.Flags)
+            {
+                if (flag is DuplicateSupportFlag df)
+                {
+                    var sourceFlag = (DuplicateSupportFlag)flags[0];
+                    df.DuplicatedSupportId.ShouldBe(sourceFlag.DuplicatedSupportId);
+                }
+                if (flag is AmountOverridenSupportFlag af)
+                {
+                    var sourceFlag = (AmountOverridenSupportFlag)flags[1];
+                    af.Approver.ShouldBe(sourceFlag.Approver);
+                }
+            }
+        }
     }
 }

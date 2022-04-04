@@ -32,6 +32,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom(s => s))
+                .ForMember(d => d.Flags, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport))
                 ;
 
             Func<SupportDelivery, SupportMethod?> resolveSupportDelieveryType = sd => sd switch
@@ -55,6 +56,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForSourceMember(s => s.FileId, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.OriginatingNeedsAssessmentId, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.IssuedOn, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.Flags, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
@@ -202,6 +204,29 @@ namespace EMBC.ESS.Resources.Supports
                 .IncludeBase<Support, era_evacueesupport>()
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.TransporationTaxi))
                 ;
+
+            CreateMap<SupportFlag, era_supportflag>()
+                .ConvertUsing<SupportFlagTypeConverter>()
+                ;
+
+            CreateMap<era_supportflag, SupportFlag>(MemberList.Destination)
+                .ConvertUsing<SupportFlagTypeConverter>()
+                ;
+
+            CreateMap<era_supportflag, AmountOverridenSupportFlag>()
+                .ForMember(d => d.Approver, opts => opts.MapFrom(s => s.era_amountoverrider))
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Source)
+                .ForMember(d => d._era_flagtype_value, opts => opts.MapFrom(s => AmountOverridenSupportFlag.FlagTypeId))
+                .ForMember(d => d.era_amountoverrider, opts => opts.MapFrom(s => s.Approver))
+                ;
+
+            CreateMap<era_supportflag, DuplicateSupportFlag>()
+                .ForMember(d => d.DuplicatedSupportId, opts => opts.MapFrom(s => s.era_SupportDuplicate == null ? null : s.era_SupportDuplicate.era_name))
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Source)
+                .ForMember(d => d._era_flagtype_value, opts => opts.MapFrom(s => DuplicateSupportFlag.FlagTypeId))
+                ;
         }
     }
 
@@ -276,6 +301,32 @@ namespace EMBC.ESS.Resources.Supports
                 Interac e => context.Mapper.Map<era_evacueesupport>(e),
 
                 _ => throw new NotImplementedException($"No known type for SupportDeliver type of {source.GetType().Name}")
+            };
+    }
+
+    /// <summary>
+    /// Automapper converter to transform support flag from Dynamics era_supportflag entity
+    /// </summary>
+    public class SupportFlagTypeConverter :
+        ITypeConverter<era_supportflag, SupportFlag>,
+        ITypeConverter<SupportFlag, era_supportflag>
+    {
+        public SupportFlag Convert(era_supportflag source, SupportFlag destination, ResolutionContext context) =>
+            source._era_flagtype_value.GetValueOrDefault().ToString() switch
+            {
+                DuplicateSupportFlag.FlagTypeId => context.Mapper.Map<DuplicateSupportFlag>(source),
+                AmountOverridenSupportFlag.FlagTypeId => context.Mapper.Map<AmountOverridenSupportFlag>(source),
+
+                _ => throw new NotImplementedException($"Unknown flg type id '{source._era_flagtype_value}'")
+            };
+
+        public era_supportflag Convert(SupportFlag source, era_supportflag destination, ResolutionContext context) =>
+            source switch
+            {
+                DuplicateSupportFlag f => context.Mapper.Map<era_supportflag>(f),
+                AmountOverridenSupportFlag f => context.Mapper.Map<era_supportflag>(f),
+
+                _ => throw new NotImplementedException($"Unknown support flag type {source.GetType().Name}")
             };
     }
 }

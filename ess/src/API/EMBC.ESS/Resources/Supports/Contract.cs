@@ -51,13 +51,24 @@ namespace EMBC.ESS.Resources.Supports
     public class AssignSupportToQueueCommand : ManageSupportCommand
     { }
 
-    public class AssignSupportToQueueResult : ManageSupportCommandResult
+    public class AssignSupportToQueueCommandResult : ManageSupportCommandResult
     { }
 
-    public class SetFlagCommand : ManageSupportCommand
-    { }
+    public class SetFlagsCommand : ManageSupportCommand
+    {
+        public string SupportId { get; set; }
+        public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
+    }
 
     public class SetFlagCommandResult : ManageSupportCommandResult
+    { }
+
+    public class ClearFlagsCommand : ManageSupportCommand
+    {
+        public string SupportId { get; set; }
+    }
+
+    public class ClearFlagCommandResult : ManageSupportCommandResult
     { }
 
     public class SupportStatusTransition
@@ -102,6 +113,7 @@ namespace EMBC.ESS.Resources.Supports
         public bool IsPaperReferral => SupportDelivery is Referral r && r.ManualReferralId != null;
         public bool IsReferral => SupportDelivery is Referral;
         public bool IsEtransfer => SupportDelivery is ETransfer;
+        public IEnumerable<SupportFlag> Flags { get; set; }
     }
 
     public abstract class SupportDelivery
@@ -241,4 +253,20 @@ namespace EMBC.ESS.Resources.Supports
     }
 
 #pragma warning restore CA1008 // Enums should have zero value
+
+    public abstract class SupportFlag
+    {
+    }
+
+    public class AmountOverridenSupportFlag : SupportFlag
+    {
+        internal const string FlagTypeId = "5a844ee3-b8ab-ec11-b831-00505683fbf4";
+        public string Approver { get; set; }
+    }
+
+    public class DuplicateSupportFlag : SupportFlag
+    {
+        internal const string FlagTypeId = "8f3487d4-b8ab-ec11-b831-00505683fbf4";
+        public string DuplicatedSupportId { get; set; }
+    }
 }

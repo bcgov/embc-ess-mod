@@ -27,21 +27,10 @@ namespace EMBC.ESS.Resources.Supports
                 SaveEvacuationFileSupportCommand c => await Handle(c),
                 ChangeSupportStatusCommand c => await Handle(c),
                 AssignSupportToQueueCommand c => await Handle(c),
-                SetFlagCommand c => await Handle(c),
+                SetFlagsCommand c => await Handle(c),
+                ClearFlagsCommand c => await Handle(c),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
-        }
-
-        private Task<SetFlagCommandResult> Handle(SetFlagCommand c)
-        {
-            var ctx = essContextFactory.Create();
-            return null;
-        }
-
-        private Task<AssignSupportToQueueResult> Handle(AssignSupportToQueueCommand c)
-        {
-            var ctx = essContextFactory.Create();
-            return null;
         }
 
         public async Task<SupportQueryResult> Query(SupportQuery query)
@@ -51,6 +40,58 @@ namespace EMBC.ESS.Resources.Supports
                 SearchSupportsQuery q => await Handle(q),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
+        }
+
+        private async Task<SetFlagCommandResult> Handle(SetFlagsCommand c)
+        {
+            var ctx = essContextFactory.Create();
+
+            var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == c.SupportId)).GetAllPagesAsync()).SingleOrDefault();
+            if (support == null) throw new ArgumentException($"Support id {c.SupportId} not found", nameof(c.SupportId));
+
+            var flagTypes = (await ctx.era_supportflagtypes.GetAllPagesAsync()).ToArray();
+            foreach (var flag in c.Flags)
+            {
+                var supportFlag = mapper.Map<era_supportflag>(flag);
+                ctx.AddToera_supportflags(supportFlag);
+                ctx.SetLink(supportFlag, nameof(era_supportflag.era_FlagType), flagTypes.Single(t => t.era_supportflagtypeid == supportFlag._era_flagtype_value));
+                ctx.SetLink(supportFlag, nameof(era_supportflag.era_EvacueeSupport), support);
+                if (flag is DuplicateSupportFlag dup)
+                {
+                    var duplicateSupport = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == dup.DuplicatedSupportId))
+                        .GetAllPagesAsync()).SingleOrDefault();
+                    if (duplicateSupport == null) throw new InvalidOperationException($"Support {dup.DuplicatedSupportId} not found");
+                    ctx.SetLink(supportFlag, nameof(era_supportflag.era_SupportDuplicate), duplicateSupport);
+                }
+            }
+
+            await ctx.SaveChangesAsync();
+
+            return new SetFlagCommandResult();
+        }
+
+        private async Task<AssignSupportToQueueCommandResult> Handle(AssignSupportToQueueCommand c)
+        {
+            await Task.CompletedTask;
+            var ctx = essContextFactory.Create();
+            return new AssignSupportToQueueCommandResult();
+        }
+
+        private async Task<ClearFlagCommandResult> Handle(ClearFlagsCommand c)
+        {
+            var ctx = essContextFactory.Create();
+
+            var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == c.SupportId)).GetAllPagesAsync()).SingleOrDefault();
+            if (support == null) throw new InvalidOperationException($"Support {c.SupportId} not found");
+            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport));
+            foreach (var flag in support.era_era_evacueesupport_era_supportflag_EvacueeSupport)
+            {
+                ctx.DeleteObject(flag);
+            }
+
+            await ctx.SaveChangesAsync();
+
+            return new ClearFlagCommandResult();
         }
 
         private async Task<SaveEvacuationFileSupportCommandResult> Handle(SaveEvacuationFileSupportCommand cmd)
@@ -113,6 +154,11 @@ namespace EMBC.ESS.Resources.Supports
             {
                 await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_EvacuationFileId));
                 await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
+                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport));
+                foreach (var flag in support.era_era_evacueesupport_era_supportflag_EvacueeSupport)
+                {
+                    if (flag._era_supportduplicate_value.HasValue) await ctx.LoadPropertyAsync(flag, nameof(era_supportflag.era_SupportDuplicate));
+                }
             }
             var results = new SearchSupportQueryResult { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
 
