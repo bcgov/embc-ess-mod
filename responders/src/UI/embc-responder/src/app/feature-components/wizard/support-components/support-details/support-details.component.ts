@@ -20,11 +20,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker/public-api';
-import { SupportSubCategory } from 'src/app/core/api/models';
+import { Support, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
-import { SupportSummary } from 'src/app/core/api/models/support-summary';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 
 @Component({
@@ -391,10 +390,7 @@ export class SupportDetailsComponent implements OnInit {
           this.showLoader = !this.showLoader;
           console.log(value);
           const draftList = this.referralCreationService.getDraftSupport();
-          const duplicateReferralList: SupportSummary[] = [
-            ...value,
-            ...draftList
-          ];
+          const duplicateReferralList: Support[] = [...value, ...draftList];
           const filteredReferrals = duplicateReferralList.filter(
             (referrals) =>
               referrals.category ===
@@ -457,6 +453,18 @@ export class SupportDetailsComponent implements OnInit {
     }
   }
 
+  private setToTime() {
+    if (this.evacueeSessionService.isPaperBased) {
+      return this.stepSupportsService?.supportDetails?.toTime
+        ? this.stepSupportsService?.supportDetails?.toTime
+        : '';
+    } else {
+      return this.stepSupportsService?.supportDetails?.toTime
+        ? this.stepSupportsService?.supportDetails?.toTime
+        : this.currentTime;
+    }
+  }
+
   /**
    * Support details form
    */
@@ -479,12 +487,7 @@ export class SupportDetailsComponent implements OnInit {
           : '',
         [this.customValidation.validDateValidator(), Validators.required]
       ],
-      toTime: [
-        this.stepSupportsService?.supportDetails?.toTime
-          ? this.stepSupportsService?.supportDetails?.toTime
-          : '',
-        [Validators.required]
-      ],
+      toTime: [this.setToTime(), [Validators.required]],
       members: this.formBuilder.array(
         [],
         [this.customValidation.memberCheckboxValidator()]
