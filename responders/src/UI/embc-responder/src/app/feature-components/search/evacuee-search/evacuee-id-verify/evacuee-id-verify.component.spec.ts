@@ -12,6 +12,7 @@ import {
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { computeInterfaceToken } from 'src/app/app.module';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { MaterialModule } from 'src/app/material.module';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
@@ -39,7 +40,8 @@ describe('EvacueeIdVerifyComponent', () => {
         EvacueeIdVerifyComponent,
         FormBuilder,
         { provide: EvacueeSessionService, useClass: MockEvacueeSessionService },
-        { provide: EvacueeSearchService, useClass: MockEvacueeSearchService }
+        { provide: EvacueeSearchService, useClass: MockEvacueeSearchService },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });
@@ -54,22 +56,6 @@ describe('EvacueeIdVerifyComponent', () => {
   it('should create', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
-  });
-
-  it('should get paper based true from service', () => {
-    evacueeSessionService.isPaperBased = true;
-    fixture.detectChanges();
-    component.ngOnInit();
-
-    expect(component.paperBased).toEqual(true);
-  });
-
-  it('should get paper based false from service', () => {
-    evacueeSessionService.isPaperBased = false;
-    fixture.detectChanges();
-    component.ngOnInit();
-
-    expect(component.paperBased).toEqual(false);
   });
 
   it('should get present ID true from form', () => {
@@ -94,39 +80,39 @@ describe('EvacueeIdVerifyComponent', () => {
     ).toEqual(false);
   });
 
-  it('should get label for Paper-based ID', fakeAsync(() => {
-    evacueeSessionService.isPaperBased = true;
-    fixture.detectChanges();
-    component.ngOnInit();
+  // it('should get label for Paper-based ID', fakeAsync(() => {
+  //   evacueeSessionService.isPaperBased = true;
+  //   fixture.detectChanges();
+  //   component.ngOnInit();
 
-    flush();
-    flushMicrotasks();
-    discardPeriodicTasks();
-    tick();
-    fixture.detectChanges();
-    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
-    const labelElem = nativeElem.querySelector('#photoId-label');
+  //   flush();
+  //   flushMicrotasks();
+  //   discardPeriodicTasks();
+  //   tick();
+  //   fixture.detectChanges();
+  //   const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+  //   const labelElem = nativeElem.querySelector('#photoId-label');
 
-    expect(labelElem.textContent).toEqual(
-      ' Did the evacuee present any government-issued photo ID when the paper ESS File was completed? '
-    );
-  }));
+  //   expect(labelElem.textContent).toEqual(
+  //     ' Did the evacuee present any government-issued photo ID when the paper ESS File was completed? '
+  //   );
+  // }));
 
-  it('should get label for Digital-based ID', fakeAsync(() => {
-    evacueeSessionService.isPaperBased = false;
-    fixture.detectChanges();
-    component.ngOnInit();
+  // it('should get label for Digital-based ID', fakeAsync(() => {
+  //   evacueeSessionService.isPaperBased = false;
+  //   fixture.detectChanges();
+  //   component.ngOnInit();
 
-    flush();
-    flushMicrotasks();
-    discardPeriodicTasks();
-    tick();
-    fixture.detectChanges();
-    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
-    const labelElem = nativeElem.querySelector('#photoId-label');
+  //   flush();
+  //   flushMicrotasks();
+  //   discardPeriodicTasks();
+  //   tick();
+  //   fixture.detectChanges();
+  //   const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+  //   const labelElem = nativeElem.querySelector('#photoId-label');
 
-    expect(labelElem.textContent).toEqual(
-      ' Can you present any government-issued photo ID to verify your identity? '
-    );
-  }));
+  //   expect(labelElem.textContent).toEqual(
+  //     ' Can you present any government-issued photo ID to verify your identity? '
+  //   );
+  // }));
 });

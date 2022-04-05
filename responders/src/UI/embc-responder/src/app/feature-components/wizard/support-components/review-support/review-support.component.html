@@ -482,11 +482,11 @@
             <p class="no-margin"><b>e-Transfer Recipient</b></p>
             <p>
               {{
-                featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
+                appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
               }},
               {{
-                featureService?.selectedEvacueeInContext?.personalDetails
-                  ?.firstName
+                appBaseService?.appModel?.selectedProfile
+                  ?.selectedEvacueeInContext?.personalDetails?.firstName
               }}
             </p>
 

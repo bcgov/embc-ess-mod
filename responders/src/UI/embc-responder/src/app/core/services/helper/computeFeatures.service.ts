@@ -6,13 +6,12 @@ import {
   EtransferRequirementStatus,
   EtransferContent
 } from '../../models/appBase.model';
+import { Compute } from '../compute/compute';
 import { AppBaseService } from './appBase.service';
 import { EtransferFeaturesService } from './etransferfeatures.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ComputeFeaturesService {
+@Injectable()
+export class ComputeFeaturesService implements Compute {
   constructor(
     private featuresService: EtransferFeaturesService,
     private appBaseService: AppBaseService
@@ -26,10 +25,16 @@ export class ComputeFeaturesService {
     // console.log(this.featuresService);
   }
 
+  triggerCaching() {
+    this.appBaseService.setCache();
+  }
+
   private computeEtransferEligibility() {
     this.featuresService.isRegistrantEtransferEligible =
-      !this.featuresService?.selectedEvacueeInContext?.isMinor &&
-      this.featuresService?.selectedEvacueeInContext?.authenticatedUser;
+      !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.isMinor &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.authenticatedUser;
   }
 
   private computeEtransferStatus() {
@@ -68,7 +73,9 @@ export class ComputeFeaturesService {
         requirementContent.push(
           Object.assign(new EtransferRequirementStatus(), {
             statement: EtransferContent.isNotMinor,
-            status: !this.featuresService?.selectedEvacueeInContext?.isMinor
+            status:
+              !this.appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext?.isMinor
           })
         );
       } else if (defaultVal.statement === EtransferContent.bcServicesCard) {
@@ -76,7 +83,8 @@ export class ComputeFeaturesService {
           Object.assign(new EtransferRequirementStatus(), {
             statement: EtransferContent.bcServicesCard,
             status:
-              this.featuresService?.selectedEvacueeInContext?.authenticatedUser
+              this.appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext?.authenticatedUser
           })
         );
       } else {
@@ -86,9 +94,5 @@ export class ComputeFeaturesService {
       }
     }
     this.featuresService.etransferRequirement = requirementContent;
-  }
-
-  private triggerCaching() {
-    this.appBaseService.setCache();
   }
 }

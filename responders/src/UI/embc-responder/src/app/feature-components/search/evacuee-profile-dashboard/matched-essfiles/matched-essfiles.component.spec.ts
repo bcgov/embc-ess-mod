@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
+import { computeInterfaceToken } from 'src/app/app.module';
 import { MemberRole } from 'src/app/core/api/models';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -86,7 +87,8 @@ describe('MatchedEssfilesComponent', () => {
         {
           provide: UserService,
           useClass: MockUserService
-        }
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });
