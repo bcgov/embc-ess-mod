@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Resources.Tasks;
@@ -16,18 +17,21 @@ namespace EMBC.ESS.Managers.Events
         private readonly ITaskRepository taskRepository;
         private readonly ISupplierRepository supplierRepository;
         private readonly ISupportRepository supportRepository;
+        private readonly IEvacueesRepository evacueesRepository;
 
         public EvacuationFileLoader(IMapper mapper,
             ITeamRepository teamRepository,
             ITaskRepository taskRepository,
             ISupplierRepository supplierRepository,
-            ISupportRepository supportRepository)
+            ISupportRepository supportRepository,
+            IEvacueesRepository evacueesRepository)
         {
             this.mapper = mapper;
             this.teamRepository = teamRepository;
             this.taskRepository = taskRepository;
             this.supplierRepository = supplierRepository;
             this.supportRepository = supportRepository;
+            this.evacueesRepository = evacueesRepository;
         }
 
         public async System.Threading.Tasks.Task Load(EvacuationFile file)
@@ -61,7 +65,7 @@ namespace EMBC.ESS.Managers.Events
                 }
             }
 
-            var supports = (await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
             file.Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports);
 
             foreach (var support in file.Supports)
@@ -93,6 +97,15 @@ namespace EMBC.ESS.Managers.Events
                     referral.SupplierDetails.TeamId = supplier.Team?.Id;
                     referral.SupplierDetails.TeamName = supplier.Team?.Name;
                     referral.SupplierDetails.Phone = supplier.Contact.Phone;
+                }
+            }
+            if (support.SupportDelivery is Shared.Contracts.Events.Interac interac && !string.IsNullOrEmpty(interac.ReceivingRegistrantId))
+            {
+                var recipient = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = interac.ReceivingRegistrantId })).Items.SingleOrDefault();
+                if (recipient != null)
+                {
+                    interac.RecipientFirstName = recipient.FirstName;
+                    interac.RecipientLastName = recipient.LastName;
                 }
             }
         }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
+using EMBC.ESS.Engines.Supporting.SupportCompliance;
+using EMBC.ESS.Engines.Supporting.SupportGeneration;
+using EMBC.ESS.Engines.Supporting.SupportProcessing;
 
 namespace EMBC.ESS.Engines.Supporting
 {
@@ -8,11 +10,16 @@ namespace EMBC.ESS.Engines.Supporting
     {
         private readonly SupportProcessingStrategyFactory supportProcessingStrategyFactory;
         private readonly SupportGenerationStrategyStragetyFactory supportGenerationStrategyStragetyFactory;
+        private readonly SupportComplianceStrategyFactory supportComplianceStrategyFactory;
 
-        public SupportingEngine(SupportProcessingStrategyFactory supportProcessingStrategyFactory, SupportGenerationStrategyStragetyFactory supportGenerationStrategyStragetyFactory)
+        public SupportingEngine(
+            SupportProcessingStrategyFactory supportProcessingStrategyFactory,
+            SupportGenerationStrategyStragetyFactory supportGenerationStrategyStragetyFactory,
+            SupportComplianceStrategyFactory supportComplianceStrategyFactory)
         {
             this.supportProcessingStrategyFactory = supportProcessingStrategyFactory;
             this.supportGenerationStrategyStragetyFactory = supportGenerationStrategyStragetyFactory;
+            this.supportComplianceStrategyFactory = supportComplianceStrategyFactory;
         }
 
         public async Task<GenerateResponse> Generate(GenerateRequest request) =>
@@ -37,6 +44,7 @@ namespace EMBC.ESS.Engines.Supporting
             {
                 DigitalSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Digital).Validate(r),
                 PaperSupportsValidationRequest r => await supportProcessingStrategyFactory.Create(SupportProcessingStrategyType.Paper).Validate(r),
+                CheckSupportComplianceRequest r => await supportComplianceStrategyFactory.Create().CheckCompliance(r),
 
                 _ => throw new NotImplementedException(request.GetType().Name)
             };

@@ -75,7 +75,9 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
    * @param term user selected filters
    */
   filter(term: TableFilterValueModel): void {
+    console.log(term);
     this.data = this.dataSource.filteredData;
+    console.log(this.dataSource.filteredData);
     this.dataSource.filterPredicate = this.teamFilterPredicate;
     this.dataSource.filter = JSON.stringify(term);
 
@@ -124,12 +126,17 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
           .toLowerCase()
           .indexOf(statusTerm.trim().toLowerCase()) !== -1;
       const labelBoolean =
-        data.labelDescription === null || data.labelDescription === undefined
+        labelTerm === ''
+          ? true
+          : data.labelDescription === null ||
+            data.labelDescription === undefined
           ? false
           : data.labelDescription
               .trim()
               .toLowerCase()
-              .indexOf(labelTerm.trim().toLowerCase()) !== -1;
+              .indexOf(labelTerm.trim().toLowerCase()) !== -1 &&
+            data.labelDescription.trim().length === labelTerm.trim().length;
+
       matchFilter.push(roleBoolean);
       matchFilter.push(statusBoolean);
       matchFilter.push(labelBoolean);

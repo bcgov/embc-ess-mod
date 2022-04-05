@@ -194,7 +194,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("supports")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SupportSummary>>> SearchSupports(string? externalReferenceId, string? fileId)
+        public async Task<ActionResult<IEnumerable<Support>>> SearchSupports(string? externalReferenceId, string? fileId)
         {
             if (string.IsNullOrEmpty(externalReferenceId) && string.IsNullOrEmpty(fileId))
                 return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = "Must specify search criteria" });
@@ -204,8 +204,7 @@ namespace EMBC.Responders.API.Controllers
                 ExternalReferenceId = externalReferenceId,
                 FileId = fileId
             })).Items);
-            var results = mapper.Map<IEnumerable<SupportSummary>>(items).ToArray();
-            return Ok(results);
+            return Ok(items);
         }
     }
 
@@ -475,6 +474,8 @@ namespace EMBC.Responders.API.Controllers
     {
         [Required]
         public string ReceivingRegistrantId { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
 
         public string? NotificationEmail { get; set; }
         public string? NotificationMobile { get; set; }

@@ -93,7 +93,7 @@ namespace EMBC.ESS.Managers.Events
             this.configuration = configuration;
             this.supportingEngine = supportingEngine;
             this.env = env;
-            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository);
+            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository);
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -499,7 +499,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[]
                 {
@@ -514,7 +514,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[]
                 {
@@ -685,7 +685,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(query.ExternalReferenceId) && string.IsNullOrEmpty(query.FileId))
                 throw new BusinessValidationException($"Search supports must have criteria");
 
-            var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>((await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+            var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
             {
                 ByExternalReferenceId = query.ExternalReferenceId,
                 ByEvacuationFileId = query.FileId
@@ -699,6 +699,11 @@ namespace EMBC.ESS.Managers.Events
             {
                 Items = supports
             };
+        }
+
+        public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand processPendingSupportsCommand)
+        {
+            await System.Threading.Tasks.Task.CompletedTask;
         }
     }
 }
