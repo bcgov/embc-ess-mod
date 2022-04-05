@@ -282,12 +282,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
       });
   }
 
-  mapMemberName(memberId: string): string {
+  mapMemberName(householdMemberId: string): string {
     const memberObject = this.needsAssessmentForSupport?.householdMembers.find(
       (value) => {
-        if (value?.id === memberId) {
-          return value;
-        } else if (value.linkedRegistrantId === memberId) {
+        if (value?.id === householdMemberId) {
           return value;
         }
       }

@@ -89,6 +89,8 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.NotificationEmail, opts => opts.MapFrom(s => s.era_notificationemailaddress))
                 .ForMember(d => d.NotificationMobile, opts => opts.MapFrom(s => s.era_notificationphonenumber))
                 .ForMember(d => d.ReceivingRegistrantId, opts => opts.MapFrom(s => s._era_payeeid_value))
+                .ForMember(d => d.RecipientFirstName, opts => opts.Ignore())
+                .ForMember(d => d.RecipientLastName, opts => opts.Ignore())
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
                 .ForMember(d => d.era_notificationemailaddress, opts => opts.MapFrom(s => s.NotificationEmail))

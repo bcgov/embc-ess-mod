@@ -59,6 +59,21 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         }
     }
 
+    public class PrintSummary
+    {
+        public string Id { get; set; }
+        public PrintReferralType Type { get; set; }
+        public string PurchaserName { get; set; }
+        public string EssNumber { get; set; }
+        public string FromDate { get; set; }
+        public string FromTime { get; set; }
+        public string ToDate { get; set; }
+        public string ToTime { get; set; }
+        public PrintSupplier Supplier { get; set; }
+        public bool IsEtransfer { get; set; }
+        public NotificationInformation NotificationInformation { get; set; }
+    }
+
     public class PrintSupplier
     {
         //public string Id { get; set; }
@@ -81,6 +96,15 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 
         public string LastName { get; set; }
         public string EvacueeTypeCode { get; set; }
+    }
+
+    public class NotificationInformation
+    {
+        public string RecipientId { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
+        public string Email { get; set; }
+        public string Mobile { get; set; }
     }
 
     public class PrintableEvacueesRow

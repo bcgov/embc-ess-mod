@@ -31,10 +31,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 
         private async Task<GenerateReferralsResponse> GenerateSingleReferralDocument(GenerateReferralsRequest request)
         {
-            var referrals = mapper.Map<IEnumerable<PrintReferral>>(request.Supports, opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
+            var referrals = mapper.Map<IEnumerable<PrintReferral>>(request.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral), opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
+            var summaryItems = mapper.Map<IEnumerable<PrintSummary>>(request.Supports, opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
             var printingUser = new PrintRequestingUser { Id = request.PrintingMember.Id, FirstName = request.PrintingMember.FirstName, LastName = request.PrintingMember.LastName };
 
             var communities = (await metadataRepository.GetCommunities()).ToDictionary(c => c.Code, c => c.Name);
+
             foreach (var referral in referrals)
             {
                 referral.VolunteerFirstName = printingUser.FirstName;
@@ -45,7 +47,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
             }
 
             var title = $"supports-{request.File.Id}-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
-            var referralsHtml = ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, request.AddSummary, request.AddWatermark, title);
+            var referralsHtml = ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, summaryItems, request.AddSummary, request.AddWatermark, title);
 
             return new GenerateReferralsResponse
             {

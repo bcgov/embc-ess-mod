@@ -475,6 +475,8 @@ namespace EMBC.Responders.API.Controllers
     {
         [Required]
         public string ReceivingRegistrantId { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
 
         public string? NotificationEmail { get; set; }
         public string? NotificationMobile { get; set; }
