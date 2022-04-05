@@ -6,6 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { SupportReprintReason } from 'src/app/core/api/models';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-reprint-referral-dialog',
@@ -18,7 +19,10 @@ export class ReprintReferralDialogComponent implements OnInit {
   reprintForm: FormGroup;
   reasons = SupportReprintReason;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) {}
 
   ngOnInit(): void {
     this.reprintReasonForm();
@@ -61,7 +65,9 @@ export class ReprintReferralDialogComponent implements OnInit {
    * @param reasonOption options to choose for reasons for reprinting
    * @returns the same reason for reprinting with spaces between words.
    */
-  splitString(reasonOption: string): string {
-    return reasonOption.split(/(?=[A-Z])/).join(' ');
+  getReasonDescription(reasonOption: string): string {
+    return this.loadEvacueeListService
+      .getReprintReasons()
+      .find((reason) => reason.value === reasonOption).description;
   }
 }

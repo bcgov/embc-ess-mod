@@ -58,6 +58,7 @@ export class LoadTeamListService {
 
   private setMemberLabels(memberLabels: MemberLabelDescription[]): void {
     this.memberLabels = memberLabels;
+    memberLabels.push({ code: null, description: '' });
     this.cacheService.set('memberLabels', memberLabels);
   }
 

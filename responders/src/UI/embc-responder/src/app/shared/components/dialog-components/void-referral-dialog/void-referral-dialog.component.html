@@ -40,7 +40,7 @@
         <mat-label>Reason for void</mat-label>
         <mat-select formControlName="reason" required>
           <mat-option *ngFor="let gen of reasons | enumToArray" [value]="gen">
-            {{ splitString(gen) }}
+            {{ getReasonDescription(gen) }}
           </mat-option>
         </mat-select>
         <mat-error

@@ -255,7 +255,13 @@
             </div>
           </div>
 
-          <div class="row" *ngIf="selectedSupport?.status !== 'Void'">
+          <div
+            class="row"
+            *ngIf="
+              selectedSupport?.status === 'PendingApproval' ||
+              selectedSupport?.status === 'UnderReview'
+            "
+          >
             <div class="col-md-12">
               <a (click)="cancelEtransfer()"
                 ><img
@@ -606,23 +612,35 @@
   <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
     <div class="col-md-4 box-text-color">e-transfer Recipient:</div>
     <div class="col-md-4 bold">
-      {{ interac?.receivingRegistrantId }}
+      {{ mapMemberName(interac?.receivingRegistrantId) }}
     </div>
   </div>
 
   <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
     <div class="col-md-4 box-text-color">Notification Preference:</div>
-    <div class="col-md-4 bold"></div>
+    <div class="col-md-4 bold">{{ getNotificationPref() }}</div>
   </div>
 
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
+  <div
+    class="row row-padding"
+    *ngIf="
+      selectedSupport?.method === 'ETransfer' &&
+      interac?.notificationEmail !== null
+    "
+  >
     <div class="col-md-4 box-text-color">Email Address:</div>
     <div class="col-md-4 bold">
       {{ interac?.notificationEmail }}
     </div>
   </div>
 
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
+  <div
+    class="row row-padding"
+    *ngIf="
+      selectedSupport?.method === 'ETransfer' &&
+      interac?.notificationMobile !== null
+    "
+  >
     <div class="col-md-4 box-text-color">Mobile Number:</div>
     <div class="col-md-4 bold">
       {{ interac?.notificationMobile }}
