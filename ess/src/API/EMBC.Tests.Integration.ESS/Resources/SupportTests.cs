@@ -210,7 +210,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task ChangeStatus_Void_Success()
         {
-            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is Referral);
+            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items
+                .First(s => s.SupportDelivery is Referral && s.Status == SupportStatus.Active);
 
             var voidedSupportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
@@ -225,7 +226,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task ChangeStatus_Cancel_Success()
         {
-            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is ETransfer);
+            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items
+                .First(s => s.SupportDelivery is ETransfer && s.Status == SupportStatus.PendingScan);
 
             var cancelledSupportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
@@ -287,6 +289,19 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var supportWithoutFlags = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportWithFlags.Id })).Items.ShouldHaveSingleItem();
 
             supportWithoutFlags.Flags.ShouldBeEmpty();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task QuerySupports_ByStatus_ReturnCorrectSupports()
+        {
+            var sampleSupports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
+
+            var status = sampleSupports.Select(s => s.Status).Skip(Random.Shared.Next(0, sampleSupports.Count() - 1)).Take(1).Single();
+
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByStatus = status })).Items;
+
+            supports.ShouldNotBeEmpty();
+            supports.ShouldAllBe(s => s.Status == status);
         }
     }
 }
