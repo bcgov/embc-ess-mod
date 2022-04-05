@@ -39,12 +39,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return handleBars;
         }
 
-        public static string CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, bool includeSummary, bool displayWatermark, string title)
+        public static string CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, IEnumerable<PrintSummary> summaryItems, bool includeSummary, bool displayWatermark, string title)
         {
             var html = new StringBuilder();
             if (includeSummary)
             {
-                html.Append(CreateReferalHtmlSummary(referrals, printingUser, displayWatermark));
+                html.Append(CreateReferalHtmlSummary(summaryItems, printingUser, displayWatermark));
                 html.Append(PageBreak);
             }
             foreach (var referral in referrals)
@@ -83,7 +83,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return template(referral);
         }
 
-        public static string CreateReferalHtmlSummary(IEnumerable<PrintReferral> supports, PrintRequestingUser requestingUser, bool displayWatermark)
+        public static string CreateReferalHtmlSummary(IEnumerable<PrintSummary> summaryItems, PrintRequestingUser requestingUser, bool displayWatermark)
         {
             var handlebars = CreateHandleBars();
 
@@ -91,11 +91,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             var printedCount = 0;
             var html = new StringBuilder();
             var items = new StringBuilder();
-            foreach (var printReferral in supports)
+            foreach (var summary in summaryItems)
             {
                 summaryBreakCount += 1;
                 printedCount += 1;
-                var partialViewType = printReferral.Type;
+                var partialViewType = summary.Type;
                 var partialViewDisplayName = partialViewType.GetType()
                         .GetMember(partialViewType.ToString())
                         .First()
@@ -111,13 +111,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 
                 var template = handlebars.Compile(LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
 
-                var purchaserName = printReferral.PurchaserName;
+                var purchaserName = summary.PurchaserName;
                 var volunteerFirstName = requestingUser.FirstName;
                 var volunteerLastName = requestingUser.LastName;
-                var itemResult = template(printReferral);
+                var itemResult = template(summary);
                 items.Append(itemResult);
 
-                if (summaryBreakCount == 3 || printedCount == supports.Count())
+                if (summaryBreakCount == 3 || printedCount == summaryItems.Count())
                 {
                     summaryBreakCount = 0;
                     handlebars.RegisterTemplate("summaryItemsPartial", items.ToString());

@@ -136,6 +136,8 @@ namespace EMBC.ESS.Resources.Supports
         public string? NotificationEmail { get; set; }
         public string? NotificationMobile { get; set; }
         public string ReceivingRegistrantId { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
     }
 
     public class ClothingSupport : Support

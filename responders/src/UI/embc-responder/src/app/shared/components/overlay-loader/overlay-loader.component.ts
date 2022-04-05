@@ -4,6 +4,7 @@ import {
   Component,
   DoCheck,
   Input,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -15,7 +16,7 @@ import {
   templateUrl: './overlay-loader.component.html',
   styleUrls: ['./overlay-loader.component.scss']
 })
-export class OverlayLoaderComponent implements OnInit, DoCheck {
+export class OverlayLoaderComponent implements OnInit, DoCheck, OnDestroy {
   @Input() showLoader: boolean;
   @ViewChild('loaderRef', { read: TemplateRef, static: true })
   public loaderRef: TemplateRef<any>;
@@ -26,6 +27,10 @@ export class OverlayLoaderComponent implements OnInit, DoCheck {
   ngOnInit(): void {
     this.overlayRef = this.createOverlay();
     this.overlayRef.attach(new TemplatePortal(this.loaderRef, this.vcRef));
+  }
+
+  ngOnDestroy(): void {
+    this.overlayRef.detach();
   }
 
   /**
