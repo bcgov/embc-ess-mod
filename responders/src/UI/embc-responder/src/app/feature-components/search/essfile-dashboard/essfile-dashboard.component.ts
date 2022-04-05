@@ -104,16 +104,24 @@ export class EssfileDashboardComponent implements OnInit {
    * Navigates the wizard for review ess file
    */
   reviewEssFile(): void {
+    this.isLoading = !this.isLoading;
     this.cacheService.set(
       'wizardOpenedFrom',
       '/responder-access/search/essfile-dashboard'
     );
     this.evacueeSessionService.setWizardType(WizardType.ReviewFile);
 
-    this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: WizardType.ReviewFile },
-      queryParamsHandling: 'merge'
-    });
+    this.router
+      .navigate(['/ess-wizard'], {
+        queryParams: { type: WizardType.ReviewFile },
+        queryParamsHandling: 'merge'
+      })
+      .then(() => {
+        this.isLoading = !this.isLoading;
+      })
+      .catch(() => {
+        this.isLoading = !this.isLoading;
+      });
   }
 
   /**
@@ -134,16 +142,24 @@ export class EssfileDashboardComponent implements OnInit {
    * Navigates the wizard for complete ess file
    */
   completeEssFile(): void {
+    this.isLoading = !this.isLoading;
     this.cacheService.set(
       'wizardOpenedFrom',
       '/responder-access/search/essfile-dashboard'
     );
     this.evacueeSessionService.setWizardType(WizardType.CompleteFile);
 
-    this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: WizardType.CompleteFile },
-      queryParamsHandling: 'merge'
-    });
+    this.router
+      .navigate(['/ess-wizard'], {
+        queryParams: { type: WizardType.CompleteFile },
+        queryParamsHandling: 'merge'
+      })
+      .then(() => {
+        this.isLoading = !this.isLoading;
+      })
+      .catch(() => {
+        this.isLoading = !this.isLoading;
+      });
   }
 
   /**

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
-using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.Utilities.Extensions;
 
@@ -15,13 +14,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
     {
         private readonly IMapper mapper;
         private readonly IMetadataRepository metadataRepository;
-        private readonly IEvacueesRepository evacueesRepository;
 
-        public SingleDocumentStrategy(IMapper mapper, IMetadataRepository metadataRepository, IEvacueesRepository evacueesRepository)
+        public SingleDocumentStrategy(IMapper mapper, IMetadataRepository metadataRepository)
         {
             this.mapper = mapper;
             this.metadataRepository = metadataRepository;
-            this.evacueesRepository = evacueesRepository;
         }
 
         public async Task<GenerateResponse> Generate(GenerateRequest request)

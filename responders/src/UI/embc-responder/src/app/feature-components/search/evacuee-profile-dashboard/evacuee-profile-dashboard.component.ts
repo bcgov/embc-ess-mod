@@ -114,6 +114,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Navigates to the Wizard configured to insert a new ESS File
    */
   createNewESSFile(): void {
+    this.isLoading = true;
     if (this.evacueeSessionService.isPaperBased) {
       this.evacueeProfileService
         .getProfileFiles(undefined, this.paperBasedEssFile)
@@ -122,12 +123,14 @@ export class EvacueeProfileDashboardComponent implements OnInit {
             if (result.length === 0) {
               this.navigateToWizard();
             } else {
+              this.isLoading = false;
               this.openEssFileExistsDialog(
                 this.evacueeSearchService.paperBasedEssFile
               );
             }
           },
           error: (errorResponse) => {
+            this.isLoading = false;
             this.alertService.clearAlert();
             this.alertService.setAlert('danger', globalConst.findEssFileError);
           }
@@ -314,9 +317,16 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     );
     this.evacueeSessionService.essFileNumber = null;
     this.evacueeSessionService.setWizardType(WizardType.NewEssFile);
-    this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: WizardType.NewEssFile },
-      queryParamsHandling: 'merge'
-    });
+    this.router
+      .navigate(['/ess-wizard'], {
+        queryParams: { type: WizardType.NewEssFile },
+        queryParamsHandling: 'merge'
+      })
+      .then(() => {
+        this.isLoading = false;
+      })
+      .catch(() => {
+        this.isLoading = false;
+      });
   }
 }

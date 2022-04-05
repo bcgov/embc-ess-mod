@@ -612,7 +612,7 @@
   <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
     <div class="col-md-4 box-text-color">e-transfer Recipient:</div>
     <div class="col-md-4 bold">
-      {{ mapMemberName(interac?.receivingRegistrantId) }}
+      {{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}
     </div>
   </div>
 
