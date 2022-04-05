@@ -12,9 +12,9 @@ export interface EvacueeSearch {
   idQuestion: string;
 }
 
-export interface DigitalFlow extends EvacueeSearch {}
+export type DigitalFlow = EvacueeSearch;
 
-export interface PaperFlow extends EvacueeSearch {}
+export type PaperFlow = EvacueeSearch;
 
 export interface SelectedProfile {
   selectedEvacueeInContext?: RegistrantProfileModel;
