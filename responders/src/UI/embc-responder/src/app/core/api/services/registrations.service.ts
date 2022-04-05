@@ -19,13 +19,12 @@ import { Note } from '../models/note';
 import { ProcessDigitalSupportsRequest } from '../models/process-digital-supports-request';
 import { ProcessPaperReferralsRequest } from '../models/process-paper-referrals-request';
 import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
-import { RegistrantFeaturesResponse } from '../models/registrant-features-response';
 import { RegistrantLinkRequest } from '../models/registrant-link-request';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
+import { Support } from '../models/support';
 import { SupportReprintReason } from '../models/support-reprint-reason';
-import { SupportSummary } from '../models/support-summary';
 import { SupportVoidReason } from '../models/support-void-reason';
 import { VerifySecurityPhraseRequest } from '../models/verify-security-phrase-request';
 import { VerifySecurityPhraseResponse } from '../models/verify-security-phrase-response';
@@ -494,68 +493,6 @@ export class RegistrationsService extends BaseService {
 
     return this.registrationsInviteToRegistrantPortal$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
-    );
-  }
-
-  /**
-   * Path part for operation registrationsGetRegistrantFeatures
-   */
-  static readonly RegistrationsGetRegistrantFeaturesPath = '/api/Registrations/registrants/{registrantId}/features';
-
-  /**
-   * Get security questions for a registrant.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsGetRegistrantFeatures()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  registrationsGetRegistrantFeatures$Response(params: {
-
-    /**
-     * registrant id
-     */
-    registrantId: string;
-  }): Observable<StrictHttpResponse<RegistrantFeaturesResponse>> {
-
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetRegistrantFeaturesPath, 'get');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrantFeaturesResponse>;
-      })
-    );
-  }
-
-  /**
-   * Get security questions for a registrant.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsGetRegistrantFeatures$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  registrationsGetRegistrantFeatures(params: {
-
-    /**
-     * registrant id
-     */
-    registrantId: string;
-  }): Observable<RegistrantFeaturesResponse> {
-
-    return this.registrationsGetRegistrantFeatures$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrantFeaturesResponse>) => r.body as RegistrantFeaturesResponse)
     );
   }
 
@@ -1924,7 +1861,7 @@ export class RegistrationsService extends BaseService {
      * search for supports in a specific evacuation file
      */
     fileId?: string;
-  }): Observable<StrictHttpResponse<Array<SupportSummary>>> {
+  }): Observable<StrictHttpResponse<Array<Support>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchSupportsPath, 'get');
     if (params) {
@@ -1938,7 +1875,7 @@ export class RegistrationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<SupportSummary>>;
+        return r as StrictHttpResponse<Array<Support>>;
       })
     );
   }
@@ -1964,10 +1901,10 @@ export class RegistrationsService extends BaseService {
      * search for supports in a specific evacuation file
      */
     fileId?: string;
-  }): Observable<Array<SupportSummary>> {
+  }): Observable<Array<Support>> {
 
     return this.registrationsSearchSupports$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<SupportSummary>>) => r.body as Array<SupportSummary>)
+      map((r: StrictHttpResponse<Array<Support>>) => r.body as Array<Support>)
     );
   }
 

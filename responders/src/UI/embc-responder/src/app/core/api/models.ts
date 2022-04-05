@@ -18,7 +18,6 @@ export { GetSecurityQuestionsResponse } from './models/get-security-questions-re
 export { VerifySecurityQuestionsResponse } from './models/verify-security-questions-response';
 export { VerifySecurityQuestionsRequest } from './models/verify-security-questions-request';
 export { InviteRequest } from './models/invite-request';
-export { RegistrantFeaturesResponse } from './models/registrant-features-response';
 export { EvacuationFile } from './models/evacuation-file';
 export { NeedsAssessment } from './models/needs-assessment';
 export { InsuranceOption } from './models/insurance-option';
@@ -64,9 +63,6 @@ export { ProcessDigitalSupportsRequest } from './models/process-digital-supports
 export { ProcessPaperReferralsRequest } from './models/process-paper-referrals-request';
 export { SupportVoidReason } from './models/support-void-reason';
 export { SupportReprintReason } from './models/support-reprint-reason';
-export { SupportSummary } from './models/support-summary';
-export { ReferralSummary } from './models/referral-summary';
-export { ETransferSummary } from './models/e-transfer-summary';
 export { SupplierListItem } from './models/supplier-list-item';
 export { SupplierTeamDetails } from './models/supplier-team-details';
 export { SupplierStatus } from './models/supplier-status';
