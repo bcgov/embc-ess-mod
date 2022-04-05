@@ -42,11 +42,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 
             var supports = mapper.Map<IEnumerable<Support>>(r.Supports);
 
-            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var processedSupports = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = r.FileId,
                 Supports = supports
-            })).Ids.ToArray();
+            })).Supports.ToArray();
 
             try
             {
@@ -55,7 +55,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
                     PrintRequest = new ReferralPrintRequest
                     {
                         FileId = r.FileId,
-                        SupportIds = supportIds,
+                        SupportIds = processedSupports.Select(s => s.Id).ToArray(),
                         IncludeSummary = r.IncludeSummaryInReferralsPrintout,
                         RequestingUserId = r.RequestingUserId,
                         Type = ReferralPrintType.New,
@@ -65,7 +65,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 
                 return new ProcessDigitalSupportsResponse
                 {
-                    SupportIds = supportIds,
+                    Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(processedSupports),
                     PrintRequestId = printRequestId
                 };
             }
@@ -73,7 +73,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
             {
                 await supportRepository.Manage(new ChangeSupportStatusCommand
                 {
-                    Items = supportIds.Select(s => SupportStatusTransition.VoidSupport(s, SupportVoidReason.ErrorOnPrintedReferral)).ToArray()
+                    Items = processedSupports.Select(s => SupportStatusTransition.VoidSupport(s.Id, SupportVoidReason.ErrorOnPrintedReferral)).ToArray()
                 });
                 throw;
             }

@@ -71,10 +71,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = newSupports })).Ids;
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            {
+                FileId = evacuationFileId,
+                Supports = newSupports
+            })).Supports.Select(s => s.Id).ToArray();
             newSupportIds.Count().ShouldBe(newSupports.Length);
 
-            var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
                 .Items.Where(s => newSupportIds.Contains(s.Id)).ToArray();
             supports.Length.ShouldBe(newSupports.Length);
 
@@ -162,10 +166,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand { FileId = evacuationFileId, Supports = paperSupports })).Ids;
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            {
+                FileId = evacuationFileId,
+                Supports = paperSupports
+            })).Supports.Select(s => s.Id).ToArray();
             newSupportIds.Count().ShouldBe(paperSupports.Length);
 
-            var supports = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = evacuationFileId }))
                 .Items.Where(s => newSupportIds.Contains(s.Id)).ToArray();
             supports.Length.ShouldBeGreaterThanOrEqualTo(paperSupports.Length);
 
@@ -202,31 +210,83 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task ChangeStatus_Void_Success()
         {
-            var support = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is Referral);
+            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is Referral);
 
-            var voidedSupportId = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var voidedSupportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[] { SupportStatusTransition.VoidSupport(support.Id, SupportVoidReason.NewSupplierRequired) }
             })).Ids.ShouldHaveSingleItem();
             voidedSupportId.ShouldBe(support.Id);
 
-            var voidedSupport = (await supportRepository.Query(new SearchSupportsQuery { ById = voidedSupportId })).Items.ShouldHaveSingleItem();
+            var voidedSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = voidedSupportId })).Items.ShouldHaveSingleItem();
             voidedSupport.Status.ShouldBe(SupportStatus.Void);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task ChangeStatus_Cancel_Success()
         {
-            var support = (await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is ETransfer);
+            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items.First(s => s.SupportDelivery is ETransfer);
 
-            var cancelledSupportId = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var cancelledSupportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Cancelled, Reason = "some reason" } }
             })).Ids.ShouldHaveSingleItem();
             cancelledSupportId.ShouldBe(support.Id);
 
-            var voidedSupport = (await supportRepository.Query(new SearchSupportsQuery { ById = cancelledSupportId })).Items.ShouldHaveSingleItem();
+            var voidedSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = cancelledSupportId })).Items.ShouldHaveSingleItem();
             voidedSupport.Status.ShouldBe(SupportStatus.Cancelled);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task SetFlags_TwoFlags_FlagsAdded()
+        {
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
+
+            var flaggedSupport = supports.First(s => s.SupportDelivery is ETransfer && s.Status == SupportStatus.PendingScan);
+            var duplicateSupport = supports.First(s => s.SupportDelivery is Referral && s.Status == SupportStatus.Active);
+
+            var flags = new SupportFlag[]
+            {
+                new DuplicateSupportFlag { DuplicatedSupportId = duplicateSupport.Id },
+                new AmountOverridenSupportFlag { Approver = "test" }
+            };
+            await supportRepository.Manage(new SetFlagsCommand
+            {
+                SupportId = flaggedSupport.Id,
+                Flags = flags
+            });
+
+            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = flaggedSupport.Id })).Items.ShouldHaveSingleItem();
+
+            support.Flags.Count().ShouldBe(flags.Length);
+
+            foreach (var flag in support.Flags)
+            {
+                if (flag is DuplicateSupportFlag df)
+                {
+                    var sourceFlag = (DuplicateSupportFlag)flags[0];
+                    df.DuplicatedSupportId.ShouldBe(sourceFlag.DuplicatedSupportId);
+                }
+                if (flag is AmountOverridenSupportFlag af)
+                {
+                    var sourceFlag = (AmountOverridenSupportFlag)flags[1];
+                    af.Approver.ShouldBe(sourceFlag.Approver);
+                }
+            }
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ClearFlags_NoFlags()
+        {
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
+
+            var supportWithFlags = supports.First(s => s.Flags.Any());
+
+            await supportRepository.Manage(new ClearFlagsCommand { SupportId = supportWithFlags.Id });
+
+            var supportWithoutFlags = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportWithFlags.Id })).Items.ShouldHaveSingleItem();
+
+            supportWithoutFlags.Flags.ShouldBeEmpty();
         }
     }
 }
