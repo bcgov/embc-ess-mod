@@ -22,7 +22,11 @@ describe('SupportDeliveryComponent', () => {
         MatDialogModule
       ],
       declarations: [SupportDeliveryComponent],
-      providers: [FormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }]
+      providers: [
+        FormBuilder,
+        DatePipe,
+        { provide: computeInterfaceToken, useValue: {} }
+      ]
     }).compileComponents();
   });
 
