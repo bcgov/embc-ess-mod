@@ -101,7 +101,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
     public class NotificationInformation
     {
         public string RecipientId { get; set; }
-        public string RecipientName { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
         public string Email { get; set; }
         public string Mobile { get; set; }
     }

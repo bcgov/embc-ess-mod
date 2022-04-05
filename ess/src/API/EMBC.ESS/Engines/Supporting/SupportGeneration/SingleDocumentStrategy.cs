@@ -40,19 +40,6 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 
             var communities = (await metadataRepository.GetCommunities()).ToDictionary(c => c.Code, c => c.Name);
 
-            var recipientId = summaryItems.FirstOrDefault(s => s.IsEtransfer).NotificationInformation.RecipientId;
-            var recipient = !string.IsNullOrEmpty(recipientId) ?
-                (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = summaryItems.FirstOrDefault(s => s.IsEtransfer).NotificationInformation.RecipientId })).Items.SingleOrDefault()
-                : null;
-
-            if (recipient != null)
-            {
-                foreach (var summary in summaryItems.Where(s => s.IsEtransfer))
-                {
-                    summary.NotificationInformation.RecipientName = recipient.FirstName + ' ' + recipient.LastName;
-                }
-            }
-
             foreach (var referral in referrals)
             {
                 referral.VolunteerFirstName = printingUser.FirstName;

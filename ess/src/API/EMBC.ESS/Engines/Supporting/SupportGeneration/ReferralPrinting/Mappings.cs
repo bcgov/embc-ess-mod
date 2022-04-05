@@ -81,7 +81,6 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 
             CreateMap<Shared.Contracts.Events.Interac, NotificationInformation>()
                 .ForMember(d => d.RecipientId, opts => opts.MapFrom(s => s.ReceivingRegistrantId))
-                .ForMember(d => d.RecipientName, opts => opts.Ignore())
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.NotificationEmail))
                 .ForMember(d => d.Mobile, opts => opts.MapFrom(s => s.NotificationMobile))
                 ;

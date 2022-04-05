@@ -45,7 +45,7 @@
             <div class="row">
                 <div class="col-6">
                     <strong>e-Transfer Recipient:</strong><br />
-                    {{NotificationInformation.RecipientName}}<br /><br />
+                    {{NotificationInformation.RecipientFirstName}} {{NotificationInformation.RecipientLastName}}<br /><br />
                 </div>
             </div>
             <div class="row">
@@ -68,7 +68,7 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    {{Supplier.City}}{{#if Supplier.PostalCode}}, {{Supplier.PostalCode}}{{/if}}<br />
+                    {{Supplier.City}}{{#if Supplier.City}}{{#if Supplier.PostalCode}}, {{/if}}{{/if}}{{Supplier.PostalCode}}<br />
                     <strong>Phone:</strong> {{Supplier.Telephone}}
                 </div>
             </div>
