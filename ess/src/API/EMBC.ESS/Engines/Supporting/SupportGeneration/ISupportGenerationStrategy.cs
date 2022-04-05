@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using EMBC.ESS.Engines.Supporting.SupportGeneration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Engines.Supporting
+namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 {
     internal interface ISupportGenerationStrategy
     {

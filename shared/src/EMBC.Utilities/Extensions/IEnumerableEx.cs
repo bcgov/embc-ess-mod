@@ -31,5 +31,10 @@ namespace EMBC.Utilities.Extensions
             var entity = source.SingleOrDefault(predicate);
             return entity == null ? default : propertyExpression.Compile().Invoke(entity);
         }
+
+        public static async Task<IEnumerable<TResult>> SelectManyAsync<T, TResult>(this IEnumerable<T> enumeration, Func<T, Task<IEnumerable<TResult>>> selector)
+        {
+            return (await Task.WhenAll(enumeration.Select(selector))).SelectMany(s => s);
+        }
     }
 }

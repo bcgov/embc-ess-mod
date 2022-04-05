@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using EMBC.ESS.Engines.Supporting.SupportProcessing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Engines.Supporting
+namespace EMBC.ESS.Engines.Supporting.SupportProcessing
 {
     internal interface ISupportProcessingStrategy
     {

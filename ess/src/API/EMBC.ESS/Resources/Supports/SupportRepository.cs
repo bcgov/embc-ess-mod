@@ -132,7 +132,7 @@ namespace EMBC.ESS.Resources.Supports
 
             ctx.DetachAll();
 
-            return new SaveEvacuationFileSupportCommandResult { Ids = mappedSupports.Select(s => s.era_name).ToArray() };
+            return new SaveEvacuationFileSupportCommandResult { Supports = mapper.Map<IEnumerable<Support>>(mappedSupports).ToArray() };
         }
 
         private async Task<ManageSupportCommandResult> Handle(ChangeSupportStatusCommand cmd)
@@ -287,6 +287,7 @@ namespace EMBC.ESS.Resources.Supports
                     default:
                         throw new InvalidOperationException($"Can't change status of {supportId} with delivery type {supportDeliveryType} to {status}");
                 }
+                ctx.UpdateObject(support);
                 return supportId;
             }
             return null;

@@ -35,7 +35,7 @@ namespace EMBC.ESS.Resources.Supports
 
     public class SaveEvacuationFileSupportCommandResult : ManageSupportCommandResult
     {
-        public IEnumerable<string> Ids { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
     }
 
     public class ChangeSupportStatusCommand : ManageSupportCommand
@@ -90,6 +90,7 @@ namespace EMBC.ESS.Resources.Supports
         public string ById { get; set; }
         public string ByExternalReferenceId { get; set; }
         public string ByEvacuationFileId { get; set; }
+        public SupportStatus ByStatus { get; set; }
     }
 
     public class SearchSupportQueryResult : SupportQueryResult

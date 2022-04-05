@@ -227,6 +227,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.DuplicatedSupportId, opts => opts.MapFrom(s => s.era_SupportDuplicate == null ? null : s.era_SupportDuplicate.era_name))
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
+                .ForSourceMember(s => s.DuplicatedSupportId, opts => opts.DoNotValidate())
                 .ForMember(d => d._era_flagtype_value, opts => opts.MapFrom(s => DuplicateSupportFlag.FlagTypeId))
                 ;
         }
