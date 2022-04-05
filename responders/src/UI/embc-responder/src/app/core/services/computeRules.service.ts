@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { Compute } from './compute/compute';
-import { ComputeFeaturesService } from './helper/computeFeatures.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +22,9 @@ export class ComputeRulesService {
   listener() {
     this.eventSubject$.subscribe({
       next: () => {
-        this.compute.forEach((service) => service.execute());
+        if (this.compute.length > 0) {
+          this.compute.forEach((service) => service.execute());
+        }
       }
     });
   }
