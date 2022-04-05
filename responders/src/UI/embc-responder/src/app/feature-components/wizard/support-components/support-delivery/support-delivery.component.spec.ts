@@ -7,6 +7,7 @@ import { FormBuilder } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('SupportDeliveryComponent', () => {
   let component: SupportDeliveryComponent;
@@ -21,7 +22,7 @@ describe('SupportDeliveryComponent', () => {
         MatDialogModule
       ],
       declarations: [SupportDeliveryComponent],
-      providers: [FormBuilder, DatePipe]
+      providers: [FormBuilder, DatePipe, { provide: computeInterfaceToken, useValue: {} }]
     }).compileComponents();
   });
 

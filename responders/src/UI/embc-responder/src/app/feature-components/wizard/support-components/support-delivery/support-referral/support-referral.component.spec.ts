@@ -8,6 +8,7 @@ import { FormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('SupportReferralComponent', () => {
   let component: SupportReferralComponent;
@@ -23,7 +24,11 @@ describe('SupportReferralComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [SupportReferralComponent],
-      providers: [FormBuilder, DatePipe]
+      providers: [
+        FormBuilder,
+        DatePipe,
+        { provide: computeInterfaceToken, useValue: {} }
+      ]
     }).compileComponents();
   });
 
