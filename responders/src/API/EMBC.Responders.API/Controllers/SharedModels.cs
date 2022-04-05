@@ -8,7 +8,7 @@ namespace EMBC.Responders.API.Controllers
         public string? AddressLine2 { get; set; }
         public string? City { get; set; }
         public string? CommunityCode { get; set; }
-        public string StateProvinceCode { get; set; }
+        public string? StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
         public string? PostalCode { get; set; }
     }

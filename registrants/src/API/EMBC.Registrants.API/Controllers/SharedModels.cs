@@ -15,7 +15,7 @@ namespace EMBC.Registrants.API.Controllers
         public string? Community { get; set; }
         public string? City { get; set; }
 
-        public string StateProvince { get; set; }
+        public string? StateProvince { get; set; }
 
         [Required]
         public string Country { get; set; }
