@@ -5,7 +5,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 
 namespace EMBC.ESS.Engines.Supporting.SupportCompliance
 {
-    public class AmountExceededSupportComplianceStrategy : ISupportComplianceCheck
+    internal class AmountExceededSupportComplianceCheck : ISupportComplianceCheck
     {
         public async Task<IEnumerable<SupportFlag>> CheckCompliance(Support support)
         {

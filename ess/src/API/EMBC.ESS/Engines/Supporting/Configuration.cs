@@ -18,8 +18,8 @@ namespace EMBC.ESS.Engines.Supporting
                 .AddTransient<SupportGenerationStrategyStragetyFactory>()
                 .AddTransient<SingleDocumentStrategy>()
                 .AddTransient<SupportComplianceStrategyFactory>()
-                .AddTransient<ISupportComplianceCheck, DuplicateSupportComplianceStrategy>()
-                .AddTransient<ISupportComplianceCheck, AmountExceededSupportComplianceStrategy>()
+                .AddTransient<ISupportComplianceCheck, DuplicateSupportComplianceCheck>()
+                .AddTransient<ISupportComplianceCheck, AmountExceededSupportComplianceCheck>()
                 ;
         }
     }
