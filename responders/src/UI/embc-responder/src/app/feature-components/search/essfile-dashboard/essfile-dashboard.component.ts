@@ -18,9 +18,10 @@ import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
-import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -32,6 +33,8 @@ export class EssfileDashboardComponent implements OnInit {
   notesList: Array<Note>;
   isLoading = false;
   color = '#169BD5';
+  isMinor = false;
+  isLinkedToBcsc = false;
 
   constructor(
     private essFileService: EssFileService,
@@ -43,7 +46,8 @@ export class EssfileDashboardComponent implements OnInit {
     private alertService: AlertService,
     private stepNotesService: StepNotesService,
     private cacheService: CacheService,
-    public evacueeSearchService: EvacueeSearchService
+    public appBaseService: AppBaseService,
+    public featureService: EtransferFeaturesService
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +55,11 @@ export class EssfileDashboardComponent implements OnInit {
     this.getEvacueeProfile(
       this.evacueeSessionService?.evacueeMetaData?.registrantId
     );
+
+    this.isMinor =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.isMinor;
+    this.isLinkedToBcsc =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.authenticatedUser;
 
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog(globalConst.profileLinkMessage)

@@ -170,26 +170,6 @@ namespace EMBC.Responders.API.Controllers
             var inviteId = await messagingClient.Send(inviteRequest);
             return Ok(inviteId);
         }
-
-        /// <summary>
-        /// Get security questions for a registrant
-        /// </summary>
-        /// <param name="registrantId">registrant id</param>
-        /// <returns>list of security questions and masked answers</returns>
-        [HttpGet("registrants/{registrantId}/features")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<RegistrantFeaturesResponse>> GetRegistrantFeatures(string registrantId)
-        {
-            var registrant = (await messagingClient.Send(new RegistrantsQuery
-            {
-                Id = registrantId
-            })).Items.FirstOrDefault();
-
-            if (registrant == null) return NotFound(registrantId);
-
-            return Ok(new RegistrantFeaturesResponse { ETransfer = registrant.AuthenticatedUser });
-        }
     }
 
     public class RegistrationResult
@@ -234,11 +214,6 @@ namespace EMBC.Responders.API.Controllers
     public class VerifySecurityQuestionsResponse
     {
         public int NumberOfCorrectAnswers { get; set; }
-    }
-
-    public class RegistrantFeaturesResponse
-    {
-        public bool ETransfer { get; set; }
     }
 
     /// <summary>
