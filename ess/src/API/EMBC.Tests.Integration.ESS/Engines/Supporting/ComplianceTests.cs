@@ -68,7 +68,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             var response = (CheckSupportComplianceResponse)await engine.Validate(new CheckSupportComplianceRequest { Supports = new[] { checkedSupport } });
             var flags = response.Flags.ShouldHaveSingleItem();
             flags.Key.Id.ShouldBe(checkedSupport.Id);
-            flags.Value.ShouldHaveSingleItem().ShouldBeOfType<DuplicateSupportFlag>().DuplicateSupportId.ShouldBe(duplicateSupportId);
+            flags.Value.ShouldHaveSingleItem().ShouldBeOfType<DuplicateSupportFlag>().DuplicatedSupportId.ShouldBe(duplicateSupportId);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

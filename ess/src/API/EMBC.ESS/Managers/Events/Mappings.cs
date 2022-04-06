@@ -145,6 +145,20 @@ namespace EMBC.ESS.Managers.Events
                 })
                 ;
 
+            CreateMap<SupportFlag, Shared.Contracts.Events.SupportFlag>()
+                .IncludeAllDerived()
+                .ReverseMap()
+                .IncludeAllDerived()
+                ;
+
+            CreateMap<DuplicateSupportFlag, Shared.Contracts.Events.DuplicateSupportFlag>()
+                .ReverseMap()
+                ;
+
+            CreateMap<AmountOverridenSupportFlag, Shared.Contracts.Events.AmountExceededSupportFlag>()
+                .ReverseMap()
+                ;
+
             CreateMap<Shared.Contracts.Events.Referral, Referral>()
                .ForMember(d => d.IssuedByDisplayName, opts => opts.Ignore())
                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
@@ -117,10 +116,13 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public static async Task<RegistrantProfile?> GetRegistrantByUserId(EventsManager manager, string userId) =>
             (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
 
-        public static async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(EventsManager manager, string fileId) =>
-            (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items;
+        public static async Task<EvacuationFile?> GetEvacuationFileById(EventsManager manager, string fileId) =>
+            (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.SingleOrDefault();
 
         public static async Task<string> SaveRegistrant(EventsManager manager, RegistrantProfile registrantProfile) =>
             await manager.Handle(new SaveRegistrantCommand { Profile = registrantProfile });
+
+        public static async Task<string> SaveEvacuationFile(EventsManager manager, EvacuationFile file) =>
+            await manager.Handle(new SubmitEvacuationFileCommand { File = file });
     }
 }
