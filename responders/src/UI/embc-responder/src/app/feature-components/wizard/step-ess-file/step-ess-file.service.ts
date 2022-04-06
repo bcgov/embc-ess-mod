@@ -699,6 +699,8 @@ export class StepEssFileService {
     this.selectedEssFile = essFile;
 
     const essNeeds = essFile.needsAssessment;
+    this.evacueeSession.currentNeedsAssessment = essNeeds;
+    this.evacueeSession.evacFile = essFile;
     this.wizardService.createObjectReference(essFile, 'file');
     const primaryLastName = essFile.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant

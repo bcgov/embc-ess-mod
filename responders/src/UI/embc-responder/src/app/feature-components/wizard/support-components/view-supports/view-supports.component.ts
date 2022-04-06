@@ -24,6 +24,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { BehaviorSubject } from 'rxjs';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 
 @Component({
   selector: 'app-view-supports',
@@ -52,7 +53,8 @@ export class ViewSupportsComponent implements OnInit {
     private cd: ChangeDetectorRef,
     public evacueeSessionService: EvacueeSessionService,
     private locationsService: LocationsService,
-    private loadEvacueeListService: LoadEvacueeListService
+    private loadEvacueeListService: LoadEvacueeListService,
+    private evacueeSearchService: EvacueeSearchService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -83,16 +85,15 @@ export class ViewSupportsComponent implements OnInit {
 
   loadSupportList() {
     this.stepSupportsService
-      .getEvacFile(this.evacueeSessionService.essFileNumber)
+      .getSupports(
+        this.evacueeSessionService.essFileNumber,
+        this.evacueeSearchService.paperBasedEssFile
+      )
       .subscribe({
-        next: (file) => {
-          console.log(file);
+        next: (supports) => {
           this.showLoader = !this.showLoader;
-          this.stepSupportsService.currentNeedsAssessment =
-            file.needsAssessment;
           const supportModel = [];
-
-          file.supports.forEach((support) => {
+          supports.forEach((support) => {
             if (
               support.subCategory === 'Lodging_Group' ||
               support.subCategory === 'Lodging_Billeting' ||
@@ -109,7 +110,6 @@ export class ViewSupportsComponent implements OnInit {
               supportModel.push(value);
             }
           });
-          this.stepSupportsService.evacFile = file;
           this.supportList = supportModel.sort(
             (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
           );

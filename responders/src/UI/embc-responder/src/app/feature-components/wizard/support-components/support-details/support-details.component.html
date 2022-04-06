@@ -47,10 +47,10 @@
           <div class="col-md-4">
             <p class="bold">
               {{
-                stepSupportsService?.evacFile?.task?.from | date: 'dd-MMM-yyyy'
+                evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy'
               }}
               at
-              {{ stepSupportsService?.evacFile?.task?.from | date: 'hh:mm a' }}
+              {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
             </p>
           </div>
         </div>
@@ -64,18 +64,18 @@
               class="bold"
               [ngStyle]="{
                 color: validTaskDate(
-                  stepSupportsService?.evacFile?.task?.from,
-                  stepSupportsService?.evacFile?.task?.to
+                  evacueeSessionService?.evacFile?.task?.from,
+                  evacueeSessionService?.evacFile?.task?.to
                 )
                   ? 'black'
                   : 'red'
               }"
             >
               {{
-                stepSupportsService?.evacFile?.task?.to | date: 'dd-MMM-yyyy'
+                evacueeSessionService?.evacFile?.task?.to | date: 'dd-MMM-yyyy'
               }}
               at
-              {{ stepSupportsService?.evacFile?.task?.to | date: 'hh:mm a' }}
+              {{ evacueeSessionService?.evacFile?.task?.to | date: 'hh:mm a' }}
             </p>
           </div>
         </div>
@@ -477,7 +477,7 @@
                   <div
                     class="row"
                     *ngFor="
-                      let member of stepSupportsService?.evacFile
+                      let member of evacueeSessionService?.evacFile
                         ?.needsAssessment?.householdMembers
                     "
                   >

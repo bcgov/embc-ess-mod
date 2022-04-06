@@ -35,16 +35,15 @@ import { DateConversionService } from 'src/app/core/services/utility/dateConvers
 import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
-  private currentNeedsAssessmentVal: NeedsAssessment;
   private existingSupportListVal: BehaviorSubject<Support[]> =
     new BehaviorSubject<Support[]>([]);
   private existingSupportListVal$: Observable<Support[]> =
     this.existingSupportListVal.asObservable();
   private supportTypeToAddVal: Code;
-  private evacFileVal: EvacuationFileModel;
   private supplierListVal: SupplierListItemModel[];
   private supportDetailsVal: SupportDetailsModel;
   private supportDeliveryVal: SupportDeliveryModel;
@@ -62,7 +61,8 @@ export class StepSupportsService {
     private dateConversionService: DateConversionService,
     private featureService: EtransferFeaturesService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   set selectedSupportDetail(selectedSupportDetailVal: Support) {
@@ -89,28 +89,12 @@ export class StepSupportsService {
     return this.supportDeliveryVal;
   }
 
-  set currentNeedsAssessment(currentNeedsAssessmentVal: NeedsAssessment) {
-    this.currentNeedsAssessmentVal = currentNeedsAssessmentVal;
-  }
-
-  get currentNeedsAssessment(): NeedsAssessment {
-    return this.currentNeedsAssessmentVal;
-  }
-
   setExistingSupportList(existingSupportListVal: Support[]) {
     this.existingSupportListVal.next(existingSupportListVal);
   }
 
   getExistingSupportList(): Observable<Support[]> {
     return this.existingSupportListVal$;
-  }
-
-  set evacFile(evacFileVal: EvacuationFileModel) {
-    this.evacFileVal = evacFileVal;
-  }
-
-  get evacFile(): EvacuationFileModel {
-    return this.evacFileVal;
   }
 
   set supportTypeToAdd(supportTypeToAddVal: Code) {
@@ -136,6 +120,13 @@ export class StepSupportsService {
 
   public getEvacFile(essFileNumber: string): Observable<EvacuationFileModel> {
     return this.essFileService.getFileFromId(essFileNumber); //'100963'
+  }
+
+  public getSupports(
+    essFileNumber: string,
+    externalReferenceId: string
+  ): Observable<Support[]> {
+    return this.essFileService.getSupports(essFileNumber, externalReferenceId);
   }
 
   public getSupplierList(): Observable<Array<SupplierListItemModel>> {
@@ -214,7 +205,7 @@ export class StepSupportsService {
         this.supportDetails.fromTime
       ),
       includedHouseholdMembers: members,
-      needsAssessmentId: this.evacFile.id,
+      needsAssessmentId: this.evacueeSessionService?.evacFile.id,
       status: SupportStatus.Draft,
       to: this.dateConversionService.createDateTimeString(
         this.supportDetails.toDate,

@@ -73,7 +73,7 @@
 
           <div
             class="row"
-            *ngIf="!stepSupportsService?.currentNeedsAssessment?.canProvideFood"
+            *ngIf="!evacueeSessionService?.currentNeedsAssessment?.canProvideFood"
           >
             <div class="col-4">Food</div>
           </div>
@@ -81,7 +81,7 @@
           <div
             class="row"
             *ngIf="
-              !stepSupportsService?.currentNeedsAssessment?.canProvideLodging
+              !evacueeSessionService?.currentNeedsAssessment?.canProvideLodging
             "
           >
             <div class="col-4">Lodging</div>
@@ -90,7 +90,7 @@
           <div
             class="row"
             *ngIf="
-              !stepSupportsService?.currentNeedsAssessment?.canProvideClothing
+              !evacueeSessionService?.currentNeedsAssessment?.canProvideClothing
             "
           >
             <div class="col-4">Clothing</div>
@@ -99,7 +99,7 @@
           <div
             class="row"
             *ngIf="
-              !stepSupportsService?.currentNeedsAssessment
+              !evacueeSessionService?.currentNeedsAssessment
                 ?.canProvideTransportation
             "
           >
@@ -109,7 +109,7 @@
           <div
             class="row"
             *ngIf="
-              !stepSupportsService?.currentNeedsAssessment
+              !evacueeSessionService?.currentNeedsAssessment
                 ?.canProvideIncidentals
             "
           >
