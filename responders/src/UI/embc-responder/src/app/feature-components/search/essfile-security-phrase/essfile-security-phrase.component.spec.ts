@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 import { EssfileSecurityPhraseComponent } from './essfile-security-phrase.component';
 
@@ -16,7 +17,8 @@ describe('EssfileSecurityPhraseComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         ReactiveFormsModule
-      ]
+      ],
+      providers: [{ provide: computeInterfaceToken, useValue: {} }]
     }).compileComponents();
   });
 

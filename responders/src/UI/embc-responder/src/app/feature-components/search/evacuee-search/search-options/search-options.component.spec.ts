@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 import { SearchOptionsComponent } from './search-options.component';
 
@@ -8,7 +9,8 @@ describe('SearchOptionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SearchOptionsComponent]
+      declarations: [SearchOptionsComponent],
+      providers: [{ provide: computeInterfaceToken, useValue: {} }]
     }).compileComponents();
   });
 

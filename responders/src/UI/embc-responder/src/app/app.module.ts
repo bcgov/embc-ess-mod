@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { InjectionToken, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
@@ -11,7 +11,11 @@ import { ErrorHandlingModule } from './shared/error-handling/error-handing.modul
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { Compute } from './core/services/compute/compute';
+import { ComputeAppBaseService } from './core/services/compute/computeAppBase.service';
+import { ComputeFeaturesService } from './core/services/helper/computeFeatures.service';
 
+export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -32,7 +36,19 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
     ErrorHandlingModule.forRoot(),
     SharedModule
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    {
+      provide: computeInterfaceToken,
+      useClass: ComputeAppBaseService,
+      multi: true
+    },
+    {
+      provide: computeInterfaceToken,
+      useClass: ComputeFeaturesService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
