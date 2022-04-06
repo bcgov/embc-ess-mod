@@ -199,33 +199,35 @@
         >
       </div>
     </div>
-    <div *ngIf="isMinor; else bcscCheck" class="row">
-      <div class="col-md-12 bold">
-        {{
-          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-            ?.personalDetails?.lastName | uppercase
-        }},
-        {{
-          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-            ?.personalDetails?.firstName | titlecase
-        }}
-        is a minor and is not eligible for e-Transfer
+    <div *ngIf="!featureService?.isRegistrantEtransferEligible">
+      <div *ngIf="isMinor; else bcscCheck" class="row">
+        <div class="col-md-12 bold">
+          {{
+            appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+              ?.personalDetails?.lastName | uppercase
+          }},
+          {{
+            appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+              ?.personalDetails?.firstName | titlecase
+          }}
+          is a minor and is not eligible for e-Transfer
+        </div>
       </div>
-    </div>
 
-    <ng-template #bcscCheck>
-      <div class="col-md-12 bold">
-        {{
-          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-            ?.personalDetails?.lastName | uppercase
-        }},
-        {{
-          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-            ?.personalDetails?.firstName | titlecase
-        }}
-        must have a profile linked to BC Services Card to be eligible
-      </div>
-    </ng-template>
+      <ng-template #bcscCheck>
+        <div class="col-md-12 bold">
+          {{
+            appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+              ?.personalDetails?.lastName | uppercase
+          }},
+          {{
+            appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+              ?.personalDetails?.firstName | titlecase
+          }}
+          must have a profile linked to BC Services Card to be eligible
+        </div>
+      </ng-template>
+    </div>
 
     <div *ngIf="featureService?.isRegistrantEtransferEligible" class="row">
       <div class="col-md-12 bold">
