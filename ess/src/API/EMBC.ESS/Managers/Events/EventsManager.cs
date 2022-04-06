@@ -701,9 +701,27 @@ namespace EMBC.ESS.Managers.Events
             };
         }
 
-        public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand processPendingSupportsCommand)
+        public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand _)
         {
-            await System.Threading.Tasks.Task.CompletedTask;
+            var pendingScanSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+            {
+                ByStatus = Resources.Supports.SupportStatus.PendingScan
+            })).Items;
+
+            var response = (CheckSupportComplianceResponse)await supportingEngine.Validate(new CheckSupportComplianceRequest { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports) });
+
+            foreach (var support in response.Flags)
+            {
+                await supportRepository.Manage(new SetFlagsCommand
+                {
+                    SupportId = support.Key.Id,
+                    Flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(support.Value)
+                });
+                await supportRepository.Manage(new ChangeSupportStatusCommand
+                {
+                    Items = new[] { new SupportStatusTransition { SupportId = support.Key.Id, ToStatus = Resources.Supports.SupportStatus.PendingApproval } }
+                });
+            }
         }
     }
 }

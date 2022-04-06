@@ -94,6 +94,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public SupportStatus Status { get; set; } = SupportStatus.Active;
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
         public SupportDelivery SupportDelivery { get; set; }
+        public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
     }
 
     [JsonConverter(typeof(PolymorphicJsonConverter<SupportDelivery>))]
@@ -218,5 +219,19 @@ namespace EMBC.ESS.Shared.Contracts.Events
         NewSupplierRequired,
         SupplierCouldNotMeetNeed,
         UserInitiatedCancellation
+    }
+
+    public abstract class SupportFlag
+    {
+    }
+
+    public class DuplicateSupportFlag : SupportFlag
+    {
+        public string DuplicatedSupportId { get; set; }
+    }
+
+    public class AmountExceededSupportFlag : SupportFlag
+    {
+        public string Approver { get; set; }
     }
 }

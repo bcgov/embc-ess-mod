@@ -173,7 +173,10 @@ namespace EMBC.ESS.Resources.Supports
 
         private static async Task<IEnumerable<era_evacueesupport>> Search(EssContext ctx, SearchSupportsQuery query)
         {
-            if (string.IsNullOrEmpty(query.ById) && string.IsNullOrEmpty(query.ByExternalReferenceId) && string.IsNullOrEmpty(query.ByEvacuationFileId))
+            if (string.IsNullOrEmpty(query.ById) &&
+                string.IsNullOrEmpty(query.ByExternalReferenceId) &&
+                string.IsNullOrEmpty(query.ByEvacuationFileId) &&
+                !query.ByStatus.HasValue)
                 throw new ArgumentException("Supports query must have at least one criteria", nameof(query));
 
             // search a specific file
@@ -195,6 +198,7 @@ namespace EMBC.ESS.Resources.Supports
 
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByExternalReferenceId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByExternalReferenceId);
+            if (query.ByStatus.HasValue) supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
 
             return (await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync()).ToArray();
         }

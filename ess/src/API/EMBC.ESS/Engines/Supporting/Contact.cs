@@ -69,20 +69,6 @@ namespace EMBC.ESS.Engines.Supporting
         public override bool IsValid => Flags.All(s => !s.Value.Any());
     }
 
-    public abstract class SupportFlag
-    {
-    }
-
-    public class DuplicateSupportFlag : SupportFlag
-    {
-        public string DuplicateSupportId { get; set; }
-    }
-
-    public class AmountExceededSupportFlag : SupportFlag
-    {
-        public string Approver { get; set; }
-    }
-
     public class ProcessPaperSupportsRequest : ProcessRequest
     {
         public string FileId { get; set; }
