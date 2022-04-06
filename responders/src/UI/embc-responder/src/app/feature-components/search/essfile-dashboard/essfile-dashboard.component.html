@@ -188,38 +188,56 @@
         <span
           class="bold"
           [ngClass]="{
-            'file-complete': essFile?.isEtransferEligible,
-            'file-expired': !essFile?.isEtransferEligible
+            'file-complete': featureService?.isRegistrantEtransferEligible,
+            ineligible: !featureService?.isRegistrantEtransferEligible
           }"
-          >{{ essFile?.isEtransferEligible ? 'Eligible' : 'Ineligible' }}</span
+          >{{
+            featureService?.isRegistrantEtransferEligible
+              ? 'Eligible'
+              : 'Ineligible'
+          }}</span
         >
       </div>
     </div>
-    <div *ngIf="essFile?.isEtransferEligible" class="row">
+    <div *ngIf="isMinor; else bcscCheck" class="row">
       <div class="col-md-12 bold">
         {{
-          evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-            ?.lastName | uppercase
+          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+            ?.personalDetails?.lastName | uppercase
         }},
         {{
-          evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-            ?.firstName | titlecase
+          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+            ?.personalDetails?.firstName | titlecase
         }}
-        is eligible for e-Transfer
+        is a minor and is not eligible for e-Transfer
       </div>
     </div>
 
-    <div *ngIf="!essFile?.isEtransferEligible" class="row">
+    <ng-template #bcscCheck>
       <div class="col-md-12 bold">
         {{
-          evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-            ?.lastName | uppercase
+          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+            ?.personalDetails?.lastName | uppercase
         }},
         {{
-          evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-            ?.firstName | titlecase
+          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+            ?.personalDetails?.firstName | titlecase
         }}
         must have a profile linked to BC Services Card to be eligible
+      </div>
+    </ng-template>
+
+    <div *ngIf="featureService?.isRegistrantEtransferEligible" class="row">
+      <div class="col-md-12 bold">
+        {{
+          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+            ?.personalDetails?.lastName | uppercase
+        }},
+        {{
+          appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+            ?.personalDetails?.firstName | titlecase
+        }}
+        is eligible for e-Transfer
       </div>
     </div>
   </div>
