@@ -54,7 +54,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
                 .Where(s => s.era_era_householdmember_era_evacueesupport.Any(m => householdMembers.Any(cm => householdMemberMatcher(cm, m))))
                 .ToArray();
 
-            var duplicates = duplicateSupports.Select(s => new DuplicateSupportFlag { DuplicateSupportId = s.era_name }).ToArray();
+            var duplicates = duplicateSupports.Select(s => new DuplicateSupportFlag { DuplicatedSupportId = s.era_name }).ToArray();
 
             ctx.DetachAll();
 

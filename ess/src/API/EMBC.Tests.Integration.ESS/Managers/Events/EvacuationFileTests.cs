@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         private async Task<RegistrantProfile?> GetTestRegistrant() => await TestHelper.GetRegistrantByUserId(manager, TestData.ContactUserId);
 
-        private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => (await TestHelper.GetEvacuationFileById(manager, fileId)).ShouldHaveSingleItem();
+        private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId) ?? null!;
 
         private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(registrant);
 

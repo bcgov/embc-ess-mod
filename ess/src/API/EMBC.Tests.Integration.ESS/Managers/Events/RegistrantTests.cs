@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
-        private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId);
+        private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId) ?? null!;
 
         private RegistrantProfile CreateNewTestRegistrantProfile(string identifier) => TestHelper.CreateRegistrantProfile(identifier);
 
@@ -115,13 +115,13 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var registrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
 
-            var file = (await GetEvacuationFileById(TestData.EvacuationFileId)).First();
+            var file = await GetEvacuationFileById(TestData.EvacuationFileId);
             var member = file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.FirstName != $"{TestData.TestPrefix}-member-no-registrant-first").First();
 
             var fileId = await manager.Handle(new LinkRegistrantCommand { FileId = file.Id, RegistantId = registrant.Id, HouseholdMemberId = member.Id });
             fileId.ShouldBe(file.Id);
 
-            var updatedFile = (await GetEvacuationFileById(TestData.EvacuationFileId)).First();
+            var updatedFile = await GetEvacuationFileById(TestData.EvacuationFileId);
             updatedFile.NeedsAssessment.HouseholdMembers.Where(m => m.Id == member.Id).Single().LinkedRegistrantId.ShouldBe(registrant.Id);
         }
 
