@@ -106,7 +106,7 @@ namespace EMBC.ESS.Managers.Events
 
             var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
-            if (contact.Email != null)
+            if (!string.IsNullOrEmpty(contact.Email))
             {
                 await SendEmailNotification(
                     SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
@@ -170,7 +170,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.Profile.Id))
             {
                 //send email when creating a new registrant profile
-                if (contact.Email != null)
+                if (!string.IsNullOrEmpty(contact.Email))
                 {
                     await SendEmailNotification(
                         SubmissionTemplateType.NewProfileRegistration,

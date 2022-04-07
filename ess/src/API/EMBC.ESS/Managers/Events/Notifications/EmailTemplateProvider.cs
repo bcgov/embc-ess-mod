@@ -25,14 +25,14 @@ namespace EMBC.ESS.Managers.Events.Notifications
 
         private EmailTemplate GetRegisterNewTemplate()
         {
-            var emailSubject = "Registration completed successfully";
+            var emailSubject = "ERA User Profile Successfully Created";
             var emailBody = LoadTemplate("RegisterNewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
         private EmailTemplate GetNewTemplate()
         {
-            var emailSubject = "Registration completed successfully";
+            var emailSubject = "ESS Self-Registration Completed Successfully";
             var emailBody = LoadTemplate("NewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
@@ -48,7 +48,7 @@ namespace EMBC.ESS.Managers.Events.Notifications
         {
             return new EmailTemplate
             {
-                Subject = "Connect your Evacuee Registration & Assistance (ERA) Profile with BC Services Card",
+                Subject = "Connect your Evacuee Registration & Assistance (ERA) User Profile with BC Services Card",
                 Content = LoadTemplate("InviteTemplate")
             };
         }
