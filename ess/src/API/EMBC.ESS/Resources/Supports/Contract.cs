@@ -93,6 +93,7 @@ namespace EMBC.ESS.Resources.Supports
         public string ByExternalReferenceId { get; set; }
         public string ByEvacuationFileId { get; set; }
         public SupportStatus? ByStatus { get; set; }
+        public int? LimitNumberOfResults { get; set; }
     }
 
     public class SearchSupportQueryResult : SupportQueryResult
