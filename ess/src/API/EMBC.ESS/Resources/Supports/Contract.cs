@@ -48,8 +48,10 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<string> Ids { get; set; }
     }
 
-    public class AssignSupportToQueueCommand : ManageSupportCommand
-    { }
+    public class SubmitSupportForApprovalCommand : ManageSupportCommand
+    {
+        public IEnumerable<string> SupportIds { get; set; }
+    }
 
     public class AssignSupportToQueueCommandResult : ManageSupportCommandResult
     { }
