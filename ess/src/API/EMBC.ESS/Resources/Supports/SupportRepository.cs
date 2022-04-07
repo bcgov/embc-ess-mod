@@ -26,7 +26,7 @@ namespace EMBC.ESS.Resources.Supports
             {
                 SaveEvacuationFileSupportCommand c => await Handle(c),
                 ChangeSupportStatusCommand c => await Handle(c),
-                AssignSupportToQueueCommand c => await Handle(c),
+                SubmitSupportForApprovalCommand c => await Handle(c),
                 SetFlagsCommand c => await Handle(c),
                 ClearFlagsCommand c => await Handle(c),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
@@ -72,10 +72,43 @@ namespace EMBC.ESS.Resources.Supports
             return new SetFlagCommandResult();
         }
 
-        private async Task<AssignSupportToQueueCommandResult> Handle(AssignSupportToQueueCommand c)
+        private static readonly Guid ApprovalQueueId = new("a4f0fbbe-89a1-ec11-b831-00505683fbf4");
+        private static readonly Guid ReviewQueueId = new("e969aae7-8aa1-ec11-b831-00505683fbf4");
+
+        private async Task<AssignSupportToQueueCommandResult> Handle(SubmitSupportForApprovalCommand cmd)
         {
             await Task.CompletedTask;
             var ctx = essContextFactory.Create();
+
+            var queues = (await ctx.queues.GetAllPagesAsync()).ToArray();
+
+            foreach (var supportId in cmd.SupportIds)
+            {
+                var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == supportId)).GetAllPagesAsync()).SingleOrDefault();
+                if (support == null) throw new InvalidOperationException($"Support {supportId} not found");
+                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport));
+
+                var queue = queues.Single(q => q.queueid == (support.era_era_evacueesupport_era_supportflag_EvacueeSupport.Any() ? ApprovalQueueId : ReviewQueueId));
+                var queueItem = new queueitem
+                {
+                    queueitemid = Guid.NewGuid(),
+                    objecttypecode = 10056 //support type picklist value
+                };
+
+                // create queue item
+                ctx.AddToqueueitems(queueItem);
+                ctx.SetLink(queueItem, nameof(queueItem.queueid), queue);
+                ctx.SetLink(queueItem, nameof(queueItem.objectid_era_evacueesupport), support);
+
+                // update support status
+                support.statuscode = (int)SupportStatus.PendingApproval;
+                ctx.UpdateObject(support);
+            }
+
+            await ctx.SaveChangesAsync();
+
+            ctx.DetachAll();
+
             return new AssignSupportToQueueCommandResult();
         }
 
