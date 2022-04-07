@@ -39,7 +39,7 @@ namespace EMBC.ESS.Engines.Supporting
 
     public class ProcessDigitalSupportsResponse : ProcessResponse
     {
-        public IEnumerable<string> SupportIds { get; set; } = Array.Empty<string>();
+        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
 
         public string PrintRequestId { get; set; } = null!;
     }
@@ -57,6 +57,18 @@ namespace EMBC.ESS.Engines.Supporting
         public IEnumerable<string> Errors { get; set; } = Array.Empty<string>();
     }
 
+    public class CheckSupportComplianceRequest : ValidationRequest
+    {
+        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
+    }
+
+    public class CheckSupportComplianceResponse : ValidationResponse
+    {
+        public IEnumerable<KeyValuePair<Support, IEnumerable<SupportFlag>>> Flags { get; set; } = Array.Empty<KeyValuePair<Support, IEnumerable<SupportFlag>>>();
+
+        public override bool IsValid => Flags.All(s => !s.Value.Any());
+    }
+
     public class ProcessPaperSupportsRequest : ProcessRequest
     {
         public string FileId { get; set; }
@@ -67,7 +79,7 @@ namespace EMBC.ESS.Engines.Supporting
 
     public class ProcessPaperSupportsResponse : ProcessResponse
     {
-        public IEnumerable<string> SupportIds { get; set; } = Array.Empty<string>();
+        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
     }
 
     public class PaperSupportsValidationRequest : ValidationRequest

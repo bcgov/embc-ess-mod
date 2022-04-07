@@ -23,13 +23,8 @@ export class EtransferFeaturesService {
   private etransferStatusVal?: ETransferStatus;
   private selectedSupportVal?: Code; //temp
   private interacAllowedVal?: boolean = true; //will come from backend
-  private selectedEvacueeInContextVal?: RegistrantProfileModel; //temporary placeholder
 
   private etransferRequirementVal?: Array<EtransferRequirementStatus>;
-
-  constructor(public cacheService: CacheService) {
-    // super(cacheService);
-  }
 
   public set isRegistrantEtransferEligible(value: boolean) {
     this.isRegistrantEtransferEligibleVal = value;
@@ -61,13 +56,6 @@ export class EtransferFeaturesService {
 
   public get interacAllowed(): boolean {
     return this.interacAllowedVal;
-  }
-
-  public get selectedEvacueeInContext(): RegistrantProfileModel {
-    return this.selectedEvacueeInContextVal;
-  }
-  public set selectedEvacueeInContext(value: RegistrantProfileModel) {
-    this.selectedEvacueeInContextVal = value;
   }
 
   public set etransferRequirement(value: Array<EtransferRequirementStatus>) {

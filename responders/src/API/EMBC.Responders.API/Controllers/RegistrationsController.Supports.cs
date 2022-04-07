@@ -474,6 +474,7 @@ namespace EMBC.Responders.API.Controllers
     {
         [Required]
         public string ReceivingRegistrantId { get; set; }
+
         public string RecipientFirstName { get; set; }
         public string RecipientLastName { get; set; }
 
@@ -787,6 +788,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => new EMBC.ESS.Shared.Contracts.Events.TeamMember { DisplayName = s.IssuedBy }))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom((s, d, m, ctx) => new SupportDeliveryTypeConverter().Convert(s.SupportDelivery, m, ctx)))
+                .ForMember(d => d.Flags, opts => opts.Ignore())
                 ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.Referral, Referral>()

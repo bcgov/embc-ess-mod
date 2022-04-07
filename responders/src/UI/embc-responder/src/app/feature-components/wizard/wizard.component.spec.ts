@@ -17,6 +17,7 @@ import { StepEvacueeProfileComponent } from './step-evacuee-profile/step-evacuee
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StepEssFileComponent } from './step-ess-file/step-ess-file.component';
 import { By } from '@angular/platform-browser';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('WizardComponent-Test for New Registration', () => {
   let component: WizardComponent;
@@ -53,7 +54,8 @@ describe('WizardComponent-Test for New Registration', () => {
           {
             provide: WizardService,
             useClass: MockWizardService
-          }
+          },
+          { provide: computeInterfaceToken, useValue: {} }
         ]
       }).compileComponents();
     })

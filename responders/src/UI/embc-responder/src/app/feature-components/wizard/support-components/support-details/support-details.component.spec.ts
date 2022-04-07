@@ -7,6 +7,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('SupportDetailsComponent', () => {
   let component: SupportDetailsComponent;
@@ -16,7 +17,11 @@ describe('SupportDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
       declarations: [SupportDetailsComponent],
-      providers: [DatePipe, FormBuilder]
+      providers: [
+        DatePipe,
+        FormBuilder,
+        { provide: computeInterfaceToken, useValue: {} }
+      ]
     }).compileComponents();
   });
 

@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SupportCategory, SupportSubCategory } from 'src/app/core/api/models';
+import {
+  Support,
+  SupportCategory,
+  SupportSubCategory
+} from 'src/app/core/api/models';
 import {
   Billeting,
   Clothing,
@@ -17,6 +21,7 @@ import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { EvacueeSessionService } from '../../../../core/services/evacuee-session.service';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SupportDetailsService {
@@ -256,7 +261,9 @@ export class SupportDetailsService {
     return clothingForm;
   }
 
-  checkUniqueReferralNumber(externalReferenceId: string) {
+  checkUniqueReferralNumber(
+    externalReferenceId: string
+  ): Observable<Support[]> {
     return this.registrationService.registrationsSearchSupports({
       externalReferenceId
     });

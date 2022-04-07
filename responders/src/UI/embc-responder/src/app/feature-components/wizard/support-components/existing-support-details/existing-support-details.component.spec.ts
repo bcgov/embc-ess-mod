@@ -27,6 +27,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ViewSupportsComponent } from '../view-supports/view-supports.component';
 import { Router } from '@angular/router';
 import { SupportDetailsComponent } from '../support-details/support-details.component';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('ExistingSupportDetailsComponent', () => {
   let component: ExistingSupportDetailsComponent;
@@ -66,7 +67,8 @@ describe('ExistingSupportDetailsComponent', () => {
         {
           provide: LoadEvacueeListService,
           useClass: MockEvacueeListService
-        }
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });

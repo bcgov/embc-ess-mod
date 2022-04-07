@@ -74,6 +74,6 @@ export class VoidReferralDialogComponent implements OnInit {
   getReasonDescription(reasonOption: string): string {
     return this.loadEvacueeListService
       .getVoidReasons()
-      .find((reason) => reason.value === reasonOption).description;
+      .find((reason) => reason?.value === reasonOption)?.description;
   }
 }

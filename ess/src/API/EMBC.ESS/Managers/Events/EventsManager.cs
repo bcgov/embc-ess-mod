@@ -499,7 +499,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[]
                 {
@@ -514,7 +514,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
             if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
 
-            var id = (await supportRepository.Manage(new ChangeSupportStatusCommand
+            var id = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
                 Items = new[]
                 {
@@ -685,7 +685,7 @@ namespace EMBC.ESS.Managers.Events
             if (string.IsNullOrEmpty(query.ExternalReferenceId) && string.IsNullOrEmpty(query.FileId))
                 throw new BusinessValidationException($"Search supports must have criteria");
 
-            var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>((await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+            var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
             {
                 ByExternalReferenceId = query.ExternalReferenceId,
                 ByEvacuationFileId = query.FileId
@@ -699,6 +699,34 @@ namespace EMBC.ESS.Managers.Events
             {
                 Items = supports
             };
+        }
+
+        public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand _)
+        {
+            // get all pending scan supports
+            var pendingScanSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+            {
+                ByStatus = Resources.Supports.SupportStatus.PendingScan
+            })).Items;
+
+            // scan and get flags
+            var response = (CheckSupportComplianceResponse)await supportingEngine.Validate(new CheckSupportComplianceRequest { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports) });
+
+            foreach (var support in response.Flags)
+            {
+                // store flags
+                await supportRepository.Manage(new SetFlagsCommand
+                {
+                    SupportId = support.Key.Id,
+                    Flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(support.Value)
+                });
+            }
+
+            // submit supports for approval
+            await supportRepository.Manage(new SubmitSupportForApprovalCommand
+            {
+                SupportIds = pendingScanSupports.Select(s => s.Id).ToArray()
+            });
         }
     }
 }

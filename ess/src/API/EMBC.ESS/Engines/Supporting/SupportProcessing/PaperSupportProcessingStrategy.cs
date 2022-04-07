@@ -39,13 +39,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             var supports = mapper.Map<IEnumerable<Support>>(r.Supports);
 
-            var supportIds = (await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var procesedSupports = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
             {
                 FileId = r.FileId,
                 Supports = supports
-            })).Ids.ToArray();
+            })).Supports.ToArray();
 
-            return new ProcessPaperSupportsResponse { SupportIds = supportIds };
+            return new ProcessPaperSupportsResponse { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(procesedSupports) };
         }
 
         private async Task<PaperSupportsValidationResponse> HandleInternal(PaperSupportsValidationRequest r)

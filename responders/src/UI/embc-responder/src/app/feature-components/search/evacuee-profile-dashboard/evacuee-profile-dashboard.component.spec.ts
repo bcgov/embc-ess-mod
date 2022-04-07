@@ -17,6 +17,7 @@ import { CommunityType } from 'src/app/core/api/models';
 import { WizardComponent } from '../../wizard/wizard.component';
 import { Router } from '@angular/router';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('EvacueeProfileDashboardComponent', () => {
   let component: EvacueeProfileDashboardComponent;
@@ -149,7 +150,8 @@ describe('EvacueeProfileDashboardComponent', () => {
         {
           provide: EvacueeProfileService,
           useClass: MockEvacueeProfileService
-        }
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });

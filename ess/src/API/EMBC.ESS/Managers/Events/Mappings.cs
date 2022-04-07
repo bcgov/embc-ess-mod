@@ -135,6 +135,7 @@ namespace EMBC.ESS.Managers.Events
                 .ValidateMemberList(MemberList.Destination)
                 .IncludeAllDerived()
                 .ForMember(d => d.CreatedByTeamMemberId, opts => opts.MapFrom(s => s.CreatedBy.Id))
+                .ForMember(d => d.Flags, opts => opts.Ignore())
                 .AfterMap((s, d) =>
                 {
                     if (d.IsPaperReferral)
@@ -142,6 +143,20 @@ namespace EMBC.ESS.Managers.Events
                         ((Referral)d.SupportDelivery).IssuedByDisplayName = s.IssuedBy?.DisplayName;
                     }
                 })
+                ;
+
+            CreateMap<SupportFlag, Shared.Contracts.Events.SupportFlag>()
+                .IncludeAllDerived()
+                .ReverseMap()
+                .IncludeAllDerived()
+                ;
+
+            CreateMap<DuplicateSupportFlag, Shared.Contracts.Events.DuplicateSupportFlag>()
+                .ReverseMap()
+                ;
+
+            CreateMap<AmountOverridenSupportFlag, Shared.Contracts.Events.AmountExceededSupportFlag>()
+                .ReverseMap()
                 ;
 
             CreateMap<Shared.Contracts.Events.Referral, Referral>()

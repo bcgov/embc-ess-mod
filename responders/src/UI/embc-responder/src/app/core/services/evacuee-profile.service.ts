@@ -14,6 +14,7 @@ import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { ComputeRulesService } from './computeRules.service';
 import { EvacueeSessionService } from './evacuee-session.service';
+import { AppBaseService } from './helper/appBase.service';
 import { EtransferFeaturesService } from './helper/etransferfeatures.service';
 import { LocationsService } from './locations.service';
 
@@ -25,7 +26,7 @@ export class EvacueeProfileService {
     private registrationsService: RegistrationsService,
     private locationsService: LocationsService,
     public evacueeSessionService: EvacueeSessionService,
-    private featureService: EtransferFeaturesService,
+    private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
   ) {}
 
@@ -53,7 +54,9 @@ export class EvacueeProfileService {
               profile.mailingAddress
             )
           };
-          this.featureService.selectedEvacueeInContext = profileModel;
+          this.appBaseService.appModel = {
+            selectedProfile: { selectedEvacueeInContext: profileModel }
+          };
           this.computeState.triggerEvent();
           return profileModel;
         })

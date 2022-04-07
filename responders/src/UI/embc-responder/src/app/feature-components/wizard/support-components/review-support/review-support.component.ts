@@ -29,9 +29,8 @@ import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DownloadService } from 'src/app/core/services/utility/download.service';
-import { FlatDateFormatPipe } from 'src/app/shared/pipes/flatDateFormat.pipe';
 import { EtransferFeaturesService } from '../../../../core/services/helper/etransferfeatures.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-review-support',
@@ -55,8 +54,7 @@ export class ReviewSupportComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
-    public featureService: EtransferFeaturesService,
-    private downloadService: DownloadService
+    public appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {

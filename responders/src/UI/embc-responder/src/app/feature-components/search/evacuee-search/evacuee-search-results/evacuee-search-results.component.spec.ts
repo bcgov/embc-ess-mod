@@ -32,6 +32,7 @@ import {
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { MockEvacueeProfileService } from 'src/app/unit-tests/mockEvacueeProfile.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('EvacueeSearchResultsComponent', () => {
   let component: EvacueeSearchResultsComponent;
@@ -190,7 +191,8 @@ describe('EvacueeSearchResultsComponent', () => {
         {
           provide: EvacueeProfileService,
           useClass: MockEvacueeProfileService
-        }
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });

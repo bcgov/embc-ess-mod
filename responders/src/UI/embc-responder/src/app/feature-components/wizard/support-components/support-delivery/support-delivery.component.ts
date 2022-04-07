@@ -4,7 +4,7 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -15,7 +15,8 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { ComputeRulesService } from '../../../../core/services/computeRules.service';
 import { ETransferStatus } from '../../../../core/models/appBase.model';
 import { SupportMethod } from '../../../../core/api/models/support-method';
-import { EtransferFeaturesService } from '../../../../core/services/helper/etransferfeatures.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-support-delivery',
@@ -34,10 +35,11 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    public featureService: EtransferFeaturesService,
+    private appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private dialog: MatDialog,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    public featureService: EtransferFeaturesService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -54,7 +56,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.stepSupportsService?.supportDelivery?.method || null;
     this.createSupportDeliveryForm();
     this.computeState.triggerEvent();
-    console.log(this.featureService);
   }
 
   ngAfterViewChecked(): void {
@@ -126,15 +127,16 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       ],
       details: this.createSupplierDetailsForm(),
       recipientFirstName: [
-        this.featureService?.selectedEvacueeInContext?.personalDetails
-          ?.firstName || ''
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+          ?.personalDetails?.firstName || ''
       ],
       recipientLastName: [
-        this.featureService?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
           ''
       ],
       receivingRegistrantId: [
-        this.featureService?.selectedEvacueeInContext?.id || ''
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+          ?.id || ''
       ],
       notificationPreference: [
         this.getExistingPreference(),

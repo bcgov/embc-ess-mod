@@ -150,7 +150,7 @@ a:not(.btn):focus {
 }
 
 .complete-task-date {
-  color: red;
+  color: rgba(201, 0, 0, 1);
   font-weight: bold;
 }
 
@@ -165,4 +165,8 @@ a:not(.btn):focus {
 
 .vline {
   border-right: 0.7px solid rgba(0, 0, 0, 0.2);
+}
+
+.ineligible {
+  color: rgba(201, 0, 0, 1);
 }

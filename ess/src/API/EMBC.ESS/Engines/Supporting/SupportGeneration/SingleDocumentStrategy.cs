@@ -24,7 +24,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
         public async Task<GenerateResponse> Generate(GenerateRequest request)
         {
             if (!(request is GenerateReferralsRequest r))
-                throw new InvalidOperationException($"{nameof(ISupportProcessingStrategy)} of type {nameof(SingleDocumentStrategy)} can only handle {nameof(GenerateReferralsRequest)} request types");
+                throw new InvalidOperationException($"{nameof(ISupportGenerationStrategy)} of type {nameof(SingleDocumentStrategy)} can only handle {nameof(GenerateReferralsRequest)} request types");
 
             return await GenerateSingleReferralDocument(r);
         }

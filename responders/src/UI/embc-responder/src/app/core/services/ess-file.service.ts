@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { RegistrantFeaturesResponse, RegistrationResult } from '../api/models';
+import { map, mergeMap } from 'rxjs/operators';
+import { RegistrationResult } from '../api/models';
 import { EvacuationFile } from '../api/models/evacuation-file';
 import { RegistrationsService } from '../api/services';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
@@ -25,30 +25,35 @@ export class EssFileService {
    * @returns ESS File record
    */
   public getFileFromId(fileId: string): Observable<EvacuationFileModel> {
-    const file$ = this.registrationsService.registrationsGetFile({
-      fileId
-    });
-    const eligibility$ = this.getEtransferEligibility(
-      this.evacueeSessionService?.evacueeMetaData?.registrantId
-    );
-
-    return file$.pipe(
-      withLatestFrom(eligibility$),
-      map(([file, registrantFeaturesResponse]) => {
-        return {
-          ...file,
-          evacuatedFromAddress:
-            this.locationsService.getAddressModelFromAddress(
-              file.evacuatedFromAddress
-            ),
-          assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
-            file?.task?.communityCode
-          ),
-          isEtransferEligible: registrantFeaturesResponse.eTransfer
-        };
+    return this.registrationsService
+      .registrationsGetFile({
+        fileId
       })
-    );
+      .pipe(
+        map((file: EvacuationFile): EvacuationFileModel => {
+          return {
+            ...file,
+            evacuatedFromAddress:
+              this.locationsService.getAddressModelFromAddress(
+                file.evacuatedFromAddress
+              ),
+            assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
+              file?.task?.communityCode
+            )
+          };
+        })
+      );
   }
+
+  // public getSupports(
+  //   externalReferenceId?: string,
+  //   fileId?: string
+  // ): Observable<SupportSummary[]> {
+  //   return this.registrationsService.registrationsSearchSupports({
+  //     externalReferenceId: externalReferenceId,
+  //     fileId: fileId
+  //   });
+  // }
 
   /**
    * Create new ESS File and fetches the created ESS File
@@ -67,13 +72,13 @@ export class EssFileService {
       );
   }
 
-  public getEtransferEligibility(
-    registrantId: string
-  ): Observable<RegistrantFeaturesResponse> {
-    return this.registrationsService.registrationsGetRegistrantFeatures({
-      registrantId
-    });
-  }
+  // public getEtransferEligibility(
+  //   registrantId: string
+  // ): Observable<RegistrantFeaturesResponse> {
+  //   return this.registrationsService.registrationsGetRegistrantFeatures({
+  //     registrantId
+  //   });
+  // }
 
   /**
    * Update existing ESS File
