@@ -73,7 +73,9 @@
 
           <div
             class="row"
-            *ngIf="!evacueeSessionService?.currentNeedsAssessment?.canProvideFood"
+            *ngIf="
+              !evacueeSessionService?.currentNeedsAssessment?.canProvideFood
+            "
           >
             <div class="col-4">Food</div>
           </div>

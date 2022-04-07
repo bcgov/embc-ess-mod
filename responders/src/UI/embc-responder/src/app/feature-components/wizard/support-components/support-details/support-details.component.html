@@ -47,10 +47,13 @@
           <div class="col-md-4">
             <p class="bold">
               {{
-                evacueeSessionService?.evacFile?.task?.from | date: 'dd-MMM-yyyy'
+                evacueeSessionService?.evacFile?.task?.from
+                  | date: 'dd-MMM-yyyy'
               }}
               at
-              {{ evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a' }}
+              {{
+                evacueeSessionService?.evacFile?.task?.from | date: 'hh:mm a'
+              }}
             </p>
           </div>
         </div>

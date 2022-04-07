@@ -124,7 +124,7 @@ export class StepSupportsService {
 
   public getSupports(
     essFileNumber: string,
-    externalReferenceId: string
+    externalReferenceId?: string
   ): Observable<Support[]> {
     return this.essFileService.getSupports(essFileNumber, externalReferenceId);
   }
