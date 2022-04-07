@@ -16,7 +16,7 @@
         >
           <mat-option
             *ngFor="
-              let member of stepSupportsService?.evacFile?.needsAssessment
+              let member of evacueeSessionService?.evacFile?.needsAssessment
                 ?.householdMembers
             "
             [value]="member"

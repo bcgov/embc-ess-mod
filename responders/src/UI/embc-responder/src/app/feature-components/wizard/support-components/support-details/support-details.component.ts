@@ -72,14 +72,14 @@ export class SupportDetailsComponent implements OnInit {
     const date = d || new Date();
     return this.evacueeSessionService.isPaperBased
       ? moment(date).isBetween(
-          moment(this.stepSupportsService?.evacFile?.task?.from),
-          moment(this.stepSupportsService?.evacFile?.task?.to),
+          moment(this.evacueeSessionService?.evacFile?.task?.from),
+          moment(this.evacueeSessionService?.evacFile?.task?.to),
           'D',
           '[]'
         )
       : moment(date).isBetween(
           moment(new Date()),
-          moment(this.stepSupportsService?.evacFile?.task?.to),
+          moment(this.evacueeSessionService?.evacFile?.task?.to),
           'D',
           '[]'
         );
@@ -88,7 +88,7 @@ export class SupportDetailsComponent implements OnInit {
   paperCompletedDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
     return moment(date).isBetween(
-      moment(this.stepSupportsService?.evacFile?.task?.from),
+      moment(this.evacueeSessionService?.evacFile?.task?.from),
       moment(new Date()),
       'D',
       '[]'
@@ -136,11 +136,11 @@ export class SupportDetailsComponent implements OnInit {
 
   calculateNoOfDays() {
     const taskStartDate = this.datePipe.transform(
-      this.stepSupportsService?.evacFile?.task?.from,
+      this.evacueeSessionService?.evacFile?.task?.from,
       'dd-MMM-yyyy'
     );
     const taskEndDate = this.datePipe.transform(
-      this.stepSupportsService?.evacFile?.task?.to,
+      this.evacueeSessionService?.evacFile?.task?.to,
       'dd-MMM-yyyy'
     );
     const dateDiff =
@@ -232,7 +232,7 @@ export class SupportDetailsComponent implements OnInit {
     const members = this.supportDetailsForm.get('members') as FormArray;
     if ($event.checked) {
       members.clear();
-      this.stepSupportsService?.evacFile?.needsAssessment?.householdMembers.forEach(
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.forEach(
         (member) => {
           members.push(new FormControl(member));
         }
@@ -264,7 +264,7 @@ export class SupportDetailsComponent implements OnInit {
   isChecked() {
     return (
       this.supportDetailsForm.get('members').value.length ===
-      this.stepSupportsService?.evacFile?.needsAssessment?.householdMembers
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers
         .length
     );
   }

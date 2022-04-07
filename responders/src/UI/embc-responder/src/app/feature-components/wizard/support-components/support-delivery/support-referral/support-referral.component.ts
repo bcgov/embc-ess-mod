@@ -8,6 +8,7 @@ import * as globalConst from '../../../../../core/services/global-constants';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 import { MatSelectChange } from '@angular/material/select';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-support-referral',
@@ -27,7 +28,8 @@ export class SupportReferralComponent implements OnInit {
 
   constructor(
     public stepSupportsService: StepSupportsService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    public evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +96,7 @@ export class SupportReferralComponent implements OnInit {
 
   populateExistingIssuedTo() {
     const allMembers: EvacuationFileHouseholdMember[] =
-      this.stepSupportsService?.evacFile?.needsAssessment?.householdMembers;
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers;
 
     if (this.editFlag) {
       if (this.stepSupportsService?.supportDelivery?.issuedTo !== undefined) {

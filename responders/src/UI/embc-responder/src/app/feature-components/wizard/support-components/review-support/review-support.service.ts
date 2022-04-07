@@ -72,7 +72,7 @@ export class ReviewSupportService {
       .getEvacFile(this.evacueeSessionService.essFileNumber)
       .subscribe({
         next: (file) => {
-          this.stepSupportsService.currentNeedsAssessment =
+          this.evacueeSessionService.currentNeedsAssessment =
             file.needsAssessment;
           // console.log(file.supports);
           const supportModel = [];

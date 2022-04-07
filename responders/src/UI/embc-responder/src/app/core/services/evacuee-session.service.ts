@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { EvacuationFileHouseholdMember } from '../api/models';
+import { EvacuationFileHouseholdMember, NeedsAssessment } from '../api/models';
+import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { EvacueeMetaDataModel } from '../models/evacuee-metadata.model';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { WizardType } from '../models/wizard-type.model';
@@ -19,8 +20,27 @@ export class EvacueeSessionService {
   private memberFlag: boolean;
   private isPaperBasedVal: boolean;
   private evacueeMetaDataVal: EvacueeMetaDataModel;
+  private currentNeedsAssessmentVal: NeedsAssessment;
+
+  private evacFileVal: EvacuationFileModel;
 
   constructor(private cacheService: CacheService) {}
+
+  set currentNeedsAssessment(currentNeedsAssessmentVal: NeedsAssessment) {
+    this.currentNeedsAssessmentVal = currentNeedsAssessmentVal;
+  }
+
+  get currentNeedsAssessment(): NeedsAssessment {
+    return this.currentNeedsAssessmentVal;
+  }
+
+  set evacFile(evacFileVal: EvacuationFileModel) {
+    this.evacFileVal = evacFileVal;
+  }
+
+  get evacFile(): EvacuationFileModel {
+    return this.evacFileVal;
+  }
 
   set profileId(profileIdVal: string) {
     this.profileIdVal = profileIdVal;

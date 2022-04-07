@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Code } from 'src/app/core/api/models';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 
@@ -23,7 +24,8 @@ export class SelectSupportComponent implements OnInit {
     public stepSupportsService: StepSupportsService,
     private loadEvacueeListService: LoadEvacueeListService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
