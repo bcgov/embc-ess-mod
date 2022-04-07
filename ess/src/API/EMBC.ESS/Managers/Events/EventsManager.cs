@@ -26,11 +26,13 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Managers.Events
 {
     public class EventsManager
     {
+        private readonly ILogger<EventsManager> logger;
         private readonly IMapper mapper;
         private readonly IEvacueesRepository evacueesRepository;
         private readonly IInvitationRepository invitationRepository;
@@ -54,6 +56,7 @@ namespace EMBC.ESS.Managers.Events
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
 
         public EventsManager(
+            ILogger<EventsManager> logger,
             IMapper mapper,
             IEvacueesRepository contactRepository,
             IInvitationRepository invitationRepository,
@@ -74,6 +77,7 @@ namespace EMBC.ESS.Managers.Events
             IConfiguration configuration,
             ISupportingEngine supportingEngine)
         {
+            this.logger = logger;
             this.mapper = mapper;
             this.evacueesRepository = contactRepository;
             this.invitationRepository = invitationRepository;
@@ -703,30 +707,44 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand _)
         {
-            // get all pending scan supports
-            var pendingScanSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+            var foundSupports = true;
+            //handle limited number of pending support at a time
+            while (foundSupports)
             {
-                ByStatus = Resources.Supports.SupportStatus.PendingScan
-            })).Items;
-
-            // scan and get flags
-            var response = (CheckSupportComplianceResponse)await supportingEngine.Validate(new CheckSupportComplianceRequest { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports) });
-
-            foreach (var support in response.Flags)
-            {
-                // store flags
-                await supportRepository.Manage(new SetFlagsCommand
+                // get all pending scan supports
+                var pendingScanSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
                 {
-                    SupportId = support.Key.Id,
-                    Flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(support.Value)
-                });
-            }
+                    ByStatus = Resources.Supports.SupportStatus.PendingScan,
+                    LimitNumberOfResults = 100
+                })).Items.ToArray();
 
-            // submit supports for approval
-            await supportRepository.Manage(new SubmitSupportForApprovalCommand
-            {
-                SupportIds = pendingScanSupports.Select(s => s.Id).ToArray()
-            });
+                foundSupports = pendingScanSupports.Any();
+
+                if (foundSupports)
+                {
+                    logger.LogInformation("Start processing {0} pending scan supports", pendingScanSupports.Length);
+                    // scan and get flags
+                    var response = (CheckSupportComplianceResponse)await supportingEngine.Validate(new CheckSupportComplianceRequest { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports) });
+
+                    foreach (var support in response.Flags)
+                    {
+                        // store flags
+                        await supportRepository.Manage(new SetFlagsCommand
+                        {
+                            SupportId = support.Key.Id,
+                            Flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(support.Value)
+                        });
+                    }
+
+                    // submit supports for approval
+                    await supportRepository.Manage(new SubmitSupportForApprovalCommand
+                    {
+                        SupportIds = pendingScanSupports.Select(s => s.Id).ToArray()
+                    });
+
+                    logger.LogInformation("End processing pending scan supports");
+                }
+            }
         }
     }
 }
