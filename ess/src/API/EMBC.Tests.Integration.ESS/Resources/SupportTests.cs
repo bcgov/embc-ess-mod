@@ -303,5 +303,19 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supports.ShouldNotBeEmpty();
             supports.ShouldAllBe(s => s.Status == status);
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task AssignToApprovalQueue_Support_Assigned()
+        {
+            var pendingScanSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByStatus = SupportStatus.PendingScan })).Items.First();
+
+            await supportRepository.Manage(new SubmitSupportForApprovalCommand
+            {
+                SupportIds = new[] { pendingScanSupport.Id }
+            });
+
+            var pendingApprovalSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = pendingScanSupport.Id })).Items.ShouldHaveSingleItem();
+            pendingApprovalSupport.Status.ShouldBe(SupportStatus.PendingApproval);
+        }
     }
 }
