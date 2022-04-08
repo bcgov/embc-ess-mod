@@ -91,7 +91,7 @@ export class EditTeamMemberComponent implements OnInit {
         [this.customValidation.whitespaceValidator()]
       ],
       userName: [
-        { value: this.teamMember.userName, disabled: this.isEditAllowed() },
+        { value: this.teamMember.userName, disabled: !this.isEditAllowed() },
         [this.customValidation.whitespaceValidator()]
       ],
       role: [
