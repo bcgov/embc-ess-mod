@@ -305,6 +305,18 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task QuerySupports_WithLimit_ReturnCorrectSupports()
+        {
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery
+            {
+                ByStatus = SupportStatus.PendingApproval,
+                LimitNumberOfResults = 2
+            })).Items;
+
+            supports.Count().ShouldBeLessThanOrEqualTo(2);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task AssignToApprovalQueue_Support_Assigned()
         {
             var pendingScanSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByStatus = SupportStatus.PendingScan })).Items.First();

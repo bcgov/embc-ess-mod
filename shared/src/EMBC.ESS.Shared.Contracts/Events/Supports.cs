@@ -79,6 +79,9 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class ProcessPendingSupportsCommand : Command
     { }
 
+    public class ProcessApprovedSupportsCommand : Command
+    { }
+
     [JsonConverter(typeof(PolymorphicJsonConverter<Support>))]
     public abstract class Support
     {
@@ -221,6 +224,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         UserInitiatedCancellation
     }
 
+    [JsonConverter(typeof(PolymorphicJsonConverter<SupportFlag>))]
     public abstract class SupportFlag
     {
     }

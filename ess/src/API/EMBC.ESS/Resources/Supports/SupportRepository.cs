@@ -88,7 +88,7 @@ namespace EMBC.ESS.Resources.Supports
                 if (support == null) throw new InvalidOperationException($"Support {supportId} not found");
                 await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport));
 
-                var queue = queues.Single(q => q.queueid == (support.era_era_evacueesupport_era_supportflag_EvacueeSupport.Any() ? ApprovalQueueId : ReviewQueueId));
+                var queue = queues.Single(q => q.queueid == (support.era_era_evacueesupport_era_supportflag_EvacueeSupport.Any() ? ReviewQueueId : ApprovalQueueId));
                 var queueItem = new queueitem
                 {
                     queueitemid = Guid.NewGuid(),
@@ -232,6 +232,8 @@ namespace EMBC.ESS.Resources.Supports
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByExternalReferenceId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByExternalReferenceId);
             if (query.ByStatus.HasValue) supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
+            if (!query.HasNoPayments ?? false) supportsQuery = supportsQuery.Where(s => s.era_era_etransfertransaction_era_evacueesuppo.Any());
+            if (query.LimitNumberOfResults.HasValue) supportsQuery = supportsQuery.Take(query.LimitNumberOfResults.Value);
 
             return (await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync()).ToArray();
         }
