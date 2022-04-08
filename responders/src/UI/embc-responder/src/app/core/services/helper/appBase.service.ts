@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
-import { AppBaseModel, SelectedPathType } from '../../models/appBase.model';
-import { EssTaskModel } from '../../models/ess-task.model';
+import {
+  AppBaseModel,
+  EtransferContent,
+  EtransferRequirementStatus,
+} from '../../models/appBase.model';
 import { CacheService } from '../cache.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppBaseService {
+  public static etransferRequirementDefault?: EtransferRequirementStatus[] = [
+    { statement: EtransferContent.bcServicesCard, status: false },
+    { statement: EtransferContent.isNotMinor, status: false },
+    { statement: EtransferContent.acceptTransfer, status: true },
+    { statement: EtransferContent.window, status: true }
+  ];
   private appModelVal: AppBaseModel;
 
   constructor(public cacheService: CacheService) {}

@@ -32,7 +32,6 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { ReferralCreationService } from './referral-creation.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
-import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -59,7 +58,6 @@ export class StepSupportsService {
     private referralService: ReferralCreationService,
     private registrationsService: RegistrationsService,
     private dateConversionService: DateConversionService,
-    private featureService: EtransferFeaturesService,
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private evacueeSessionService: EvacueeSessionService
@@ -100,7 +98,8 @@ export class StepSupportsService {
   set supportTypeToAdd(supportTypeToAddVal: Code) {
     this.supportTypeToAddVal = supportTypeToAddVal;
     this.cacheService.set('supportType', JSON.stringify(supportTypeToAddVal));
-    this.featureService.selectedSupport = supportTypeToAddVal;
+    this.appBaseService.appModel.supportProperties.selectedSupport =
+      supportTypeToAddVal;
     this.computeState.triggerEvent();
   }
 

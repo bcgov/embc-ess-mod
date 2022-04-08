@@ -6,23 +6,19 @@ import {
   EtransferRequirementStatus,
   EtransferContent
 } from '../../models/appBase.model';
-import { Compute } from '../compute/compute';
-import { AppBaseService } from './appBase.service';
-import { EtransferFeaturesService } from './etransferfeatures.service';
+import { Compute } from './compute';
+import { AppBaseService } from '../helper/appBase.service';
 
 @Injectable()
 export class ComputeFeaturesService implements Compute {
-  constructor(
-    private featuresService: EtransferFeaturesService,
-    private appBaseService: AppBaseService
-  ) {}
+  constructor(private appBaseService: AppBaseService) {}
 
   execute() {
     this.computeEtransferStatus();
     this.computeEtransferEligibility();
     this.computeEtransferRequirementContent();
     this.triggerCaching();
-    // console.log(this.featuresService);
+    console.log(this.appBaseService);
   }
 
   triggerCaching() {
@@ -30,7 +26,7 @@ export class ComputeFeaturesService implements Compute {
   }
 
   private computeEtransferEligibility() {
-    this.featuresService.isRegistrantEtransferEligible =
+    this.appBaseService.appModel.etransferProperties.isRegistrantEtransferEligible =
       !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.isMinor &&
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
@@ -41,26 +37,33 @@ export class ComputeFeaturesService implements Compute {
     if (
       this.appBaseService?.appModel?.selectedUserPathway ===
         SelectedPathType.paperBased ||
-      !this.featuresService.interacAllowed
+      !this.appBaseService?.appModel?.etransferProperties?.interacAllowed
     ) {
-      this.featuresService.etransferStatus = ETransferStatus.unavailable;
+      this.appBaseService.appModel.etransferProperties.etransferStatus =
+        ETransferStatus.unavailable;
     } else if (
-      this.featuresService?.selectedSupport?.value ===
-        SupportSubCategory.Lodging_Hotel ||
-      this.featuresService?.selectedSupport?.value ===
-        SupportSubCategory.Lodging_Billeting ||
-      this.featuresService?.selectedSupport?.value ===
-        SupportSubCategory.Lodging_Group ||
-      this.featuresService?.selectedSupport?.value ===
-        SupportSubCategory.Transportation_Other ||
-      this.featuresService?.selectedSupport?.value ===
-        SupportSubCategory.Transportation_Taxi
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport
+        ?.value === SupportSubCategory.Lodging_Hotel ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport
+        ?.value === SupportSubCategory.Lodging_Billeting ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport
+        ?.value === SupportSubCategory.Lodging_Group ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport
+        ?.value === SupportSubCategory.Transportation_Other ||
+      this.appBaseService?.appModel?.supportProperties?.selectedSupport
+        ?.value === SupportSubCategory.Transportation_Taxi
     ) {
-      this.featuresService.etransferStatus = ETransferStatus.notAllowed;
-    } else if (!this.featuresService?.isRegistrantEtransferEligible) {
-      this.featuresService.etransferStatus = ETransferStatus.inEligible;
+      this.appBaseService.appModel.etransferProperties.etransferStatus =
+        ETransferStatus.notAllowed;
+    } else if (
+      !this.appBaseService?.appModel?.etransferProperties
+        ?.isRegistrantEtransferEligible
+    ) {
+      this.appBaseService.appModel.etransferProperties.etransferStatus =
+        ETransferStatus.inEligible;
     } else {
-      this.featuresService.etransferStatus = ETransferStatus.available;
+      this.appBaseService.appModel.etransferProperties.etransferStatus =
+        ETransferStatus.available;
     }
   }
 
@@ -68,7 +71,7 @@ export class ComputeFeaturesService implements Compute {
     const requirementContent: Array<EtransferRequirementStatus> =
       new Array<EtransferRequirementStatus>();
 
-    for (const defaultVal of EtransferFeaturesService.etransferRequirementDefault) {
+    for (const defaultVal of AppBaseService.etransferRequirementDefault) {
       if (defaultVal.statement === EtransferContent.isNotMinor) {
         requirementContent.push(
           Object.assign(new EtransferRequirementStatus(), {
@@ -93,6 +96,7 @@ export class ComputeFeaturesService implements Compute {
         );
       }
     }
-    this.featuresService.etransferRequirement = requirementContent;
+    this.appBaseService.appModel.etransferProperties.etransferRequirement =
+      requirementContent;
   }
 }

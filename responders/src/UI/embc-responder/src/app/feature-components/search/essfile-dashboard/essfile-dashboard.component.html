@@ -188,18 +188,28 @@
         <span
           class="bold"
           [ngClass]="{
-            'file-complete': featureService?.isRegistrantEtransferEligible,
-            ineligible: !featureService?.isRegistrantEtransferEligible
+            'file-complete':
+              appBaseService?.appModel?.etransferProperties
+                ?.isRegistrantEtransferEligible,
+            ineligible:
+              !appBaseService?.appModel?.etransferProperties
+                ?.isRegistrantEtransferEligible
           }"
           >{{
-            featureService?.isRegistrantEtransferEligible
+            appBaseService?.appModel?.etransferProperties
+              ?.isRegistrantEtransferEligible
               ? 'Eligible'
               : 'Ineligible'
           }}</span
         >
       </div>
     </div>
-    <div *ngIf="!featureService?.isRegistrantEtransferEligible">
+    <div
+      *ngIf="
+        !appBaseService?.appModel?.etransferProperties
+          ?.isRegistrantEtransferEligible
+      "
+    >
       <div *ngIf="isMinor; else bcscCheck" class="row">
         <div class="col-md-12 bold">
           {{
@@ -229,7 +239,13 @@
       </ng-template>
     </div>
 
-    <div *ngIf="featureService?.isRegistrantEtransferEligible" class="row">
+    <div
+      *ngIf="
+        appBaseService?.appModel?.etransferProperties
+          ?.isRegistrantEtransferEligible
+      "
+      class="row"
+    >
       <div class="col-md-12 bold">
         {{
           appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
