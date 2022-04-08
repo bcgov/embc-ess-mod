@@ -86,7 +86,7 @@
                 >
               </mat-form-field>
             </div>
-            <div *ngIf="isEditAllowed()" class="col-md-8">
+            <div *ngIf="!isEditAllowed()" class="col-md-8">
               <p class="disabled">
                 Username cannot be edited as the user has already logged in with
                 this BCeID. If the username has been changed in the BCeID
