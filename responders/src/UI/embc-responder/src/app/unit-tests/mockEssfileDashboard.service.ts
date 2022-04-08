@@ -19,7 +19,7 @@ export class MockEssfileDashboardService extends EssfileDashboardService {
     this.essFileValue = value;
   }
 
-  getPossibleProfileMatches(
+  getPossibleProfileMatchesCombinedData(
     firstName: string,
     lastName: string,
     dateOfBirth: string

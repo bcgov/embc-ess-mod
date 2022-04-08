@@ -4,8 +4,7 @@ import { MatAccordion } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import {
   EvacuationFileHouseholdMember,
-  HouseholdMemberType,
-  RegistrantProfile
+  HouseholdMemberType
 } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -19,6 +18,8 @@ import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkReg
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
 @Component({
   selector: 'app-household-member',
@@ -28,14 +29,12 @@ import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-
 export class HouseholdMemberComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Input() essFile: EvacuationFileModel;
+  public color = '#169BD5';
   currentlyOpenedItemIndex = -1;
   registrantId: string;
   isLoading = false;
   matchedProfileCount: number;
   matchedProfiles: LinkRegistrantProfileModel[];
-  linkedFlag = false;
-  public color = '#169BD5';
-  selectedHouseholdMember: LinkRegistrantProfileModel;
   displayLinks: string;
 
   constructor(
@@ -44,7 +43,8 @@ export class HouseholdMemberComponent implements OnInit {
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     public evacueeSessionService: EvacueeSessionService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {}
@@ -69,10 +69,18 @@ export class HouseholdMemberComponent implements OnInit {
     houseHoldMember: EvacuationFileHouseholdMember
   ): void {
     this.currentlyOpenedItemIndex = itemIndex;
-    this.isLoading = !this.isLoading;
-    if (houseHoldMember.type === HouseholdMemberType.HouseholdMember) {
+    this.displayLinks = undefined;
+    this.matchedProfileCount = 0;
+    this.matchedProfiles = undefined;
+    if (
+      houseHoldMember.type === HouseholdMemberType.HouseholdMember &&
+      this.appBaseService.appModel.selectedUserPathway ===
+        SelectedPathType.digital &&
+      !houseHoldMember.isMinor
+    ) {
+      this.isLoading = !this.isLoading;
       this.essfileDashboardService
-        .getPossibleProfileMatches(
+        .getPossibleProfileMatchesCombinedData(
           houseHoldMember.firstName,
           houseHoldMember.lastName,
           houseHoldMember.dateOfBirth
@@ -81,18 +89,24 @@ export class HouseholdMemberComponent implements OnInit {
           next: (value: LinkRegistrantProfileModel[]) => {
             this.matchedProfileCount = value.length;
             this.matchedProfiles = value;
-            if (value.length > 1) {
-              this.linkedFlag = true;
+
+            if (this.matchedProfileCount === 0) {
+              this.displayLinks = 'create-profile';
+            } else if (
+              (this.matchedProfiles[0].hasSecurityQuestions &&
+                this.matchedProfileCount === 1) ||
+              this.matchedProfileCount > 1
+            ) {
+              this.displayLinks = 'link-profile';
+            } else if (
+              !this.matchedProfiles[0].hasSecurityQuestions &&
+              this.matchedProfileCount === 1
+            ) {
+              this.displayLinks = 'no-security-questions';
             } else {
-              this.linkedFlag = false;
+              this.displayLinks = null;
             }
-            if (value.length === 1) {
-              this.selectedHouseholdMember = value[0];
-            }
-            setTimeout(() => {
-              this.linkedProfileDisplay(houseHoldMember);
-              this.isLoading = !this.isLoading;
-            }, 500);
+            this.isLoading = !this.isLoading;
           },
           error: (error) => {
             this.isLoading = !this.isLoading;
@@ -100,12 +114,21 @@ export class HouseholdMemberComponent implements OnInit {
             this.alertService.setAlert('danger', globalConst.genericError);
           }
         });
-    } else {
-      this.linkedFlag = false;
-      this.selectedHouseholdMember = undefined;
-      this.displayLinks = null;
-      this.matchedProfileCount = 0;
-      this.matchedProfiles = undefined;
+    } else if (houseHoldMember.type === HouseholdMemberType.Registrant) {
+      this.isLoading = !this.isLoading;
+      if (
+        this.appBaseService.appModel.selectedUserPathway ===
+        SelectedPathType.digital
+      ) {
+        this.displayLinks = 'view-profile';
+      } else if (
+        this.appBaseService.appModel.selectedUserPathway ===
+          SelectedPathType.paperBased &&
+        houseHoldMember?.linkedRegistrantId ===
+          this.evacueeSessionService?.evacueeMetaData?.registrantId
+      ) {
+        this.displayLinks = 'view-profile';
+      }
       this.isLoading = !this.isLoading;
     }
   }
@@ -163,32 +186,6 @@ export class HouseholdMemberComponent implements OnInit {
       this.multipleMatchedRegistrantLink(
         this.createMultipleRegistrantModel(memberDetails)
       );
-    }
-  }
-
-  linkedProfileDisplay(file: EvacuationFileHouseholdMember): void {
-    if (
-      !this.evacueeSessionService?.isPaperBased &&
-      file?.linkedRegistrantId === null &&
-      !file?.isMinor
-    ) {
-      if (this.matchedProfileCount === 0) {
-        this.displayLinks = 'create-profile';
-      } else if (
-        this.selectedHouseholdMember?.hasSecurityQuestions &&
-        this.matchedProfileCount === 1
-      ) {
-        this.displayLinks = 'link-profile';
-      } else if (this.linkedFlag) {
-        this.displayLinks = 'link-profile';
-      } else if (
-        !this.selectedHouseholdMember?.hasSecurityQuestions &&
-        this.matchedProfileCount === 1
-      ) {
-        this.displayLinks = 'no-security-questions';
-      }
-    } else {
-      this.displayLinks = null;
     }
   }
 
