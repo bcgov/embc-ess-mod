@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Payments
 {
@@ -26,6 +28,14 @@ namespace EMBC.ESS.Resources.Payments
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
 
+        public async Task<QueryPaymentResponse> Query(QueryPaymentRequest request) =>
+        request switch
+        {
+            SearchPaymentRequest r => await Handle(r),
+
+            _ => throw new NotSupportedException($"type {request.GetType().Name}")
+        };
+
         private async Task<SavePaymentResponse> Handle(SavePaymentRequest request)
         {
             var ctx = essContextFactory.Create();
@@ -44,6 +54,8 @@ namespace EMBC.ESS.Resources.Payments
             }
             if (request.Payment is InteracSupportPayment ip)
             {
+                await ctx.SaveChangesAsync();
+
                 foreach (var supportId in ip.LinkedSupportIds)
                 {
                     var support = ctx.era_evacueesupports.Where(s => s.era_name == supportId).SingleOrDefault();
@@ -61,10 +73,23 @@ namespace EMBC.ESS.Resources.Payments
             return new SavePaymentResponse { Id = id };
         }
 
-        public Task<QueryPaymentResponse> Query(QueryPaymentRequest request) =>
-            request switch
+        private async Task<SearchPaymentResponse> Handle(SearchPaymentRequest request)
+        {
+            var ctx = essContextFactory.Create();
+
+            IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
+            if (!string.IsNullOrEmpty(request.ById)) query = query.Where(tx => tx.era_name == request.ById);
+            if (request.ByStatus.HasValue) query = query.Where(tx => tx.statecode == (int)request.ByStatus.Value);
+
+            var txs = (await ((DataServiceQuery<era_etransfertransaction>)query).GetAllPagesAsync()).ToArray();
+            foreach (var tx in txs)
             {
-                _ => throw new NotSupportedException($"type {request.GetType().Name}")
-            };
+                await ctx.LoadPropertyAsync(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo));
+            }
+
+            ctx.DetachAll();
+
+            return new SearchPaymentResponse { Items = mapper.Map<IEnumerable<Payment>>(txs).ToArray() };
+        }
     }
 }

@@ -63,13 +63,16 @@ namespace EMBC.ESS.Resources.Payments
         public string SecurityAnswer { get; set; }
         public string? NotificationEmail { get; set; }
         public string? NotificationPhone { get; set; }
-        public InteracNotificationMethod NotificationMethod { get; set; }
     }
 
-    public enum InteracNotificationMethod
+    public class SearchPaymentRequest : QueryPaymentRequest
     {
-        Both,
-        Email,
-        Phone
+        public PaymentStatus? ByStatus { get; set; }
+        public string ById { get; set; }
+    }
+
+    public class SearchPaymentResponse : QueryPaymentResponse
+    {
+        public IEnumerable<Payment> Items { get; set; } = Array.Empty<Payment>();
     }
 }
