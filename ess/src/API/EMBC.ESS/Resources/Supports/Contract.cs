@@ -94,6 +94,7 @@ namespace EMBC.ESS.Resources.Supports
         public string ByEvacuationFileId { get; set; }
         public SupportStatus? ByStatus { get; set; }
         public int? LimitNumberOfResults { get; set; }
+        public bool? HasNoPayments { get; set; }
     }
 
     public class SearchSupportQueryResult : SupportQueryResult
