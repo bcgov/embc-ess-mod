@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { RegistrationResult } from '../api/models';
+import { RegistrationResult, Support } from '../api/models';
 import { EvacuationFile } from '../api/models/evacuation-file';
 import { RegistrationsService } from '../api/services';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
-import { EvacueeSessionService } from './evacuee-session.service';
 import { LocationsService } from './locations.service';
 
 @Injectable({
@@ -14,8 +13,7 @@ import { LocationsService } from './locations.service';
 export class EssFileService {
   constructor(
     private registrationsService: RegistrationsService,
-    private locationsService: LocationsService,
-    private evacueeSessionService: EvacueeSessionService
+    private locationsService: LocationsService
   ) {}
 
   /**
@@ -45,15 +43,22 @@ export class EssFileService {
       );
   }
 
-  // public getSupports(
-  //   externalReferenceId?: string,
-  //   fileId?: string
-  // ): Observable<SupportSummary[]> {
-  //   return this.registrationsService.registrationsSearchSupports({
-  //     externalReferenceId: externalReferenceId,
-  //     fileId: fileId
-  //   });
-  // }
+  /**
+   * Gets supports for file or paper file
+   *
+   * @param externalReferenceId
+   * @param fileId
+   * @returns array of support
+   */
+  public getSupports(
+    fileId?: string,
+    externalReferenceId?: string
+  ): Observable<Support[]> {
+    return this.registrationsService.registrationsSearchSupports({
+      externalReferenceId,
+      fileId
+    });
+  }
 
   /**
    * Create new ESS File and fetches the created ESS File

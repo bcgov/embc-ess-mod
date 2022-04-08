@@ -262,11 +262,11 @@ export class ReviewSupportComponent implements OnInit {
    */
   getMemberFullName(memberId: string): string {
     const lastName =
-      this.stepSupportsService.evacFile.needsAssessment.householdMembers.find(
+      this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find(
         (member) => member.id === memberId
       ).lastName;
     const firstName =
-      this.stepSupportsService.evacFile.needsAssessment.householdMembers.find(
+      this.evacueeSessionService.evacFile.needsAssessment.householdMembers.find(
         (member) => member.id === memberId
       ).firstName;
 
@@ -334,7 +334,7 @@ export class ReviewSupportComponent implements OnInit {
   private saveDraftSupports() {
     this.showLoader = !this.showLoader;
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
-    const fileId: string = this.stepSupportsServices.evacFile.id;
+    const fileId: string = this.evacueeSessionService.evacFile.id;
     this.reviewSupportService
       .savePaperSupports(fileId, supportsDraft)
       .subscribe({
@@ -358,7 +358,7 @@ export class ReviewSupportComponent implements OnInit {
   private processDraftSupports(): void {
     this.showLoader = !this.showLoader;
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
-    const fileId: string = this.stepSupportsServices.evacFile.id;
+    const fileId: string = this.evacueeSessionService.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
       next: (response) => {
         response
