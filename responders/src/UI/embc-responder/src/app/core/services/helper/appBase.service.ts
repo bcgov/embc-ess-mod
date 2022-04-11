@@ -1,13 +1,24 @@
 import { Injectable } from '@angular/core';
-import { AppBaseModel, SelectedPathType } from '../../models/appBase.model';
-import { EssTaskModel } from '../../models/ess-task.model';
+import {
+  AppBaseModel,
+  EtransferContent,
+  EtransferRequirementStatus,
+  EtransferProperties
+} from '../../models/appBase.model';
 import { CacheService } from '../cache.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppBaseService {
+  public static etransferRequirementDefault?: EtransferRequirementStatus[] = [
+    { statement: EtransferContent.bcServicesCard, status: false },
+    { statement: EtransferContent.isNotMinor, status: false },
+    { statement: EtransferContent.acceptTransfer, status: true },
+    { statement: EtransferContent.window, status: true }
+  ];
   private appModelVal: AppBaseModel;
+  private etransferPropertiesVal: EtransferProperties;
 
   constructor(public cacheService: CacheService) {}
 
@@ -21,13 +32,22 @@ export class AppBaseService {
     this.appModelVal = { ...this.appModel, ...value };
   }
 
+  public get etransferProperties(): EtransferProperties {
+    return this.etransferPropertiesVal
+      ? this.etransferPropertiesVal
+      : JSON.parse(this.cacheService.get('eTransferProps'));
+  }
+  public set etransferProperties(value: EtransferProperties) {
+    this.etransferPropertiesVal = { ...this.etransferProperties, ...value };
+  }
+
   clear() {
     this.appModelVal = undefined;
     this.cacheService.remove('appCache');
   }
 
   setCache() {
-    console.log(this.appModel);
+    this.cacheService.set('eTransferProps', this.etransferProperties);
     this.cacheService.set('appCache', this.appModel);
   }
 }

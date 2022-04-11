@@ -104,7 +104,9 @@
           *ngIf="
             file?.type === 'Registrant' &&
             evacueeSessionService?.isPaperBased &&
-            file?.id === evacueeSessionService?.evacueeMetaData?.registrantId
+            file?.id ===
+              appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext?.id
           "
           class="row button-div"
         >

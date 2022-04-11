@@ -102,7 +102,8 @@
       <mat-card
         class="support-delivery-card"
         [class.disabled]="
-          featureService?.etransferStatus !== eTransferStatus.available
+          appBaseService?.etransferProperties?.etransferStatus !==
+          eTransferStatus.available
         "
         [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
         (click)="setSupportMethod(supportMethod.ETransfer)"
@@ -145,7 +146,10 @@
         </div>
 
         <div
-          *ngIf="featureService?.etransferStatus !== eTransferStatus.available"
+          *ngIf="
+            appBaseService?.etransferProperties?.etransferStatus !==
+            eTransferStatus.available
+          "
           class="etransfer-ineligible"
         >
           <p>Evacuee Ineligible</p>
@@ -153,7 +157,12 @@
 
         <div class="requirements">
           <p><b>Requirements:</b></p>
-          <div *ngFor="let req of featureService.etransferRequirement">
+          <div
+            *ngFor="
+              let req of appBaseService?.etransferProperties
+                ?.etransferRequirement
+            "
+          >
             <img
               *ngIf="req.status"
               src="/assets/images/wizard/eligible.svg"

@@ -5,6 +5,8 @@ import { RegistrationResult, Support } from '../api/models';
 import { EvacuationFile } from '../api/models/evacuation-file';
 import { RegistrationsService } from '../api/services';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
+import { ComputeRulesService } from './computeRules.service';
+import { AppBaseService } from './helper/appBase.service';
 import { LocationsService } from './locations.service';
 
 @Injectable({
@@ -13,7 +15,9 @@ import { LocationsService } from './locations.service';
 export class EssFileService {
   constructor(
     private registrationsService: RegistrationsService,
-    private locationsService: LocationsService
+    private locationsService: LocationsService,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   /**
@@ -29,7 +33,7 @@ export class EssFileService {
       })
       .pipe(
         map((file: EvacuationFile): EvacuationFileModel => {
-          return {
+          const fileModel = {
             ...file,
             evacuatedFromAddress:
               this.locationsService.getAddressModelFromAddress(
@@ -39,6 +43,14 @@ export class EssFileService {
               file?.task?.communityCode
             )
           };
+          this.appBaseService.appModel.selectedEssFile = fileModel;
+          this.appBaseService.etransferProperties = {
+            interacAllowed: fileModel?.task?.features.find(
+              (feature) => feature?.name === 'digital-support-etransfer'
+            )?.enabled
+          };
+          this.computeState.triggerEvent();
+          return fileModel;
         })
       );
   }
@@ -76,14 +88,6 @@ export class EssFileService {
         )
       );
   }
-
-  // public getEtransferEligibility(
-  //   registrantId: string
-  // ): Observable<RegistrantFeaturesResponse> {
-  //   return this.registrationsService.registrationsGetRegistrantFeatures({
-  //     registrantId
-  //   });
-  // }
 
   /**
    * Update existing ESS File

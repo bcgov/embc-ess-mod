@@ -19,6 +19,7 @@ import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkReg
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-household-member',
@@ -44,7 +45,8 @@ export class HouseholdMemberComponent implements OnInit {
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     public evacueeSessionService: EvacueeSessionService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    public appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {}
