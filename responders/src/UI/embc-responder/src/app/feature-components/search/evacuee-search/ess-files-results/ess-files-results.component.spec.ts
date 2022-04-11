@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { EssfileDashboardComponent } from '../../essfile-dashboard/essfile-dashboard.component';
 import { EssfileSecurityPhraseComponent } from '../../essfile-security-phrase/essfile-security-phrase.component';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('EssFilesResultsComponent', () => {
   let component: EssFilesResultsComponent;
@@ -145,7 +146,8 @@ describe('EssFilesResultsComponent', () => {
         {
           provide: EssFileSecurityPhraseService,
           useClass: MockEssFileSecurityPhraseService
-        }
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });

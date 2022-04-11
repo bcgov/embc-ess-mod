@@ -29,7 +29,6 @@ import { ReviewSupportService } from './review-support.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { EtransferFeaturesService } from '../../../../core/services/helper/etransferfeatures.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({

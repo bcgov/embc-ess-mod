@@ -13,7 +13,7 @@ import { DatePipe } from '@angular/common';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { Compute } from './core/services/compute/compute';
 import { ComputeAppBaseService } from './core/services/compute/computeAppBase.service';
-import { ComputeFeaturesService } from './core/services/helper/computeFeatures.service';
+import { ComputeFeaturesService } from './core/services/compute/computeFeatures.service';
 
 export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
 @NgModule({

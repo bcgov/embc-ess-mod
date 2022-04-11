@@ -26,7 +26,8 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essfile-security-phrase.service';
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
-import { EvacueeMetaDataModel } from 'src/app/core/models/evacuee-metadata.model';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -46,6 +47,7 @@ export class EssFilesResultsComponent
     private evacueeSessionService: EvacueeSessionService,
     private essFileSecurityPhraseService: EssFileSecurityPhraseService,
     private evacueeSearchResultsService: EvacueeSearchResultsService,
+    private evacueeProfileService: EvacueeProfileService,
     private router: Router,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
@@ -77,7 +79,7 @@ export class EssFilesResultsComponent
    */
   openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
     this.evacueeSessionService.essFileNumber = selectedESSFile.id;
-    this.setFileMetaData(selectedESSFile);
+    this.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
       if (
         this.evacueeSearchService.paperBasedEssFile !==
@@ -174,16 +176,22 @@ export class EssFilesResultsComponent
     });
   }
 
-  private setFileMetaData(selectedFile: EvacuationFileSearchResultModel) {
+  private getSearchedUserProfile(
+    selectedFile: EvacuationFileSearchResultModel
+  ) {
     const primaryMember = selectedFile.householdMembers.find(
       (member) => member.isSearchMatch
     );
-    const metaData: EvacueeMetaDataModel = {
-      firstName: primaryMember.firstName,
-      lastName: primaryMember.lastName,
-      registrantId: primaryMember.id,
-      fileId: selectedFile.id
-    };
-    this.evacueeSessionService.evacueeMetaData = metaData;
+    this.getEvacueeProfile(primaryMember.id);
+  }
+
+  private getEvacueeProfile(evacueeProfileId): void {
+    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
+      next: (profile: RegistrantProfileModel) => {},
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.getProfileError);
+      }
+    });
   }
 }
