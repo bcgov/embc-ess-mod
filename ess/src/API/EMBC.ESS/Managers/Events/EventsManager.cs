@@ -365,7 +365,7 @@ namespace EMBC.ESS.Managers.Events
             if (contact == null) throw new NotFoundException($"registrant {query.RegistrantId} not found", query.RegistrantId);
 
             var numberOfCorrectAnswers = query.Answers
-                .Select(a => contact.SecurityQuestions.Any(q => a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase) && a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase)))
+                .Select(a => contact.SecurityQuestions.Any(q => a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase) && a.Question.Equals(q.Question, StringComparison.OrdinalIgnoreCase)))
                 .Count(a => a);
             return new VerifySecurityQuestionsResponse { NumberOfCorrectAnswers = numberOfCorrectAnswers };
         }
