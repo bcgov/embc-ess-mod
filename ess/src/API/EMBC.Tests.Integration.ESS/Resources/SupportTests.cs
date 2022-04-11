@@ -49,7 +49,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                        NotificationMobile = "+000-000-0000",
                        ReceivingRegistrantId = TestData.ContactId
                    },
-                   TotalAmount = 100.00,
+                   TotalAmount = 100.00m,
                    CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IncludedHouseholdMembers = householdMembers,
                    From = now,

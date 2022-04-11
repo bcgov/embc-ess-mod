@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Shared.Contracts.Events;
 
 namespace EMBC.ESS.Engines.Supporting
@@ -114,5 +115,27 @@ namespace EMBC.ESS.Engines.Supporting
     public class GenerateReferralsResponse : GenerateResponse
     {
         public byte[] Content { get; set; }
+    }
+
+    public class GeneratePaymentsRequest : GenerateRequest
+    {
+        public IEnumerable<PayableSupport> Supports { get; set; }
+    }
+
+    public class PayableSupport
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public decimal Amount { get; set; }
+        public string NotificationEmail { get; set; }
+        public string NotificationPhone { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
+    }
+
+    public class GeneratePaymentsResponse : GenerateResponse
+    {
+        //TODO: create manager level payment dto
+        public IEnumerable<Payment> Payments { get; set; }
     }
 }
