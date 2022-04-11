@@ -22,10 +22,12 @@
 .next {
   float: right;
   width: 40%;
+  min-width: fit-content;
 }
 
 .back {
   width: 40%;
+  min-width: fit-content;
 }
 
 .supplier-box {

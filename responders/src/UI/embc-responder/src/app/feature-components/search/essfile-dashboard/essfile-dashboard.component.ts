@@ -96,7 +96,7 @@ export class EssfileDashboardComponent implements OnInit {
         component: FileStatusDefinitionComponent,
         content: this.essFile.status
       },
-      height: '295px',
+      height: '325px',
       width: '580px'
     });
   }
