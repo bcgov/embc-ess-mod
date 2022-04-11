@@ -98,8 +98,9 @@ export class StepSupportsService {
   set supportTypeToAdd(supportTypeToAddVal: Code) {
     this.supportTypeToAddVal = supportTypeToAddVal;
     this.cacheService.set('supportType', JSON.stringify(supportTypeToAddVal));
-    this.appBaseService.appModel.supportProperties.selectedSupport =
-      supportTypeToAddVal;
+    this.appBaseService.appModel.supportProperties = {
+      selectedSupport: supportTypeToAddVal
+    };
     this.computeState.triggerEvent();
   }
 

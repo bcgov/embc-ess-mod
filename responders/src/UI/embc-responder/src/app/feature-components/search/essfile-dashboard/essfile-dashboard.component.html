@@ -195,15 +195,14 @@
           class="bold"
           [ngClass]="{
             'file-complete':
-              appBaseService?.appModel?.etransferProperties
+              appBaseService?.etransferProperties
                 ?.isRegistrantEtransferEligible,
             ineligible:
-              !appBaseService?.appModel?.etransferProperties
+              !appBaseService?.etransferProperties
                 ?.isRegistrantEtransferEligible
           }"
           >{{
-            appBaseService?.appModel?.etransferProperties
-              ?.isRegistrantEtransferEligible
+            appBaseService?.etransferProperties?.isRegistrantEtransferEligible
               ? 'Eligible'
               : 'Ineligible'
           }}</span
@@ -212,8 +211,7 @@
     </div>
     <div
       *ngIf="
-        !appBaseService?.appModel?.etransferProperties
-          ?.isRegistrantEtransferEligible
+        !appBaseService?.etransferProperties?.isRegistrantEtransferEligible
       "
     >
       <div *ngIf="isMinor; else bcscCheck" class="row">
@@ -246,10 +244,7 @@
     </div>
 
     <div
-      *ngIf="
-        appBaseService?.appModel?.etransferProperties
-          ?.isRegistrantEtransferEligible
-      "
+      *ngIf="appBaseService?.etransferProperties?.isRegistrantEtransferEligible"
       class="row"
     >
       <div class="col-md-12 bold">

@@ -26,21 +26,24 @@ export class ComputeFeaturesService implements Compute {
   }
 
   private computeEtransferEligibility() {
-    this.appBaseService.appModel.etransferProperties.isRegistrantEtransferEligible =
-      !this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.isMinor &&
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.authenticatedUser;
+    this.appBaseService.etransferProperties = {
+      isRegistrantEtransferEligible:
+        !this.appBaseService?.appModel?.selectedProfile
+          ?.selectedEvacueeInContext?.isMinor &&
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+          ?.authenticatedUser
+    };
   }
 
   private computeEtransferStatus() {
     if (
       this.appBaseService?.appModel?.selectedUserPathway ===
         SelectedPathType.paperBased ||
-      !this.appBaseService?.appModel?.etransferProperties?.interacAllowed
+      !this.appBaseService?.etransferProperties?.interacAllowed
     ) {
-      this.appBaseService.appModel.etransferProperties.etransferStatus =
-        ETransferStatus.unavailable;
+      this.appBaseService.etransferProperties = {
+        etransferStatus: ETransferStatus.unavailable
+      };
     } else if (
       this.appBaseService?.appModel?.supportProperties?.selectedSupport
         ?.value === SupportSubCategory.Lodging_Hotel ||
@@ -53,17 +56,19 @@ export class ComputeFeaturesService implements Compute {
       this.appBaseService?.appModel?.supportProperties?.selectedSupport
         ?.value === SupportSubCategory.Transportation_Taxi
     ) {
-      this.appBaseService.appModel.etransferProperties.etransferStatus =
-        ETransferStatus.notAllowed;
+      this.appBaseService.etransferProperties = {
+        etransferStatus: ETransferStatus.notAllowed
+      };
     } else if (
-      !this.appBaseService?.appModel?.etransferProperties
-        ?.isRegistrantEtransferEligible
+      !this.appBaseService?.etransferProperties?.isRegistrantEtransferEligible
     ) {
-      this.appBaseService.appModel.etransferProperties.etransferStatus =
-        ETransferStatus.inEligible;
+      this.appBaseService.etransferProperties = {
+        etransferStatus: ETransferStatus.inEligible
+      };
     } else {
-      this.appBaseService.appModel.etransferProperties.etransferStatus =
-        ETransferStatus.available;
+      this.appBaseService.etransferProperties = {
+        etransferStatus: ETransferStatus.available
+      };
     }
   }
 
@@ -96,7 +101,8 @@ export class ComputeFeaturesService implements Compute {
         );
       }
     }
-    this.appBaseService.appModel.etransferProperties.etransferRequirement =
-      requirementContent;
+    this.appBaseService.etransferProperties = {
+      etransferRequirement: requirementContent
+    };
   }
 }

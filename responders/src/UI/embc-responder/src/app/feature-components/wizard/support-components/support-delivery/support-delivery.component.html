@@ -102,7 +102,7 @@
       <mat-card
         class="support-delivery-card"
         [class.disabled]="
-          appBaseService?.appModel?.etransferProperties?.etransferStatus !==
+          appBaseService?.etransferProperties?.etransferStatus !==
           eTransferStatus.available
         "
         [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
@@ -147,7 +147,7 @@
 
         <div
           *ngIf="
-            appBaseService?.appModel?.etransferProperties?.etransferStatus !==
+            appBaseService?.etransferProperties?.etransferStatus !==
             eTransferStatus.available
           "
           class="etransfer-ineligible"
@@ -159,7 +159,7 @@
           <p><b>Requirements:</b></p>
           <div
             *ngFor="
-              let req of appBaseService?.appModel?.etransferProperties
+              let req of appBaseService?.etransferProperties
                 ?.etransferRequirement
             "
           >

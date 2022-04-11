@@ -2,13 +2,11 @@ import { Code } from '../api/models';
 import { EssTaskModel } from './ess-task.model';
 import { EvacuationFileModel } from './evacuation-file.model';
 import { RegistrantProfileModel } from './registrant-profile.model';
-
 export interface AppBaseModel {
   selectedEssTask?: EssTaskModel;
   selectedUserPathway?: SelectedPathType;
   evacueeSearchType?: DigitalFlow | PaperFlow;
   selectedProfile?: SelectedProfile;
-  etransferProperties?: EtransferProperties;
   selectedEssFile?: EvacuationFileModel;
   supportProperties?: SupportProperties;
 }
