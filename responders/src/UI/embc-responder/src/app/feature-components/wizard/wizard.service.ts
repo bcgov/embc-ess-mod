@@ -77,22 +77,10 @@ export class WizardService {
    * @param url URL of current page, typically retrieved from this.router.url
    */
   public getCurrentStep(currentUrl: string): number {
-    let curStep = -1;
     currentUrl = currentUrl.toLowerCase();
-
-    this.menuItems.every((item, index) => {
-      const route = item.route.toLowerCase();
-
-      // If match is found, set value and stop loop
-      if (currentUrl.startsWith(route)) {
-        curStep = index;
-        return false;
-      }
-
-      return true;
-    });
-
-    return curStep;
+    return this.menuItems.findIndex((mi) =>
+      currentUrl.startsWith(mi.route.toLowerCase())
+    );
   }
 
   public setStepStatus(name: string, status: boolean): void {
