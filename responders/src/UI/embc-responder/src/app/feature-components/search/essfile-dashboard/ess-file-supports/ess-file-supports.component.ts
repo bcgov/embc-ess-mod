@@ -196,12 +196,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
         return value;
       }
     });
-    return (
-      memberObject?.lastName.toUpperCase() +
-      ', ' +
-      memberObject?.firstName.charAt(0).toUpperCase() +
-      memberObject?.firstName.slice(1)
-    );
+    return memberObject?.lastName + ', ' + memberObject?.firstName;
   }
 
   generateSupportType(element: Support): string {
