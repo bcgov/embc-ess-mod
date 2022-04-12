@@ -12,13 +12,12 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
         public async Task<GeneratePaymentsResponse> GeneratePayments(GeneratePaymentsRequest request)
         {
             await Task.CompletedTask;
-            var supportsByFile = request.Supports.GroupBy(s => s.FileId);
             var payments = new List<Payment>();
-            //aggregate per file
-            foreach (var supportsInFile in supportsByFile)
+            // aggregate per file
+            foreach (var supportsInFile in request.Supports.GroupBy(s => s.FileId))
             {
                 var fileId = supportsInFile.Key;
-                //aggregate per payment details
+                // aggregate per payment details
                 foreach (var paymentGroup in supportsInFile.GroupBy(s => (s.RecipientFirstName, s.RecipientLastName, s.NotificationEmail, s.NotificationPhone)))
                 {
                     var supports = paymentGroup.ToArray();
@@ -26,19 +25,19 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
                     var linkedSupportIds = new List<string>();
                     var numOfSupports = supports.Length;
                     var i = 0;
-                    do
+                    while (i < numOfSupports)
                     {
-                        //aggregate supports into a single payment if possible
+                        // aggregate supports into a single payment if possible
                         var support = supports[i];
                         while (i < numOfSupports && amount + support.Amount <= amountLimit)
                         {
                             amount += support.Amount;
                             linkedSupportIds.Add(support.SupportId);
-                            //check if no more supports
+                            // check if no more supports
                             if (++i < numOfSupports) support = supports[i];
                         }
 
-                        //add the aggregated payment
+                        // add the aggregated payment
                         payments.Add(new InteracSupportPayment
                         {
                             Amount = amount,
@@ -54,7 +53,6 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
                         amount = 0;
                         linkedSupportIds.Clear();
                     }
-                    while (i < numOfSupports);
                 }
             }
 
