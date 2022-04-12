@@ -269,7 +269,7 @@
             <div class="col-md-4">
               <p>Evacuees</p>
               <span *ngFor="let id of support?.includedHouseholdMembers">
-                <p class="bold">{{ mapMemberName(id) | uppercase }}</p>
+                <p class="bold">{{ mapMemberName(id) | titlecase }}</p>
               </span>
             </div>
           </div>

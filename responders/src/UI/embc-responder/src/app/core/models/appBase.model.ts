@@ -1,11 +1,14 @@
+import { Code } from '../api/models';
 import { EssTaskModel } from './ess-task.model';
+import { EvacuationFileModel } from './evacuation-file.model';
 import { RegistrantProfileModel } from './registrant-profile.model';
-
 export interface AppBaseModel {
   selectedEssTask?: EssTaskModel;
   selectedUserPathway?: SelectedPathType;
   evacueeSearchType?: DigitalFlow | PaperFlow;
   selectedProfile?: SelectedProfile;
+  selectedEssFile?: EvacuationFileModel;
+  supportProperties?: SupportProperties;
 }
 
 export interface EvacueeSearch {
@@ -18,7 +21,17 @@ export type PaperFlow = EvacueeSearch;
 
 export interface SelectedProfile {
   selectedEvacueeInContext?: RegistrantProfileModel;
-  features?: [];
+}
+
+export interface EtransferProperties {
+  isRegistrantEtransferEligible?: boolean;
+  etransferStatus?: ETransferStatus;
+  interacAllowed?: boolean; //will come from backend
+  etransferRequirement?: Array<EtransferRequirementStatus>;
+}
+
+export interface SupportProperties {
+  selectedSupport?: Code;
 }
 
 export enum SelectedPathType {

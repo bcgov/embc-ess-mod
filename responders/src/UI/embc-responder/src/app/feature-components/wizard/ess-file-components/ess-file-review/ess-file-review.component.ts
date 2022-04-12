@@ -9,7 +9,6 @@ import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { TabModel } from 'src/app/core/models/tab.model';
-import { EvacueeMetaDataModel } from 'src/app/core/models/evacuee-metadata.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 
 @Component({
@@ -146,7 +145,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
         next: (essFile: EvacuationFileModel) => {
           // After creating and fetching ESS File, update ESS File Step values
           this.stepEssFileService.setFormValuesFromFile(essFile);
-          this.setFileMetaData(essFile);
           // Once all profile work is done, user can close wizard or proceed to step 3
           this.disableButton = true;
           this.saveLoader = false;
@@ -194,7 +192,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
         next: (essFile: EvacuationFileModel) => {
           // After creating and fetching ESS File, update ESS File Step values
           this.stepEssFileService.setFormValuesFromFile(essFile);
-          this.setFileMetaData(essFile);
           // Once all profile work is done, user can close wizard or proceed to step 3
           this.disableButton = true;
           this.saveLoader = false;
@@ -227,19 +224,5 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
           this.alertService.setAlert('danger', globalConst.editEssFileError);
         }
       });
-  }
-
-  private setFileMetaData(file: EvacuationFileModel) {
-    const metaData: EvacueeMetaDataModel = {
-      firstName:
-        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-          ?.firstName,
-      lastName:
-        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
-          ?.lastName,
-      registrantId: this.evacueeSessionService.profileId,
-      fileId: file.id
-    };
-    this.evacueeSessionService.evacueeMetaData = metaData;
   }
 }

@@ -16,7 +16,6 @@ import { ComputeRulesService } from '../../../../core/services/computeRules.serv
 import { ETransferStatus } from '../../../../core/models/appBase.model';
 import { SupportMethod } from '../../../../core/api/models/support-method';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-support-delivery',
@@ -35,11 +34,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private appBaseService: AppBaseService,
+    public appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private dialog: MatDialog,
-    private cd: ChangeDetectorRef,
-    public featureService: EtransferFeaturesService
+    private cd: ChangeDetectorRef
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
