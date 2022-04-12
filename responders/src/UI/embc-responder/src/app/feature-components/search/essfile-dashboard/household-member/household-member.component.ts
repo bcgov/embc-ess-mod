@@ -19,6 +19,7 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
 @Component({
   selector: 'app-household-member',
