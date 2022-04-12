@@ -94,7 +94,6 @@ namespace EMBC.ESS.Resources.Supports
         public string ByEvacuationFileId { get; set; }
         public SupportStatus? ByStatus { get; set; }
         public int? LimitNumberOfResults { get; set; }
-        public bool? HasNoPayments { get; set; }
     }
 
     public class SearchSupportQueryResult : SupportQueryResult
@@ -224,7 +223,8 @@ namespace EMBC.ESS.Resources.Supports
         Paid = 174360003,
         Cancelled = 174360004,
         UnderReview = 174360005,
-        PendingScan = 174360006
+        PendingScan = 174360006,
+        Processed = 10 //not in Dynamics
     }
 
     public enum SupportVoidReason
