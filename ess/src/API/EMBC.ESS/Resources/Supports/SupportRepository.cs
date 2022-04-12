@@ -174,8 +174,11 @@ namespace EMBC.ESS.Resources.Supports
             var changesSupportIds = new List<string>();
             foreach (var item in cmd.Items)
             {
-                var supportId = await ChangeSupportStatus(ctx, item.SupportId, item.ToStatus, item.Reason);
-                if (!string.IsNullOrEmpty(supportId)) changesSupportIds.Add(supportId);
+                var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == item.SupportId)).GetAllPagesAsync()).SingleOrDefault();
+                if (support == null) throw new InvalidOperationException($"Support {item.SupportId} not found, can't update its status");
+                ChangeSupportStatus(ctx, support, item.ToStatus, item.Reason);
+                ctx.UpdateObject(support);
+                changesSupportIds.Add(item.SupportId);
             }
 
             await ctx.SaveChangesAsync();
@@ -231,8 +234,10 @@ namespace EMBC.ESS.Resources.Supports
 
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByExternalReferenceId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByExternalReferenceId);
-            if (query.ByStatus.HasValue) supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
-            if (!query.HasNoPayments ?? false) supportsQuery = supportsQuery.Where(s => s.era_era_etransfertransaction_era_evacueesuppo.Any());
+            if (query.ByStatus.HasValue && query.ByStatus != SupportStatus.Processed)
+                supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
+            if (query.ByStatus.HasValue && query.ByStatus == SupportStatus.Processed)
+                supportsQuery = supportsQuery.Where(s => s.statuscode == (int)SupportStatus.Approved && s.era_etransfertransactioncreated == true);
             if (query.LimitNumberOfResults.HasValue) supportsQuery = supportsQuery.Take(query.LimitNumberOfResults.Value);
 
             return (await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync()).ToArray();
@@ -289,47 +294,45 @@ namespace EMBC.ESS.Resources.Supports
             AssignETransferRecipientToSupport(ctx, support);
         }
 
-        private static async Task<string> ChangeSupportStatus(EssContext ctx, string supportId, SupportStatus status, string changeReason)
+        private static void ChangeSupportStatus(EssContext ctx, era_evacueesupport support, SupportStatus status, string changeReason)
         {
-            var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == supportId)).GetAllPagesAsync()).SingleOrDefault();
-
             var supportDeliveryType = (SupportMethod)support.era_supportdeliverytype;
-            if (support != null)
+
+            switch (status)
             {
-                switch (status)
-                {
-                    case SupportStatus.Void when supportDeliveryType == SupportMethod.Referral:
-                        support.era_voidreason = (int)Enum.Parse<SupportVoidReason>(changeReason);
-                        ctx.DeactivateObject(support, (int)status);
-                        break;
+                case SupportStatus.Void when supportDeliveryType == SupportMethod.Referral:
+                    support.era_voidreason = (int)Enum.Parse<SupportVoidReason>(changeReason);
+                    ctx.DeactivateObject(support, (int)status);
+                    break;
 
-                    case SupportStatus.PendingApproval when supportDeliveryType == SupportMethod.ETransfer:
-                        support.statuscode = (int)status;
-                        break;
+                case SupportStatus.PendingApproval when supportDeliveryType == SupportMethod.ETransfer:
+                    support.statuscode = (int)status;
+                    break;
 
-                    case SupportStatus.Paid when supportDeliveryType == SupportMethod.ETransfer:
-                        support.statuscode = (int)status;
-                        break;
+                case SupportStatus.Paid when supportDeliveryType == SupportMethod.ETransfer:
+                    support.statuscode = (int)status;
+                    break;
 
-                    case SupportStatus.Cancelled when supportDeliveryType == SupportMethod.ETransfer:
-                        ctx.DeactivateObject(support, (int)status);
-                        break;
+                case SupportStatus.Cancelled when supportDeliveryType == SupportMethod.ETransfer:
+                    ctx.DeactivateObject(support, (int)status);
+                    break;
 
-                    case SupportStatus.UnderReview when supportDeliveryType == SupportMethod.ETransfer:
-                        support.statuscode = (int)status;
-                        break;
+                case SupportStatus.UnderReview when supportDeliveryType == SupportMethod.ETransfer:
+                    support.statuscode = (int)status;
+                    break;
 
-                    case SupportStatus.PendingScan when supportDeliveryType == SupportMethod.ETransfer:
-                        support.statuscode = (int)status;
-                        break;
+                case SupportStatus.PendingScan when supportDeliveryType == SupportMethod.ETransfer:
+                    support.statuscode = (int)status;
+                    break;
 
-                    default:
-                        throw new InvalidOperationException($"Can't change status of {supportId} with delivery type {supportDeliveryType} to {status}");
-                }
-                ctx.UpdateObject(support);
-                return supportId;
+                case SupportStatus.Processed when supportDeliveryType == SupportMethod.ETransfer:
+                    support.statuscode = (int)SupportStatus.Approved;
+                    if (support.era_etransfertransactioncreated != true) support.era_etransfertransactioncreated = true;
+                    break;
+
+                default:
+                    throw new InvalidOperationException($"Can't change status of {support.era_name} with delivery type {supportDeliveryType} to {status}");
             }
-            return null;
         }
 
         private static void AssignHouseholdMembersToSupport(EssContext ctx, era_evacueesupport support, IEnumerable<era_householdmember> householdMembers)

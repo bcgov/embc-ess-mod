@@ -1,4 +1,5 @@
-﻿using EMBC.ESS.Engines.Supporting.SupportCompliance;
+﻿using EMBC.ESS.Engines.Supporting.PaymentGeneration;
+using EMBC.ESS.Engines.Supporting.SupportCompliance;
 using EMBC.ESS.Engines.Supporting.SupportGeneration;
 using EMBC.ESS.Engines.Supporting.SupportProcessing;
 using EMBC.Utilities.Configuration;
@@ -20,6 +21,7 @@ namespace EMBC.ESS.Engines.Supporting
                 .AddTransient<SupportComplianceStrategyFactory>()
                 .AddTransient<ISupportComplianceCheck, DuplicateSupportComplianceCheck>()
                 .AddTransient<ISupportComplianceCheck, AmountExceededSupportComplianceCheck>()
+                .AddTransient<PaymentGenerationStrategyFactory>()
                 ;
         }
     }
