@@ -36,6 +36,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   essFileNumber: string;
   editIndex: number;
   editFlag = false;
+  duplicateFlag = false;
   addNewMember = false;
   showMemberForm = false;
   newMembersColumns: string[] = ['members', 'buttons'];
@@ -67,6 +68,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Set up Members array
     this.members = this.stepEssFileService.householdMembers;
     this.memberSource.next(this.members);
+
+    console.log(this.members);
 
     // Set up type of members table to display
     if (!this.essFileNumber) {
@@ -159,48 +162,60 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Saves householdmembers in the Evacuation File Form
    */
   save(): void {
+    this.duplicateFlag = false;
     if (this.householdForm.get('houseHoldMember').status === 'VALID') {
-      if (this.editIndex !== undefined && this.editFlag) {
-        // Editing existing Member
-        this.members[this.editIndex] = {
-          ...this.members[this.editIndex],
-          ...this.householdForm.get('houseHoldMember').value
-        };
+      if (
+        !this.householdService.householdMemberExists(
+          this.householdForm.get('houseHoldMember').value,
+          this.members,
+          this.editIndex
+        )
+      ) {
+        if (this.editIndex !== undefined && this.editFlag) {
+          // Editing existing Member
+          this.members[this.editIndex] = {
+            ...this.members[this.editIndex],
+            ...this.householdForm.get('houseHoldMember').value
+          };
 
-        //Adding edited household members to selected items
-        this.selection.select(this.members[this.editIndex]);
-        this.editIndex = undefined;
+          //Adding edited household members to selected items
+          this.selection.select(this.members[this.editIndex]);
+          this.editIndex = undefined;
+        } else {
+          // Adding new Member
+          this.members.push({
+            ...this.householdForm.get('houseHoldMember').value,
+            isPrimaryRegistrant: false,
+            householdMemberFromDatabase: false,
+            type: HouseholdMemberType.HouseholdMember
+          });
+
+          //Adding edited household members to selected items
+          this.selection.select(this.members[this.members.length - 1]);
+        }
+
+        this.memberSource.next(this.members);
+        this.householdService.saveHouseholdMember(this.householdForm);
+
+        this.showMemberForm = false;
+        this.editFlag = false;
+        this.addNewMember = false;
       } else {
-        // Adding new Member
-        this.members.push({
-          ...this.householdForm.get('houseHoldMember').value,
-          isPrimaryRegistrant: false,
-          householdMemberFromDatabase: false,
-          type: HouseholdMemberType.HouseholdMember
-        });
-
-        //Adding edited household members to selected items
-        this.selection.select(this.members[this.members.length - 1]);
+        this.duplicateFlag = true;
       }
-
-      this.memberSource.next(this.members);
-      this.householdService.saveHouseholdMember(this.householdForm);
-
-      this.showMemberForm = false;
-      this.editFlag = false;
-      this.addNewMember = false;
     } else {
       this.householdForm.get('houseHoldMember').markAllAsTouched();
     }
   }
 
   /**
-   * Resets the househol Member form and goes back to the main Form
+   * Resets the household Member form and goes back to the main Form
    */
   cancel(): void {
     this.householdService.cancel(this.householdForm);
     this.showMemberForm = false;
     this.editFlag = false;
+    this.duplicateFlag = false;
 
     if (this.members.length < 2) {
       this.householdForm.get('hasHouseholdMembers').setValue(false);

@@ -204,6 +204,13 @@ mat-row:nth-child(even) {
   padding-bottom: 20px;
 }
 
+.duplicate-warning {
+  color: #f44336;
+  font-size: 75%;
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
 @media (max-width: 1400px) {
   .cell-member-details {
     flex: 0 0 70%;
