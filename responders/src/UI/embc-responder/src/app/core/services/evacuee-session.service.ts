@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EvacuationFileHouseholdMember, NeedsAssessment } from '../api/models';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
-import { EvacueeMetaDataModel } from '../models/evacuee-metadata.model';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { WizardType } from '../models/wizard-type.model';
 import { CacheService } from './cache.service';
@@ -19,7 +18,6 @@ export class EvacueeSessionService {
   private memberRegistrationVal: EvacuationFileHouseholdMember;
   private memberFlag: boolean;
   private isPaperBasedVal: boolean;
-  private evacueeMetaDataVal: EvacueeMetaDataModel;
   private currentNeedsAssessmentVal: NeedsAssessment;
 
   private evacFileVal: EvacuationFileModel;
@@ -168,16 +166,6 @@ export class EvacueeSessionService {
   public set isPaperBased(value: boolean) {
     this.isPaperBasedVal = value;
     this.cacheService.set('paperBased', value);
-  }
-
-  public get evacueeMetaData(): EvacueeMetaDataModel {
-    return this.evacueeMetaDataVal
-      ? this.evacueeMetaDataVal
-      : JSON.parse(this.cacheService.get('evacueeMetaData'));
-  }
-  public set evacueeMetaData(value: EvacueeMetaDataModel) {
-    this.evacueeMetaDataVal = value;
-    this.cacheService.set('evacueeMetaData', value);
   }
 
   clearEvacueeSession() {

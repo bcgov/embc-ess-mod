@@ -18,10 +18,7 @@ import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
-import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
-import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { EtransferFeaturesService } from 'src/app/core/services/helper/etransferfeatures.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -42,19 +39,14 @@ export class EssfileDashboardComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
-    private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private stepNotesService: StepNotesService,
     private cacheService: CacheService,
-    public appBaseService: AppBaseService,
-    public featureService: EtransferFeaturesService
+    public appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
     this.getEssFile();
-    this.getEvacueeProfile(
-      this.evacueeSessionService?.evacueeMetaData?.registrantId
-    );
 
     this.isMinor =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.isMinor;
@@ -104,7 +96,7 @@ export class EssfileDashboardComponent implements OnInit {
         component: FileStatusDefinitionComponent,
         content: this.essFile.status
       },
-      height: '295px',
+      height: '325px',
       width: '580px'
     });
   }
@@ -224,16 +216,6 @@ export class EssfileDashboardComponent implements OnInit {
         content: displayMessage
       },
       width: '530px'
-    });
-  }
-
-  private getEvacueeProfile(evacueeProfileId): void {
-    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
-      next: (profile: RegistrantProfileModel) => {},
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.getProfileError);
-      }
     });
   }
 }

@@ -25,7 +25,7 @@
 }
 
 .row-padding {
-  padding-bottom: 20px;
+  padding-bottom: 25px;
 }
 
 .supplier-align {
@@ -33,7 +33,7 @@
 }
 
 .support-draft {
-  color: #F48605;
+  color: #f48605;
 }
 
 .support-active {
@@ -49,31 +49,29 @@
 }
 
 .support-pending-approval {
-  color: #1EAEAA;
+  color: #1eaeaa;
 }
 
 .support-under-review {
-  color: #1EAEAA;
+  color: #1eaeaa;
 }
 
 .support-approved {
-  color: #1F00B5;
+  color: #1f00b5;
 }
 
 .support-paid {
-  color: #169BD5;
+  color: #169bd5;
 }
 
 .support-cancelled {
-  color: #DB1087;
+  color: #db1087;
 }
 
 .support-card {
   box-shadow: none !important;
   border: 1px solid rgb(221, 221, 221);
   padding-top: 0px !important;
-  margin-right: 15px;
-  margin-left: 15px;
 }
 
 .support-header {
@@ -86,16 +84,19 @@
   padding-top: 15px;
 }
 
-.evacuee-section {
-  padding-left: 5rem;
-}
-
 .info-box {
   margin-left: 0px;
   margin-right: 0px;
 }
 
 .data-card {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 0;
+}
+
+.evacuee-name {
+  font-weight: bold;
+}
+
+.col-match-header {
+  width: 37.5%;
 }

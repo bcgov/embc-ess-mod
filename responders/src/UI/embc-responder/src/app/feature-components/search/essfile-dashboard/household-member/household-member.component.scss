@@ -34,7 +34,10 @@
 
 mat-expansion-panel {
   margin: 0px !important;
-  padding-top: 15px;
+}
+
+::ng-deep .mat-expansion-panel-header {
+  height: 60px;
 }
 
 .expansion-divider {
@@ -140,8 +143,7 @@ mat-expansion-panel {
 }
 
 .data-card {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 0;
 }
 
 .cannot-link {

@@ -45,7 +45,7 @@
   <div class="col-md-2 vline">
     <div class="row dashboard-subheading">
       <div class="col-md-12">
-        <span> Status:</span>
+        <span> Status: </span>
         <span
           class="bold"
           [ngClass]="{
@@ -81,7 +81,13 @@
     <div class="row">
       <div class="col-md-12">
         <span class="field-label">Main Applicant:</span>
-        <span class="bold">
+        <span
+          class="bold"
+          *ngIf="
+            essFile?.primaryRegistrantLastName ||
+            essFile?.primaryRegistrantFirstName
+          "
+        >
           {{ essFile?.primaryRegistrantLastName | uppercase }},
           {{ essFile?.primaryRegistrantFirstName | titlecase }}</span
         >
@@ -153,7 +159,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <span class="bold">
+        <span class="bold" *ngIf="essFile?.evacuatedFromAddress?.addressLine1">
           {{ essFile?.evacuatedFromAddress?.addressLine1 }},</span
         >
         <span
@@ -180,26 +186,34 @@
 
   <div class="col-md-3">
     <div class="row dashboard-subheading">
-      <div class="col-md-1">
+      <div class="col-wide-icon">
         <img src="/assets/images/etransfer.svg" height="20" width="30" />
       </div>
-      <div class="col-md-11">
+      <div class="col">
         e-Transfer
         <span
           class="bold"
           [ngClass]="{
-            'file-complete': featureService?.isRegistrantEtransferEligible,
-            ineligible: !featureService?.isRegistrantEtransferEligible
+            'file-complete':
+              appBaseService?.etransferProperties
+                ?.isRegistrantEtransferEligible,
+            ineligible:
+              !appBaseService?.etransferProperties
+                ?.isRegistrantEtransferEligible
           }"
           >{{
-            featureService?.isRegistrantEtransferEligible
+            appBaseService?.etransferProperties?.isRegistrantEtransferEligible
               ? 'Eligible'
               : 'Ineligible'
           }}</span
         >
       </div>
     </div>
-    <div *ngIf="!featureService?.isRegistrantEtransferEligible">
+    <div
+      *ngIf="
+        !appBaseService?.etransferProperties?.isRegistrantEtransferEligible
+      "
+    >
       <div *ngIf="isMinor; else bcscCheck" class="row">
         <div class="col-md-12 bold">
           {{
@@ -229,7 +243,10 @@
       </ng-template>
     </div>
 
-    <div *ngIf="featureService?.isRegistrantEtransferEligible" class="row">
+    <div
+      *ngIf="appBaseService?.etransferProperties?.isRegistrantEtransferEligible"
+      class="row"
+    >
       <div class="col-md-12 bold">
         {{
           appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext

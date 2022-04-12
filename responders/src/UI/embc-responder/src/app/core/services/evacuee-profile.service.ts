@@ -15,7 +15,6 @@ import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { ComputeRulesService } from './computeRules.service';
 import { EvacueeSessionService } from './evacuee-session.service';
 import { AppBaseService } from './helper/appBase.service';
-import { EtransferFeaturesService } from './helper/etransferfeatures.service';
 import { LocationsService } from './locations.service';
 
 @Injectable({
@@ -194,10 +193,6 @@ export class EvacueeProfileService {
           }
         });
       })
-      // withLatestFrom(profile$),
-      // map(([blob, regResult]) => {
-      //   this.evacueeSessionService.profileId = regResult.id;
-      // })
     );
     return $result;
   }
