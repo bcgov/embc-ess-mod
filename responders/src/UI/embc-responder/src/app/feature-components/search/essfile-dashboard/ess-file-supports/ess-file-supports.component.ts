@@ -196,7 +196,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
         return value;
       }
     });
-    return memberObject?.lastName + ',' + memberObject?.firstName;
+    return memberObject?.lastName + ', ' + memberObject?.firstName;
   }
 
   generateSupportType(element: Support): string {

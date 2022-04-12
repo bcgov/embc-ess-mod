@@ -262,25 +262,25 @@ export const wizardESSFileMessage: DialogContent = {
 export const newRegWizardProfileCreatedMessage: DialogContent = {
   title: 'Evacuee Profile Saved',
   text: '<p>Evacuee profile has been successfully created.</p>',
-  confirmButton: 'Proceed to Step 2'
+  confirmButton: 'Proceed to Next Step'
 };
 export const newRegWizardEssFileCreatedMessage: DialogContent = {
   title: 'ESS File Saved',
   text: '<p>ESS File has been successfully created and saved.</p>',
-  confirmButton: 'Proceed to Step 3',
+  confirmButton: 'Proceed to Next Step',
   exitLink: 'Exit Wizard'
 };
 
 export const newRegWizardProfileUpdatedMessage: DialogContent = {
   title: 'Evacuee Profile Updated',
   text: '<p>Evacuee profile has been successfully updated.</p>',
-  confirmButton: 'Proceed to Step 2'
+  confirmButton: 'Proceed to Next Step'
 };
 
 export const editRegWizardProfileCreatedMessage: DialogContent = {
   title: 'Evacuee Profile Saved',
   text: '<p>Evacuee profile has been successfully updated.</p>',
-  confirmButton: 'Proceed to Step 2'
+  confirmButton: 'Proceed to Next Step'
 };
 
 export const evacueeProfileUpdatedMessage: DialogContent = {
