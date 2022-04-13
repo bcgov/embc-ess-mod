@@ -69,8 +69,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.members = this.stepEssFileService.householdMembers;
     this.memberSource.next(this.members);
 
-    console.log(this.members);
-
     // Set up type of members table to display
     if (!this.essFileNumber) {
       this.membersColumns = this.newMembersColumns;
@@ -163,45 +161,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    */
   save(): void {
     this.duplicateFlag = false;
+
     if (this.householdForm.get('houseHoldMember').status === 'VALID') {
-      if (
-        !this.householdService.householdMemberExists(
-          this.householdForm.get('houseHoldMember').value,
-          this.members,
-          this.editIndex
-        )
-      ) {
-        if (this.editIndex !== undefined && this.editFlag) {
-          // Editing existing Member
-          this.members[this.editIndex] = {
-            ...this.members[this.editIndex],
-            ...this.householdForm.get('houseHoldMember').value
-          };
-
-          //Adding edited household members to selected items
-          this.selection.select(this.members[this.editIndex]);
-          this.editIndex = undefined;
-        } else {
-          // Adding new Member
-          this.members.push({
-            ...this.householdForm.get('houseHoldMember').value,
-            isPrimaryRegistrant: false,
-            householdMemberFromDatabase: false,
-            type: HouseholdMemberType.HouseholdMember
-          });
-
-          //Adding edited household members to selected items
-          this.selection.select(this.members[this.members.length - 1]);
-        }
-
-        this.memberSource.next(this.members);
-        this.householdService.saveHouseholdMember(this.householdForm);
-
-        this.showMemberForm = false;
-        this.editFlag = false;
-        this.addNewMember = false;
+      if (this.editIndex !== undefined && this.editFlag) {
+        this.saveEditedMember();
       } else {
-        this.duplicateFlag = true;
+        this.saveNewMember();
       }
     } else {
       this.householdForm.get('houseHoldMember').markAllAsTouched();
@@ -348,10 +313,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.householdForm.controls,
         'householdMember'
       );
-
-      // const hasMembersUpdated = this.wizardService.hasMemberChanged(
-      //   this.members
-      // );
 
       this.wizardService.setEditStatus({
         tabName: 'householdMember',
@@ -560,5 +521,55 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
     this.stepEssFileService.tempHouseholdMember =
       this.householdForm.get('houseHoldMember').value;
+  }
+
+  private saveNewMember(): void {
+    if (
+      !this.householdService.householdMemberExists(
+        this.householdForm.get('houseHoldMember').value,
+        this.members
+      )
+    ) {
+      this.members.push({
+        ...this.householdForm.get('houseHoldMember').value,
+        isPrimaryRegistrant: false,
+        householdMemberFromDatabase: false,
+        type: HouseholdMemberType.HouseholdMember
+      });
+
+      this.selection.select(this.members[this.members.length - 1]);
+      this.memberSource.next(this.members);
+      this.householdService.saveHouseholdMember(this.householdForm);
+
+      this.showMemberForm = false;
+      this.addNewMember = false;
+    } else {
+      this.duplicateFlag = true;
+    }
+  }
+
+  private saveEditedMember(): void {
+    const similarMember = this.householdService.householdMemberExists(
+      this.householdForm.get('houseHoldMember').value,
+      this.members
+    );
+
+    if (similarMember === this.members[this.editIndex]) {
+      this.members[this.editIndex] = {
+        ...this.members[this.editIndex],
+        ...this.householdForm.get('houseHoldMember').value
+      };
+
+      this.selection.select(this.members[this.editIndex]);
+      this.editIndex = undefined;
+
+      this.memberSource.next(this.members);
+      this.householdService.saveHouseholdMember(this.householdForm);
+
+      this.showMemberForm = false;
+      this.editFlag = false;
+    } else {
+      this.duplicateFlag = true;
+    }
   }
 }

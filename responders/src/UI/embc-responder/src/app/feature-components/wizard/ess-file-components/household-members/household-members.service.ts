@@ -59,28 +59,9 @@ export class HouseholdMembersService {
 
   householdMemberExists(
     newMember: HouseholdMemberModel,
-    household: HouseholdMemberModel[],
-    index?: number
-  ): boolean {
-    if (index === undefined) {
-      for (const member of household) {
-        const result = this.householdEquals(newMember, member);
-        if (result) {
-          return true;
-        }
-      }
-      return false;
-    } else {
-      for (const [i, member] of household.entries()) {
-        if (i !== index) {
-          const result = this.householdEquals(newMember, member);
-          if (result) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
+    household: HouseholdMemberModel[]
+  ): HouseholdMemberModel {
+    return household.find((member) => this.householdEquals(newMember, member));
   }
 
   private householdEquals(
