@@ -28,7 +28,10 @@
 
 mat-expansion-panel {
   margin: 0px !important;
-  padding-top: 15px;
+}
+
+::ng-deep .mat-expansion-panel-header {
+  height: 60px;
 }
 
 .expansion-divider {
@@ -50,7 +53,6 @@ mat-expansion-panel {
   display: block;
   margin: auto;
   text-align: center;
-
 }
 
 .essFile-parent {
@@ -71,15 +73,15 @@ mat-expansion-panel {
 }
 
 .info-image img:last-child {
-display: none;
+  display: none;
 }
 
 .info-image:hover img:last-child {
-display: inline;
+  display: inline;
 }
 
 .info-image:hover img:first-child {
-display: none;
+  display: none;
 }
 
 .table-parent {
@@ -120,6 +122,5 @@ display: none;
 }
 
 .data-card {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding: 0;
 }

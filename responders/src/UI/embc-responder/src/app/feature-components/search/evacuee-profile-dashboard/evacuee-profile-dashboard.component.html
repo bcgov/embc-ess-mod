@@ -264,7 +264,13 @@
                   <p>Contact</p>
                   <p>Details</p>
                 </div>
-                <div class="col-md-9 table-parent" *ngIf="evacueeProfile?.contactDetails?.email || evacueeProfile?.contactDetails?.phone ">
+                <div
+                  class="col-md-9 table-parent"
+                  *ngIf="
+                    evacueeProfile?.contactDetails?.email ||
+                    evacueeProfile?.contactDetails?.phone
+                  "
+                >
                   <table class="table-details">
                     <tr>
                       <th>Email Address:</th>
@@ -280,9 +286,22 @@
                     </tr>
                   </table>
                 </div>
-                <div class="col-md-9 table-parent" *ngIf="!evacueeProfile?.contactDetails?.email && !evacueeProfile?.contactDetails?.phone ">
-                  <mat-radio-button class="primary-radio-button" [value]="true" [disabled]="true" [checked]="true">
-                    <span class="highlight">No</span> - Do you authorize Emergency Management British Columbia and your Local Emergency Program to communicate with you by email or phone regarding your emergency situation?
+                <div
+                  class="col-md-9 table-parent"
+                  *ngIf="
+                    !evacueeProfile?.contactDetails?.email &&
+                    !evacueeProfile?.contactDetails?.phone
+                  "
+                >
+                  <mat-radio-button
+                    class="primary-radio-button disabled"
+                    [value]="true"
+                    [checked]="true"
+                  >
+                    <b>No</b> - Do you authorize Emergency Management British
+                    Columbia and your Local Emergency Program to communicate
+                    with you by email or phone regarding your emergency
+                    situation?
                   </mat-radio-button>
                 </div>
               </div>

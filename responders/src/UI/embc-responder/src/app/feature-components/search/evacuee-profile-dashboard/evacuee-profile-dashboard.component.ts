@@ -81,7 +81,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       data: {
         component: StatusDefinitionDialogComponent
       },
-      height: '530px',
+      height: '550px',
       width: '580px'
     });
   }
