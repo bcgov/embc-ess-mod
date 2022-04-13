@@ -203,3 +203,8 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+
+.disabled {
+  cursor: default !important;
+  pointer-events: none;
+}
