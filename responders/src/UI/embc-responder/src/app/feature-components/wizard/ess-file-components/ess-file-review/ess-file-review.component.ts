@@ -149,13 +149,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
           this.disableButton = true;
           this.saveLoader = false;
 
-          const modalMessage = globalConst.newRegWizardEssFileCreatedMessage;
-          const nextStep =
-            this.wizardService.getCurrentStep('/ess-wizard/ess-file') + 2;
-          modalMessage.confirmButton = 'Proceed to Step ' + nextStep;
-
           this.stepEssFileService
-            .openModal(modalMessage)
+            .openModal(globalConst.newRegWizardEssFileCreatedMessage)
             .afterClosed()
             .subscribe((event) => {
               this.wizardService.setStepStatus(
@@ -201,13 +196,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
           this.disableButton = true;
           this.saveLoader = false;
 
-          const modalMessage = globalConst.newRegWizardEssFileCreatedMessage;
-          const nextStep =
-            this.wizardService.getCurrentStep('/ess-wizard/ess-file') + 2;
-          modalMessage.confirmButton = 'Proceed to Step ' + nextStep;
-
           this.stepEssFileService
-            .openModal(modalMessage)
+            .openModal(globalConst.newRegWizardEssFileCreatedMessage)
             .afterClosed()
             .subscribe((event) => {
               this.wizardService.setStepStatus(
