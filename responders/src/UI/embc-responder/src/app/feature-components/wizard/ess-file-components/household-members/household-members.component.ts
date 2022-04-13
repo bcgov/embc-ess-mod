@@ -554,7 +554,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.members
     );
 
-    if (similarMember === this.members[this.editIndex]) {
+    if (
+      similarMember === this.members[this.editIndex] ||
+      similarMember === undefined
+    ) {
       this.members[this.editIndex] = {
         ...this.members[this.editIndex],
         ...this.householdForm.get('houseHoldMember').value
