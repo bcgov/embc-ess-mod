@@ -1,4 +1,4 @@
-name: ci-load-test
+name: ci-automation
 
 on:
   pull_request:
