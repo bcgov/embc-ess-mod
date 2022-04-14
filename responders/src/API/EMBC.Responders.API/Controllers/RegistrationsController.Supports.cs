@@ -188,20 +188,20 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Search for supports
         /// </summary>
-        /// <param name="externalReferenceId">search for supports for an external reference id</param>
+        /// <param name="manualReferralId">search for supports for an manual referral id</param>
         /// <param name="fileId">search for supports in a specific evacuation file</param>
         /// <returns>list of supports</returns>
         [HttpGet("supports")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Support>>> SearchSupports(string? externalReferenceId, string? fileId)
+        public async Task<ActionResult<IEnumerable<Support>>> SearchSupports(string? manualReferralId, string? fileId)
         {
-            if (string.IsNullOrEmpty(externalReferenceId) && string.IsNullOrEmpty(fileId))
+            if (string.IsNullOrEmpty(manualReferralId) && string.IsNullOrEmpty(fileId))
                 return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = "Must specify search criteria" });
 
             var items = mapper.Map<IEnumerable<Support>>((await messagingClient.Send(new SearchSupportsQuery
             {
-                ExternalReferenceId = externalReferenceId,
+                ManualReferralId = manualReferralId,
                 FileId = fileId
             })).Items);
             return Ok(items);
@@ -225,7 +225,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class ReferralSummary : SupportSummary
     {
-        public string? ExternalReferenceId { get; set; }
+        public string? ManualReferralId { get; set; }
     }
 
     public class ETransferSummary : SupportSummary
@@ -883,7 +883,7 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<Support, SupportSummary>();
 
             CreateMap<Support, ReferralSummary>()
-                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => ((Referral)s.SupportDelivery).ManualReferralId))
+                .ForMember(d => d.ManualReferralId, opts => opts.MapFrom(s => ((Referral)s.SupportDelivery).ManualReferralId))
             ;
 
             CreateMap<Support, ETransferSummary>();

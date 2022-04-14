@@ -43,7 +43,7 @@ namespace EMBC.ESS.Resources.Evacuations
     public class EvacuationFilesQuery : EvacuationFileQuery
     {
         public string FileId { get; set; }
-        public string ExternalReferenceId { get; set; }
+        public string ManualFileId { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public bool MaskSecurityPhrase { get; set; } = true;
 
@@ -69,7 +69,7 @@ namespace EMBC.ESS.Resources.Evacuations
         public string CompletedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastModified { get; set; }
-        public string? ExternalReferenceId { get; set; }
+        public string? ManualFileId { get; set; }
         public bool IsPaper { get; set; }
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }

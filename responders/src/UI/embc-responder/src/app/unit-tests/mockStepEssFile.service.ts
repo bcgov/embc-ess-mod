@@ -128,7 +128,7 @@ export class MockStepEssFileService extends StepEssFileService {
 
   public essFile: EvacuationFileModel = {
     id: '154150',
-    externalReferenceId: null,
+    manualFileId: null,
     completedOn: null,
     completedBy: null,
     isPaper: false,

@@ -47,7 +47,7 @@ export class EvacueeSearchResultsService {
         lastName: evacueeSearchParameters?.lastName,
         dateOfBirth: evacueeSearchParameters?.dateOfBirth,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        ExternalReferenceId: paperBasedEssFile
+        ManualFileId: paperBasedEssFile
       })
       .pipe(
         map((searchResult: EvacueeSearchResults) => {

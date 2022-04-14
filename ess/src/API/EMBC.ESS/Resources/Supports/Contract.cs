@@ -90,7 +90,7 @@ namespace EMBC.ESS.Resources.Supports
     public class SearchSupportsQuery : SupportQuery
     {
         public string ById { get; set; }
-        public string ByExternalReferenceId { get; set; }
+        public string ByManualReferralId { get; set; }
         public string ByEvacuationFileId { get; set; }
         public SupportStatus? ByStatus { get; set; }
         public int? LimitNumberOfResults { get; set; }
