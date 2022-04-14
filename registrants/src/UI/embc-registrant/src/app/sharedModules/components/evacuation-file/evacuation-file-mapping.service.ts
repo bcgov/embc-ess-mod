@@ -13,7 +13,7 @@ export class EvacuationFileMappingService {
     private evacuationFileDataService: EvacuationFileDataService,
     private restrictionService: RestrictionService,
     private formCreationService: FormCreationService
-  ) { }
+  ) {}
 
   public mapEvacuationFile(evacuationFile: EvacuationFileModel): void {
     this.evacuationFileDataService.essFileId = evacuationFile.fileId;
