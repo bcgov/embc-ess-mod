@@ -137,7 +137,7 @@ export class MatchedEssfilesComponent implements OnInit {
             ) {
               this.essFiles = essFilesArray.filter(
                 (files) =>
-                  files.externalReferenceId ===
+                  files.manualFileId ===
                   this.evacueeSearchService.paperBasedEssFile
               );
             }

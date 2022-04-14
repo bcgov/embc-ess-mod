@@ -29,7 +29,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
                 .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
-                .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ExternalReferenceId))
+                .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ManualFileId))
                 .ForMember(d => d.era_registrationcompleteddate, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.era_interviewername, opts => opts.MapFrom(s => s.CompletedBy))
                 .AfterMap((s, d) =>
@@ -69,7 +69,7 @@ namespace EMBC.ESS.Resources.Evacuations
                         string.IsNullOrEmpty(s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_CurrentNeedsAssessmentid.era_externalreferralsdetails },
                         string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
                     }.Where(n => n != null).ToArray()))
-                .ForMember(d => d.ExternalReferenceId, opts => opts.MapFrom(s => s.era_paperbasedessfile))
+                .ForMember(d => d.ManualFileId, opts => opts.MapFrom(s => s.era_paperbasedessfile))
                 .ForMember(d => d.IsPaper, opts => opts.MapFrom(s => s.era_paperbasedessfile != null))
                 ;
 
