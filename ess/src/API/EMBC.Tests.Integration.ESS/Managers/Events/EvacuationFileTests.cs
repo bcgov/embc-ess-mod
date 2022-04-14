@@ -332,14 +332,14 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
-            file.ExternalReferenceId = $"{TestData.TestPrefix}-{Guid.NewGuid().ToString().Substring(0, 4)}";
+            file.ManualFileId = $"{TestData.TestPrefix}-{Guid.NewGuid().ToString().Substring(0, 4)}";
             file.SecurityPhrase = null!;
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             fileId.ShouldNotBeNull();
 
             var savedFile = await GetEvacuationFileById(fileId);
-            savedFile.ExternalReferenceId.ShouldBe(file.ExternalReferenceId);
+            savedFile.ManualFileId.ShouldBe(file.ManualFileId);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

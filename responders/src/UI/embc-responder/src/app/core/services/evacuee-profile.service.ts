@@ -134,13 +134,13 @@ export class EvacueeProfileService {
    */
   public getProfileFiles(
     registrantId?: string,
-    externalReferenceId?: string
+    manualFileId?: string
   ): Observable<Array<EvacuationFileSummaryModel>> {
     const evacFileSummaryModelArray: Array<EvacuationFileSummaryModel> = [];
     return this.registrationsService
       .registrationsGetFiles({
         registrantId,
-        externalReferenceId
+        manualFileId
       })
       .pipe(
         map(

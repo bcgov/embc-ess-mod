@@ -257,7 +257,7 @@ namespace EMBC.ESS.Managers.Events
             var cases = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
             {
                 FileId = query.FileId,
-                ExternalReferenceId = query.ExternalReferenceId,
+                ManualFileId = query.ManualFileId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
                 LinkedRegistrantId = query.LinkedRegistrantId,
                 NeedsAssessmentId = query.NeedsAssessmentId,
@@ -690,12 +690,12 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<SearchSupportsQueryResponse> Handle(Shared.Contracts.Events.SearchSupportsQuery query)
         {
-            if (string.IsNullOrEmpty(query.ExternalReferenceId) && string.IsNullOrEmpty(query.FileId))
+            if (string.IsNullOrEmpty(query.ManualReferralId) && string.IsNullOrEmpty(query.FileId))
                 throw new BusinessValidationException($"Search supports must have criteria");
 
             var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
             {
-                ByExternalReferenceId = query.ExternalReferenceId,
+                ByManualReferralId = query.ManualReferralId,
                 ByEvacuationFileId = query.FileId
             })).Items);
 

@@ -16,11 +16,11 @@ export interface EvacuationFile {
   completedOn?: null | string;
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
-  externalReferenceId?: null | string;
   householdMembers?: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   isPaper?: null | boolean;
   isRestricted?: null | boolean;
+  manualFileId?: null | string;
   needsAssessment: NeedsAssessment;
   notes?: Array<Note>;
   primaryRegistrantFirstName?: null | string;

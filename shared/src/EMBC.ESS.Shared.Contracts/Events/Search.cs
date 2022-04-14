@@ -6,7 +6,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class EvacuationFilesQuery : Query<EvacuationFilesQueryResponse>
     {
         public string FileId { get; set; }
-        public string ExternalReferenceId { get; set; }
+        public string ManualFileId { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string PrimaryRegistrantUserId { get; set; }
         public string LinkedRegistrantId { get; set; }
@@ -101,7 +101,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public DateTime EvacuationDate { get; set; }
         public Address EvacuationAddress { get; set; }
         public IEnumerable<EvacuationFileSearchResultHouseholdMember> HouseholdMembers { get; set; }
-        public string ExternalReferenceId { get; set; }
+        public string ManualFileId { get; set; }
     }
 
     public class EvacuationFileSearchResultHouseholdMember
@@ -118,7 +118,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
 
     public class SearchSupportsQuery : Query<SearchSupportsQueryResponse>
     {
-        public string ExternalReferenceId { get; set; }
+        public string ManualReferralId { get; set; }
         public string FileId { get; set; }
     }
 

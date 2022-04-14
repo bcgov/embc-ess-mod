@@ -210,7 +210,7 @@ namespace EMBC.ESS.Resources.Supports
         private static async Task<IEnumerable<era_evacueesupport>> Search(EssContext ctx, SearchSupportsQuery query)
         {
             if (string.IsNullOrEmpty(query.ById) &&
-                string.IsNullOrEmpty(query.ByExternalReferenceId) &&
+                string.IsNullOrEmpty(query.ByManualReferralId) &&
                 string.IsNullOrEmpty(query.ByEvacuationFileId) &&
                 !query.ByStatus.HasValue)
                 throw new ArgumentException("Supports query must have at least one criteria", nameof(query));
@@ -224,7 +224,7 @@ namespace EMBC.ESS.Resources.Supports
                 await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
                 IEnumerable<era_evacueesupport> supports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId;
                 if (!string.IsNullOrEmpty(query.ById)) supports = supports.Where(s => s.era_name == query.ById);
-                if (!string.IsNullOrEmpty(query.ByExternalReferenceId)) supports = supports.Where(s => s.era_manualsupport == query.ByExternalReferenceId);
+                if (!string.IsNullOrEmpty(query.ByManualReferralId)) supports = supports.Where(s => s.era_manualsupport == query.ByManualReferralId);
 
                 return supports.ToArray();
             }
@@ -233,7 +233,7 @@ namespace EMBC.ESS.Resources.Supports
             IQueryable<era_evacueesupport> supportsQuery = ctx.era_evacueesupports;
 
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
-            if (!string.IsNullOrEmpty(query.ByExternalReferenceId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByExternalReferenceId);
+            if (!string.IsNullOrEmpty(query.ByManualReferralId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByManualReferralId);
             if (query.ByStatus.HasValue && query.ByStatus != SupportStatus.Processed)
                 supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
             if (query.ByStatus.HasValue && query.ByStatus == SupportStatus.Processed)

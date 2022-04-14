@@ -18,7 +18,7 @@ export class EvacuationFileMappingService {
   public mapEvacuationFile(evacuationFile: EvacuationFileModel): void {
     this.evacuationFileDataService.essFileId = evacuationFile.fileId;
     this.evacuationFileDataService.externalReferenceId =
-      evacuationFile.externalReferenceId;
+      evacuationFile.manualFileId;
     this.evacuationFileDataService.isPaper = evacuationFile.isPaper;
     this.evacuationFileDataService.evacuatedAddress =
       evacuationFile.evacuatedAddress;
