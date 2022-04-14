@@ -68,23 +68,22 @@ export class EssfileDashboardService {
         lastName,
         dateOfBirth
       })
-      .pipe(
-        map(
-          (
-            matchedProfiles: RegistrantProfile[]
-          ): LinkRegistrantProfileModel[] => {
-            const linkProfiles: LinkRegistrantProfileModel[] = [];
-            for (const profile of matchedProfiles) {
-              const linkProfile: LinkRegistrantProfileModel = {
-                ...profile,
-                hasSecurityQuestions: undefined
-              };
-              linkProfiles.push(linkProfile);
-            }
-            return linkProfiles;
-          }
-        )
-      );
+      // .pipe(
+      //   map(
+      //     (
+      //       matchedProfiles: RegistrantProfile[]
+      //     ): LinkRegistrantProfileModel[] => {
+      //       const linkProfiles: LinkRegistrantProfileModel[] = [];
+      //       for (const profile of matchedProfiles) {
+      //         const linkProfile: LinkRegistrantProfileModel = {
+      //           ...profile
+      //         };
+      //         linkProfiles.push(linkProfile);
+      //       }
+      //       return linkProfiles;
+      //     }
+      //   )
+      // );
   }
 
   private getHasSecurityQuestions(
@@ -111,5 +110,10 @@ export class EssfileDashboardService {
           }
         )
       );
+  }
+
+
+  mapLinkedModel(profile:RegistrantProfile, securityQues: GetSecurityQuestionsResponse) {
+
   }
 }

@@ -47,4 +47,8 @@ export class ComputeAppBaseService implements Compute {
       } as DigitalFlow
     };
   }
+
+  private computeHouseholdMemberDisplayButton() {
+    
+  }
 }
