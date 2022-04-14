@@ -46,22 +46,22 @@ namespace EMBC.Responders.API.Controllers
         /// Search files
         /// </summary>
         /// <param name="registrantId">fileId</param>
-        /// <param name="externalReferenceId">externalReferenceId</param>
+        /// <param name="manualFileId">manualFileId</param>
         /// <returns>file</returns>
         [HttpGet("files")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string? registrantId, [FromQuery] string? externalReferenceId)
+        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string? registrantId, [FromQuery] string? manualFileId)
         {
-            if (!string.IsNullOrEmpty(registrantId) && string.IsNullOrEmpty(externalReferenceId))
+            if (!string.IsNullOrEmpty(registrantId) && string.IsNullOrEmpty(manualFileId))
             {
                 var userRole = Enum.Parse<MemberRole>(currentUserRole);
                 var files = await evacuationSearchService.GetEvacuationFilesByRegistrantId(registrantId, userRole);
                 return Ok(files);
             }
-            else if (!string.IsNullOrEmpty(externalReferenceId) && string.IsNullOrEmpty(registrantId))
+            else if (!string.IsNullOrEmpty(manualFileId) && string.IsNullOrEmpty(registrantId))
             {
-                var files = await evacuationSearchService.GetEvacuationFilesByExternalReferenceId(externalReferenceId);
+                var files = await evacuationSearchService.GetEvacuationFilesByManualFileId(manualFileId);
                 return Ok(files);
             }
 
@@ -69,7 +69,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Invalid request",
-                Detail = $"{nameof(registrantId)} or {nameof(externalReferenceId)} are mandatory, but not both"
+                Detail = $"{nameof(registrantId)} or {nameof(manualFileId)} are mandatory, but not both"
             });
         }
 
@@ -258,7 +258,7 @@ namespace EMBC.Responders.API.Controllers
     public class EvacuationFile
     {
         public string? Id { get; set; } = null!;
-        public string? ExternalReferenceId { get; set; }
+        public string? ManualFileId { get; set; }
 
         public DateTime? CompletedOn { get; set; }
 
@@ -298,7 +298,7 @@ namespace EMBC.Responders.API.Controllers
     public class EvacuationFileSummary
     {
         public string Id { get; set; } = null!;
-        public string? ExternalReferenceId { get; set; }
+        public string? ManualFileId { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public EvacuationFileTask? Task { get; set; }
         public DateTime CreatedOn { get; set; }

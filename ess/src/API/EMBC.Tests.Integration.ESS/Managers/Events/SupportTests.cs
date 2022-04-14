@@ -253,7 +253,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var paperFile = CreateNewTestEvacuationFile(registrant);
 
-            paperFile.ExternalReferenceId = $"{TestData.TestPrefix}-paperfile";
+            paperFile.ManualFileId = $"{TestData.TestPrefix}-paperfile";
             paperFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             paperFile.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
 
@@ -349,7 +349,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task SearchSupports_ExternalReferenceId_CorrectListOfSupports()
+        public async Task SearchSupports_ManualReferralId_CorrectListOfSupports()
         {
             var fileId = TestData.PaperEvacuationFileId;
 
@@ -380,7 +380,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, RequestingUserId = TestData.Tier4TeamMemberId, Supports = newSupports });
 
-            var supports = (await manager.Handle(new SearchSupportsQuery { ExternalReferenceId = paperReferralId })).Items;
+            var supports = (await manager.Handle(new SearchSupportsQuery { ManualReferralId = paperReferralId })).Items;
             supports.ShouldNotBeEmpty();
             supports.Count().ShouldBe(newSupports.Length);
             foreach (var support in supports)

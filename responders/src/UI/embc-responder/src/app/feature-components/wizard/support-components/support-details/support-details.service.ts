@@ -261,11 +261,9 @@ export class SupportDetailsService {
     return clothingForm;
   }
 
-  checkUniqueReferralNumber(
-    externalReferenceId: string
-  ): Observable<Support[]> {
+  checkUniqueReferralNumber(manualReferralId: string): Observable<Support[]> {
     return this.registrationService.registrationsSearchSupports({
-      externalReferenceId
+      manualReferralId
     });
   }
 }

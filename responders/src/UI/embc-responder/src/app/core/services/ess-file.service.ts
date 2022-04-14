@@ -58,16 +58,16 @@ export class EssFileService {
   /**
    * Gets supports for file or paper file
    *
-   * @param externalReferenceId
+   * @param manualReferralId
    * @param fileId
    * @returns array of support
    */
   public getSupports(
     fileId?: string,
-    externalReferenceId?: string
+    manualReferralId?: string
   ): Observable<Support[]> {
     return this.registrationsService.registrationsSearchSupports({
-      externalReferenceId,
+      manualReferralId,
       fileId
     });
   }

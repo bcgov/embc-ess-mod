@@ -42,7 +42,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class EvacuationFile
     {
         public string Id { get; set; }
-        public string ExternalReferenceId { get; set; }
+        public string ManualFileId { get; set; }
         public string CompletedOn { get; set; }
         public string CompletedBy { get; set; }
         public IncidentTask RelatedTask { get; set; }

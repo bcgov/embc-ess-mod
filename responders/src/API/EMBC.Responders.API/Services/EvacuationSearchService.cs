@@ -11,11 +11,11 @@ namespace EMBC.Responders.API.Services
 {
     public interface IEvacuationSearchService
     {
-        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string ExternalReferenceId, MemberRole userRole);
+        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string ManualFileId, MemberRole userRole);
 
         Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId);
 
-        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByExternalReferenceId(string externalFileId);
+        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByManualFileId(string manualFileId);
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string registrantId, MemberRole userRole);
 
@@ -46,7 +46,7 @@ namespace EMBC.Responders.API.Services
     public class EvacuationFileSearchResult
     {
         public string Id { get; set; }
-        public string ExternalReferenceId { get; set; }
+        public string ManualFileId { get; set; }
         public bool IsPaperBasedFile { get; set; }
         public bool IsRestricted { get; set; }
         public string TaskId { get; set; }
@@ -86,9 +86,9 @@ namespace EMBC.Responders.API.Services
             this.configuration = configuration;
         }
 
-        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string externalReferenceId, MemberRole userRole)
+        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string manualFileId, MemberRole userRole)
         {
-            var allowedStatues = (!string.IsNullOrEmpty(externalReferenceId) || userRole != MemberRole.Tier1 ? tier2andAboveFileStatuses : tier1FileStatuses)
+            var allowedStatues = (!string.IsNullOrEmpty(manualFileId) || userRole != MemberRole.Tier1 ? tier2andAboveFileStatuses : tier1FileStatuses)
                 .Select(s => Enum.Parse<EMBC.ESS.Shared.Contracts.Events.EvacuationFileStatus>(s.ToString(), true)).ToArray();
             var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
             {
@@ -115,9 +115,9 @@ namespace EMBC.Responders.API.Services
             return mappedFile;
         }
 
-        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByExternalReferenceId(string externalFileId)
+        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByManualFileId(string manualFileId)
         {
-            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { ExternalReferenceId = externalFileId }))
+            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { ManualFileId = manualFileId }))
                 .Items
                 .OrderByDescending(f => f.Id)
                 .FirstOrDefault();
@@ -171,7 +171,7 @@ namespace EMBC.Responders.API.Services
             {
                 new EvacuationFileTaskFeature { Name = "digital-support-referrals", Enabled = file.Task.To >= DateTime.UtcNow },
                 new EvacuationFileTaskFeature { Name = "digital-support-etransfer", Enabled = etransferEnabled && file.Task.To >= DateTime.UtcNow },
-                new EvacuationFileTaskFeature { Name = "paper-support-referrals", Enabled = file.ExternalReferenceId != null },
+                new EvacuationFileTaskFeature { Name = "paper-support-referrals", Enabled = file.ManualFileId != null },
             };
         }
     }
@@ -181,7 +181,7 @@ namespace EMBC.Responders.API.Services
         public EvacuationSearchMapping()
         {
             CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResult, EvacuationFileSearchResult>()
-                .ForMember(d => d.IsPaperBasedFile, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ExternalReferenceId)))
+                .ForMember(d => d.IsPaperBasedFile, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.ManualFileId)))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))

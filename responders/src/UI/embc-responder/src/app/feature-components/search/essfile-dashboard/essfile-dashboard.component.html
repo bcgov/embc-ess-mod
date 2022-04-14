@@ -12,9 +12,7 @@
         'file-expired': essFile?.status === 'Expired'
       }"
       >ESS File #
-      <span class="bold">{{
-        essFile?.externalReferenceId || essFile?.id
-      }}</span></span
+      <span class="bold">{{ essFile?.manualFileId || essFile?.id }}</span></span
     >
     <span class="file-heading"
       ><img
@@ -315,9 +313,7 @@
   </div>
 
   <div
-    *ngIf="
-      essFile?.status === 'Completed' && essFile?.externalReferenceId === null
-    "
+    *ngIf="essFile?.status === 'Completed' && essFile?.manualFileId === null"
     class="row banner"
   >
     <div class="col-md-12 center-content">
@@ -331,9 +327,7 @@
   </div>
 
   <div
-    *ngIf="
-      essFile?.status === 'Completed' && essFile?.externalReferenceId !== null
-    "
+    *ngIf="essFile?.status === 'Completed' && essFile?.manualFileId !== null"
     class="row banner"
   >
     <div class="col-md-9 center-content">

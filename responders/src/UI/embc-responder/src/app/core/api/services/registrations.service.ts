@@ -665,15 +665,15 @@ export class RegistrationsService extends BaseService {
     registrantId?: string;
 
     /**
-     * externalReferenceId
+     * manualFileId
      */
-    externalReferenceId?: string;
+    manualFileId?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSummary>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilesPath, 'get');
     if (params) {
       rb.query('registrantId', params.registrantId, {});
-      rb.query('externalReferenceId', params.externalReferenceId, {});
+      rb.query('manualFileId', params.manualFileId, {});
     }
 
     return this.http.request(rb.build({
@@ -705,9 +705,9 @@ export class RegistrationsService extends BaseService {
     registrantId?: string;
 
     /**
-     * externalReferenceId
+     * manualFileId
      */
-    externalReferenceId?: string;
+    manualFileId?: string;
   }): Observable<Array<EvacuationFileSummary>> {
 
     return this.registrationsGetFiles$Response(params).pipe(
@@ -1221,7 +1221,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
-    ExternalReferenceId?: string;
+    ManualFileId?: string;
   }): Observable<StrictHttpResponse<SearchResults>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchPath, 'get');
@@ -1229,7 +1229,7 @@ export class RegistrationsService extends BaseService {
       rb.query('firstName', params.firstName, {});
       rb.query('lastName', params.lastName, {});
       rb.query('dateOfBirth', params.dateOfBirth, {});
-      rb.query('ExternalReferenceId', params.ExternalReferenceId, {});
+      rb.query('ManualFileId', params.ManualFileId, {});
     }
 
     return this.http.request(rb.build({
@@ -1257,7 +1257,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
-    ExternalReferenceId?: string;
+    ManualFileId?: string;
   }): Observable<SearchResults> {
 
     return this.registrationsSearch$Response(params).pipe(
@@ -1280,7 +1280,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
-    ExternalReferenceId?: string;
+    ManualFileId?: string;
   }): Observable<StrictHttpResponse<Array<RegistrantProfile>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingRegistrantsPath, 'get');
@@ -1288,7 +1288,7 @@ export class RegistrationsService extends BaseService {
       rb.query('firstName', params.firstName, {});
       rb.query('lastName', params.lastName, {});
       rb.query('dateOfBirth', params.dateOfBirth, {});
-      rb.query('ExternalReferenceId', params.ExternalReferenceId, {});
+      rb.query('ManualFileId', params.ManualFileId, {});
     }
 
     return this.http.request(rb.build({
@@ -1312,7 +1312,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
-    ExternalReferenceId?: string;
+    ManualFileId?: string;
   }): Observable<Array<RegistrantProfile>> {
 
     return this.registrationsSearchMatchingRegistrants$Response(params).pipe(
@@ -1335,7 +1335,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
-    ExternalReferenceId?: string;
+    ManualFileId?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingEvacuationFilesPath, 'get');
@@ -1343,7 +1343,7 @@ export class RegistrationsService extends BaseService {
       rb.query('firstName', params.firstName, {});
       rb.query('lastName', params.lastName, {});
       rb.query('dateOfBirth', params.dateOfBirth, {});
-      rb.query('ExternalReferenceId', params.ExternalReferenceId, {});
+      rb.query('ManualFileId', params.ManualFileId, {});
     }
 
     return this.http.request(rb.build({
@@ -1367,7 +1367,7 @@ export class RegistrationsService extends BaseService {
     firstName?: string;
     lastName?: string;
     dateOfBirth?: string;
-    ExternalReferenceId?: string;
+    ManualFileId?: string;
   }): Observable<Array<EvacuationFileSearchResult>> {
 
     return this.registrationsSearchMatchingEvacuationFiles$Response(params).pipe(
@@ -1853,9 +1853,9 @@ export class RegistrationsService extends BaseService {
   registrationsSearchSupports$Response(params?: {
 
     /**
-     * search for supports for an external reference id
+     * search for supports for an manual referral id
      */
-    externalReferenceId?: string;
+    manualReferralId?: string;
 
     /**
      * search for supports in a specific evacuation file
@@ -1865,7 +1865,7 @@ export class RegistrationsService extends BaseService {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchSupportsPath, 'get');
     if (params) {
-      rb.query('externalReferenceId', params.externalReferenceId, {});
+      rb.query('manualReferralId', params.manualReferralId, {});
       rb.query('fileId', params.fileId, {});
     }
 
@@ -1893,9 +1893,9 @@ export class RegistrationsService extends BaseService {
   registrationsSearchSupports(params?: {
 
     /**
-     * search for supports for an external reference id
+     * search for supports for an manual referral id
      */
-    externalReferenceId?: string;
+    manualReferralId?: string;
 
     /**
      * search for supports in a specific evacuation file
