@@ -152,10 +152,41 @@
           "
           class="etransfer-ineligible"
         >
-          <p>Evacuee Ineligible</p>
+          <p
+            *ngIf="
+              appBaseService?.etransferProperties?.etransferStatus ===
+              eTransferStatus.inEligible
+            "
+          >
+            Evacuee Ineligible
+          </p>
+          <p
+            *ngIf="
+              appBaseService?.etransferProperties?.etransferStatus ===
+              eTransferStatus.unavailable
+            "
+          >
+            Not Available
+          </p>
+          <p
+            *ngIf="
+              appBaseService?.etransferProperties?.etransferStatus ===
+              eTransferStatus.notAllowed
+            "
+          >
+            Not Available for this Support Type
+          </p>
         </div>
 
-        <div class="requirements">
+        <div
+          class="requirements"
+          *ngIf="
+            appBaseService?.etransferProperties?.etransferStatus ===
+              eTransferStatus.available ||
+            appBaseService?.etransferProperties?.etransferStatus ===
+              eTransferStatus.inEligible
+          "
+        >
           <p><b>Requirements:</b></p>
           <div
             *ngFor="

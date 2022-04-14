@@ -86,7 +86,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                     etransfer.NotificationEmail.ShouldBe(sourceEtransfer.NotificationEmail);
                     etransfer.NotificationMobile.ShouldBe(sourceEtransfer.NotificationMobile);
                     etransfer.ReceivingRegistrantId.ShouldBe(sourceEtransfer.ReceivingRegistrantId);
-                    support.Status.ShouldBe(SupportStatus.PendingScan);
+                    support.Status.ShouldBe(SupportStatus.PendingApproval);
                 }
                 support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
                 support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
@@ -253,7 +253,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var paperFile = CreateNewTestEvacuationFile(registrant);
 
-            paperFile.ExternalReferenceId = $"{TestData.TestPrefix}-paperfile";
+            paperFile.ManualFileId = $"{TestData.TestPrefix}-paperfile";
             paperFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
             paperFile.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
 
@@ -349,7 +349,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task SearchSupports_ExternalReferenceId_CorrectListOfSupports()
+        public async Task SearchSupports_ManualReferralId_CorrectListOfSupports()
         {
             var fileId = TestData.PaperEvacuationFileId;
 
@@ -380,7 +380,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, RequestingUserId = TestData.Tier4TeamMemberId, Supports = newSupports });
 
-            var supports = (await manager.Handle(new SearchSupportsQuery { ExternalReferenceId = paperReferralId })).Items;
+            var supports = (await manager.Handle(new SearchSupportsQuery { ManualReferralId = paperReferralId })).Items;
             supports.ShouldNotBeEmpty();
             supports.Count().ShouldBe(newSupports.Length);
             foreach (var support in supports)
@@ -431,7 +431,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             firstFileSupports = (await manager.Handle(new SearchSupportsQuery { FileId = firstFile.Id })).Items.Where(S => S.SupportDelivery is Interac).ToArray();
             firstFileSupports.ShouldNotBeEmpty();
-            firstFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingScan);
+            firstFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingApproval);
 
             //process pending supports of first file
             await manager.Handle(new ProcessPendingSupportsCommand());
@@ -470,6 +470,15 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             secondFileSupports = (await manager.Handle(new SearchSupportsQuery { FileId = secondFile.Id })).Items.Where(S => S.SupportDelivery is Interac).ToArray();
             secondFileSupports.ShouldNotBeEmpty();
             secondFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingApproval && s.Flags.SingleOrDefault(f => f is DuplicateSupportFlag) != null);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessApprovedSupportsCommand_ApprovedSupports_PaymentsAdded()
+        {
+            var fileId = TestData.EvacuationFileId;
+            var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Where(S => S.Status == SupportStatus.Approved).ToArray();
+            approvedSupports.ShouldNotBeEmpty();
+            await manager.Handle(new ProcessApprovedSupportsCommand());
         }
     }
 }

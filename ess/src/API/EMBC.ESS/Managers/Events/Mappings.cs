@@ -121,6 +121,14 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
                 ;
 
+            Func<Support, Shared.Contracts.Events.SupportStatus> resolveSupportStatus = s =>
+                s.Status switch
+                {
+                    SupportStatus.PendingScan => Shared.Contracts.Events.SupportStatus.PendingApproval,
+                    SupportStatus.Processed => Shared.Contracts.Events.SupportStatus.Approved,
+
+                    _ => Enum.Parse<Shared.Contracts.Events.SupportStatus>(s.Status.ToString())
+                };
             CreateMap<Support, Shared.Contracts.Events.Support>()
                 .ForMember(d => d.CreatedBy, opts => opts.MapFrom(s => s.CreatedByTeamMemberId == null
                     ? null
@@ -131,6 +139,7 @@ namespace EMBC.ESS.Managers.Events
                         : string.IsNullOrEmpty(GetReferralOrNull(s).IssuedByDisplayName)
                             ? null
                             : new Shared.Contracts.Events.TeamMember { DisplayName = GetReferralOrNull(s).IssuedByDisplayName }))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => resolveSupportStatus(s)))
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
                 .IncludeAllDerived()

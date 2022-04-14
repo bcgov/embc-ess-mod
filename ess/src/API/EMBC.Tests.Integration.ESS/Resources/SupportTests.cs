@@ -49,7 +49,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                        NotificationMobile = "+000-000-0000",
                        ReceivingRegistrantId = TestData.ContactId
                    },
-                   TotalAmount = 100.00,
+                   TotalAmount = 100.00m,
                    CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
                    IncludedHouseholdMembers = householdMembers,
                    From = now,
@@ -240,8 +240,67 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ChangeStatus_Processed_Success()
+        {
+            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items;
+            var support = supports.First(s => s.SupportDelivery is Interac && s.Status == SupportStatus.Approved);
+
+            var supportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
+            {
+                Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Processed } }
+            })).Ids.ShouldHaveSingleItem();
+            supportId.ShouldBe(support.Id);
+
+            var voidedSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
+            voidedSupport.Status.ShouldBe(SupportStatus.Processed);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SetFlags_TwoFlags_FlagsAdded()
         {
+            var uniqueId = TestData.TestPrefix;
+            var householdMembers = TestData.HouseholdMemberIds;
+            var now = DateTime.UtcNow;
+            var fileId = TestData.EvacuationFileId;
+
+            var newSupports = new Support[]
+            {
+                new ClothingSupport {
+                   SupportDelivery = new Referral
+                   {
+                        SupplierId = TestData.SupplierAId,
+                        SupplierNotes = $"{uniqueId}-notes",
+                        IssuedToPersonName = "test person",
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now
+                },
+                new ClothingSupport {
+                   SupportDelivery = new Interac
+                   {
+                        NotificationEmail = "test@email",
+                        NotificationMobile = "12345",
+                        ReceivingRegistrantId = TestData.ContactId,
+                        RecipientFirstName = "test",
+                        RecipientLastName = "test"
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now
+                },
+            };
+
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            {
+                FileId = fileId,
+                Supports = newSupports
+            })).Supports.Select(s => s.Id).ToArray();
+
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
 
             var flaggedSupport = supports.First(s => s.SupportDelivery is ETransfer && s.Status == SupportStatus.PendingScan);
@@ -319,6 +378,36 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task AssignToApprovalQueue_Support_Assigned()
         {
+            var uniqueId = TestData.TestPrefix;
+            var householdMembers = TestData.HouseholdMemberIds;
+            var now = DateTime.UtcNow;
+            var fileId = TestData.EvacuationFileId;
+
+            var newSupports = new Support[]
+            {
+                new ClothingSupport {
+                   SupportDelivery = new Interac
+                   {
+                        NotificationEmail = "test@email",
+                        NotificationMobile = "12345",
+                        ReceivingRegistrantId = TestData.ContactId,
+                        RecipientFirstName = "test",
+                        RecipientLastName = "test"
+                   },
+                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                   IncludedHouseholdMembers = householdMembers,
+                   From = now,
+                   To = now.AddDays(3),
+                   IssuedOn = now
+                }
+            };
+
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            {
+                FileId = fileId,
+                Supports = newSupports
+            })).Supports.Select(s => s.Id).ToArray();
+
             var pendingScanSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByStatus = SupportStatus.PendingScan })).Items.First();
 
             await supportRepository.Manage(new SubmitSupportForApprovalCommand

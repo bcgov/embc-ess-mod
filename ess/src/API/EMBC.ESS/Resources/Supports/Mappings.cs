@@ -29,7 +29,9 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.MapFrom(s => s._era_needsassessmentid_value))
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode == (int)SupportStatus.Approved && s.era_etransfertransactioncreated == true
+                    ? SupportStatus.Processed
+                    : (SupportStatus)s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.Flags, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport))
@@ -41,6 +43,16 @@ namespace EMBC.ESS.Resources.Supports
                 Interac => SupportMethod.ETransfer,
 
                 _ => null
+            };
+
+            Func<Support, SupportStatus> resolveSupportStatus = s => s switch
+            {
+                // default e-transfer
+                var sup when sup.IsEtransfer == true && sup.Status == SupportStatus.Active => SupportStatus.PendingScan,
+                // expired referral
+                var sup when sup.To < DateTime.UtcNow && sup.Status == SupportStatus.Active => SupportStatus.Expired,
+
+                _ => s.Status
             };
             CreateMap<Support, era_evacueesupport>(MemberList.Source)
                 .IgnoreAllSourcePropertiesWithAnInaccessibleSetter()
@@ -60,10 +72,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
-                .ForMember(d => d.statuscode, opts => opts.MapFrom(s =>
-                    s.IsEtransfer
-                        ? SupportStatus.PendingScan
-                        : s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))
+                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => resolveSupportStatus(s)))
                 .ForMember(d => d.era_era_householdmember_era_evacueesupport, opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
                 .ForMember(d => d._era_issuedbyid_value, opts => opts.MapFrom(s => s.CreatedByTeamMemberId))
                 .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.IsPaperReferral ? s.IssuedOn : null))

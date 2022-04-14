@@ -90,11 +90,10 @@ namespace EMBC.ESS.Resources.Supports
     public class SearchSupportsQuery : SupportQuery
     {
         public string ById { get; set; }
-        public string ByExternalReferenceId { get; set; }
+        public string ByManualReferralId { get; set; }
         public string ByEvacuationFileId { get; set; }
         public SupportStatus? ByStatus { get; set; }
         public int? LimitNumberOfResults { get; set; }
-        public bool? HasNoPayments { get; set; }
     }
 
     public class SearchSupportQueryResult : SupportQueryResult
@@ -148,21 +147,21 @@ namespace EMBC.ESS.Resources.Supports
     public class ClothingSupport : Support
     {
         public bool ExtremeWinterConditions { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string? ApproverName { get; set; }
     }
 
     public class IncidentalsSupport : Support
     {
         public string ApprovedItems { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string? ApproverName { get; set; }
     }
 
     public class FoodGroceriesSupport : Support
     {
         public int NumberOfDays { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string? ApproverName { get; set; }
     }
 
@@ -171,7 +170,7 @@ namespace EMBC.ESS.Resources.Supports
         public int NumberOfBreakfastsPerPerson { get; set; }
         public int NumberOfLunchesPerPerson { get; set; }
         public int NumberOfDinnersPerPerson { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 
     public class LodgingHotelSupport : Support
@@ -208,7 +207,7 @@ namespace EMBC.ESS.Resources.Supports
 
     public class TransportationOtherSupport : Support
     {
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string TransportMode { get; set; }
     }
 
@@ -224,7 +223,8 @@ namespace EMBC.ESS.Resources.Supports
         Paid = 174360003,
         Cancelled = 174360004,
         UnderReview = 174360005,
-        PendingScan = 174360006
+        PendingScan = 174360006,
+        Processed = 10 //not in Dynamics
     }
 
     public enum SupportVoidReason

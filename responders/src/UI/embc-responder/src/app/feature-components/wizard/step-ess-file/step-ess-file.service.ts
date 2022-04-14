@@ -515,7 +515,7 @@ export class StepEssFileService {
       primaryRegistrantId: this.evacueeSession.profileId,
       completedBy: this.completedBy,
       completedOn: this.completedOn,
-      externalReferenceId: this.evacueeSession.isPaperBased
+      manualFileId: this.evacueeSession.isPaperBased
         ? this.evacueeSearchService.paperBasedEssFile
         : null,
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
@@ -606,7 +606,7 @@ export class StepEssFileService {
     return {
       completedBy: this.completedBy,
       completedOn: this.completedOn,
-      externalReferenceId: this.evacueeSession.isPaperBased
+      manualFileId: this.evacueeSession.isPaperBased
         ? this.evacueeSearchService.paperBasedEssFile
         : null,
       evacuationFileDate: this.evacuationFileDate,

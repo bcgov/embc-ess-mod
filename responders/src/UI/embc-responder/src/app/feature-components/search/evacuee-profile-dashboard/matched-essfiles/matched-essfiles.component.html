@@ -38,7 +38,7 @@
               'complete-status': file.status === 'Completed',
               'expired-status': file.status === 'Expired'
             }"
-            >ESS File # {{ file.externalReferenceId || file.id }}</span
+            >ESS File # {{ file.manualFileId || file.id }}</span
           >
           <div class="file-heading">
             <img
@@ -130,7 +130,7 @@
       </div>
       <div
         class="row button-div"
-        *ngIf="isDisplayedProceedESSFile(file?.externalReferenceId)"
+        *ngIf="isDisplayedProceedESSFile(file?.manualFileId)"
       >
         <button class="button-p proceed-button" (click)="goToESSFile(file?.id)">
           Proceed to ESS File
