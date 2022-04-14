@@ -29,7 +29,7 @@ namespace EMBC.Utilities.Hosting
             using (var scope = serviceProvider.CreateScope())
             {
                 var initialTask = scope.ServiceProvider.GetRequiredService<T>();
-                schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = false });
+                schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
                 startupDelay = initialTask.InitialDelay;
 
                 concurrencyManager = new BackgroundTaskConcurrencyManager(
