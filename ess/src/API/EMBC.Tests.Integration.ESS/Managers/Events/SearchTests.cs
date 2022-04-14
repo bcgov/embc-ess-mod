@@ -140,13 +140,13 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var dateOfBirth = TestData.ContactDateOfBirth;
 
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
-            searchResults.EvacuationFiles.ShouldContain(e => e.ExternalReferenceId == TestData.PaperEvacuationFilePaperId);
+            searchResults.EvacuationFiles.ShouldContain(e => e.ManualFileId == TestData.PaperEvacuationFilePaperId);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacuationFilesByPaperId()
         {
-            var files = (await manager.Handle(new EvacuationFilesQuery { ExternalReferenceId = TestData.PaperEvacuationFilePaperId })).Items;
+            var files = (await manager.Handle(new EvacuationFilesQuery { ManualFileId = TestData.PaperEvacuationFilePaperId })).Items;
             files.ShouldNotBeEmpty();
         }
 

@@ -7,11 +7,11 @@ using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
-    public class PaymentRepositoryTests : DynamicsWebAppTestBase
+    public class PaymentsTests : DynamicsWebAppTestBase
     {
         private readonly IPaymentRepository repository;
 
-        public PaymentRepositoryTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+        public PaymentsTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             repository = Services.GetRequiredService<IPaymentRepository>();
         }

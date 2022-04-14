@@ -11,6 +11,7 @@ using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Metadata;
+using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Supports;
@@ -51,6 +52,7 @@ namespace EMBC.ESS.Managers.Events
         private readonly IDataProtectionProvider dataProtectionProvider;
         private readonly IConfiguration configuration;
         private readonly ISupportingEngine supportingEngine;
+        private readonly IPaymentRepository paymentRepository;
         private readonly EvacuationFileLoader evacuationFileLoader;
         private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
@@ -75,7 +77,8 @@ namespace EMBC.ESS.Managers.Events
             IMetadataRepository metadataRepository,
             IDataProtectionProvider dataProtectionProvider,
             IConfiguration configuration,
-            ISupportingEngine supportingEngine)
+            ISupportingEngine supportingEngine,
+            IPaymentRepository paymentRepository)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -96,6 +99,7 @@ namespace EMBC.ESS.Managers.Events
             this.dataProtectionProvider = dataProtectionProvider;
             this.configuration = configuration;
             this.supportingEngine = supportingEngine;
+            this.paymentRepository = paymentRepository;
             this.env = env;
             evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository);
         }
@@ -253,7 +257,7 @@ namespace EMBC.ESS.Managers.Events
             var cases = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
             {
                 FileId = query.FileId,
-                ExternalReferenceId = query.ExternalReferenceId,
+                ManualFileId = query.ManualFileId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
                 LinkedRegistrantId = query.LinkedRegistrantId,
                 NeedsAssessmentId = query.NeedsAssessmentId,
@@ -686,12 +690,12 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<SearchSupportsQueryResponse> Handle(Shared.Contracts.Events.SearchSupportsQuery query)
         {
-            if (string.IsNullOrEmpty(query.ExternalReferenceId) && string.IsNullOrEmpty(query.FileId))
+            if (string.IsNullOrEmpty(query.ManualReferralId) && string.IsNullOrEmpty(query.FileId))
                 throw new BusinessValidationException($"Search supports must have criteria");
 
             var supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
             {
-                ByExternalReferenceId = query.ExternalReferenceId,
+                ByManualReferralId = query.ManualReferralId,
                 ByEvacuationFileId = query.FileId
             })).Items);
 
@@ -715,16 +719,19 @@ namespace EMBC.ESS.Managers.Events
                 var pendingScanSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
                 {
                     ByStatus = Resources.Supports.SupportStatus.PendingScan,
-                    LimitNumberOfResults = 100
+                    LimitNumberOfResults = 20
                 })).Items.ToArray();
 
                 foundSupports = pendingScanSupports.Any();
 
                 if (foundSupports)
                 {
-                    logger.LogInformation("Start processing {0} pending scan supports", pendingScanSupports.Length);
+                    logger.LogInformation("Found {0} pending scan supports", pendingScanSupports.Length);
                     // scan and get flags
-                    var response = (CheckSupportComplianceResponse)await supportingEngine.Validate(new CheckSupportComplianceRequest { Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports) });
+                    var response = (CheckSupportComplianceResponse)await supportingEngine.Validate(new CheckSupportComplianceRequest
+                    {
+                        Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports)
+                    });
 
                     foreach (var support in response.Flags)
                     {
@@ -741,8 +748,62 @@ namespace EMBC.ESS.Managers.Events
                     {
                         SupportIds = pendingScanSupports.Select(s => s.Id).ToArray()
                     });
+                }
+            }
+        }
 
-                    logger.LogInformation("End processing pending scan supports");
+        public async System.Threading.Tasks.Task Handle(ProcessApprovedSupportsCommand _)
+        {
+            var foundSupports = true;
+            //handle limited number of approved support at a time
+            while (foundSupports)
+            {
+                var approvedSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+                {
+                    ByStatus = Resources.Supports.SupportStatus.Processed,
+                    LimitNumberOfResults = 100
+                })).Items.ToArray();
+
+                foundSupports = approvedSupports.Any();
+
+                Func<Resources.Supports.Support, decimal> getSupportAmount = sup => sup switch
+                 {
+                     Resources.Supports.ClothingSupport s => s.TotalAmount,
+                     Resources.Supports.IncidentalsSupport s => s.TotalAmount,
+                     Resources.Supports.FoodGroceriesSupport s => s.TotalAmount,
+                     Resources.Supports.FoodRestaurantSupport s => s.TotalAmount,
+                     Resources.Supports.TransportationOtherSupport s => s.TotalAmount,
+                     _ => 0m
+                 };
+
+                if (foundSupports)
+                {
+                    logger.LogInformation("Found {0} approved supports", approvedSupports.Length);
+                    var payments = ((GeneratePaymentsResponse)await supportingEngine.Generate(new GeneratePaymentsRequest
+                    {
+                        Supports = approvedSupports.Select(s => new PayableSupport
+                        {
+                            Amount = getSupportAmount(s),
+                            FileId = s.FileId,
+                            SupportId = s.Id,
+                        }).ToArray()
+                    })).Payments.ToArray();
+
+                    logger.LogInformation("Generating {0} payments", payments.Length);
+
+                    foreach (var payment in payments)
+                    {
+                        await paymentRepository.Manage(new SavePaymentRequest { Payment = payment });
+                    }
+
+                    await supportRepository.Manage(new ChangeSupportStatusCommand
+                    {
+                        Items = approvedSupports.Select(s => new SupportStatusTransition
+                        {
+                            ToStatus = Resources.Supports.SupportStatus.Processed,
+                            SupportId = s.Id
+                        })
+                    });
                 }
             }
         }

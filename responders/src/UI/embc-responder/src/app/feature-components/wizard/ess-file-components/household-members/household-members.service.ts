@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 
 @Injectable({ providedIn: 'root' })
 export class HouseholdMembersService {
@@ -54,5 +55,24 @@ export class HouseholdMembersService {
     householdForm.get('addMemberIndicator').setValue(false);
     householdForm.get('houseHoldMember').reset();
     return householdForm;
+  }
+
+  householdMemberExists(
+    newMember: HouseholdMemberModel,
+    household: HouseholdMemberModel[]
+  ): HouseholdMemberModel {
+    return household.find((member) => this.householdEquals(newMember, member));
+  }
+
+  private householdEquals(
+    newMember: HouseholdMemberModel,
+    oldMember: HouseholdMemberModel
+  ): boolean {
+    return (
+      newMember.dateOfBirth === oldMember.dateOfBirth &&
+      newMember.firstName.toLowerCase() === oldMember.firstName.toLowerCase() &&
+      newMember.lastName.toLowerCase() === oldMember.lastName.toLowerCase() &&
+      newMember.gender === oldMember.gender
+    );
   }
 }

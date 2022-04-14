@@ -342,15 +342,34 @@ namespace EMBC.Tests.Integration.ESS
 
         private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file)
         {
-            var supports = Enumerable.Range(1, random.Next(1, 5)).Select(i => new era_evacueesupport
+            var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
+            var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
+
+            var referrals = referralSupportTypes.Select((t, i) => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
-                era_name = $"{file.era_name}-support-{i}",
+                era_name = $"{file.era_name}-referral-{i}",
                 era_validfrom = DateTime.UtcNow.AddDays(-3),
                 era_validto = DateTime.UtcNow.AddDays(3),
-                era_supporttype = 174360006
-            }).ToArray();
+                era_supporttype = t,
+                era_supportdeliverytype = 174360000, //referral
+                statuscode = 1, //active
+                statecode = 0
+            });
+            var etransfers = etransferSupportTypes.Select((t, i) => new era_evacueesupport
+            {
+                era_evacueesupportid = Guid.NewGuid(),
+                era_name = $"{file.era_name}-etransfer-{i}",
+                era_validfrom = DateTime.UtcNow.AddDays(-3),
+                era_validto = DateTime.UtcNow.AddDays(3),
+                era_supporttype = t,
+                era_supportdeliverytype = 174360001, //etransfer
+                era_totalamount = 100m,
+                statuscode = 174360002, //approved
+                statecode = 0
+            });
 
+            var supports = referrals.Concat(etransfers).ToArray();
             foreach (var support in supports)
             {
                 essContext.AddToera_evacueesupports(support);
