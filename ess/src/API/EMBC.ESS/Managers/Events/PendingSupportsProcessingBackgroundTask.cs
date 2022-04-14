@@ -6,7 +6,7 @@ using EMBC.Utilities.Hosting;
 
 namespace EMBC.ESS.Managers.Events
 {
-    public class SupportProcessingBackgroundTask : IBackgroundTask
+    public class PendingSupportsProcessingBackgroundTask : IBackgroundTask
     {
         private readonly EventsManager eventsManager;
 
@@ -18,7 +18,7 @@ namespace EMBC.ESS.Managers.Events
 
         public TimeSpan InactivityTimeout => TimeSpan.FromSeconds(60);
 
-        public SupportProcessingBackgroundTask(EventsManager eventsManager)
+        public PendingSupportsProcessingBackgroundTask(EventsManager eventsManager)
         {
             this.eventsManager = eventsManager;
         }
@@ -26,7 +26,6 @@ namespace EMBC.ESS.Managers.Events
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await eventsManager.Handle(new ProcessPendingSupportsCommand());
-            //await eventsManager.Handle(new ProcessApprovedSupportsCommand());
         }
     }
 }
