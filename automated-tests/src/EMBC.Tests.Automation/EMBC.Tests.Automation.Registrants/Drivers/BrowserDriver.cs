@@ -29,7 +29,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         private IWebDriver CreateWebDriver()
         {
             var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), new ChromeOptions());
-            chromeDriver.Url = "http://localhost:5200/";
+            chromeDriver.Url = "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/";
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
 
