@@ -758,34 +758,44 @@ namespace EMBC.ESS.Managers.Events
             //handle limited number of approved support at a time
             while (foundSupports)
             {
-                var approvedSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
-                {
-                    ByStatus = Resources.Supports.SupportStatus.Processed,
-                    LimitNumberOfResults = 100
-                })).Items.ToArray();
+                //var approvedSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+                //{
+                //    ByStatus = Resources.Supports.SupportStatus.Approved,
+                //    LimitNumberOfResults = 100
+                //})).Items.ToArray();
+                var approvedSupports = ((PendingPaymentSupportSearchResponse)await searchEngine.Search(new PendingPaymentSupportSearchRequest())).Supports.ToArray();
 
                 foundSupports = approvedSupports.Any();
 
-                Func<Resources.Supports.Support, decimal> getSupportAmount = sup => sup switch
-                 {
-                     Resources.Supports.ClothingSupport s => s.TotalAmount,
-                     Resources.Supports.IncidentalsSupport s => s.TotalAmount,
-                     Resources.Supports.FoodGroceriesSupport s => s.TotalAmount,
-                     Resources.Supports.FoodRestaurantSupport s => s.TotalAmount,
-                     Resources.Supports.TransportationOtherSupport s => s.TotalAmount,
-                     _ => 0m
-                 };
+                //Func<Resources.Supports.Support, decimal> getSupportAmount = sup => sup switch
+                // {
+                //     Resources.Supports.ClothingSupport s => s.TotalAmount,
+                //     Resources.Supports.IncidentalsSupport s => s.TotalAmount,
+                //     Resources.Supports.FoodGroceriesSupport s => s.TotalAmount,
+                //     Resources.Supports.FoodRestaurantSupport s => s.TotalAmount,
+                //     Resources.Supports.TransportationOtherSupport s => s.TotalAmount,
+                //     _ => 0m
+                // };
 
                 if (foundSupports)
                 {
                     logger.LogInformation("Found {0} approved supports", approvedSupports.Length);
                     var payments = ((GeneratePaymentsResponse)await supportingEngine.Generate(new GeneratePaymentsRequest
                     {
-                        Supports = approvedSupports.Select(s => new PayableSupport
+                        Supports = approvedSupports.Select(s => new Engines.Supporting.PayableSupport
                         {
-                            Amount = getSupportAmount(s),
+                            Amount = s.Amount,
                             FileId = s.FileId,
-                            SupportId = s.Id,
+                            SupportId = s.SupportId,
+                            Delivery = s.Delivery is PayableSupportInteracDelivery d
+                                ? new PaymentDelivery
+                                {
+                                    NotificationEmail = d.NotificationEmail,
+                                    NotificationPhone = d.NotificationPhone,
+                                    RecipientFirstName = d.RecipientFirstName,
+                                    RecipientLastName = d.RecipientLastName
+                                }
+                                : null
                         }).ToArray()
                     })).Payments.ToArray();
 
@@ -795,15 +805,6 @@ namespace EMBC.ESS.Managers.Events
                     {
                         await paymentRepository.Manage(new SavePaymentRequest { Payment = payment });
                     }
-
-                    await supportRepository.Manage(new ChangeSupportStatusCommand
-                    {
-                        Items = approvedSupports.Select(s => new SupportStatusTransition
-                        {
-                            ToStatus = Resources.Supports.SupportStatus.Processed,
-                            SupportId = s.Id
-                        })
-                    });
                 }
             }
         }

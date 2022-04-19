@@ -224,7 +224,6 @@ namespace EMBC.ESS.Resources.Supports
         Cancelled = 174360004,
         UnderReview = 174360005,
         PendingScan = 174360006,
-        Processed = 10 //not in Dynamics
     }
 
     public enum SupportVoidReason

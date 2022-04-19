@@ -234,10 +234,7 @@ namespace EMBC.ESS.Resources.Supports
 
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByManualReferralId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByManualReferralId);
-            if (query.ByStatus.HasValue && query.ByStatus != SupportStatus.Processed)
-                supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
-            if (query.ByStatus.HasValue && query.ByStatus == SupportStatus.Processed)
-                supportsQuery = supportsQuery.Where(s => s.statuscode == (int)SupportStatus.Approved && s.era_etransfertransactioncreated == true);
+            if (query.ByStatus.HasValue) supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
             if (query.LimitNumberOfResults.HasValue) supportsQuery = supportsQuery.Take(query.LimitNumberOfResults.Value);
 
             return (await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync()).ToArray();
@@ -323,11 +320,6 @@ namespace EMBC.ESS.Resources.Supports
 
                 case SupportStatus.PendingScan when supportDeliveryType == SupportMethod.ETransfer:
                     support.statuscode = (int)status;
-                    break;
-
-                case SupportStatus.Processed when supportDeliveryType == SupportMethod.ETransfer:
-                    support.statuscode = (int)SupportStatus.Approved;
-                    if (support.era_etransfertransactioncreated != true) support.era_etransfertransactioncreated = true;
                     break;
 
                 default:

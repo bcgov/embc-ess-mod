@@ -247,12 +247,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var supportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
-                Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Processed } }
+                Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Approved } }
             })).Ids.ShouldHaveSingleItem();
             supportId.ShouldBe(support.Id);
 
             var voidedSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
-            voidedSupport.Status.ShouldBe(SupportStatus.Processed);
+            voidedSupport.Status.ShouldBe(SupportStatus.Approved);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
