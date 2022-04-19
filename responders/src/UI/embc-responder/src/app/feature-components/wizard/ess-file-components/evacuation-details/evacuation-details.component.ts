@@ -19,6 +19,7 @@ import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -53,7 +54,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     private customValidation: CustomValidationService,
     private wizardService: WizardService,
     public evacueeSearchService: EvacueeSearchService,
-    private dateConversionService: DateConversionService
+    private dateConversionService: DateConversionService,
+    private appBaseService: AppBaseService
   ) {}
 
   paperCompletedDateFilter = (d: Date | null): boolean => {
@@ -67,11 +69,11 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
-    this.wizardType = this.evacueeSessionService.getWizardType();
+    this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
     if (
-      this.evacueeSessionService.getWizardType() !== WizardType.NewEssFile &&
-      this.evacueeSessionService.getWizardType() !== WizardType.NewRegistration
+      this.wizardType !== WizardType.NewEssFile &&
+      this.wizardType !== WizardType.NewRegistration
     ) {
       this.stepEssFileService.paperESSFile =
         this.stepEssFileService?.selectedEssFile?.manualFileId;

@@ -352,10 +352,10 @@
           class="col-12"
           *ngIf="
             !evacueeSessionService?.isPaperBased &&
-            !this.evacueeSessionService.profileId &&
-            (this.evacueeSessionService.getWizardType() ===
+            !this.evacueeSessionService?.profileId &&
+            (this.appBaseService?.wizardProperties?.wizardType ===
               wizardType.NewRegistration ||
-              this.evacueeSessionService.getWizardType() ===
+              this.appBaseService?.wizardProperties?.wizardType ===
                 wizardType.MemberRegistration)
           "
         >
