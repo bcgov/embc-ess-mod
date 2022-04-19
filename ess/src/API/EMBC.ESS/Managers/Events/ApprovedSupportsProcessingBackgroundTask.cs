@@ -25,7 +25,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await Task.CompletedTask();
+            await Task.CompletedTask;
             // await eventsManager.Handle(new ProcessApprovedSupportsCommand());
         }
     }
