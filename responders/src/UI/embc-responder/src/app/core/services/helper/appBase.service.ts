@@ -58,6 +58,14 @@ export class AppBaseService {
     this.cacheService.remove('appCache');
   }
 
+  clearEvacueeProperties() {
+    this.etransferPropertiesVal = undefined;
+    this.wizardPropertiesVal = undefined;
+    this.cacheService.remove('eTransferProps');
+    this.cacheService.remove('wizardProps');
+    //profile and file
+  }
+
   setCache() {
     this.cacheService.set('eTransferProps', this.etransferProperties);
     this.cacheService.set('appCache', this.appModel);
