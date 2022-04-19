@@ -4,7 +4,7 @@ import { MatAccordion } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import {
   EvacuationFileHouseholdMember,
-  HouseholdMemberType,
+  HouseholdMemberType
 } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';

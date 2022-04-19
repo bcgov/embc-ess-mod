@@ -106,7 +106,7 @@ export class EssfileDashboardComponent implements OnInit {
    */
   reviewEssFile(): void {
     this.isLoading = !this.isLoading;
-   
+
     this.appBaseService.wizardProperties = {
       wizardType: WizardType.ReviewFile,
       lastCompletedStep: null,
