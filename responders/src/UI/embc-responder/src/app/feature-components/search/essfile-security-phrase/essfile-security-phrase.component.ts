@@ -1,4 +1,3 @@
-import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,9 +11,10 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { Location } from '@angular/common';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-essfile-security-phrase',
@@ -37,9 +37,10 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private evacueeProfileService: EvacueeProfileService,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
-    private cacheService: CacheService,
     private location: Location,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
@@ -123,11 +124,13 @@ export class EssfileSecurityPhraseComponent implements OnInit {
    * Function that redirects to Evacuation Registration page
    */
   goToEvacRegistration() {
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.NewRegistration,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
 
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: WizardType.NewRegistration },
