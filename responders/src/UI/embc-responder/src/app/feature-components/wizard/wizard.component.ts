@@ -187,13 +187,10 @@ export class WizardComponent implements OnInit, OnDestroy {
   private clearCachedServices() {
     this.cacheService.remove('wizardMenu');
     this.cacheService.remove('wizardType');
-    //this.cacheService.remove('wizardOpenedFrom');
     this.appBaseService.wizardProperties = {
       editFlag: false,
       memberFlag: false
     };
     this.computeState.triggerEvent();
-    //this.evacueeSessionService.setMemberFlag(null);
-    //evacueeSessionService.setEditWizardFlag(null);
   }
 }
