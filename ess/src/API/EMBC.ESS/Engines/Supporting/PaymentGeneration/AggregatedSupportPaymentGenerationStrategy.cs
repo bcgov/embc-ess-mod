@@ -18,7 +18,7 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
             {
                 var fileId = supportsInFile.Key;
                 // aggregate per payment details
-                foreach (var paymentGroup in supportsInFile.GroupBy(s => (s.Delivery.RecipientFirstName, s.Delivery.RecipientLastName, s.Delivery.NotificationEmail, s.Delivery.NotificationPhone)))
+                foreach (var paymentGroup in supportsInFile.GroupBy(s => (s.Delivery?.RecipientFirstName, s.Delivery?.RecipientLastName, s.Delivery?.NotificationEmail, s.Delivery?.NotificationPhone)))
                 {
                     var supports = paymentGroup.ToArray();
                     var amount = 0m;
