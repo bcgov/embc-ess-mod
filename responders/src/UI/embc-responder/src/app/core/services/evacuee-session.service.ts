@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { EvacuationFileHouseholdMember, NeedsAssessment } from '../api/models';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
-import { WizardType } from '../models/wizard-type.model';
 import { CacheService } from './cache.service';
 
 @Injectable({ providedIn: 'root' })
@@ -11,12 +10,10 @@ export class EvacueeSessionService {
   private essFileNumberVal: string;
   private securityQuestionsOpenedFromVal: string;
   private securityPhraseOpenedFromVal: string;
-  private editWizardFlag: boolean;
   private fileLinkFlagVal: string;
   private fileLinkMetaDataVal: FileLinkRequestModel;
   private fileLinkStatusVal: string;
   private memberRegistrationVal: EvacuationFileHouseholdMember;
-  private memberFlag: boolean;
   private isPaperBasedVal: boolean;
   private currentNeedsAssessmentVal: NeedsAssessment;
 
@@ -177,12 +174,9 @@ export class EvacueeSessionService {
     this.fileLinkStatus = null;
     this.fileLinkMetaData = null;
     this.memberRegistration = null;
-    this.editWizardFlag = null;
-    this.memberFlag = null;
     this.isPaperBased = null;
     this.cacheService.remove('registrantProfileId');
     this.cacheService.remove('fileNumber');
-    this.cacheService.remove('wizardType');
     this.cacheService.remove('evacueeSearchContext');
     this.cacheService.remove('essFile');
     this.cacheService.remove('securityQuestionsOpenedFrom');
@@ -191,59 +185,6 @@ export class EvacueeSessionService {
     this.cacheService.remove('fileLinkStatus');
     this.cacheService.remove('fileLinkMetaData');
     this.cacheService.remove('memberRegistration');
-    this.cacheService.remove('editWizardFlag');
-    this.cacheService.remove('memberFlag');
     this.cacheService.remove('paperBased');
-  }
-
-  public setWizardType(wizardType: string) {
-    this.cacheService.set('wizardType', wizardType);
-
-    if (
-      wizardType === WizardType.EditRegistration ||
-      wizardType === WizardType.ReviewFile ||
-      wizardType === WizardType.CompleteFile
-    ) {
-      this.setEditWizardFlag(true);
-    } else if (wizardType === WizardType.MemberRegistration) {
-      this.setEditWizardFlag(false);
-      this.setMemberFlag(true);
-    } else {
-      this.setEditWizardFlag(false);
-    }
-  }
-
-  public getWizardType(): string {
-    return this.cacheService.get('wizardType');
-  }
-
-  public getEditWizardFlag(): boolean {
-    return this.editWizardFlag
-      ? this.editWizardFlag
-      : JSON.parse(this.cacheService.get('editWizardFlag'));
-  }
-
-  public setEditWizardFlag(editWizardFlag: boolean) {
-    this.editWizardFlag = editWizardFlag;
-    if (editWizardFlag !== null) {
-      this.cacheService.set('editWizardFlag', editWizardFlag);
-    } else {
-      this.cacheService.remove('editWizardFlag');
-    }
-  }
-
-  public getMemberFlag(): boolean {
-    return this.memberFlag
-      ? this.memberFlag
-      : JSON.parse(this.cacheService.get('memberFlag'));
-  }
-
-  public setMemberFlag(memberFlag: boolean) {
-    this.memberFlag = memberFlag;
-    if (memberFlag !== null) {
-      this.cacheService.set('memberFlag', memberFlag);
-    } else {
-      this.cacheService.remove('memberFlag');
-    }
   }
 }

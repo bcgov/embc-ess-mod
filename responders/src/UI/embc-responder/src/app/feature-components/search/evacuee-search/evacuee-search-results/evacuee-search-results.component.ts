@@ -8,7 +8,6 @@ import {
   ClaimType
 } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
-import { CacheService } from 'src/app/core/services/cache.service';
 import {
   EvacuationFileSearchResultModel,
   RegistrantProfileSearchResultModel
@@ -21,6 +20,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EssFileExistsComponent } from 'src/app/shared/components/dialog-components/ess-file-exists/ess-file-exists.component';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -44,9 +45,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
     private evacueeProfileService: EvacueeProfileService,
     private userService: UserService,
     private router: Router,
-    private cacheService: CacheService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
@@ -157,11 +159,13 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   private navigateToWizard(): void {
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.NewRegistration,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
 
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: WizardType.NewRegistration },

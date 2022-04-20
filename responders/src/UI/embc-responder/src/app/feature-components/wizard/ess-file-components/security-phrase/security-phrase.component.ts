@@ -15,6 +15,7 @@ import {
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-security-phrase',
@@ -35,7 +36,8 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +45,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     this.createSecurityPhraseForm();
 
     // Set up wizard type and ESS File number
-    this.wizardType = this.evacueeSessionService.getWizardType();
+    this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
 
     // Setting the edit Security Flag in case the wizard type is set to edit an ESS File

@@ -5,6 +5,7 @@ import {
   EtransferRequirementStatus,
   EtransferProperties
 } from '../../models/appBase.model';
+import { WizardProperties } from '../../models/wizard-type.model';
 import { CacheService } from '../cache.service';
 
 @Injectable({
@@ -19,6 +20,7 @@ export class AppBaseService {
   ];
   private appModelVal: AppBaseModel;
   private etransferPropertiesVal: EtransferProperties;
+  private wizardPropertiesVal: WizardProperties;
 
   constructor(public cacheService: CacheService) {}
 
@@ -41,13 +43,32 @@ export class AppBaseService {
     this.etransferPropertiesVal = { ...this.etransferProperties, ...value };
   }
 
+  public get wizardProperties(): WizardProperties {
+    return this.wizardPropertiesVal
+      ? this.wizardPropertiesVal
+      : JSON.parse(this.cacheService.get('wizardProps'));
+  }
+
+  public set wizardProperties(value: WizardProperties) {
+    this.wizardPropertiesVal = { ...this.wizardProperties, ...value };
+  }
+
   clear() {
     this.appModelVal = undefined;
     this.cacheService.remove('appCache');
   }
 
+  clearEvacueeProperties() {
+    this.etransferPropertiesVal = undefined;
+    this.wizardPropertiesVal = undefined;
+    this.cacheService.remove('eTransferProps');
+    this.cacheService.remove('wizardProps');
+    //profile and file
+  }
+
   setCache() {
     this.cacheService.set('eTransferProps', this.etransferProperties);
     this.cacheService.set('appCache', this.appModel);
+    this.cacheService.set('wizardProps', this.wizardProperties);
   }
 }
