@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { CacheService } from 'src/app/core/services/cache.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { BcscInviteDialogComponent } from 'src/app/shared/components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
 import { EssFileExistsComponent } from 'src/app/shared/components/dialog-components/ess-file-exists/ess-file-exists.component';
@@ -35,12 +36,13 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private cacheService: CacheService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
     private evacueeSearchService: EvacueeSearchService,
     private alertService: AlertService,
-    private evacueeProfileDashboardService: EvacueeProfileDashboardService
+    private evacueeProfileDashboardService: EvacueeProfileDashboardService,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
@@ -144,11 +146,13 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Navigates to the Wizard configured to update the current registrant Profile
    */
   editProfile(): void {
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee-profile-dashboard'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.EditRegistration);
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.EditRegistration,
+      lastCompletedStep: null,
+      editFlag: true,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
 
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: WizardType.EditRegistration },
@@ -311,12 +315,15 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * navigates to the wizard component
    */
   private navigateToWizard(): void {
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee-profile-dashboard'
-    );
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.NewEssFile,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
+
     this.evacueeSessionService.essFileNumber = null;
-    this.evacueeSessionService.setWizardType(WizardType.NewEssFile);
     this.router
       .navigate(['/ess-wizard'], {
         queryParams: { type: WizardType.NewEssFile },

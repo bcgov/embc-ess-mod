@@ -4,8 +4,7 @@ import { MatAccordion } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import {
   EvacuationFileHouseholdMember,
-  HouseholdMemberType,
-  RegistrantProfile
+  HouseholdMemberType
 } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -17,9 +16,9 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Component({
   selector: 'app-household-member',
@@ -45,8 +44,8 @@ export class HouseholdMemberComponent implements OnInit {
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     public evacueeSessionService: EvacueeSessionService,
-    private cacheService: CacheService,
-    public appBaseService: AppBaseService
+    public appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {}
@@ -145,11 +144,14 @@ export class HouseholdMemberComponent implements OnInit {
   createProfile(memberDetails: EvacuationFileHouseholdMember) {
     this.evacueeSessionService.memberRegistration = memberDetails;
     this.evacueeSessionService.profileId = null;
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/essfile-dashboard'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.MemberRegistration);
+
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.MemberRegistration,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: true
+    };
+    this.computeState.triggerEvent();
 
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: WizardType.MemberRegistration },

@@ -21,6 +21,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { SelectionModel } from '@angular/cdk/collections';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-household-members',
@@ -54,11 +55,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     private customValidation: CustomValidationService,
     private router: Router,
     private householdService: HouseholdMembersService,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
-    this.wizardType = this.evacueeSessionService.getWizardType();
+    this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
     this.addNewMember = this.stepEssFileService.addMemberIndicator;
 

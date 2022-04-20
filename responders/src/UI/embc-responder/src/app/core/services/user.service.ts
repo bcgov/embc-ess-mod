@@ -105,7 +105,6 @@ export class UserService {
     this.cacheService.remove('allTeamCommunityList');
     this.cacheService.remove('teamCommunityList');
     this.cacheService.remove('stateProvinceList');
-    this.cacheService.remove('wizardOpenedFrom');
     this.cacheService.remove('regionalDistrictsList');
     this.cacheService.remove('countriesList');
     this.cacheService.remove('communityList');

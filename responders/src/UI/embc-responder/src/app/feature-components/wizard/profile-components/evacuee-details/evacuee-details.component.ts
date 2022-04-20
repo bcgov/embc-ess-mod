@@ -16,6 +16,7 @@ import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-c
 import { MatDialog } from '@angular/material/dialog';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-evacuee-details',
@@ -52,11 +53,12 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     private customValidation: CustomValidationService,
     private evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
-    private wizardService: WizardService
+    private wizardService: WizardService,
+    private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
-    this.editFlag = this.evacueeSessionService.getEditWizardFlag();
+    this.editFlag = this.appBaseService?.wizardProperties?.editFlag;
     this.verifiedProfile = this.stepEvacueeProfileService.verifiedProfile;
     this.authorizedUser = this.stepEvacueeProfileService.authorizedUser;
 
@@ -215,7 +217,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
         this.showLockIcon = false;
         this.showUnlockLink = false;
       }
-    } else if (this.evacueeSessionService.getMemberFlag()) {
+    } else if (this.appBaseService?.wizardProperties?.memberFlag) {
       this.showLockIcon = false;
       this.showUnlockLink = false;
     } else {
