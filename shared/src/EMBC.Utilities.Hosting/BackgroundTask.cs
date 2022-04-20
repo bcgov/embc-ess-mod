@@ -24,7 +24,7 @@ namespace EMBC.Utilities.Hosting
         private string instanceName => Environment.MachineName;
         private readonly bool enabled;
 
-        public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger, IConfiguration configuration)
+        public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger)
         {
             this.serviceProvider = serviceProvider;
             this.logger = logger;
@@ -40,6 +40,7 @@ namespace EMBC.Utilities.Hosting
                     initialTask.DegreeOfParallelism,
                     initialTask.InactivityTimeout);
 
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
                 enabled = configuration.GetValue($"backgroundtask:{typeof(T).Name}", true);
             }
         }
