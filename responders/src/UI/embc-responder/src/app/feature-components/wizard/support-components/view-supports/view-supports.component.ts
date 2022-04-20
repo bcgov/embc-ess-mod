@@ -84,12 +84,8 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   loadSupportList() {
-    const externalRefId =
-      this.evacueeSearchService?.paperBasedEssFile !== 'undefined'
-        ? this.evacueeSearchService?.paperBasedEssFile
-        : null;
     this.stepSupportsService
-      .getSupports(this.evacueeSessionService?.essFileNumber, externalRefId)
+      .getSupports(this.evacueeSessionService?.essFileNumber)
       .subscribe({
         next: (supports) => {
           this.showLoader = !this.showLoader;
