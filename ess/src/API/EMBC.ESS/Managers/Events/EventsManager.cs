@@ -758,24 +758,9 @@ namespace EMBC.ESS.Managers.Events
             //handle limited number of approved support at a time
             while (foundSupports)
             {
-                //var approvedSupports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
-                //{
-                //    ByStatus = Resources.Supports.SupportStatus.Approved,
-                //    LimitNumberOfResults = 100
-                //})).Items.ToArray();
                 var approvedSupports = ((PendingPaymentSupportSearchResponse)await searchEngine.Search(new PendingPaymentSupportSearchRequest())).Supports.ToArray();
 
                 foundSupports = approvedSupports.Any();
-
-                //Func<Resources.Supports.Support, decimal> getSupportAmount = sup => sup switch
-                // {
-                //     Resources.Supports.ClothingSupport s => s.TotalAmount,
-                //     Resources.Supports.IncidentalsSupport s => s.TotalAmount,
-                //     Resources.Supports.FoodGroceriesSupport s => s.TotalAmount,
-                //     Resources.Supports.FoodRestaurantSupport s => s.TotalAmount,
-                //     Resources.Supports.TransportationOtherSupport s => s.TotalAmount,
-                //     _ => 0m
-                // };
 
                 if (foundSupports)
                 {

@@ -302,28 +302,13 @@ namespace EMBC.ESS.Resources.Supports
                     ctx.DeactivateObject(support, (int)status);
                     break;
 
-                case SupportStatus.PendingApproval when supportDeliveryType == SupportMethod.ETransfer:
-                    support.statuscode = (int)status;
-                    break;
-
-                case SupportStatus.Paid when supportDeliveryType == SupportMethod.ETransfer:
-                    support.statuscode = (int)status;
-                    break;
-
                 case SupportStatus.Cancelled when supportDeliveryType == SupportMethod.ETransfer:
                     ctx.DeactivateObject(support, (int)status);
                     break;
 
-                case SupportStatus.UnderReview when supportDeliveryType == SupportMethod.ETransfer:
-                    support.statuscode = (int)status;
-                    break;
-
-                case SupportStatus.PendingScan when supportDeliveryType == SupportMethod.ETransfer:
-                    support.statuscode = (int)status;
-                    break;
-
                 default:
-                    throw new InvalidOperationException($"Can't change status of {support.era_name} with delivery type {supportDeliveryType} to {status}");
+                    support.statuscode = (int)status;
+                    break;
             }
         }
 
