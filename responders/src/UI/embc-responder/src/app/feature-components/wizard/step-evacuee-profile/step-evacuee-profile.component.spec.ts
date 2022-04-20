@@ -18,6 +18,7 @@ import { NavigationStart, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { MockAlertService } from 'src/app/unit-tests/mockAlert.service';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('StepEvacueeProfileComponent', () => {
   let component: StepEvacueeProfileComponent;
@@ -57,7 +58,8 @@ describe('StepEvacueeProfileComponent', () => {
           {
             provide: AlertService,
             useClass: MockAlertService
-          }
+          },
+          { provide: computeInterfaceToken, useValue: {} }
         ]
       }).compileComponents();
     })

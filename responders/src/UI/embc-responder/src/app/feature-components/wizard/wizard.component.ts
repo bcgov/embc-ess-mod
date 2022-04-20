@@ -11,6 +11,8 @@ import * as globalConst from '../../core/services/global-constants';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { WizardAdapterService } from './wizard-adapter.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Component({
   selector: 'app-wizard',
@@ -29,7 +31,8 @@ export class WizardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private wizardAdapterService: WizardAdapterService,
-    private evacueeSessionService: EvacueeSessionService
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {
     const params = this.route.snapshot.queryParams;
     if (params && params.type) {
@@ -105,7 +108,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    * Exits the wizards and navigates to last page
    */
   exit(): void {
-    const navigateTo = this.cacheService.get('wizardOpenedFrom');
+    const navigateTo = this.appBaseService?.wizardProperties?.exitLink;
     this.openExitModal(navigateTo);
   }
 
@@ -184,8 +187,10 @@ export class WizardComponent implements OnInit, OnDestroy {
   private clearCachedServices() {
     this.cacheService.remove('wizardMenu');
     this.cacheService.remove('wizardType');
-    this.cacheService.remove('wizardOpenedFrom');
-    this.evacueeSessionService.setMemberFlag(null);
-    this.evacueeSessionService.setEditWizardFlag(null);
+    this.appBaseService.wizardProperties = {
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
   }
 }
