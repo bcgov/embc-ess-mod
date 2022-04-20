@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EMBC.Utilities.Caching;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -21,8 +22,9 @@ namespace EMBC.Utilities.Hosting
         private readonly TimeSpan startupDelay;
         private readonly BackgroundTaskConcurrencyManager concurrencyManager;
         private string instanceName => Environment.MachineName;
+        private readonly bool enabled;
 
-        public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger)
+        public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger, IConfiguration configuration)
         {
             this.serviceProvider = serviceProvider;
             this.logger = logger;
@@ -37,11 +39,18 @@ namespace EMBC.Utilities.Hosting
                     typeof(T).FullName ?? null!,
                     initialTask.DegreeOfParallelism,
                     initialTask.InactivityTimeout);
+
+                enabled = configuration.GetValue($"backgroundtask:{typeof(T).Name}", true);
             }
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (!enabled)
+            {
+                logger.LogWarning($"background task is disabled, check configuration flag 'backgroundTask:{typeof(T).Name}'");
+                return;
+            }
             await Task.Delay(startupDelay, stoppingToken);
             var now = DateTime.UtcNow;
             var nextExecutionDate = schedule.GetNextOccurrence(now);
