@@ -127,6 +127,11 @@ namespace EMBC.ESS.Engines.Supporting
         public string FileId { get; set; }
         public string SupportId { get; set; }
         public decimal Amount { get; set; }
+        public PaymentDelivery Delivery { get; set; }
+    }
+
+    public class PaymentDelivery
+    {
         public string NotificationEmail { get; set; }
         public string NotificationPhone { get; set; }
         public string RecipientFirstName { get; set; }

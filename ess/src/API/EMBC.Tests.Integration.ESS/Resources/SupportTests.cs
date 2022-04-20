@@ -224,10 +224,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ChangeStatus_Cancel_Success()
+        public async Task ChangeStatus_eTransferToCancel_Success()
         {
             var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items
-                .First(s => s.SupportDelivery is ETransfer && s.Status == SupportStatus.PendingScan);
+                .First(s => s.SupportDelivery is ETransfer);
 
             var cancelledSupportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
@@ -240,19 +240,19 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ChangeStatus_Processed_Success()
+        public async Task ChangeStatus_eTransferToApproved_Success()
         {
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items;
             var support = supports.First(s => s.SupportDelivery is Interac && s.Status == SupportStatus.Approved);
 
             var supportId = ((ChangeSupportStatusCommandResult)await supportRepository.Manage(new ChangeSupportStatusCommand
             {
-                Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Processed } }
+                Items = new[] { new SupportStatusTransition { SupportId = support.Id, ToStatus = SupportStatus.Approved } }
             })).Ids.ShouldHaveSingleItem();
             supportId.ShouldBe(support.Id);
 
             var voidedSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
-            voidedSupport.Status.ShouldBe(SupportStatus.Processed);
+            voidedSupport.Status.ShouldBe(SupportStatus.Approved);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

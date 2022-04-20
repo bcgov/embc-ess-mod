@@ -29,9 +29,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.MapFrom(s => s._era_needsassessmentid_value))
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode == (int)SupportStatus.Approved && s.era_etransfertransactioncreated == true
-                    ? SupportStatus.Processed
-                    : (SupportStatus)s.statuscode))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ForMember(d => d.SupportDelivery, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.Flags, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_supportflag_EvacueeSupport))

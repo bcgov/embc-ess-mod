@@ -34,4 +34,40 @@ namespace EMBC.ESS.Engines.Search
         public IEnumerable<string> MatchingRegistrantIds { get; set; }
         public IEnumerable<string> MatchingHouseholdMemberIds { get; set; }
     }
+
+    public abstract class SupportSearchRequest : SearchRequest
+    {
+    }
+
+    public class PendingPaymentSupportSearchRequest : SupportSearchRequest
+    {
+    }
+
+    public abstract class SupportSearchResponse : SearchResponse
+    {
+    }
+
+    public class PendingPaymentSupportSearchResponse : SupportSearchResponse
+    {
+        public IEnumerable<PayableSupport> Supports { get; set; }
+    }
+
+    public class PayableSupport
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public decimal Amount { get; set; }
+        public PayableSupportDelivery Delivery { get; set; }
+    }
+
+    public abstract class PayableSupportDelivery
+    { }
+
+    public class PayableSupportInteracDelivery : PayableSupportDelivery
+    {
+        public string NotificationEmail { get; set; }
+        public string NotificationPhone { get; set; }
+        public string RecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
+    }
 }

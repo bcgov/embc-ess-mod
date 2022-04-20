@@ -22,7 +22,7 @@ namespace EMBC.ESS.Resources.Metadata
             this.metadataRepository = new InternalMetadataRepository(essContextFactory, mapper);
         }
 
-        public string Schedule => "*/15 * * * *";
+        public string Schedule => "* */15 * * * *";
 
         public int DegreeOfParallelism => 1;
 

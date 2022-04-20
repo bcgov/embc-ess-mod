@@ -141,7 +141,7 @@ namespace EMBC.Tests.Unit.ESS.Utilities
             this.logger = logger;
         }
 
-        public string Schedule => "*/1 * * * *";
+        public string Schedule => "* */1 * * * *";
 
         public int DegreeOfParallelism => 1;
 
