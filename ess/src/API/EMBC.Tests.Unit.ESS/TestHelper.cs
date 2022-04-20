@@ -18,7 +18,7 @@ namespace EMBC.Tests.Unit.ESS
         {
             var services = new ServiceCollection();
             services.AddLogging(builder => builder.AddXunit(output));
-
+            services.AddSingleton<IConfiguration>(new ConfigurationBuilder().Build());
             return services;
         }
 
@@ -42,7 +42,6 @@ namespace EMBC.Tests.Unit.ESS
             var configJson = new JsonObject();
             configJson.Add(sectionName, JsonSerializer.SerializeToNode(options));
 
-            var configBuilder = new ConfigurationBuilder();
             var ms = new MemoryStream();
 
             var jsonWriter = new Utf8JsonWriter(ms);
@@ -50,9 +49,9 @@ namespace EMBC.Tests.Unit.ESS
             configJson.WriteTo(jsonWriter);
             jsonWriter.Flush();
             ms.Position = 0;
-            configBuilder.AddJsonStream(ms);
+            configurationBuilder.AddJsonStream(ms);
 
-            return configBuilder;
+            return configurationBuilder;
         }
     }
 }
