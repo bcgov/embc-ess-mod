@@ -24,7 +24,9 @@ import { UserService } from 'src/app/core/services/user.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import * as _ from 'lodash';
 import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search.service';
-import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { WizardSteps, WizardType } from 'src/app/core/models/wizard-type.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -96,7 +98,9 @@ export class StepEssFileService {
     private evacueeSession: EvacueeSessionService,
     private userService: UserService,
     private locationService: LocationsService,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   // Selected ESS File Model getter and setter
@@ -698,6 +702,11 @@ export class StepEssFileService {
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     this.selectedEssFile = essFile;
 
+    this.appBaseService.wizardProperties = {
+      lastCompletedStep: WizardSteps.Step2
+    };
+    this.computeState.triggerEvent();
+
     const essNeeds = essFile.needsAssessment;
     this.evacueeSession.currentNeedsAssessment = essNeeds;
     this.evacueeSession.evacFile = essFile;
@@ -951,8 +960,10 @@ export class StepEssFileService {
 
   public getTaskEndDate(): string {
     if (
-      this.evacueeSession.getWizardType() === WizardType.NewEssFile ||
-      this.evacueeSession.getWizardType() === WizardType.NewRegistration
+      this.appBaseService?.wizardProperties?.wizardType ===
+        WizardType.NewEssFile ||
+      this.appBaseService?.wizardProperties?.wizardType ===
+        WizardType.NewRegistration
     ) {
       return this.userService?.currentProfile?.taskStartDate;
     } else {

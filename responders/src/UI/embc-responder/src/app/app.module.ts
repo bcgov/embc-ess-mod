@@ -14,6 +14,7 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { Compute } from './core/services/compute/compute';
 import { ComputeAppBaseService } from './core/services/compute/computeAppBase.service';
 import { ComputeFeaturesService } from './core/services/compute/computeFeatures.service';
+import { ComputeWizardService } from './core/services/compute/computeWizard.service';
 
 export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
 @NgModule({
@@ -46,6 +47,11 @@ export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
     {
       provide: computeInterfaceToken,
       useClass: ComputeFeaturesService,
+      multi: true
+    },
+    {
+      provide: computeInterfaceToken,
+      useClass: ComputeWizardService,
       multi: true
     }
   ],

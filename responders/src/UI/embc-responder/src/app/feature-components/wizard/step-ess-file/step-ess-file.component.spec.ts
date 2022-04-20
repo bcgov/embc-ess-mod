@@ -9,6 +9,7 @@ import { NavigationStart, Router } from '@angular/router';
 import { WizardDataService } from '../wizard-data.service';
 import { StepEssFileService } from './step-ess-file.service';
 import { MockStepEssFileService } from 'src/app/unit-tests/mockStepEssFile.service';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('StepEssFileComponent', () => {
   let component: StepEssFileComponent;
@@ -33,7 +34,8 @@ describe('StepEssFileComponent', () => {
         {
           provide: StepEssFileService,
           useClass: MockStepEssFileService
-        }
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });

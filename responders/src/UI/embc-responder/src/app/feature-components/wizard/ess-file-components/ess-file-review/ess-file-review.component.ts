@@ -10,6 +10,7 @@ import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -50,11 +51,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private essFileService: EssFileService,
     private alertService: AlertService,
-    private evacueeSearchService: EvacueeSearchService
+    private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
-    this.wizardType = this.evacueeSessionService.getWizardType();
+    this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
     this.essFileNumber = this.evacueeSessionService.essFileNumber;
 
