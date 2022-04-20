@@ -1,5 +1,5 @@
 .highlighted-word {
-    color: #169BD5;
+    color: #169bd5;
     font-weight: bold;
 }
 
@@ -15,6 +15,7 @@
 
 .signin-button {
     width: 70%;
+    min-width: fit-content;
 }
 
 .img-align {
@@ -24,13 +25,13 @@
 
 .info-card {
     font-size: 21px;
-    color: #FFFFFF;
+    color: #ffffff;
     text-align: center;
     padding: 10px;
 }
 
 .info-card-text {
-    color: #FFFFFF;
+    color: #ffffff;
     text-align: center;
     padding: 10px;
     font-size: 16px;
@@ -42,7 +43,7 @@
 }
 
 a {
-    color: #169BD5;
+    color: #169bd5;
     text-decoration: none;
 }
 
@@ -57,4 +58,16 @@ a:hover {
 
 .signIn-link:hover {
     text-decoration: underline;
+}
+
+.logo-container {
+    min-width: fit-content;
+}
+
+.view-info-card {
+    height: 100%;
+}
+
+.img-fit-col {
+    max-width: inherit;
 }
