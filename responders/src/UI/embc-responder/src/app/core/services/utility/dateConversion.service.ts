@@ -9,7 +9,7 @@ export class DateConversionService {
   constructor(private datePipe: DatePipe) {}
 
   convertDateTimeToDate(dateTime: string) {
-    return new Date(this.datePipe.transform(dateTime, 'dd-MMM-yyyy', 'PST'));
+    return new Date(this.datePipe.transform(dateTime, 'MMM d, y', 'PST'));
   }
 
   convertDateTimeToTime(dateTime: string) {
