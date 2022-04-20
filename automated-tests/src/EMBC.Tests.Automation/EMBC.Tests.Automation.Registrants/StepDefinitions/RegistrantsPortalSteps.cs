@@ -13,7 +13,7 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
             this.pageObject = new AnonymousRegistration(driver.Current);
         }
 
-        [Given("I see Registrants Portal home page")]
+        [Given("I see Registrants' Portal home page")]
         public void GivenNavigateToHomePage()
         {
             pageObject.GetCurrentLocation.Should().Be("/registration-method");
