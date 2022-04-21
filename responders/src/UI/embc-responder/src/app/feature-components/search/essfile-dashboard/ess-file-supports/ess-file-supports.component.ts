@@ -196,7 +196,16 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
         return value;
       }
     });
-    return memberObject?.lastName + ', ' + memberObject?.firstName;
+    return memberObject?.firstName;
+  }
+
+  mapMemberLastName(memberId: string): string {
+    const memberObject = this.essFile?.householdMembers.find((value) => {
+      if (value?.id === memberId) {
+        return value;
+      }
+    });
+    return memberObject?.lastName;
   }
 
   generateSupportType(element: Support): string {
