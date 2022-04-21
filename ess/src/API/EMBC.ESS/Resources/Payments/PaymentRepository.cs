@@ -61,6 +61,9 @@ namespace EMBC.ESS.Resources.Payments
                     var support = ctx.era_evacueesupports.Where(s => s.era_name == supportId).SingleOrDefault();
                     if (support == null) throw new InvalidOperationException($"support id {supportId} not found");
                     ctx.AddLink(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), support);
+                    // set the flag on support so it would not be processed again
+                    support.era_etransfertransactioncreated = true;
+                    ctx.UpdateObject(support);
                 }
             }
 

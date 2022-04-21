@@ -10,7 +10,7 @@ namespace EMBC.ESS.Managers.Events
     {
         private readonly EventsManager eventsManager;
 
-        public string Schedule => "*/1 * * * *";
+        public string Schedule => "30 */1 * * * *";
 
         public int DegreeOfParallelism => 1;
 
@@ -25,8 +25,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
-            // await eventsManager.Handle(new ProcessApprovedSupportsCommand());
+            await eventsManager.Handle(new ProcessApprovedSupportsCommand());
         }
     }
 }

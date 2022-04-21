@@ -125,7 +125,6 @@ namespace EMBC.ESS.Managers.Events
                 s.Status switch
                 {
                     SupportStatus.PendingScan => Shared.Contracts.Events.SupportStatus.PendingApproval,
-                    SupportStatus.Processed => Shared.Contracts.Events.SupportStatus.Approved,
 
                     _ => Enum.Parse<Shared.Contracts.Events.SupportStatus>(s.Status.ToString())
                 };

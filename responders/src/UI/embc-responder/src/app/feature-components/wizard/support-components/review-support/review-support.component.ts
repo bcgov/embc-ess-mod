@@ -366,7 +366,9 @@ export class ReviewSupportComponent implements OnInit {
             const printWindow = document.createElement('iframe');
             printWindow.style.display = 'none';
             document.body.appendChild(printWindow);
-            printWindow.contentDocument.write(text);
+            // printWindow.contentDocument.write(text);
+            const content = document.createElement(text);
+            printWindow.contentDocument.appendChild(content);
             printWindow.contentWindow.print();
             document.body.removeChild(printWindow);
 
