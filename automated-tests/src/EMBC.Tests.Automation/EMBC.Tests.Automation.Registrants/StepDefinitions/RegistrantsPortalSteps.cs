@@ -13,7 +13,7 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
             this.pageObject = new AnonymousRegistration(driver.Current);
         }
 
-        [Given("I see Registrants' Portal home page")]
+        [Given("I see the Registrants' Portal home page")]
         public void GivenNavigateToHomePage()
         {
             pageObject.GetCurrentLocation.Should().Be("/registration-method");
@@ -23,6 +23,12 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
         public void WhenClickSelfRegister()
         {
             pageObject.EnterCollectionNotice();
+        }
+
+        [When("I select to register without a BC Services Card")]
+        public void WhenRegisterWithoutBCServicesCard()
+        {
+            // to be completed
         }
 
         [Then("I see Collection Notice page")]
