@@ -8,9 +8,9 @@ namespace EMBC.ESS.Utilities.Cas
 {
     public interface IWebProxy
     {
-        Task<InvoiceResponse> CreateInvoiceAsync(Invoice invoice);
-
         Task<string> CreateTokenAsync();
+
+        Task<InvoiceResponse> CreateInvoiceAsync(Invoice invoice);
     }
 
     public class Invoice
@@ -74,6 +74,8 @@ namespace EMBC.ESS.Utilities.Cas
 
         [JsonPropertyName("CAS-Returned-Messages")]
         public string CASReturnedMessages { get; set; } = null!;
+
+        public bool IsSuccess() => "SUCCEEDED".Equals(CASReturnedMessages, StringComparison.OrdinalIgnoreCase);
     }
 
     public class CasDateJsonConverter : JsonConverter<DateTime>

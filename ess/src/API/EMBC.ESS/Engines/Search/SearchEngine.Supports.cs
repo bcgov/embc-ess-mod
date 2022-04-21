@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
 
@@ -46,5 +45,18 @@ namespace EMBC.ESS.Engines.Search
                 })
             };
         }
+    }
+
+    internal enum SupportStatus
+    {
+        Active = 1,
+        Expired = 174360000,
+        Void = 2,
+        PendingApproval = 174360001,
+        Approved = 174360002,
+        Paid = 174360003,
+        Cancelled = 174360004,
+        UnderReview = 174360005,
+        PendingScan = 174360006,
     }
 }

@@ -66,7 +66,7 @@ namespace EMBC.Tests.Integration.ESS
             var response = await client.CreateInvoiceAsync(invoice);
 
             response.ShouldNotBeNull();
-            response.CASReturnedMessages.ShouldBe("SUCCEEDED");
+            response.IsSuccess().ShouldBeTrue();
             response.InvoiceNumber.ShouldNotBeNull();
         }
     }

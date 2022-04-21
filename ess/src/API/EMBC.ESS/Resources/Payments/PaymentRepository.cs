@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
@@ -13,17 +14,20 @@ namespace EMBC.ESS.Resources.Payments
     {
         private readonly IMapper mapper;
         private readonly IEssContextFactory essContextFactory;
+        private readonly IWebProxy casWebProxy;
 
-        public PaymentRepository(IMapper mapper, IEssContextFactory essContextFactory)
+        public PaymentRepository(IMapper mapper, IEssContextFactory essContextFactory, IWebProxy casWebProxy)
         {
             this.mapper = mapper;
             this.essContextFactory = essContextFactory;
+            this.casWebProxy = casWebProxy;
         }
 
         public async Task<ManagePaymentResponse> Manage(ManagePaymentRequest request) =>
             request switch
             {
                 SavePaymentRequest r => await Handle(r),
+                SendPaymentToCasRequest r => await Handle(r),
 
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
@@ -82,7 +86,7 @@ namespace EMBC.ESS.Resources.Payments
 
             IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
             if (!string.IsNullOrEmpty(request.ById)) query = query.Where(tx => tx.era_name == request.ById);
-            if (request.ByStatus.HasValue) query = query.Where(tx => tx.statecode == (int)request.ByStatus.Value);
+            if (request.ByStatus.HasValue) query = query.Where(tx => tx.statuscode == (int)request.ByStatus.Value);
 
             var txs = (await ((DataServiceQuery<era_etransfertransaction>)query).GetAllPagesAsync()).ToArray();
             foreach (var tx in txs)
@@ -93,6 +97,40 @@ namespace EMBC.ESS.Resources.Payments
             ctx.DetachAll();
 
             return new SearchPaymentResponse { Items = mapper.Map<IEnumerable<Payment>>(txs).ToArray() };
+        }
+
+        private async Task<SendPaymentToCasResponse> Handle(SendPaymentToCasRequest request)
+        {
+            var ctx = essContextFactory.Create();
+
+            List<string> processedPayments = new List<string>();
+
+            foreach (var paymentId in request.PaymentIds)
+            {
+                var payment = ctx.era_etransfertransactions.Where(tx => tx.era_name == paymentId).SingleOrDefault();
+                if (payment == null) throw new InvalidOperationException($"etransfer transaction {paymentId} not found");
+                if (payment.statuscode != (int)PaymentStatus.Pending) throw new InvalidOperationException($"etransfer transaction is in status {(PaymentStatus)payment.statuscode} - cannot send to CAS");
+
+                var response = await casWebProxy.CreateInvoiceAsync(mapper.Map<Invoice>(payment));
+                if (response.IsSuccess())
+                {
+                    payment.statuscode = (int)PaymentStatus.Sent;
+                    payment.era_processingresponse = string.Empty;
+                }
+                else
+                {
+                    payment.statuscode = (int)PaymentStatus.Failed;
+                    payment.era_processingresponse = response.CASReturnedMessages;
+                }
+                ctx.UpdateObject(payment);
+                await ctx.SaveChangesAsync();
+                processedPayments.Add(paymentId);
+            }
+
+            return new SendPaymentToCasResponse
+            {
+                Items = processedPayments.ToArray()
+            };
         }
     }
 }

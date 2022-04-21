@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using EMBC.ESS.Resources.Payments;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -26,8 +27,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 Amount = 100.00m,
                 RecipientFirstName = "first",
                 RecipientLastName = "last",
-                NotificationEmail = "email",
-                NotificationPhone = "12345",
+                NotificationEmail = "email@unit.test",
+                NotificationPhone = "1234567890",
                 SecurityAnswer = "answer",
                 SecurityQuestion = "question",
                 LinkedSupportIds = linkedSupportIds
@@ -49,6 +50,23 @@ namespace EMBC.Tests.Integration.ESS.Resources
             readPayment.SecurityAnswer.ShouldBe(payment.SecurityAnswer);
             readPayment.SecurityQuestion.ShouldBe(payment.SecurityQuestion);
             readPayment.LinkedSupportIds.ShouldBe(payment.LinkedSupportIds);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task SendPaymentToCas_InteracPayment_Sent()
+        {
+            var pendingPayments = ((SearchPaymentResponse)await repository.Query(new SearchPaymentRequest { ByStatus = PaymentStatus.Pending })).Items.ToArray();
+
+            pendingPayments.ShouldNotBeEmpty();
+
+            var sentPayments = ((SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest { PaymentIds = pendingPayments.Select(p => p.Id) })).Items.ToArray();
+            sentPayments.Length.ShouldBe(pendingPayments.Length);
+
+            foreach (var paymentId in sentPayments)
+            {
+                var payment = ((SearchPaymentResponse)await repository.Query(new SearchPaymentRequest { ById = paymentId })).Items.ShouldHaveSingleItem();
+                payment.Status.ShouldBe(PaymentStatus.Sent);
+            }
         }
     }
 }
