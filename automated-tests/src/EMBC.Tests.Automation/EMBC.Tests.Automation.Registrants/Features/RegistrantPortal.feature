@@ -1,4 +1,4 @@
-﻿Feature: Feature1
+﻿Feature: Registrant Portal
 
 The purpose of these tests is to confirm access to the Registrant Portal and successful form completion.
 
