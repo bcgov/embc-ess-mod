@@ -17,7 +17,10 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
+import {
+  LinkedRegistrantProfileResults,
+  LinkRegistrantProfileModel
+} from 'src/app/core/models/link-registrant-profile.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
@@ -72,6 +75,7 @@ export class HouseholdMemberComponent implements OnInit {
     this.displayLinks = undefined;
     this.matchedProfileCount = 0;
     this.matchedProfiles = undefined;
+    this.essfileDashboardService.selectedMember = houseHoldMember;
     if (
       houseHoldMember.type === HouseholdMemberType.HouseholdMember &&
       this.appBaseService.appModel.selectedUserPathway ===
@@ -86,26 +90,28 @@ export class HouseholdMemberComponent implements OnInit {
           houseHoldMember.dateOfBirth
         )
         .subscribe({
-          next: (value: LinkRegistrantProfileModel[]) => {
-            this.matchedProfileCount = value.length;
-            this.matchedProfiles = value;
+          next: (value: LinkedRegistrantProfileResults) => {
+            console.log(value);
+            this.matchedProfileCount = value.matchedProfiles.length;
+            this.matchedProfiles = value.matchedProfiles;
 
-            if (this.matchedProfileCount === 0) {
-              this.displayLinks = 'create-profile';
-            } else if (
-              (this.matchedProfiles[0].hasSecurityQuestions &&
-                this.matchedProfileCount === 1) ||
-              this.matchedProfileCount > 1
-            ) {
-              this.displayLinks = 'link-profile';
-            } else if (
-              !this.matchedProfiles[0].hasSecurityQuestions &&
-              this.matchedProfileCount === 1
-            ) {
-              this.displayLinks = 'no-security-questions';
-            } else {
-              this.displayLinks = null;
-            }
+            // if (this.matchedProfileCount === 0) {
+            //   this.displayLinks = 'create-profile';
+            // } else if (
+            //   (this.matchedProfiles[0].hasSecurityQuestions &&
+            //     this.matchedProfileCount === 1) ||
+            //   this.matchedProfileCount > 1
+            // ) {
+            //   this.displayLinks = 'link-profile';
+            // } else if (
+            //   !this.matchedProfiles[0].hasSecurityQuestions &&
+            //   this.matchedProfileCount === 1
+            // ) {
+            //   this.displayLinks = 'no-security-questions';
+            // } else {
+            //   this.displayLinks = null;
+            // }
+            this.displayLinks = value.householdMemberDisplayButton;
             this.isLoading = !this.isLoading;
           },
           error: (error) => {
@@ -116,19 +122,25 @@ export class HouseholdMemberComponent implements OnInit {
         });
     } else if (houseHoldMember.type === HouseholdMemberType.Registrant) {
       this.isLoading = !this.isLoading;
-      if (
-        this.appBaseService.appModel.selectedUserPathway ===
-        SelectedPathType.digital
-      ) {
-        this.displayLinks = 'view-profile';
-      } else if (
-        this.appBaseService.appModel.selectedUserPathway ===
-          SelectedPathType.paperBased &&
-        houseHoldMember?.linkedRegistrantId ===
-          this.evacueeSessionService?.evacueeMetaData?.registrantId
-      ) {
-        this.displayLinks = 'view-profile';
-      }
+      // if (
+      //   this.appBaseService.appModel.selectedUserPathway ===
+      //   SelectedPathType.digital
+      // ) {
+      //   this.displayLinks = 'view-profile';
+      // } else if (
+      //   this.appBaseService.appModel.selectedUserPathway ===
+      //     SelectedPathType.paperBased &&
+      //   houseHoldMember?.linkedRegistrantId ===
+      //     this.evacueeSessionService?.evacueeMetaData?.registrantId
+      // ) {
+      //   this.displayLinks = 'view-profile';
+      // }
+
+      // file?.type === 'Registrant' &&
+      //       evacueeSessionService?.isPaperBased &&
+      //       file?.id ===
+      //         appBaseService?.appModel?.selectedProfile
+      //           ?.selectedEvacueeInContext?.id
       this.isLoading = !this.isLoading;
     }
   }

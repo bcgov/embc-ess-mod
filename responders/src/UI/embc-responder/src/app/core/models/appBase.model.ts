@@ -13,9 +13,7 @@ export interface AppBaseModel {
 
 export interface EvacueeSearch {
   idQuestion?: string;
-  
 }
-
 
 export type DigitalFlow = EvacueeSearch;
 // VIEW: If Registrant
@@ -25,8 +23,7 @@ export type DigitalFlow = EvacueeSearch;
 
 export type PaperFlow = EvacueeSearch;
 // VIEW: If Registrant and The First Name, Last Name and Date of Birth of the Registrant record match to the values entered in the search fields
-// 
-
+//
 
 export interface SelectedProfile {
   selectedEvacueeInContext?: RegistrantProfileModel;
@@ -69,8 +66,8 @@ export class EtransferRequirementStatus {
 }
 
 export enum HouseholdMemberButtons {
-  viewProfile = 'View Profile',
-  createProfile = 'Create Profile',
-  linkProfile = 'Link Profile',
-  cannotLinkProfile = 'Cannot Link'
+  viewProfile = 'view-profile',
+  createProfile = 'create-profile',
+  linkProfile = 'link-profile',
+  cannotLinkProfile = 'cannot-link'
 }

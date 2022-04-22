@@ -2,13 +2,24 @@ import { Injectable } from '@angular/core';
 
 import { map, mergeMap, Observable, toArray } from 'rxjs';
 import {
+  EvacuationFileHouseholdMember,
   GetSecurityQuestionsResponse,
+  HouseholdMemberType,
   RegistrantProfile
 } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
+import {
+  HouseholdMemberButtons,
+  SelectedPathType
+} from 'src/app/core/models/appBase.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
-import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
+import {
+  LinkedRegistrantProfileResults,
+  LinkRegistrantProfileModel
+} from 'src/app/core/models/link-registrant-profile.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ProfileSecurityQuestionsService } from '../profile-security-questions/profile-security-questions.service';
 
 @Injectable({
@@ -16,11 +27,14 @@ import { ProfileSecurityQuestionsService } from '../profile-security-questions/p
 })
 export class EssfileDashboardService {
   private essFileVal: EvacuationFileModel;
+  private selectedMemberVal: EvacuationFileHouseholdMember;
 
   constructor(
     private cacheService: CacheService,
     private registrationService: RegistrationsService,
-    private profileSecurityQuestionsService: ProfileSecurityQuestionsService
+    private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
+    private appBaseService: AppBaseService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   get essFile(): EvacuationFileModel {
@@ -34,27 +48,44 @@ export class EssfileDashboardService {
     this.cacheService.set('essFile', essFileVal);
   }
 
+  public get selectedMember(): EvacuationFileHouseholdMember {
+    return this.selectedMemberVal;
+  }
+  public set selectedMember(value: EvacuationFileHouseholdMember) {
+    this.selectedMemberVal = value;
+  }
+
   public getPossibleProfileMatchesCombinedData(
     firstName: string,
     lastName: string,
     dateOfBirth: string
-  ): Observable<LinkRegistrantProfileModel[]> {
+  ): Observable<LinkedRegistrantProfileResults> {
     const matchedProfiles$ = this.getPossibleProfileMatches(
       firstName,
       lastName,
       dateOfBirth
     );
-    const hasSecQuestions$ = matchedProfiles$.pipe(
+    const matchedProfilesResults$ = matchedProfiles$.pipe(
       mergeMap((profiles) => profiles),
       mergeMap((matchProfile) => {
         const linkProfile$: Observable<LinkRegistrantProfileModel> =
           this.getHasSecurityQuestions(matchProfile);
         return linkProfile$;
       }),
-      toArray()
+      toArray(),
+      map(
+        (
+          hasSecQuest: LinkRegistrantProfileModel[]
+        ): LinkedRegistrantProfileResults => {
+          return {
+            matchedProfiles: hasSecQuest,
+            householdMemberDisplayButton: this.mapLinkedModel(hasSecQuest)
+          };
+        }
+      )
     );
 
-    return hasSecQuestions$;
+    return matchedProfilesResults$;
   }
 
   private getPossibleProfileMatches(
@@ -62,28 +93,11 @@ export class EssfileDashboardService {
     lastName: string,
     dateOfBirth: string
   ): Observable<RegistrantProfile[]> {
-    return this.registrationService
-      .registrationsSearchMatchingRegistrants({
-        firstName,
-        lastName,
-        dateOfBirth
-      })
-      // .pipe(
-      //   map(
-      //     (
-      //       matchedProfiles: RegistrantProfile[]
-      //     ): LinkRegistrantProfileModel[] => {
-      //       const linkProfiles: LinkRegistrantProfileModel[] = [];
-      //       for (const profile of matchedProfiles) {
-      //         const linkProfile: LinkRegistrantProfileModel = {
-      //           ...profile
-      //         };
-      //         linkProfiles.push(linkProfile);
-      //       }
-      //       return linkProfiles;
-      //     }
-      //   )
-      // );
+    return this.registrationService.registrationsSearchMatchingRegistrants({
+      firstName,
+      lastName,
+      dateOfBirth
+    });
   }
 
   private getHasSecurityQuestions(
@@ -112,8 +126,31 @@ export class EssfileDashboardService {
       );
   }
 
+  private mapLinkedModel(
+    matchedProfiles: LinkRegistrantProfileModel[]
+  ): HouseholdMemberButtons {
+    // Member has 0 profile match found
+    if (matchedProfiles.length === 0) {
+      return HouseholdMemberButtons.createProfile;
 
-  mapLinkedModel(profile:RegistrantProfile, securityQues: GetSecurityQuestionsResponse) {
+      // Member has 1 match and has security questions OR Member has more than 1 match
+    } else if (
+      (matchedProfiles.length === 1 &&
+        matchedProfiles[0].hasSecurityQuestions) ||
+      matchedProfiles.length > 1
+    ) {
+      return HouseholdMemberButtons.linkProfile;
 
+      // Member has 1 match and doesn't have security questions
+    } else if (
+      matchedProfiles.length === 1 &&
+      !matchedProfiles[0].hasSecurityQuestions
+    ) {
+      return HouseholdMemberButtons.cannotLinkProfile;
+
+      // Default option
+    } else {
+      return undefined;
+    }
   }
 }
