@@ -225,6 +225,7 @@ namespace EMBC.ESS.Resources.Supports
                 IEnumerable<era_evacueesupport> supports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId;
                 if (!string.IsNullOrEmpty(query.ById)) supports = supports.Where(s => s.era_name == query.ById);
                 if (!string.IsNullOrEmpty(query.ByManualReferralId)) supports = supports.Where(s => s.era_manualsupport == query.ByManualReferralId);
+                supports = supports.OrderBy(s => s.createdon);
 
                 return supports.ToArray();
             }
@@ -235,6 +236,7 @@ namespace EMBC.ESS.Resources.Supports
             if (!string.IsNullOrEmpty(query.ById)) supportsQuery = supportsQuery.Where(s => s.era_name == query.ById);
             if (!string.IsNullOrEmpty(query.ByManualReferralId)) supportsQuery = supportsQuery.Where(s => s.era_manualsupport == query.ByManualReferralId);
             if (query.ByStatus.HasValue) supportsQuery = supportsQuery.Where(s => s.statuscode == (int)query.ByStatus.Value);
+            supportsQuery = supportsQuery.OrderBy(s => s.createdon);
             if (query.LimitNumberOfResults.HasValue) supportsQuery = supportsQuery.Take(query.LimitNumberOfResults.Value);
 
             return (await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync()).ToArray();

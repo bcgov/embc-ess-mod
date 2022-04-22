@@ -69,6 +69,7 @@ namespace EMBC.ESS.Resources.Payments
     {
         public PaymentStatus? ByStatus { get; set; }
         public string ById { get; set; }
+        public int? LimitNumberOfItems { get; set; }
     }
 
     public class SearchPaymentResponse : QueryPaymentResponse
@@ -78,6 +79,7 @@ namespace EMBC.ESS.Resources.Payments
 
     public class SendPaymentToCasRequest : ManagePaymentRequest
     {
+        public string CasBatchName { get; set; }
         public IEnumerable<CasPayment> Items { get; set; } = Array.Empty<CasPayment>();
     }
 
@@ -88,6 +90,7 @@ namespace EMBC.ESS.Resources.Payments
 
     public class SendPaymentToCasResponse : ManagePaymentResponse
     {
-        public IEnumerable<string> Items { get; set; } = Array.Empty<string>();
+        public IEnumerable<string> SentItems { get; set; } = Array.Empty<string>();
+        public IEnumerable<(string Id, string Reason)> FailedItems { get; set; } = Array.Empty<(string Id, string Reason)>();
     }
 }
