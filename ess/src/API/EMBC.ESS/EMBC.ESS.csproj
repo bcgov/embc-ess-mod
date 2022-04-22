@@ -13,6 +13,7 @@
         <RepositoryType>GIT</RepositoryType>
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
