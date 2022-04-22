@@ -51,10 +51,7 @@ namespace EMBC.ESS.Resources.Payments
             CreateMap<era_etransfertransaction, Invoice>(MemberList.None)
                 .ForMember(d => d.SupplierNumber, opts => opts.MapFrom(s => s.era_suppliernumber))
                 .ForMember(d => d.SupplierSiteNumber, opts => opts.MapFrom(s => s.era_sitesuppliernumber))
-                .ForMember(d => d.NameLine1, opts => opts.MapFrom(s => $"{s.era_lastname}, {s.era_firstname}".ToUpper()))
                 .ForMember(d => d.InvoiceNumber, opts => opts.MapFrom(s => s.era_name))
-                .ForMember(d => d.InvoiceBatchName, opts => opts.MapFrom(s => s.era_name))
-                .ForMember(d => d.PayGroup, opts => opts.MapFrom(s => "EMB INC"))
                 .ForMember(d => d.DateInvoiceReceived, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
                 .ForMember(d => d.InvoiceDate, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
                 .ForMember(d => d.GlDate, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
@@ -64,17 +61,10 @@ namespace EMBC.ESS.Resources.Payments
                 .ForMember(d => d.InteracMobileNumber, opts => opts.MapFrom(s => Regex.Replace(s.era_phonenumber, @"^(\+)|\D", "$1")))
                 .ForMember(d => d.RemittanceMessage1, opts => opts.MapFrom(s => s.era_securityquestion))
                 .ForMember(d => d.RemittanceMessage2, opts => opts.MapFrom(s => s.era_securityanswer))
-                .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => "No address"))
-                .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => "V1V1V1"))
-                .ForMember(d => d.City, opts => opts.MapFrom(s => "City"))
-                .ForMember(d => d.Province, opts => opts.MapFrom(s => "BC"))
-                .ForMember(d => d.Country, opts => opts.MapFrom(s => "CA"))
                 .ForMember(d => d.InvoiceLineDetails, opts => opts.MapFrom(s => new[]
                     {
                         new InvoiceLineDetail
                         {
-                            DefaultDistributionAccount = "105.15006.10120.5185.1500000.000000.0000",
-                            InvoiceLineNumber = 1,
                             InvoiceLineAmount = s.era_totalamount.Value
                         }
                     }))

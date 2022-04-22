@@ -13,6 +13,7 @@
         <AnalysisMode>Default</AnalysisMode>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <Nullable>enable</Nullable>
+        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <ItemGroup>

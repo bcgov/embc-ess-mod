@@ -76,10 +76,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 payment.Id = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
             }
 
-            var sentPayments = ((SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest
+            var results = (SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest
             {
+                CasBatchName = TestData.TestPrefix,
                 Items = payments.Select(p => new CasPayment { PaymentId = p.Id })
-            })).Items.ToArray();
+            });
+
+            var sentPayments = results.SentItems.ToArray();
+            var failedPayments = results.FailedItems.ToArray();
+
+            failedPayments.ShouldBeEmpty();
             sentPayments.Length.ShouldBe(payments.Length);
 
             foreach (var paymentId in sentPayments)

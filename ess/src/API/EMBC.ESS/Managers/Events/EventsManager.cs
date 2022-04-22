@@ -755,7 +755,6 @@ namespace EMBC.ESS.Managers.Events
         public async System.Threading.Tasks.Task Handle(ProcessApprovedSupportsCommand _)
         {
             var foundSupports = true;
-            //handle limited number of approved support at a time
             while (foundSupports)
             {
                 var approvedSupports = ((PendingPaymentSupportSearchResponse)await searchEngine.Search(new PendingPaymentSupportSearchRequest())).Supports.ToArray();
@@ -789,6 +788,47 @@ namespace EMBC.ESS.Managers.Events
                     foreach (var payment in payments)
                     {
                         await paymentRepository.Manage(new SavePaymentRequest { Payment = payment });
+                    }
+                }
+            }
+        }
+
+        public async System.Threading.Tasks.Task Handle(ProcessPendingPaymentsCommand _)
+        {
+            var foundPayments = true;
+            while (foundPayments)
+            {
+                var pendingPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+                {
+                    ByStatus = PaymentStatus.Pending,
+                    LimitNumberOfItems = 20
+                })).Items.ToArray();
+
+                foundPayments = pendingPayments.Any();
+
+                if (foundPayments)
+                {
+                    var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
+                    logger.LogInformation("Found {0} pending payments", pendingPayments.Length);
+                    foreach (var payment in pendingPayments)
+                    {
+                        var result = (SendPaymentToCasResponse)await paymentRepository.Manage(new SendPaymentToCasRequest
+                        {
+                            CasBatchName = casBatchName,
+                            Items = new[] { new CasPayment { PaymentId = payment.Id } }
+                        });
+                        if (result.SentItems.Any())
+                        {
+                            logger.LogInformation($"Sent {result.SentItems.Count()} to CAS");
+                        }
+                        if (result.FailedItems.Any())
+                        {
+                            logger.LogError($"Failed to send {result.SentItems.Count()} to CAS");
+                            foreach (var failedItem in result.FailedItems)
+                            {
+                                logger.LogError("Failed to send payment {0} to CAS: {1}", failedItem.Id, failedItem.Reason);
+                            }
+                        }
                     }
                 }
             }

@@ -5,7 +5,17 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Company>Province of British Columbia</Company>
+        <Authors>Quartech Systems Limited</Authors>
+        <Copyright>Copyright 2021 Province of British Columbia</Copyright>
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
+        <RepositoryType>GIT</RepositoryType>
+        <AnalysisMode>Default</AnalysisMode>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <DebugType>full</DebugType>
         <UserSecretsId>0d3cba7f-28c0-495e-a236-85cae997fa6f</UserSecretsId>
+        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
