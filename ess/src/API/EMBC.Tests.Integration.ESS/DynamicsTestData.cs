@@ -124,32 +124,24 @@ namespace EMBC.Tests.Integration.ESS
             var evacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
-                .Where(f => f.era_name == testPrefix + "-file").SingleOrDefault();
+                .Where(f => f.era_name == testPrefix + "-digital").SingleOrDefault();
 
-            if (evacuationfile != null)
+            if (evacuationfile == null)
             {
-                essContext.LoadProperty(evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
-            }
-            else
-            {
-                evacuationfile = CreateEvacuationFile(this.contact);
-                var supports = CreateEvacueeSupports(evacuationfile);
+                evacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-digital");
+                var supports = CreateEvacueeSupports(evacuationfile, this.contact);
                 CreateReferralPrint(evacuationfile, this.tier4TeamMember, supports);
             }
 
             var paperEvacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
-                .Where(f => f.era_name == testPrefix + "-file-with-paperId").SingleOrDefault();
+                .Where(f => f.era_name == testPrefix + "-paper").SingleOrDefault();
 
-            if (paperEvacuationfile != null)
+            if (paperEvacuationfile == null)
             {
-                essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
-            }
-            else
-            {
-                paperEvacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-paperfile");
-                var supports = CreateEvacueeSupports(paperEvacuationfile);
+                paperEvacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-paper", testPrefix + "-paper");
+                var supports = CreateEvacueeSupports(paperEvacuationfile, this.contact);
                 CreateReferralPrint(paperEvacuationfile, this.tier4TeamMember, supports);
             }
 
@@ -269,12 +261,12 @@ namespace EMBC.Tests.Integration.ESS
             return contact;
         }
 
-        private era_evacuationfile CreateEvacuationFile(contact primaryContact, string? paperFileNumber = null)
+        private era_evacuationfile CreateEvacuationFile(contact primaryContact, string fileId, string? paperFileNumber = null)
         {
             var file = new era_evacuationfile()
             {
                 era_evacuationfileid = Guid.NewGuid(),
-                era_name = paperFileNumber != null ? testPrefix + "-file-with-paperId" : testPrefix + "-file",
+                era_name = fileId,
                 era_evacuationfiledate = DateTime.UtcNow,
                 era_securityphrase = EvacuationFileSecurityPhrase,
                 era_paperbasedessfile = paperFileNumber
@@ -340,7 +332,7 @@ namespace EMBC.Tests.Integration.ESS
             return file;
         }
 
-        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file)
+        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file, contact contact)
         {
             var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
             var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
@@ -374,6 +366,7 @@ namespace EMBC.Tests.Integration.ESS
             {
                 essContext.AddToera_evacueesupports(support);
                 essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);
+                essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), contact);
             }
 
             return supports;

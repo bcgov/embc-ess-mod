@@ -75,4 +75,19 @@ namespace EMBC.ESS.Resources.Payments
     {
         public IEnumerable<Payment> Items { get; set; } = Array.Empty<Payment>();
     }
+
+    public class SendPaymentToCasRequest : ManagePaymentRequest
+    {
+        public IEnumerable<CasPayment> Items { get; set; } = Array.Empty<CasPayment>();
+    }
+
+    public class CasPayment
+    {
+        public string PaymentId { get; set; }
+    }
+
+    public class SendPaymentToCasResponse : ManagePaymentResponse
+    {
+        public IEnumerable<string> Items { get; set; } = Array.Empty<string>();
+    }
 }
