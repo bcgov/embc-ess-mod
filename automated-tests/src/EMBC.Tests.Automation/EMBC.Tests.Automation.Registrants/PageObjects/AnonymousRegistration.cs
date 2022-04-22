@@ -53,7 +53,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             var firstName = "Jane";
             var lastName = "Doe";
-            var dateOfBirth = "01011980";
+            //var dateOfBirth = "01011980";
 
             var firstNameInput = webDriver.FindElement(By.Id("mat-input-0"));
             firstNameInput.SendKeys(firstName); 
