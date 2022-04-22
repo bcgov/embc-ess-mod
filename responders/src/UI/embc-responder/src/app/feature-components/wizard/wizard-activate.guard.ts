@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
 import { WizardAdapterService } from './wizard-adapter.service';
 
@@ -20,7 +21,8 @@ export class WizardActivateGuard implements CanActivate {
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private wizardAdapterService: WizardAdapterService,
-    private router: Router
+    private router: Router,
+    private appBaseService: AppBaseService
   ) {}
 
   public canActivate(
@@ -32,17 +34,13 @@ export class WizardActivateGuard implements CanActivate {
     | boolean
     | UrlTree {
     const loggedInTaskNumber = this.cacheService.get('loggedInTaskNumber');
-    const wizardType = this.evacueeSessionService.getWizardType();
+    const wizardType = this.appBaseService?.wizardProperties?.wizardType;
     const registrantProfileId = this.evacueeSessionService.profileId;
 
     if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTaskNumber)) {
         this.evacueeSessionService.profileId = null;
         this.evacueeSessionService.essFileNumber = null;
-        this.cacheService.set(
-          'wizardOpenedFrom',
-          '/responder-access/search/evacuee'
-        );
         this.wizardAdapterService.stepCreateProfileFromSearch();
 
         return true;

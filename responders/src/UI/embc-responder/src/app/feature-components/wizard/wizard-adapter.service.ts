@@ -14,6 +14,7 @@ import { WizardDataService } from './wizard-data.service';
 import { WizardService } from './wizard.service';
 import * as globalConst from '../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,14 +30,15 @@ export class WizardAdapterService {
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private stepEssFileService: StepEssFileService,
     private referralCreation: ReferralCreationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private appBaseService: AppBaseService
   ) {}
 
   /**
    * Clear all steps for current wizard type, usually before exiting wizard
    */
   public clearWizard(): void {
-    const wizType = this.evacueeSessionService.getWizardType();
+    const wizType = this.appBaseService?.wizardProperties?.wizardType;
 
     switch (wizType) {
       case WizardType.NewRegistration:

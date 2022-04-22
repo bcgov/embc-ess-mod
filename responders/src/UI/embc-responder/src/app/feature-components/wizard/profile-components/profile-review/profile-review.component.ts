@@ -23,6 +23,7 @@ import { SecurityQuestion } from 'src/app/core/api/models';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { CustomErrorMailMatcher } from '../contact/contact.component';
 import { CustomValidationService } from '../../../../core/services/customValidation.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-profile-review',
@@ -54,7 +55,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     public stepEvacueeProfileService: StepEvacueeProfileService,
-    public evacueeSessionService: EvacueeSessionService
+    public evacueeSessionService: EvacueeSessionService,
+    public appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
@@ -137,13 +139,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
 
       if (
         !this.evacueeSessionService.profileId &&
-        this.evacueeSessionService.getWizardType() ===
+        this.appBaseService?.wizardProperties?.wizardType ===
           WizardType.NewRegistration
       ) {
         this.createNewProfile();
       } else if (
         !this.evacueeSessionService.profileId &&
-        this.evacueeSessionService.getWizardType() ===
+        this.appBaseService?.wizardProperties?.wizardType ===
           WizardType.MemberRegistration
       ) {
         this.createMemberRegistration();
@@ -262,7 +264,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
           this.disableButton = true;
           this.saveLoader = false;
 
-          switch (this.evacueeSessionService.getWizardType()) {
+          switch (this.appBaseService?.wizardProperties?.wizardType) {
             case WizardType.NewRegistration:
               this.editNewRegistrationProfileDialog(profile);
               return;

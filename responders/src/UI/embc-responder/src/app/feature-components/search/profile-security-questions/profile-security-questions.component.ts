@@ -11,8 +11,9 @@ import { ProfileSecurityQuestionsService } from './profile-security-questions.se
 import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-profile-security-questions',
@@ -39,8 +40,9 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
-    private cacheService: CacheService,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
@@ -183,11 +185,13 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    * Function that redirects to Evacuation Registration page
    */
   goToEvacRegistration() {
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.NewRegistration,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
 
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: WizardType.NewRegistration },

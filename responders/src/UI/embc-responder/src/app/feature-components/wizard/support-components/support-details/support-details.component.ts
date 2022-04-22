@@ -137,11 +137,11 @@ export class SupportDetailsComponent implements OnInit {
   calculateNoOfDays() {
     const taskStartDate = this.datePipe.transform(
       this.evacueeSessionService?.evacFile?.task?.from,
-      'dd-MMM-yyyy'
+      'MMM d, y'
     );
     const taskEndDate = this.datePipe.transform(
       this.evacueeSessionService?.evacFile?.task?.to,
-      'dd-MMM-yyyy'
+      'MMM d, y'
     );
     const dateDiff =
       new Date(taskEndDate).getTime() - new Date(taskStartDate).getTime();

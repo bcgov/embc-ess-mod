@@ -1,79 +1,24 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
-using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Engines.Search
 {
-    public class SearchEngine : ISearchEngine
+    internal partial class SearchEngine : ISearchEngine
     {
-        private readonly EssContext essContext;
+        private readonly IEssContextFactory essContextFactory;
 
         public SearchEngine(IEssContextFactory essContextFactory)
         {
-            this.essContext = essContextFactory.CreateReadOnly();
+            this.essContextFactory = essContextFactory;
         }
 
         public async Task<SearchResponse> Search(SearchRequest request) =>
-                    request.GetType().Name switch
-                    {
-                        nameof(EvacueeSearchRequest) => await HandleEvacueeSearchRequest((EvacueeSearchRequest)request),
-                        _ => throw new NotSupportedException($"{request.GetType().Name} is not supported")
-                    };
-
-        private async Task<EvacueeSearchResponse> HandleEvacueeSearchRequest(EvacueeSearchRequest request)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (string.IsNullOrWhiteSpace(request.FirstName)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.FirstName));
-            if (string.IsNullOrWhiteSpace(request.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.LastName));
-            if (string.IsNullOrWhiteSpace(request.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.DateOfBirth));
-
-            System.Collections.Generic.IEnumerable<string> membersQuery;
-            if (request.SearchMode == SearchMode.Both)
+            request switch
             {
-                membersQuery = essContext.era_householdmembers
-                    .Where(m => m.statecode == (int)EntityState.Active)
-                    .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
-                    .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
-                    .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
-                    .ToArray()
-                    .Select(m => m.era_householdmemberid.Value.ToString());
-            }
-            else if (request.SearchMode == SearchMode.HouseholdMembers)
-            {
-                //when searching HouseholdMembers only, we only return results that are not already linked to a Registrant.
-                membersQuery = essContext.era_householdmembers
-                    .Where(m => m.statecode == (int)EntityState.Active)
-                    .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
-                    .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
-                    .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
-                    .Where(m => m._era_registrant_value == null)
-                    .ToArray()
-                    .Select(m => m.era_householdmemberid.Value.ToString());
-            }
-            else
-            {
-                membersQuery = Array.Empty<string>();
-            }
-
-            var registrantsQuery = request.SearchMode == SearchMode.Both || request.SearchMode == SearchMode.Registrants
-                ? essContext.contacts
-                    .Where(m => m.statecode == (int)EntityState.Active)
-                    .Where(m => m.firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
-                    .Where(m => m.lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
-                    .Where(m => m.birthdate.Equals(Date.Parse(request.DateOfBirth)))
-                    .ToArray()
-                    .Select(m => m.contactid.Value.ToString())
-                : Array.Empty<string>();
-
-            var response = new EvacueeSearchResponse
-            {
-                MatchingHouseholdMemberIds = membersQuery.Distinct().ToArray(),
-                MatchingRegistrantIds = registrantsQuery.Distinct().ToArray()
+                EvacueeSearchRequest r => await Handle(r),
+                SupportSearchRequest r => await Handle(r),
+                _ => throw new NotSupportedException($"{request.GetType().Name} is not supported")
             };
-
-            return await Task.FromResult(response);
-        }
     }
 }

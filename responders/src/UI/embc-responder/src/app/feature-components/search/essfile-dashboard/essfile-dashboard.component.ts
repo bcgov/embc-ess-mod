@@ -15,10 +15,10 @@ import * as globalConst from '../../../core/services/global-constants';
 import { Note } from 'src/app/core/api/models';
 import { StepNotesService } from '../../wizard/step-notes/step-notes.service';
 import { map } from 'rxjs/operators';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -41,8 +41,8 @@ export class EssfileDashboardComponent implements OnInit {
     private essfileDashboardService: EssfileDashboardService,
     private alertService: AlertService,
     private stepNotesService: StepNotesService,
-    private cacheService: CacheService,
-    public appBaseService: AppBaseService
+    public appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
@@ -106,11 +106,14 @@ export class EssfileDashboardComponent implements OnInit {
    */
   reviewEssFile(): void {
     this.isLoading = !this.isLoading;
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/essfile-dashboard'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.ReviewFile);
+
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.ReviewFile,
+      lastCompletedStep: null,
+      editFlag: true,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
 
     this.router
       .navigate(['/ess-wizard'], {
@@ -144,11 +147,14 @@ export class EssfileDashboardComponent implements OnInit {
    */
   completeEssFile(): void {
     this.isLoading = !this.isLoading;
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/essfile-dashboard'
-    );
-    this.evacueeSessionService.setWizardType(WizardType.CompleteFile);
+
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.CompleteFile,
+      lastCompletedStep: null,
+      editFlag: true,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
 
     this.router
       .navigate(['/ess-wizard'], {
