@@ -91,10 +91,13 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var files = searchResults.EvacuationFiles;
             files.ShouldNotBeEmpty();
-            files.ShouldAllBe(f => f.HouseholdMembers
-                .Any(m => m.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
-                m.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase) &&
-                m.DateOfBirth == dateOfBirth));
+            foreach (var file in files)
+            {
+                var matchedMember = file.HouseholdMembers.Where(m => m.IsSearchMatch).ShouldHaveSingleItem();
+                matchedMember.FirstName.ShouldBe(firstName, StringCompareShould.IgnoreCase);
+                matchedMember.LastName.ShouldBe(lastName, StringCompareShould.IgnoreCase);
+                matchedMember.DateOfBirth.ShouldBe(dateOfBirth);
+            }
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

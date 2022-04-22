@@ -12,12 +12,12 @@ namespace EMBC.ESS.Resources.Suppliers
 {
     public class SupplierRepository : ISupplierRepository
     {
-        private readonly EssContext essContext;
+        private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
 
-        public SupplierRepository(EssContext essContext, IMapper mapper)
+        public SupplierRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.essContext = essContext;
+            this.essContextFactory = essContextFactory;
             this.mapper = mapper;
         }
 
@@ -42,6 +42,8 @@ namespace EMBC.ESS.Resources.Suppliers
 
         private async Task<SupplierCommandResult> HandleSaveSupplier(SaveSupplier cmd)
         {
+            var essContext = essContextFactory.Create();
+
             var supplier = mapper.Map<era_supplier>(cmd.Supplier);
             var existingSupplier = supplier.era_supplierid.HasValue
                 ? essContext.era_suppliers
@@ -55,7 +57,7 @@ namespace EMBC.ESS.Resources.Suppliers
             }
             else
             {
-                RemoveTeamSuppliers(existingSupplier, supplier);
+                RemoveTeamSuppliers(essContext, existingSupplier, supplier);
                 essContext.Detach(existingSupplier);
                 supplier.era_supplierid = existingSupplier.era_supplierid;
 
@@ -70,7 +72,7 @@ namespace EMBC.ESS.Resources.Suppliers
 
             var contact = mapper.Map<era_suppliercontact>(cmd.Supplier.Contact);
 
-            AddSupplierContact(supplier, contact);
+            AddSupplierContact(essContext, supplier, contact);
 
             foreach (var ts in supplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
@@ -78,7 +80,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 ts.era_isprimarysupplier = cmd.Supplier.Team?.Id != null ? ts._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id) : false;
             }
 
-            AddTeamSuppliers(existingSupplier, supplier);
+            AddTeamSuppliers(essContext, existingSupplier, supplier);
 
             await essContext.SaveChangesAsync();
             essContext.DetachAll();
@@ -88,6 +90,8 @@ namespace EMBC.ESS.Resources.Suppliers
 
         private async Task<SupplierQueryResult> HandleQuery(SuppliersByTeamQuery queryRequest)
         {
+            var essContext = essContextFactory.CreateReadOnly();
+
             IQueryable<era_essteamsupplier> supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
                 .Expand(s => s.era_ESSTeamID)
@@ -101,6 +105,8 @@ namespace EMBC.ESS.Resources.Suppliers
 
             foreach (var supplier in suppliers)
             {
+                essContext.AttachTo(nameof(EssContext.era_essteamsuppliers), supplier);
+                essContext.AttachTo(nameof(EssContext.era_suppliers), supplier.era_SupplierId);
                 await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_PrimaryContact));
                 await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCity));
                 await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCountry));
@@ -127,6 +133,8 @@ namespace EMBC.ESS.Resources.Suppliers
 
         private async Task<SupplierQueryResult> HandleQuery(SupplierSearchQuery queryRequest)
         {
+            var essContext = essContextFactory.CreateReadOnly();
+
             if ((!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)) ||
                 (!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)))
             {
@@ -165,7 +173,7 @@ namespace EMBC.ESS.Resources.Suppliers
             return new SupplierQueryResult { Items = items };
         }
 
-        private void AddSupplierContact(era_supplier supplier, era_suppliercontact contact)
+        private static void AddSupplierContact(EssContext essContext, era_supplier supplier, era_suppliercontact contact)
         {
             var existinContact = supplier._era_primarycontact_value.HasValue
                 ? essContext.era_suppliercontacts
@@ -189,7 +197,7 @@ namespace EMBC.ESS.Resources.Suppliers
             essContext.SetLink(contact, nameof(era_suppliercontact.era_RelatedSupplier), supplier);
         }
 
-        private void AddTeamSuppliers(era_supplier existingSupplier, era_supplier updatedSupplier)
+        private static void AddTeamSuppliers(EssContext essContext, era_supplier existingSupplier, era_supplier updatedSupplier)
         {
             foreach (var ts1 in updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
@@ -219,7 +227,7 @@ namespace EMBC.ESS.Resources.Suppliers
             }
         }
 
-        private void RemoveTeamSuppliers(era_supplier existingSupplier, era_supplier updatedSupplier)
+        private static void RemoveTeamSuppliers(EssContext essContext, era_supplier existingSupplier, era_supplier updatedSupplier)
         {
             essContext.LoadProperty(existingSupplier, nameof(existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId));
 
