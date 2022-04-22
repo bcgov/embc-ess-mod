@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
         this.isLoading = false;
         this.alertService.clearAlert();
         if (error.status === 403) {
-          this.alertService.setAlert('danger', globalConst.accessError);
+          this.router.navigate(['/access-denied']);
         } else {
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.systemError);

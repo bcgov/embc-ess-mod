@@ -41,7 +41,7 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>current user profile</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<UserProfile>> GetCurrentUserProfile()
         {
             var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
@@ -54,7 +54,7 @@ namespace EMBC.Responders.API.Controllers
             if (currentMember == null)
             {
                 logger.LogError("Login failure userName {0}, user ID {1}, sourceSystem: {2}: {3}", userName, userId, sourceSystem, $"User {userName} not found");
-                return Unauthorized();
+                return Forbid();
             }
             if (currentMember.ExternalUserId != null && currentMember.ExternalUserId != userId)
                 throw new Exception($"User {userName} has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
