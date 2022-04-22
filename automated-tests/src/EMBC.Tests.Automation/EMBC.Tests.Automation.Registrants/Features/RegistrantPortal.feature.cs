@@ -143,7 +143,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("I click on the Self Register button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 15
- testRunner.And("I complete the minimum fields on the evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Then("I complete the minimum fields on the evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 16
  testRunner.And("the submitted information is correct for minimum fields completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -180,10 +180,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("I click on the Self Register button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 22
- testRunner.And("I complete the minimum fields on the evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 23
- testRunner.Then("the CAPTCHA field is confirmed to be working", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I complete the minimum fields on the evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -251,7 +248,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("I click on the Self Register button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 35
- testRunner.And("I complete the minimum fields on the verified evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Then("I complete the minimum fields on the verified evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 36
  testRunner.And("the submitted information is correct for minimum fields completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
