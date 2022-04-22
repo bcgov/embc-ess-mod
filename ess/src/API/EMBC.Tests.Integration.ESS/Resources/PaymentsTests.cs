@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using EMBC.ESS.Resources.Payments;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -26,8 +27,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 Amount = 100.00m,
                 RecipientFirstName = "first",
                 RecipientLastName = "last",
-                NotificationEmail = "email",
-                NotificationPhone = "12345",
+                NotificationEmail = "email@unit.test",
+                NotificationPhone = "1234567890",
                 SecurityAnswer = "answer",
                 SecurityQuestion = "question",
                 LinkedSupportIds = linkedSupportIds
@@ -49,6 +50,43 @@ namespace EMBC.Tests.Integration.ESS.Resources
             readPayment.SecurityAnswer.ShouldBe(payment.SecurityAnswer);
             readPayment.SecurityQuestion.ShouldBe(payment.SecurityQuestion);
             readPayment.LinkedSupportIds.ShouldBe(payment.LinkedSupportIds);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task SendPaymentToCas_InteracPayment_Sent()
+        {
+            var payments = new[]
+            {
+                new InteracSupportPayment
+                    {
+                        Status = PaymentStatus.Pending,
+                        Amount = 100.00m,
+                        RecipientFirstName = "first",
+                        RecipientLastName = "last",
+                        NotificationEmail = "email@unit.test",
+                        NotificationPhone = "1234567890",
+                        SecurityAnswer = "answer",
+                        SecurityQuestion = "question",
+                        LinkedSupportIds = TestData.SupportIds
+                    }
+            };
+
+            foreach (var payment in payments)
+            {
+                payment.Id = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
+            }
+
+            var sentPayments = ((SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest
+            {
+                Items = payments.Select(p => new CasPayment { PaymentId = p.Id })
+            })).Items.ToArray();
+            sentPayments.Length.ShouldBe(payments.Length);
+
+            foreach (var paymentId in sentPayments)
+            {
+                var payment = ((SearchPaymentResponse)await repository.Query(new SearchPaymentRequest { ById = paymentId })).Items.ShouldHaveSingleItem();
+                payment.Status.ShouldBe(PaymentStatus.Sent);
+            }
         }
     }
 }
