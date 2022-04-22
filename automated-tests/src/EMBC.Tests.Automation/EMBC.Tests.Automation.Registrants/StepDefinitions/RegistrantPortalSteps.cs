@@ -19,16 +19,10 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
             pageObject.GetCurrentLocation.Should().Be("/registration-method");
         }
 
-        [When("I click Self Register button")]
+        [When("I click on the Self Register button")]
         public void WhenClickSelfRegister()
         {
             pageObject.EnterCollectionNotice();
-        }
-
-        [When("I select to register without a BC Services Card")]
-        public void WhenRegisterWithoutBCServicesCard()
-        {
-            // to be completed
         }
 
         [Then("I see Collection Notice page")]
