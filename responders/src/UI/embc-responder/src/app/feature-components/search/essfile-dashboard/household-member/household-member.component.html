@@ -85,20 +85,6 @@
             </tr>
           </table>
         </div>
-        <!-- <div
-          *ngIf="
-            (file?.type === 'Registrant' &&
-              !evacueeSessionService?.isPaperBased) ||
-            (file?.type === 'HouseholdMember' &&
-              file?.linkedRegistrantId !== null &&
-              !evacueeSessionService?.isPaperBased)
-          "
-          class="row button-div"
-        >
-          <button class="button-p proceed-button" (click)="viewProfile(file)">
-            View Profile
-          </button>
-        </div> -->
 
         <div *ngIf="displayLinks === 'view-profile'" class="row button-div">
           <button class="button-p proceed-button" (click)="viewProfile(file)">

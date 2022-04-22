@@ -13,17 +13,12 @@ export interface AppBaseModel {
 
 export interface EvacueeSearch {
   idQuestion?: string;
+  householdMemberDisplayButton: HouseholdMemberButtons;
 }
 
 export type DigitalFlow = EvacueeSearch;
-// VIEW: If Registrant
-// CREATE: HouseholdMember, notMinor, no matching registrant
-// LINKING: hOUSEHOLDm, notMinor, 1 or more matching profile
-// CANNOTLINK: 1 matching profile with no security questions
 
 export type PaperFlow = EvacueeSearch;
-// VIEW: If Registrant and The First Name, Last Name and Date of Birth of the Registrant record match to the values entered in the search fields
-//
 
 export interface SelectedProfile {
   selectedEvacueeInContext?: RegistrantProfileModel;

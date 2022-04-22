@@ -16,7 +16,6 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { CacheService } from 'src/app/core/services/cache.service';
 import {
   LinkedRegistrantProfileResults,
   LinkRegistrantProfileModel
@@ -48,8 +47,8 @@ export class HouseholdMemberComponent implements OnInit {
     private alertService: AlertService,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
-    public evacueeSessionService: EvacueeSessionService,
-    public appBaseService: AppBaseService,
+    private evacueeSessionService: EvacueeSessionService,
+    private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
   ) {}
 
@@ -97,23 +96,6 @@ export class HouseholdMemberComponent implements OnInit {
             console.log(value);
             this.matchedProfileCount = value.matchedProfiles.length;
             this.matchedProfiles = value.matchedProfiles;
-
-            // if (this.matchedProfileCount === 0) {
-            //   this.displayLinks = 'create-profile';
-            // } else if (
-            //   (this.matchedProfiles[0].hasSecurityQuestions &&
-            //     this.matchedProfileCount === 1) ||
-            //   this.matchedProfileCount > 1
-            // ) {
-            //   this.displayLinks = 'link-profile';
-            // } else if (
-            //   !this.matchedProfiles[0].hasSecurityQuestions &&
-            //   this.matchedProfileCount === 1
-            // ) {
-            //   this.displayLinks = 'no-security-questions';
-            // } else {
-            //   this.displayLinks = null;
-            // }
             this.displayLinks = value.householdMemberDisplayButton;
             this.isLoading = !this.isLoading;
           },
@@ -125,25 +107,8 @@ export class HouseholdMemberComponent implements OnInit {
         });
     } else if (houseHoldMember.type === HouseholdMemberType.Registrant) {
       this.isLoading = !this.isLoading;
-      // if (
-      //   this.appBaseService.appModel.selectedUserPathway ===
-      //   SelectedPathType.digital
-      // ) {
-      //   this.displayLinks = 'view-profile';
-      // } else if (
-      //   this.appBaseService.appModel.selectedUserPathway ===
-      //     SelectedPathType.paperBased &&
-      //   houseHoldMember?.linkedRegistrantId ===
-      //     this.evacueeSessionService?.evacueeMetaData?.registrantId
-      // ) {
-      //   this.displayLinks = 'view-profile';
-      // }
-
-      // file?.type === 'Registrant' &&
-      //       evacueeSessionService?.isPaperBased &&
-      //       file?.id ===
-      //         appBaseService?.appModel?.selectedProfile
-      //           ?.selectedEvacueeInContext?.id
+      this.displayLinks =
+        this.appBaseService.appModel.evacueeSearchType.householdMemberDisplayButton;
       this.isLoading = !this.isLoading;
     }
   }

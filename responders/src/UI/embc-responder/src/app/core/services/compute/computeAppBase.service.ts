@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   DigitalFlow,
+  HouseholdMemberButtons,
   PaperFlow,
   SelectedPathType
 } from '../../models/appBase.model';
@@ -35,7 +36,13 @@ export class ComputeAppBaseService implements Compute {
   private computeEvacueePaperSearchParams() {
     this.appBaseService.appModel = {
       evacueeSearchType: {
-        idQuestion: globalConst.paperIdQuestion
+        idQuestion: globalConst.paperIdQuestion,
+        householdMemberDisplayButton:
+          this.appBaseService?.appModel.selectedProfile.selectedEvacueeInContext
+            .id ===
+          this.appBaseService?.appModel.selectedEssFile.primaryRegistrantId
+            ? HouseholdMemberButtons.viewProfile
+            : undefined
       } as PaperFlow
     };
   }
@@ -43,12 +50,9 @@ export class ComputeAppBaseService implements Compute {
   private computeEvacueeDigitalSearchParams() {
     this.appBaseService.appModel = {
       evacueeSearchType: {
-        idQuestion: globalConst.digitalIdQuestion
+        idQuestion: globalConst.digitalIdQuestion,
+        householdMemberDisplayButton: HouseholdMemberButtons.viewProfile
       } as DigitalFlow
     };
-  }
-
-  private computeHouseholdMemberDisplayButton() {
-    
   }
 }

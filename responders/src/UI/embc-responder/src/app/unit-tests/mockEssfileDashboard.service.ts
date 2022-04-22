@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { RegistrantProfile } from '../core/api/models';
 import { EvacuationFileModel } from '../core/models/evacuation-file.model';
-import { LinkRegistrantProfileModel } from '../core/models/link-registrant-profile.model';
+import {
+  LinkedRegistrantProfileResults,
+  LinkRegistrantProfileModel
+} from '../core/models/link-registrant-profile.model';
 import { EssfileDashboardService } from '../feature-components/search/essfile-dashboard/essfile-dashboard.service';
 
 @Injectable({
@@ -10,7 +12,9 @@ import { EssfileDashboardService } from '../feature-components/search/essfile-da
 })
 export class MockEssfileDashboardService extends EssfileDashboardService {
   public essFileValue: EvacuationFileModel;
-  public possibleProfileMatches: LinkRegistrantProfileModel[] = [];
+  public possibleProfileMatches: LinkedRegistrantProfileResults = {
+    matchedProfiles: []
+  };
 
   public get essFile(): EvacuationFileModel {
     return this.essFileValue;
@@ -23,8 +27,8 @@ export class MockEssfileDashboardService extends EssfileDashboardService {
     firstName: string,
     lastName: string,
     dateOfBirth: string
-  ): Observable<LinkRegistrantProfileModel[]> {
-    return new BehaviorSubject<LinkRegistrantProfileModel[]>(
+  ): Observable<LinkedRegistrantProfileResults> {
+    return new BehaviorSubject<LinkedRegistrantProfileResults>(
       this.possibleProfileMatches
     );
   }
