@@ -44,7 +44,7 @@ namespace EMBC.Tests.Integration.ESS
                builder.UseSerilog((ctx, cfg) =>
                {
                    cfg
-                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Debug)
+                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
                     .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
                });
