@@ -18,7 +18,9 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { WizardService } from '../wizard.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
-import { CacheService } from 'src/app/core/services/cache.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { WizardSteps } from 'src/app/core/models/wizard-type.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
@@ -69,7 +71,8 @@ export class StepEvacueeProfileService {
     private wizardService: WizardService,
     private evacueeSession: EvacueeSessionService,
     private locationService: LocationsService,
-    private cacheService: CacheService
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
   // Wizard variables
   public get profileTabs(): Array<TabModel> {
@@ -409,10 +412,11 @@ export class StepEvacueeProfileService {
     this.wizardService.createObjectReference(profile, 'profile');
     // Wizard variables
     this.evacueeSession.profileId = profile.id;
-    this.cacheService.set(
-      'wizardOpenedFrom',
-      '/responder-access/search/evacuee-profile-dashboard'
-    );
+
+    this.appBaseService.wizardProperties = {
+      lastCompletedStep: WizardSteps.Step1
+    };
+    this.computeState.triggerEvent();
 
     // Restriction tab
     this.restrictedAccess = profile.restriction;

@@ -16,7 +16,7 @@ namespace EMBC.Utilities.Caching
             this.logger = logger;
         }
 
-        public string Schedule => "*/1 * * * *";
+        public string Schedule => "* */1 * * * *";
 
         public int DegreeOfParallelism => -1;
 
