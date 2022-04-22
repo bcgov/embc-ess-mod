@@ -82,6 +82,9 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class ProcessApprovedSupportsCommand : Command
     { }
 
+    public class ProcessPendingPaymentsCommand : Command
+    { }
+
     [JsonConverter(typeof(PolymorphicJsonConverter<Support>))]
     public abstract class Support
     {

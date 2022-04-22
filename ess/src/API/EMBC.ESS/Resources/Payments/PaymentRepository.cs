@@ -82,11 +82,16 @@ namespace EMBC.ESS.Resources.Payments
 
         private async Task<SearchPaymentResponse> Handle(SearchPaymentRequest request)
         {
+            if (string.IsNullOrEmpty(request.ById) && !request.ByStatus.HasValue)
+                throw new ArgumentException("Payments query must have at least one criteria", nameof(request));
+
             var ctx = essContextFactory.Create();
 
             IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
             if (!string.IsNullOrEmpty(request.ById)) query = query.Where(tx => tx.era_name == request.ById);
             if (request.ByStatus.HasValue) query = query.Where(tx => tx.statuscode == (int)request.ByStatus.Value);
+            query = query.OrderBy(q => q.createdon);
+            if (request.LimitNumberOfItems.HasValue) query = query.Take(request.LimitNumberOfItems.Value);
 
             var txs = (await ((DataServiceQuery<era_etransfertransaction>)query).GetAllPagesAsync()).ToArray();
             foreach (var tx in txs)
@@ -104,52 +109,72 @@ namespace EMBC.ESS.Resources.Payments
             var ctx = essContextFactory.Create();
 
             List<string> processedPayments = new List<string>();
+            List<(string Id, string Reason)> failedPayments = new List<(string Id, string Reason)>();
 
             foreach (var casPayment in request.Items)
             {
                 var paymentId = casPayment.PaymentId;
-                var payment = ctx.era_etransfertransactions
-                    .Where(tx => tx.era_name == paymentId).SingleOrDefault();
-                if (payment == null) throw new InvalidOperationException($"etransfer transaction {paymentId} not found");
-                if (payment.statuscode != (int)PaymentStatus.Pending) throw new InvalidOperationException($"etransfer transaction is in status {(PaymentStatus)payment.statuscode} - cannot send to CAS");
+                var payment = ctx.era_etransfertransactions.Where(tx => tx.era_name == paymentId).SingleOrDefault();
+                if (payment == null) throw new Exception($"Payment {paymentId} not found");
 
-                await ctx.LoadPropertyAsync(payment, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo));
-                var linkedSupports = payment.era_era_etransfertransaction_era_evacueesuppo.ToArray();
-                if (!linkedSupports.Any()) throw new InvalidOperationException($"Payment {paymentId} is not linked to any supports");
-                var support = linkedSupports[0];
-                if (linkedSupports.Any(s => s._era_payeeid_value == null || s._era_payeeid_value != support._era_payeeid_value)) throw new InvalidOperationException($"Payment {paymentId} has linked supports with multiple or null evacuees");
-
-                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_PayeeId));
-
-                var registrant = support.era_PayeeId;
-
-                // set the payment's supplier information
-                //TODO: remove temp values and check for null values
-                payment.era_suppliernumber = registrant.era_suppliernumber ?? "044994";
-                payment.era_sitesuppliernumber = registrant.era_sitesuppliernumber ?? "001";
-                ctx.UpdateObject(payment);
-
-                var invoice = mapper.Map<Invoice>(payment);
-
-                var response = await casWebProxy.CreateInvoiceAsync(invoice);
-                if (response.IsSuccess())
+                try
                 {
-                    payment.statuscode = (int)PaymentStatus.Sent;
-                    payment.era_processingresponse = string.Empty;
+                    if (payment.statuscode != (int)PaymentStatus.Pending) throw new Exception($"Payment is in status {(PaymentStatus)payment.statuscode} - cannot send to CAS");
+
+                    await ctx.LoadPropertyAsync(payment, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo));
+                    var linkedSupports = payment.era_era_etransfertransaction_era_evacueesuppo.ToArray();
+                    if (!linkedSupports.Any()) throw new Exception($"Payment {paymentId} is not linked to any supports");
+                    var support = linkedSupports[0];
+                    if (linkedSupports.Any(s => s._era_payeeid_value == null || s._era_payeeid_value != support._era_payeeid_value)) throw new Exception($"Payment {paymentId} has linked supports with multiple or null evacuees");
+
+                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_PayeeId));
+
+                    var registrant = support.era_PayeeId;
+
+                    // set the payment's supplier information
+                    //TODO: remove temp values and check for null values
+                    payment.era_suppliernumber = registrant.era_suppliernumber ?? "2002738";
+                    payment.era_sitesuppliernumber = registrant.era_sitesuppliernumber ?? "001";
+
+                    var invoice = mapper.Map<Invoice>(payment);
+                    //TODO: get from Dynamics sys config values
+                    invoice.PayGroup = "EMB INC";
+                    invoice.InvoiceBatchName = request.CasBatchName;
+                    var lineItemNumber = 1;
+                    foreach (var lineItem in invoice.InvoiceLineDetails)
+                    {
+                        lineItem.InvoiceLineNumber = lineItemNumber++;
+                        lineItem.DefaultDistributionAccount = "105.15006.10120.5185.1500000.000000.0000";
+                    }
+
+                    var response = await casWebProxy.CreateInvoiceAsync(invoice);
+                    if (response.IsSuccess())
+                    {
+                        payment.statuscode = (int)PaymentStatus.Sent;
+                        payment.era_processingresponse = string.Empty;
+                        processedPayments.Add(paymentId);
+                    }
+                    else
+                    {
+                        payment.statuscode = (int)PaymentStatus.Failed;
+                        payment.era_processingresponse = response.CASReturnedMessages;
+                        failedPayments.Add((paymentId, response.CASReturnedMessages));
+                    }
                 }
-                else
+                catch (Exception e)
                 {
                     payment.statuscode = (int)PaymentStatus.Failed;
-                    payment.era_processingresponse = response.CASReturnedMessages;
+                    payment.era_processingresponse = e.Message;
+                    failedPayments.Add((paymentId, e.Message));
                 }
                 ctx.UpdateObject(payment);
                 await ctx.SaveChangesAsync();
-                processedPayments.Add(paymentId);
             }
 
             return new SendPaymentToCasResponse
             {
-                Items = processedPayments.ToArray()
+                SentItems = processedPayments.ToArray(),
+                FailedItems = failedPayments.ToArray()
             };
         }
     }

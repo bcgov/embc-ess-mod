@@ -31,15 +31,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetEvacuationFilesByFileId()
         {
+            var fileId = TestEssFileNumber;
             var caseQuery = new EvacuationFilesQuery
             {
-                FileId = TestEssFileNumber
+                FileId = fileId
             };
             var queryResult = await evacuationRepository.Query(caseQuery);
             queryResult.Items.ShouldHaveSingleItem();
 
-            var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
-            evacuationFile.Id.ShouldBe(TestEssFileNumber);
+            var evacuationFile = queryResult.Items.ShouldHaveSingleItem();
+            evacuationFile.Id.ShouldBe(fileId);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
