@@ -4,16 +4,16 @@ using EMBC.Tests.Automation.Registrants.PageObjects;
 namespace EMBC.Tests.Automation.Registrants.StepDefinitions
 {
     [Binding]
-    public sealed class RegistrantsPortalSteps
+    public sealed class RegistrantPortalSteps
     {
         private readonly AnonymousRegistration pageObject;
 
-        public RegistrantsPortalSteps(BrowserDriver driver)
+        public RegistrantPortalSteps(BrowserDriver driver)
         {
             this.pageObject = new AnonymousRegistration(driver.Current);
         }
 
-        [Given("I see the Registrants' Portal home page")]
+        [Given("I see the Registrant Portal home page")]
         public void GivenNavigateToHomePage()
         {
             pageObject.GetCurrentLocation.Should().Be("/registration-method");

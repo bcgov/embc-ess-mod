@@ -19,7 +19,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class RegistrantsPortalHomepageFeature : object, Xunit.IClassFixture<RegistrantsPortalHomepageFeature.FixtureData>, System.IDisposable
+    public partial class RegistrantPortalHomepageFeature : object, Xunit.IClassFixture<RegistrantPortalHomepageFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -31,7 +31,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
 #line 1 "HomePage.feature"
 #line hidden
         
-        public RegistrantsPortalHomepageFeature(RegistrantsPortalHomepageFeature.FixtureData fixtureData, EMBC_Tests_Automation_Registrants_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public RegistrantPortalHomepageFeature(RegistrantPortalHomepageFeature.FixtureData fixtureData, EMBC_Tests_Automation_Registrants_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Registrants portal homepage", null, ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Registrant Portal homepage", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -81,7 +81,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Start anonymous registration")]
-        [Xunit.TraitAttribute("FeatureTitle", "Registrants portal homepage")]
+        [Xunit.TraitAttribute("FeatureTitle", "Registrant Portal homepage")]
         [Xunit.TraitAttribute("Description", "Start anonymous registration")]
         [Xunit.TraitAttribute("Category", "mytag")]
         public void StartAnonymousRegistration()
@@ -101,7 +101,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 5
- testRunner.Given("I see Registrants\' Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I see the Registrant Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 6
  testRunner.When("I click Self Register button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -120,12 +120,12 @@ this.ScenarioInitialize(scenarioInfo);
             
             public FixtureData()
             {
-                RegistrantsPortalHomepageFeature.FeatureSetup();
+                RegistrantPortalHomepageFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                RegistrantsPortalHomepageFeature.FeatureTearDown();
+                RegistrantPortalHomepageFeature.FeatureTearDown();
             }
         }
     }

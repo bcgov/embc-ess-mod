@@ -19,7 +19,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class Feature1Feature : object, Xunit.IClassFixture<Feature1Feature.FixtureData>, System.IDisposable
+    public partial class RegistrantPortalFeature : object, Xunit.IClassFixture<RegistrantPortalFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -31,7 +31,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
 #line 1 "RegistrantPortal.feature"
 #line hidden
         
-        public Feature1Feature(Feature1Feature.FixtureData fixtureData, EMBC_Tests_Automation_Registrants_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public RegistrantPortalFeature(RegistrantPortalFeature.FixtureData fixtureData, EMBC_Tests_Automation_Registrants_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Feature1", "The purpose of these tests is to confirm access to the Registrant Portal and succ" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Registrant Portal", "The purpose of these tests is to confirm access to the Registrant Portal and succ" +
                     "essful form completion.", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
@@ -82,7 +82,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Registrant Portal - Anonymous - Happy path/maximum fields")]
-        [Xunit.TraitAttribute("FeatureTitle", "Feature1")]
+        [Xunit.TraitAttribute("FeatureTitle", "Registrant Portal")]
         [Xunit.TraitAttribute("Description", "Registrant Portal - Anonymous - Happy path/maximum fields")]
         [Xunit.TraitAttribute("Category", "tag1")]
         public void RegistrantPortal_Anonymous_HappyPathMaximumFields()
@@ -102,7 +102,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 7
- testRunner.Given("I see the Registrants\' Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I see the Registrant Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 8
  testRunner.When("I select to register without a BC Services Card", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -121,7 +121,7 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Registrant Portal - Anonymous - Happy path/minimum fields")]
-        [Xunit.TraitAttribute("FeatureTitle", "Feature1")]
+        [Xunit.TraitAttribute("FeatureTitle", "Registrant Portal")]
         [Xunit.TraitAttribute("Description", "Registrant Portal - Anonymous - Happy path/minimum fields")]
         public void RegistrantPortal_Anonymous_HappyPathMinimumFields()
         {
@@ -139,7 +139,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 14
- testRunner.Given("I see the Registrants\' Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I see the Registrant Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 15
  testRunner.When("I select to register without a BC Services Card", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -158,7 +158,7 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Registrant Portal - Verified path - Happy path/maximum fields")]
-        [Xunit.TraitAttribute("FeatureTitle", "Feature1")]
+        [Xunit.TraitAttribute("FeatureTitle", "Registrant Portal")]
         [Xunit.TraitAttribute("Description", "Registrant Portal - Verified path - Happy path/maximum fields")]
         public void RegistrantPortal_VerifiedPath_HappyPathMaximumFields()
         {
@@ -176,7 +176,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 21
- testRunner.Given("I see the Registrants\' Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I see the Registrant Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 22
  testRunner.When("I register with a BC Services Card", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -195,7 +195,7 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [Xunit.SkippableFactAttribute(DisplayName="Registrant Portal - Verified path - Happy path/minimum fields")]
-        [Xunit.TraitAttribute("FeatureTitle", "Feature1")]
+        [Xunit.TraitAttribute("FeatureTitle", "Registrant Portal")]
         [Xunit.TraitAttribute("Description", "Registrant Portal - Verified path - Happy path/minimum fields")]
         public void RegistrantPortal_VerifiedPath_HappyPathMinimumFields()
         {
@@ -213,7 +213,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 28
- testRunner.Given("I see the Registrants\' Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I see the Registrant Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 29
  testRunner.When("I register with a BC Services Card", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -238,12 +238,12 @@ this.ScenarioInitialize(scenarioInfo);
             
             public FixtureData()
             {
-                Feature1Feature.FeatureSetup();
+                RegistrantPortalFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                Feature1Feature.FeatureTearDown();
+                RegistrantPortalFeature.FeatureTearDown();
             }
         }
     }
