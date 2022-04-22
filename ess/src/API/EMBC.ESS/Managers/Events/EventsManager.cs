@@ -243,7 +243,7 @@ namespace EMBC.ESS.Managers.Events
             })).Items;
             var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
 
-            return new RegistrantsQueryResponse { Items = registrants.ToArray() };
+            return new RegistrantsQueryResponse { Items = registrants };
         }
 
         public async Task<EvacuationFilesQueryResponse> Handle(Shared.Contracts.Events.EvacuationFilesQuery query)
@@ -266,10 +266,7 @@ namespace EMBC.ESS.Managers.Events
 
             var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(cases);
 
-            foreach (var file in files)
-            {
-                await evacuationFileLoader.Load(file);
-            }
+            await System.Threading.Tasks.Task.WhenAll(files.Select(f => evacuationFileLoader.Load(f)).ToArray());
 
             return new EvacuationFilesQueryResponse { Items = files };
         }
