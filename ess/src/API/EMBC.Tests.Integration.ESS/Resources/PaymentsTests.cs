@@ -55,12 +55,32 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SendPaymentToCas_InteracPayment_Sent()
         {
-            var pendingPayments = ((SearchPaymentResponse)await repository.Query(new SearchPaymentRequest { ByStatus = PaymentStatus.Pending })).Items.ToArray();
+            var payments = new[]
+            {
+                new InteracSupportPayment
+                    {
+                        Status = PaymentStatus.Pending,
+                        Amount = 100.00m,
+                        RecipientFirstName = "first",
+                        RecipientLastName = "last",
+                        NotificationEmail = "email@unit.test",
+                        NotificationPhone = "1234567890",
+                        SecurityAnswer = "answer",
+                        SecurityQuestion = "question",
+                        LinkedSupportIds = TestData.SupportIds
+                    }
+            };
 
-            pendingPayments.ShouldNotBeEmpty();
+            foreach (var payment in payments)
+            {
+                payment.Id = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
+            }
 
-            var sentPayments = ((SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest { PaymentIds = pendingPayments.Select(p => p.Id) })).Items.ToArray();
-            sentPayments.Length.ShouldBe(pendingPayments.Length);
+            var sentPayments = ((SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest
+            {
+                Items = payments.Select(p => new CasPayment { PaymentId = p.Id })
+            })).Items.ToArray();
+            sentPayments.Length.ShouldBe(payments.Length);
 
             foreach (var paymentId in sentPayments)
             {

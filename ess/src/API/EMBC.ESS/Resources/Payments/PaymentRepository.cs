@@ -105,13 +105,33 @@ namespace EMBC.ESS.Resources.Payments
 
             List<string> processedPayments = new List<string>();
 
-            foreach (var paymentId in request.PaymentIds)
+            foreach (var casPayment in request.Items)
             {
-                var payment = ctx.era_etransfertransactions.Where(tx => tx.era_name == paymentId).SingleOrDefault();
+                var paymentId = casPayment.PaymentId;
+                var payment = ctx.era_etransfertransactions
+                    .Where(tx => tx.era_name == paymentId).SingleOrDefault();
                 if (payment == null) throw new InvalidOperationException($"etransfer transaction {paymentId} not found");
                 if (payment.statuscode != (int)PaymentStatus.Pending) throw new InvalidOperationException($"etransfer transaction is in status {(PaymentStatus)payment.statuscode} - cannot send to CAS");
 
-                var response = await casWebProxy.CreateInvoiceAsync(mapper.Map<Invoice>(payment));
+                await ctx.LoadPropertyAsync(payment, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo));
+                var linkedSupports = payment.era_era_etransfertransaction_era_evacueesuppo.ToArray();
+                if (!linkedSupports.Any()) throw new InvalidOperationException($"Payment {paymentId} is not linked to any supports");
+                var support = linkedSupports[0];
+                if (linkedSupports.Any(s => s._era_payeeid_value == null || s._era_payeeid_value != support._era_payeeid_value)) throw new InvalidOperationException($"Payment {paymentId} has linked supports with multiple or null evacuees");
+
+                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_PayeeId));
+
+                var registrant = support.era_PayeeId;
+
+                // set the payment's supplier information
+                //TODO: remove temp values and check for null values
+                payment.era_suppliernumber = registrant.era_suppliernumber ?? "044994";
+                payment.era_sitesuppliernumber = registrant.era_sitesuppliernumber ?? "001";
+                ctx.UpdateObject(payment);
+
+                var invoice = mapper.Map<Invoice>(payment);
+
+                var response = await casWebProxy.CreateInvoiceAsync(invoice);
                 if (response.IsSuccess())
                 {
                     payment.statuscode = (int)PaymentStatus.Sent;
