@@ -423,6 +423,9 @@ objects:
                 requests:
                   cpu: 5m
                   memory: 24Mi
+              env:
+                - name: API_URL
+                  value: ${APP_NAME}-responders-portal-api:8080
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/responders-portal-ui:${TAG}
               imagePullPolicy: Always
               volumeMounts:
