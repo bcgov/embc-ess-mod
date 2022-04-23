@@ -39,6 +39,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
                 support.From = from;
                 support.To = to;
                 support.IncludedHouseholdMembers = householdMembers;
+                support.CreatedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
             }
 
             var duplicateSupportId = ((ProcessDigitalSupportsResponse)await engine.Process(new ProcessDigitalSupportsRequest
@@ -55,7 +56,8 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
                 TotalAmount = 100.00,
                 IncludedHouseholdMembers = householdMembers,
                 From = from,
-                To = to
+                To = to,
+                CreatedBy = new TeamMember { Id = TestData.Tier4TeamMemberId }
             };
 
             checkedSupport.Id = ((ProcessDigitalSupportsResponse)await engine.Process(new ProcessDigitalSupportsRequest
@@ -87,7 +89,8 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
                 IncludedHouseholdMembers = householdMembers,
                 From = from,
                 To = to,
-                ApproverName = "test approver"
+                ApproverName = "test approver",
+                CreatedBy = new TeamMember { Id = TestData.Tier4TeamMemberId }
             };
 
             checkedSupport.Id = ((ProcessDigitalSupportsResponse)await engine.Process(new ProcessDigitalSupportsRequest

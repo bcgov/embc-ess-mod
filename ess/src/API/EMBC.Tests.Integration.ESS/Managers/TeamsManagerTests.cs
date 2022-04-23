@@ -272,13 +272,13 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var now = DateTime.UtcNow;
             var adminManager = Services.GetRequiredService<AdminManager>();
-            var communities = (await adminManager.Handle(new CommunitiesQuery())).Items;
+            var communities = TestData.Commmunities;// (await adminManager.Handle(new CommunitiesQuery())).Items;
 
             var assignedCommunities = (await manager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 
             var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
 
-            var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code).ToList();
+            var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c)).Take(5).ToList();
             if (!assignedCommunities.Any(c => c.Code == TestData.ActiveTaskCommunity) && !newCommunities.Any(c => c == TestData.ActiveTaskCommunity)) newCommunities.Add(TestData.ActiveTaskCommunity);
 
             await manager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
