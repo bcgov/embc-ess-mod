@@ -317,7 +317,8 @@ namespace EMBC.ESS.Managers.Events
                 files.Add(mappedFile);
             });
 
-            await householdMemberTasks.Union(profileTasks).ToArray().ForEachAsync(5, t => t);
+            //await householdMemberTasks.Union(profileTasks).ToArray().ForEachAsync(5, t => t);
+            await System.Threading.Tasks.Task.WhenAll(householdMemberTasks.Union(profileTasks).ToArray());
 
             var profileResults = profiles.ToArray();
             var fileResults = files.ToArray();

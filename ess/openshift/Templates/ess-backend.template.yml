@@ -63,6 +63,15 @@ parameters:
   - description: Oauth/oidc server url
     name: OAUTH_AUTHORITY
     required: true
+  - description: CAS base url
+    name: CAS_BASE_URL
+    required: true
+  - description: CAS oauth client id
+    name: CAS_CLIENT_ID
+    required: true
+  - description: CAS oauth client secret
+    name: CAS_CLIENT_SECRET
+    required: true
 
 objects:
   - kind: ConfigMap
@@ -86,6 +95,7 @@ objects:
       REGISTRANTS_PORTAL_BASE_URL: ${REGISTRANTS_PORTAL_BASE_URL}
       messaging__authorizationEnabled: "true"
       messaging__oauth__metadataAddress: ${OAUTH_AUTHORITY}/.well-known/openid-configuration
+      cas__baseUrl: ${CAS_BASE_URL}
 
   - kind: Secret
     apiVersion: v1
@@ -106,6 +116,8 @@ objects:
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
       SPLUNK_URL: ${SPLUNK_URL}
       SPLUNK_TOKEN: ${SPLUNK_TOKEN}
+      cas__clientId: ${CAS_CLIENT_ID}
+      cas__clientSecret: ${CAS_CLIENT_SECRET}
 
   - kind: Service
     apiVersion: v1

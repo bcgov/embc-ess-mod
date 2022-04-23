@@ -52,7 +52,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var metaDataRepository = Services.GetRequiredService<IMetadataRepository>();
             var unavailableCommunities = (await teamRepository.QueryTeams(new TeamQuery())).Items.SelectMany(t => t.AssignedCommunities).Select(c => c.Code).ToArray();
-            var allCommunities = (await metaDataRepository.GetCommunities()).Select(c => c.Code).ToArray();
+            var allCommunities = TestData.Commmunities;
             var availableCommunities = allCommunities.Where(c => !unavailableCommunities.Any(uc => uc == c)).ToArray();
 
             var team = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
