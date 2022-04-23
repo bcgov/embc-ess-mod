@@ -243,7 +243,17 @@ namespace EMBC.Utilities.Hosting
             services.AddSingleton(TracerProvider.Default.GetTracer(appName));
 
             // add background tasks
-            services.AddBackgroundTasks(logger, assemblies);
+            if (configuration.GetValue("backgroundTask:enabled", true))
+            {
+                logger.LogInformation("Background tasks are enabled");
+                services.AddBackgroundTasks(logger, assemblies);
+            }
+            else
+            {
+                logger.LogWarning("Background tasks are disabled and not registered");
+            }
+
+            // add version providers
             services.AddTransient<IVersionInformationProvider, HostVersionInformationProvider>();
         }
 
