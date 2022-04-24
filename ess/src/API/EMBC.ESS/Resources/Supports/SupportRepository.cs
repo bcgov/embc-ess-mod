@@ -154,7 +154,7 @@ namespace EMBC.ESS.Resources.Supports
 
             ctx.DetachAll();
 
-            Parallel.ForEach(mappedSupports, s => s.era_name = ctx.era_evacueesupports.ByKey(s.era_evacueesupportid).Select(s => s.era_name).GetValue());
+            mappedSupports.AsParallel().ForAll(s => s.era_name = ctx.era_evacueesupports.ByKey(s.era_evacueesupportid).Select(s => s.era_name).GetValue());
 
             ctx.DetachAll();
 
@@ -183,7 +183,7 @@ namespace EMBC.ESS.Resources.Supports
         {
             var ctx = essContextFactory.CreateReadOnly();
             var supports = (await Search(ctx, query)).ToArray();
-            await Task.WhenAll(supports.Select(s => LoadSupportDetails(ctx, s)));
+            supports.AsParallel().ForAll(async s => await LoadSupportDetails(ctx, s));
 
             var results = new SearchSupportQueryResult { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
 
