@@ -183,7 +183,7 @@ namespace EMBC.ESS.Resources.Supports
         {
             var ctx = essContextFactory.CreateReadOnly();
             var supports = (await Search(ctx, query)).ToArray();
-            supports.AsParallel().ForAll(async s => await LoadSupportDetails(ctx, s));
+            await Parallel.ForEachAsync(supports, (s, ct) => new ValueTask(LoadSupportDetails(ctx, s)));
 
             var results = new SearchSupportQueryResult { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
 
