@@ -20,7 +20,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var referrals = GeneratePrintReferral(requestingUser, 1, false);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfFile.html", content);
@@ -33,7 +33,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var referrals = GeneratePrintReferral(requestingUser, 5, false);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsFile.html", content);
@@ -47,7 +47,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var summaryItems = GetSummaryFromReferrals(referrals);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfWithSummaryFile.html", content);
@@ -61,23 +61,23 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var summaryItems = GetSummaryFromReferrals(referrals);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
 
-            var content = ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsWithSummaryFile.html", content);
         }
 
         [Fact]
-        public void MultipleHtmlGenerationLoadTest()
+        public async Task MultipleHtmlGenerationLoadTest()
         {
-            Parallel.For(0, 10, new ParallelOptions { MaxDegreeOfParallelism = 10 }, i =>
-             {
-                 var requestingUser = GeneratePrintRequestingUser();
-                 var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
-                 var summaryItems = GetSummaryFromReferrals(referrals);
-                 var title = $"supportstest-{i}";
-                 ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
-             });
+            await Parallel.ForEachAsync(Enumerable.Range(0, 10), new ParallelOptions { MaxDegreeOfParallelism = 10 }, (i, ct) =>
+              {
+                  var requestingUser = GeneratePrintRequestingUser();
+                  var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
+                  var summaryItems = GetSummaryFromReferrals(referrals);
+                  var title = $"supportstest-{i}";
+                  return new ValueTask(ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title));
+              });
         }
 
         private PrintRequestingUser GeneratePrintRequestingUser() =>
