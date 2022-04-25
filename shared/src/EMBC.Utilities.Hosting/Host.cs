@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -291,8 +290,7 @@ namespace EMBC.Utilities.Hosting
                 endpoints.Map("/version", async ctx =>
                 {
                     var versionInformationProviders = ctx.RequestServices.GetServices<IVersionInformationProvider>();
-                    var versions = new List<VersionInformation>();
-                    await versionInformationProviders.ForEachAsync(10, async p => { versions.AddRange(await p.Get()); });
+                    var versions = await Task.WhenAll(versionInformationProviders.Select(p => p.Get()).ToArray());
 
                     ctx.Response.ContentType = "application/json";
                     ctx.Response.StatusCode = (int)HttpStatusCode.OK;

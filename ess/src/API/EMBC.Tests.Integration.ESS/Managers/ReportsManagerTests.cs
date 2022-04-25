@@ -6,13 +6,13 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.ESS.Resources
+namespace EMBC.Tests.Integration.ESS.Managers
 {
-    public class ReportsTests : DynamicsWebAppTestBase
+    public class ReportsManagerTests : DynamicsWebAppTestBase
     {
         private readonly ReportsManager reportsManager;
 
-        public ReportsTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+        public ReportsManagerTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             reportsManager = Services.GetRequiredService<ReportsManager>();
         }
