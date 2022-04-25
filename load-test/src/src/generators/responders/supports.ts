@@ -122,9 +122,9 @@ function generateSupport(file: EvacuationFile, suppliers: Array<Supplier>, categ
         to: addDays(now, getRandomInt(1, 5)).toISOString(),
         status: SupportStatus.Draft,
         method: SupportMethod.Referral,
-        supportDelivery: supportDelivery,
         category: category,
         subCategory: subCategory,
+        supportDelivery: supportDelivery,
         includedHouseholdMembers: member_ids,
     };
 }
