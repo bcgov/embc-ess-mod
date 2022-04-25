@@ -2,19 +2,19 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace EMBC.Utilities.Extensions
 {
     public static class AssemblyEx
     {
-        public static string GetManifestResourceString(this Assembly assembly, string manifestName)
+        public static async Task<string> GetManifestResourceString(this Assembly assembly, string manifestName)
         {
             using (var stream = assembly.GetManifestResourceStream(manifestName))
             {
                 using (var reader = new StreamReader(stream))
                 {
-                    var template = reader.ReadToEnd();
-                    return template;
+                    return await reader.ReadToEndAsync();
                 }
             }
         }

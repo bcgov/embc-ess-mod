@@ -157,14 +157,10 @@ namespace EMBC.ESS.Resources.Suppliers
             if (!string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)) supplierQuery = supplierQuery.Where(s => s.era_name == queryRequest.LegalName && s.era_gstnumber == queryRequest.GSTNumber);
 
             var suppliers = (await ((DataServiceQuery<era_supplier>)supplierQuery).GetAllPagesAsync()).ToArray();
-            foreach (var supplier in suppliers)
-            {
-                var teamSupplierQuery = essContext.era_essteamsuppliers
-                        .Expand(s => s.era_ESSTeamID)
-                        .Where(s => s._era_supplierid_value == supplier.era_supplierid);
 
-                supplier.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>((await ((DataServiceQuery<era_essteamsupplier>)teamSupplierQuery).GetAllPagesAsync()).ToArray());
-            }
+            suppliers
+                .AsParallel()
+                .ForAll(s => s.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>(essContext.era_essteamsuppliers.Where(ts => ts._era_supplierid_value == s.era_supplierid).ToArray()));
 
             var items = mapper.Map<IEnumerable<Supplier>>(suppliers);
 

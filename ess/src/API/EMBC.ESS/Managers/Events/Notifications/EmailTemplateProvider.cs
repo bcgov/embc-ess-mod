@@ -14,50 +14,50 @@ namespace EMBC.ESS.Managers.Events.Notifications
     public class EmailTemplateProvider : ITemplateProvider
     {
         public async Task<Template> Get(SubmissionTemplateType template) =>
-            await Task.FromResult(template switch
-            {
-                SubmissionTemplateType.NewAnonymousEvacuationFileSubmission => GetAnonymousnewTemplate(),
-                SubmissionTemplateType.NewEvacuationFileSubmission => GetNewTemplate(),
-                SubmissionTemplateType.NewProfileRegistration => GetRegisterNewTemplate(),
-                SubmissionTemplateType.InviteProfile => GetInviteTemplate(),
-                _ => throw new NotImplementedException($"No template found for {template}")
-            });
+              template switch
+              {
+                  SubmissionTemplateType.NewAnonymousEvacuationFileSubmission => await GetAnonymousnewTemplate(),
+                  SubmissionTemplateType.NewEvacuationFileSubmission => await GetNewTemplate(),
+                  SubmissionTemplateType.NewProfileRegistration => await GetRegisterNewTemplate(),
+                  SubmissionTemplateType.InviteProfile => await GetInviteTemplate(),
+                  _ => throw new NotImplementedException($"No template found for {template}")
+              };
 
-        private EmailTemplate GetRegisterNewTemplate()
+        private async Task<EmailTemplate> GetRegisterNewTemplate()
         {
             var emailSubject = "ERA User Profile Successfully Created";
-            var emailBody = LoadTemplate("RegisterNewTemplate");
+            var emailBody = await LoadTemplate("RegisterNewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
-        private EmailTemplate GetNewTemplate()
+        private async Task<EmailTemplate> GetNewTemplate()
         {
             var emailSubject = "ESS Self-Registration Completed Successfully";
-            var emailBody = LoadTemplate("NewTemplate");
+            var emailBody = await LoadTemplate("NewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
-        private EmailTemplate GetAnonymousnewTemplate()
+        private async Task<EmailTemplate> GetAnonymousnewTemplate()
         {
             var emailSubject = "Registration completed successfully";
-            var emailBody = LoadTemplate("AnonymousNewTemplate");
+            var emailBody = await LoadTemplate("AnonymousNewTemplate");
             return new EmailTemplate { Subject = emailSubject, Content = emailBody };
         }
 
-        private EmailTemplate GetInviteTemplate()
+        private async Task<EmailTemplate> GetInviteTemplate()
         {
             return new EmailTemplate
             {
                 Subject = "Connect your Evacuee Registration & Assistance (ERA) User Profile with BC Services Card",
-                Content = LoadTemplate("InviteTemplate")
+                Content = await LoadTemplate("InviteTemplate")
             };
         }
 
-        private static string LoadTemplate(string name)
+        private static async Task<string> LoadTemplate(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var manifestName = $"EMBC.ESS.Managers.Events.Notifications.Templates.{name}.hbs";
-            return assembly.GetManifestResourceString(manifestName);
+            return await assembly.GetManifestResourceString(manifestName);
         }
     }
 }

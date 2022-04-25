@@ -129,8 +129,8 @@ namespace EMBC.Tests.Integration.ESS
             if (evacuationfile == null)
             {
                 evacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-digital");
-                var supports = CreateEvacueeSupports(evacuationfile, this.contact);
-                CreateReferralPrint(evacuationfile, this.tier4TeamMember, supports);
+                var supports = CreateEvacueeSupports(evacuationfile, this.contact, this.tier4TeamMember);
+                //CreateReferralPrint(evacuationfile, this.tier4TeamMember, supports);
             }
 
             var paperEvacuationfile = essContext.era_evacuationfiles
@@ -141,8 +141,8 @@ namespace EMBC.Tests.Integration.ESS
             if (paperEvacuationfile == null)
             {
                 paperEvacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-paper", testPrefix + "-paper");
-                var supports = CreateEvacueeSupports(paperEvacuationfile, this.contact);
-                CreateReferralPrint(paperEvacuationfile, this.tier4TeamMember, supports);
+                var supports = CreateEvacueeSupports(paperEvacuationfile, this.contact, this.tier4TeamMember);
+                //CreateReferralPrint(paperEvacuationfile, this.tier4TeamMember, supports);
             }
 
             essContext.SaveChanges();
@@ -332,7 +332,7 @@ namespace EMBC.Tests.Integration.ESS
             return file;
         }
 
-        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file, contact contact)
+        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file, contact contact, era_essteamuser creator)
         {
             var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
             var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
@@ -361,15 +361,23 @@ namespace EMBC.Tests.Integration.ESS
                 statecode = 0
             });
 
-            var supports = referrals.Concat(etransfers).ToArray();
-            foreach (var support in supports)
+            foreach (var support in referrals)
             {
                 essContext.AddToera_evacueesupports(support);
                 essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);
+                essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), creator);
                 essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), contact);
             }
 
-            return supports;
+            foreach (var support in etransfers)
+            {
+                essContext.AddToera_evacueesupports(support);
+                essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);
+                essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), creator);
+                essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), contact);
+            }
+
+            return referrals.Concat(etransfers).ToArray();
         }
 
         private era_referralprint CreateReferralPrint(era_evacuationfile file, era_essteamuser member, IEnumerable<era_evacueesupport> supports)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,8 @@ namespace EMBC.Tests.Integration.ESS
                 // add secerts from host assembly
                 opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), false, true);
                 opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true);
+                // disable background tasks during tests
+                opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
             });
         }
     }

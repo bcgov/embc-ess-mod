@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using EMBC.Utilities.Extensions;
 using HandlebarsDotNet;
 
@@ -39,7 +40,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return handleBars;
         }
 
-        public static string CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, IEnumerable<PrintSummary> summaryItems, bool includeSummary, bool displayWatermark, string title)
+        public static async Task<string> CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, IEnumerable<PrintSummary> summaryItems, bool includeSummary, bool displayWatermark, string title)
         {
             var html = new StringBuilder();
             if (includeSummary)
@@ -53,37 +54,37 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 html.Append(PageBreak);
             }
 
-            return CreateDocument(html.ToString(), title);
+            return await CreateDocument(html.ToString(), title);
         }
 
-        private static string CreateDocument(string html, string documentTitle)
+        private static async Task<string> CreateDocument(string html, string documentTitle)
         {
             var handlebars = CreateHandleBars();
-            handlebars.RegisterTemplate("stylePartial", GetCSSPartialView());
+            handlebars.RegisterTemplate("stylePartial", await GetCSSPartialView());
             handlebars.RegisterTemplate("bodyPartial", html);
-            var template = handlebars.Compile(LoadTemplate("MasterLayout"));
+            var template = handlebars.Compile(await LoadTemplate("MasterLayout"));
 
             return template(new { documentTitle });
         }
 
-        public static string CreateReferralHtmlPage(PrintReferral referral)
+        public static async Task<string> CreateReferralHtmlPage(PrintReferral referral)
         {
             var handlebars = CreateHandleBars();
-            handlebars.RegisterTemplate("stylePartial", GetCSSPartialView());
+            handlebars.RegisterTemplate("stylePartial", await GetCSSPartialView());
 
             var partialViewType = referral.Type;
 
-            handlebars.RegisterTemplate("itemsPartial", GetItemsPartialView(partialViewType));
+            handlebars.RegisterTemplate("itemsPartial", await GetItemsPartialView(partialViewType));
             handlebars.RegisterTemplate("itemsDetailTitle", string.Empty);
-            handlebars.RegisterTemplate("supplierPartial", GetSupplierPartialView(partialViewType));
-            handlebars.RegisterTemplate("checklistPartial", GetChecklistPartialView(partialViewType));
+            handlebars.RegisterTemplate("supplierPartial", await GetSupplierPartialView(partialViewType));
+            handlebars.RegisterTemplate("checklistPartial", await GetChecklistPartialView(partialViewType));
 
-            var template = handlebars.Compile(LoadTemplate(ReferalMainViews.Referral.ToString()));
+            var template = handlebars.Compile(await LoadTemplate(ReferalMainViews.Referral.ToString()));
 
             return template(referral);
         }
 
-        public static string CreateReferalHtmlSummary(IEnumerable<PrintSummary> summaryItems, PrintRequestingUser requestingUser, bool displayWatermark)
+        public static async Task<string> CreateReferalHtmlSummary(IEnumerable<PrintSummary> summaryItems, PrintRequestingUser requestingUser, bool displayWatermark)
         {
             var handlebars = CreateHandleBars();
 
@@ -105,11 +106,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 
                 var useSummaryVersion = partialViewType == PrintReferralType.Hotel || partialViewType == PrintReferralType.Billeting;
 
-                handlebars.RegisterTemplate("itemsPartial", GetItemsPartialView(partialViewType, useSummaryVersion));
+                handlebars.RegisterTemplate("itemsPartial", await GetItemsPartialView(partialViewType, useSummaryVersion));
                 handlebars.RegisterTemplate("itemsDetailTitle", "Details");
-                handlebars.RegisterTemplate("notesPartial", GetNotesPartialView(partialViewType));
+                handlebars.RegisterTemplate("notesPartial", await GetNotesPartialView(partialViewType));
 
-                var template = handlebars.Compile(LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
+                var template = handlebars.Compile(await LoadTemplate(ReferalMainViews.SummaryItem.ToString()));
 
                 var purchaserName = summary.PurchaserName;
                 var volunteerFirstName = requestingUser.FirstName;
@@ -122,7 +123,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                     summaryBreakCount = 0;
                     handlebars.RegisterTemplate("summaryItemsPartial", items.ToString());
 
-                    var mainTemplate = handlebars.Compile(LoadTemplate(ReferalMainViews.Summary.ToString()));
+                    var mainTemplate = handlebars.Compile(await LoadTemplate(ReferalMainViews.Summary.ToString()));
                     var data = new { volunteerFirstName, volunteerLastName, purchaserName, displayWatermark };
                     html.Append(mainTemplate(data));
                     html.Append(PageBreak);
@@ -132,23 +133,23 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return html.ToString();
         }
 
-        private static string GetCSSPartialView()
+        private static Task<string> GetCSSPartialView()
         {
             return LoadTemplate("Css");
         }
 
-        private static string GetItemsPartialView(PrintReferralType partialView, bool useSummaryPartial = false)
+        private static Task<string> GetItemsPartialView(PrintReferralType partialView, bool useSummaryPartial = false)
         {
             var summary = useSummaryPartial ? "Summary" : string.Empty;
             var name = $"{partialView}.{partialView}Items{summary}Partial";
             return LoadTemplate(name);
         }
 
-        private static string GetChecklistPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}ChecklistPartial");
+        private static Task<string> GetChecklistPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}ChecklistPartial");
 
-        private static string GetSupplierPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}SupplierPartial");
+        private static Task<string> GetSupplierPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}SupplierPartial");
 
-        private static string GetNotesPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}NotesPartial");
+        private static Task<string> GetNotesPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}NotesPartial");
 
         private enum ReferalMainViews
         {
@@ -157,7 +158,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             SummaryItem
         }
 
-        private static string LoadTemplate(string name) =>
-            Assembly.GetExecutingAssembly().GetManifestResourceString($"EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting.Views.{name}.hbs");
+        private static async Task<string> LoadTemplate(string name) =>
+           await Assembly.GetExecutingAssembly().GetManifestResourceString($"EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting.Views.{name}.hbs");
     }
 }
