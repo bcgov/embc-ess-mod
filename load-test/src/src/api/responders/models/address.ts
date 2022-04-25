@@ -7,5 +7,5 @@ export interface Address {
   communityCode?: null | string;
   countryCode?: string;
   postalCode?: null | string;
-  stateProvinceCode?: string;
+  stateProvinceCode?: null | string;
 }
