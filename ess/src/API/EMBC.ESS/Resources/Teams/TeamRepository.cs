@@ -11,28 +11,28 @@ namespace EMBC.ESS.Resources.Teams
 {
     public class TeamRepository : ITeamRepository
     {
-        private readonly EssContext context;
+        private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
 
         //private const int DynamicsActiveStatus = 1;
         private const int DynamicsInactiveStatus = 2;
 
-        public TeamRepository(EssContext dynamicsClientContext, IMapper mapper)
+        public TeamRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.context = dynamicsClientContext;
+            this.essContextFactory = essContextFactory;
             this.mapper = mapper;
         }
 
         public async Task<TeamQueryResponse> QueryTeams(TeamQuery query)
         {
+            var context = essContextFactory.CreateReadOnly();
             var teams = (await QueryTeams(context, query)).Concat(await QueryTeamAreas(context, query)).ToArray();
 
             foreach (var team in teams)
             {
-                var loadTasks = new List<Task>();
-                loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID))));
-                loadTasks.Add(Task.Run(async () => await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId))));
-                await Task.WhenAll(loadTasks.ToArray());
+                context.AttachTo(nameof(EssContext.era_essteams), team);
+                await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
+                await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId));
             }
 
             context.DetachAll();
@@ -61,6 +61,7 @@ namespace EMBC.ESS.Resources.Teams
 
             foreach (var ta in teamAreas)
             {
+                ctx.AttachTo(nameof(EssContext.era_essteamareas), ta);
                 await ctx.LoadPropertyAsync(ta, nameof(era_essteamarea.era_ESSTeamID));
             }
 
@@ -71,7 +72,9 @@ namespace EMBC.ESS.Resources.Teams
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
         {
-            var query = EssTeamUsers;
+            var context = essContextFactory.CreateReadOnly();
+
+            var query = EssTeamUsers(context);
 
             if (!string.IsNullOrEmpty(teamId)) query = query.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
             if (!string.IsNullOrEmpty(userName)) query = query.Where(u => u.era_externalsystemusername.Equals(userName, StringComparison.OrdinalIgnoreCase));
@@ -87,7 +90,9 @@ namespace EMBC.ESS.Resources.Teams
 
         public async Task<string> SaveMember(TeamMember teamMember)
         {
-            var essTeam = EssTeam(Guid.Parse(teamMember.TeamId));
+            var context = essContextFactory.Create();
+
+            var essTeam = EssTeam(context, Guid.Parse(teamMember.TeamId));
             if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new ArgumentException($"team {teamMember.TeamId} not found");
 
             var essTeamUser = mapper.Map<era_essteamuser>(teamMember);
@@ -130,8 +135,10 @@ namespace EMBC.ESS.Resources.Teams
 
         public async Task<string> SaveTeam(Team team)
         {
+            var context = essContextFactory.Create();
+
             if (string.IsNullOrEmpty(team.Id)) throw new ArgumentException($"Team ID cannot be empty", nameof(team.Id));
-            var essTeam = EssTeam(Guid.Parse(team.Id));
+            var essTeam = EssTeam(context, Guid.Parse(team.Id));
             if (essTeam == null) throw new ArgumentException($"Team {team.Id} not found");
 
             await context.LoadPropertyAsync(essTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
@@ -166,7 +173,9 @@ namespace EMBC.ESS.Resources.Teams
 
         public async Task<bool> DeleteMember(string teamId, string teamMemberId)
         {
-            var member = EssTeamUsers
+            var context = essContextFactory.Create();
+
+            var member = EssTeamUsers(context)
                 .Where(u => u._era_essteamid_value == Guid.Parse(teamId) && u.era_essteamuserid == Guid.Parse(teamMemberId))
                 .SingleOrDefault();
 
@@ -179,12 +188,12 @@ namespace EMBC.ESS.Resources.Teams
             return true;
         }
 
-        private era_essteam EssTeam(Guid id) =>
+        private static era_essteam EssTeam(EssContext context, Guid id) =>
             context.era_essteams
             .Where(t => t.era_essteamid == id && t.statecode == (int)EntityState.Active)
             .SingleOrDefault();
 
-        private IQueryable<era_essteamuser> EssTeamUsers =>
+        private static IQueryable<era_essteamuser> EssTeamUsers(EssContext context) =>
             context.era_essteamusers
                 .Expand(u => u.era_ESSTeamId)
                 .Where(u => u.statuscode != (int)TeamMemberStatus.SoftDelete);

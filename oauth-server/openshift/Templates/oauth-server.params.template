@@ -9,3 +9,7 @@ BCSC_CLIENTID=<bcsc identity provider client id>
 BCSC_CLIENTSECRET=<bcsc identity provider client secret>
 SPLUNK_URL=<optional splunk logging url>
 SPLUNK_URL=<optional splunk token>
+OAUTH_AUTHORITY=<oauth authority url>
+CAS_BASE_URL=<CAS base url>
+CAS_CLIENT_ID=<CAS client id>
+CAS_CLIENT_SECRET=<CAS client secret>

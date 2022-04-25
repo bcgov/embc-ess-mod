@@ -8,7 +8,6 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities;
-using EMBC.Utilities.Extensions;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Evacuations
@@ -212,7 +211,6 @@ namespace EMBC.ESS.Resources.Evacuations
         private void AssignHouseholdMember(era_needassessment needsAssessment, era_householdmember member)
         {
             essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_needassessment), needsAssessment);
-            //essContext.AddLink(needsAssessment, nameof(era_needassessment.era_era_householdmember_era_needassessment), member);
         }
 
         private void AddPets(era_evacuationfile file)
@@ -396,8 +394,10 @@ namespace EMBC.ESS.Resources.Evacuations
         private static async Task<IEnumerable<era_evacuationfile>> ParallelLoadEvacuationFilesAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
         {
             //load files' properties
-            await files.Select(file => ParallelLoadEvacuationFileAsync(ctx, file)).ToArray().ForEachAsync(10, t => t);
+            //await files.Select(file => ParallelLoadEvacuationFileAsync(ctx, file)).ToArray().ForEachAsync(10, t => t);
+            await Task.WhenAll(files.Select(f => ParallelLoadEvacuationFileAsync(ctx, f)).ToArray());
             //await files.Select(file => LoadEvacuationFile(ctx, file)).ToArray().ForEachAsync(10, t => t);
+            //await Task.WhenAll(files.Select(f => LoadEvacuationFile(ctx, f)).ToArray());
 
             return files.ToArray();
         }
