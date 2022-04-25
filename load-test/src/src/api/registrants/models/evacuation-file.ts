@@ -9,12 +9,15 @@ import { Support } from './support';
  * Evacuation File
  */
 export interface EvacuationFile {
+  completedBy?: null | string;
+  completedOn?: null | string;
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
-  externalReferenceId?: null | string;
   fileId?: null | string;
+  isPaper?: null | boolean;
   isRestricted?: null | boolean;
   lastModified?: string;
+  manualFileId?: null | string;
   needsAssessment: NeedsAssessment;
   secretPhrase?: null | string;
   secretPhraseEdited?: null | boolean;

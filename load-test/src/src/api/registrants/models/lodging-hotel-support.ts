@@ -1,15 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Referral } from './referral';
+import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface LodgingBilletingReferral extends Referral {
+export interface LodgingHotelSupport extends Support {
   category?: SupportCategory;
-  hostAddress?: string;
-  hostCity?: string;
-  hostEmail?: string;
-  hostName?: string;
-  hostPhone?: string;
   numberOfNights?: number;
+  numberOfRooms?: number;
   subCategory?: SupportSubCategory;
 }

@@ -1,13 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Referral } from './referral';
+import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface FoodRestaurantReferral extends Referral {
+export interface IncidentalsSupport extends Support {
+  approvedItems?: string;
   category?: SupportCategory;
-  numberOfBreakfastsPerPerson?: number;
-  numberOfDinnersPerPerson?: number;
-  numberOfLunchesPerPerson?: number;
   subCategory?: SupportSubCategory;
   totalAmount?: number;
 }
