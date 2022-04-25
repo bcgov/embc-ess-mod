@@ -67,7 +67,11 @@
               >
                 Sign in to a different task #
               </button>
-              <button mat-menu-item (click)="openUserProfile()">
+              <button
+                mat-menu-item
+                (click)="openUserProfile()"
+                *ngIf="allowMyProfile()"
+              >
                 My Profile
               </button>
               <button mat-menu-item (click)="signOut()">Sign out</button>
