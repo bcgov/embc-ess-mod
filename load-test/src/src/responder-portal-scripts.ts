@@ -416,8 +416,6 @@ const submitFileNote = (token: any, file: any) => {
 }
 
 
-//TODO - should refresh token avery 5 minutes or so
-
 export function ResponderNewRegistration() {
   let token: any = null;
   let communities: any = null;
@@ -425,7 +423,7 @@ export function ResponderNewRegistration() {
   let ITERATIONS_PER_LOGIN = 1;
 
   navigate();
-  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
+  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while
     ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
     // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
     getStartPage();
@@ -499,7 +497,7 @@ export function ResponderExistingRegistration() {
   let ITERATIONS_PER_LOGIN = 1;
 
   navigate();
-  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
+  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while
     ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
     // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
     getStartPage();

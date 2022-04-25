@@ -1,9 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Referral } from './referral';
+import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface ClothingReferral extends Referral {
+export interface ClothingSupport extends Support {
   category?: SupportCategory;
   extremeWinterConditions?: boolean;
   subCategory?: SupportSubCategory;
