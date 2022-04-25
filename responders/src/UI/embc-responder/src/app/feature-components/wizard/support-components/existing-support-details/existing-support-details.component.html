@@ -335,7 +335,10 @@
 
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Valid To:</div>
-    <div class="col-md-4 bold">
+    <div
+      class="col-md-4 bold"
+      [ngClass]="{ 'expired-status': selectedSupport?.status === 'Expired' }"
+    >
       {{ selectedSupport?.to | date: 'dd-MMM-yyyy' }} at
       {{ selectedSupport?.to | date: 'hh:mm a' }}
     </div>
