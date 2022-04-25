@@ -37,7 +37,11 @@
         Electronic Access Agreement Signed
       </div>
       <div class="col-md-8">
-        {{ userProfile?.agreementSignDate | date: 'dd-MMM-yyyy HH:mm' }}
+        {{
+          this.dateConversionService.convertDateTimeToDateUTC(
+            userProfile?.agreementSignDate
+          )
+        }}
       </div>
     </div>
 
