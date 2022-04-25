@@ -63,4 +63,8 @@ export class HeaderComponent implements OnInit {
   allowSignIn(): boolean {
     return this.profile.taskNumber !== null;
   }
+
+  allowMyProfile(): boolean {
+    return this.profile.requiredToSignAgreement === false;
+  }
 }

@@ -103,7 +103,8 @@ export class WizardAdapterService {
       firstName: this.evacueeSessionService.memberRegistration.firstName,
       lastName: this.evacueeSessionService.memberRegistration.lastName,
       dateOfBirth: this.evacueeSessionService.memberRegistration.dateOfBirth,
-      gender: this.evacueeSessionService.memberRegistration.gender
+      gender: this.evacueeSessionService.memberRegistration.gender,
+      initials: this.evacueeSessionService.memberRegistration.initials
     };
     this.stepEvacueeProfileService.profileTabs =
       this.wizardDataService.createNewProfileSteps();
