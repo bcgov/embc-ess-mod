@@ -70,7 +70,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.preferenceSubscription.unsubscribe();
+    this.preferenceSubscription?.unsubscribe();
   }
 
   /**
