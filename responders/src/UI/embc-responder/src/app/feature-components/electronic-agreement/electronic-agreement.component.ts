@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ElectronicAgreementService } from './electronic-agreement.service';
 import * as globalConst from '../../core/services/global-constants';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-electronic-agreement',
@@ -16,7 +17,8 @@ export class ElectronicAgreementComponent implements OnInit {
   constructor(
     private router: Router,
     private eaaService: ElectronicAgreementService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {}
@@ -24,6 +26,7 @@ export class ElectronicAgreementComponent implements OnInit {
   submitEAA(): void {
     this.eaaService.signAgreement().subscribe({
       next: () => {
+        this.userService.loadUserProfile();
         this.router.navigateByUrl('responder-access');
       },
       error: (error) => {
