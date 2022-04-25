@@ -93,7 +93,6 @@ export class HouseholdMemberComponent implements OnInit {
         )
         .subscribe({
           next: (value: LinkedRegistrantProfileResults) => {
-            console.log(value);
             this.matchedProfileCount = value.matchedProfiles.length;
             this.matchedProfiles = value.matchedProfiles;
             this.displayLinks = value.householdMemberDisplayButton;
@@ -169,32 +168,6 @@ export class HouseholdMemberComponent implements OnInit {
       this.multipleMatchedRegistrantLink(
         this.createMultipleRegistrantModel(memberDetails)
       );
-    }
-  }
-
-  linkedProfileDisplay(file: EvacuationFileHouseholdMember): void {
-    if (
-      !this.evacueeSessionService?.isPaperBased &&
-      file?.linkedRegistrantId === null &&
-      !file?.isMinor
-    ) {
-      if (this.matchedProfileCount === 0) {
-        this.displayLinks = 'create-profile';
-      } else if (
-        this.selectedHouseholdMember?.hasSecurityQuestions &&
-        this.matchedProfileCount === 1
-      ) {
-        this.displayLinks = 'link-profile';
-      } else if (this.linkedFlag) {
-        this.displayLinks = 'link-profile';
-      } else if (
-        !this.selectedHouseholdMember?.hasSecurityQuestions &&
-        this.matchedProfileCount === 1
-      ) {
-        this.displayLinks = 'no-security-questions';
-      }
-    } else {
-      this.displayLinks = null;
     }
   }
 
