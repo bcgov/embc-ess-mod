@@ -415,16 +415,15 @@ const submitFileNote = (token: any, file: any) => {
   return response.json();
 }
 
-let token: any = null;
-let communities: any = null;
-let security_questions: any = null;
-let ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
-
-//TODO - should refresh token avery 5 minutes or so
 
 export function ResponderNewRegistration() {
+  let token: any = null;
+  let communities: any = null;
+  let security_questions: any = null;
+  let ITERATIONS_PER_LOGIN = 1;
+
   navigate();
-  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
+  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while
     ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
     // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
     getStartPage();
@@ -492,8 +491,13 @@ export function ResponderNewRegistration() {
 };
 
 export function ResponderExistingRegistration() {
+  let token: any = null;
+  let communities: any = null;
+  let security_questions: any = null;
+  let ITERATIONS_PER_LOGIN = 1;
+
   navigate();
-  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while\
+  if (__ITER % ITERATIONS_PER_LOGIN == 0) { //simulate working on multiple registrants in the same session, only get metadata and login token every once in a while
     ITERATIONS_PER_LOGIN = getRandomInt(1, 3);
     // console.log(`Responders - ${getIterationName()}: start fresh - get token and metadata`);
     getStartPage();
@@ -509,7 +513,6 @@ export function ResponderExistingRegistration() {
     security_questions = getSecurityQuestions();
     navigate();
   }
-
   const registrant = getPersonDetailsForIteration();
   getTaskSearchPage(token);
   navigate();
