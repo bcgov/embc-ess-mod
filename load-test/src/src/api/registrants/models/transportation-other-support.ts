@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Referral } from './referral';
+import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface TransportationTaxiReferral extends Referral {
+export interface TransportationOtherSupport extends Support {
   category?: SupportCategory;
-  fromAddress?: string;
   subCategory?: SupportSubCategory;
-  toAddress?: string;
+  totalAmount?: number;
+  transportMode?: string;
 }

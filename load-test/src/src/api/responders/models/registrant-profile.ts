@@ -14,6 +14,7 @@ export interface RegistrantProfile {
   createdOn?: string;
   id?: null | string;
   isMailingAddressSameAsPrimaryAddress?: boolean;
+  isMinor?: boolean;
   mailingAddress: Address;
   modifiedOn?: string;
   personalDetails: PersonDetails;

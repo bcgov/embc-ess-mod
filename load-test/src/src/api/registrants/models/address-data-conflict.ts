@@ -3,7 +3,7 @@
 import { Address } from './address';
 import { ProfileDataConflict } from './profile-data-conflict';
 export interface AddressDataConflict extends ProfileDataConflict {
-  conflictingValue: Address;
+  conflictingValue?: Address;
   dataElementName: string;
-  originalValue: Address;
+  originalValue?: Address;
 }

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { Referral } from './referral';
+import { Support } from './support';
 export interface ProcessPaperReferralsRequest {
-  referrals?: Array<Referral>;
+  referrals?: Array<Support>;
 }
