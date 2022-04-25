@@ -45,12 +45,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             var html = new StringBuilder();
             if (includeSummary)
             {
-                html.Append(CreateReferalHtmlSummary(summaryItems, printingUser, displayWatermark));
+                html.Append(await CreateReferalHtmlSummary(summaryItems, printingUser, displayWatermark));
                 html.Append(PageBreak);
             }
             foreach (var referral in referrals)
             {
-                html.Append(CreateReferralHtmlPage(referral));
+                html.Append(await CreateReferralHtmlPage(referral));
                 html.Append(PageBreak);
             }
 
