@@ -30,18 +30,18 @@ namespace EMBC.Utilities.Hosting
             this.logger = logger;
             using (var scope = serviceProvider.CreateScope())
             {
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>().GetSection($"backgroundtask:{typeof(T).Name}");
                 var initialTask = scope.ServiceProvider.GetRequiredService<T>();
-                schedule = CrontabSchedule.Parse(initialTask.Schedule, new CrontabSchedule.ParseOptions { IncludingSeconds = true });
-                startupDelay = initialTask.InitialDelay;
+
+                schedule = CrontabSchedule.Parse(configuration.GetValue("schedule", initialTask.Schedule), new CrontabSchedule.ParseOptions { IncludingSeconds = true });
+                startupDelay = configuration.GetValue("initialDelay", initialTask.InitialDelay);
+                enabled = configuration.GetValue("enabled", true);
 
                 concurrencyManager = new BackgroundTaskConcurrencyManager(
                     scope.ServiceProvider.GetRequiredService<ICache>(),
                     typeof(T).FullName ?? null!,
                     initialTask.DegreeOfParallelism,
                     initialTask.InactivityTimeout);
-
-                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-                enabled = configuration.GetValue($"backgroundtask:{typeof(T).Name}", true);
             }
         }
 
@@ -89,7 +89,7 @@ namespace EMBC.Utilities.Hosting
                         logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                     }
                 }
-                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }
 

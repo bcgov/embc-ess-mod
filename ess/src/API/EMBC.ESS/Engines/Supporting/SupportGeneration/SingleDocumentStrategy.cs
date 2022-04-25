@@ -47,7 +47,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
             }
 
             var title = $"supports-{request.File.Id}-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
-            var referralsHtml = ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, summaryItems, request.AddSummary, request.AddWatermark, title);
+            var referralsHtml = await ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, summaryItems, request.AddSummary, request.AddWatermark, title);
 
             return new GenerateReferralsResponse
             {
