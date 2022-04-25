@@ -1,6 +1,6 @@
 import * as faker from 'faker/locale/en_CA';
-import { ClothingReferral, EvacuationFile, FoodGroceriesReferral, FoodRestaurantReferral, IncidentalsReferral, LodgingBilletingReferral, LodgingGroupReferral, LodgingHotelReferral, Referral, Supplier, Support, SupportCategory, SupportMethod, SupportStatus, SupportSubCategory, TransportationOtherReferral, TransportationTaxiReferral } from '../../api/responders/models';
-import { ProcessDigitalSupportsRequest } from '../../api/responders/models';
+import { ClothingSupport, EvacuationFile, FoodGroceriesSupport, FoodRestaurantSupport, IncidentalsSupport, LodgingBilletingSupport, LodgingGroupSupport, LodgingHotelSupport, ProcessDigitalSupportsRequest, Referral, Supplier, Support, SupportCategory, SupportDelivery, SupportMethod, SupportStatus, SupportSubCategory, TransportationOtherSupport, TransportationTaxiSupport } from '../../api/responders/models';
+
 import { addDays, getRandomInt } from '../../utilities';
 
 export function generateSupports(file: EvacuationFile, suppliers: Array<Supplier>): ProcessDigitalSupportsRequest {
@@ -26,29 +26,29 @@ export function generateSupports(file: EvacuationFile, suppliers: Array<Supplier
     };
 }
 
-function generateClothingSupport(file: EvacuationFile, suppliers: Array<Supplier>): ClothingReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Clothing, SupportSubCategory.None) as ClothingReferral;
+function generateClothingSupport(file: EvacuationFile, suppliers: Array<Supplier>): ClothingSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Clothing, SupportSubCategory.None) as ClothingSupport;
     support.extremeWinterConditions = faker.datatype.boolean();
     support.totalAmount = getRandomInt(50, 200);
     return support;
 }
 
-function generateIncidentalSupport(file: EvacuationFile, suppliers: Array<Supplier>): IncidentalsReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Incidentals, SupportSubCategory.None) as IncidentalsReferral;
+function generateIncidentalSupport(file: EvacuationFile, suppliers: Array<Supplier>): IncidentalsSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Incidentals, SupportSubCategory.None) as IncidentalsSupport;
     support.approvedItems = faker.lorem.word();
     support.totalAmount = getRandomInt(50, 200);
     return support;
 }
 
-function generateLodgingHotelSupport(file: EvacuationFile, suppliers: Array<Supplier>): LodgingHotelReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Lodging, SupportSubCategory.Lodging_Hotel) as LodgingHotelReferral;
+function generateLodgingHotelSupport(file: EvacuationFile, suppliers: Array<Supplier>): LodgingHotelSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Lodging, SupportSubCategory.Lodging_Hotel) as LodgingHotelSupport;
     support.numberOfNights = getRandomInt(1, 7);
     support.numberOfRooms = getRandomInt(1, 3);
     return support;
 }
 
-function generateLodgingBiletingSupport(file: EvacuationFile, suppliers: Array<Supplier>): LodgingBilletingReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Lodging, SupportSubCategory.Lodging_Billeting) as LodgingBilletingReferral;
+function generateLodgingBiletingSupport(file: EvacuationFile, suppliers: Array<Supplier>): LodgingBilletingSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Lodging, SupportSubCategory.Lodging_Billeting) as LodgingBilletingSupport;
     support.numberOfNights = getRandomInt(1, 7);
     support.hostAddress = faker.address.streetAddress();
     support.hostCity = faker.address.city();
@@ -58,8 +58,8 @@ function generateLodgingBiletingSupport(file: EvacuationFile, suppliers: Array<S
     return support;
 }
 
-function generateLodgingGroupSupport(file: EvacuationFile, suppliers: Array<Supplier>): LodgingGroupReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Lodging, SupportSubCategory.Lodging_Group) as LodgingGroupReferral;
+function generateLodgingGroupSupport(file: EvacuationFile, suppliers: Array<Supplier>): LodgingGroupSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Lodging, SupportSubCategory.Lodging_Group) as LodgingGroupSupport;
     support.numberOfNights = getRandomInt(1, 7);
     support.facilityAddress = faker.address.streetAddress();
     support.facilityCity = faker.address.city();
@@ -68,15 +68,15 @@ function generateLodgingGroupSupport(file: EvacuationFile, suppliers: Array<Supp
     return support;
 }
 
-function generateFoodGroceriesSupport(file: EvacuationFile, suppliers: Array<Supplier>): FoodGroceriesReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Food, SupportSubCategory.Food_Groceries) as FoodGroceriesReferral;
+function generateFoodGroceriesSupport(file: EvacuationFile, suppliers: Array<Supplier>): FoodGroceriesSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Food, SupportSubCategory.Food_Groceries) as FoodGroceriesSupport;
     support.numberOfDays = getRandomInt(1, 7);
     support.totalAmount = getRandomInt(50, 200);
     return support;
 }
 
-function generateFoodRestaurantSupport(file: EvacuationFile, suppliers: Array<Supplier>): FoodRestaurantReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Food, SupportSubCategory.Food_Restaurant) as FoodRestaurantReferral;
+function generateFoodRestaurantSupport(file: EvacuationFile, suppliers: Array<Supplier>): FoodRestaurantSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Food, SupportSubCategory.Food_Restaurant) as FoodRestaurantSupport;
     support.numberOfBreakfastsPerPerson = getRandomInt(1, 7);
     support.numberOfLunchesPerPerson = getRandomInt(1, 7);
     support.numberOfDinnersPerPerson = getRandomInt(1, 7);
@@ -84,21 +84,21 @@ function generateFoodRestaurantSupport(file: EvacuationFile, suppliers: Array<Su
     return support;
 }
 
-function generateTransportationTaxiSupport(file: EvacuationFile, suppliers: Array<Supplier>): TransportationTaxiReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Transportation, SupportSubCategory.Transportation_Taxi) as TransportationTaxiReferral;
+function generateTransportationTaxiSupport(file: EvacuationFile, suppliers: Array<Supplier>): TransportationTaxiSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Transportation, SupportSubCategory.Transportation_Taxi) as TransportationTaxiSupport;
     support.fromAddress = faker.address.streetAddress();
     support.toAddress = faker.address.streetAddress();
     return support;
 }
 
-function generateTransportationOtherSupport(file: EvacuationFile, suppliers: Array<Supplier>): TransportationOtherReferral {
-    let support = generateRerral(file, suppliers, SupportCategory.Transportation, SupportSubCategory.Transportation_Other) as TransportationOtherReferral;
+function generateTransportationOtherSupport(file: EvacuationFile, suppliers: Array<Supplier>): TransportationOtherSupport {
+    let support = generateSupport(file, suppliers, SupportCategory.Transportation, SupportSubCategory.Transportation_Other) as TransportationOtherSupport;
     support.transportMode = faker.vehicle.type();
     support.totalAmount = getRandomInt(50, 200);
     return support;
 }
 
-function generateRerral(file: EvacuationFile, suppliers: Array<Supplier>, category: SupportCategory, subCategory: SupportSubCategory): Referral {
+function generateSupport(file: EvacuationFile, suppliers: Array<Supplier>, category: SupportCategory, subCategory: SupportSubCategory): Support {
     let now = new Date();
     let member_count = getRandomInt(1, (file.householdMembers?.length || 1) - 1);
     let member_ids: Array<string> = [];
@@ -107,19 +107,24 @@ function generateRerral(file: EvacuationFile, suppliers: Array<Supplier>, catego
     }
 
     let random_supplier = faker.random.arrayElement(suppliers);
-    return {
-        from: now.toISOString(),
-        includedHouseholdMembers: member_ids,
-        needsAssessmentId: file.needsAssessment.id,
-        status: SupportStatus.Draft,
-        to: addDays(now, getRandomInt(1, 5)).toISOString(),
-        category: category,
+    let supportDelivery: Referral = {
         method: SupportMethod.Referral,
-        subCategory: subCategory,
         issuedToPersonName: file.primaryRegistrantLastName + "," + file.primaryRegistrantFirstName,
-        supplierAddress: random_supplier?.address || null,
+        supplierAddress: random_supplier?.address,
         supplierId: random_supplier?.id || "",
-        supplierName: random_supplier?.name || null,
+        supplierName: random_supplier?.name || "",
         supplierNotes: "notes",
+    }
+    
+    return {
+        needsAssessmentId: file.needsAssessment.id,
+        from: now.toISOString(),
+        to: addDays(now, getRandomInt(1, 5)).toISOString(),
+        status: SupportStatus.Draft,
+        method: SupportMethod.Referral,
+        supportDelivery: supportDelivery,
+        category: category,
+        subCategory: subCategory,
+        includedHouseholdMembers: member_ids,
     };
 }
