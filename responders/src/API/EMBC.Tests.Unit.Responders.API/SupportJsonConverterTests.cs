@@ -247,9 +247,9 @@ namespace EMBC.Tests.Unit.Responders.API
             ""from"": ""2022-04-25T21:58:14.295Z"",
             ""to"": ""2022-04-29T21:58:14.295Z"",
             ""status"": ""Draft"",
-            ""method"": ""Referral"",
+            ""method"": ""ETransfer"",
             ""supportDelivery"": {
-                ""method"": ""Referral"",
+                ""method"": ""ETransfer"",
                 ""issuedToPersonName"": ""autotest-load-0,autotest-load-4"",
                 ""supplierAddress"": {
                     ""addressLine1"": ""123 Douglas St."",
