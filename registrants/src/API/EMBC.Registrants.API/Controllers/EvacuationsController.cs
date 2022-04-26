@@ -558,11 +558,10 @@ namespace EMBC.Registrants.API.Controllers
             SupportCategory category = SupportCategory.Unknown;
             SupportSubCategory subCategory = SupportSubCategory.None;
 
-            if (clonedReader.TokenType != JsonTokenType.StartObject) throw new JsonException();
+            if (clonedReader.TokenType != JsonTokenType.StartObject) throw new JsonException($"Invalid json object");
 
             while (clonedReader.Read())
             {
-                if (clonedReader.TokenType == JsonTokenType.EndObject) break;
                 if (clonedReader.TokenType != JsonTokenType.PropertyName) continue;
                 var propertyName = FirstLetterCapital(clonedReader.GetString());
 
@@ -572,15 +571,15 @@ namespace EMBC.Registrants.API.Controllers
                 switch (propertyName)
                 {
                     case nameof(Support.Method):
-                        if (!Enum.TryParse(propertyValue, out method)) throw new JsonException();
+                        if (!Enum.TryParse(propertyValue, out method)) throw new JsonException($"Invalid support method");
                         break;
 
                     case nameof(Support.Category):
-                        if (!Enum.TryParse(propertyValue, out category)) throw new JsonException();
+                        if (!Enum.TryParse(propertyValue, out category)) throw new JsonException($"Invalid support category");
                         break;
 
                     case nameof(Support.SubCategory):
-                        if (!Enum.TryParse(propertyValue, out subCategory)) throw new JsonException();
+                        if (!Enum.TryParse(propertyValue, out subCategory)) throw new JsonException($"Invalid support sub category");
                         break;
                 }
             }
