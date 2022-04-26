@@ -19,6 +19,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -181,7 +182,19 @@ export class EssfileDashboardComponent implements OnInit {
           this.loadNotes();
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
-          this.evacueeSessionService.profileId = file.primaryRegistrantId;
+          //this.evacueeSessionService.profileId = file.primaryRegistrantId;
+          // let profileIdObject: RegistrantProfileModel = {
+          //   id: file.primaryRegistrantId,
+          //   primaryAddress: null,
+          //   mailingAddress: null,
+          //   personalDetails: null,
+          //   contactDetails: null,
+          //   restriction: null
+          // };
+          // this.appBaseService.appModel = {
+          //   selectedProfile: { selectedEvacueeInContext: profileIdObject }
+          // };
+          // this.computeState.triggerEvent();
           return file;
         })
       )

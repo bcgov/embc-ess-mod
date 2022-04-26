@@ -37,20 +37,20 @@ export class EvacueeSessionService {
     return this.evacFileVal;
   }
 
-  set profileId(profileIdVal: string) {
-    this.profileIdVal = profileIdVal;
-    if (profileIdVal !== null) {
-      this.cacheService.set('registrantProfileId', profileIdVal);
-    } else {
-      this.cacheService.remove('registrantProfileId');
-    }
-  }
+  // set profileId(profileIdVal: string) {
+  //   this.profileIdVal = profileIdVal;
+  //   if (profileIdVal !== null) {
+  //     this.cacheService.set('registrantProfileId', profileIdVal);
+  //   } else {
+  //     this.cacheService.remove('registrantProfileId');
+  //   }
+  // }
 
-  get profileId(): string {
-    return this.profileIdVal
-      ? this.profileIdVal
-      : this.cacheService.get('registrantProfileId');
-  }
+  // get profileId(): string {
+  //   return this.profileIdVal
+  //     ? this.profileIdVal
+  //     : this.cacheService.get('registrantProfileId');
+  // }
 
   set memberRegistration(memberRegistrationVal: EvacuationFileHouseholdMember) {
     this.memberRegistrationVal = memberRegistrationVal;
@@ -166,7 +166,7 @@ export class EvacueeSessionService {
   }
 
   clearEvacueeSession() {
-    this.profileId = null;
+    //this.profileId = null; --TODO
     this.essFileNumber = null;
     this.securityQuestionsOpenedFrom = null;
     this.securityPhraseOpenedFrom = null;

@@ -46,7 +46,8 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.evacueeProfileId = this.evacueeSessionService.profileId;
+    this.evacueeProfileId =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
     this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
     this.emailSuccessMessage = '';

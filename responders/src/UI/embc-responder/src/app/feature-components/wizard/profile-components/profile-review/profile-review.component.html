@@ -298,7 +298,13 @@
           </div>
         </div>
 
-        <div class="col-12" *ngIf="!evacueeSessionService?.profileId">
+        <div
+          class="col-12"
+          *ngIf="
+            !this.appBaseService?.appModel?.selectedProfile
+              ?.selectedEvacueeInContext?.id
+          "
+        >
           <div class="confirm-panel">
             <label class="tab-subtitle">Identification</label>
 
@@ -352,7 +358,8 @@
           class="col-12"
           *ngIf="
             !evacueeSessionService?.isPaperBased &&
-            !this.evacueeSessionService?.profileId &&
+            !this.appBaseService?.appModel?.selectedProfile
+              ?.selectedEvacueeInContext?.id &&
             (this.appBaseService?.wizardProperties?.wizardType ===
               wizardType.NewRegistration ||
               this.appBaseService?.wizardProperties?.wizardType ===

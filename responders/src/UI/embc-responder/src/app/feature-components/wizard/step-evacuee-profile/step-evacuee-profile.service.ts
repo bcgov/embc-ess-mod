@@ -411,8 +411,11 @@ export class StepEvacueeProfileService {
   public setFormValuesFromProfile(profile: RegistrantProfileModel) {
     this.wizardService.createObjectReference(profile, 'profile');
     // Wizard variables
-    this.evacueeSession.profileId = profile.id;
+    //this.evacueeSession.profileId = profile.id;
 
+    this.appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: profile }
+    };
     this.appBaseService.wizardProperties = {
       lastCompletedStep: WizardSteps.Step1
     };
@@ -489,7 +492,11 @@ export class StepEvacueeProfileService {
   }
 
   checkForEdit(): boolean {
-    return this.evacueeSession.profileId !== null;
+    return (
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.id !== null
+    );
+    //  this.evacueeSession.profileId !== null;
   }
 
   updateEditedFormStatus() {
