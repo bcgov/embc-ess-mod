@@ -46,7 +46,11 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.MailingProvince, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_MailingProvinceState == null ? s.era_Registrant.address2_stateorprovince : s.era_Registrant.era_MailingProvinceState.era_code))
                 .ForMember(d => d.MailingPostal, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address2_postalcode))
                 .ForMember(d => d.MailingCountry, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_MailingCountry == null ? s.era_Registrant.address2_country : s.era_Registrant.era_MailingCountry.era_countrycode))
-                .ForMember(d => d.Insurance, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? InsuranceOption.Unknown : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? InsuranceOption.Unknown : Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_insurancecoverage).ToString())))
+                .ForMember(d => d.Insurance, opts => opts.MapFrom(s => s.era_EvacuationFileid == null
+                    ? InsuranceOption.Unknown
+                    : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null
+                        ? InsuranceOption.Unknown
+                        : Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_insurancecoverage).ToString())))
                 .ForMember(d => d.NumberOfPets, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? 0 : s.era_EvacuationFileid.era_era_evacuationfile_era_animal_ESSFileid.Count))
                 .ForMember(d => d.Inquiry, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_hasinquiryreferral))
                 .ForMember(d => d.HealthServices, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_hashealthservicesreferral))
