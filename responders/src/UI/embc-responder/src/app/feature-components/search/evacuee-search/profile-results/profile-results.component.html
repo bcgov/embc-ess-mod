@@ -69,7 +69,7 @@
                 class="p-custom file-active"
               >
                 <b
-                  >ESS File # {{ files?.externalReferenceId || files?.id }} -
+                  >ESS File # {{ files?.manualFileId || files?.id }} -
                   {{ communityName(files?.evacuatedFrom) }}</b
                 >
               </p>
@@ -78,7 +78,7 @@
                 class="p-custom file-pending"
               >
                 <b
-                  >ESS File # {{ files?.externalReferenceId || files?.id }} -
+                  >ESS File # {{ files?.manualFileId || files?.id }} -
                   {{ communityName(files?.evacuatedFrom) }}</b
                 >
               </p>
@@ -87,7 +87,7 @@
                 class="p-custom file-complete"
               >
                 <b
-                  >ESS File # {{ files?.externalReferenceId || files?.id }} -
+                  >ESS File # {{ files?.manualFileId || files?.id }} -
                   {{ communityName(files?.evacuatedFrom) }}</b
                 >
               </p>
@@ -96,7 +96,7 @@
                 class="p-custom file-expired"
               >
                 <b
-                  >ESS File # {{ files?.externalReferenceId || files?.id }} -
+                  >ESS File # {{ files?.manualFileId || files?.id }} -
                   {{ communityName(files?.evacuatedFrom) }}</b
                 >
               </p>
