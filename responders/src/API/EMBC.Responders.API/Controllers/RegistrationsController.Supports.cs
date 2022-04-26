@@ -634,11 +634,10 @@ namespace EMBC.Responders.API.Controllers
             SupportCategory category = SupportCategory.Unknown;
             SupportSubCategory subCategory = SupportSubCategory.None;
 
-            if (clonedReader.TokenType != JsonTokenType.StartObject) throw new JsonException();
+            if (clonedReader.TokenType != JsonTokenType.StartObject) throw new JsonException($"Invalid json object");
 
             while (clonedReader.Read())
             {
-                if (clonedReader.TokenType == JsonTokenType.EndObject) break;
                 if (clonedReader.TokenType != JsonTokenType.PropertyName) continue;
                 var propertyName = FirstLetterCapital(clonedReader.GetString());
 
@@ -648,15 +647,15 @@ namespace EMBC.Responders.API.Controllers
                 switch (propertyName)
                 {
                     case nameof(Support.Method):
-                        if (!Enum.TryParse(propertyValue, out method)) throw new JsonException();
+                        if (!Enum.TryParse(propertyValue, out method)) throw new JsonException($"Failed to parse {propertyName} {propertyValue}");
                         break;
 
                     case nameof(Support.Category):
-                        if (!Enum.TryParse(propertyValue, out category)) throw new JsonException();
+                        if (!Enum.TryParse(propertyValue, out category)) throw new JsonException($"Failed to parse {propertyName} {propertyValue}");
                         break;
 
                     case nameof(Support.SubCategory):
-                        if (!Enum.TryParse(propertyValue, out subCategory)) throw new JsonException();
+                        if (!Enum.TryParse(propertyValue, out subCategory)) throw new JsonException($"Failed to parse {propertyName} {propertyValue}");
                         break;
                 }
             }

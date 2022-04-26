@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserProfile } from 'src/app/core/api/models';
 import { UserService } from 'src/app/core/services/user.service';
+import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 
 @Component({
   selector: 'app-view-user-profile',
@@ -11,7 +12,11 @@ import { UserService } from 'src/app/core/services/user.service';
 export class ViewUserProfileComponent implements OnInit {
   userProfile: UserProfile;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    public dateConversionService: DateConversionService
+  ) {}
 
   /**
    * On init, calls the currentProfile to get the data and display it on screen

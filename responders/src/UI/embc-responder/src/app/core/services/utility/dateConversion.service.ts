@@ -65,4 +65,8 @@ export class DateConversionService {
 
     return milliseconds / 86400000;
   }
+
+  convertDateTimeToDateUTC(date: string) {
+    return this.datePipe.transform(date, 'dd-MMM-yyyy', 'utc');
+  }
 }
