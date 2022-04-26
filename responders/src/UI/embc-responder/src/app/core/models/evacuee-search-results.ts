@@ -1,39 +1,21 @@
 import {
-  EvacuationFileStatus,
-  RegistrantStatus,
-  SearchResults
+  EvacuationFileSearchResult,
+  RegistrantProfileSearchResult
 } from '../api/models';
-import { EvacuationFileSearchResultHouseholdMember } from '../api/models/evacuation-file-search-result-household-member';
 import { AddressModel } from './address.model';
 
-export interface EvacueeSearchResults extends SearchResults {
+export interface EvacueeSearchResults {
   files?: null | Array<EvacuationFileSearchResultModel>;
   registrants?: null | Array<RegistrantProfileSearchResultModel>;
 }
 
-export interface RegistrantProfileSearchResultModel {
-  createdOn?: string;
-  evacuationFiles?: null | Array<EvacuationFileSearchResultModel>;
-  firstName?: null | string;
-  id?: null | string;
-  isRestricted?: boolean;
-  lastName?: null | string;
-  modifiedOn?: string;
+export interface RegistrantProfileSearchResultModel
+  extends RegistrantProfileSearchResult {
   primaryAddress?: null | AddressModel;
-  status?: RegistrantStatus;
+  evacuationFiles?: null | Array<EvacuationFileSearchResultModel>;
 }
 
-export interface EvacuationFileSearchResultModel {
-  createdOn?: string;
+export interface EvacuationFileSearchResultModel
+  extends EvacuationFileSearchResult {
   evacuatedFrom?: null | AddressModel;
-  householdMembers?: null | Array<EvacuationFileSearchResultHouseholdMember>;
-  id?: null | string;
-  externalReferenceId?: null | string;
-  isPaperBasedFile?: boolean;
-  isRestricted?: boolean;
-  status?: EvacuationFileStatus;
-  taskId?: null | string;
-  taskEndDate?: null | string;
-  taskStartDate?: null | string;
-  modifiedOn?: string;
 }

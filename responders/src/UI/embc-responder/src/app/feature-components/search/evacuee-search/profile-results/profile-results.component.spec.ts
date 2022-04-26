@@ -63,7 +63,7 @@ describe('ProfileResultsComponent', () => {
     evacuationFiles: [
       {
         id: '127510',
-        externalReferenceId: null,
+        manualFileId: null,
         isPaperBasedFile: false,
         isRestricted: false,
         taskId: '1234',

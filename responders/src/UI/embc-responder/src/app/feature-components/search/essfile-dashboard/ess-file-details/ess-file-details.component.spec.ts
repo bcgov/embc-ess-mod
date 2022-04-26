@@ -24,7 +24,7 @@ describe('EssFileDetailsComponent', () => {
   let mockEssfileState: { file: EvacuationFileModel };
   const mockEssfile = {
     id: '102431',
-    externalReferenceId: null,
+    manualFileId: null,
     primaryRegistrantId: 'a677e7e1-54ea-48ef-a030-b48c56fccd9c',
     primaryRegistrantFirstName: 'Anne',
     primaryRegistrantLastName: 'Lee',

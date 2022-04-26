@@ -32,7 +32,7 @@ describe('EssFilesResultsComponent', () => {
 
   const mockPaperEssFileResult: EvacuationFileSearchResultModel = {
     id: '149927',
-    externalReferenceId: 'T2000',
+    manualFileId: 'T2000',
     isPaperBasedFile: true,
     isRestricted: false,
     taskId: 'test',
@@ -74,7 +74,7 @@ describe('EssFilesResultsComponent', () => {
 
   const mockDigitalEssFileResult: EvacuationFileSearchResultModel = {
     id: '149927',
-    externalReferenceId: null,
+    manualFileId: null,
     isPaperBasedFile: false,
     isRestricted: false,
     taskId: 'test',
