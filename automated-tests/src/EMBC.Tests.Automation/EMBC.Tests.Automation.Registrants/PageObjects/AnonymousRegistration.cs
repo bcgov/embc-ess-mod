@@ -61,10 +61,10 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var lastNameInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='lastName']"));
             lastNameInput.SendKeys(lastName);
 
-            var genderSelect = webDriver.FindElement(By.XPath("//mat-select[@id='mat-select-0']"));
+            var genderSelect = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='gender']"));
             genderSelect.SendKeys(gender);
 
-            var dateOfBirthInput = webDriver.FindElement(By.Id("mat-input-4"));
+            var dateOfBirthInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='dateOfBirth']"));
             dateOfBirthInput.SendKeys(dateOfBirth);
         }
 
@@ -87,18 +87,23 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var citySelect = webDriver.FindElement(By.Id("mat-option-186"));
             citySelect.Click();
 
-            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-8"));
+            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-11"));
             yesRadioButton2.Click();
         }
 
         public void NoRadioButton()
         {
+            Thread.Sleep(2000);
+
             var noRadioButton = webDriver.FindElement(By.Id("mat-radio-6"));
+            //var noRadioButton = webDriver.FindElement(By.CssSelector("[formcontrolname='isBcAddress'] mat-radio-button"));
             noRadioButton.Click();
         }
 
         public void SecurityQuestions()
         {
+            Thread.Sleep(3000);
+
             var securityQuestion1 = "What was the name of your first pet?";
             var securityQuestion2 = "What was your first car’s make and model? (e.g. Ford Taurus)";
             var securityQuestion3 = "Where was your first job?";
@@ -107,27 +112,33 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var securityResponse3 = "McDonald's";
 
             //var securitySelect1 = webDriver.FindElement(By.CssSelector("[formcontrolname='question1'] mat-select"));
-            var securitySelect1 = webDriver.FindElement(By.Id("mat-select-0"));
+            var securitySelect1 = webDriver.FindElement(By.Id("mat-select-2"));
             securitySelect1.SendKeys(securityQuestion1);
 
-            var securitySelect2 = webDriver.FindElement(By.Id("mat-select-2"));
+            Thread.Sleep(1000);
+
+            var securitySelect2 = webDriver.FindElement(By.Id("mat-select-6"));
             securitySelect2.SendKeys(securityQuestion2);
 
-            var securitySelect3 = webDriver.FindElement(By.Id("mat-select-4"));
+            Thread.Sleep(1000);
+
+            var securitySelect3 = webDriver.FindElement(By.Id("mat-select-8"));
             securitySelect3.SendKeys(securityQuestion3);
 
-            var securityInput1 = webDriver.FindElement(By.Id("mat-input-0"));
+            var securityInput1 = webDriver.FindElement(By.CssSelector("input[formcontrolname='answer1']"));
             securityInput1.SendKeys(securityResponse1);
 
-            var securityInput2 = webDriver.FindElement(By.Id("mat-input-1"));
+            var securityInput2 = webDriver.FindElement(By.CssSelector("input[formcontrolname='answer2']"));
             securityInput2.SendKeys(securityResponse2);
 
-            var securityInput3 = webDriver.FindElement(By.Id("mat-input-2"));
+            var securityInput3 = webDriver.FindElement(By.CssSelector("input[formcontrolname='answer3']"));
             securityInput3.SendKeys(securityResponse3);
         }
 
         public void CreateESSFileLocation()
         {
+            Thread.Sleep(3000);
+
             var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-19"));
             yesRadioButton.Click();
 
@@ -137,6 +148,8 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileHouseholdMembers()
         {
+            Thread.Sleep(3000);
+
             var noRadioButton = webDriver.FindElement(By.Id("mat-radio-24"));
             noRadioButton.Click();
 
@@ -146,6 +159,8 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileNeeds()
         {
+            Thread.Sleep(3000);
+
             var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-32"));
             yesRadioButton.Click();
 
@@ -164,6 +179,8 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileSecurityPhrase()
         {
+            Thread.Sleep(3000);
+
             var securityPhrase = "Sesame";
 
             var securityPhraseInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='secretPhrase']"));
@@ -172,6 +189,8 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CAPTCHAFails()
         {
+            Thread.Sleep(3000);
+
             var CAPTCHAEntry = "Invalid";
 
             var CAPTCHAInput = webDriver.FindElement(By.Name("answer"));

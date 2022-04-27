@@ -59,6 +59,9 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
             // click on 'No' for Contact Information
             pageObject.NoRadioButton();
 
+            // click on 'Next' button 
+            pageObject.NextButton();
+
             // complete the Security Questions
             pageObject.SecurityQuestions();
 
