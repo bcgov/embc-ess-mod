@@ -26,10 +26,10 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essfile-security-phrase.service';
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
-import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
-import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
-import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -49,13 +49,13 @@ export class EssFilesResultsComponent
     private evacueeSessionService: EvacueeSessionService,
     private essFileSecurityPhraseService: EssFileSecurityPhraseService,
     private evacueeSearchResultsService: EvacueeSearchResultsService,
-    private evacueeProfileService: EvacueeProfileService,
     private router: Router,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
     private alertService: AlertService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private evacueeProfileService: EvacueeProfileService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -97,7 +97,7 @@ export class EssFilesResultsComponent
       if (
         !this.evacueeSearchService.evacueeSearchContext
           .hasShownIdentification &&
-        selectedESSFile.isPaperBasedFile
+        !selectedESSFile.isFileCompleted
       ) {
         this.openUnableAccessDialog();
       } else if (
