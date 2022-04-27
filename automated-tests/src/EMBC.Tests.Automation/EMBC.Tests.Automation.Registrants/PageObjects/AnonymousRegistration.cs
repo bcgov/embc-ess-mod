@@ -53,7 +53,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var gender = "Female";
             var dateOfBirth = "01011980";
 
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             var firstNameInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='firstName']"));
             firstNameInput.SendKeys(firstName);
@@ -70,7 +70,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void MinimumAddress()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             var addressLine1 = "1012 Douglas St";
             var city = "Victoria";
@@ -87,7 +87,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var citySelect = webDriver.FindElement(By.Id("mat-option-186"));
             citySelect.Click();
 
-            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-11"));
+            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-8"));
             yesRadioButton2.Click();
         }
 
@@ -95,8 +95,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             Thread.Sleep(2000);
 
-            var noRadioButton = webDriver.FindElement(By.Id("mat-radio-6"));
-            //var noRadioButton = webDriver.FindElement(By.CssSelector("[formcontrolname='isBcAddress'] mat-radio-button"));
+            var noRadioButton = webDriver.FindElement(By.Id("mat-radio-12"));
             noRadioButton.Click();
         }
 
@@ -111,18 +110,17 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var securityResponse2 = "Honda Civic";
             var securityResponse3 = "McDonald's";
 
-            //var securitySelect1 = webDriver.FindElement(By.CssSelector("[formcontrolname='question1'] mat-select"));
-            var securitySelect1 = webDriver.FindElement(By.Id("mat-select-2"));
+            var securitySelect1 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question1']"));
             securitySelect1.SendKeys(securityQuestion1);
 
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
 
-            var securitySelect2 = webDriver.FindElement(By.Id("mat-select-6"));
+            var securitySelect2 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question2']"));
             securitySelect2.SendKeys(securityQuestion2);
 
             Thread.Sleep(1000);
 
-            var securitySelect3 = webDriver.FindElement(By.Id("mat-select-8"));
+            var securitySelect3 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question3']"));
             securitySelect3.SendKeys(securityQuestion3);
 
             var securityInput1 = webDriver.FindElement(By.CssSelector("input[formcontrolname='answer1']"));

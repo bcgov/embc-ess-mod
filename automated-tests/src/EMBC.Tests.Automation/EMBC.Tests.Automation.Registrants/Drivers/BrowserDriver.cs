@@ -7,8 +7,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
     /// <summary>
     /// Manages a browser instance using Selenium
     /// </summary>
-    //public class BrowserDriver : IDisposable
-    public class BrowserDriver
+    public class BrowserDriver : IDisposable
     {
         private readonly Lazy<IWebDriver> _currentWebDriverLazy;
         private bool _isDisposed;
@@ -29,7 +28,10 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         /// <returns></returns>
         private IWebDriver CreateWebDriver()
         {
-            var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), new ChromeOptions());
+            var options = new ChromeOptions();
+            options.AddArguments("start-maximized");
+
+            var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), options);
             chromeDriver.Url = "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/";
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
@@ -43,7 +45,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
         /// </summary>
-        /*public void Dispose()
+        public void Dispose()
         {
             if (_isDisposed)
             {
@@ -56,6 +58,6 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
             }
 
             _isDisposed = true;
-        }*/
+        }
     }
 }
