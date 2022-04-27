@@ -48,7 +48,7 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
                             RecipientFirstName = paymentGroup.Key.RecipientFirstName,
                             RecipientLastName = paymentGroup.Key.RecipientLastName,
                             SecurityAnswer = fileId,
-                            SecurityQuestion = "Your ESS evacuation file number",
+                            SecurityQuestion = "What is your ESS File Number?",
                             Status = PaymentStatus.Pending,
                             PayeeId = payeeId
                         });
