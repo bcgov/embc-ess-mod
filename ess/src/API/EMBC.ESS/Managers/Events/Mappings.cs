@@ -108,6 +108,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.CreatedOn)) //temporary until files have issued date
                 .ForMember(d => d.TaskStartDate, opts => opts.Ignore())
                 .ForMember(d => d.TaskEndDate, opts => opts.Ignore())
+                .ForMember(d => d.IsFileCompleted, opts => opts.MapFrom(s => !string.IsNullOrEmpty(s.SecurityPhrase)))
                 ;
 
             CreateMap<Evacuee, Shared.Contracts.Events.ProfileSearchResult>()

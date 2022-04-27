@@ -8,6 +8,7 @@ export interface EvacuationFileSearchResult {
   evacuatedFrom?: Address;
   householdMembers?: Array<EvacuationFileSearchResultHouseholdMember>;
   id?: string;
+  isFileCompleted?: boolean;
   isPaperBasedFile?: boolean;
   isRestricted?: boolean;
   manualFileId?: string;

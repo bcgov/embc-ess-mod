@@ -38,7 +38,7 @@ export class EssfileDashboardComponent implements OnInit {
 
   constructor(
     private essFileService: EssFileService,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,

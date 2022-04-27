@@ -182,6 +182,9 @@ this.ScenarioInitialize(scenarioInfo);
 #line 22
  testRunner.Then("I complete the minimum fields on the evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
+#line 23
+ testRunner.Then("the CAPTCHA field is confirmed to be working", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
             }
             this.ScenarioCleanup();
         }

@@ -103,6 +103,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public Address EvacuationAddress { get; set; }
         public IEnumerable<EvacuationFileSearchResultHouseholdMember> HouseholdMembers { get; set; }
         public string ManualFileId { get; set; }
+        public bool IsFileCompleted { get; set; }
     }
 
     public class EvacuationFileSearchResultHouseholdMember
