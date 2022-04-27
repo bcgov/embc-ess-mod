@@ -136,6 +136,10 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.ManualReferralId, opts => opts.Ignore())
                 .ForMember(d => d.NotificationEmail, opts => opts.Ignore())
                 .ForMember(d => d.NofificationMobile, opts => opts.Ignore())
+                .ForMember(d => d.RecipientFirstName, opts => opts.Ignore())
+                .ForMember(d => d.RecipientLastName, opts => opts.Ignore())
+                .ForMember(d => d.SecurityQuestion, opts => opts.Ignore())
+                .ForMember(d => d.SecurityAnswer, opts => opts.Ignore())
                 .AfterMap((s, d, ctx) =>
                 {
                     if (s.SupportDelivery is ESS.Shared.Contracts.Events.Referral referral)
@@ -152,6 +156,10 @@ namespace EMBC.Registrants.API.Mappers
                         d.Method = SupportMethod.ETransfer;
                         d.NofificationMobile = eTransfer.NotificationMobile;
                         d.NotificationEmail = eTransfer.NotificationEmail;
+                        d.RecipientFirstName = eTransfer.RecipientFirstName;
+                        d.RecipientLastName = eTransfer.RecipientLastName;
+                        d.SecurityQuestion = "*update* question";
+                        d.SecurityAnswer = "*update* answer";
                     }
                     else
                     {
