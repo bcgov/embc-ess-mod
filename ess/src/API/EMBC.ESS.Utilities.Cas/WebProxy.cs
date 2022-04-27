@@ -60,5 +60,30 @@ namespace EMBC.ESS.Utilities.Cas
 
             return await response.Content.ReadFromJsonAsync<InvoiceResponse>(jsonSerializerOptions) ?? null!;
         }
+
+        public async Task<GetSupplierResponse?> GetSupplierAsync(GetSupplierRequest getRequest)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"cfs/supplierbyname/{getRequest.SupplierName}/{getRequest.PostalCode}");
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse($"Bearer {await GetToken()}");
+            var response = await httpClient.SendAsync(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+            return await response.Content.ReadFromJsonAsync<GetSupplierResponse>(jsonSerializerOptions) ?? null!;
+        }
+
+        public async Task<CreateSupplierResponse> CreateSupplierAsync(CreateSupplierRequest supplier)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "cfs/supplier/");
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse($"Bearer {await GetToken()}");
+            var localJsonSerializerOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = null // create supplier expects names as is
+            };
+
+            request.Content = JsonContent.Create(supplier, options: localJsonSerializerOptions);
+            var response = await httpClient.SendAsync(request);
+
+            return await response.Content.ReadFromJsonAsync<CreateSupplierResponse>(jsonSerializerOptions) ?? null!;
+        }
     }
 }
