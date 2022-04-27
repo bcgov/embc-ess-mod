@@ -160,7 +160,7 @@ namespace EMBC.ESS.Resources.Suppliers
 
             suppliers
                 .AsParallel()
-                .ForAll(s => s.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>(essContext.era_essteamsuppliers.Where(ts => ts._era_supplierid_value == s.era_supplierid).ToArray()));
+                .ForAll(s => s.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>(essContext.era_essteamsuppliers.Expand(s => s.era_ESSTeamID).Where(ts => ts._era_supplierid_value == s.era_supplierid).ToArray()));
 
             var items = mapper.Map<IEnumerable<Supplier>>(suppliers);
 
