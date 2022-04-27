@@ -55,12 +55,50 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
 
             // click on 'Next' button 
             pageObject.NextButton();
+
+            // click on 'No' for Contact Information
+            pageObject.NoRadioButton();
+
+            // complete the Security Questions
+            pageObject.SecurityQuestions();
+
+            // click on 'Next' button
+            pageObject.NextButton();
+
+            // enter ESS file Location
+            pageObject.CreateESSFileLocation();
+
+            // click on 'Next' button
+            pageObject.NextButton();
+
+            // enter ESS file Household Members
+            pageObject.CreateESSFileHouseholdMembers();
+
+            // click on 'Next' button
+            pageObject.NextButton();
+
+            // no pets entered
+
+            // click on 'Next' button
+            pageObject.NextButton();
+
+            // enter ESS file Needs
+            pageObject.CreateESSFileNeeds();
+
+            // click on 'Next' button
+            pageObject.NextButton();
+
+            // enter ESS file Security Phrase
+            pageObject.CreateESSFileSecurityPhrase();
+
+            // click on 'Next' button
+            pageObject.NextButton();
         }
 
         [Then("the CAPTCHA field is confirmed to be working")]
         public void CAPTCHAFieldWorking()
         {
-            // to be completed
+            pageObject.CAPTCHAFails();
         }
     }
 }
