@@ -28,6 +28,8 @@ import { EssFileSecurityPhraseService } from '../../essfile-security-phrase/essf
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -51,7 +53,9 @@ export class EssFilesResultsComponent
     private router: Router,
     private cd: ChangeDetectorRef,
     private dialog: MatDialog,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -83,7 +87,7 @@ export class EssFilesResultsComponent
     if (this.evacueeSessionService.isPaperBased) {
       if (
         this.evacueeSearchService.paperBasedEssFile !==
-        selectedESSFile.externalReferenceId
+        selectedESSFile.manualFileId
       ) {
         this.openUnableAccessESSFileDialog();
       } else {
@@ -179,19 +183,26 @@ export class EssFilesResultsComponent
   private getSearchedUserProfile(
     selectedFile: EvacuationFileSearchResultModel
   ) {
-    const primaryMember = selectedFile.householdMembers.find(
+    const searchedMember = selectedFile.householdMembers.find(
       (member) => member.isSearchMatch
     );
-    this.getEvacueeProfile(primaryMember.id);
+    this.getEvacueeProfile(searchedMember.id);
   }
 
-  private getEvacueeProfile(evacueeProfileId): void {
-    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
-      next: (profile: RegistrantProfileModel) => {},
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.getProfileError);
-      }
-    });
+  private getEvacueeProfile(evacueeProfileId: string): void {
+    if (evacueeProfileId !== null && evacueeProfileId !== undefined) {
+      this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
+        next: (profile: RegistrantProfileModel) => {},
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.getProfileError);
+        }
+      });
+    } else {
+      this.appBaseService.appModel = {
+        selectedProfile: { selectedEvacueeInContext: null }
+      };
+      this.computeState.triggerEvent();
+    }
   }
 }

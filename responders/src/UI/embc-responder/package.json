@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 6200 --proxy-config proxy.dev.conf.json",
+    "start": "npm run gen-api && ng serve --port 6200 --proxy-config proxy.dev.conf.json",
     "startlocal": "npm run gen-api-local && ng serve --port 6200 --proxy-config proxy.conf.json",
     "restart": "npm run gen-api",
     "build": "ng build",

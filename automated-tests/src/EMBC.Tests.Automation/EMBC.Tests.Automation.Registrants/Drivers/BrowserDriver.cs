@@ -28,7 +28,10 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         /// <returns></returns>
         private IWebDriver CreateWebDriver()
         {
-            var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), new ChromeOptions());
+            var options = new ChromeOptions();
+            options.AddArguments("start-maximized");
+
+            var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), options);
             chromeDriver.Url = "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/";
 
             var ngWebDriver = new NgWebDriver(chromeDriver);

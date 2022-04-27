@@ -293,7 +293,7 @@ describe('EvacueeProfileDashboardComponent', () => {
     evacueeProfileService.evacuationFileSummaryValue = [
       {
         id: '122552',
-        externalReferenceId: 'T3333',
+        manualFileId: 'T3333',
         status: 'Completed',
         task: {
           taskNumber: '0001',

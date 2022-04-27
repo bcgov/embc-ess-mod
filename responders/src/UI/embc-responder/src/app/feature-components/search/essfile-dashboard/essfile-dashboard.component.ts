@@ -19,6 +19,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -32,17 +33,20 @@ export class EssfileDashboardComponent implements OnInit {
   color = '#169BD5';
   isMinor = false;
   isLinkedToBcsc = false;
+  eligibilityFirstName: string;
+  eligibilityLastName: string;
 
   constructor(
     private essFileService: EssFileService,
-    private evacueeSessionService: EvacueeSessionService,
+    public evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     private alertService: AlertService,
     private stepNotesService: StepNotesService,
     public appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private evacueeSearchService: EvacueeSearchService
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +78,8 @@ export class EssfileDashboardComponent implements OnInit {
           }
         });
     }
+
+    this.eligiblityDisplayName();
   }
 
   /**
@@ -196,6 +202,23 @@ export class EssfileDashboardComponent implements OnInit {
           this.alertService.setAlert('danger', globalConst.fileDashboardError);
         }
       });
+  }
+
+  private eligiblityDisplayName() {
+    if (
+      this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext !== null
+    ) {
+      this.eligibilityFirstName =
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
+      this.eligibilityLastName =
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName;
+    } else {
+      this.eligibilityFirstName =
+        this.evacueeSearchService.evacueeSearchContext.evacueeSearchParameters.firstName;
+      this.eligibilityLastName =
+        this.evacueeSearchService.evacueeSearchContext.evacueeSearchParameters.lastName;
+    }
   }
 
   /**
