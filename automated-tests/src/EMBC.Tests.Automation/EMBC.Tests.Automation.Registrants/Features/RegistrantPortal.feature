@@ -20,7 +20,7 @@ Scenario: Registrant Portal - Anonymous - Confirm CAPTCHA field is working
 	Given I see the Registrant Portal home page
 	When I click on the Self Register button
 	Then I complete the minimum fields on the evacuee forms
-	# Then the CAPTCHA field is confirmed to be working
+	Then the CAPTCHA field is confirmed to be working
 
 Scenario: Registrant Portal - Verified path - Happy path/maximum fields
 	Given I see the Registrant Portal home page
