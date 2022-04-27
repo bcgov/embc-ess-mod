@@ -97,7 +97,7 @@ export class EssFilesResultsComponent
       if (
         !this.evacueeSearchService.evacueeSearchContext
           .hasShownIdentification &&
-        selectedESSFile.isPaperBasedFile
+        !selectedESSFile.isFileCompleted
       ) {
         this.openUnableAccessDialog();
       } else if (

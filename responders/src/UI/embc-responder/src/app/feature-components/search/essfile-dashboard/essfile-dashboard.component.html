@@ -295,7 +295,9 @@
   </div>
 
   <div
-    *ngIf="essFile?.status === 'Completed' && essFile?.manualFileId === null"
+    *ngIf="
+      essFile?.status === 'Completed' && !evacueeSessionService?.isPaperBased
+    "
     class="row banner"
   >
     <div class="col-md-12 center-content">
@@ -309,7 +311,9 @@
   </div>
 
   <div
-    *ngIf="essFile?.status === 'Completed' && essFile?.manualFileId !== null"
+    *ngIf="
+      essFile?.status === 'Completed' && evacueeSessionService?.isPaperBased
+    "
     class="row banner"
   >
     <div class="col-md-9 center-content">

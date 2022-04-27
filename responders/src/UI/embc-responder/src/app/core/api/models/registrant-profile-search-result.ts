@@ -8,6 +8,7 @@ export interface RegistrantProfileSearchResult {
   evacuationFiles?: Array<EvacuationFileSearchResult>;
   firstName?: string;
   id?: string;
+  isAuthenticated?: boolean;
   isProfileCompleted?: boolean;
   isRestricted?: boolean;
   lastName?: string;
