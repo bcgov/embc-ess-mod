@@ -46,7 +46,7 @@ describe('EvacueeSearchResultsComponent', () => {
     files: [
       {
         id: '127509',
-        externalReferenceId: 'T2000',
+        manualFileId: 'T2000',
         isPaperBasedFile: true,
         isRestricted: false,
         taskId: null,
@@ -122,7 +122,7 @@ describe('EvacueeSearchResultsComponent', () => {
         evacuationFiles: [
           {
             id: '127510',
-            externalReferenceId: null,
+            manualFileId: null,
             isPaperBasedFile: false,
             isRestricted: false,
             taskId: null,
@@ -327,7 +327,7 @@ describe('EvacueeSearchResultsComponent', () => {
     evacueeProfileService.evacuationFileSummaryValue = [
       {
         id: '122552',
-        externalReferenceId: 'T3333',
+        manualFileId: 'T3333',
         status: 'Completed',
         task: {
           taskNumber: '0001',

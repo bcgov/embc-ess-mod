@@ -17,7 +17,6 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             var buttons = webDriver.FindElements(By.TagName("button"));
             var selfRegisterButton = buttons.Should().ContainSingle(b => b.Text.Contains("Self-Register")).Subject;
-
             selfRegisterButton.Click();
         }
 
@@ -38,14 +37,12 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             var buttons = webDriver.FindElements(By.TagName("button"));
             var nextButton = buttons.Should().ContainSingle(b => b.Text.Contains("Next")).Subject;
-
             nextButton.Click();
         }
 
         public void YesRadioButton()
         {
             var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-2"));
-
             yesRadioButton.Click();
         }
 
@@ -53,7 +50,10 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             var firstName = "Jane";
             var lastName = "Doe";
-            //var dateOfBirth = "01011980";
+            var gender = "Female";
+            var dateOfBirth = "01011980";
+
+            Thread.Sleep(3000);
 
             var firstNameInput = webDriver.FindElement(By.Id("mat-input-0"));
             firstNameInput.SendKeys(firstName); 
@@ -61,10 +61,28 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var lastNameInput = webDriver.FindElement(By.Id("mat-input-1"));
             lastNameInput.SendKeys(lastName);
 
-            //var selectGender = webDriver.FindElement(By.CssSelector("mat-select-8"));
+            var selectGender = webDriver.FindElement(By.XPath("//mat-select[@id='mat-select-0']"));
+            selectGender.SendKeys(gender);
 
-            //var dateOfBirthInput = webDriver.FindElement(By.Id("mat-input-4"));
-            //dateOfBirthInput.SendKeys(dateOfBirth);
+            var dateOfBirthInput = webDriver.FindElement(By.Id("mat-input-4"));
+            dateOfBirthInput.SendKeys(dateOfBirth);
+        }
+
+        public void MinimumAddress()
+        {
+            Thread.Sleep(3000);
+
+            var addressLine1 = "1012 Douglas St";
+            var city = "Victoria";
+
+            var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-9"));
+            yesRadioButton.Click();
+
+            var addressLine1Input = webDriver.FindElement(By.Id("mat-input-8"));
+            addressLine1Input.SendKeys(addressLine1);
+
+            var cityInput = webDriver.FindElement(By.Id("mat-input-10"));
+            cityInput.SendKeys(city);
         }
     }
 }

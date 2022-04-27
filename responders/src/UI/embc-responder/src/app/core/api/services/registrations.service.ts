@@ -21,6 +21,7 @@ import { ProcessPaperReferralsRequest } from '../models/process-paper-referrals-
 import { ReferralPrintRequestResponse } from '../models/referral-print-request-response';
 import { RegistrantLinkRequest } from '../models/registrant-link-request';
 import { RegistrantProfile } from '../models/registrant-profile';
+import { RegistrantProfileSearchResult } from '../models/registrant-profile-search-result';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
 import { Support } from '../models/support';
@@ -1281,7 +1282,7 @@ export class RegistrationsService extends BaseService {
     lastName?: string;
     dateOfBirth?: string;
     ManualFileId?: string;
-  }): Observable<StrictHttpResponse<Array<RegistrantProfile>>> {
+  }): Observable<StrictHttpResponse<Array<RegistrantProfileSearchResult>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingRegistrantsPath, 'get');
     if (params) {
@@ -1297,7 +1298,7 @@ export class RegistrationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<RegistrantProfile>>;
+        return r as StrictHttpResponse<Array<RegistrantProfileSearchResult>>;
       })
     );
   }
@@ -1313,10 +1314,10 @@ export class RegistrationsService extends BaseService {
     lastName?: string;
     dateOfBirth?: string;
     ManualFileId?: string;
-  }): Observable<Array<RegistrantProfile>> {
+  }): Observable<Array<RegistrantProfileSearchResult>> {
 
     return this.registrationsSearchMatchingRegistrants$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<RegistrantProfile>>) => r.body as Array<RegistrantProfile>)
+      map((r: StrictHttpResponse<Array<RegistrantProfileSearchResult>>) => r.body as Array<RegistrantProfileSearchResult>)
     );
   }
 

@@ -87,7 +87,7 @@ export class EssFilesResultsComponent
     if (this.evacueeSessionService.isPaperBased) {
       if (
         this.evacueeSearchService.paperBasedEssFile !==
-        selectedESSFile.externalReferenceId
+        selectedESSFile.manualFileId
       ) {
         this.openUnableAccessESSFileDialog();
       } else {
@@ -183,19 +183,26 @@ export class EssFilesResultsComponent
   private getSearchedUserProfile(
     selectedFile: EvacuationFileSearchResultModel
   ) {
-    const primaryMember = selectedFile.householdMembers.find(
+    const searchedMember = selectedFile.householdMembers.find(
       (member) => member.isSearchMatch
     );
-    this.getEvacueeProfile(primaryMember.id);
+    this.getEvacueeProfile(searchedMember.id);
   }
 
-  private getEvacueeProfile(evacueeProfileId): void {
-    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
-      next: (profile: RegistrantProfileModel) => {},
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.getProfileError);
-      }
-    });
+  private getEvacueeProfile(evacueeProfileId: string): void {
+    if (evacueeProfileId !== null && evacueeProfileId !== undefined) {
+      this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
+        next: (profile: RegistrantProfileModel) => {},
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.getProfileError);
+        }
+      });
+    } else {
+      this.appBaseService.appModel = {
+        selectedProfile: { selectedEvacueeInContext: null }
+      };
+      this.computeState.triggerEvent();
+    }
   }
 }

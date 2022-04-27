@@ -27,7 +27,7 @@ describe('MatchedEssfilesComponent', () => {
   const mockMatchedEssFiles = [
     {
       id: '127510',
-      externalReferenceId: 'T2000',
+      manualFileId: 'T2000',
       status: 'Pending',
       task: {
         taskNumber: null,

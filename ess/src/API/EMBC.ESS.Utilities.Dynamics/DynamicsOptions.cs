@@ -12,6 +12,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         public AdfsOptions Adfs { get; set; } = new AdfsOptions();
         public int NumberOfRetries { get; set; } = 2;
         public int RetryWaitTimeInSeconds { get; set; } = 1;
+        public TimeSpan HttpClientTimeout { get; set; } = TimeSpan.FromSeconds(30);
     }
 
     public class AdfsOptions
