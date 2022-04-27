@@ -21,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         private async Task<EvacuationFile> GetEvacuationFileById(string fileId) => await TestHelper.GetEvacuationFileById(manager, fileId) ?? null!;
 
-        private RegistrantProfile CreateNewTestRegistrantProfile(string identifier) => TestHelper.CreateRegistrantProfile(identifier);
+        private RegistrantProfile CreateNewTestRegistrantProfile() => TestHelper.CreateRegistrantProfile(TestData.TestPrefix);
 
         public RegistrantTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
@@ -31,8 +31,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCreateNewRegistrantProfile()
         {
-            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
-            var newRegistrant = CreateNewTestRegistrantProfile(uniqueSignature);
+            var newRegistrant = CreateNewTestRegistrantProfile();
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
@@ -106,8 +105,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
-            var identifier = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
-            var newRegistrant = CreateNewTestRegistrantProfile(identifier);
+            var newRegistrant = CreateNewTestRegistrantProfile();
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
@@ -237,8 +235,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanProcessRegistrantInvite()
         {
-            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
-            var newRegistrant = CreateNewTestRegistrantProfile(uniqueSignature);
+            var newRegistrant = CreateNewTestRegistrantProfile();
+            var userId = newRegistrant.UserId;
 
             var registrantId = await manager.Handle(new SaveRegistrantCommand { Profile = newRegistrant });
 
@@ -252,9 +250,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var dp = Services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
             var encryptedInviteId = dp.Protect(inviteId);
 
-            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = encryptedInviteId, LoggedInUserId = uniqueSignature });
+            await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = encryptedInviteId, LoggedInUserId = userId });
 
-            var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, uniqueSignature)).ShouldNotBeNull();
+            var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
             actualRegistrant.AuthenticatedUser.ShouldBeTrue();
             actualRegistrant.VerifiedUser.ShouldBeTrue();
         }
@@ -263,8 +261,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public async Task ProcessRegistrantInvite_TwoSameRegistrant_FirstIsInvalid()
         {
             var dp = Services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
-            var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
-            var registrant = CreateNewTestRegistrantProfile(uniqueSignature);
+            var registrant = CreateNewTestRegistrantProfile();
+            var userId = registrant.UserId;
             var registrantId = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             var firstInviteId = dp.Protect(await manager.Handle(new InviteRegistrantCommand
@@ -281,8 +279,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 RequestingUserId = null
             }));
 
-            await Should.ThrowAsync<NotFoundException>(manager.Handle(new ProcessRegistrantInviteCommand { InviteId = firstInviteId, LoggedInUserId = uniqueSignature }));
-            await Should.NotThrowAsync(manager.Handle(new ProcessRegistrantInviteCommand { InviteId = secondInviteId, LoggedInUserId = uniqueSignature }));
+            await Should.ThrowAsync<NotFoundException>(manager.Handle(new ProcessRegistrantInviteCommand { InviteId = firstInviteId, LoggedInUserId = userId }));
+            await Should.NotThrowAsync(manager.Handle(new ProcessRegistrantInviteCommand { InviteId = secondInviteId, LoggedInUserId = userId }));
         }
     }
 }

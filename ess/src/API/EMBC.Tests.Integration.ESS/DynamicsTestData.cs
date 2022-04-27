@@ -257,7 +257,9 @@ namespace EMBC.Tests.Integration.ESS
             };
 
             essContext.AddTocontacts(contact);
-            essContext.SetLink(contact, nameof(contact.era_City), jurisdictions.First());
+            essContext.SetLink(contact, nameof(contact.era_City), jurisdictions.Skip(Random.Shared.Next(jurisdictions.Length - 1)).First());
+            essContext.SetLink(contact, nameof(contact.era_ProvinceState), bc);
+            essContext.SetLink(contact, nameof(contact.era_Country), canada);
             return contact;
         }
 

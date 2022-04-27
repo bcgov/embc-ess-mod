@@ -39,6 +39,7 @@ namespace EMBC.ESS.Resources.Payments
         public decimal Amount { get; set; }
         public PaymentStatus Status { get; set; }
         public string? FailureReason { get; set; }
+        public string PayeeId { get; set; }
     }
 
     public enum PaymentStatus
@@ -50,13 +51,9 @@ namespace EMBC.ESS.Resources.Payments
         Cancelled = 174360003,
     }
 
-    public abstract class SupportPayment : Payment
+    public class InteracSupportPayment : Payment
     {
         public IEnumerable<string> LinkedSupportIds { get; set; } = Array.Empty<string>();
-    }
-
-    public class InteracSupportPayment : SupportPayment
-    {
         public string RecipientFirstName { get; set; }
         public string RecipientLastName { get; set; }
         public string SecurityQuestion { get; set; }
@@ -86,11 +83,30 @@ namespace EMBC.ESS.Resources.Payments
     public class CasPayment
     {
         public string PaymentId { get; set; }
+
+        public CasPayeeDetails PayeeDetails { get; set; }
+    }
+
+    public class CasPayeeDetails
+    {
+        public string SupplierNumber { get; set; }
+        public string SupplierSiteCode { get; set; }
     }
 
     public class SendPaymentToCasResponse : ManagePaymentResponse
     {
         public IEnumerable<string> SentItems { get; set; } = Array.Empty<string>();
         public IEnumerable<(string Id, string Reason)> FailedItems { get; set; } = Array.Empty<(string Id, string Reason)>();
+    }
+
+    public class GetCasPayeeDetailsRequest : QueryPaymentRequest
+    {
+        public string PayeeId { get; set; }
+    }
+
+    public class GetCasPayeeDetailsResponse : QueryPaymentResponse
+    {
+        public string CasSupplierNumber { get; set; }
+        public string CasSupplierSiteNumber { get; set; }
     }
 }
