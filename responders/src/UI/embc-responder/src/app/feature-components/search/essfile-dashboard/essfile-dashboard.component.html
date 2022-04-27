@@ -312,9 +312,7 @@
 
   <div
     *ngIf="
-      essFile?.status === 'Completed' &&
-      essFile?.isPaper &&
-      evacueeSessionService?.isPaperBased
+      essFile?.status === 'Completed' && evacueeSessionService?.isPaperBased
     "
     class="row banner"
   >
