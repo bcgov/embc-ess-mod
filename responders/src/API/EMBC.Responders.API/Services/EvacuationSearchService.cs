@@ -19,7 +19,7 @@ namespace EMBC.Responders.API.Services
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string registrantId, MemberRole userRole);
 
-        Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
+        Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
 
         Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
     }
@@ -41,6 +41,7 @@ namespace EMBC.Responders.API.Services
         public DateTime ModifiedOn { get; set; }
         public Address PrimaryAddress { get; set; }
         public IEnumerable<EvacuationFileSearchResult> EvacuationFiles { get; set; }
+        public bool IsProfileCompleted { get; set; }
     }
 
     public class EvacuationFileSearchResult
@@ -134,7 +135,7 @@ namespace EMBC.Responders.API.Services
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
         }
 
-        public async Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
+        public async Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
         {
             var searchResults = await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacueeSearchQuery
             {
@@ -144,7 +145,7 @@ namespace EMBC.Responders.API.Services
                 IncludeRestrictedAccess = userRole != MemberRole.Tier1,
                 IncludeRegistrantProfilesOnly = true
             });
-            return mapper.Map<IEnumerable<RegistrantProfile>>(searchResults.Profiles);
+            return mapper.Map<IEnumerable<RegistrantProfileSearchResult>>(searchResults.Profiles);
         }
 
         public async Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
@@ -193,25 +194,7 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.IsVerified ? RegistrantStatus.Verified : RegistrantStatus.NotVerified))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.RegistrationDate))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
-              ;
-
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.ProfileSearchResult, RegistrantProfile>()
-                .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.IsVerified))
-                .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.IsAuthenticated))
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.RegistrationDate))
-                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
-                .ForMember(d => d.ContactDetails, opts => opts.Ignore())
-                .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
-                {
-                    FirstName = s.FirstName,
-                    LastName = s.LastName,
-                    DateOfBirth = s.DateOfBirth
-                }))
-                .ForMember(d => d.MailingAddress, opts => opts.Ignore())
-                .ForMember(d => d.SecurityQuestions, opts => opts.Ignore())
-                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
-              ;
+             ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.LinkedRegistrantId == null ? null : s.LinkedRegistrantId))

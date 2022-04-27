@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
@@ -81,6 +82,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.VerifiedUser))
                 .ForMember(d => d.Minor, opts => opts.Ignore())
                 ;
+
             CreateMap<Evacuee, Shared.Contracts.Events.RegistrantProfile>()
                 .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.Verified))
@@ -114,6 +116,7 @@ namespace EMBC.ESS.Managers.Events
                 .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
                 .ForMember(d => d.IsAuthenticated, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.IsMinor, opts => opts.MapFrom(s => s.Minor))
+                .ForMember(d => d.IsProfileCompleted, opts => opts.MapFrom(s => s.SecurityQuestions.Any()))
                 ;
 
             CreateMap<HouseholdMember, Shared.Contracts.Events.EvacuationFileSearchResultHouseholdMember>()

@@ -44,10 +44,14 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
             // click on 'Next' button 
             pageObject.NextButton();
 
-            //Thread.Sleep(2000);
-
             // complete the minimum Personal Details
             pageObject.MinimumPersonalDetails();
+
+            // click on 'Next' button 
+            pageObject.NextButton();
+
+            // complete the Address
+            pageObject.MinimumAddress();
 
             // click on 'Next' button 
             pageObject.NextButton();
