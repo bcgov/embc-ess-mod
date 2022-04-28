@@ -104,10 +104,10 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             Thread.Sleep(3000);
 
             var securityQuestion1 = "What was the name of your first pet?";
-            var securityQuestion2 = "What was your first car’s make and model? (e.g. Ford Taurus)";
+            var securityQuestion2 = "In what city or town was your mother born?";
             var securityQuestion3 = "Where was your first job?";
             var securityResponse1 = "Daisy";
-            var securityResponse2 = "Honda Civic";
+            var securityResponse2 = "Vancouver";
             var securityResponse3 = "McDonald's";
 
             var securitySelect1 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question1']"));
@@ -148,10 +148,10 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             Thread.Sleep(3000);
 
-            var noRadioButton = webDriver.FindElement(By.Id("mat-radio-24"));
+            var noRadioButton = webDriver.FindElement(By.Id("mat-radio-43"));
             noRadioButton.Click();
 
-            var noRadioButton2 = webDriver.FindElement(By.Id("mat-radio-26"));
+            var noRadioButton2 = webDriver.FindElement(By.Id("mat-radio-45"));
             noRadioButton2.Click();
         }
 
@@ -159,19 +159,19 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             Thread.Sleep(3000);
 
-            var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-32"));
+            var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-26"));
             yesRadioButton.Click();
 
-            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-35"));
+            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-29"));
             yesRadioButton2.Click();
 
-            var yesRadioButton3 = webDriver.FindElement(By.Id("mat-radio-38"));
+            var yesRadioButton3 = webDriver.FindElement(By.Id("mat-radio-32"));
             yesRadioButton3.Click();
 
-            var yesRadioButton4 = webDriver.FindElement(By.Id("mat-radio-41"));
+            var yesRadioButton4 = webDriver.FindElement(By.Id("mat-radio-35"));
             yesRadioButton4.Click();
 
-            var yesRadioButton5 = webDriver.FindElement(By.Id("mat-radio-44"));
+            var yesRadioButton5 = webDriver.FindElement(By.Id("mat-radio-38"));
             yesRadioButton5.Click();
         }
 
