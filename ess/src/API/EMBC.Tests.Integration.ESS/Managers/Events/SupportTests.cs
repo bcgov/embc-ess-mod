@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId) => (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
 
-        private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(registrant);
+        private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant) => TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
 
         public SupportTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
@@ -397,8 +397,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
             registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
-            var firstFile = TestHelper.CreateNewTestEvacuationFile(registrant);
-            var secondFile = TestHelper.CreateNewTestEvacuationFile(registrant);
+            var firstFile = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
+            var secondFile = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
 
             firstFile.Id = await TestHelper.SaveEvacuationFile(manager, firstFile);
             secondFile.Id = await TestHelper.SaveEvacuationFile(manager, secondFile);

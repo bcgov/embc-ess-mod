@@ -35,6 +35,7 @@ namespace EMBC.ESS.Engines.Search
                     Amount = s.era_totalamount ?? 0m,
                     FileId = s.era_EvacuationFileId.era_name,
                     SupportId = s.era_name,
+                    PayeeId = s.era_PayeeId.contactid?.ToString(),
                     Delivery = new PayableSupportInteracDelivery
                     {
                         NotificationEmail = s.era_notificationemailaddress,

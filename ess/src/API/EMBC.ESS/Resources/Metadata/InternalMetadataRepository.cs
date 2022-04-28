@@ -21,23 +21,24 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            var jurisdictions = await essContext.era_jurisdictions
+            var jurisdictions = (await essContext.era_jurisdictions
                         .Expand(j => j.era_RelatedProvinceState)
                         .Expand(j => j.era_RegionalDistrict)
-                        .GetAllPagesAsync();
+                        .GetAllPagesAsync())
+                        .ToArray();
 
-            var communities = mapper.Map<IEnumerable<Community>>(jurisdictions);
+            var stateProvinces = (await essContext.era_provinceterritorieses.GetAllPagesAsync()).ToArray();
 
-            // a hack to map country codes to communities because Dynamics v9.0 doesn't allow multi step expansion (i.e. province->country)
-            var stateProvinces = essContext.era_provinceterritorieses
-                   .Select(sp => new { code = sp.era_code, countryId = sp.era_RelatedCountry.era_countryid, countryCode = sp.era_RelatedCountry.era_countrycode })
-                   .ToArray();
+            var communities = jurisdictions
+                .AsParallel()
+                .Select(j =>
+                {
+                    var community = mapper.Map<Community>(j);
+                    community.CountryCode = stateProvinces.SingleOrDefault(sp => sp.era_provinceterritoriesid == j._era_relatedprovincestate_value.Value)?.era_code;
+                    return community;
+                });
 
-            foreach (var community in communities)
-            {
-                community.CountryCode = stateProvinces.SingleOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
-            }
-            return communities;
+            return communities.ToArray();
         }
 
         public async Task<IEnumerable<Country>> GetCountries()

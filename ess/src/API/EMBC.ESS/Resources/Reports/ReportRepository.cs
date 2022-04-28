@@ -95,6 +95,7 @@ namespace EMBC.ESS.Resources.Reports
             //}
             //return files;
 
+            tasks.AsParallel().ForAll(t => ctx.AttachTo(nameof(EssContext.era_tasks), t));
             await Parallel.ForEachAsync(tasks, ct, (t, ct) => new ValueTask(ctx.LoadPropertyAsync(t, nameof(era_task.era_era_task_era_evacuationfileId), ct)));
             tasks.AsParallel().ForAll(t => { foreach (var file in t.era_era_task_era_evacuationfileId) file.era_TaskId = t; });
 

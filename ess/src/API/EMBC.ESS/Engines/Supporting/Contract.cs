@@ -128,6 +128,7 @@ namespace EMBC.ESS.Engines.Supporting
         public string SupportId { get; set; }
         public decimal Amount { get; set; }
         public PaymentDelivery Delivery { get; set; }
+        public string PayeeId { get; set; }
     }
 
     public class PaymentDelivery
