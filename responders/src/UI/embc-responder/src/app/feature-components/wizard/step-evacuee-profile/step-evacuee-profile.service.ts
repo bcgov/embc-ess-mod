@@ -411,7 +411,6 @@ export class StepEvacueeProfileService {
   public setFormValuesFromProfile(profile: RegistrantProfileModel) {
     this.wizardService.createObjectReference(profile, 'profile');
     // Wizard variables
-    //this.evacueeSession.profileId = profile.id;
 
     this.appBaseService.appModel = {
       selectedProfile: { selectedEvacueeInContext: profile }
@@ -496,7 +495,6 @@ export class StepEvacueeProfileService {
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.id !== null
     );
-    //  this.evacueeSession.profileId !== null;
   }
 
   updateEditedFormStatus() {

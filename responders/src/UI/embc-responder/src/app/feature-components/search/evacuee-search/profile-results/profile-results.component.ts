@@ -95,7 +95,6 @@ export class ProfileResultsComponent
         selectedProfile: { selectedEvacueeInContext: profileIdObject }
       };
       this.computeState.triggerEvent();
-      //this.evacueeSessionService.profileId = selectedRegistrant.id;
       if (
         this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {

@@ -166,7 +166,6 @@ export class WizardAdapterService {
     this.stepEssFileService.essTabs =
       this.wizardDataService.createNewESSFileSteps();
 
-    //this.evacueeSessionService.profileId = profile.id;
     this.appBaseService.appModel = {
       selectedProfile: { selectedEvacueeInContext: profile }
     };
@@ -193,8 +192,6 @@ export class WizardAdapterService {
   public stepCreateEssFileFromEditProfileRecord(
     profile: RegistrantProfileModel
   ) {
-    //this.evacueeSessionService.profileId = profile.id;
-
     this.appBaseService.appModel = {
       selectedProfile: { selectedEvacueeInContext: profile }
     };

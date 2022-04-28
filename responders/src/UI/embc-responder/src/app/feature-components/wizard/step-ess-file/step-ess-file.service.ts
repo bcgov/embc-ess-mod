@@ -519,7 +519,6 @@ export class StepEssFileService {
       primaryRegistrantId:
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
           ?.id,
-      //this.evacueeSession.profileId,
       completedBy: this.completedBy,
       completedOn: this.completedOn,
       manualFileId: this.evacueeSession.isPaperBased
@@ -620,7 +619,6 @@ export class StepEssFileService {
       primaryRegistrantId:
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
           ?.id,
-      //this.evacueeSession.profileId,
 
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress

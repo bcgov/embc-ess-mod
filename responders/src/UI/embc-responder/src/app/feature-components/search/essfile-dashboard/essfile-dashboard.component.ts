@@ -187,19 +187,6 @@ export class EssfileDashboardComponent implements OnInit {
           this.loadNotes();
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
-          //this.evacueeSessionService.profileId = file.primaryRegistrantId;
-          // let profileIdObject: RegistrantProfileModel = {
-          //   id: file.primaryRegistrantId,
-          //   primaryAddress: null,
-          //   mailingAddress: null,
-          //   personalDetails: null,
-          //   contactDetails: null,
-          //   restriction: null
-          // };
-          // this.appBaseService.appModel = {
-          //   selectedProfile: { selectedEvacueeInContext: profileIdObject }
-          // };
-          // this.computeState.triggerEvent();
           return file;
         })
       )
