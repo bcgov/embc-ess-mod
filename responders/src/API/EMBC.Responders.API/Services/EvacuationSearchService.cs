@@ -42,6 +42,7 @@ namespace EMBC.Responders.API.Services
         public Address PrimaryAddress { get; set; }
         public IEnumerable<EvacuationFileSearchResult> EvacuationFiles { get; set; }
         public bool IsProfileCompleted { get; set; }
+        public bool IsAuthenticated { get; set; }
     }
 
     public class EvacuationFileSearchResult
@@ -59,6 +60,7 @@ namespace EMBC.Responders.API.Services
         public DateTime ModifiedOn { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public IEnumerable<EvacuationFileSearchResultHouseholdMember> HouseholdMembers { get; set; }
+        public bool IsFileCompleted { get; set; }
     }
 
     public class EvacuationFileSearchResultHouseholdMember
