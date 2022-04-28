@@ -82,6 +82,8 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
 
             // no pets entered
 
+            Thread.Sleep(2000);
+
             // click on 'Next' button
             pageObject.NextButton();
 
