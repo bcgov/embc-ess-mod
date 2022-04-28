@@ -4,7 +4,8 @@ import { MatAccordion } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import {
   EvacuationFileHouseholdMember,
-  HouseholdMemberType
+  HouseholdMemberType,
+  RegistrantProfileSearchResult
 } from 'src/app/core/api/models';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -16,9 +17,9 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
 @Component({
   selector: 'app-household-member',
@@ -31,20 +32,15 @@ export class HouseholdMemberComponent implements OnInit {
   currentlyOpenedItemIndex = -1;
   registrantId: string;
   isLoading = false;
-  matchedProfileCount: number;
-  matchedProfiles: LinkRegistrantProfileModel[];
-  linkedFlag = false;
   public color = '#169BD5';
-  selectedHouseholdMember: LinkRegistrantProfileModel;
-  displayLinks: string;
 
   constructor(
+    public essfileDashboardService: EssfileDashboardService,
     private dialog: MatDialog,
     private alertService: AlertService,
     private router: Router,
-    private essfileDashboardService: EssfileDashboardService,
-    public evacueeSessionService: EvacueeSessionService,
-    public appBaseService: AppBaseService,
+    private evacueeSessionService: EvacueeSessionService,
+    private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
   ) {}
 
@@ -70,8 +66,19 @@ export class HouseholdMemberComponent implements OnInit {
     houseHoldMember: EvacuationFileHouseholdMember
   ): void {
     this.currentlyOpenedItemIndex = itemIndex;
+    this.essfileDashboardService.matchedProfiles = undefined;
+    this.essfileDashboardService.displayMemberButton = undefined;
+    this.essfileDashboardService.selectedMember = houseHoldMember;
+
     this.isLoading = !this.isLoading;
-    if (houseHoldMember.type === HouseholdMemberType.HouseholdMember) {
+
+    if (
+      houseHoldMember.type === HouseholdMemberType.HouseholdMember &&
+      this.appBaseService.appModel.selectedUserPathway ===
+        SelectedPathType.digital &&
+      !houseHoldMember.isMinor &&
+      houseHoldMember.linkedRegistrantId === null
+    ) {
       this.essfileDashboardService
         .getPossibleProfileMatches(
           houseHoldMember.firstName,
@@ -79,21 +86,10 @@ export class HouseholdMemberComponent implements OnInit {
           houseHoldMember.dateOfBirth
         )
         .subscribe({
-          next: (value: LinkRegistrantProfileModel[]) => {
-            this.matchedProfileCount = value.length;
-            this.matchedProfiles = value;
-            if (value.length > 1) {
-              this.linkedFlag = true;
-            } else {
-              this.linkedFlag = false;
-            }
-            if (value.length === 1) {
-              this.selectedHouseholdMember = value[0];
-            }
-            setTimeout(() => {
-              this.linkedProfileDisplay(houseHoldMember);
-              this.isLoading = !this.isLoading;
-            }, 500);
+          next: (value: RegistrantProfileSearchResult[]) => {
+            this.essfileDashboardService.matchedProfiles = value;
+            this.essfileDashboardService.maphouseholdMemberDisplayButton();
+            this.isLoading = !this.isLoading;
           },
           error: (error) => {
             this.isLoading = !this.isLoading;
@@ -102,11 +98,7 @@ export class HouseholdMemberComponent implements OnInit {
           }
         });
     } else {
-      this.linkedFlag = false;
-      this.selectedHouseholdMember = undefined;
-      this.displayLinks = null;
-      this.matchedProfileCount = 0;
-      this.matchedProfiles = undefined;
+      this.essfileDashboardService.maphouseholdMemberDisplayButton();
       this.isLoading = !this.isLoading;
     }
   }
@@ -160,39 +152,13 @@ export class HouseholdMemberComponent implements OnInit {
   }
 
   linkToProfile(memberDetails: EvacuationFileHouseholdMember) {
-    if (this.matchedProfileCount === 1) {
+    if (this.essfileDashboardService.matchedProfiles.length === 1) {
       this.evacueeSessionService.fileLinkFlag = 'Y';
       this.singleMatchedRegistrantLink(memberDetails);
-    } else if (this.matchedProfileCount > 1) {
+    } else if (this.essfileDashboardService.matchedProfiles.length > 1) {
       this.multipleMatchedRegistrantLink(
         this.createMultipleRegistrantModel(memberDetails)
       );
-    }
-  }
-
-  linkedProfileDisplay(file: EvacuationFileHouseholdMember): void {
-    if (
-      !this.evacueeSessionService?.isPaperBased &&
-      file?.linkedRegistrantId === null &&
-      !file?.isMinor
-    ) {
-      if (this.matchedProfileCount === 0) {
-        this.displayLinks = 'create-profile';
-      } else if (
-        this.selectedHouseholdMember?.hasSecurityQuestions &&
-        this.matchedProfileCount === 1
-      ) {
-        this.displayLinks = 'link-profile';
-      } else if (this.linkedFlag) {
-        this.displayLinks = 'link-profile';
-      } else if (
-        !this.selectedHouseholdMember?.hasSecurityQuestions &&
-        this.matchedProfileCount === 1
-      ) {
-        this.displayLinks = 'no-security-questions';
-      }
-    } else {
-      this.displayLinks = null;
     }
   }
 
@@ -204,7 +170,9 @@ export class HouseholdMemberComponent implements OnInit {
       lastName: memberDetails.lastName,
       dateOfBirth: memberDetails.dateOfBirth,
       profiles: this.sortByVerificationFactor(
-        this.sortByAuthenticationFactor(this.matchedProfiles)
+        this.sortByAuthenticationFactor(
+          this.essfileDashboardService.matchedProfiles
+        )
       ),
       householdMemberId: memberDetails.id
     };
@@ -217,14 +185,10 @@ export class HouseholdMemberComponent implements OnInit {
    * @returns sorted array
    */
   private sortByAuthenticationFactor(
-    matchedProfiles: LinkRegistrantProfileModel[]
-  ): LinkRegistrantProfileModel[] {
+    matchedProfiles: RegistrantProfileSearchResult[]
+  ): RegistrantProfileSearchResult[] {
     return matchedProfiles.sort((a, b) =>
-      a.authenticatedUser === b.authenticatedUser
-        ? 0
-        : a.authenticatedUser
-        ? -1
-        : 1
+      a.isAuthenticated === b.isAuthenticated ? 0 : a.isAuthenticated ? -1 : 1
     );
   }
 
@@ -235,11 +199,9 @@ export class HouseholdMemberComponent implements OnInit {
    * @returns sorted array
    */
   private sortByVerificationFactor(
-    matchedProfiles: LinkRegistrantProfileModel[]
-  ): LinkRegistrantProfileModel[] {
-    return matchedProfiles.sort((a, b) =>
-      a.verifiedUser === b.verifiedUser ? 0 : a.verifiedUser ? -1 : 1
-    );
+    matchedProfiles: RegistrantProfileSearchResult[]
+  ): RegistrantProfileSearchResult[] {
+    return matchedProfiles.sort((a, b) => a.status.localeCompare(b.status));
   }
 
   /**
@@ -284,10 +246,11 @@ export class HouseholdMemberComponent implements OnInit {
       fileId: this.essFile.id,
       linkRequest: {
         householdMemberId: memberDetails.id,
-        registantId: this.matchedProfiles[0].id
+        registantId: this.essfileDashboardService.matchedProfiles[0].id
       }
     };
-    this.evacueeSessionService.profileId = this.matchedProfiles[0].id;
+    this.evacueeSessionService.profileId =
+      this.essfileDashboardService.matchedProfiles[0].id;
     this.router.navigate(['responder-access/search/security-questions']);
   }
 
