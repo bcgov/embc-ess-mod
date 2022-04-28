@@ -290,7 +290,6 @@ export class HouseholdMemberComponent implements OnInit {
         registantId: this.matchedProfiles[0].id
       }
     };
-    //this.evacueeSessionService.profileId = this.matchedProfiles[0].id;
     this.setProfileDetails(this.matchedProfiles[0].id);
     this.router.navigate(['responder-access/search/security-questions']);
   }
@@ -332,17 +331,9 @@ export class HouseholdMemberComponent implements OnInit {
   }
 
   private setProfileDetails(id: string) {
-    const profileIdObject: RegistrantProfileModel = {
-      id,
-      primaryAddress: null,
-      mailingAddress: null,
-      personalDetails: null,
-      contactDetails: null,
-      restriction: null
-    };
-
+    let profileModel = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
     this.appBaseService.appModel = {
-      selectedProfile: { selectedEvacueeInContext: profileIdObject }
+      selectedProfile: { selectedEvacueeInContext: profileModel, householdMemberId: id }
     };
     this.computeState.triggerEvent();
   }

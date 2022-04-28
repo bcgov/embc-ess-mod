@@ -54,7 +54,10 @@ export class EvacueeProfileService {
             )
           };
           this.appBaseService.appModel = {
-            selectedProfile: { selectedEvacueeInContext: profileModel }
+            selectedProfile: {
+              selectedEvacueeInContext: profileModel,
+              householdMemberId: undefined
+            }
           };
           this.computeState.triggerEvent();
           return profileModel;
