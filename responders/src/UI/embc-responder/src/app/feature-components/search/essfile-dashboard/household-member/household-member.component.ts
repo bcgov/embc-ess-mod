@@ -144,11 +144,6 @@ export class HouseholdMemberComponent implements OnInit {
 
   createProfile(memberDetails: EvacuationFileHouseholdMember) {
     this.evacueeSessionService.memberRegistration = memberDetails;
-    //this.evacueeSessionService.profileId = null;
-
-    this.appBaseService.appModel = {
-      selectedProfile: { selectedEvacueeInContext: null }
-    };
 
     this.appBaseService.wizardProperties = {
       wizardType: WizardType.MemberRegistration,

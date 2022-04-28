@@ -302,7 +302,9 @@
           class="col-12"
           *ngIf="
             !this.appBaseService?.appModel?.selectedProfile
-              ?.selectedEvacueeInContext?.id
+              ?.selectedEvacueeInContext?.id ||
+            this.appBaseService?.wizardProperties?.wizardType ===
+              wizardType.MemberRegistration
           "
         >
           <div class="confirm-panel">
@@ -358,8 +360,6 @@
           class="col-12"
           *ngIf="
             !evacueeSessionService?.isPaperBased &&
-            !this.appBaseService?.appModel?.selectedProfile
-              ?.selectedEvacueeInContext?.id &&
             (this.appBaseService?.wizardProperties?.wizardType ===
               wizardType.NewRegistration ||
               this.appBaseService?.wizardProperties?.wizardType ===

@@ -145,10 +145,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       ) {
         this.createNewProfile();
       } else if (
-        !this.appBaseService?.appModel?.selectedProfile
-          ?.selectedEvacueeInContext?.id &&
         this.appBaseService?.wizardProperties?.wizardType ===
-          WizardType.MemberRegistration
+        WizardType.MemberRegistration
       ) {
         this.createMemberRegistration();
       } else {
@@ -213,17 +211,15 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.essFileNumber
       )
       .subscribe({
-        next: async (profile) => {
+        next: async (profileId) => {
           if (this.inviteEmailControl.email.value) {
             await this.sendEmailInvite(
               this.inviteEmailControl.email.value,
-              this.appBaseService?.appModel?.selectedProfile
-                ?.selectedEvacueeInContext?.id
+              profileId
             );
           }
           this.disableButton = true;
           this.saveLoader = false;
-          //this.setProfileMetaData(this.evacueeSessionService.profileId); //TODO-Sue
           this.memberProfileDialog();
         },
         error: (error) => {

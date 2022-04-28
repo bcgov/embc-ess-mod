@@ -184,21 +184,6 @@ export class EvacueeProfileService {
 
     const $result = profile$.pipe(
       mergeMap((regResult: RegistrationResult) => {
-        //this.evacueeSessionService.profileId = regResult.id;
-
-        const profileIdObject: RegistrantProfileModel = {
-          id: regResult.id,
-          primaryAddress: null,
-          mailingAddress: null,
-          personalDetails: null,
-          contactDetails: null,
-          restriction: null
-        };
-        this.appBaseService.appModel = {
-          selectedProfile: { selectedEvacueeInContext: profileIdObject }
-        };
-        this.computeState.triggerEvent();
-
         return this.linkMemberProfile({
           fileId: essFileId,
           linkRequest: {
