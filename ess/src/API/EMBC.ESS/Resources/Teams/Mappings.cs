@@ -71,6 +71,8 @@ namespace EMBC.ESS.Resources.Teams
         Volunteer = 174360001,
         ThirdParty = 174360002,
         ConvergentVolunteer = 174360003,
+        FirstNation = 174360004,
+        LocalGovernmentEmployee = 174360005,
     }
 
     public enum ExternalSystemOptionSet
