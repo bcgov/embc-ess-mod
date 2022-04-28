@@ -78,121 +78,124 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
    * Creates support delivery form
    */
   createSupportDeliveryForm(): void {
-    this.supportDeliveryForm = this.formBuilder.group({
-      issuedTo: [
-        this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
-        [
+    this.supportDeliveryForm = this.formBuilder.group(
+      {
+        issuedTo: [
+          this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
+          [
+            this.customValidation
+              .conditionalValidation(
+                () => this.selectedSupportMethod === SupportMethod.Referral,
+                Validators.required
+              )
+              .bind(this.customValidation)
+          ]
+        ],
+        name: [
+          this.stepSupportsService?.supportDelivery?.name ?? '',
+          [
+            this.customValidation
+              .conditionalValidation(
+                () =>
+                  this.selectedSupportMethod === SupportMethod.Referral &&
+                  this.supportDeliveryForm.get('issuedTo').value ===
+                    'Someone else',
+                this.customValidation.whitespaceValidator()
+              )
+              .bind(this.customValidation)
+          ]
+        ],
+        supplier: [
+          this.stepSupportsService?.supportDelivery?.supplier ?? '',
+          [
+            this.customValidation
+              .conditionalValidation(
+                () =>
+                  this.selectedSupportMethod === SupportMethod.Referral &&
+                  this.stepSupportsService.supportTypeToAdd.value !==
+                    'Lodging_Billeting' &&
+                  this.stepSupportsService.supportTypeToAdd.value !==
+                    'Lodging_Group',
+                Validators.required
+              )
+              .bind(this.customValidation)
+          ]
+        ],
+        supplierNote: [
+          this.stepSupportsService?.supportDelivery?.supplierNote ?? ''
+        ],
+        details: this.createSupplierDetailsForm(),
+        recipientFirstName: [
+          this.appBaseService?.appModel?.selectedProfile
+            ?.selectedEvacueeInContext?.personalDetails?.firstName || ''
+        ],
+        recipientLastName: [
+          this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+            ''
+        ],
+        receivingRegistrantId: [
+          this.appBaseService?.appModel?.selectedProfile
+            ?.selectedEvacueeInContext?.id || ''
+        ],
+        notificationPreference: [
+          this.getExistingPreference(),
           this.customValidation
             .conditionalValidation(
-              () => this.selectedSupportMethod === SupportMethod.Referral,
+              () => this.selectedSupportMethod === SupportMethod.ETransfer,
               Validators.required
             )
             .bind(this.customValidation)
-        ]
-      ],
-      name: [
-        this.stepSupportsService?.supportDelivery?.name ?? '',
-        [
-          this.customValidation
-            .conditionalValidation(
+        ],
+        notificationEmail: [
+          this.stepSupportsService?.supportDelivery?.notificationEmail ?? '',
+          [
+            Validators.email,
+            this.customValidation.conditionalValidation(
               () =>
-                this.selectedSupportMethod === SupportMethod.Referral &&
-                this.supportDeliveryForm.get('issuedTo').value ===
-                  'Someone else',
+                this.selectedSupportMethod === SupportMethod.ETransfer &&
+                (this.supportDeliveryForm.get('notificationPreference')
+                  .value === 'Email' ||
+                  this.supportDeliveryForm.get('notificationPreference')
+                    .value === 'Email & Mobile'),
               this.customValidation.whitespaceValidator()
             )
-            .bind(this.customValidation)
-        ]
-      ],
-      supplier: [
-        this.stepSupportsService?.supportDelivery?.supplier ?? '',
-        [
-          this.customValidation
-            .conditionalValidation(
+          ]
+        ],
+        notificationConfirmEmail: [
+          '',
+          [
+            Validators.email,
+            this.customValidation.conditionalValidation(
               () =>
-                this.selectedSupportMethod === SupportMethod.Referral &&
-                this.stepSupportsService.supportTypeToAdd.value !==
-                  'Lodging_Billeting' &&
-                this.stepSupportsService.supportTypeToAdd.value !==
-                  'Lodging_Group',
-              Validators.required
+                this.selectedSupportMethod === SupportMethod.ETransfer &&
+                (this.supportDeliveryForm.get('notificationPreference')
+                  .value === 'Email' ||
+                  this.supportDeliveryForm.get('notificationPreference')
+                    .value === 'Email & Mobile'),
+              this.customValidation.whitespaceValidator()
             )
-            .bind(this.customValidation)
+          ]
+        ],
+        notificationMobile: [
+          this.stepSupportsService?.supportDelivery?.notificationMobile ?? '',
+          [
+            this.customValidation
+              .maskedNumberLengthValidator()
+              .bind(this.customValidation),
+            this.customValidation.conditionalValidation(
+              () =>
+                this.selectedSupportMethod === SupportMethod.ETransfer &&
+                (this.supportDeliveryForm.get('notificationPreference')
+                  .value === 'Mobile' ||
+                  this.supportDeliveryForm.get('notificationPreference')
+                    .value === 'Email & Mobile'),
+              this.customValidation.whitespaceValidator()
+            )
+          ]
         ]
-      ],
-      supplierNote: [
-        this.stepSupportsService?.supportDelivery?.supplierNote ?? ''
-      ],
-      details: this.createSupplierDetailsForm(),
-      recipientFirstName: [
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.personalDetails?.firstName || ''
-      ],
-      recipientLastName: [
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
-          ''
-      ],
-      receivingRegistrantId: [
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.id || ''
-      ],
-      notificationPreference: [
-        this.getExistingPreference(),
-        this.customValidation
-          .conditionalValidation(
-            () => this.selectedSupportMethod === SupportMethod.ETransfer,
-            Validators.required
-          )
-          .bind(this.customValidation)
-      ],
-      notificationEmail: [
-        this.stepSupportsService?.supportDelivery?.notificationEmail ?? '',
-        [
-          Validators.email,
-          this.customValidation.conditionalValidation(
-            () =>
-              this.selectedSupportMethod === SupportMethod.ETransfer &&
-              (this.supportDeliveryForm.get('notificationPreference').value ===
-                'Email' ||
-                this.supportDeliveryForm.get('notificationPreference').value ===
-                  'Email & Mobile'),
-            this.customValidation.whitespaceValidator()
-          )
-        ]
-      ],
-      notificationConfirmEmail: [
-        '',
-        [
-          Validators.email,
-          this.customValidation.conditionalValidation(
-            () =>
-              this.selectedSupportMethod === SupportMethod.ETransfer &&
-              (this.supportDeliveryForm.get('notificationPreference').value ===
-                'Email' ||
-                this.supportDeliveryForm.get('notificationPreference').value ===
-                  'Email & Mobile'),
-            this.customValidation.whitespaceValidator()
-          )
-        ]
-      ],
-      notificationMobile: [
-        this.stepSupportsService?.supportDelivery?.notificationMobile ?? '',
-        [
-          this.customValidation
-            .maskedNumberLengthValidator()
-            .bind(this.customValidation),
-          this.customValidation.conditionalValidation(
-            () =>
-              this.selectedSupportMethod === SupportMethod.ETransfer &&
-              (this.supportDeliveryForm.get('notificationPreference').value ===
-                'Mobile' ||
-                this.supportDeliveryForm.get('notificationPreference').value ===
-                  'Email & Mobile'),
-            this.customValidation.whitespaceValidator()
-          )
-        ]
-      ]
-    });
+      },
+      { validators: this.customValidation.confirmNotificationEmailValidator() }
+    );
   }
 
   getExistingPreference() {
