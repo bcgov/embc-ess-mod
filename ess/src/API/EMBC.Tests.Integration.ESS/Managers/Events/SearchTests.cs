@@ -69,9 +69,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacuationFilesByBCServicesCardId()
         {
-            var statuses = new[] { EvacuationFileStatus.Active, EvacuationFileStatus.Pending };
-
-            var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = TestData.ContactUserId, IncludeFilesInStatuses = statuses })).Items;
+            var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = TestData.ContactUserId })).Items;
 
             files.ShouldNotBeEmpty();
         }

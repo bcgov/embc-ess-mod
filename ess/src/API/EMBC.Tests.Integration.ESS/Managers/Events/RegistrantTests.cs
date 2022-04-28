@@ -236,7 +236,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public async Task CanProcessRegistrantInvite()
         {
             var newRegistrant = CreateNewTestRegistrantProfile();
-            var userId = newRegistrant.UserId;
+            var userId = TestHelper.GenerateNewUniqueId(TestData.TestPrefix);
 
             var registrantId = await manager.Handle(new SaveRegistrantCommand { Profile = newRegistrant });
 
@@ -262,7 +262,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var dp = Services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();
             var registrant = CreateNewTestRegistrantProfile();
-            var userId = registrant.UserId;
+            var userId = TestHelper.GenerateNewUniqueId(TestData.TestPrefix);
+
             var registrantId = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             var firstInviteId = dp.Protect(await manager.Handle(new InviteRegistrantCommand
