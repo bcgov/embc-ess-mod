@@ -1,4 +1,4 @@
-import { Code } from '../api/models';
+import { Code, HouseholdMemberType } from '../api/models';
 import { EssTaskModel } from './ess-task.model';
 import { EvacuationFileModel } from './evacuation-file.model';
 import { RegistrantProfileModel } from './registrant-profile.model';
@@ -13,7 +13,6 @@ export interface AppBaseModel {
 
 export interface EvacueeSearch {
   idQuestion?: string;
-  householdMemberDisplayButton: HouseholdMemberButtons;
 }
 
 export type DigitalFlow = EvacueeSearch;

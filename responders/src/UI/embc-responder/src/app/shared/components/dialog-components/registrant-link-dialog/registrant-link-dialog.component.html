@@ -41,14 +41,16 @@
         <p class="p-margin">BC Services Card Online Authenticated:</p>
       </div>
       <div class="col-md-5 bold">
-        <p class="p-margin">{{ profile?.authenticatedUser ? 'Yes' : 'No' }}</p>
+        <p class="p-margin">
+          {{ profile?.status === 'Verified' ? 'Yes' : 'No' }}
+        </p>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6"><p class="p-margin">Verification Status:</p></div>
       <div class="col-md-6 bold">
         <p class="p-margin">
-          {{ profile?.verifiedUser ? 'Verified' : 'Unverified' }}
+          {{ profile?.isAuthenticated ? 'Verified' : 'Unverified' }}
         </p>
       </div>
     </div>
@@ -69,7 +71,7 @@
       </div>
     </div>
 
-    <div *ngIf="profile?.hasSecurityQuestions" class="row">
+    <div *ngIf="profile?.isProfileCompleted" class="row">
       <div class="col-md-6">
         <button
           class="button-p link-button"
@@ -81,7 +83,7 @@
       </div>
     </div>
 
-    <div *ngIf="!profile?.hasSecurityQuestions" class="row">
+    <div *ngIf="!profile?.isProfileCompleted" class="row">
       <div class="col-md-6">
         <p class="cannot-link">
           Cannot link to a profile without security questions

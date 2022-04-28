@@ -86,19 +86,34 @@
           </table>
         </div>
 
-        <div *ngIf="displayLinks === 'view-profile'" class="row button-div">
+        <div
+          *ngIf="
+            essfileDashboardService?.displayMemberButton === 'view-profile'
+          "
+          class="row button-div"
+        >
           <button class="button-p proceed-button" (click)="viewProfile(file)">
             View Profile
           </button>
         </div>
 
-        <div *ngIf="displayLinks === 'create-profile'" class="row button-div">
+        <div
+          *ngIf="
+            essfileDashboardService?.displayMemberButton === 'create-profile'
+          "
+          class="row button-div"
+        >
           <button class="button-p proceed-button" (click)="createProfile(file)">
             Create Profile
           </button>
         </div>
 
-        <div *ngIf="displayLinks === 'link-profile'" class="row button-div">
+        <div
+          *ngIf="
+            essfileDashboardService?.displayMemberButton === 'link-profile'
+          "
+          class="row button-div"
+        >
           <button class="button-p proceed-button" (click)="linkToProfile(file)">
             Link to this Profile
           </button>
@@ -106,7 +121,10 @@
             >Not a Match? Create Profile</a
           >
         </div>
-        <div *ngIf="displayLinks === 'cannot-link'" class="row button-div">
+        <div
+          *ngIf="essfileDashboardService?.displayMemberButton === 'cannot-link'"
+          class="row button-div"
+        >
           <p class="cannot-link">
             Cannot link to a profile without security questions.
           </p>

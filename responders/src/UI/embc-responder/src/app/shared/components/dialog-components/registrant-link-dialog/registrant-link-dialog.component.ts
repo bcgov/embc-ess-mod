@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RegistrantProfile } from 'src/app/core/api/models';
+import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkRegistrant.model';
 
@@ -21,7 +21,7 @@ export class RegistrantLinkDialogComponent implements OnInit {
     this.outputEvent.emit('close');
   }
 
-  linkProfile(selectedProfile: RegistrantProfile) {
+  linkProfile(selectedProfile: RegistrantProfileSearchResult) {
     this.outputEvent.emit(selectedProfile.id);
   }
 }
