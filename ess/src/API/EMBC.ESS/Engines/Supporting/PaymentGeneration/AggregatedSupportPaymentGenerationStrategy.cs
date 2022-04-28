@@ -14,9 +14,10 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
             await Task.CompletedTask;
             var payments = new List<Payment>();
             // aggregate per file
-            foreach (var supportsInFile in request.Supports.GroupBy(s => s.FileId))
+            foreach (var supportsInFile in request.Supports.GroupBy(s => (s.FileId, s.PayeeId)))
             {
-                var fileId = supportsInFile.Key;
+                var fileId = supportsInFile.Key.FileId;
+                var payeeId = supportsInFile.Key.PayeeId;
                 // aggregate per payment details
                 foreach (var paymentGroup in supportsInFile.GroupBy(s => (s.Delivery?.RecipientFirstName, s.Delivery?.RecipientLastName, s.Delivery?.NotificationEmail, s.Delivery?.NotificationPhone)))
                 {
@@ -47,8 +48,9 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
                             RecipientFirstName = paymentGroup.Key.RecipientFirstName,
                             RecipientLastName = paymentGroup.Key.RecipientLastName,
                             SecurityAnswer = fileId,
-                            SecurityQuestion = "Your ESS evacuation file number",
-                            Status = PaymentStatus.Pending
+                            SecurityQuestion = "What is your ESS File Number?",
+                            Status = PaymentStatus.Pending,
+                            PayeeId = payeeId
                         });
                         amount = 0;
                         linkedSupportIds.Clear();

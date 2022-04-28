@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Resources.Payments;
+using EMBC.Tests.Integration.ESS.Managers.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -15,6 +17,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public PaymentsTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             repository = Services.GetRequiredService<IPaymentRepository>();
+        }
+
+        private async Task<string> CreateNewRegistrant()
+        {
+            var registrant = TestHelper.CreateRegistrantProfile(TestData.TestPrefix);
+            return await TestHelper.SaveRegistrant(Services.GetRequiredService<EventsManager>(), registrant);
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
@@ -55,6 +63,11 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SendPaymentToCas_InteracPayment_Sent()
         {
+            var registrantId = await CreateNewRegistrant();
+            //var registrantId = TestData.ContactId;
+
+            var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
+
             var payments = new[]
             {
                 new InteracSupportPayment
@@ -67,7 +80,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         NotificationPhone = "1234567890",
                         SecurityAnswer = "answer",
                         SecurityQuestion = "question",
-                        LinkedSupportIds = TestData.SupportIds
+                        LinkedSupportIds = TestData.SupportIds,
+                        PayeeId = registrantId
                     }
             };
 
@@ -79,7 +93,15 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var results = (SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest
             {
                 CasBatchName = TestData.TestPrefix,
-                Items = payments.Select(p => new CasPayment { PaymentId = p.Id })
+                Items = payments.Select(p => new CasPayment
+                {
+                    PaymentId = p.Id,
+                    PayeeDetails = new CasPayeeDetails
+                    {
+                        SupplierNumber = payeeDetails.CasSupplierNumber,
+                        SupplierSiteCode = payeeDetails.CasSupplierSiteNumber
+                    }
+                })
             });
 
             var sentPayments = results.SentItems.ToArray();
@@ -93,6 +115,27 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 var payment = ((SearchPaymentResponse)await repository.Query(new SearchPaymentRequest { ById = paymentId })).Items.ShouldHaveSingleItem();
                 payment.Status.ShouldBe(PaymentStatus.Sent);
             }
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task GetPayeeDetails_NewEvacuee_CasSupplierCreated()
+        {
+            var registrantId = await CreateNewRegistrant();
+            var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
+            payeeDetails.CasSupplierNumber.ShouldNotBeNullOrEmpty();
+            payeeDetails.CasSupplierSiteNumber.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task GetPayeeDetails_ExistingEvacuee_CasSupplierSaved()
+        {
+            var registrantId = await CreateNewRegistrant();
+            //var registrantId = TestData.ContactId;
+
+            //query supplier
+            var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
+            payeeDetails.CasSupplierNumber.ShouldNotBeNullOrEmpty();
+            payeeDetails.CasSupplierSiteNumber.ShouldNotBeNullOrEmpty();
         }
     }
 }

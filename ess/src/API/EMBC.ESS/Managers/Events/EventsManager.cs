@@ -20,7 +20,6 @@ using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.PdfGenerator;
-using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Notifications;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
@@ -769,6 +768,7 @@ namespace EMBC.ESS.Managers.Events
                             Amount = s.Amount,
                             FileId = s.FileId,
                             SupportId = s.SupportId,
+                            PayeeId = s.PayeeId,
                             Delivery = s.Delivery is PayableSupportInteracDelivery d
                                 ? new PaymentDelivery
                                 {
@@ -806,26 +806,50 @@ namespace EMBC.ESS.Managers.Events
 
                 if (foundPayments)
                 {
-                    var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
                     logger.LogInformation("Found {0} pending payments", pendingPayments.Length);
+                    var casPayments = new List<CasPayment>();
+
                     foreach (var payment in pendingPayments)
                     {
-                        var result = (SendPaymentToCasResponse)await paymentRepository.Manage(new SendPaymentToCasRequest
+                        // get payee cas details
+                        var payeeDetails = (GetCasPayeeDetailsResponse)await paymentRepository.Query(new GetCasPayeeDetailsRequest
                         {
-                            CasBatchName = casBatchName,
-                            Items = new[] { new CasPayment { PaymentId = payment.Id } }
+                            PayeeId = payment.PayeeId
                         });
-                        if (result.SentItems.Any())
+                        if (string.IsNullOrEmpty(payeeDetails.CasSupplierNumber))
                         {
-                            logger.LogInformation($"Sent {result.SentItems.Count()} to CAS");
+                            logger.LogError($"Skipping payment {payment.Id}: Payee {payment.PayeeId} doesn't have CAS supplier details");
+                            continue;
                         }
-                        if (result.FailedItems.Any())
+                        var casPayment = new CasPayment
                         {
-                            logger.LogError($"Failed to send {result.SentItems.Count()} to CAS");
-                            foreach (var failedItem in result.FailedItems)
+                            PaymentId = payment.Id,
+                            PayeeDetails = new CasPayeeDetails
                             {
-                                logger.LogError("Failed to send payment {0} to CAS: {1}", failedItem.Id, failedItem.Reason);
+                                SupplierNumber = payeeDetails.CasSupplierNumber,
+                                SupplierSiteCode = payeeDetails.CasSupplierSiteNumber
                             }
+                        };
+                        casPayments.Add(casPayment);
+                    }
+
+                    var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
+                    var result = (SendPaymentToCasResponse)await paymentRepository.Manage(new SendPaymentToCasRequest
+                    {
+                        CasBatchName = casBatchName,
+                        Items = casPayments
+                    });
+
+                    if (result.SentItems.Any())
+                    {
+                        logger.LogInformation($"Sent {result.SentItems.Count()} to CAS");
+                    }
+                    if (result.FailedItems.Any())
+                    {
+                        logger.LogError($"Failed to send {result.SentItems.Count()} to CAS");
+                        foreach (var failedItem in result.FailedItems)
+                        {
+                            logger.LogError("Failed to send payment {0} to CAS: {1}", failedItem.Id, failedItem.Reason);
                         }
                     }
                 }

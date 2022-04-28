@@ -8,9 +8,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
     public static class TestHelper
     {
-        public static EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant)
+        public static string GenerateNewUniqueId(string prefix) => prefix + Guid.NewGuid().ToString().Substring(0, 4);
+
+        public static EvacuationFile CreateNewTestEvacuationFile(string prefix, RegistrantProfile registrant)
         {
-            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
+            var uniqueSignature = GenerateNewUniqueId(prefix);
             var file = new EvacuationFile()
             {
                 PrimaryRegistrantId = registrant.Id,
@@ -91,8 +93,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             return file;
         }
 
-        public static RegistrantProfile CreateRegistrantProfile(string uniqueIdentifier)
+        public static RegistrantProfile CreateRegistrantProfile(string prefix)
         {
+            var uniqueIdentifier = GenerateNewUniqueId(prefix);
             var address = new Address
             {
                 AddressLine1 = $"{uniqueIdentifier} st.",

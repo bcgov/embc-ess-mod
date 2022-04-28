@@ -56,6 +56,7 @@ namespace EMBC.ESS.Engines.Search
     {
         public string FileId { get; set; }
         public string SupportId { get; set; }
+        public string PayeeId { get; set; }
         public decimal Amount { get; set; }
         public PayableSupportDelivery Delivery { get; set; }
     }
