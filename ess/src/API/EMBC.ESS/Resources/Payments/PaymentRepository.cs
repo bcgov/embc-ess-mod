@@ -37,6 +37,7 @@ namespace EMBC.ESS.Resources.Payments
         {
             SearchPaymentRequest r => await Handle(r),
             GetCasPayeeDetailsRequest r => await Handle(r),
+            GetCasPaymentStatusRequest r => await Handle(r),
 
             _ => throw new NotSupportedException($"type {request.GetType().Name}")
         };
@@ -249,6 +250,27 @@ namespace EMBC.ESS.Resources.Payments
             ctx.DetachAll();
 
             return response;
+        }
+
+        private async Task<GetCasPaymentStatusResponse> Handle(GetCasPaymentStatusRequest request)
+        {
+            var response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
+            {
+                PayGroup = "EMB INC",
+                PaymentStatusDateFrom = request.ChangedFrom
+            });
+
+            if (response == null) throw new InvalidOperationException("Failed to retrieve CAS payment statuses");
+
+            return new GetCasPaymentStatusResponse
+            {
+                Payments = response.Items.Select(p => new CasPaymentStatus
+                {
+                    PaymentId = p.Invoicenumber,
+                    Status = p.Paymentstatus,
+                    StatusChangeDate = p.Paymentstatusdate ?? request.ChangedFrom
+                })
+            };
         }
     }
 }

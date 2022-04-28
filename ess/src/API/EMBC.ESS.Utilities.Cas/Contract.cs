@@ -12,7 +12,9 @@ namespace EMBC.ESS.Utilities.Cas
 
         Task<InvoiceResponse> CreateInvoiceAsync(Invoice invoice);
 
-        Task<GetSupplierResponse?> GetSupplierAsync(GetSupplierRequest request);
+        Task<GetInvoiceResponse?> GetInvoiceAsync(GetInvoiceRequest getRequest);
+
+        Task<GetSupplierResponse?> GetSupplierAsync(GetSupplierRequest getRequest);
 
         Task<CreateSupplierResponse> CreateSupplierAsync(CreateSupplierRequest supplier);
     }
@@ -149,6 +151,53 @@ namespace EMBC.ESS.Utilities.Cas
         public string CASReturnedMessages { get; set; } = null!;
 
         public bool IsSuccess() => "SUCCEEDED".Equals(CASReturnedMessages, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public class GetInvoiceRequest
+    {
+        public string PayGroup { get; set; } = null!;
+        public DateTime? InvoiceCreationDateFrom { get; set; }
+        public DateTime? InvoiceCreationDateTo { get; set; }
+        public DateTime? PaymentStatusDateFrom { get; set; }
+        public DateTime? PaymentStatusDateTo { get; set; }
+        public string? InvoiceNumber { get; set; }
+        public string? SupplierNumber { get; set; }
+        public string? SupplierSiteCode { get; set; }
+        public string? PaymentStatus { get; set; }
+        public string? PaymentNumber { get; set; }
+    }
+
+    public class GetInvoiceResponse
+    {
+        [JsonPropertyName("items")]
+        public InvoiceItem[] Items { get; set; } = Array.Empty<InvoiceItem>();
+
+        public PageReference? First { get; set; }
+        public PageReference? Next { get; set; }
+    }
+
+    public class PageReference
+    {
+        [JsonPropertyName("$ref")]
+        public string Ref { get; set; } = null!;
+    }
+
+    public class InvoiceItem
+    {
+        public string Invoicenumber { get; set; } = null!;
+        public string Suppliernumber { get; set; } = null!;
+        public string Sitecode { get; set; } = null!;
+        public DateTime Invoicecreationdate { get; set; }
+        public int? Paymentnumber { get; set; }
+        public string? Paygroup { get; set; }
+        public DateTime? Paymentdate { get; set; }
+        public decimal? Paymentamount { get; set; }
+        public string? Paymentstatus { get; set; }
+        public DateTime? Paymentstatusdate { get; set; }
+        public DateTime? Cleareddate { get; set; }
+        public DateTime? voiddate { get; set; }
+        public string? Voidreason { get; set; }
+        public DateTime Systemdate { get; set; }
     }
 
     public class CasDateJsonConverter : JsonConverter<DateTime>

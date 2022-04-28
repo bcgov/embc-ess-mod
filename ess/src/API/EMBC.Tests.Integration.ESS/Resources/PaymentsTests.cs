@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Resources.Payments;
@@ -136,6 +137,20 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
             payeeDetails.CasSupplierNumber.ShouldNotBeNullOrEmpty();
             payeeDetails.CasSupplierSiteNumber.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
+        {
+            //var registrantId = await CreateNewRegistrant();
+            //var registrantId = TestData.ContactId;
+
+            //query payments
+            var startDate = DateTime.UtcNow;
+            var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate });
+
+            response.Payments.ShouldNotBeEmpty();
+            response.Payments.ShouldAllBe(p => p.StatusChangeDate >= startDate);
         }
     }
 }

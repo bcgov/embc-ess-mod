@@ -109,4 +109,21 @@ namespace EMBC.ESS.Resources.Payments
         public string CasSupplierNumber { get; set; }
         public string CasSupplierSiteNumber { get; set; }
     }
+
+    public class GetCasPaymentStatusRequest : QueryPaymentRequest
+    {
+        public DateTime ChangedFrom { get; set; }
+    }
+
+    public class GetCasPaymentStatusResponse : QueryPaymentResponse
+    {
+        public IEnumerable<CasPaymentStatus> Payments { get; set; } = Array.Empty<CasPaymentStatus>();
+    }
+
+    public class CasPaymentStatus
+    {
+        public string PaymentId { get; set; }
+        public string Status { get; set; }
+        public DateTime StatusChangeDate { get; set; }
+    }
 }
