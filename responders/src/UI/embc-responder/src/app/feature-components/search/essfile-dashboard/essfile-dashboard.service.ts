@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { map, mergeMap, Observable, toArray } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   EvacuationFileHouseholdMember,
-  GetSecurityQuestionsResponse,
   HouseholdMemberType,
-  RegistrantProfile,
   RegistrantProfileSearchResult
 } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
@@ -14,9 +12,7 @@ import {
 } from 'src/app/core/models/appBase.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { ProfileSecurityQuestionsService } from '../profile-security-questions/profile-security-questions.service';
 
 @Injectable({
   providedIn: 'root'
