@@ -70,6 +70,7 @@ export class HouseholdMemberComponent implements OnInit {
   ): void {
     this.currentlyOpenedItemIndex = itemIndex;
     this.essfileDashboardService.matchedProfiles = undefined;
+    this.essfileDashboardService.displayMemberButton = undefined;
     this.essfileDashboardService.selectedMember = houseHoldMember;
 
     this.isLoading = !this.isLoading;
@@ -203,9 +204,7 @@ export class HouseholdMemberComponent implements OnInit {
   private sortByVerificationFactor(
     matchedProfiles: RegistrantProfileSearchResult[]
   ): RegistrantProfileSearchResult[] {
-    return matchedProfiles.sort((a, b) =>
-      a.status === b.status ? 0 : a.status ? -1 : 1
-    );
+    return matchedProfiles.sort((a, b) => a.status.localeCompare(b.status));
   }
 
   /**

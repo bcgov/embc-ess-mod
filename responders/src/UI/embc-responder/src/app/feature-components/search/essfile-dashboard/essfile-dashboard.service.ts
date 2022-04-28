@@ -13,7 +13,6 @@ import {
   SelectedPathType
 } from 'src/app/core/models/appBase.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
-import { LinkRegistrantProfileModel } from 'src/app/core/models/link-registrant-profile.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -32,9 +31,7 @@ export class EssfileDashboardService {
   constructor(
     private cacheService: CacheService,
     private registrationService: RegistrationsService,
-    private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
-    private appBaseService: AppBaseService,
-    private evacueeSessionService: EvacueeSessionService
+    private appBaseService: AppBaseService
   ) {}
 
   get essFile(): EvacuationFileModel {
@@ -114,10 +111,6 @@ export class EssfileDashboardService {
         !this.matchedProfiles[0]?.isProfileCompleted
       ) {
         this.displayMemberButton = HouseholdMemberButtons.cannotLinkProfile;
-
-        // Default option
-      } else {
-        this.displayMemberButton = undefined;
       }
     } else {
       if (
