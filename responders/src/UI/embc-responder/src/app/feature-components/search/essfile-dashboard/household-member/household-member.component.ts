@@ -19,10 +19,7 @@ import { MultipleLinkRegistrantModel } from 'src/app/core/models/multipleLinkReg
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import {
-  DigitalFlow,
-  SelectedPathType
-} from 'src/app/core/models/appBase.model';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
 @Component({
   selector: 'app-household-member',
