@@ -42,7 +42,7 @@
       </div>
       <div class="col-md-5 bold">
         <p class="p-margin">
-          {{ profile?.status === 'Verified' ? 'Yes' : 'No' }}
+          {{ profile?.isAuthenticated ? 'Yes' : 'No' }}
         </p>
       </div>
     </div>
@@ -50,7 +50,7 @@
       <div class="col-md-6"><p class="p-margin">Verification Status:</p></div>
       <div class="col-md-6 bold">
         <p class="p-margin">
-          {{ profile?.isAuthenticated ? 'Verified' : 'Unverified' }}
+          {{ profile?.status === 'Verified' ? 'Verified' : 'Unverified' }}
         </p>
       </div>
     </div>
