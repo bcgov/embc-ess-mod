@@ -326,6 +326,21 @@ namespace EMBC.Tests.Integration.ESS.Managers
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task Query_Suppliers_ReturnsTeamInfo()
+        {
+            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+
+            if (testSupplier.Team == null || testSupplier.Team.Id == null || testSupplier.Team.Name == null)
+            {
+                await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });
+                testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+            }
+
+            testSupplier.Team.Id.ShouldBe(TestData.TeamId);
+            testSupplier.Team.Name.ShouldBe(TestData.TeamName);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task QueryInActiveById_Suppliers_ReturnsNothing()
         {
             var searchResults = await manager.Handle(new SuppliersQuery { SupplierId = TestData.InactiveSupplierId });

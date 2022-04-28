@@ -36,6 +36,7 @@ namespace EMBC.Tests.Integration.ESS
 
         public string TestPrefix => testPrefix;
         public string TeamId => team.era_essteamid.GetValueOrDefault().ToString();
+        public string TeamName => team.era_name;
         public string OtherTeamId => otherTeam.era_essteamid.GetValueOrDefault().ToString();
         public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.First()._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string OtherCommunityId => jurisdictions.Last().era_jurisdictionid.GetValueOrDefault().ToString();
