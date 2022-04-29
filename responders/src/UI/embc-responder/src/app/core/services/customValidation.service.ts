@@ -192,6 +192,31 @@ export class CustomValidationService {
   }
 
   /**
+   * Checks if the notification email and confirm email fields match
+   */
+  confirmNotificationEmailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const email = control.get('notificationEmail').value;
+        const confirmEmail = control.get('notificationConfirmEmail').value;
+
+        if (
+          email !== undefined &&
+          confirmEmail !== undefined &&
+          email !== null &&
+          confirmEmail !== null &&
+          email !== '' &&
+          confirmEmail !== ''
+        ) {
+          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+            return { emailMatch: true };
+          }
+        }
+      }
+    };
+  }
+
+  /**
    * Checks if the email and confirm email field matches
    */
   confirmEmailValidator(): ValidatorFn {
