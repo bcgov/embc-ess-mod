@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Cas;
@@ -16,6 +17,8 @@ namespace EMBC.ESS.Resources.Payments
         private readonly IEssContextFactory essContextFactory;
         private readonly IWebProxy casWebProxy;
 
+        private static CancellationToken CreateCancellationToken() => new CancellationTokenSource().Token;
+
         public PaymentRepository(IMapper mapper, IEssContextFactory essContextFactory, IWebProxy casWebProxy)
         {
             this.mapper = mapper;
@@ -28,6 +31,7 @@ namespace EMBC.ESS.Resources.Payments
             {
                 SavePaymentRequest r => await Handle(r),
                 SendPaymentToCasRequest r => await Handle(r),
+                UpdateCasPaymentStatusRequest r => await Handle(r),
 
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
@@ -37,12 +41,14 @@ namespace EMBC.ESS.Resources.Payments
         {
             SearchPaymentRequest r => await Handle(r),
             GetCasPayeeDetailsRequest r => await Handle(r),
+            GetCasPaymentStatusRequest r => await Handle(r),
 
             _ => throw new NotSupportedException($"type {request.GetType().Name}")
         };
 
         private async Task<SavePaymentResponse> Handle(SavePaymentRequest request)
         {
+            var ct = CreateCancellationToken();
             var ctx = essContextFactory.Create();
 
             var tx = mapper.Map<era_etransfertransaction>(request.Payment);
@@ -51,7 +57,7 @@ namespace EMBC.ESS.Resources.Payments
             {
                 tx.era_etransfertransactionid = Guid.NewGuid();
                 ctx.AddToera_etransfertransactions(tx);
-                await ctx.SaveChangesAsync();
+                await ctx.SaveChangesAsync(ct);
             }
             else
             {
@@ -84,7 +90,7 @@ namespace EMBC.ESS.Resources.Payments
 
             ctx.DetachAll();
 
-            var id = ctx.era_etransfertransactions.Where(t => t.era_etransfertransactionid == tx.era_etransfertransactionid).Single().era_name;
+            var id = (await ctx.era_etransfertransactions.ByKey(tx.era_etransfertransactionid).GetValueAsync(ct)).era_name;
 
             return new SavePaymentResponse { Id = id };
         }
@@ -94,7 +100,8 @@ namespace EMBC.ESS.Resources.Payments
             if (string.IsNullOrEmpty(request.ById) && !request.ByStatus.HasValue)
                 throw new ArgumentException("Payments query must have at least one criteria", nameof(request));
 
-            var ctx = essContextFactory.Create();
+            var ct = CreateCancellationToken();
+            var ctx = essContextFactory.CreateReadOnly();
 
             IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
             if (!string.IsNullOrEmpty(request.ById)) query = query.Where(tx => tx.era_name == request.ById);
@@ -102,11 +109,9 @@ namespace EMBC.ESS.Resources.Payments
             query = query.OrderBy(q => q.createdon);
             if (request.LimitNumberOfItems.HasValue) query = query.Take(request.LimitNumberOfItems.Value);
 
-            var txs = (await ((DataServiceQuery<era_etransfertransaction>)query).GetAllPagesAsync()).ToArray();
-            foreach (var tx in txs)
-            {
-                await ctx.LoadPropertyAsync(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo));
-            }
+            var txs = (await ((DataServiceQuery<era_etransfertransaction>)query).GetAllPagesAsync(ct)).ToArray();
+            txs.AsParallel().ForAll(tx => ctx.AttachTo(nameof(EssContext.era_etransfertransactions), tx));
+            await Parallel.ForEachAsync(txs, ct, (tx, ct) => new ValueTask(ctx.LoadPropertyAsync(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), ct)));
 
             ctx.DetachAll();
 
@@ -115,6 +120,7 @@ namespace EMBC.ESS.Resources.Payments
 
         private async Task<SendPaymentToCasResponse> Handle(SendPaymentToCasRequest request)
         {
+            var ct = CreateCancellationToken();
             var ctx = essContextFactory.Create();
 
             List<string> processedPayments = new List<string>();
@@ -123,14 +129,14 @@ namespace EMBC.ESS.Resources.Payments
             foreach (var casPayment in request.Items)
             {
                 var paymentId = casPayment.PaymentId;
-                var payment = ctx.era_etransfertransactions.Where(tx => tx.era_name == paymentId).SingleOrDefault();
+                var payment = (await ((DataServiceQuery<era_etransfertransaction>)ctx.era_etransfertransactions.Where(tx => tx.era_name == paymentId)).ExecuteAsync(ct)).SingleOrDefault();
                 if (payment == null) throw new Exception($"Payment {paymentId} not found");
 
                 try
                 {
-                    if (payment.statuscode != (int)PaymentStatus.Pending) throw new Exception($"Payment is in status {(PaymentStatus)payment.statuscode} - cannot send to CAS");
+                    if (payment.statuscode != (int)PaymentStatus.Pending) throw new InvalidOperationException($"Payment is in status {(PaymentStatus)payment.statuscode} - cannot send to CAS");
 
-                    // update etransfer dates to today
+                    // update CAS related fields
                     var now = DateTime.UtcNow;
                     payment.era_gldate = now;
                     payment.era_invoicedate = now;
@@ -141,37 +147,37 @@ namespace EMBC.ESS.Resources.Payments
                     var invoice = mapper.Map<Invoice>(payment);
                     //TODO: get from Dynamics sys config values
                     invoice.PayGroup = "EMB INC";
+                    var distributedAccount = "105.15006.10120.5185.1500000.000000.0000";
                     invoice.InvoiceBatchName = request.CasBatchName;
-
                     var lineItemNumber = 1;
                     foreach (var lineItem in invoice.InvoiceLineDetails)
                     {
                         lineItem.InvoiceLineNumber = lineItemNumber++;
-                        lineItem.DefaultDistributionAccount = "105.15006.10120.5185.1500000.000000.0000";
+                        lineItem.DefaultDistributionAccount = distributedAccount;
                     }
 
                     var response = await casWebProxy.CreateInvoiceAsync(invoice);
                     if (response.IsSuccess())
                     {
-                        payment.statuscode = (int)PaymentStatus.Sent;
+                        UpdatePaymentStatus(ctx, payment, PaymentStatus.Sent);
                         payment.era_processingresponse = string.Empty;
                         processedPayments.Add(paymentId);
                     }
                     else
                     {
-                        payment.statuscode = (int)PaymentStatus.Failed;
+                        UpdatePaymentStatus(ctx, payment, PaymentStatus.Failed);
                         payment.era_processingresponse = response.CASReturnedMessages;
                         failedPayments.Add((paymentId, response.CASReturnedMessages));
                     }
                 }
                 catch (Exception e)
                 {
-                    payment.statuscode = (int)PaymentStatus.Failed;
+                    UpdatePaymentStatus(ctx, payment, PaymentStatus.Failed);
                     payment.era_processingresponse = e.Message;
                     failedPayments.Add((paymentId, e.Message));
                 }
                 ctx.UpdateObject(payment);
-                await ctx.SaveChangesAsync();
+                await ctx.SaveChangesAsync(ct);
             }
 
             return new SendPaymentToCasResponse
@@ -183,15 +189,21 @@ namespace EMBC.ESS.Resources.Payments
 
         private static string CasSupplierNameFormatter(contact payee) => $"{payee.lastname.ToUpperInvariant()}, {payee.firstname.ToUpperInvariant()}";
 
+        private static string CasPostalCodeFormatter(string postalCode) => postalCode.Replace(" ", string.Empty).ToUpperInvariant();
+
         private async Task<GetCasPayeeDetailsResponse> Handle(GetCasPayeeDetailsRequest request)
         {
+            if (string.IsNullOrEmpty(request.PayeeId) || !Guid.TryParse(request.PayeeId, out var payeeId)) throw new ArgumentNullException(nameof(request.PayeeId));
+
+            var ct = CreateCancellationToken();
             var ctx = essContextFactory.Create();
+
             var payee = (await ((DataServiceQuery<contact>)ctx.contacts
                 .Expand(c => c.era_ProvinceState)
                 .Expand(c => c.era_Country)
                 .Expand(c => c.era_City)
-                .Where(c => c.contactid == Guid.Parse(request.PayeeId)))
-                .ExecuteAsync())
+                .Where(c => c.contactid == payeeId))
+                .ExecuteAsync(ct))
                 .SingleOrDefault();
 
             if (payee.era_suppliernumber == null)
@@ -199,10 +211,12 @@ namespace EMBC.ESS.Resources.Payments
                 // payee has no supplier number, search CAS
                 var supplier = await casWebProxy.GetSupplierAsync(new GetSupplierRequest
                 {
-                    PostalCode = payee.address1_postalcode.Replace(" ", string.Empty),
+                    PostalCode = CasPostalCodeFormatter(payee.address1_postalcode),
                     SupplierName = CasSupplierNameFormatter(payee)
                 });
-                if (supplier == null)
+                var supplierAddress = supplier?.SupplierAddress.FirstOrDefault();
+
+                if (supplier == null || supplierAddress == null)
                 {
                     // no matching supplier in CAS, create a new one
                     var newSupplier = await casWebProxy.CreateSupplierAsync(new CreateSupplierRequest
@@ -230,14 +244,14 @@ namespace EMBC.ESS.Resources.Payments
                 }
                 else
                 {
-                    var supplierAddress = supplier?.SupplierAddress.First();
+                    // supplier found, save CAS values
                     payee.era_suppliernumber = supplier.Suppliernumber;
                     payee.era_sitesuppliernumber = supplierAddress.Suppliersitecode.Replace('[', ' ').Replace(']', ' ').Trim();
                 }
 
                 ctx.UpdateObject(payee);
 
-                await ctx.SaveChangesAsync();
+                await ctx.SaveChangesAsync(ct);
             }
 
             var response = new GetCasPayeeDetailsResponse
@@ -249,6 +263,146 @@ namespace EMBC.ESS.Resources.Payments
             ctx.DetachAll();
 
             return response;
+        }
+
+        private async Task<GetCasPaymentStatusResponse> Handle(GetCasPaymentStatusRequest request)
+        {
+            var casStatuses = CasStatusResolver(request.InStatus);
+
+            var payments = new List<CasPaymentDetails>();
+            foreach (var status in casStatuses)
+            {
+                var response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
+                {
+                    PayGroup = "EMB INC",
+                    PaymentStatusDateFrom = request.ChangedFrom,
+                    PaymentStatus = status
+                });
+
+                if (response == null) throw new InvalidOperationException("Failed to retrieve CAS payment statuses");
+                payments.AddRange(response.Items.Select(p => new CasPaymentDetails
+                {
+                    PaymentId = p.Invoicenumber,
+                    Status = CasStatusResolver(p.Paymentstatus),
+                    StatusChangeDate = p.Paymentstatusdate,
+                    CasReferenceNumber = p.Paymentnumber?.ToString(),
+                    StatusDescription = p.Voidreason
+                }));
+            }
+
+            return new GetCasPaymentStatusResponse
+            {
+                //temp fix for a bug in CAS API
+                Payments = payments.Where(p => p.StatusChangeDate.HasValue)
+            };
+        }
+
+        private static IEnumerable<string> CasStatusResolver(CasPaymentStatus? s) =>
+            s switch
+            {
+                CasPaymentStatus.Paid => new[] { "RECONCILED", "RECONCILED UNACCOUNTED" },
+                CasPaymentStatus.Pending => new[] { "NEGOTIABLE" },
+                CasPaymentStatus.Failed => new[] { "VOIDED" },
+
+                _ => new[] { string.Empty }
+            };
+
+        private static CasPaymentStatus CasStatusResolver(string? s) =>
+            s switch
+            {
+                "RECONCILED" => CasPaymentStatus.Paid,
+                "RECONCILED UNACCOUNTED" => CasPaymentStatus.Paid,
+                "VOIDED" => CasPaymentStatus.Failed,
+
+                _ => CasPaymentStatus.Pending
+            };
+
+        private static SupportStatus ResolveSupportStatus(PaymentStatus paymentStatus) =>
+            paymentStatus switch
+            {
+                PaymentStatus.Failed => SupportStatus.UnderReview,
+                PaymentStatus.Paid => SupportStatus.Paid,
+                _ => throw new NotImplementedException($"missing map from payment status {paymentStatus} to support status")
+            };
+
+        private enum SupportStatus
+        {
+            Active = 1,
+            Expired = 174360000,
+            Void = 2,
+            PendingApproval = 174360001,
+            Approved = 174360002,
+            Paid = 174360003,
+            Cancelled = 174360004,
+            UnderReview = 174360005,
+            PendingScan = 174360006,
+        }
+
+        private async Task<UpdateCasPaymentStatusResponse> Handle(UpdateCasPaymentStatusRequest request)
+        {
+            if (string.IsNullOrEmpty(request.PaymentId)) throw new ArgumentNullException(nameof(request.PaymentId));
+
+            var ct = CreateCancellationToken();
+            var ctx = essContextFactory.Create();
+
+            var tx = (await ((DataServiceQuery<era_etransfertransaction>)ctx.era_etransfertransactions.Where(t => t.era_name == request.PaymentId)).ExecuteAsync(ct)).SingleOrDefault();
+            if (tx == null) return new UpdateCasPaymentStatusResponse { };
+            await ctx.LoadPropertyAsync(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), ct);
+
+            UpdatePaymentStatus(ctx, tx, request.ToPaymentStatus);
+            tx.era_casresponsedate = request.StatusChangeDate;
+            tx.era_casreferencenumber = request.CasReferenceNumber;
+            tx.era_processingresponse = request.Reason;
+
+            ctx.UpdateObject(tx);
+
+            foreach (var support in tx.era_era_etransfertransaction_era_evacueesuppo)
+            {
+                UpdateSupportStatus(ctx, support, ResolveSupportStatus(request.ToPaymentStatus));
+                ctx.UpdateObject(support);
+            }
+
+            await ctx.SaveChangesAsync(ct);
+
+            return new UpdateCasPaymentStatusResponse { PaymentId = request.PaymentId };
+        }
+
+        private static void UpdatePaymentStatus(EssContext ctx, era_etransfertransaction payment, PaymentStatus status)
+        {
+            switch (status)
+            {
+                case PaymentStatus.Pending:
+                case PaymentStatus.Sent:
+                case PaymentStatus.Failed:
+                    ctx.ActivateObject(payment, (int)status);
+                    break;
+
+                case PaymentStatus.Paid:
+                case PaymentStatus.Cancelled:
+                    ctx.DeactivateObject(payment, (int)status);
+                    break;
+
+                default:
+                    throw new NotImplementedException($"Update payment status to {status}");
+            }
+        }
+
+        private static void UpdateSupportStatus(EssContext ctx, era_evacueesupport support, SupportStatus status)
+        {
+            switch (status)
+            {
+                case SupportStatus.Paid:
+                    ctx.DeactivateObject(support, (int)status);
+                    break;
+
+                case SupportStatus.UnderReview:
+                    ctx.ActivateObject(support, (int)status);
+                    break;
+
+                default:
+                    support.statuscode = (int)status;
+                    break;
+            }
         }
     }
 }
