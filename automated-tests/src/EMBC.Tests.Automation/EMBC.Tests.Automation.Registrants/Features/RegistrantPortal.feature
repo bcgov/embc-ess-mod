@@ -16,7 +16,7 @@ Scenario: Registrant Portal - Anonymous - Happy path/minimum fields
 	And the submitted information is correct for minimum fields completed
 	Then I confirm the ESS File Number is displayed
 
-Scenario: Registrant Portal - Anonymous - Confirm CAPTCHA field is working
+Scenario: Registrant Portal - CAPTCHA field check
 	Given I see the Registrant Portal home page
 	When I click on the Self Register button
 	Then I complete the minimum fields on the evacuee forms
