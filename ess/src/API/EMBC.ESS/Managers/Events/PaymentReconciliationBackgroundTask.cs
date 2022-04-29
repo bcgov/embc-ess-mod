@@ -6,11 +6,11 @@ using EMBC.Utilities.Hosting;
 
 namespace EMBC.ESS.Managers.Events
 {
-    public class ApprovedSupportsProcessingBackgroundTask : IBackgroundTask
+    public class PaymentReconciliationBackgroundTask : IBackgroundTask
     {
         private readonly EventsManager eventsManager;
 
-        public string Schedule => "30 */1 * * * *";
+        public string Schedule => "0 */15 * * * *";
 
         public int DegreeOfParallelism => 1;
 
@@ -18,14 +18,14 @@ namespace EMBC.ESS.Managers.Events
 
         public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(5);
 
-        public ApprovedSupportsProcessingBackgroundTask(EventsManager eventsManager)
+        public PaymentReconciliationBackgroundTask(EventsManager eventsManager)
         {
             this.eventsManager = eventsManager;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await eventsManager.Handle(new ProcessApprovedSupportsCommand());
+            await eventsManager.Handle(new ReconcilePaymentsCommand());
         }
     }
 }
