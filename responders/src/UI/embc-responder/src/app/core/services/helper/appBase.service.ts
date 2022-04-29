@@ -61,9 +61,12 @@ export class AppBaseService {
   clearEvacueeProperties() {
     this.etransferPropertiesVal = undefined;
     this.wizardPropertiesVal = undefined;
+    this.appModel = {
+      selectedProfile: { selectedEvacueeInContext: null }
+    };
     this.cacheService.remove('eTransferProps');
     this.cacheService.remove('wizardProps');
-    //profile and file
+    //file
   }
 
   setCache() {

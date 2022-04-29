@@ -138,15 +138,15 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       this.saveLoader = true;
 
       if (
-        !this.evacueeSessionService.profileId &&
+        !this.appBaseService?.appModel?.selectedProfile
+          ?.selectedEvacueeInContext?.id &&
         this.appBaseService?.wizardProperties?.wizardType ===
           WizardType.NewRegistration
       ) {
         this.createNewProfile();
       } else if (
-        !this.evacueeSessionService.profileId &&
         this.appBaseService?.wizardProperties?.wizardType ===
-          WizardType.MemberRegistration
+        WizardType.MemberRegistration
       ) {
         this.createMemberRegistration();
       } else {
@@ -211,16 +211,15 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.essFileNumber
       )
       .subscribe({
-        next: async (profile) => {
+        next: async (profileId) => {
           if (this.inviteEmailControl.email.value) {
             await this.sendEmailInvite(
               this.inviteEmailControl.email.value,
-              this.evacueeSessionService.profileId
+              profileId
             );
           }
           this.disableButton = true;
           this.saveLoader = false;
-          //this.setProfileMetaData(this.evacueeSessionService.profileId); //TODO-Sue
           this.memberProfileDialog();
         },
         error: (error) => {
@@ -255,7 +254,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   editProfile() {
     this.evacueeProfileService
       .updateProfile(
-        this.evacueeSessionService.profileId,
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+          ?.id,
         this.stepEvacueeProfileService.createProfileDTO()
       )
       .subscribe({

@@ -12,7 +12,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable, of, tap } from 'rxjs';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
@@ -81,9 +81,9 @@ export class EssFilesResultsComponent
    *
    * @param selectedESSFile selected ess file
    */
-  openESSFile(selectedESSFile: EvacuationFileSearchResultModel): void {
+  async openESSFile(selectedESSFile: EvacuationFileSearchResultModel) {
     this.evacueeSessionService.essFileNumber = selectedESSFile.id;
-    this.getSearchedUserProfile(selectedESSFile);
+    const profile$ = await this.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
       if (
         this.evacueeSearchService.paperBasedEssFile !==
@@ -180,29 +180,36 @@ export class EssFilesResultsComponent
     });
   }
 
-  private getSearchedUserProfile(
+  private async getSearchedUserProfile(
     selectedFile: EvacuationFileSearchResultModel
   ) {
     const searchedMember = selectedFile.householdMembers.find(
       (member) => member.isSearchMatch
     );
-    this.getEvacueeProfile(searchedMember.id);
-  }
-
-  private getEvacueeProfile(evacueeProfileId: string): void {
-    if (evacueeProfileId !== null && evacueeProfileId !== undefined) {
-      this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
-        next: (profile: RegistrantProfileModel) => {},
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.getProfileError);
-        }
-      });
+    if (searchedMember.id !== null && searchedMember.id !== undefined) {
+      const profile$ = await this.getEvacueeProfile(searchedMember.id);
     } else {
       this.appBaseService.appModel = {
         selectedProfile: { selectedEvacueeInContext: null }
       };
       this.computeState.triggerEvent();
     }
+  }
+
+  private getEvacueeProfile(
+    evacueeProfileId: string
+  ): Promise<RegistrantProfileModel> {
+    const profile$ = this.evacueeProfileService
+      .getProfileFromId(evacueeProfileId)
+      .pipe(
+        tap({
+          next: (profile: RegistrantProfileModel) => {},
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.getProfileError);
+          }
+        })
+      );
+    return lastValueFrom(profile$);
   }
 }

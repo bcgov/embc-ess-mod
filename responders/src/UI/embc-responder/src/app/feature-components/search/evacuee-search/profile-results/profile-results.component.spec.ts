@@ -4,6 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { computeInterfaceToken } from 'src/app/app.module';
 import {
   CommunityType,
   EvacuationFileStatus,
@@ -141,7 +142,8 @@ describe('ProfileResultsComponent', () => {
         {
           provide: EvacueeSearchResultsService,
           useClass: MockEvacueeSearchResultsService
-        }
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });

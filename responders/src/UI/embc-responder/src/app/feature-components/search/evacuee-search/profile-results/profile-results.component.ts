@@ -24,6 +24,9 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 
 @Component({
   selector: 'app-profile-results',
@@ -47,7 +50,9 @@ export class ProfileResultsComponent
     private dialog: MatDialog,
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
     private alertService: AlertService,
-    private evacueeSearchResultsService: EvacueeSearchResultsService
+    private evacueeSearchResultsService: EvacueeSearchResultsService,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,7 +83,18 @@ export class ProfileResultsComponent
     ) {
       this.openUnableAccessDialog();
     } else {
-      this.evacueeSessionService.profileId = selectedRegistrant.id;
+      const profileIdObject: RegistrantProfileModel = {
+        id: selectedRegistrant.id,
+        primaryAddress: null,
+        mailingAddress: null,
+        personalDetails: null,
+        contactDetails: null,
+        restriction: null
+      };
+      this.appBaseService.appModel = {
+        selectedProfile: { selectedEvacueeInContext: profileIdObject }
+      };
+      this.computeState.triggerEvent();
       if (
         this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {
@@ -88,7 +104,10 @@ export class ProfileResultsComponent
       } else {
         this.evacueeSearchResultsService.setloadingOverlay(true);
         this.profileSecurityQuestionsService
-          .getSecurityQuestions(this.evacueeSessionService.profileId)
+          .getSecurityQuestions(
+            this.appBaseService?.appModel?.selectedProfile
+              ?.selectedEvacueeInContext?.id
+          )
           .subscribe({
             next: (results) => {
               this.evacueeSearchResultsService.setloadingOverlay(false);

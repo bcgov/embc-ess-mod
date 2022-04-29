@@ -135,7 +135,6 @@ export class HouseholdMemberComponent implements OnInit {
 
   createProfile(memberDetails: EvacuationFileHouseholdMember) {
     this.evacueeSessionService.memberRegistration = memberDetails;
-    this.evacueeSessionService.profileId = null;
 
     this.appBaseService.wizardProperties = {
       wizardType: WizardType.MemberRegistration,
@@ -215,17 +214,20 @@ export class HouseholdMemberComponent implements OnInit {
     memberDetails: EvacuationFileHouseholdMember
   ) {
     if (value === 'Yes') {
-      this.evacueeSessionService.profileId = memberDetails.linkedRegistrantId;
+      //this.evacueeSessionService.profileId = memberDetails.linkedRegistrantId;
+      this.setProfileDetails(memberDetails.linkedRegistrantId);
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'
       ]);
     } else if (value === 'No') {
-      this.evacueeSessionService.profileId = memberDetails.linkedRegistrantId;
+      //this.evacueeSessionService.profileId = memberDetails.linkedRegistrantId;
+      this.setProfileDetails(memberDetails.linkedRegistrantId);
       this.evacueeSessionService.securityQuestionsOpenedFrom =
         'responder-access/search/essfile-dashboard';
       this.router.navigate(['responder-access/search/security-questions']);
     } else if (value === 'answered') {
-      this.evacueeSessionService.profileId = memberDetails.linkedRegistrantId;
+      //this.evacueeSessionService.profileId = memberDetails.linkedRegistrantId;
+      this.setProfileDetails(memberDetails.linkedRegistrantId);
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'
       ]);
@@ -249,8 +251,7 @@ export class HouseholdMemberComponent implements OnInit {
         registantId: this.essfileDashboardService.matchedProfiles[0].id
       }
     };
-    this.evacueeSessionService.profileId =
-      this.essfileDashboardService.matchedProfiles[0].id;
+    this.setProfileDetails(this.essfileDashboardService.matchedProfiles[0].id);
     this.router.navigate(['responder-access/search/security-questions']);
   }
 
@@ -280,12 +281,36 @@ export class HouseholdMemberComponent implements OnInit {
                 registantId: value
               }
             };
-            this.evacueeSessionService.profileId = value;
+            //this.evacueeSessionService.profileId = value;
+            this.setProfileDetails(value);
             this.router.navigate([
               'responder-access/search/security-questions'
             ]);
           }
         }
       });
+  }
+
+  private setProfileDetails(id: string) {
+    let profileModel =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
+
+    if (profileModel === null) {
+      profileModel = {
+        id,
+        primaryAddress: null,
+        mailingAddress: null,
+        personalDetails: null,
+        contactDetails: null,
+        restriction: null
+      };
+    }
+    this.appBaseService.appModel = {
+      selectedProfile: {
+        selectedEvacueeInContext: profileModel,
+        householdMemberId: id
+      }
+    };
+    this.computeState.triggerEvent();
   }
 }

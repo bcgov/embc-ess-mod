@@ -6,6 +6,7 @@ import { EvacuationFileStatus, MemberRole } from 'src/app/core/api/models';
 import { EvacuationFileSummaryModel } from 'src/app/core/models/evacuation-file-summary.model';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
@@ -35,13 +36,15 @@ export class MatchedEssfilesComponent implements OnInit {
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
     this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
-    this.registrantId = this.evacueeSessionService.profileId;
+    this.registrantId =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
     this.getProfileESSFiles(this.registrantId);
   }
 
