@@ -89,7 +89,8 @@ namespace EMBC.Utilities.Hosting
                         logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
                     }
                 }
-                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+                // add +/- 1 sec for randomness
+                await Task.Delay(TimeSpan.FromSeconds(5).Add(TimeSpan.FromMilliseconds(Random.Shared.Next(-1000, 1000))), stoppingToken);
             }
         }
 

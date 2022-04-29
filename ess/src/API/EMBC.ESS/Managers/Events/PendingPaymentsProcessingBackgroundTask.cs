@@ -16,7 +16,7 @@ namespace EMBC.ESS.Managers.Events
 
         public TimeSpan InitialDelay => TimeSpan.FromSeconds(30);
 
-        public TimeSpan InactivityTimeout => TimeSpan.FromSeconds(60);
+        public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(5);
 
         public PendingPaymentsProcessingBackgroundTask(EventsManager eventsManager)
         {
