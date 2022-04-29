@@ -32,7 +32,9 @@
                 (change)="evacPrimaryAddressChange($event)"
                 required
               >
-                <mat-radio-button value="Yes">Yes </mat-radio-button>
+                <mat-radio-button id="yesOption" value="Yes"
+                  >Yes
+                </mat-radio-button>
                 <div class="prim-address">
                   <p>
                     {{
@@ -73,7 +75,7 @@
                     >
                   </p>
                 </div>
-                <mat-radio-button value="No">No</mat-radio-button>
+                <mat-radio-button id="noOption" value="No">No</mat-radio-button>
                 <mat-error
                   class="custom-mat-error"
                   *ngIf="
