@@ -129,6 +129,7 @@ namespace EMBC.ESS.Resources.Payments
         public CasPaymentStatus Status { get; set; }
         public DateTime? StatusChangeDate { get; set; }
         public string CasReferenceNumber { get; set; }
+        public string StatusDescription { get; set; }
     }
 
     public enum CasPaymentStatus
@@ -142,10 +143,13 @@ namespace EMBC.ESS.Resources.Payments
     {
         public string PaymentId { get; set; }
         public PaymentStatus ToPaymentStatus { get; set; }
-        public DateTime StatusChangeDate { get; set; }
+        public DateTime? StatusChangeDate { get; set; }
         public string CasReferenceNumber { get; set; }
+        public string? Reason { get; set; }
     }
 
     public class UpdateCasPaymentStatusResponse : ManagePaymentResponse
-    { }
+    {
+        public string PaymentId { get; set; }
+    }
 }

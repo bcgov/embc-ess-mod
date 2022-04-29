@@ -811,6 +811,17 @@ namespace EMBC.ESS.Managers.Events
 
                     foreach (var payment in pendingPayments)
                     {
+                        if (string.IsNullOrEmpty(payment.PayeeId))
+                        {
+                            logger.LogError($"Cannot send payment {payment.Id}: no payee is associated with this payment");
+                            await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                            {
+                                PaymentId = payment.Id,
+                                ToPaymentStatus = PaymentStatus.Failed,
+                                Reason = "no payee is associated with this payment"
+                            });
+                            continue;
+                        }
                         // get payee cas details
                         var payeeDetails = (GetCasPayeeDetailsResponse)await paymentRepository.Query(new GetCasPayeeDetailsRequest
                         {
@@ -862,30 +873,37 @@ namespace EMBC.ESS.Managers.Events
 
             var queryPaymentStatusesFrom = sentPayments.Where(p => p is InteracSupportPayment).Cast<InteracSupportPayment>().OrderBy(p => p.SentOn).FirstOrDefault()?.SentOn;
 
-            var updatedFailedPayments = (GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Failed });
+            logger.LogInformation($"Polling for CAS payments after {queryPaymentStatusesFrom}");
 
-            foreach (var payment in updatedFailedPayments.Payments)
+            var updatedFailedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Failed })).Payments.ToArray();
+            logger.LogInformation("Reconciling {0} failed payments", updatedFailedPayments.Length);
+
+            foreach (var payment in updatedFailedPayments)
             {
-                await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
                 {
                     PaymentId = payment.PaymentId,
                     ToPaymentStatus = PaymentStatus.Paid,
                     CasReferenceNumber = payment.CasReferenceNumber,
                     StatusChangeDate = payment.StatusChangeDate.Value
                 });
+                if (response.PaymentId == null) logger.LogError($"Failed to update payment {payment.PaymentId}");
             }
 
-            var updatedPaidPayments = (GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Paid });
+            var updatedPaidPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Paid })).Payments.ToArray();
+            logger.LogInformation("Reconciling {0} paid payments", updatedFailedPayments.Length);
 
-            foreach (var payment in updatedFailedPayments.Payments)
+            foreach (var payment in updatedFailedPayments)
             {
-                await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
                 {
                     PaymentId = payment.PaymentId,
                     ToPaymentStatus = PaymentStatus.Failed,
                     CasReferenceNumber = payment.CasReferenceNumber,
-                    StatusChangeDate = payment.StatusChangeDate.Value
+                    StatusChangeDate = payment.StatusChangeDate.Value,
+                    Reason = payment.StatusDescription
                 });
+                if (response.PaymentId == null) logger.LogError($"Failed to update payment {payment.PaymentId}");
             }
         }
     }
