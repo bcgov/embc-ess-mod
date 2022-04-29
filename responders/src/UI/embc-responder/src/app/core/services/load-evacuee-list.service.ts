@@ -14,6 +14,7 @@ export class LoadEvacueeListService {
   private supportMethodVal: Code[] = [];
   private voidReasonVal: Code[] = [];
   private reprintReasonVal: Code[] = [];
+  private communityTypeVal: Code[] = [];
 
   constructor(
     private configService: ConfigurationService,
@@ -69,6 +70,14 @@ export class LoadEvacueeListService {
       : this.getReprintReasonsList();
   }
 
+  public getCommunityTypes() {
+    return this.communityTypeVal.length > 0
+      ? this.communityTypeVal
+      : JSON.parse(this.cacheService.get('communityType'))
+      ? JSON.parse(this.cacheService.get('communityType'))
+      : this.getCommunityTypesList();
+  }
+
   public loadStaticEvacueeLists(): Promise<void> {
     const categories: Observable<Array<Code>> =
       this.configService.configurationGetCodes({
@@ -94,6 +103,10 @@ export class LoadEvacueeListService {
       this.configService.configurationGetCodes({
         forEnumType: 'SupportReprintReason'
       });
+    const communityTypes: Observable<Array<Code>> =
+      this.configService.configurationGetCodes({
+        forEnumType: 'CommunityType'
+      });
 
     const list$ = forkJoin([
       categories,
@@ -101,7 +114,8 @@ export class LoadEvacueeListService {
       status,
       methods,
       voidReasons,
-      reprintReasons
+      reprintReasons,
+      communityTypes
     ]).pipe(
       map((results) => {
         this.setSupportCategories(results[0]);
@@ -110,6 +124,7 @@ export class LoadEvacueeListService {
         this.setSupportMethods(results[3]);
         this.setVoidReasons(results[4]);
         this.setReprintReasons(results[5]);
+        this.setCommunityTypes(results[6]);
       })
     );
 
@@ -292,5 +307,30 @@ export class LoadEvacueeListService {
   private setReprintReasons(reprintReasonVal: Code[]): void {
     this.reprintReasonVal = reprintReasonVal;
     this.cacheService.set('reprintReason', reprintReasonVal);
+  }
+
+  private getCommunityTypesList(): Code[] {
+    let communityTypesList: Code[] = [];
+    this.configService
+      .configurationGetCodes({ forEnumType: 'CommunityType' })
+      .subscribe({
+        next: (communityTypes: Code[]) => {
+          communityTypesList = communityTypes;
+          this.setCommunityTypes(communityTypes);
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.supportVoidReasonsError
+          );
+        }
+      });
+    return communityTypesList;
+  }
+
+  private setCommunityTypes(communityTypeVal: Code[]): void {
+    this.communityTypeVal = communityTypeVal;
+    this.cacheService.set('communityType', communityTypeVal);
   }
 }
