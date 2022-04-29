@@ -331,9 +331,24 @@ export class HouseholdMemberComponent implements OnInit {
   }
 
   private setProfileDetails(id: string) {
-    let profileModel = this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
+    let profileModel =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
+
+    if (profileModel === null) {
+      profileModel = {
+        id,
+        primaryAddress: null,
+        mailingAddress: null,
+        personalDetails: null,
+        contactDetails: null,
+        restriction: null
+      };
+    }
     this.appBaseService.appModel = {
-      selectedProfile: { selectedEvacueeInContext: profileModel, householdMemberId: id }
+      selectedProfile: {
+        selectedEvacueeInContext: profileModel,
+        householdMemberId: id
+      }
     };
     this.computeState.triggerEvent();
   }

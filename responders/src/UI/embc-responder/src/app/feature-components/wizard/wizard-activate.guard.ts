@@ -43,7 +43,6 @@ export class WizardActivateGuard implements CanActivate {
 
     if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTaskNumber)) {
-
         this.appBaseService.appModel = {
           selectedProfile: { selectedEvacueeInContext: null }
         };

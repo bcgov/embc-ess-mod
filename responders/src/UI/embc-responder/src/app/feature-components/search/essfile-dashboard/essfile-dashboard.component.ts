@@ -206,7 +206,9 @@ export class EssfileDashboardComponent implements OnInit {
   private eligiblityDisplayName() {
     if (
       this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext !== null
+        ?.selectedEvacueeInContext !== null &&
+      this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext !== undefined
     ) {
       this.eligibilityFirstName =
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
@@ -214,9 +216,9 @@ export class EssfileDashboardComponent implements OnInit {
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName;
     } else {
       this.eligibilityFirstName =
-        this.evacueeSearchService.evacueeSearchContext.evacueeSearchParameters.firstName;
+        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.firstName;
       this.eligibilityLastName =
-        this.evacueeSearchService.evacueeSearchContext.evacueeSearchParameters.lastName;
+        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.lastName;
     }
   }
 

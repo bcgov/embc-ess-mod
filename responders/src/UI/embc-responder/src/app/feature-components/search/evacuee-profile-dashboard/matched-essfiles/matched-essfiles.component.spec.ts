@@ -102,26 +102,6 @@ describe('MatchedEssfilesComponent', () => {
     userService = TestBed.inject(UserService);
   });
 
-  it('should get profileId from service', () => {
-    userService.currentProfileValue = {
-      agreementSignDate: null,
-      firstName: 'Test_First_Name',
-      lastName: 'Test_Last_Name',
-      requiredToSignAgreement: false,
-      userName: 'Test_User',
-      role: MemberRole.Tier1
-    };
-    evacueeSessionService.isPaperBased = true;
-    evacueeSearchService.paperBasedEssFile = 'T2000';
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
-    evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
-    fixture.detectChanges();
-    component.ngOnInit();
-    expect(component.registrantId).toEqual(
-      'a7b76c4b-256b-4385-b35e-7b496e70f172'
-    );
-  });
-
   it('should get paperBased from service', () => {
     userService.currentProfileValue = {
       agreementSignDate: null,
@@ -132,7 +112,6 @@ describe('MatchedEssfilesComponent', () => {
       role: MemberRole.Tier2
     };
     evacueeSessionService.isPaperBased = false;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
     fixture.detectChanges();
     component.ngOnInit();
@@ -150,7 +129,6 @@ describe('MatchedEssfilesComponent', () => {
     };
     evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
     evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeSearchService.paperBasedEssFile = 'T2000';
     fixture.detectChanges();
     component.ngOnInit();
@@ -159,7 +137,6 @@ describe('MatchedEssfilesComponent', () => {
 
   it('should get matches ess files from service', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeSearchService.paperBasedEssFile = 'T2000';
     userService.currentProfileValue = {
       agreementSignDate: null,
