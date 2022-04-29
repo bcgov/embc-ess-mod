@@ -395,6 +395,10 @@ namespace EMBC.ESS.Resources.Payments
                     ctx.DeactivateObject(support, (int)status);
                     break;
 
+                case SupportStatus.UnderReview:
+                    ctx.ActivateObject(support, (int)status);
+                    break;
+
                 default:
                     support.statuscode = (int)status;
                     break;
