@@ -93,7 +93,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void NoRadioButton()
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
             var noRadioButton = webDriver.FindElement(By.Id("mat-radio-12"));
             noRadioButton.Click();
@@ -101,7 +101,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void SecurityQuestions()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             var securityQuestion1 = "What was the name of your first pet?";
             var securityQuestion2 = "In what city or town was your mother born?";
@@ -113,7 +113,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var securitySelect1 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question1']"));
             securitySelect1.SendKeys(securityQuestion1);
 
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
             var securitySelect2 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question2']"));
             securitySelect2.SendKeys(securityQuestion2);
@@ -135,7 +135,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileLocation()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-19"));
             yesRadioButton.Click();
@@ -146,7 +146,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileHouseholdMembers()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
 
             var noRadioButton = webDriver.FindElement(By.Id("mat-radio-43"));
             noRadioButton.Click();
@@ -157,7 +157,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileNeeds()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(2000);
 
             var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-26"));
             yesRadioButton.Click();
@@ -177,7 +177,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileSecurityPhrase()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             var securityPhrase = "Sesame";
 
@@ -187,7 +187,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CAPTCHAFails()
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             var CAPTCHAEntry = "Invalid";
 
