@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssignedCommunityTableComponent } from './assigned-community-table.component';
@@ -8,6 +9,7 @@ describe('DataTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [AssignedCommunityTableComponent]
     }).compileComponents();
   });
