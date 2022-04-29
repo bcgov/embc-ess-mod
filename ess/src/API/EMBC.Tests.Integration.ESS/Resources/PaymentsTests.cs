@@ -64,8 +64,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SendPaymentToCas_InteracPayment_Sent()
         {
-            var registrantId = await CreateNewRegistrant();
-            //var registrantId = TestData.ContactId;
+            var registrantId = TestData.ContactId;
 
             var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
 
@@ -130,8 +129,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task GetPayeeDetails_ExistingEvacuee_CasSupplierSaved()
         {
-            var registrantId = await CreateNewRegistrant();
-            //var registrantId = TestData.ContactId;
+            var registrantId = TestData.ContactId;
 
             //query supplier
             var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
@@ -142,15 +140,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
         {
-            //var registrantId = await CreateNewRegistrant();
-            //var registrantId = TestData.ContactId;
-
             //query payments
-            var startDate = DateTime.UtcNow;
+            var startDate = DateTime.Now.AddDays(-1);
             var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate });
 
             response.Payments.ShouldNotBeEmpty();
-            response.Payments.ShouldAllBe(p => p.StatusChangeDate >= startDate);
+            //response.Payments.ShouldAllBe(p => p.StatusChangeDate >= startDate);
+            foreach (var payment in response.Payments)
+            {
+                payment.StatusChangeDate.ShouldNotBeNull().ShouldBeGreaterThanOrEqualTo(startDate);
+            }
         }
     }
 }

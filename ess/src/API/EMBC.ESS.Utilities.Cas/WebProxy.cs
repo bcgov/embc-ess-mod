@@ -89,7 +89,7 @@ namespace EMBC.ESS.Utilities.Cas
             return await response.Content.ReadFromJsonAsync<CreateSupplierResponse>(jsonSerializerOptions) ?? null!;
         }
 
-        private static Func<DateTime, string> CasDateTimeFormatter => d => d.ToPST().ToString("dd-MMM-yyyy hh:mm:ss", CultureInfo.InvariantCulture);
+        private static Func<DateTime, string> CasDateTimeFormatter => d => d.ToPST().ToString("dd-MMM-yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
         public async Task<GetInvoiceResponse?> GetInvoiceAsync(GetInvoiceRequest getRequest)
         {

@@ -855,5 +855,38 @@ namespace EMBC.ESS.Managers.Events
                 }
             }
         }
+
+        public async System.Threading.Tasks.Task Handle(ReconcilePaymentsCommand _)
+        {
+            var sentPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ByStatus = PaymentStatus.Sent })).Items;
+
+            var queryPaymentStatusesFrom = sentPayments.Where(p => p is InteracSupportPayment).Cast<InteracSupportPayment>().OrderBy(p => p.SentOn).FirstOrDefault()?.SentOn;
+
+            var updatedFailedPayments = (GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Failed });
+
+            foreach (var payment in updatedFailedPayments.Payments)
+            {
+                await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                {
+                    PaymentId = payment.PaymentId,
+                    ToPaymentStatus = PaymentStatus.Paid,
+                    CasReferenceNumber = payment.CasReferenceNumber,
+                    StatusChangeDate = payment.StatusChangeDate.Value
+                });
+            }
+
+            var updatedPaidPayments = (GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Paid });
+
+            foreach (var payment in updatedFailedPayments.Payments)
+            {
+                await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                {
+                    PaymentId = payment.PaymentId,
+                    ToPaymentStatus = PaymentStatus.Failed,
+                    CasReferenceNumber = payment.CasReferenceNumber,
+                    StatusChangeDate = payment.StatusChangeDate.Value
+                });
+            }
+        }
     }
 }

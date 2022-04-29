@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Utilities.Cas
 {
@@ -204,12 +205,12 @@ namespace EMBC.ESS.Utilities.Cas
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return DateTime.Parse(reader.GetString() ?? string.Empty);
+            return DateTime.Parse(reader.GetString() ?? string.Empty).ToPST();
         }
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture));
+            writer.WriteStringValue(value.ToPST().ToString("dd-MMM-yyyy", CultureInfo.InvariantCulture));
         }
     }
 }
