@@ -60,6 +60,8 @@ namespace EMBC.ESS.Resources.Payments
         public string SecurityAnswer { get; set; }
         public string? NotificationEmail { get; set; }
         public string? NotificationPhone { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime? SentOn { get; set; }
     }
 
     public class SearchPaymentRequest : QueryPaymentRequest
@@ -108,5 +110,46 @@ namespace EMBC.ESS.Resources.Payments
     {
         public string CasSupplierNumber { get; set; }
         public string CasSupplierSiteNumber { get; set; }
+    }
+
+    public class GetCasPaymentStatusRequest : QueryPaymentRequest
+    {
+        public DateTime? ChangedFrom { get; set; }
+        public CasPaymentStatus? InStatus { get; set; }
+    }
+
+    public class GetCasPaymentStatusResponse : QueryPaymentResponse
+    {
+        public IEnumerable<CasPaymentDetails> Payments { get; set; } = Array.Empty<CasPaymentDetails>();
+    }
+
+    public class CasPaymentDetails
+    {
+        public string PaymentId { get; set; }
+        public CasPaymentStatus Status { get; set; }
+        public DateTime? StatusChangeDate { get; set; }
+        public string CasReferenceNumber { get; set; }
+        public string StatusDescription { get; set; }
+    }
+
+    public enum CasPaymentStatus
+    {
+        Pending,
+        Failed,
+        Paid
+    }
+
+    public class UpdateCasPaymentStatusRequest : ManagePaymentRequest
+    {
+        public string PaymentId { get; set; }
+        public PaymentStatus ToPaymentStatus { get; set; }
+        public DateTime? StatusChangeDate { get; set; }
+        public string CasReferenceNumber { get; set; }
+        public string? Reason { get; set; }
+    }
+
+    public class UpdateCasPaymentStatusResponse : ManagePaymentResponse
+    {
+        public string PaymentId { get; set; }
     }
 }

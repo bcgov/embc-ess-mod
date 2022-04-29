@@ -30,6 +30,7 @@ namespace EMBC.ESS.Resources.Payments
 
             CreateMap<InteracSupportPayment, era_etransfertransaction>(MemberList.Source)
                 .ForSourceMember(s => s.LinkedSupportIds, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.SentOn, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.RecipientFirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.RecipientLastName))
                 .ForMember(d => d.era_emailaddress, opts => opts.MapFrom(s => s.NotificationEmail))
@@ -45,6 +46,8 @@ namespace EMBC.ESS.Resources.Payments
                 .ForMember(d => d.SecurityAnswer, opts => opts.MapFrom(s => s.era_securityanswer))
                 .ForMember(d => d.SecurityQuestion, opts => opts.MapFrom(s => s.era_securityquestion))
                 .ForMember(d => d.LinkedSupportIds, opts => opts.MapFrom(s => s.era_era_etransfertransaction_era_evacueesuppo.Select(s => s.era_name)))
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
+                .ForMember(d => d.SentOn, opts => opts.MapFrom(s => s.era_invoicedate.Value.DateTime))
                 ;
 
             CreateMap<IEnumerable<era_etransfertransaction>, IEnumerable<Payment>>()
