@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Engines.Search;
@@ -240,6 +241,7 @@ namespace EMBC.ESS.Managers.Events
                 EvacueeId = query.Id,
                 UserId = query.UserId
             })).Items;
+
             var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
 
             return new RegistrantsQueryResponse { Items = registrants };
@@ -261,11 +263,12 @@ namespace EMBC.ESS.Managers.Events
                 LinkedRegistrantId = query.LinkedRegistrantId,
                 NeedsAssessmentId = query.NeedsAssessmentId,
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Evacuations.EvacuationFileStatus>(s.ToString())).ToArray()
-            })).Items.Cast<Resources.Evacuations.EvacuationFile>();
+            })).Items;
 
-            var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(cases);
+            var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(cases).ToArray();
 
-            await System.Threading.Tasks.Task.WhenAll(files.Select(f => evacuationFileLoader.Load(f)).ToArray());
+            var ct = new CancellationTokenSource().Token;
+            await Parallel.ForEachAsync(files, (f, ct) => new ValueTask(evacuationFileLoader.Load(f, ct)));
 
             return new EvacuationFilesQueryResponse { Items = files };
         }
@@ -316,8 +319,9 @@ namespace EMBC.ESS.Managers.Events
                 files.Add(mappedFile);
             });
 
-            //await householdMemberTasks.Union(profileTasks).ToArray().ForEachAsync(5, t => t);
-            await System.Threading.Tasks.Task.WhenAll(householdMemberTasks.Union(profileTasks).ToArray());
+            var ct = new CancellationTokenSource().Token;
+            //await System.Threading.Tasks.Task.WhenAll(householdMemberTasks.Union(profileTasks));
+            await Parallel.ForEachAsync(householdMemberTasks.Union(profileTasks), ct, (t, ct) => new ValueTask(t));
 
             var profileResults = profiles.ToArray();
             var fileResults = files.ToArray();
@@ -339,7 +343,7 @@ namespace EMBC.ESS.Managers.Events
                 fileResults = fileResults.Where(f => query.InStatuses.Contains(f.Status)).ToArray();
             }
 
-            foreach (var file in fileResults)
+            foreach (var file in fileResults.AsParallel())
             {
                 if (file.TaskId != null)
                 {
@@ -560,7 +564,9 @@ namespace EMBC.ESS.Managers.Events
                 FileId = printRequest.FileId
             })).Items.Cast<Resources.Evacuations.EvacuationFile>().SingleOrDefault());
             if (file == null) throw new NotFoundException($"Evacuation file {printRequest.FileId} not found", printRequest.Id);
-            await evacuationFileLoader.Load(file);
+
+            var ct = new CancellationTokenSource().Token;
+            await evacuationFileLoader.Load(file, ct);
 
             //Find referrals to print
             var referrals = file.Supports.Where(s => printRequest.SupportIds.Contains(s.Id)).ToArray();
@@ -696,10 +702,8 @@ namespace EMBC.ESS.Managers.Events
                 ByEvacuationFileId = query.FileId
             })).Items);
 
-            foreach (var support in supports)
-            {
-                await evacuationFileLoader.Load(support);
-            }
+            var ct = new CancellationTokenSource().Token;
+            await Parallel.ForEachAsync(supports, ct, (s, ct) => new ValueTask(evacuationFileLoader.Load(s, ct)));
             return new SearchSupportsQueryResponse
             {
                 Items = supports

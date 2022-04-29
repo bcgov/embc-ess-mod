@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Suppliers;
@@ -10,7 +12,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 
 namespace EMBC.ESS.Managers.Events
 {
-    public class EvacuationFileLoader
+    internal class EvacuationFileLoader
     {
         private readonly IMapper mapper;
         private readonly ITeamRepository teamRepository;
@@ -34,7 +36,7 @@ namespace EMBC.ESS.Managers.Events
             this.evacueesRepository = evacueesRepository;
         }
 
-        public async System.Threading.Tasks.Task Load(EvacuationFile file)
+        public async System.Threading.Tasks.Task Load(EvacuationFile file, CancellationToken ct)
         {
             if (file.NeedsAssessment.CompletedBy?.Id != null)
             {
@@ -52,7 +54,7 @@ namespace EMBC.ESS.Managers.Events
                 if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
             }
 
-            foreach (var note in file.Notes)
+            foreach (var note in file.Notes.AsParallel().WithCancellation(ct))
             {
                 if (string.IsNullOrEmpty(note.CreatedBy?.Id)) continue;
                 var teamMembers = await teamRepository.GetMembers(null, null, note.CreatedBy.Id);
@@ -67,11 +69,10 @@ namespace EMBC.ESS.Managers.Events
 
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
             file.Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports);
-
-            await System.Threading.Tasks.Task.WhenAll(file.Supports.Select(s => Load(s)).ToArray());
+            await Parallel.ForEachAsync(file.Supports, ct, (s, ct) => new ValueTask(Load(s, ct)));
         }
 
-        public async System.Threading.Tasks.Task Load(Shared.Contracts.Events.Support support)
+        public async System.Threading.Tasks.Task Load(Shared.Contracts.Events.Support support, CancellationToken ct)
         {
             if (!string.IsNullOrEmpty(support.CreatedBy?.Id))
             {
