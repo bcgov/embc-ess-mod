@@ -308,6 +308,12 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("EMBC Employee")]
         EMBCEmployee,
+
+        [Description("First Nation")]
+        FirstNation,
+
+        [Description("Local Government Employee")]
+        LocalGovernmentEmployee,
     }
 
     public class TeamMemberMapping : Profile

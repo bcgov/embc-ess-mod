@@ -7,6 +7,7 @@ import { EvacueeSearchService } from './evacuee-search.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { EssTaskModel } from '../../../core/models/ess-task.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Component({
   selector: 'app-evacuee-search',
@@ -25,7 +26,8 @@ export class EvacueeSearchComponent implements OnInit {
     private alertService: AlertService,
     private userService: UserService,
     private taskSearchService: TaskSearchService,
-    private appBaseService: AppBaseService
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
@@ -33,6 +35,7 @@ export class EvacueeSearchComponent implements OnInit {
     this.evacueeSearchService.clearEvacueeSearch();
     this.appBaseService.clearEvacueeProperties();
     this.checkTaskStatus();
+    this.computeState.triggerEvent();
   }
 
   /**

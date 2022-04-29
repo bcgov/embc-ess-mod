@@ -85,13 +85,10 @@
             </tr>
           </table>
         </div>
+
         <div
           *ngIf="
-            (file?.type === 'Registrant' &&
-              !evacueeSessionService?.isPaperBased) ||
-            (file?.type === 'HouseholdMember' &&
-              file?.linkedRegistrantId !== null &&
-              !evacueeSessionService?.isPaperBased)
+            essfileDashboardService?.displayMemberButton === 'view-profile'
           "
           class="row button-div"
         >
@@ -102,26 +99,21 @@
 
         <div
           *ngIf="
-            file?.type === 'Registrant' &&
-            evacueeSessionService?.isPaperBased &&
-            file?.id ===
-              appBaseService?.appModel?.selectedProfile
-                ?.selectedEvacueeInContext?.id
+            essfileDashboardService?.displayMemberButton === 'create-profile'
           "
           class="row button-div"
         >
-          <button class="button-p proceed-button" (click)="viewProfile(file)">
-            View Profile
-          </button>
-        </div>
-
-        <div *ngIf="displayLinks === 'create-profile'" class="row button-div">
           <button class="button-p proceed-button" (click)="createProfile(file)">
             Create Profile
           </button>
         </div>
 
-        <div *ngIf="displayLinks === 'link-profile'" class="row button-div">
+        <div
+          *ngIf="
+            essfileDashboardService?.displayMemberButton === 'link-profile'
+          "
+          class="row button-div"
+        >
           <button class="button-p proceed-button" (click)="linkToProfile(file)">
             Link to this Profile
           </button>
@@ -130,7 +122,7 @@
           >
         </div>
         <div
-          *ngIf="displayLinks === 'no-security-questions'"
+          *ngIf="essfileDashboardService?.displayMemberButton === 'cannot-link'"
           class="row button-div"
         >
           <p class="cannot-link">

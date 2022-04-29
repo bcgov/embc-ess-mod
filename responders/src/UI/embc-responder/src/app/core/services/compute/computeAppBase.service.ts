@@ -25,7 +25,6 @@ export class ComputeAppBaseService implements Compute {
       this.computeEvacueePaperSearchParams();
     }
     this.triggerCaching();
-    // console.log(this.appBaseService);
   }
 
   triggerCaching() {

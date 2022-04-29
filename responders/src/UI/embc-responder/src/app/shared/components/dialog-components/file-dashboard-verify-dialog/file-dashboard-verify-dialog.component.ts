@@ -88,7 +88,12 @@ export class FileDashboardVerifyDialogComponent implements OnInit {
    * @param $event radio button change event
    */
   isVerified($event: MatRadioChange): void {
-    if ($event.value === 'No') {
+    if (
+      ($event.value === 'No' && this.evacueeSessionService.isPaperBased) ||
+      ($event.value === 'No' &&
+        !this.evacueeSessionService.isPaperBased &&
+        !this.hasSecurityQues)
+    ) {
       this.noIdFlag = false;
     } else {
       this.noIdFlag = true;

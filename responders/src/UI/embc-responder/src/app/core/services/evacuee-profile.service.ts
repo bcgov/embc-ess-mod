@@ -54,7 +54,10 @@ export class EvacueeProfileService {
             )
           };
           this.appBaseService.appModel = {
-            selectedProfile: { selectedEvacueeInContext: profileModel }
+            selectedProfile: {
+              selectedEvacueeInContext: profileModel,
+              householdMemberId: undefined
+            }
           };
           this.computeState.triggerEvent();
           return profileModel;
@@ -184,7 +187,6 @@ export class EvacueeProfileService {
 
     const $result = profile$.pipe(
       mergeMap((regResult: RegistrationResult) => {
-        this.evacueeSessionService.profileId = regResult.id;
         return this.linkMemberProfile({
           fileId: essFileId,
           linkRequest: {

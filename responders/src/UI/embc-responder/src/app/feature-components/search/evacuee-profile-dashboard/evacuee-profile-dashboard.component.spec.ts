@@ -169,20 +169,8 @@ describe('EvacueeProfileDashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get profileId from service', () => {
-    evacueeSessionService.isPaperBased = false;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
-    evacueeSessionService.fileLinkStatus = 'S';
-    fixture.detectChanges();
-    component.ngOnInit();
-    expect(component.evacueeProfileId).toEqual(
-      'a7b76c4b-256b-4385-b35e-7b496e70f172'
-    );
-  });
-
   it('should get paperBased from service', () => {
     evacueeSessionService.isPaperBased = false;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeSessionService.fileLinkStatus = 'S';
     fixture.detectChanges();
     component.ngOnInit();
@@ -191,23 +179,11 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   it('should get paperBased EssFile number from service', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeSearchService.paperBasedEssFile = 'T2000';
     evacueeSessionService.fileLinkStatus = 'S';
     fixture.detectChanges();
     component.ngOnInit();
     expect(component.paperBasedEssFile).toEqual('T2000');
-  });
-
-  it('should get evacuee profile from service', () => {
-    evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
-    evacueeSearchService.paperBasedEssFile = 'T2000';
-    evacueeSessionService.fileLinkStatus = 'S';
-    evacueeProfileService.registrantProfileValue = mockProfile;
-    fixture.detectChanges();
-    component.ngOnInit();
-    expect(component.evacueeProfile).toEqual(mockProfile);
   });
 
   it('should navigate to New ESS File Wizard', inject(
@@ -244,7 +220,6 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   it('should open dialog ess file successfully linked', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeSessionService.fileLinkStatus = 'S';
     fixture.detectChanges();
     component.ngOnInit();
@@ -259,7 +234,6 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   it('should open dialog ess file error linked', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeSessionService.fileLinkStatus = 'E';
     fixture.detectChanges();
     component.ngOnInit();
@@ -274,7 +248,6 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   it('should open dialog complete profile', () => {
     evacueeSessionService.isPaperBased = false;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     fixture.detectChanges();
     component.ngOnInit();
 
@@ -288,7 +261,6 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   it('should open dialog paper based ESS File already exists', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.profileId = 'a7b76c4b-256b-4385-b35e-7b496e70f172';
     evacueeSearchService.paperBasedEssFile = 'T3333';
     evacueeProfileService.evacuationFileSummaryValue = [
       {

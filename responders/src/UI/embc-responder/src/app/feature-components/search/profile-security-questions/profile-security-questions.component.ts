@@ -53,13 +53,17 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
       this.profileSecurityQuestionsService.shuffledSecurityQuestions;
 
     if (
-      this.evacueeSessionService.profileId === undefined &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.id === undefined &&
       this.securityQuestions === undefined
     ) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else if (this.securityQuestions === undefined) {
       this.profileSecurityQuestionsService
-        .getSecurityQuestions(this.evacueeSessionService.profileId)
+        .getSecurityQuestions(
+          this.appBaseService?.appModel?.selectedProfile
+            ?.selectedEvacueeInContext?.id
+        )
         .subscribe({
           next: (results) => {
             this.profileSecurityQuestionsService.shuffleSecurityQuestions(
@@ -110,7 +114,11 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
       answers: this.securityAnswers
     };
     this.profileSecurityQuestionsService
-      .verifySecurityQuestions(this.evacueeSessionService.profileId, body)
+      .verifySecurityQuestions(
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+          ?.id,
+        body
+      )
       .subscribe({
         next: (results) => {
           this.securityQuestionResult = results.numberOfCorrectAnswers;

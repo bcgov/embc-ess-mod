@@ -133,10 +133,9 @@ export class WizardService {
 
   hasChanged(form: { [key: string]: AbstractControl }, type: string): boolean {
     if (
-      (this.profileObjectReference !== null &&
-        this.profileObjectReference !== undefined &&
-        type === 'personalDetails') ||
-      type === 'contactDetails'
+      this.profileObjectReference !== null &&
+      this.profileObjectReference !== undefined &&
+      (type === 'personalDetails' || type === 'contactDetails')
     ) {
       const initialValue = (
         this.profileObjectReference as RegistrantProfileModel
@@ -155,10 +154,9 @@ export class WizardService {
       ).restriction;
       return initialValue !== form.restrictedAccess.value;
     } else if (
-      (this.profileObjectReference !== null &&
-        this.profileObjectReference !== undefined &&
-        type === 'primaryAddress') ||
-      type === 'mailingAddress'
+      this.profileObjectReference !== null &&
+      this.profileObjectReference !== undefined &&
+      (type === 'primaryAddress' || type === 'mailingAddress')
     ) {
       const initialValue = (
         this.profileObjectReference as RegistrantProfileModel

@@ -15,6 +15,7 @@ import { WizardService } from './wizard.service';
 import * as globalConst from '../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,8 @@ export class WizardAdapterService {
     private stepEssFileService: StepEssFileService,
     private referralCreation: ReferralCreationService,
     private alertService: AlertService,
-    private appBaseService: AppBaseService
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   /**
@@ -103,8 +105,8 @@ export class WizardAdapterService {
       firstName: this.evacueeSessionService.memberRegistration.firstName,
       lastName: this.evacueeSessionService.memberRegistration.lastName,
       dateOfBirth: this.evacueeSessionService.memberRegistration.dateOfBirth,
-      gender: this.evacueeSessionService.memberRegistration.gender,
-      initials: this.evacueeSessionService.memberRegistration.initials
+      initials: this.evacueeSessionService.memberRegistration.initials,
+      gender: this.evacueeSessionService.memberRegistration.gender
     };
     this.stepEvacueeProfileService.profileTabs =
       this.wizardDataService.createNewProfileSteps();
@@ -165,7 +167,11 @@ export class WizardAdapterService {
     this.stepEssFileService.essTabs =
       this.wizardDataService.createNewESSFileSteps();
 
-    this.evacueeSessionService.profileId = profile.id;
+    this.appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: profile }
+    };
+    this.computeState.triggerEvent();
+
     this.stepEssFileService.primaryAddress =
       this.wizardService.setAddressObjectForForm(profile.primaryAddress);
 
@@ -187,7 +193,11 @@ export class WizardAdapterService {
   public stepCreateEssFileFromEditProfileRecord(
     profile: RegistrantProfileModel
   ) {
-    this.evacueeSessionService.profileId = profile.id;
+    this.appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: profile }
+    };
+    this.computeState.triggerEvent();
+
     this.stepEssFileService.primaryAddress =
       this.wizardService.setAddressObjectForForm(profile.primaryAddress);
 

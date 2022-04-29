@@ -1,4 +1,4 @@
-import { Code } from '../api/models';
+import { Code, HouseholdMemberType } from '../api/models';
 import { EssTaskModel } from './ess-task.model';
 import { EvacuationFileModel } from './evacuation-file.model';
 import { RegistrantProfileModel } from './registrant-profile.model';
@@ -12,7 +12,7 @@ export interface AppBaseModel {
 }
 
 export interface EvacueeSearch {
-  idQuestion: string;
+  idQuestion?: string;
 }
 
 export type DigitalFlow = EvacueeSearch;
@@ -21,6 +21,7 @@ export type PaperFlow = EvacueeSearch;
 
 export interface SelectedProfile {
   selectedEvacueeInContext?: RegistrantProfileModel;
+  householdMemberId?: string;
 }
 
 export interface EtransferProperties {
@@ -57,4 +58,11 @@ export enum EtransferContent {
 export class EtransferRequirementStatus {
   statement?: EtransferContent;
   status?: boolean;
+}
+
+export enum HouseholdMemberButtons {
+  viewProfile = 'view-profile',
+  createProfile = 'create-profile',
+  linkProfile = 'link-profile',
+  cannotLinkProfile = 'cannot-link'
 }
