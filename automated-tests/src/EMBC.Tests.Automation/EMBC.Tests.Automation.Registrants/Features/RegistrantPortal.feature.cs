@@ -155,14 +155,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Registrant Portal - Anonymous - Confirm CAPTCHA field is working")]
+        [Xunit.SkippableFactAttribute(DisplayName="Registrant Portal - CAPTCHA field check")]
         [Xunit.TraitAttribute("FeatureTitle", "Registrant Portal")]
-        [Xunit.TraitAttribute("Description", "Registrant Portal - Anonymous - Confirm CAPTCHA field is working")]
-        public void RegistrantPortal_Anonymous_ConfirmCAPTCHAFieldIsWorking()
+        [Xunit.TraitAttribute("Description", "Registrant Portal - CAPTCHA field check")]
+        public void RegistrantPortal_CAPTCHAFieldCheck()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Registrant Portal - Anonymous - Confirm CAPTCHA field is working", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Registrant Portal - CAPTCHA field check", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 19
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
