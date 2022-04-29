@@ -46,7 +46,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
 
     // Set up wizard type and ESS File number
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
-    this.essFileNumber = this.evacueeSessionService.essFileNumber;
+    this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
 
     // Setting the edit Security Flag in case the wizard type is set to edit an ESS File
     this.editedPhraseFlag();
@@ -200,7 +200,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   private formValidation() {
-    if (this.evacueeSessionService.essFileNumber !== null) {
+    if (this.appBaseService?.appModel?.selectedEssFile?.id !== null) {
       if (
         this.stepEssFileService.securityPhrase ===
         this.stepEssFileService.originalSecurityPhrase

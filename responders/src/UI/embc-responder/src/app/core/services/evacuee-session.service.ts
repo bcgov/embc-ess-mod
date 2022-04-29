@@ -6,7 +6,6 @@ import { CacheService } from './cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class EvacueeSessionService {
-  private essFileNumberVal: string;
   private securityQuestionsOpenedFromVal: string;
   private securityPhraseOpenedFromVal: string;
   private fileLinkFlagVal: string;
@@ -49,21 +48,6 @@ export class EvacueeSessionService {
     return this.memberRegistrationVal
       ? this.memberRegistrationVal
       : JSON.parse(this.cacheService.get('memberRegistration'));
-  }
-
-  set essFileNumber(essFileNumberVal: string) {
-    this.essFileNumberVal = essFileNumberVal;
-    if (essFileNumberVal !== null) {
-      this.cacheService.set('fileNumber', essFileNumberVal);
-    } else {
-      this.cacheService.remove('fileNumber');
-    }
-  }
-
-  get essFileNumber(): string {
-    return this.essFileNumberVal
-      ? this.essFileNumberVal
-      : this.cacheService.get('fileNumber');
   }
 
   set securityQuestionsOpenedFrom(securityQuestionsOpenedFromVal: string) {
@@ -151,7 +135,7 @@ export class EvacueeSessionService {
 
   clearEvacueeSession() {
     //this.profileId = null; --TODO
-    this.essFileNumber = null;
+    //this.essFileNumber = null;
     this.securityQuestionsOpenedFrom = null;
     this.securityPhraseOpenedFrom = null;
     this.fileLinkFlag = null;

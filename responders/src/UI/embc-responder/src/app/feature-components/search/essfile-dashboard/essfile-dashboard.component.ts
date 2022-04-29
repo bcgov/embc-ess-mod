@@ -181,7 +181,7 @@ export class EssfileDashboardComponent implements OnInit {
   private getEssFile(): void {
     this.isLoading = !this.isLoading;
     this.essFileService
-      .getFileFromId(this.evacueeSessionService.essFileNumber)
+      .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
       .pipe(
         map((file: EvacuationFileModel) => {
           this.loadNotes();

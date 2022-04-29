@@ -331,9 +331,9 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       editFlag: false,
       memberFlag: false
     };
+    this.appBaseService.appModel.selectedEssFile = null;
     this.computeState.triggerEvent();
 
-    this.evacueeSessionService.essFileNumber = null;
     this.router
       .navigate(['/ess-wizard'], {
         queryParams: { type: WizardType.NewEssFile },
