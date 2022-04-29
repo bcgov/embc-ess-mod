@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
@@ -20,13 +21,14 @@ namespace EMBC.ESS.Engines.Search
 
         private async Task<PendingPaymentSupportSearchResponse> HandleInternal(PendingPaymentSupportSearchRequest _)
         {
+            var ct = new CancellationTokenSource().Token;
             var ctx = essContextFactory.CreateReadOnly();
 
             var pendingPaymentSupports = await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports
                 .Expand(s => s.era_EvacuationFileId)
                 .Expand(s => s.era_PayeeId)
                 .Where(s => s.statuscode == (int)SupportStatus.Approved && s.era_etransfertransactioncreated != true))
-                .GetAllPagesAsync();
+                .GetAllPagesAsync(ct);
 
             return new PendingPaymentSupportSearchResponse
             {
