@@ -724,7 +724,7 @@ export class StepEssFileService {
     this.evacuationFileDate = essFile.evacuationFileDate;
 
     // Wizard variables
-    this.evacueeSession.essFileNumber = essFile.id;
+    //this.evacueeSession.essFileNumber = essFile.id;
 
     // Evacuation Details tab
     this.completedOn = essFile.completedOn;
@@ -994,7 +994,7 @@ export class StepEssFileService {
   }
 
   checkForEdit(): boolean {
-    return this.evacueeSession.essFileNumber !== null;
+    return this.appBaseService?.appModel?.selectedEssFile?.id !== null;
   }
 
   getNavLinks(name: string): TabModel {
