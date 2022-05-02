@@ -636,8 +636,12 @@ namespace EMBC.Responders.API.Controllers
 
             if (clonedReader.TokenType != JsonTokenType.StartObject) throw new JsonException($"Invalid json object");
 
+            int baseDepth = clonedReader.CurrentDepth;
+
             while (clonedReader.Read())
             {
+                if (baseDepth == clonedReader.CurrentDepth && clonedReader.TokenType == JsonTokenType.EndObject) break;
+
                 if (clonedReader.TokenType != JsonTokenType.PropertyName) continue;
                 var propertyName = FirstLetterCapital(clonedReader.GetString());
 
