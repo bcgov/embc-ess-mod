@@ -300,7 +300,7 @@ namespace EMBC.Utilities.Hosting
                 endpoints.Map("/version", async ctx =>
                 {
                     var versionInformationProviders = ctx.RequestServices.GetServices<IVersionInformationProvider>();
-                    var versions = await Task.WhenAll(versionInformationProviders.Select(p => p.Get()).ToArray());
+                    var versions = await versionInformationProviders.AsParallel().SelectManyAsync(async vip => await vip.Get());
 
                     ctx.Response.ContentType = "application/json";
                     ctx.Response.StatusCode = (int)HttpStatusCode.OK;
