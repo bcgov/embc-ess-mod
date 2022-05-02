@@ -170,17 +170,17 @@ objects:
                   scheme: HTTPS
                   path: /hc/live
                   port: 8080
-                timeoutSeconds: 5
-                periodSeconds: 10
+                timeoutSeconds: 10
+                periodSeconds: 60
                 successThreshold: 1
                 failureThreshold: 5
               startupProbe:
                 httpGet:
                   scheme: HTTPS
-                  path: /hc/startup
+                  path: /version
                   port: 8080
                 initialDelaySeconds: 15
-                timeoutSeconds: 5
+                timeoutSeconds: 10
                 periodSeconds: 10
                 successThreshold: 1
                 failureThreshold: 5
@@ -190,7 +190,7 @@ objects:
                   path: /hc/ready
                   port: 8080
                 timeoutSeconds: 5
-                periodSeconds: 10
+                periodSeconds: 60
                 successThreshold: 1
                 failureThreshold: 5
           dnsPolicy: ClusterFirst

@@ -163,7 +163,7 @@ objects:
             - name: oauth-server
               resources:
                 limits:
-                  cpu: 40m
+                  cpu: 50m
                   memory: 256Mi
                 requests:
                   cpu: 10m
@@ -190,17 +190,17 @@ objects:
                 httpGet:
                   path: /hc/live
                   port: 8080
-                timeoutSeconds: 5
-                periodSeconds: 30
+                timeoutSeconds: 10
+                periodSeconds: 60
                 successThreshold: 1
                 failureThreshold: 5
               startupProbe:
                 httpGet:
-                  path: /hc/ready
+                  path: /.well-known/openid-configuration
                   port: 8080
                 initialDelaySeconds: 30
-                timeoutSeconds: 5
-                periodSeconds: 30
+                timeoutSeconds: 10
+                periodSeconds: 15
                 successThreshold: 1
                 failureThreshold: 5
               readinessProbe:
@@ -208,7 +208,7 @@ objects:
                   path: /hc/ready
                   port: 8080
                 timeoutSeconds: 5
-                periodSeconds: 30
+                periodSeconds: 60
                 successThreshold: 1
                 failureThreshold: 5
           dnsPolicy: ClusterFirst
@@ -256,13 +256,13 @@ objects:
             name: cpu
             target:
               type: Utilization
-              averageUtilization: 200
+              averageUtilization: 100
         - type: Resource
           resource:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 200
+              averageUtilization: 175
 
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
