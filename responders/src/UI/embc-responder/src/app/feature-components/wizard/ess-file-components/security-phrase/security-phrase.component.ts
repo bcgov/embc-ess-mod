@@ -12,7 +12,6 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -32,7 +31,6 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
 
   constructor(
     public stepEssFileService: StepEssFileService,
-    private evacueeSessionService: EvacueeSessionService,
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
     private router: Router,
@@ -200,7 +198,10 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   private formValidation() {
-    if (this.appBaseService?.appModel?.selectedEssFile?.id !== null) {
+    if (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    ) {
       if (
         this.stepEssFileService.securityPhrase ===
         this.stepEssFileService.originalSecurityPhrase
