@@ -82,7 +82,7 @@ export class EssFilesResultsComponent
    * @param selectedESSFile selected ess file
    */
   async openESSFile(selectedESSFile: EvacuationFileSearchResultModel) {
-    this.evacueeSessionService.essFileNumber = selectedESSFile.id;
+    this.setSelectedFile(selectedESSFile.id);
     const profile$ = await this.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
       if (
@@ -105,7 +105,7 @@ export class EssFilesResultsComponent
       ) {
         this.evacueeSearchResultsService.setloadingOverlay(true);
         this.essFileSecurityPhraseService
-          .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
+          .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
           .subscribe({
             next: (results) => {
               this.evacueeSearchResultsService.setloadingOverlay(false);
@@ -211,5 +211,18 @@ export class EssFilesResultsComponent
         })
       );
     return lastValueFrom(profile$);
+  }
+
+  private setSelectedFile(fileId: string) {
+    this.appBaseService.appModel.selectedEssFile = {
+      id: fileId,
+      evacuatedFromAddress: null,
+      needsAssessment: null,
+      primaryRegistrantId: null,
+      registrationLocation: null,
+      task: null
+    };
+
+    this.computeState.triggerEvent();
   }
 }
