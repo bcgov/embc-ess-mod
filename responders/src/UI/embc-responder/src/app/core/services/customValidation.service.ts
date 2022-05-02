@@ -216,6 +216,28 @@ export class CustomValidationService {
     };
   }
 
+  confirmNotificationMobileValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const mobile = control.get('notificationMobile').value;
+        const confirmMobile = control.get('notificationConfirmMobile').value;
+
+        if (
+          mobile !== undefined &&
+          confirmMobile !== undefined &&
+          mobile !== null &&
+          confirmMobile !== null &&
+          mobile !== '' &&
+          confirmMobile !== ''
+        ) {
+          if (mobile.toLowerCase() !== confirmMobile.toLowerCase()) {
+            return { mobileMatch: true };
+          }
+        }
+      }
+    };
+  }
+
   /**
    * Checks if the email and confirm email field matches
    */
