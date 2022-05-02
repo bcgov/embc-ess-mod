@@ -1,6 +1,7 @@
 name: cd-oauth-server
 
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - master
