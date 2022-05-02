@@ -85,6 +85,9 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class ProcessPendingPaymentsCommand : Command
     { }
 
+    public class ReconcilePaymentsCommand : Command
+    { }
+
     [JsonConverter(typeof(PolymorphicJsonConverter<Support>))]
     public abstract class Support
     {

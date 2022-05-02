@@ -32,8 +32,8 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
             options.AddArguments("start-maximized");
 
             var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), options);
-            //chromeDriver.Url = "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/";
-            chromeDriver.Url = "https://test-era-registrants.apps.silver.devops.gov.bc.ca/";
+            chromeDriver.Url = "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/";
+            //chromeDriver.Url = "https://test-era-registrants.apps.silver.devops.gov.bc.ca/";
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
 

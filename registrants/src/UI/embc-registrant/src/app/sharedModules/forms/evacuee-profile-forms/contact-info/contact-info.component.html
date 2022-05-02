@@ -26,11 +26,19 @@
         (change)="hideContact($event)"
         required
       >
-        <mat-radio-button class="primary-radio-button" [value]="true">
+        <mat-radio-button
+          class="primary-radio-button"
+          [value]="true"
+          id="yesOption"
+        >
           <span class="highlight">Yes</span> - you may contact me regarding the
           emergency situation.
         </mat-radio-button>
-        <mat-radio-button class="primary-radio-button" [value]="false">
+        <mat-radio-button
+          class="primary-radio-button"
+          [value]="false"
+          id="noOption"
+        >
           <span class="highlight">No</span> - you may <b>NOT</b> contact me.
         </mat-radio-button>
       </mat-radio-group>

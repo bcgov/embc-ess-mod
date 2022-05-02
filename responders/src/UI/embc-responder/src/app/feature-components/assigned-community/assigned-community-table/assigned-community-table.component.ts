@@ -16,6 +16,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
+import { LoadEvacueeListService } from '../../../core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-assigned-community-table',
@@ -41,7 +42,10 @@ export class AssignedCommunityTableComponent
   selection = new SelectionModel<any>(true, []);
   color = '#169BD5';
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) {}
 
   /**
    * Listens to input events and popluate values
@@ -169,7 +173,9 @@ export class AssignedCommunityTableComponent
     this.selectedRows.emit(this.selection.selected);
   }
 
-  splitWord(word: string): string {
-    return word.replace(/([A-Z])/g, ' $1').trim();
+  getCommunitTypeDescription(communityOption: string): string {
+    return this.loadEvacueeListService
+      .getCommunityTypes()
+      .find((type) => type.value === communityOption).description;
   }
 }
