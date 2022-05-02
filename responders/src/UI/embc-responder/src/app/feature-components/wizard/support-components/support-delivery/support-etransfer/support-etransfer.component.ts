@@ -4,7 +4,10 @@ import { Observable, Subscription } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
 import { MatSelectChange } from '@angular/material/select';
-import { CustomErrorMailMatcher } from '../../../profile-components/contact/contact.component';
+import {
+  CustomErrorMailMatcher,
+  CustomErrorMobileMatcher
+} from '../../../profile-components/contact/contact.component';
 
 @Component({
   selector: 'app-support-etransfer',
@@ -39,6 +42,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
 
   notificationPreferences = ['Email', 'Mobile', 'Email & Mobile'];
   emailMatcher = new CustomErrorMailMatcher();
+  mobileMatcher = new CustomErrorMobileMatcher();
 
   preferenceSubscription: Subscription;
 
@@ -56,6 +60,9 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
         }
         if (!pref.includes('Mobile')) {
           this.supportDeliveryForm?.get('notificationMobile').patchValue('');
+          this.supportDeliveryForm
+            ?.get('notificationConfirmMobile')
+            .patchValue('');
         }
         this.supportDeliveryForm
           ?.get('notificationEmail')
@@ -65,6 +72,9 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
           .updateValueAndValidity();
         this.supportDeliveryForm
           ?.get('notificationMobile')
+          .updateValueAndValidity();
+        this.supportDeliveryForm
+          ?.get('notificationConfirmMobile')
           .updateValueAndValidity();
       });
   }

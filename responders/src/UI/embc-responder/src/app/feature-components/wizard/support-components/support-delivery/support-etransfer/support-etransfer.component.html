@@ -170,5 +170,51 @@
         </mat-form-field>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Mobile Number</mat-label>
+          <input
+            formControlName="notificationConfirmMobile"
+            matInput
+            placeholder="Confirm Mobile Number"
+            [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+            [errorStateMatcher]="mobileMatcher"
+          />
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl.notificationConfirmMobile.invalid &&
+              supportDeliveryFormControl.notificationConfirmMobile.hasError(
+                'whitespaceError'
+              )
+            "
+          >
+            Mobile Number is required</mat-error
+          >
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl.notificationConfirmMobile.invalid &&
+              supportDeliveryFormControl.notificationConfirmMobile.hasError(
+                'incorrectLength'
+              )
+            "
+          >
+            Mobile number must have 10 digits</mat-error
+          >
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl?.notificationConfirmMobile?.parent
+                ?.invalid &&
+              supportDeliveryFormControl?.notificationConfirmMobile?.parent?.hasError(
+                'mobileMatch'
+              )
+            "
+          >
+            Mobile number mismatch</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
   </ng-container>
 </form>

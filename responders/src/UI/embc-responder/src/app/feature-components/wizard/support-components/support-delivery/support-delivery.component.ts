@@ -192,9 +192,31 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               this.customValidation.whitespaceValidator()
             )
           ]
+        ],
+        notificationConfirmMobile: [
+          '',
+          [
+            this.customValidation
+              .maskedNumberLengthValidator()
+              .bind(this.customValidation),
+            this.customValidation.conditionalValidation(
+              () =>
+                this.selectedSupportMethod === SupportMethod.ETransfer &&
+                (this.supportDeliveryForm.get('notificationPreference')
+                  .value === 'Mobile' ||
+                  this.supportDeliveryForm.get('notificationPreference')
+                    .value === 'Email & Mobile'),
+              this.customValidation.whitespaceValidator()
+            )
+          ]
         ]
       },
-      { validators: this.customValidation.confirmNotificationEmailValidator() }
+      {
+        validators: [
+          this.customValidation.confirmNotificationEmailValidator(),
+          this.customValidation.confirmNotificationMobileValidator()
+        ]
+      }
     );
   }
 
@@ -239,7 +261,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
    * Navigates to view support page and saves the new support as drafts
    */
   next() {
-    if (!this.supportDeliveryForm.valid) {
+    if (!this.supportDeliveryForm.valid || !this.selectedSupportMethod) {
       this.supportDeliveryForm.markAllAsTouched();
     } else {
       this.stepSupportsService.supportDelivery =
