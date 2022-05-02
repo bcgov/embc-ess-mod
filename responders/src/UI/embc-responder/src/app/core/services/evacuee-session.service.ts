@@ -14,10 +14,19 @@ export class EvacueeSessionService {
   private memberRegistrationVal: EvacuationFileHouseholdMember;
   private isPaperBasedVal: boolean;
   private currentNeedsAssessmentVal: NeedsAssessment;
+  private newHouseholdRegistrantIdVal: string;
 
   private evacFileVal: EvacuationFileModel;
 
   constructor(private cacheService: CacheService) {}
+
+  set newHouseholdRegistrantId(newHouseholdRegistrantIdVal: string) {
+    this.newHouseholdRegistrantIdVal = newHouseholdRegistrantIdVal;
+  }
+
+  get newHouseholdRegistrantId(): string {
+    return this.newHouseholdRegistrantIdVal;
+  }
 
   set currentNeedsAssessment(currentNeedsAssessmentVal: NeedsAssessment) {
     this.currentNeedsAssessmentVal = currentNeedsAssessmentVal;
@@ -136,6 +145,7 @@ export class EvacueeSessionService {
   clearEvacueeSession() {
     //this.profileId = null; --TODO
     //this.essFileNumber = null;
+    this.newHouseholdRegistrantId = null;
     this.securityQuestionsOpenedFrom = null;
     this.securityPhraseOpenedFrom = null;
     this.fileLinkFlag = null;

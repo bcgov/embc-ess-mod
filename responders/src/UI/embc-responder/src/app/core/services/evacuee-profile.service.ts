@@ -184,9 +184,9 @@ export class EvacueeProfileService {
       this.registrationsService.registrationsCreateRegistrantProfile({
         body: regProfile
       });
-
     const $result = profile$.pipe(
       mergeMap((regResult: RegistrationResult) => {
+        this.evacueeSessionService.newHouseholdRegistrantId = regResult.id;
         return this.linkMemberProfile({
           fileId: essFileId,
           linkRequest: {

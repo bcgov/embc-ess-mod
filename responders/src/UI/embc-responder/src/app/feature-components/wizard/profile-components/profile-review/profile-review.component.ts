@@ -208,14 +208,14 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       .createMemberRegistration(
         this.stepEvacueeProfileService.createProfileDTO(),
         this.evacueeSessionService.memberRegistration.id,
-        this.evacueeSessionService.essFileNumber
+        this.appBaseService?.appModel?.selectedEssFile?.id
       )
       .subscribe({
         next: async (profileId) => {
           if (this.inviteEmailControl.email.value) {
             await this.sendEmailInvite(
               this.inviteEmailControl.email.value,
-              profileId
+              this.evacueeSessionService.newHouseholdRegistrantId
             );
           }
           this.disableButton = true;
