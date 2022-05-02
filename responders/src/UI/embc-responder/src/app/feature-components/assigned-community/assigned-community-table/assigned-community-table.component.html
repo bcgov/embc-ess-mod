@@ -48,11 +48,11 @@
             <span
               *ngIf="!row?.allowSelect && disableRow; else typeData"
               style="color: #b0b0b0"
-              >{{ splitWord(row[column?.ref]) }}</span
+              >{{ getCommunitTypeDescription(row[column?.ref]) }}</span
             >
           </span>
           <ng-template #typeData>
-            <span>{{ splitWord(row[column?.ref]) }}</span>
+            <span>{{ getCommunitTypeDescription(row[column?.ref]) }}</span>
           </ng-template>
           <span *ngIf="column?.ref === 'action' && row.conflict">
             <img

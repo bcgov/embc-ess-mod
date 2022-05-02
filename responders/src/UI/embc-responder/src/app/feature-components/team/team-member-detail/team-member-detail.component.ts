@@ -13,6 +13,7 @@ import { TeamListDataService } from '../team-list/team-list-data.service';
 import { TeamMemberDetailsService } from './team-member-details.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { TeamMemberModel } from '../../../core/models/team-member.model';
 
 @Component({
   selector: 'app-team-member-detail',
@@ -20,7 +21,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
   styleUrls: ['./team-member-detail.component.scss']
 })
 export class TeamMemberDetailComponent {
-  teamMember: TeamMember;
+  teamMember: TeamMemberModel;
 
   constructor(
     private router: Router,
@@ -33,11 +34,12 @@ export class TeamMemberDetailComponent {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras
-          .state as TeamMember;
+          .state as TeamMemberModel;
         this.teamMember = state;
       }
     } else {
-      this.teamMember = this.teamDataService.getSelectedTeamMember();
+      this.teamMember =
+        this.teamDataService.getSelectedTeamMember() as TeamMemberModel;
     }
   }
 
