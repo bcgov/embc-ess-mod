@@ -292,7 +292,7 @@ objects:
         name: ${APP_NAME}-ess-backend
         apiVersion: apps.openshift.io/v1
       minReplicas: 3
-      maxReplicas: 12
+      maxReplicas: 15
       metrics:
         - type: Resource
           resource:
