@@ -36,6 +36,22 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
   }
 }
 
+export class CustomErrorMobileMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const isSubmitted = form && form.submitted;
+    return (
+      !!(
+        control &&
+        control.invalid &&
+        (control.dirty || control.touched || isSubmitted)
+      ) || control.parent.hasError('mobileMatch')
+    );
+  }
+}
+
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
