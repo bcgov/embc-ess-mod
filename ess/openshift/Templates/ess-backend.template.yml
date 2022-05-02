@@ -202,7 +202,7 @@ objects:
             - name: ess-backend
               resources:
                 limits:
-                  cpu: 150m
+                  cpu: 200m
                   memory: 512Mi
                 requests:
                   cpu: 50m
@@ -230,17 +230,17 @@ objects:
                   scheme: HTTPS
                   path: /hc/live
                   port: 8080
-                timeoutSeconds: 5
-                periodSeconds: 10
+                timeoutSeconds: 10
+                periodSeconds: 60
                 successThreshold: 1
                 failureThreshold: 5
               startupProbe:
                 httpGet:
                   scheme: HTTPS
-                  path: /hc/startup
+                  path: /version
                   port: 8080
-                initialDelaySeconds: 15
-                timeoutSeconds: 5
+                initialDelaySeconds: 20
+                timeoutSeconds: 10
                 periodSeconds: 10
                 successThreshold: 1
                 failureThreshold: 5
@@ -250,7 +250,7 @@ objects:
                   path: /hc/ready
                   port: 8080
                 timeoutSeconds: 5
-                periodSeconds: 10
+                periodSeconds: 60
                 successThreshold: 1
                 failureThreshold: 5
           dnsPolicy: ClusterFirst
@@ -299,13 +299,13 @@ objects:
             name: cpu
             target:
               type: Utilization
-              averageUtilization: 150
+              averageUtilization: 100
         - type: Resource
           resource:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 150
+              averageUtilization: 175
 
   # pvc shared with all .net pods for data protection keys
   - kind: "PersistentVolumeClaim"
