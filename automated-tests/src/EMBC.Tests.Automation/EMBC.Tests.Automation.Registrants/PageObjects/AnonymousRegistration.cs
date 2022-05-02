@@ -42,7 +42,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void YesRadioButton()
         {
-            var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-2"));
+            var yesRadioButton = webDriver.FindElement(By.Id("yesOption"));
             yesRadioButton.Click();
         }
 
@@ -78,16 +78,16 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var yesRadioButton = webDriver.FindElement(By.CssSelector("[formcontrolname='isBcAddress'] mat-radio-button"));
             yesRadioButton.Click();
 
-            var addressLine1Input = webDriver.FindElement(By.Id("mat-input-8"));
+            var addressLine1Input = webDriver.FindElement(By.CssSelector("input[formcontrolname='addressLine1']"));
             addressLine1Input.SendKeys(addressLine1);
 
-            var cityInput = webDriver.FindElement(By.Id("mat-input-10"));
+            var cityInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='community']"));
             cityInput.SendKeys(city);
 
-            var citySelect = webDriver.FindElement(By.Id("mat-option-186"));
+            var citySelect = webDriver.FindElement(By.Id("Victoria"));
             citySelect.Click();
 
-            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-8"));
+            var yesRadioButton2 = webDriver.FindElement(By.CssSelector("[formcontrolname='isNewMailingAddress'] mat-radio-button"));
             yesRadioButton2.Click();
         }
 
@@ -95,7 +95,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             Thread.Sleep(1000);
 
-            var noRadioButton = webDriver.FindElement(By.Id("mat-radio-12"));
+            var noRadioButton = webDriver.FindElement(By.Id("noOption"));
             noRadioButton.Click();
         }
 
@@ -137,10 +137,10 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             Thread.Sleep(1000);
 
-            var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-19"));
+            var yesRadioButton = webDriver.FindElement(By.Id("yesOption"));
             yesRadioButton.Click();
 
-            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-14"));
+            var yesRadioButton2 = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='insurance']/mat-radio-button[1]"));
             yesRadioButton2.Click();
         }
 
@@ -148,10 +148,10 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             Thread.Sleep(2000);
 
-            var noRadioButton = webDriver.FindElement(By.Id("mat-radio-43"));
+            var noRadioButton = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='haveSpecialDiet']/mat-radio-button[2]"));
             noRadioButton.Click();
 
-            var noRadioButton2 = webDriver.FindElement(By.Id("mat-radio-45"));
+            var noRadioButton2 = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='haveMedication']/mat-radio-button[2]"));
             noRadioButton2.Click();
         }
 
@@ -159,19 +159,19 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             Thread.Sleep(2000);
 
-            var yesRadioButton = webDriver.FindElement(By.Id("mat-radio-26"));
+            var yesRadioButton = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideFood']/mat-radio-button[1]"));
             yesRadioButton.Click();
 
-            var yesRadioButton2 = webDriver.FindElement(By.Id("mat-radio-29"));
+            var yesRadioButton2 = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideLodging']/mat-radio-button[1]"));
             yesRadioButton2.Click();
 
-            var yesRadioButton3 = webDriver.FindElement(By.Id("mat-radio-32"));
+            var yesRadioButton3 = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideClothing']/mat-radio-button[1]"));
             yesRadioButton3.Click();
 
-            var yesRadioButton4 = webDriver.FindElement(By.Id("mat-radio-35"));
+            var yesRadioButton4 = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideTransportation']/mat-radio-button[1]"));
             yesRadioButton4.Click();
 
-            var yesRadioButton5 = webDriver.FindElement(By.Id("mat-radio-38"));
+            var yesRadioButton5 = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideIncidentals']/mat-radio-button[1]"));
             yesRadioButton5.Click();
         }
 
