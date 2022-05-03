@@ -38,7 +38,7 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
 
     public class BcscUser
     {
-        public string Csn { get; set; }
-        public string Passcode { get; set; }
+        public string Csn { get; set; } = null!;
+        public string Passcode { get; set; } = null!;
     }
 }
