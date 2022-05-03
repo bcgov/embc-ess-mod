@@ -47,11 +47,11 @@ export class EvacueeProfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     if (
-      this.appBaseService?.appModel?.selectedProfile?.householdMemberId !==
-      undefined
+      this.appBaseService?.appModel?.selectedProfile
+        ?.householdMemberRegistrantId !== undefined
     ) {
       this.evacueeProfileId =
-        this.appBaseService?.appModel?.selectedProfile?.householdMemberId;
+        this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId;
     } else {
       this.evacueeProfileId =
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;

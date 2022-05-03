@@ -846,7 +846,7 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.essTabs.some(
+    return this.essTabs?.some(
       (tab) =>
         (tab.status === 'not-started' || tab.status === 'incomplete') &&
         tab.name !== 'review'

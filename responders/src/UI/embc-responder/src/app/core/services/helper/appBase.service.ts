@@ -62,7 +62,10 @@ export class AppBaseService {
     this.etransferPropertiesVal = undefined;
     this.wizardPropertiesVal = undefined;
     this.appModel = {
-      selectedProfile: { selectedEvacueeInContext: null },
+      selectedProfile: {
+        selectedEvacueeInContext: null,
+        householdMemberRegistrantId: null
+      },
       selectedEssFile: null
     };
     this.cacheService.remove('eTransferProps');
