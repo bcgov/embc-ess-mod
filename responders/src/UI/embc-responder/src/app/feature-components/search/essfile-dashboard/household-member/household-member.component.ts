@@ -308,7 +308,7 @@ export class HouseholdMemberComponent implements OnInit {
     this.appBaseService.appModel = {
       selectedProfile: {
         selectedEvacueeInContext: profileModel,
-        householdMemberId: id
+        householdMemberRegistrantId: id
       }
     };
     this.computeState.triggerEvent();

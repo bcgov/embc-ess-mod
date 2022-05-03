@@ -189,8 +189,8 @@ describe('EvacueeProfileDashboardComponent', () => {
   it('should navigate to New ESS File Wizard', inject(
     [Router],
     (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.isPaperBased = true;
+      spyOn(router, 'navigate').and.resolveTo(true);
+      evacueeSessionService.isPaperBased = false;
       evacueeProfileService.evacuationFileSummaryValue = [];
 
       fixture.detectChanges();

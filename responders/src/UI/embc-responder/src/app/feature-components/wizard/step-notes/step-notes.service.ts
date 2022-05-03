@@ -8,7 +8,7 @@ import {
   ActionPermission,
   ClaimType
 } from 'src/app/core/services/authorization.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
@@ -18,8 +18,8 @@ export class StepNotesService {
 
   constructor(
     private registrationsService: RegistrationsService,
-    private evacueeSessionService: EvacueeSessionService,
-    private userService: UserService
+    private userService: UserService,
+    private appBaseService: AppBaseService
   ) {}
 
   public get notesTab(): Array<TabModel> {
@@ -45,7 +45,7 @@ export class StepNotesService {
   public getNotes(): Observable<Array<Note>> {
     return this.registrationsService
       .registrationsGetFile({
-        fileId: this.evacueeSessionService.essFileNumber
+        fileId: this.appBaseService?.appModel?.selectedEssFile?.id
       })
       .pipe(
         map((file) => {
@@ -79,7 +79,7 @@ export class StepNotesService {
    */
   public saveNotes(note: Note): Observable<RegistrationResult> {
     return this.registrationsService.registrationsCreateFileNote({
-      fileId: this.evacueeSessionService.essFileNumber,
+      fileId: this.appBaseService?.appModel?.selectedEssFile?.id,
       body: note
     });
   }
@@ -97,7 +97,7 @@ export class StepNotesService {
   ): Observable<Array<Note>> {
     return this.registrationsService
       .registrationsSetFileNoteHiddenStatus({
-        fileId: this.evacueeSessionService.essFileNumber,
+        fileId: this.appBaseService?.appModel?.selectedEssFile?.id,
         noteId,
         isHidden
       })
@@ -116,7 +116,7 @@ export class StepNotesService {
    */
   public editNote(note: Note): Observable<RegistrationResult> {
     return this.registrationsService.registrationsUpdateFileNoteContent({
-      fileId: this.evacueeSessionService.essFileNumber,
+      fileId: this.appBaseService?.appModel?.selectedEssFile?.id,
       noteId: note.id,
       body: note
     });

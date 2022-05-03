@@ -46,9 +46,9 @@ export class WizardActivateGuard implements CanActivate {
         this.appBaseService.appModel = {
           selectedProfile: { selectedEvacueeInContext: null }
         };
+        this.appBaseService.appModel.selectedEssFile = null;
         this.computeState.triggerEvent();
 
-        this.evacueeSessionService.essFileNumber = null;
         this.wizardAdapterService.stepCreateProfileFromSearch();
 
         return true;
@@ -110,22 +110,22 @@ export class WizardActivateGuard implements CanActivate {
   private isProfileCreationAllowed(): boolean {
     //need to add more assumptions: houselhold members
     return (
-      this.evacueeSessionService.essFileNumber !== null &&
-      this.evacueeSessionService.essFileNumber !== undefined
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
     );
   }
 
   private isFileReviewAllowed(): boolean {
     return (
-      this.evacueeSessionService.essFileNumber !== null &&
-      this.evacueeSessionService.essFileNumber !== undefined
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
     ); // add file status for review
   }
 
   private isFileCompletionAllowed(): boolean {
     return (
-      this.evacueeSessionService.essFileNumber !== null &&
-      this.evacueeSessionService.essFileNumber !== undefined
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
     ); // add file status for complete
   }
 }

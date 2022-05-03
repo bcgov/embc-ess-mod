@@ -32,6 +32,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   correctAnswerFlag = false;
   showLoader = false;
   color = '#169BD5';
+  evacueeProfileId: string;
 
   constructor(
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
@@ -46,24 +47,31 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (
+      this.appBaseService?.appModel?.selectedProfile
+        ?.householdMemberRegistrantId !== undefined
+    ) {
+      this.evacueeProfileId =
+        this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId;
+    } else {
+      this.evacueeProfileId =
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
+    }
     this.createAnswersForm();
     this.securityAnswers = [];
     this.firstTryCorrect = false;
-    this.securityQuestions =
-      this.profileSecurityQuestionsService.shuffledSecurityQuestions;
+    // this.securityQuestions =
+    //   this.profileSecurityQuestionsService.shuffledSecurityQuestions;
 
     if (
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.id === undefined &&
-      this.securityQuestions === undefined
+      this.securityQuestions.length === 0
     ) {
       this.router.navigate(['responder-access/search/evacuee']);
-    } else if (this.securityQuestions === undefined) {
+    } else if (this.securityQuestions.length === 0) {
       this.profileSecurityQuestionsService
-        .getSecurityQuestions(
-          this.appBaseService?.appModel?.selectedProfile
-            ?.selectedEvacueeInContext?.id
-        )
+        .getSecurityQuestions(this.evacueeProfileId)
         .subscribe({
           next: (results) => {
             this.profileSecurityQuestionsService.shuffleSecurityQuestions(
@@ -114,11 +122,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
       answers: this.securityAnswers
     };
     this.profileSecurityQuestionsService
-      .verifySecurityQuestions(
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.id,
-        body
-      )
+      .verifySecurityQuestions(this.evacueeProfileId, body)
       .subscribe({
         next: (results) => {
           this.securityQuestionResult = results.numberOfCorrectAnswers;

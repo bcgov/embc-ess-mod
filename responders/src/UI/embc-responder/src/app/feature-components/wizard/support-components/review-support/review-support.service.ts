@@ -12,6 +12,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { mergeMap } from 'rxjs/operators';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewSupportService {
@@ -22,7 +23,8 @@ export class ReviewSupportService {
     private stepSupportsService: StepSupportsService,
     private evacueeSessionService: EvacueeSessionService,
     private locationsService: LocationsService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private appBaseService: AppBaseService
   ) {}
 
   public get includeEvacueeSummary(): boolean {
@@ -69,7 +71,7 @@ export class ReviewSupportService {
 
   updateExistingSupportsList(): void {
     this.stepSupportsService
-      .getEvacFile(this.evacueeSessionService.essFileNumber)
+      .getEvacFile(this.appBaseService?.appModel?.selectedEssFile?.id)
       .subscribe({
         next: (file) => {
           this.evacueeSessionService.currentNeedsAssessment =

@@ -57,7 +57,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
-    this.essFileNumber = this.evacueeSessionService.essFileNumber;
+    this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
 
     // Get the displayed value for radio options
     this.insuranceDisplay = globalConst.insuranceOptions.find(
@@ -111,7 +111,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.stepEssFileService.nextTabUpdate.next();
     this.saveLoader = true;
 
-    if (!this.evacueeSessionService.essFileNumber) {
+    if (!this.appBaseService?.appModel?.selectedEssFile?.id) {
       this.createNewEssFile();
     } else {
       this.editEssFile();
@@ -186,7 +186,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   private editEssFile() {
     this.essFileService
       .updateFile(
-        this.evacueeSessionService.essFileNumber,
+        this.appBaseService?.appModel?.selectedEssFile?.id,
         this.stepEssFileService.updateEvacFileDTO()
       )
       .subscribe({
