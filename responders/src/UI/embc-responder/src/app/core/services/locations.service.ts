@@ -170,7 +170,13 @@ export class LocationsService {
           }))
         );
         this.setRegionalDistricts(
-          Array.from(new Set(results[0].map((comm) => comm.districtName)))
+          Array.from(
+            new Set(
+              results[0]
+                .filter((comm) => comm.districtName)
+                .map((comm) => comm.districtName)
+            )
+          )
         );
 
         this.setStateProvinceList(
@@ -219,7 +225,13 @@ export class LocationsService {
           }))
         );
         this.setRegionalDistricts(
-          Array.from(new Set(communities.map((comm) => comm.districtName)))
+          Array.from(
+            new Set(
+              communities
+                .filter((comm) => comm.districtName)
+                .map((comm) => comm.districtName)
+            )
+          )
         );
       },
       error: (error) => {
