@@ -200,7 +200,9 @@ export class HouseholdMemberComponent implements OnInit {
   private sortByVerificationFactor(
     matchedProfiles: RegistrantProfileSearchResult[]
   ): RegistrantProfileSearchResult[] {
-    return matchedProfiles.sort((a, b) => a.status.localeCompare(b.status));
+    return matchedProfiles.sort((a, b) =>
+      a.status ? a.status.localeCompare(b.status) : -1
+    );
   }
 
   /**
