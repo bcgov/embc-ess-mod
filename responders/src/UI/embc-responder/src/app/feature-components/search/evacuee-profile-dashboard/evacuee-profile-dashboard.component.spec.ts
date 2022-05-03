@@ -190,7 +190,7 @@ describe('EvacueeProfileDashboardComponent', () => {
     [Router],
     (router: Router) => {
       spyOn(router, 'navigate').and.stub();
-      evacueeSessionService.isPaperBased = true;
+      evacueeSessionService.isPaperBased = false;
       evacueeProfileService.evacuationFileSummaryValue = [];
 
       fixture.detectChanges();

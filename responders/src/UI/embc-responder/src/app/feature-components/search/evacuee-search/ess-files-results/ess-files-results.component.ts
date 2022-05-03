@@ -214,13 +214,15 @@ export class EssFilesResultsComponent
   }
 
   private setSelectedFile(fileId: string) {
-    this.appBaseService.appModel.selectedEssFile = {
-      id: fileId,
-      evacuatedFromAddress: null,
-      needsAssessment: null,
-      primaryRegistrantId: null,
-      registrationLocation: null,
-      task: null
+    this.appBaseService.appModel = {
+      selectedEssFile: {
+        id: fileId,
+        evacuatedFromAddress: null,
+        needsAssessment: null,
+        primaryRegistrantId: null,
+        registrationLocation: null,
+        task: null
+      }
     };
 
     this.computeState.triggerEvent();
