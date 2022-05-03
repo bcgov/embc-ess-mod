@@ -1,109 +1,87 @@
-using EMBC.Tests.Automation.Registrants.Drivers;
-using EMBC.Tests.Automation.Registrants.PageObjects;
-
 namespace EMBC.Tests.Automation.Registrants.StepDefinitions
 {
     [Binding]
     public sealed class RegistrantPortalSteps
     {
-        private readonly AnonymousRegistration pageObject;
+        private readonly AnonymousRegistration anonymousRegistration;
 
         public RegistrantPortalSteps(BrowserDriver driver)
         {
-            this.pageObject = new AnonymousRegistration(driver.Current);
+            this.anonymousRegistration = new AnonymousRegistration(driver.Current);
         }
 
-        [Given("I see the Registrant Portal home page")]
-        public void GivenNavigateToHomePage()
-        {
-            pageObject.GetCurrentLocation.Should().Be("/registration-method");
-        }
-
-        [When("I click on the Self Register button")]
-        public void WhenClickSelfRegister()
-        {
-            pageObject.EnterCollectionNotice();
-        }
-
-        [Then("I see Collection Notice page")]
-        public void ThenCollectionNotice()
-        {
-            pageObject.GetCurrentLocation.Should().Be("/non-verified-registration/collection-notice");
-            pageObject.GetCurrentWizardStep().Should().Be(AnonymousRegistration.AnonymousRegistrationWizardStep.CollectionNotice);
-        }
-
-        [Then("I complete the minimum fields on the evacuee forms")]
+        [When("I complete the minimum fields on the evacuee forms")]
         public void MinimumFieldsEvacueeForms()
         {
+            anonymousRegistration.CurrentLocation.Should().Be("/non-verified-registration/collection-notice");
             // click on 'Next' button on Collection Notice page
-            pageObject.NextButton();
+            anonymousRegistration.NextButton();
 
             // click on 'Yes' button on Restriction page
-            pageObject.YesRadioButton();
+            anonymousRegistration.YesRadioButton();
 
-            // click on 'Next' button 
-            pageObject.NextButton();
+            // click on 'Next' button
+            anonymousRegistration.NextButton();
 
             // complete the minimum Personal Details
-            pageObject.MinimumPersonalDetails();
+            anonymousRegistration.MinimumPersonalDetails();
 
-            // click on 'Next' button 
-            pageObject.NextButton();
+            // click on 'Next' button
+            anonymousRegistration.NextButton();
 
             // complete the Address
-            pageObject.MinimumAddress();
+            anonymousRegistration.MinimumAddress();
 
-            // click on 'Next' button 
-            pageObject.NextButton();
+            // click on 'Next' button
+            anonymousRegistration.NextButton();
 
             // click on 'No' for Contact Information
-            pageObject.NoRadioButton();
+            anonymousRegistration.NoRadioButton();
 
-            // click on 'Next' button 
-            pageObject.NextButton();
+            // click on 'Next' button
+            anonymousRegistration.NextButton();
 
             // complete the Security Questions
-            pageObject.SecurityQuestions();
+            anonymousRegistration.SecurityQuestions();
 
             // click on 'Next' button
-            pageObject.NextButton();
+            anonymousRegistration.NextButton();
 
             // enter ESS file Location
-            pageObject.CreateESSFileLocation();
+            anonymousRegistration.CreateESSFileLocation();
 
             // click on 'Next' button
-            pageObject.NextButton();
+            anonymousRegistration.NextButton();
 
             // enter ESS file Household Members
-            pageObject.CreateESSFileHouseholdMembers();
+            anonymousRegistration.CreateESSFileHouseholdMembers();
 
             // click on 'Next' button
-            pageObject.NextButton();
+            anonymousRegistration.NextButton();
 
             // no pets entered
-
-            Thread.Sleep(2000);
+            anonymousRegistration.Wait();
 
             // click on 'Next' button
-            pageObject.NextButton();
+            anonymousRegistration.NextButton();
 
             // enter ESS file Needs
-            pageObject.CreateESSFileNeeds();
+            anonymousRegistration.CreateESSFileNeeds();
 
             // click on 'Next' button
-            pageObject.NextButton();
+            anonymousRegistration.NextButton();
 
             // enter ESS file Security Phrase
-            pageObject.CreateESSFileSecurityPhrase();
+            anonymousRegistration.CreateESSFileSecurityPhrase();
 
             // click on 'Next' button
-            pageObject.NextButton();
+            anonymousRegistration.NextButton();
         }
 
         [Then("the CAPTCHA field is confirmed to be working")]
         public void CAPTCHAFieldWorking()
         {
-            pageObject.CAPTCHAFails();
+            anonymousRegistration.CAPTCHAFails();
         }
     }
 }

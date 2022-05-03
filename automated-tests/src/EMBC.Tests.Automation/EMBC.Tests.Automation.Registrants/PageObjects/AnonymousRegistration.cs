@@ -2,23 +2,10 @@
 
 namespace EMBC.Tests.Automation.Registrants.PageObjects
 {
-    public class AnonymousRegistration
+    public class AnonymousRegistration : PageObjectBase
     {
-        private readonly IWebDriver webDriver;
-
-        public AnonymousRegistration(IWebDriver webDriver)
-        {
-            this.webDriver = webDriver;
-        }
-
-        public string GetCurrentLocation => new Uri(webDriver.Url).PathAndQuery;
-
-        public void EnterCollectionNotice()
-        {
-            var buttons = webDriver.FindElements(By.TagName("button"));
-            var selfRegisterButton = buttons.Should().ContainSingle(b => b.Text.Contains("Self-Register")).Subject;
-            selfRegisterButton.Click();
-        }
+        public AnonymousRegistration(IWebDriver webDriver) : base(webDriver)
+        { }
 
         public AnonymousRegistrationWizardStep GetCurrentWizardStep()
         {
@@ -53,7 +40,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var gender = "Female";
             var dateOfBirth = "01011980";
 
-            Thread.Sleep(1000);
+            Wait();
 
             var firstNameInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='firstName']"));
             firstNameInput.SendKeys(firstName);
@@ -70,7 +57,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void MinimumAddress()
         {
-            Thread.Sleep(1000);
+            Wait();
 
             var addressLine1 = "1012 Douglas St";
             var city = "Victoria";
@@ -93,7 +80,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void NoRadioButton()
         {
-            Thread.Sleep(1000);
+            Wait();
 
             var noRadioButton = webDriver.FindElement(By.Id("noOption"));
             noRadioButton.Click();
@@ -101,7 +88,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void SecurityQuestions()
         {
-            Thread.Sleep(1000);
+            Wait();
 
             var securityQuestion1 = "What was the name of your first pet?";
             var securityQuestion2 = "In what city or town was your mother born?";
@@ -113,12 +100,12 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             var securitySelect1 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question1']"));
             securitySelect1.SendKeys(securityQuestion1);
 
-            Thread.Sleep(1000);
+            Wait();
 
             var securitySelect2 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question2']"));
             securitySelect2.SendKeys(securityQuestion2);
 
-            Thread.Sleep(1000);
+            Wait();
 
             var securitySelect3 = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='question3']"));
             securitySelect3.SendKeys(securityQuestion3);
@@ -135,7 +122,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileLocation()
         {
-            Thread.Sleep(1000);
+            Wait();
 
             var yesRadioButton = webDriver.FindElement(By.Id("yesOption"));
             yesRadioButton.Click();
@@ -146,7 +133,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileHouseholdMembers()
         {
-            Thread.Sleep(2000);
+            Wait();
 
             var noRadioButton = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='haveSpecialDiet']/mat-radio-button[2]"));
             noRadioButton.Click();
@@ -157,7 +144,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileNeeds()
         {
-            Thread.Sleep(2000);
+            Wait();
 
             var yesRadioButton = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideFood']/mat-radio-button[1]"));
             yesRadioButton.Click();
@@ -177,7 +164,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CreateESSFileSecurityPhrase()
         {
-            Thread.Sleep(1000);
+            Wait();
 
             var securityPhrase = "Sesame";
 
@@ -187,7 +174,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void CAPTCHAFails()
         {
-            Thread.Sleep(1000);
+            Wait();
 
             var CAPTCHAEntry = "Invalid";
 
@@ -196,6 +183,5 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
             Assert.True(webDriver.FindElement(By.XPath("//body[contains(.,' Incorrect answer, please try again. ')]")).Displayed);
         }
-
     }
 }

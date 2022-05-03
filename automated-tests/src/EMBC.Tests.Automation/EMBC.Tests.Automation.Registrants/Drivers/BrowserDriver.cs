@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Extensions.Configuration;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Protractor;
 
@@ -9,18 +10,22 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
     /// </summary>
     public class BrowserDriver : IDisposable
     {
-        private readonly Lazy<IWebDriver> _currentWebDriverLazy;
+        private readonly Lazy<IWebDriver> currentWebDriverLazy;
+        private readonly Lazy<IConfiguration> configurationLazy;
         private bool _isDisposed;
 
         public BrowserDriver()
         {
-            _currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
+            currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
+            configurationLazy = new Lazy<IConfiguration>(ReadConfiguration);
         }
 
         /// <summary>
         /// The Selenium IWebDriver instance
         /// </summary>
-        public IWebDriver Current => _currentWebDriverLazy.Value;
+        public IWebDriver Current => currentWebDriverLazy.Value;
+
+        public IConfiguration Configuration => configurationLazy.Value;
 
         /// <summary>
         /// Creates the Selenium web driver (opens a browser)
@@ -32,8 +37,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
             options.AddArguments("start-maximized");
 
             var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), options);
-            chromeDriver.Url = "https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/";
-            //chromeDriver.Url = "https://test-era-registrants.apps.silver.devops.gov.bc.ca/";
+            chromeDriver.Url = Configuration.GetValue<string>("baseUrl");
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
 
@@ -42,6 +46,11 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
 
             return ngWebDriver;
         }
+
+        private IConfiguration ReadConfiguration() =>
+            new ConfigurationBuilder()
+                .AddUserSecrets<BrowserDriver>()
+                .Build();
 
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
@@ -53,7 +62,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
                 return;
             }
 
-            if (_currentWebDriverLazy.IsValueCreated)
+            if (currentWebDriverLazy.IsValueCreated)
             {
                 Current.Quit();
             }
