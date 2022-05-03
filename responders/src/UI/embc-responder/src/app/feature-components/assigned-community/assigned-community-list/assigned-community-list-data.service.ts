@@ -120,7 +120,7 @@ export class AssignedCommunityListDataService {
 
   private sort(incomingList: string[]): string[] {
     if (incomingList !== null && incomingList !== undefined) {
-      return incomingList.sort((a, b) => a.localeCompare(b));
+      return incomingList.sort((a, b) => (a ? a.localeCompare(b) : -1));
     }
   }
 }
