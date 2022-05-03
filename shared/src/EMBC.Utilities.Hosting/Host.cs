@@ -1,34 +1,22 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime;
-using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
-using Serilog.Enrichers.Span;
 using Serilog.Events;
-using Serilog.Exceptions;
 using Serilog.Extensions.Logging;
 using StackExchange.Redis;
 
@@ -47,9 +35,6 @@ namespace EMBC.Utilities.Hosting
     /// </summary>
     public class Host
     {
-        private const string HealthCheckReadyTag = "ready";
-        private const string HealthCheckAliveTag = "alive";
-        private const string logOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}";
         private readonly string appName;
 
         public Host(string appName)
@@ -70,7 +55,7 @@ namespace EMBC.Utilities.Hosting
                .MinimumLevel.Debug()
                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                .Enrich.FromLogContext()
-               .WriteTo.Console(outputTemplate: logOutputTemplate)
+               .WriteTo.Console(outputTemplate: Logging.LogOutputTemplate)
                .CreateBootstrapLogger();
 
             try
@@ -107,7 +92,7 @@ namespace EMBC.Utilities.Hosting
                      // add secrets json file if exists in the hosting assembly
                      opts.AddUserSecrets(Assembly.GetEntryAssembly(), true, true);
                  })
-                .UseSerilog(ConfigureSerilog)
+                .UseSerilog((ctx, config) => Logging.ConfigureSerilog(ctx, config, appName))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureServices((ctx, services) =>
@@ -119,48 +104,6 @@ namespace EMBC.Utilities.Hosting
                         Configure(app, ctx.Configuration, ctx.HostingEnvironment, assemblies);
                     });
                 });
-
-        protected virtual void ConfigureSerilog(HostBuilderContext hostBuilderContext, LoggerConfiguration loggerConfiguration)
-        {
-            loggerConfiguration
-                .ReadFrom.Configuration(hostBuilderContext.Configuration)
-                .Enrich.WithMachineName()
-                .Enrich.FromLogContext()
-                .Enrich.WithExceptionDetails()
-                .Enrich.WithProperty("app", appName)
-                .Enrich.WithEnvironmentName()
-                .Enrich.WithEnvironmentUserName()
-                .Enrich.WithCorrelationId()
-                .Enrich.WithCorrelationIdHeader()
-                .Enrich.WithClientAgent()
-                .Enrich.WithClientIp()
-                .Enrich.WithSpan()
-                .WriteTo.Console(outputTemplate: logOutputTemplate)
-#if DEBUG
-            //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
-#endif
-            ;
-
-            var splunkUrl = hostBuilderContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
-            var splunkToken = hostBuilderContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
-            if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
-            {
-                Log.Warning($"Logs will NOT be forwarded to Splunk: check SPLUNK_TOKEN and SPLUNK_URL env vars");
-            }
-            else
-            {
-                loggerConfiguration
-                    .WriteTo.EventCollector(
-                        splunkHost: splunkUrl,
-                        eventCollectorToken: splunkToken,
-                        messageHandler: new HttpClientHandler
-                        {
-                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                        },
-                        renderTemplate: false);
-                Log.Information($"Logs will be forwarded to Splunk");
-            }
-        }
 
         protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment, params Assembly[] assemblies)
         {
@@ -191,9 +134,7 @@ namespace EMBC.Utilities.Hosting
                 if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
 
-            services.AddHealthChecks()
-                .AddCheck($"ready hc", () => HealthCheckResult.Healthy("ready"), new[] { HealthCheckReadyTag })
-                .AddCheck($"live hc", () => HealthCheckResult.Healthy("alive"), new[] { HealthCheckAliveTag });
+            services.AddDefaultHealthChecks();
 
             services
                 .AddHttpContextAccessor()
@@ -229,18 +170,7 @@ namespace EMBC.Utilities.Hosting
 
             services.ConfigureComponentServices(configuration, hostEnvironment, logger, assemblies);
 
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                builder
-                    .AddConsoleExporter()
-                    .AddSource(appName)
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: appName, serviceVersion: "1.0.0.0")).AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddGrpcCoreInstrumentation()
-                    .AddGrpcClientInstrumentation()
-                    .AddRedisInstrumentation();
-            });
-            services.AddSingleton(TracerProvider.Default.GetTracer(appName));
+            services.AddOpenTelemetry(appName);
 
             // add background tasks
             if (configuration.GetValue("backgroundTask:enabled", true))
@@ -263,14 +193,16 @@ namespace EMBC.Utilities.Hosting
 
             if (env.IsDevelopment())
             {
-                app.Use(WriteDevelopmentResponse);
+                app.Use(ErrorHandling.WriteDevelopmentResponse);
             }
             else
             {
-                app.Use(WriteProductionResponse);
+                app.Use(ErrorHandling.WriteProductionResponse);
             }
 
             logger.LogInformation("Starting configuration of {appName}", appName);
+
+            app.SetDefaultRequestLogging();
 
             app.UseResponseCompression();
             app.UseForwardedHeaders();
@@ -279,33 +211,12 @@ namespace EMBC.Utilities.Hosting
 
             app.ConfigureComponentPipeline(configuration, env, logger, assemblies);
 
-            app.UseSerilogRequestLogging(opts =>
-            {
-                opts.IncludeQueryInRequestPath = true;
-                opts.GetLevel = ExcludeHealthChecks;
-                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
-                {
-                    diagCtx.Set("User", httpCtx.User.Identity?.Name ?? string.Empty);
-                    diagCtx.Set("Host", httpCtx.Request.Host);
-                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength?.ToString() ?? string.Empty);
-                };
-            });
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
-                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
-                endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
-                endpoints.Map("/version", async ctx =>
-                {
-                    var versionInformationProviders = ctx.RequestServices.GetServices<IVersionInformationProvider>();
-                    var versions = await versionInformationProviders.AsParallel().SelectManyAsync(async vip => await vip.Get());
+                endpoints.MapDefaultHealthChecks();
 
-                    ctx.Response.ContentType = "application/json";
-                    ctx.Response.StatusCode = (int)HttpStatusCode.OK;
-                    await ctx.Response.WriteAsJsonAsync(versions.ToArray());
-                });
+                endpoints.MapVersionsEndpoint();
 
                 //map gRPC services
                 var grpcServices = assemblies.SelectMany(a => a.CreateInstancesOf<IHaveGrpcServices>()).SelectMany(p => p.GetGrpcServiceTypes()).ToArray();
@@ -316,57 +227,6 @@ namespace EMBC.Utilities.Hosting
                     grpcRegistrationMethodInfo.MakeGenericMethod(service).Invoke(null, new[] { endpoints });
                 }
             });
-        }
-
-        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
-        ex != null
-            ? LogEventLevel.Error
-            : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
-                ? LogEventLevel.Error
-                : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
-                    ? LogEventLevel.Verbose
-                    : LogEventLevel.Information;
-
-        //borrowed from https://andrewlock.net/creating-a-custom-error-handler-middleware-function/
-        private static Task WriteDevelopmentResponse(HttpContext httpContext, Func<Task> next) => WriteResponse(httpContext, includeDetails: true, next);
-
-        private static Task WriteProductionResponse(HttpContext httpContext, Func<Task> next) => WriteResponse(httpContext, includeDetails: false, next);
-
-        private static async Task WriteResponse(HttpContext httpContext, bool includeDetails, Func<Task> next)
-        {
-            // Try and retrieve the error from the ExceptionHandler middleware
-            var exceptionDetails = httpContext.Features.Get<IExceptionHandlerFeature>();
-            var ex = exceptionDetails?.Error;
-
-            // Should always exist, but best to be safe!
-            if (ex != null)
-            {
-                // ProblemDetails has it's own content type
-                httpContext.Response.ContentType = "application/problem+json";
-
-                // Get the details to display, depending on whether we want to expose the raw exception
-                var title = includeDetails ? "An error occured: " + ex.Message : "An error occured";
-                var details = includeDetails ? ex.ToString() : null;
-
-                var problem = new ProblemDetails
-                {
-                    Status = 500,
-                    Title = title,
-                    Detail = details
-                };
-
-                // This is often very handy information for tracing the specific request
-                var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
-                if (traceId != null)
-                {
-                    problem.Extensions["traceId"] = traceId;
-                }
-
-                //Serialize the problem details object to the Response as JSON (using System.Text.Json)
-                var stream = (httpContext ?? null!).Response.Body;
-                await JsonSerializer.SerializeAsync(stream, problem);
-            }
-            await next();
         }
     }
 }

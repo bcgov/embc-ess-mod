@@ -1,5 +1,5 @@
 import * as faker from 'faker/locale/en_CA';
-import { ClothingSupport, EvacuationFile, FoodGroceriesSupport, FoodRestaurantSupport, IncidentalsSupport, LodgingBilletingSupport, LodgingGroupSupport, LodgingHotelSupport, ProcessDigitalSupportsRequest, Referral, Supplier, Support, SupportCategory, SupportDelivery, SupportMethod, SupportStatus, SupportSubCategory, TransportationOtherSupport, TransportationTaxiSupport } from '../../api/responders/models';
+import { ClothingSupport, EvacuationFile, FoodGroceriesSupport, FoodRestaurantSupport, IncidentalsSupport, Interac, LodgingBilletingSupport, LodgingGroupSupport, LodgingHotelSupport, ProcessDigitalSupportsRequest, Referral, Supplier, Support, SupportCategory, SupportMethod, SupportStatus, SupportSubCategory, TransportationOtherSupport, TransportationTaxiSupport } from '../../api/responders/models';
 
 import { addDays, getRandomInt } from '../../utilities';
 
@@ -106,22 +106,33 @@ function generateSupport(file: EvacuationFile, suppliers: Array<Supplier>, categ
         member_ids.push(file.householdMembers ? file.householdMembers[i].id || "" : "");
     }
 
+    let method = faker.random.arrayElement([SupportMethod.Referral, SupportMethod.ETransfer]);
+
     let random_supplier = faker.random.arrayElement(suppliers);
-    let supportDelivery: Referral = {
+
+    let supportDelivery: Referral | Interac = method == SupportMethod.Referral ? {
         method: SupportMethod.Referral,
         issuedToPersonName: file.primaryRegistrantLastName + "," + file.primaryRegistrantFirstName,
         supplierAddress: random_supplier?.address,
         supplierId: random_supplier?.id || "",
         supplierName: random_supplier?.name || "",
         supplierNotes: "notes",
-    }
-    
+    } as Referral :
+        {
+            method: SupportMethod.ETransfer,
+            receivingRegistrantId: file.primaryRegistrantId,
+            recipientFirstName: file.primaryRegistrantFirstName,
+            recipientLastName: file.primaryRegistrantLastName,
+            notificationEmail: faker.internet.email(),
+            notificationMobile: faker.phone.phoneNumber("###-###-####"),
+        } as Interac;
+
     return {
         needsAssessmentId: file.needsAssessment.id,
         from: now.toISOString(),
         to: addDays(now, getRandomInt(1, 5)).toISOString(),
         status: SupportStatus.Draft,
-        method: SupportMethod.Referral,
+        method: method,
         category: category,
         subCategory: subCategory,
         supportDelivery: supportDelivery,
