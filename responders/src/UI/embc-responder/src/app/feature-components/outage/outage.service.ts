@@ -205,7 +205,8 @@ export class OutageService {
             this.alertService.clearAlert();
             this.alertService.setAlert('danger', globalConst.systemError);
           }
-        }));
+        })
+    );
   }
 
   public startOutageInterval(): void {
@@ -215,7 +216,8 @@ export class OutageService {
         .subscribe(() => {
           this.routeOutageInfo();
           this.openOutageDialog();
-        }));
+        })
+    );
   }
 
   public outageInfoIsEqual(newOutageInfo: OutageInformation): boolean {

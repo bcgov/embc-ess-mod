@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -30,7 +30,8 @@ export class MockOutageService extends OutageService {
     public alertService: MockAlertService,
     public router: Router,
     public authenticationService: AuthenticationService,
-    public cacheService: CacheService
+    public cacheService: CacheService,
+    zone: NgZone
   ) {
     super(
       dialog,
@@ -38,7 +39,8 @@ export class MockOutageService extends OutageService {
       alertService,
       router,
       authenticationService,
-      cacheService
+      cacheService,
+      zone
     );
   }
 
