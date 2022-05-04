@@ -296,7 +296,7 @@ export class HouseholdMemberComponent implements OnInit {
   private setProfileDetails(id: string) {
     let profileModel =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
-    let profileReloadFlag =
+    const profileReload =
       this.appBaseService?.appModel?.selectedProfile
         ?.selectedEvacueeInContext === null;
 
@@ -314,7 +314,7 @@ export class HouseholdMemberComponent implements OnInit {
       selectedProfile: {
         selectedEvacueeInContext: profileModel,
         householdMemberRegistrantId: id,
-        profileReloadFlag: profileReloadFlag
+        profileReloadFlag: profileReload
       }
     };
     this.computeState.triggerEvent();

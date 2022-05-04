@@ -254,7 +254,7 @@ export class EvacueeProfileService {
   private setProfileDetails(id: string) {
     let profileModel =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
-    let profileReloadFlag =
+    const profileReloadFlag =
       this.appBaseService?.appModel?.selectedProfile
         ?.selectedEvacueeInContext === null;
 
@@ -272,7 +272,7 @@ export class EvacueeProfileService {
       selectedProfile: {
         selectedEvacueeInContext: profileModel,
         householdMemberRegistrantId: id,
-        profileReloadFlag: profileReloadFlag
+        profileReloadFlag
       }
     };
     this.computeState.triggerEvent();
