@@ -183,5 +183,24 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
             Assert.True(webDriver.FindElement(By.XPath("//body[contains(.,' Incorrect answer, please try again. ')]")).Displayed);
         }
+
+        public void SubmitForm(string captchaAnswer)
+        {
+            if (string.IsNullOrWhiteSpace(captchaAnswer)) throw new ArgumentNullException(nameof(captchaAnswer));
+            //create the captcha automation answer - captcha is limited to 6 characters
+            var answer = captchaAnswer.Substring(0, 6);
+
+            Wait();
+
+            webDriver.FindElement(By.Name("answer")).SendKeys(answer);
+
+            Wait(2000);
+
+            var saveButton = webDriver.FindElement(By.ClassName("save-button"));
+
+            saveButton.Enabled.Should().BeTrue();
+
+            saveButton.Click();
+        }
     }
 }

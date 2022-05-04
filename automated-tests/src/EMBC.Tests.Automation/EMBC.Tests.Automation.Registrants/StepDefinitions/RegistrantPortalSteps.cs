@@ -1,13 +1,17 @@
+using Microsoft.Extensions.Configuration;
+
 namespace EMBC.Tests.Automation.Registrants.StepDefinitions
 {
     [Binding]
     public sealed class RegistrantPortalSteps
     {
         private readonly AnonymousRegistration anonymousRegistration;
+        private readonly string captchaAnswer;
 
         public RegistrantPortalSteps(BrowserDriver driver)
         {
             this.anonymousRegistration = new AnonymousRegistration(driver.Current);
+            captchaAnswer = driver.Configuration.GetValue<string>("captchaAnswer");
         }
 
         [When("I complete the minimum fields on the evacuee forms")]
@@ -82,6 +86,12 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
         public void CAPTCHAFieldWorking()
         {
             anonymousRegistration.CAPTCHAFails();
+        }
+
+        [When("I submit the anonymous registration form")]
+        public void SubmitForm()
+        {
+            anonymousRegistration.SubmitForm(this.captchaAnswer);
         }
     }
 }

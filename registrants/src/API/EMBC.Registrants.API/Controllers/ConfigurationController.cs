@@ -70,6 +70,11 @@ namespace EMBC.Responders.API.Controllers
                 {
                     SessionTimeoutInMinutes = configuration.GetValue<int>("timeout:minutes", 20),
                     WarningMessageDuration = configuration.GetValue<int>("timeout:warningDuration", 1)
+                },
+                Captcha = new CaptchaConfiguration
+                {
+                    Url = configuration.GetValue<string>("captcha:url"),
+                    AutomationValue = configuration.GetValue<string>("captcha:automation")?.Substring(0, 6).ToSha256() //captcha is limited to 6 characters
                 }
             };
 
@@ -173,6 +178,7 @@ namespace EMBC.Responders.API.Controllers
         public OidcOptions Oidc { get; set; }
         public OutageInformation OutageInfo { get; set; }
         public TimeoutConfiguration TimeoutInfo { get; set; }
+        public CaptchaConfiguration Captcha { get; set; }
     }
 
     public class OidcOptions
@@ -209,6 +215,12 @@ namespace EMBC.Responders.API.Controllers
     {
         public int SessionTimeoutInMinutes { get; set; }
         public int WarningMessageDuration { get; set; }
+    }
+
+    public class CaptchaConfiguration
+    {
+        public string Url { get; set; }
+        public string AutomationValue { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
