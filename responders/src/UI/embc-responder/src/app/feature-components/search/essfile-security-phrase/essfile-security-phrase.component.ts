@@ -74,6 +74,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
    * Function that redirects back
    */
   goBack() {
+    this.essFileSecurityPhraseService.securityPhrase = undefined;
     this.location.back();
   }
 
@@ -97,7 +98,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
           if (results.isCorrect) {
             this.wrongAnswerFlag = false;
             this.correctAnswerFlag = true;
-
+            this.essFileSecurityPhraseService.securityPhrase = undefined;
             if (this.evacueeSessionService.fileLinkFlag === 'Y') {
               this.evacueeProfileService
                 .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
