@@ -29,6 +29,10 @@ export class HeaderComponent implements OnInit {
     return this.profile.userName;
   }
 
+  public get displayName(): string {
+    return [this.profile.firstName, this.profile.lastName?.charAt(0)].join(' ');
+  }
+
   constructor(
     private router: Router,
     private authService: AuthenticationService,
