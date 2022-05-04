@@ -3,7 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Protractor;
 
-namespace EMBC.Tests.Automation.Registrants.Drivers
+namespace EMBC.Tests.Automation.Responders.Drivers
 {
     /// <summary>
     /// Manages a browser instance using Selenium

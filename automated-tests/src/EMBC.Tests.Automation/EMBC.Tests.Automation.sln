@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Tests.Automation.Registrants", "EMBC.Tests.Automation.Registrants\EMBC.Tests.Automation.Registrants.csproj", "{2BF54F06-FB67-430E-85B6-B651CC337DB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMBC.Tests.Automation.Responders", "EMBC.Tests.Automation.Responders\EMBC.Tests.Automation.Responders.csproj", "{ECF40786-F527-4304-81A4-30F8CD41B489}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2BF54F06-FB67-430E-85B6-B651CC337DB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BF54F06-FB67-430E-85B6-B651CC337DB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BF54F06-FB67-430E-85B6-B651CC337DB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECF40786-F527-4304-81A4-30F8CD41B489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECF40786-F527-4304-81A4-30F8CD41B489}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECF40786-F527-4304-81A4-30F8CD41B489}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECF40786-F527-4304-81A4-30F8CD41B489}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,7 +19,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class RegistrantPortalHomepageFeature : object, Xunit.IClassFixture<RegistrantPortalHomepageFeature.FixtureData>, System.IDisposable
+    public partial class AuthenticatedRegistrantFeature : object, Xunit.IClassFixture<AuthenticatedRegistrantFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace EMBC.Tests.Automation.Registrants.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "HomePage.feature"
+#line 1 "AuthenticatedRegistrant.feature"
 #line hidden
         
-        public RegistrantPortalHomepageFeature(RegistrantPortalHomepageFeature.FixtureData fixtureData, EMBC_Tests_Automation_Registrants_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public AuthenticatedRegistrantFeature(AuthenticatedRegistrantFeature.FixtureData fixtureData, EMBC_Tests_Automation_Registrants_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Registrant Portal homepage", null, ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Authenticated Registrant", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -80,17 +80,15 @@ namespace EMBC.Tests.Automation.Registrants.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Start anonymous registration")]
-        [Xunit.TraitAttribute("FeatureTitle", "Registrant Portal homepage")]
-        [Xunit.TraitAttribute("Description", "Start anonymous registration")]
-        [Xunit.TraitAttribute("Category", "mytag")]
-        public void StartAnonymousRegistration()
+        [Xunit.SkippableFactAttribute(DisplayName="BCSC user logs in to dashboard")]
+        [Xunit.TraitAttribute("FeatureTitle", "Authenticated Registrant")]
+        [Xunit.TraitAttribute("Description", "BCSC user logs in to dashboard")]
+        public void BCSCUserLogsInToDashboard()
         {
-            string[] tagsOfScenario = new string[] {
-                    "mytag"};
+            string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Start anonymous registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 4
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("BCSC user logs in to dashboard", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 3
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -100,14 +98,11 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
+#line 4
+ testRunner.Given("I log in with BCSC credentials EVAC00006", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
 #line 5
- testRunner.Given("I see the Registrant Portal home page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 6
- testRunner.When("I click on the Self Register button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 7
- testRunner.Then("I see Collection Notice page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I am on path /verified-registration/dashboard/current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -120,12 +115,12 @@ this.ScenarioInitialize(scenarioInfo);
             
             public FixtureData()
             {
-                RegistrantPortalHomepageFeature.FeatureSetup();
+                AuthenticatedRegistrantFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                RegistrantPortalHomepageFeature.FeatureTearDown();
+                AuthenticatedRegistrantFeature.FeatureTearDown();
             }
         }
     }

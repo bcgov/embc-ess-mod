@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { OutageInformation } from 'src/app/core/api/models/outage-information';
 import * as moment from 'moment';
 import { OutageDialogComponent } from 'src/app/shared/outage-components/outage-dialog/outage-dialog.component';
@@ -47,7 +47,8 @@ export class OutageService {
     public alertService: AlertService,
     public router: Router,
     public authenticationService: AuthenticationService,
-    public cacheService: CacheService
+    public cacheService: CacheService,
+    private zone: NgZone
   ) {}
 
   public get outageInfo(): OutageInformation {
@@ -181,38 +182,42 @@ export class OutageService {
   }
 
   public outagePolling(): void {
-    timer(1000, 300000)
-      .pipe(
-        switchMap(() => this.getOutageConfig()),
-        share(),
-        takeUntil(this.stopPolling)
-      )
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-          // this.outageInfo = response;
-          if (response !== null) {
-            if (!this.outageInfoIsEqual(response)) {
-              this.outageDialogCounter = 0;
+    this.zone.runOutsideAngular(() =>
+      timer(1000, 300000)
+        .pipe(
+          switchMap(() => this.getOutageConfig()),
+          share(),
+          takeUntil(this.stopPolling)
+        )
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+            // this.outageInfo = response;
+            if (response !== null) {
+              if (!this.outageInfoIsEqual(response)) {
+                this.outageDialogCounter = 0;
+              }
+              this.setOutageInformation(response);
+              this.displayOutageBanner(response);
             }
-            this.setOutageInformation(response);
-            this.displayOutageBanner(response);
+          },
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.systemError);
           }
-        },
-        error: (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.systemError);
-        }
-      });
+        })
+    );
   }
 
   public startOutageInterval(): void {
-    timer(1000, 30000)
-      .pipe(share(), takeUntil(this.stopPolling))
-      .subscribe(() => {
-        this.routeOutageInfo();
-        this.openOutageDialog();
-      });
+    this.zone.runOutsideAngular(() =>
+      timer(1000, 30000)
+        .pipe(share(), takeUntil(this.stopPolling))
+        .subscribe(() => {
+          this.routeOutageInfo();
+          this.openOutageDialog();
+        })
+    );
   }
 
   public outageInfoIsEqual(newOutageInfo: OutageInformation): boolean {
