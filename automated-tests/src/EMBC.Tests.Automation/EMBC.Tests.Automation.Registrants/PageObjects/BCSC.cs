@@ -17,14 +17,14 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
             driver.FindElement(By.Id("tile_btn_virtual_device_div_id")).Click();
 
-            Thread.Sleep(500);
+            Wait();
 
             driver.FindElement(By.Name("csn")).Clear();
             driver.FindElement(By.Name("csn")).SendKeys(csn);
 
             driver.FindElement(By.Id("continue")).Click();
 
-            Thread.Sleep(500);
+            Wait();
 
             driver.FindElement(By.Name("passcode")).Clear();
             driver.FindElement(By.Name("passcode")).SendKeys(passcode);
