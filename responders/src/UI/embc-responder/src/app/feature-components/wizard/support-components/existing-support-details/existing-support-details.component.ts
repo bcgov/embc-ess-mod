@@ -251,18 +251,12 @@ export class ExistingSupportDetailsComponent implements OnInit {
                       printWindow.style.display = 'none';
                       document.body.appendChild(printWindow);
                       printWindow.contentDocument.write(text);
-                      printWindow.contentWindow.print();
-                      document.body.removeChild(printWindow);
+                      setTimeout(() => {
+                        printWindow.contentWindow.print();
+                        document.body.removeChild(printWindow);
 
-                      // const blob = new Blob([response], { type: response.type });
-                      // this.downloadService.downloadFile(
-                      //   window,
-                      //   blob,
-                      //   `support-${
-                      //     this.selectedSupport.id
-                      //   }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
-                      // );
-                      this.isLoading = !this.isLoading;
+                        this.isLoading = !this.isLoading;
+                      }, 300);
                     })
                     .catch((error) => {
                       throw error;
