@@ -689,7 +689,7 @@
               ?.value.householdMembers
           "
         >
-          <ng-container *ngIf="member.isPrimaryRegistrant === false">
+          <ng-container *ngIf="member.isPrimaryRegistrant !== true">
             <div class="row info-detail">
               <div class="col-md-3">First Name:</div>
               <div class="col-md-3">{{ member.firstName }}</div>
