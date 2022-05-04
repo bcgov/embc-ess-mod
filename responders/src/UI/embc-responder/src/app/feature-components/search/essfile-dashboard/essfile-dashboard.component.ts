@@ -20,6 +20,9 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
+import { lastValueFrom, tap } from 'rxjs';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -46,12 +49,13 @@ export class EssfileDashboardComponent implements OnInit {
     private stepNotesService: StepNotesService,
     public appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
+    private evacueeProfileService: EvacueeProfileService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getEssFile();
-    this.updateMember();
+    const profile$ = await this.updateMember();
 
     this.isMinor =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.isMinor;
@@ -250,19 +254,44 @@ export class EssfileDashboardComponent implements OnInit {
     });
   }
 
-  private updateMember() {
+  private async updateMember() {
     if (
       this.appBaseService?.appModel?.selectedProfile
         ?.householdMemberRegistrantId !== undefined
-    )
+    ) {
+      if (this.appBaseService?.appModel?.selectedProfile.profileReloadFlag) {
+        const profile$ = await this.getEvacueeProfile(
+          this.appBaseService?.appModel?.selectedProfile
+            ?.selectedEvacueeInContext?.id
+        );
+      }
       this.appBaseService.appModel = {
         selectedProfile: {
           selectedEvacueeInContext:
             this.appBaseService?.appModel?.selectedProfile
               ?.selectedEvacueeInContext,
-          householdMemberRegistrantId: undefined
+          householdMemberRegistrantId: undefined,
+          profileReloadFlag: null
         }
       };
-    this.computeState.triggerEvent();
+      this.computeState.triggerEvent();
+    }
+  }
+
+  private getEvacueeProfile(
+    evacueeProfileId: string
+  ): Promise<RegistrantProfileModel> {
+    const profile$ = this.evacueeProfileService
+      .getProfileFromId(evacueeProfileId)
+      .pipe(
+        tap({
+          next: (profile: RegistrantProfileModel) => {},
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.getProfileError);
+          }
+        })
+      );
+    return lastValueFrom(profile$);
   }
 }

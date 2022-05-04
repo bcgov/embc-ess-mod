@@ -42,6 +42,7 @@ export class StepEssFileService {
   private primaryAddressVal: AddressModel;
   private taskNumberVal: string;
   private evacuationFileDateVal: string;
+  private primaryRegistrantIdVal: string;
 
   // Evacuation Details tab
   private paperESSFileVal: string;
@@ -110,6 +111,14 @@ export class StepEssFileService {
 
   public set selectedEssFile(essFile: EvacuationFileModel) {
     this.selectedEssFileVal = essFile;
+  }
+
+  public get primaryRegistrantId(): string {
+    return this.primaryRegistrantIdVal;
+  }
+
+  public set primaryRegistrantId(primaryRegistrantIdVal: string) {
+    this.primaryRegistrantIdVal = primaryRegistrantIdVal;
   }
 
   // Wizard variables
@@ -616,9 +625,7 @@ export class StepEssFileService {
         ? this.evacueeSearchService.paperBasedEssFile
         : null,
       evacuationFileDate: this.evacuationFileDate,
-      primaryRegistrantId:
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.id,
+      primaryRegistrantId: this.primaryRegistrantId,
 
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
@@ -705,6 +712,7 @@ export class StepEssFileService {
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     this.selectedEssFile = essFile;
+    this.primaryRegistrantId = essFile.primaryRegistrantId;
 
     this.appBaseService.wizardProperties = {
       lastCompletedStep: WizardSteps.Step2

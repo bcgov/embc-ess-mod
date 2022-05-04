@@ -64,7 +64,8 @@ export class AppBaseService {
     this.appModel = {
       selectedProfile: {
         selectedEvacueeInContext: null,
-        householdMemberRegistrantId: null
+        householdMemberRegistrantId: null,
+        profileReloadFlag: null
       },
       selectedEssFile: null
     };

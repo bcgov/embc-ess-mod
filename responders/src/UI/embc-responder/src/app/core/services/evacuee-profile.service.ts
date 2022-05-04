@@ -187,6 +187,7 @@ export class EvacueeProfileService {
     const $result = profile$.pipe(
       mergeMap((regResult: RegistrationResult) => {
         this.evacueeSessionService.newHouseholdRegistrantId = regResult.id;
+        //this.setProfileDetails(regResult.id);
         return this.linkMemberProfile({
           fileId: essFileId,
           linkRequest: {
@@ -248,5 +249,32 @@ export class EvacueeProfileService {
       registrantId,
       body: { email }
     });
+  }
+
+  private setProfileDetails(id: string) {
+    let profileModel =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
+    let profileReloadFlag =
+      this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext === null;
+
+    if (profileModel === null) {
+      profileModel = {
+        id,
+        primaryAddress: null,
+        mailingAddress: null,
+        personalDetails: null,
+        contactDetails: null,
+        restriction: null
+      };
+    }
+    this.appBaseService.appModel = {
+      selectedProfile: {
+        selectedEvacueeInContext: profileModel,
+        householdMemberRegistrantId: id,
+        profileReloadFlag: profileReloadFlag
+      }
+    };
+    this.computeState.triggerEvent();
   }
 }
