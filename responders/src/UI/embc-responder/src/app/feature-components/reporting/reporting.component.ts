@@ -65,7 +65,7 @@ export class ReportingComponent implements OnInit {
           const url = window.URL.createObjectURL(blob);
           const anchor = document.createElement('a');
           anchor.download =
-            'Referral_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
+            'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
           anchor.href = url;
           document.body.appendChild(anchor);
           anchor.click();
