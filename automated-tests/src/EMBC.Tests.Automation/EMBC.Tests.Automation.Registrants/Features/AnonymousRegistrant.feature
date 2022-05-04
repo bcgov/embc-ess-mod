@@ -21,6 +21,13 @@ Scenario: Registrant Portal - CAPTCHA field check
 	When I complete the minimum fields on the evacuee forms
 	Then the CAPTCHA field is confirmed to be working
 
+
+Scenario: Registrant Portal - submit minimal form
+	Given I start self registration
+	When I complete the minimum fields on the evacuee forms
+	And I submit the anonymous registration form
+	Then I am on path /non-verified-registration/file-submission
+
 #Scenario: Registrant Portal - Verified path - Happy path/maximum fields
 #	Given I register anonymously
 #	#When I click on the Self Register button

@@ -68,6 +68,9 @@ parameters:
   - description: splunk token
     name: SPLUNK_TOKEN
     required: false
+  - description: Captcha service url
+    name: CAPTCHA_SERVICE_URL
+    required: true
 
 objects:
   - kind: ConfigMap
@@ -92,6 +95,7 @@ objects:
       TIMEOUT__WARNINGDURATION: ${TIMEOUT_WARNINGDURATION}
       messaging__authorizationEnabled: "true"
       messaging__oauth__metadataAddress: ${OAUTH_AUTHORITY}/.well-known/openid-configuration
+      captcha__url: ${CAPTCHA_SERVICE_URL}
 
   - kind: Secret
     apiVersion: v1

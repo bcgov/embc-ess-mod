@@ -2,6 +2,7 @@ export { Configuration } from './models/configuration';
 export { OidcOptions } from './models/oidc-options';
 export { OutageInformation } from './models/outage-information';
 export { TimeoutConfiguration } from './models/timeout-configuration';
+export { CaptchaConfiguration } from './models/captcha-configuration';
 export { ProblemDetails } from './models/problem-details';
 export { Code } from './models/code';
 export { CommunityCode } from './models/community-code';

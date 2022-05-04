@@ -5,7 +5,11 @@ import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 import { lastValueFrom } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { tap } from 'rxjs/internal/operators/tap';
-import { Configuration, OutageInformation } from '../api/models';
+import {
+  CaptchaConfiguration,
+  Configuration,
+  OutageInformation
+} from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { EnvironmentInformation } from '../model/environment-information.model';
 import { AlertService } from './alert.service';
@@ -34,16 +38,6 @@ export class ConfigService {
     public alertService: AlertService,
     @Inject(APP_BASE_HREF) public baseHref: string
   ) {}
-
-  // public async loadConfig(): Promise<Configuration> {
-  //   await this.configurationService
-  //     .configurationGetConfiguration()
-  //     .toPromise()
-  //     .then((config: Configuration) => {
-  //       this.configuration = config;
-  //     });
-  //   return this.configuration;
-  // }
 
   public async loadConfig(): Promise<Configuration> {
     if (this.configuration !== null) {
@@ -105,6 +99,10 @@ export class ConfigService {
 
   public getOutageConfiguration(): Observable<OutageInformation> {
     return this.configurationService.configurationGetOutageInfo();
+  }
+
+  public getCaptchaConfiguration(): CaptchaConfiguration {
+    return this.configuration.captcha;
   }
 
   private getEnvironmentInfo(): EnvironmentInformation {

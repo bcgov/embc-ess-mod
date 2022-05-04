@@ -12,9 +12,11 @@ using EMBC.Utilities.Caching;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -31,14 +33,16 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
         private readonly ICache cache;
+        private readonly IHostEnvironment environment;
         private const int cacheDuration = 60 * 1; //1 minute
 
-        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache)
+        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache, IHostEnvironment environment)
         {
             this.configuration = configuration;
             this.client = client;
             this.mapper = mapper;
             this.cache = cache;
+            this.environment = environment;
         }
 
         /// <summary>
@@ -70,6 +74,11 @@ namespace EMBC.Responders.API.Controllers
                 {
                     SessionTimeoutInMinutes = configuration.GetValue<int>("timeout:minutes", 20),
                     WarningMessageDuration = configuration.GetValue<int>("timeout:warningDuration", 1)
+                },
+                Captcha = new CaptchaConfiguration
+                {
+                    Url = configuration.GetValue<string>("captcha:url"),
+                    AutomationValue = environment.IsProduction() ? null : configuration.GetValue<string>("captcha:automation")?.Substring(0, 6).ToSha256() //captcha is limited to 6 characters
                 }
             };
 
@@ -173,6 +182,7 @@ namespace EMBC.Responders.API.Controllers
         public OidcOptions Oidc { get; set; }
         public OutageInformation OutageInfo { get; set; }
         public TimeoutConfiguration TimeoutInfo { get; set; }
+        public CaptchaConfiguration Captcha { get; set; }
     }
 
     public class OidcOptions
@@ -209,6 +219,12 @@ namespace EMBC.Responders.API.Controllers
     {
         public int SessionTimeoutInMinutes { get; set; }
         public int WarningMessageDuration { get; set; }
+    }
+
+    public class CaptchaConfiguration
+    {
+        public string Url { get; set; }
+        public string AutomationValue { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
