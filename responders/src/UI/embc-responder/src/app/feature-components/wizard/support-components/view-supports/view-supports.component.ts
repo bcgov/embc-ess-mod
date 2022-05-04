@@ -24,7 +24,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { BehaviorSubject } from 'rxjs';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
-import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-view-supports',
@@ -54,7 +54,7 @@ export class ViewSupportsComponent implements OnInit {
     public evacueeSessionService: EvacueeSessionService,
     private locationsService: LocationsService,
     private loadEvacueeListService: LoadEvacueeListService,
-    private evacueeSearchService: EvacueeSearchService
+    private appBaseService: AppBaseService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -85,7 +85,7 @@ export class ViewSupportsComponent implements OnInit {
 
   loadSupportList() {
     this.stepSupportsService
-      .getSupports(this.evacueeSessionService?.essFileNumber)
+      .getSupports(this.appBaseService?.appModel?.selectedEssFile?.id)
       .subscribe({
         next: (supports) => {
           this.showLoader = !this.showLoader;

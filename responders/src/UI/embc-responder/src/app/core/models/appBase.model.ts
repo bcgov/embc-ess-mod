@@ -21,7 +21,7 @@ export type PaperFlow = EvacueeSearch;
 
 export interface SelectedProfile {
   selectedEvacueeInContext?: RegistrantProfileModel;
-  householdMemberId?: string;
+  householdMemberRegistrantId?: string;
 }
 
 export interface EtransferProperties {

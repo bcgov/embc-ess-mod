@@ -12,9 +12,11 @@ import { Router } from '@angular/router';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuation-file-search-result.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
 
@@ -36,7 +38,9 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
     private evacueeProfileService: EvacueeProfileService,
     private essFileService: EssFileService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {}
@@ -89,7 +93,7 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
         const householdMemberId = this.getRegistrantIdToLink(
           essFile.householdMembers
         );
-        this.evacueeSessionService.essFileNumber = essFile.id;
+        this.setSelectedFile(essFile.id);
         this.evacueeSessionService.fileLinkFlag = 'Y';
         this.evacueeSessionService.securityPhraseOpenedFrom =
           'responder-access/search/evacuee-profile-dashboard';
@@ -127,7 +131,9 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
       .subscribe({
         next: (essFileArray) => {
           this.essFiles = essFileArray.sort((a, b) => {
-            return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
+            return (
+              new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+            );
           });
           this.isLoading = !this.isLoading;
         },
@@ -155,5 +161,18 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
       }
     }
     return null;
+  }
+
+  private setSelectedFile(fileId: string) {
+    this.appBaseService.appModel.selectedEssFile = {
+      id: fileId,
+      evacuatedFromAddress: null,
+      needsAssessment: null,
+      primaryRegistrantId: null,
+      registrationLocation: null,
+      task: null
+    };
+
+    this.computeState.triggerEvent();
   }
 }

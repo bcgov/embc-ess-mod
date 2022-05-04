@@ -4,6 +4,7 @@ import { MatAccordion } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { EvacuationFileStatus, MemberRole } from 'src/app/core/api/models';
 import { EvacuationFileSummaryModel } from 'src/app/core/models/evacuation-file-summary.model';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -37,7 +38,8 @@ export class MatchedEssfilesComponent implements OnInit {
     private alertService: AlertService,
     private router: Router,
     private userService: UserService,
-    private appBaseService: AppBaseService
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   ngOnInit(): void {
@@ -99,7 +101,7 @@ export class MatchedEssfilesComponent implements OnInit {
    * @param essFileId the essFileID of the selected item
    */
   goToESSFile(essFileId: string): void {
-    this.evacueeSessionService.essFileNumber = essFileId;
+    this.setSelectedFile(essFileId);
     this.router.navigate(['/responder-access/search/essfile-dashboard']);
   }
 
@@ -168,5 +170,18 @@ export class MatchedEssfilesComponent implements OnInit {
         );
       }
     });
+  }
+
+  private setSelectedFile(fileId: string) {
+    this.appBaseService.appModel.selectedEssFile = {
+      id: fileId,
+      evacuatedFromAddress: null,
+      needsAssessment: null,
+      primaryRegistrantId: null,
+      registrationLocation: null,
+      task: null
+    };
+
+    this.computeState.triggerEvent();
   }
 }

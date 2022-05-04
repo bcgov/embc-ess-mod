@@ -304,14 +304,17 @@ export class WizardService {
   }
 
   hasPetsChanged(pets: Pet[]): boolean {
-    const initialValue = (this.fileObjectReference as EvacuationFileModel)
-      .needsAssessment.pets;
-    return _.isEqual(initialValue, pets);
+    if (
+      this.fileObjectReference !== null &&
+      this.fileObjectReference !== undefined
+    ) {
+      const initialValue = (this.fileObjectReference as EvacuationFileModel)
+        .needsAssessment.pets;
+      return _.isEqual(initialValue, pets);
+    }
   }
 
   comparePets(initialValue: EvacuationFileModel, form) {
-    // &&
-    //   _.isEqual(form.pets.value, initialValue.needsAssessment.pets)
     if (
       globalConst.radioButtonOptions.find(
         (ins) => ins.value === form.hasPetsFood.value

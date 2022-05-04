@@ -48,7 +48,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
 
     this.securityPhrase = this.essFileSecurityPhraseService.securityPhrase;
     if (
-      this.evacueeSessionService.essFileNumber === undefined ||
+      this.appBaseService?.appModel?.selectedEssFile?.id === undefined ||
       this.securityPhrase === undefined
     ) {
       this.router.navigate(['responder-access/search/evacuee']);
@@ -72,7 +72,10 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     };
 
     this.essFileSecurityPhraseService
-      .verifySecurityPhrase(this.evacueeSessionService.essFileNumber, body)
+      .verifySecurityPhrase(
+        this.appBaseService?.appModel?.selectedEssFile?.id,
+        body
+      )
       .subscribe({
         next: (results) => {
           this.showLoader = !this.showLoader;

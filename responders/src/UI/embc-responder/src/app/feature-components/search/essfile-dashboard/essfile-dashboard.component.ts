@@ -51,6 +51,7 @@ export class EssfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEssFile();
+    this.updateMember();
 
     this.isMinor =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.isMinor;
@@ -181,7 +182,7 @@ export class EssfileDashboardComponent implements OnInit {
   private getEssFile(): void {
     this.isLoading = !this.isLoading;
     this.essFileService
-      .getFileFromId(this.evacueeSessionService.essFileNumber)
+      .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
       .pipe(
         map((file: EvacuationFileModel) => {
           this.loadNotes();
@@ -247,5 +248,21 @@ export class EssfileDashboardComponent implements OnInit {
       },
       width: '530px'
     });
+  }
+
+  private updateMember() {
+    if (
+      this.appBaseService?.appModel?.selectedProfile
+        ?.householdMemberRegistrantId !== undefined
+    )
+      this.appBaseService.appModel = {
+        selectedProfile: {
+          selectedEvacueeInContext:
+            this.appBaseService?.appModel?.selectedProfile
+              ?.selectedEvacueeInContext,
+          householdMemberRegistrantId: undefined
+        }
+      };
+    this.computeState.triggerEvent();
   }
 }

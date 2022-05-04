@@ -200,7 +200,9 @@ export class HouseholdMemberComponent implements OnInit {
   private sortByVerificationFactor(
     matchedProfiles: RegistrantProfileSearchResult[]
   ): RegistrantProfileSearchResult[] {
-    return matchedProfiles.sort((a, b) => a.status.localeCompare(b.status));
+    return matchedProfiles.sort((a, b) =>
+      a.status ? a.status.localeCompare(b.status) : -1
+    );
   }
 
   /**
@@ -308,7 +310,7 @@ export class HouseholdMemberComponent implements OnInit {
     this.appBaseService.appModel = {
       selectedProfile: {
         selectedEvacueeInContext: profileModel,
-        householdMemberId: id
+        householdMemberRegistrantId: id
       }
     };
     this.computeState.triggerEvent();

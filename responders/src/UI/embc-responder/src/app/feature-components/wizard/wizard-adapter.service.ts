@@ -217,7 +217,7 @@ export class WizardAdapterService {
   public stepReviewESSFileFromESSFileRecord(): Observable<boolean> {
     return new Observable<boolean>((obs) => {
       this.essFileService
-        .getFileFromId(this.evacueeSessionService.essFileNumber)
+        .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
         .subscribe({
           next: (evacuationFileModel) => {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
@@ -239,7 +239,7 @@ export class WizardAdapterService {
   public stepCompleteESSFileFromESSFileRecord(): Observable<boolean> {
     return new Observable<boolean>((obs) => {
       this.essFileService
-        .getFileFromId(this.evacueeSessionService.essFileNumber)
+        .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
         .subscribe({
           next: (evacuationFileModel) => {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
