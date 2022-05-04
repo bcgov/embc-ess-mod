@@ -235,4 +235,4 @@ objects:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 125
+              averageUtilization: 150
