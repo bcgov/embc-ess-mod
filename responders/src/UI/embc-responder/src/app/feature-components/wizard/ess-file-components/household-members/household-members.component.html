@@ -224,7 +224,9 @@
                           <tr>
                             <th>Date of Birth:</th>
                             <td>
-                              <b>{{ member?.dateOfBirth }}</b>
+                              <b>{{
+                                member?.dateOfBirth | date: 'dd-MMM-yyyy'
+                              }}</b>
                             </td>
                           </tr>
                         </table>
@@ -245,7 +247,9 @@
                           <tr>
                             <th>Date of Birth:</th>
                             <td>
-                              <b>{{ member?.dateOfBirth }}</b>
+                              <b>{{
+                                member?.dateOfBirth | date: 'dd-MMM-yyyy'
+                              }}</b>
                             </td>
                           </tr>
                           <tr>

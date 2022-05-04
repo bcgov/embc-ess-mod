@@ -151,7 +151,7 @@
                     Date of Birth
                   </mat-header-cell>
                   <mat-cell *matCellDef="let element">
-                    {{ element.dateOfBirth }}
+                    {{ element.dateOfBirth | date: 'dd-MMM-yyyy' }}
                   </mat-cell>
                 </ng-container>
 

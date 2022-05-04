@@ -64,7 +64,10 @@
             <div class="row">
               <div class="col-4">Date of Birth</div>
               <div class="col-8 bold">
-                {{ stepEvacueeProfileService?.personalDetails?.dateOfBirth }}
+                {{
+                  stepEvacueeProfileService?.personalDetails?.dateOfBirth
+                    | date: 'dd-MMM-yyyy'
+                }}
               </div>
             </div>
 

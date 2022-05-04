@@ -311,7 +311,7 @@ export const noPetsDialog: DialogContent = {
 
 export const householdMemberDeleteDialog: DialogContent = {
   title: 'Remove Household Member',
-  text: '<p>Are you sure you want to <b>remove</b> this household member from your evacuation file?</p>',
+  text: '<p>Are you sure you want to <b>remove</b> this household member from your ESS File?</p>',
   confirmButton: 'Yes, Remove Household Member',
   cancelButton: 'No, Cancel'
 };

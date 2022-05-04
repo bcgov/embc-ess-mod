@@ -10,8 +10,15 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        <span class="bold p-margin">{{ supportList?.length }} support(s)</span>
-        have been recorded for Evacuation File #
+        <span class="bold p-margin"
+          >{{ supportList?.length }} support<span
+            *ngIf="supportList?.length !== 1"
+            >s</span
+          >&nbsp;</span
+        >
+        <span *ngIf="supportList?.length !== 1">have</span>
+        <span *ngIf="supportList?.length === 1">has</span>
+        been recorded for ESS File #
         {{
           evacueeSessionService?.isPaperBased
             ? evacueeSessionService?.evacFile?.manualFileId
