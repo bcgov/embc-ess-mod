@@ -1,0 +1,7 @@
+NAMESPACE_PREFIX=<openshift namespace>
+ENV=<openshift namespace env>
+APP_NAME=<app name>
+TAG=<image stream tag to deploy from>
+PRIVATE_KEY=<captcha private key file>
+SECRET=<captcha secret value>
+CORS_ALLOW_ALL=<whether to allow captcha service to serve from all origins>
