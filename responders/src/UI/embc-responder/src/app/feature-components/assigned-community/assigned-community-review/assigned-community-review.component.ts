@@ -6,6 +6,7 @@ import { AddCommunityService } from '../add-community/add-community.service';
 import { AssignedCommunityListDataService } from '../assigned-community-list/assigned-community-list-data.service';
 import { AssignedCommunityReviewService } from './assigned-community-review.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-assigned-community-review',
@@ -25,8 +26,13 @@ export class AssignedCommunityReviewComponent implements OnInit {
     private addCommunityService: AddCommunityService,
     private assignedCommunityDataService: AssignedCommunityListDataService,
     private assignedCommunityReviewService: AssignedCommunityReviewService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private userService: UserService
   ) {}
+
+  public get teamName(): string {
+    return this.userService.currentProfile?.teamName;
+  }
 
   /**
    * Loads the added/removed community lists
