@@ -16,11 +16,19 @@
           class="primary-radio-group"
           required
         >
-          <mat-radio-button class="primary-radio-button" [value]="true">
+          <mat-radio-button
+            class="primary-radio-button"
+            [value]="true"
+            id="yesOption"
+          >
             <span class="highlight">Yes</span> - the evacuee did provide valid
             government issued photo identification.
           </mat-radio-button>
-          <mat-radio-button class="primary-radio-button" [value]="false">
+          <mat-radio-button
+            class="primary-radio-button"
+            [value]="false"
+            id="noOption"
+          >
             <span class="highlight">No</span> - the evacuee did not provide
             valid government issued photo identification.
           </mat-radio-button>
