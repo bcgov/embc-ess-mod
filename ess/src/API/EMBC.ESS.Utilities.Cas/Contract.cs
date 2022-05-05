@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.Utilities.Extensions;
 
@@ -9,15 +10,15 @@ namespace EMBC.ESS.Utilities.Cas
 {
     public interface IWebProxy
     {
-        Task<string> CreateTokenAsync();
+        Task<string> CreateTokenAsync(CancellationToken ct);
 
-        Task<InvoiceResponse> CreateInvoiceAsync(Invoice invoice);
+        Task<InvoiceResponse> CreateInvoiceAsync(Invoice invoice, CancellationToken ct);
 
-        Task<GetInvoiceResponse?> GetInvoiceAsync(GetInvoiceRequest getRequest);
+        Task<GetInvoiceResponse> GetInvoiceAsync(GetInvoiceRequest getRequest, CancellationToken ct);
 
-        Task<GetSupplierResponse?> GetSupplierAsync(GetSupplierRequest getRequest);
+        Task<GetSupplierResponse?> GetSupplierAsync(GetSupplierRequest getRequest, CancellationToken ct);
 
-        Task<CreateSupplierResponse> CreateSupplierAsync(CreateSupplierRequest supplier);
+        Task<CreateSupplierResponse> CreateSupplierAsync(CreateSupplierRequest supplier, CancellationToken ct);
     }
 
     public class Invoice
@@ -166,6 +167,7 @@ namespace EMBC.ESS.Utilities.Cas
         public string? SupplierSiteCode { get; set; }
         public string? PaymentStatus { get; set; }
         public string? PaymentNumber { get; set; }
+        public int? PageNumber { get; set; }
     }
 
     public class GetInvoiceResponse

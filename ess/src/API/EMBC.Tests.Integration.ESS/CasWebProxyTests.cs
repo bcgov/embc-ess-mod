@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Cas;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CreateToken_Success()
         {
-            var token = await client.CreateTokenAsync();
+            var token = await client.CreateTokenAsync(CancellationToken.None);
 
             token.ShouldNotBeNull();
         }
@@ -63,7 +64,7 @@ namespace EMBC.Tests.Integration.ESS
                 Province = "BC",
                 Country = "CA"
             };
-            var response = await client.CreateInvoiceAsync(invoice);
+            var response = await client.CreateInvoiceAsync(invoice, CancellationToken.None);
 
             response.ShouldNotBeNull();
             response.IsSuccess().ShouldBeTrue();

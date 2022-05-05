@@ -11,19 +11,19 @@ using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Payments
 {
-    public class PaymentRepository : IPaymentRepository
+    internal class PaymentRepository : IPaymentRepository
     {
         private readonly IMapper mapper;
         private readonly IEssContextFactory essContextFactory;
-        private readonly IWebProxy casWebProxy;
+        private readonly ICasGateway casGateway;
 
         private static CancellationToken CreateCancellationToken() => new CancellationTokenSource().Token;
 
-        public PaymentRepository(IMapper mapper, IEssContextFactory essContextFactory, IWebProxy casWebProxy)
+        public PaymentRepository(IMapper mapper, IEssContextFactory essContextFactory, ICasGateway casGateway)
         {
             this.mapper = mapper;
             this.essContextFactory = essContextFactory;
-            this.casWebProxy = casWebProxy;
+            this.casGateway = casGateway;
         }
 
         public async Task<ManagePaymentResponse> Manage(ManagePaymentRequest request) =>
@@ -144,31 +144,9 @@ namespace EMBC.ESS.Resources.Payments
                     if (payment.era_suppliernumber == null) payment.era_suppliernumber = casPayment.PayeeDetails.SupplierNumber;
                     if (payment.era_sitesuppliernumber == null) payment.era_sitesuppliernumber = casPayment.PayeeDetails.SupplierSiteCode;
 
-                    var invoice = mapper.Map<Invoice>(payment);
-                    //TODO: get from Dynamics sys config values
-                    invoice.PayGroup = "EMB INC";
-                    var distributedAccount = "105.15006.10120.5185.1500000.000000.0000";
-                    invoice.InvoiceBatchName = request.CasBatchName;
-                    var lineItemNumber = 1;
-                    foreach (var lineItem in invoice.InvoiceLineDetails)
-                    {
-                        lineItem.InvoiceLineNumber = lineItemNumber++;
-                        lineItem.DefaultDistributionAccount = distributedAccount;
-                    }
-
-                    var response = await casWebProxy.CreateInvoiceAsync(invoice);
-                    if (response.IsSuccess())
-                    {
-                        UpdatePaymentStatus(ctx, payment, PaymentStatus.Sent);
-                        payment.era_processingresponse = string.Empty;
-                        processedPayments.Add(paymentId);
-                    }
-                    else
-                    {
-                        UpdatePaymentStatus(ctx, payment, PaymentStatus.Failed);
-                        payment.era_processingresponse = response.CASReturnedMessages;
-                        failedPayments.Add((paymentId, response.CASReturnedMessages));
-                    }
+                    UpdatePaymentStatus(ctx, payment, PaymentStatus.Sent);
+                    payment.era_processingresponse = string.Empty;
+                    processedPayments.Add(paymentId);
                 }
                 catch (Exception e)
                 {
@@ -205,45 +183,15 @@ namespace EMBC.ESS.Resources.Payments
             if (payee.era_suppliernumber == null)
             {
                 // payee has no supplier number, search CAS
-                var supplier = await casWebProxy.GetSupplierAsync(new GetSupplierRequest
-                {
-                    PostalCode = payee.address1_postalcode.ToCasPostalCode(),
-                    SupplierName = Formatters.ToCasSupplierName(payee.firstname, payee.lastname)
-                });
-                var supplierAddress = supplier?.SupplierAddress.FirstOrDefault();
+                var supplierDetails = await casGateway.GetSupplier(payee, ct);
 
-                if (supplier == null || supplierAddress == null)
+                if (supplierDetails == null)
                 {
                     // no matching supplier in CAS, create a new one
-                    var newSupplier = await casWebProxy.CreateSupplierAsync(new CreateSupplierRequest
-                    {
-                        SubCategory = "Individual",
-                        SupplierName = Formatters.ToCasSupplierName(payee.firstname, payee.lastname),
-                        SupplierAddress = new[]
-                        {
-                            new Supplieraddress
-                            {
-                                ProviderId = "CAS_SU_AT_ESS",
-                                AddressLine1 = payee.address1_line1.StripSpecialCharacters(),
-                                AddressLine2 = payee.address1_line2?.StripSpecialCharacters(),
-                                AddressLine3 = payee.address1_line3?.StripSpecialCharacters(),
-                                City = (payee.era_City?.era_jurisdictionname ?? payee.address1_city).ToCasCity(),
-                                Postalcode = payee.address1_postalcode.ToCasPostalCode(),
-                                Province = payee.era_ProvinceState.era_code,
-                                Country = "CA",
-                            }
-                        }
-                    });
-                    if (!newSupplier.IsSuccess()) throw new Exception($"CAS supplier creation failed for payee {payee.contactid}: {newSupplier.CASReturnedMessages}");
-                    payee.era_suppliernumber = newSupplier.SupplierNumber;
-                    payee.era_sitesuppliernumber = newSupplier.SupplierSiteCode.StripCasSiteNumberBrackets();
+                    supplierDetails = await casGateway.CreateSupplier(payee, ct);
                 }
-                else
-                {
-                    // supplier found, save CAS values
-                    payee.era_suppliernumber = supplier.Suppliernumber;
-                    payee.era_sitesuppliernumber = supplierAddress.Suppliersitecode.StripCasSiteNumberBrackets();
-                }
+                payee.era_suppliernumber = supplierDetails.Value.SupplierNumber;
+                payee.era_sitesuppliernumber = supplierDetails.Value.SiteCode;
 
                 ctx.UpdateObject(payee);
 
@@ -263,33 +211,25 @@ namespace EMBC.ESS.Resources.Payments
 
         private async Task<GetCasPaymentStatusResponse> Handle(GetCasPaymentStatusRequest request)
         {
+            var ct = CreateCancellationToken();
             var casStatuses = CasStatusResolver(request.InStatus);
 
-            var payments = new List<CasPaymentDetails>();
+            var invoices = new List<InvoiceItem>();
             foreach (var status in casStatuses)
             {
-                var response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
-                {
-                    PayGroup = "EMB INC",
-                    PaymentStatusDateFrom = request.ChangedFrom,
-                    PaymentStatus = status
-                });
+                invoices.AddRange(await casGateway.QueryInvoices(status, request.ChangedFrom, ct));
+            }
 
-                if (response == null) throw new InvalidOperationException("Failed to retrieve CAS payment statuses");
-                payments.AddRange(response.Items.Select(p => new CasPaymentDetails
+            return new GetCasPaymentStatusResponse
+            {
+                Payments = invoices.Select(p => new CasPaymentDetails
                 {
                     PaymentId = p.Invoicenumber,
                     Status = CasStatusResolver(p.Paymentstatus),
                     StatusChangeDate = p.Paymentstatusdate,
                     CasReferenceNumber = p.Paymentnumber?.ToString(),
                     StatusDescription = p.Voidreason
-                }));
-            }
-
-            return new GetCasPaymentStatusResponse
-            {
-                //temp fix for a bug in CAS API
-                Payments = payments.Where(p => p.StatusChangeDate.HasValue)
+                })
             };
         }
 
