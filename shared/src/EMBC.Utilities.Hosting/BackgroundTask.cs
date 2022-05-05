@@ -71,7 +71,7 @@ namespace EMBC.Utilities.Hosting
                         }
                         else
                         {
-                            logger.LogInformation("running {0}", nextExecutionDate);
+                            logger.LogDebug("running {0}", nextExecutionDate);
                             using (var executionScope = serviceProvider.CreateScope())
                             {
                                 var task = executionScope.ServiceProvider.GetRequiredService<T>();
