@@ -16,10 +16,10 @@ export const phoneMask = [
 ];
 
 export const mealRate = {
-  total: 45,
-  breakfast: 10,
-  lunch: 13,
-  dinner: 22
+  total: 53,
+  breakfast: 12.75,
+  lunch: 14.75,
+  dinner: 25.5
 };
 
 export const groceriesRate = {
@@ -36,6 +36,12 @@ export const extremeConditions = {
 
 export const normalConditions = {
   rate: 150
+};
+
+export const billeting = {
+  rate: 30,
+  adult: 10,
+  child: 5
 };
 
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -74,25 +80,41 @@ export const radioButtonOptions = [
 
 export const mealRateSheet: DialogContent = {
   title: 'ESS Rate Sheet - Meals',
-  text: '<div class="row primary"><div class="col-md-2">Breakfast</div><div class="col-md-2 bold">$12.25</div></div><div class="row primary"><div class="col-md-2">Lunch</div><div class="col-md-2 bold">$14.25</div></div><div class="row primary"><div class="col-md-2">Dinner</div><div class="col-md-2 bold">$24.50</div></div><div class="row primary"><div class="col-md-2">Total</div><div class="col-md-4 bold">$51 (incl. GST)</div></div><p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>',
+  text: `<div class="row primary"><div class="col-md-2">Breakfast</div><div class="col-md-2 bold">\$${mealRate.breakfast.toFixed(
+    2
+  )}</div></div><div class="row primary"><div class="col-md-2">Lunch</div><div class="col-md-2 bold">\$${mealRate.lunch.toFixed(
+    2
+  )}</div></div><div class="row primary"><div class="col-md-2">Dinner</div><div class="col-md-2 bold">\$${mealRate.dinner.toFixed(
+    2
+  )}</div></div><div class="row primary"><div class="col-md-2">Total</div><div class="col-md-4 bold">\$${mealRate.total.toFixed(
+    2
+  )} (incl. GST)</div></div><p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>`,
   cancelButton: 'Close'
 };
 
 export const groceriesRateSheet: DialogContent = {
   title: 'ESS Rate Sheet - Groceries',
-  text: '<p class="primary">Daily rate per person <span class="bold">- $22.50 (incl. GST/PST)</span></p> <p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>',
+  text: `<p class="primary">Daily rate per person <span class="bold">- \$${groceriesRate.rate.toFixed(
+    2
+  )} (incl. GST/PST)</span></p> <p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>`,
   cancelButton: 'Close'
 };
 
 export const incidentalsRateSheet: DialogContent = {
   title: 'ESS Rate Sheet - Incidentals',
-  text: '<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span>up to $50.00 maximum per person (incl. PST)</span></p><p>NOTE:<p><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and lodging, medication for a 3 day period, and other immediate needs as required. The Emergency Management BC (EMBC) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>',
+  text: `<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span>up to \$${incidentals.rate.toFixed(
+    2
+  )} maximum per person (incl. PST)</span></p><p>NOTE:<p><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and lodging, medication for a 3 day period, and other immediate needs as required. The Emergency Management BC (EMBC) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>`,
   cancelButton: 'Close'
 };
 
 export const clothingRateSheet: DialogContent = {
   title: 'ESS Rate Sheet - Clothing',
-  text: '<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span class="bold">up to $150.00 maximum per person (incl. PST)*</span></p><p>* Where <span class="bold">extreme winter conditions</span> apply at the time of the incident, and on a needs basis, amount maybe increased to <span class="bold">$200 per person.</span></p><p>NOTE:</p><p>Clothing is provided as needed to preserve health and modesty. This is not wardrobe replacement. Clothing may include footwear or special needs items such as baby diapers.</p>',
+  text: `<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span class="bold">up to \$${normalConditions.rate.toFixed(
+    2
+  )} maximum per person (incl. PST)*</span></p><p>* Where <span class="bold">extreme winter conditions</span> apply at the time of the incident, and on a needs basis, amount maybe increased to <span class="bold">\$${extremeConditions.rate.toFixed(
+    2
+  )} per person.</span></p><p>NOTE:</p><p>Clothing is provided as needed to preserve health and modesty. This is not wardrobe replacement. Clothing may include footwear or special needs items such as baby diapers.</p>`,
   cancelButton: 'Close'
 };
 
@@ -116,7 +138,13 @@ export const hotelRateSheet: DialogContent = {
 
 export const billetingRateSheet: DialogContent = {
   title: 'ESS Rate Sheet - Lodging',
-  text: '<p class="primary bold">Billeting in Private Homes</p><p>The referral form for billeting is issued to the billeting host (supplier). Billeting rate does not include meals.</p><p>$30 per night based on single occupancy (add $10 for each additional adult and youth and $5 for each additional child.</p>',
+  text: `<p class="primary bold">Billeting in Private Homes</p><p>The referral form for billeting is issued to the billeting host (supplier). Billeting rate does not include meals.</p><p>\$${billeting.rate.toFixed(
+    2
+  )} per night based on single occupancy (add \$${billeting.adult.toFixed(
+    2
+  )} for each additional adult and youth and \$${billeting.child.toFixed(
+    2
+  )} for each additional child.</p>`,
   cancelButton: 'Close'
 };
 

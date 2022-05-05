@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   QueryList,
   ViewChildren
@@ -22,7 +23,7 @@ import { ReferralCreationService } from '../../step-supports/referral-creation.s
 import { WizardService } from '../../wizard.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
@@ -31,13 +32,13 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   templateUrl: './view-supports.component.html',
   styleUrls: ['./view-supports.component.scss']
 })
-export class ViewSupportsComponent implements OnInit {
+export class ViewSupportsComponent implements OnInit, OnDestroy {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;
   supportList: Support[];
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   showLoader = false;
-  color = '#169BD5';
+  supportListSubscription: Subscription;
   private supportListEvent: BehaviorSubject<Support[]> = new BehaviorSubject<
     Support[]
   >(null);
@@ -65,6 +66,17 @@ export class ViewSupportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.supportListSubscription = this.stepSupportsService
+      .getExistingSupportList()
+      .subscribe({
+        next: (supports) => {
+          this.supportList = supports;
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.supportListerror);
+        }
+      });
     this.loadEvacueeListService.getSupportStatus();
     this.loadSupportList();
     this.filtersToLoad = this.viewSupportsService.load();
@@ -73,6 +85,10 @@ export class ViewSupportsComponent implements OnInit {
         this.setStepStatus();
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.supportListSubscription.unsubscribe();
   }
 
   addSupports() {
@@ -151,6 +167,7 @@ export class ViewSupportsComponent implements OnInit {
       ];
     }
     this.supportListEvent.next(this.supportList);
+    this.stepSupportsService.setExistingSupportList(this.supportList);
   }
 
   setStepStatus() {

@@ -18,12 +18,15 @@
         >
         <span *ngIf="supportList?.length !== 1">have</span>
         <span *ngIf="supportList?.length === 1">has</span>
-        been recorded for ESS File #
-        {{
-          evacueeSessionService?.isPaperBased
-            ? evacueeSessionService?.evacFile?.manualFileId
-            : evacueeSessionService?.evacFile?.id
-        }}
+        been recorded for
+        <b
+          >ESS File #
+          {{
+            evacueeSessionService?.isPaperBased
+              ? evacueeSessionService?.evacFile?.manualFileId
+              : evacueeSessionService?.evacFile?.id
+          }}</b
+        >
         within the ERA Tool.
       </p>
     </div>

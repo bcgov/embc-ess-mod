@@ -16,6 +16,7 @@ import * as globalConst from '../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { StepSupportsService } from './step-supports/step-supports.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,8 @@ export class WizardAdapterService {
     private referralCreation: ReferralCreationService,
     private alertService: AlertService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private stepSupportsService: StepSupportsService
   ) {}
 
   /**
@@ -225,6 +227,9 @@ export class WizardAdapterService {
               this.wizardDataService.createNewESSFileSteps();
             this.stepEssFileService.setReviewEssFileTabStatus();
             this.stepEssFileService.selectedHouseholdMembers = [];
+            this.stepSupportsService.setExistingSupportList(
+              evacuationFileModel.supports
+            );
             obs.next(true);
           },
           error: (error) => {
@@ -247,6 +252,9 @@ export class WizardAdapterService {
               this.wizardDataService.createNewESSFileSteps();
             this.stepEssFileService.setCompleteEssFileTabStatus();
             this.stepEssFileService.selectedHouseholdMembers = [];
+            this.stepSupportsService.setExistingSupportList(
+              evacuationFileModel.supports
+            );
             obs.next(true);
           },
           error: (error) => {
