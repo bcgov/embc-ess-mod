@@ -367,23 +367,18 @@ export class ReviewSupportComponent implements OnInit {
             printWindow.style.display = 'none';
             document.body.appendChild(printWindow);
             printWindow.contentDocument.write(text);
-            printWindow.contentWindow.print();
-            document.body.removeChild(printWindow);
 
-            //const blob = new Blob([response], { type: response.type });
-            // this.downloadService.downloadFile(
-            //   window,
-            //   blob,
-            //   `supports-${fileId}-${new FlatDateFormatPipe().transform(
-            //     new Date()
-            //   )}.pdf`
-            //);
+            //delay to allow browser a chance to load images before showing print screen
+            setTimeout(() => {
+              printWindow.contentWindow.print();
+              document.body.removeChild(printWindow);
 
-            //Clearing Draft supports array and updating the supports list for the selected ESS File
-            this.referralService.clearDraftSupport();
-            this.reviewSupportService.updateExistingSupportsList();
-            this.showLoader = !this.showLoader;
-            this.router.navigate(['/ess-wizard/add-supports']);
+              //Clearing Draft supports array and updating the supports list for the selected ESS File
+              this.referralService.clearDraftSupport();
+              this.reviewSupportService.updateExistingSupportsList();
+              this.showLoader = !this.showLoader;
+              this.router.navigate(['/ess-wizard/add-supports']);
+            }, 300);
           })
           .catch((error) => {
             throw error;

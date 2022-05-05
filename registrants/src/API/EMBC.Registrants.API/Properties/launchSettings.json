@@ -8,7 +8,7 @@
         "messaging__url": "https://localhost:2020",
         "messaging_allowInvalidServerCertificate": "true",
         "DOTNET_gcServer": "1",
-        "captcha__url": "https://embcess-captcha.apps.silver.devops.gov.bc.ca"
+        "captcha__url": "https://dev-era-captcha.apps.silver.devops.gov.bc.ca"
       }
     }
   }

@@ -3,7 +3,7 @@
 <mat-card *ngIf="reviewAction === 'add'">
   <p>
     You are requesting to <b>add</b> the following communities to the
-    <b>Oak Bay ESS Team</b> Areas of Responsibility list.
+    <b>{{ teamName }}</b> Areas of Responsibility list.
   </p>
 
   <div class="row">
@@ -47,7 +47,7 @@
 <mat-card *ngIf="reviewAction === 'delete'">
   <p>
     You are requesting to <b>remove</b> the following communities from the
-    <b>Oak Bay ESS Team</b> Areas of Responsibility list.
+    <b>{{ teamName }}</b> Areas of Responsibility list.
   </p>
 
   <div class="row">

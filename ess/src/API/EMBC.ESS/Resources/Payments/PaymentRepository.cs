@@ -187,10 +187,6 @@ namespace EMBC.ESS.Resources.Payments
             };
         }
 
-        private static string CasSupplierNameFormatter(contact payee) => $"{payee.lastname.ToUpperInvariant()}, {payee.firstname.ToUpperInvariant()}";
-
-        private static string CasPostalCodeFormatter(string postalCode) => postalCode.Replace(" ", string.Empty).ToUpperInvariant();
-
         private async Task<GetCasPayeeDetailsResponse> Handle(GetCasPayeeDetailsRequest request)
         {
             if (string.IsNullOrEmpty(request.PayeeId) || !Guid.TryParse(request.PayeeId, out var payeeId)) throw new ArgumentNullException(nameof(request.PayeeId));
@@ -211,8 +207,8 @@ namespace EMBC.ESS.Resources.Payments
                 // payee has no supplier number, search CAS
                 var supplier = await casWebProxy.GetSupplierAsync(new GetSupplierRequest
                 {
-                    PostalCode = CasPostalCodeFormatter(payee.address1_postalcode),
-                    SupplierName = CasSupplierNameFormatter(payee)
+                    PostalCode = payee.address1_postalcode.ToCasPostalCode(),
+                    SupplierName = Formatters.ToCasSupplierName(payee.firstname, payee.lastname)
                 });
                 var supplierAddress = supplier?.SupplierAddress.FirstOrDefault();
 
@@ -222,17 +218,17 @@ namespace EMBC.ESS.Resources.Payments
                     var newSupplier = await casWebProxy.CreateSupplierAsync(new CreateSupplierRequest
                     {
                         SubCategory = "Individual",
-                        SupplierName = CasSupplierNameFormatter(payee),
+                        SupplierName = Formatters.ToCasSupplierName(payee.firstname, payee.lastname),
                         SupplierAddress = new[]
                         {
                             new Supplieraddress
                             {
                                 ProviderId = "CAS_SU_AT_ESS",
-                                AddressLine1 = payee.address1_line1.Replace('.', ' '),
-                                AddressLine2 = payee.address1_line2,
-                                AddressLine3 = payee.address1_line3,
-                                City = payee.era_City?.era_jurisdictionname ?? payee.address1_city,
-                                Postalcode = payee.address1_postalcode.Replace(" ", string.Empty),
+                                AddressLine1 = payee.address1_line1.StripSpecialCharacters(),
+                                AddressLine2 = payee.address1_line2?.StripSpecialCharacters(),
+                                AddressLine3 = payee.address1_line3?.StripSpecialCharacters(),
+                                City = (payee.era_City?.era_jurisdictionname ?? payee.address1_city).ToCasCity(),
+                                Postalcode = payee.address1_postalcode.ToCasPostalCode(),
                                 Province = payee.era_ProvinceState.era_code,
                                 Country = "CA",
                             }
@@ -240,13 +236,13 @@ namespace EMBC.ESS.Resources.Payments
                     });
                     if (!newSupplier.IsSuccess()) throw new Exception($"CAS supplier creation failed for payee {payee.contactid}: {newSupplier.CASReturnedMessages}");
                     payee.era_suppliernumber = newSupplier.SupplierNumber;
-                    payee.era_sitesuppliernumber = newSupplier.SupplierSiteCode.Replace('[', ' ').Replace(']', ' ').Trim();
+                    payee.era_sitesuppliernumber = newSupplier.SupplierSiteCode.StripCasSiteNumberBrackets();
                 }
                 else
                 {
                     // supplier found, save CAS values
                     payee.era_suppliernumber = supplier.Suppliernumber;
-                    payee.era_sitesuppliernumber = supplierAddress.Suppliersitecode.Replace('[', ' ').Replace(']', ' ').Trim();
+                    payee.era_sitesuppliernumber = supplierAddress.Suppliersitecode.StripCasSiteNumberBrackets();
                 }
 
                 ctx.UpdateObject(payee);

@@ -49,7 +49,7 @@ export class CaptchaService {
       if (this.automationValue) {
         //automation captcha support
         const hashedAnswer = await this.hash(answer);
-        response.body['valid'] = this.automationValue == hashedAnswer;
+        response.body['valid'] = response.body['valid'] || this.automationValue == hashedAnswer;
       }
       return response;
     }));

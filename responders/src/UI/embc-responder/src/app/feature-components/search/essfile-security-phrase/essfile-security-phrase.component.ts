@@ -48,10 +48,25 @@ export class EssfileSecurityPhraseComponent implements OnInit {
 
     this.securityPhrase = this.essFileSecurityPhraseService.securityPhrase;
     if (
-      this.appBaseService?.appModel?.selectedEssFile?.id === undefined ||
+      this.appBaseService?.appModel?.selectedEssFile?.id === undefined &&
       this.securityPhrase === undefined
     ) {
       this.router.navigate(['responder-access/search/evacuee']);
+    } else {
+      this.essFileSecurityPhraseService
+        .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
+        .subscribe({
+          next: (results) => {
+            this.securityPhrase = results;
+          },
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.securityPhraseError
+            );
+          }
+        });
     }
   }
 
@@ -59,6 +74,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
    * Function that redirects back
    */
   goBack() {
+    this.essFileSecurityPhraseService.securityPhrase = undefined;
     this.location.back();
   }
 
@@ -82,7 +98,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
           if (results.isCorrect) {
             this.wrongAnswerFlag = false;
             this.correctAnswerFlag = true;
-
+            this.essFileSecurityPhraseService.securityPhrase = undefined;
             if (this.evacueeSessionService.fileLinkFlag === 'Y') {
               this.evacueeProfileService
                 .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
