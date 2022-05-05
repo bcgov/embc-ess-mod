@@ -66,6 +66,9 @@ namespace EMBC.ESS.Utilities.Cas
 
         public async Task<GetSupplierResponse?> GetSupplierAsync(GetSupplierRequest getRequest)
         {
+            if (string.IsNullOrWhiteSpace(getRequest.PostalCode)) throw new ArgumentNullException(nameof(getRequest.PostalCode));
+            if (string.IsNullOrWhiteSpace(getRequest.SupplierName)) throw new ArgumentNullException(nameof(getRequest.SupplierName));
+
             var request = new HttpRequestMessage(HttpMethod.Get, $"cfs/supplierbyname/{getRequest.SupplierName}/{getRequest.PostalCode}");
             request.Headers.Authorization = AuthenticationHeaderValue.Parse($"Bearer {await GetToken()}");
             var response = await httpClient.SendAsync(request);
