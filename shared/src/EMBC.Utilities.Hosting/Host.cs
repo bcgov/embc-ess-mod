@@ -150,9 +150,9 @@ namespace EMBC.Utilities.Hosting
             services.AddCors(opts => opts.AddDefaultPolicy(policy =>
             {
                 // try to get array of origins from section array
-                var corsOrigins = configuration.GetSection("app:cors:origins").GetChildren().Select(c => c.Value).ToArray();
+                var corsOrigins = configuration.GetSection("cors:origins").GetChildren().Select(c => c.Value).ToArray();
                 // try to get array of origins from value
-                if (!corsOrigins.Any()) corsOrigins = configuration.GetValue("app:cors:origins", string.Empty).Split(',');
+                if (!corsOrigins.Any()) corsOrigins = configuration.GetValue("cors:origins", string.Empty).Split(',');
                 corsOrigins = corsOrigins.Where(o => !string.IsNullOrWhiteSpace(o)).ToArray();
                 if (corsOrigins.Any())
                 {
