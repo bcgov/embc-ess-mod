@@ -30,7 +30,10 @@ export class HeaderComponent implements OnInit {
   }
 
   public get displayName(): string {
-    return [this.profile.firstName, this.profile.lastName?.charAt(0)].join(' ');
+    return [
+      this.profile.firstName,
+      this.profile.lastName?.charAt(0).toUpperCase()
+    ].join(' ');
   }
 
   constructor(
