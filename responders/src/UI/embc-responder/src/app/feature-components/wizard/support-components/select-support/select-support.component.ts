@@ -32,7 +32,6 @@ export class SelectSupportComponent implements OnInit {
     this.supportList = this.loadEvacueeListService
       .getSupportTypeList()
       .filter((element) => element.description !== '');
-    console.log(this.supportList);
     this.stepSupportsService.supportDetails = null;
     this.stepSupportsService.supportDelivery = null;
     this.createVerificationForm();
