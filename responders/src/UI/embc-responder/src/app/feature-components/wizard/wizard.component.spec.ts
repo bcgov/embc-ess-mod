@@ -18,7 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StepEssFileComponent } from './step-ess-file/step-ess-file.component';
 import { By } from '@angular/platform-browser';
 import { computeInterfaceToken } from 'src/app/app.module';
-import { StepSupportsService } from './step-supports/step-supports.service';
+import { DatePipe } from '@angular/common';
 
 describe('WizardComponent-Test for New Registration', () => {
   let component: WizardComponent;
@@ -51,7 +51,7 @@ describe('WizardComponent-Test for New Registration', () => {
         providers: [
           WizardComponent,
           WizardDataService,
-          StepSupportsService,
+          DatePipe,
           { provide: ActivatedRoute, useValue: activatedRouteMock },
           {
             provide: WizardService,
