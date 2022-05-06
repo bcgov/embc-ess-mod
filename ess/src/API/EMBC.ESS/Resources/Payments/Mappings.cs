@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using AutoMapper;
-using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Payments
@@ -52,28 +50,6 @@ namespace EMBC.ESS.Resources.Payments
 
             CreateMap<IEnumerable<era_etransfertransaction>, IEnumerable<Payment>>()
                 .ConvertUsing((s, d, ctx) => s.Select(tx => ctx.Mapper.Map<InteracSupportPayment>(tx)))
-                ;
-
-            CreateMap<era_etransfertransaction, Invoice>(MemberList.None)
-                .ForMember(d => d.SupplierNumber, opts => opts.MapFrom(s => s.era_suppliernumber))
-                .ForMember(d => d.SupplierSiteNumber, opts => opts.MapFrom(s => s.era_sitesuppliernumber))
-                .ForMember(d => d.InvoiceNumber, opts => opts.MapFrom(s => s.era_name))
-                .ForMember(d => d.DateInvoiceReceived, opts => opts.MapFrom(s => s.era_invoicedate.Value.DateTime))
-                .ForMember(d => d.InvoiceDate, opts => opts.MapFrom(s => s.era_invoicedate.Value.DateTime))
-                .ForMember(d => d.GlDate, opts => opts.MapFrom(s => s.era_gldate.Value.DateTime))
-                .ForMember(d => d.InvoiceAmount, opts => opts.MapFrom(s => s.era_totalamount))
-                .ForMember(d => d.InteracEmail, opts => opts.MapFrom(s => s.era_emailaddress))
-                .ForMember(d => d.InteracMobileCountryCode, opts => opts.MapFrom(s => s.era_phonenumber == null ? null : "1"))
-                .ForMember(d => d.InteracMobileNumber, opts => opts.MapFrom(s => Regex.Replace(s.era_phonenumber, @"^(\+)|\D", "$1")))
-                .ForMember(d => d.RemittanceMessage1, opts => opts.MapFrom(s => s.era_securityquestion))
-                .ForMember(d => d.RemittanceMessage2, opts => opts.MapFrom(s => s.era_securityanswer))
-                .ForMember(d => d.InvoiceLineDetails, opts => opts.MapFrom(s => new[]
-                    {
-                        new InvoiceLineDetail
-                        {
-                            InvoiceLineAmount = s.era_totalamount.Value
-                        }
-                    }))
                 ;
         }
     }

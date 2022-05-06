@@ -47,23 +47,30 @@ namespace EMBC.ESS.Resources.Payments
 
         private async Task<SavePaymentResponse> Handle(SavePaymentRequest request)
         {
+            if (request.Payment.PayeeId == null) throw new ArgumentNullException(nameof(request.Payment.PayeeId));
+            if (request.Payment is InteracSupportPayment isp && !isp.LinkedSupportIds.Any()) throw new ArgumentException("Interac payment must be linked to at least one support");
+
             var ct = CreateCancellationToken();
             var ctx = essContextFactory.Create();
 
-            var tx = mapper.Map<era_etransfertransaction>(request.Payment);
+            var payment = mapper.Map<era_etransfertransaction>(request.Payment);
 
             if (string.IsNullOrEmpty(request.Payment.Id))
             {
-                tx.era_etransfertransactionid = Guid.NewGuid();
-                ctx.AddToera_etransfertransactions(tx);
+                payment.era_etransfertransactionid = Guid.NewGuid();
+                ctx.AddToera_etransfertransactions(payment);
+                // create in locking status
+                UpdatePaymentStatus(ctx, payment, PaymentStatus.Sending); //TODO: change to creating
                 await ctx.SaveChangesAsync(ct);
+                // release from lock
+                UpdatePaymentStatus(ctx, payment, request.Payment.Status);
             }
             else
             {
-                tx.era_etransfertransactionid = ctx.era_etransfertransactions.Where(t => t.era_name == request.Payment.Id).SingleOrDefault()?.era_etransfertransactionid;
-                if (!tx.era_etransfertransactionid.HasValue) throw new InvalidOperationException($"payment id {request.Payment.Id} not found");
-                ctx.UpdateObject(tx);
+                payment.era_etransfertransactionid = ctx.era_etransfertransactions.Where(t => t.era_name == request.Payment.Id).SingleOrDefault()?.era_etransfertransactionid;
+                if (!payment.era_etransfertransactionid.HasValue) throw new InvalidOperationException($"payment id {request.Payment.Id} not found");
             }
+
             if (request.Payment is InteracSupportPayment ip)
             {
                 //link the payment to the related supports
@@ -71,26 +78,27 @@ namespace EMBC.ESS.Resources.Payments
                 {
                     var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == supportId)).ExecuteAsync(ct)).SingleOrDefault();
                     if (support == null) throw new InvalidOperationException($"support id {supportId} not found");
-                    ctx.AddLink(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), support);
+                    ctx.AddLink(payment, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), support);
                     // set the flag on support so it would not be processed again
                     support.era_etransfertransactioncreated = true;
                     ctx.UpdateObject(support);
                 }
             }
-            if (tx._era_payee_value.HasValue)
+            if (payment._era_payee_value.HasValue)
             {
-                var payee = await ctx.contacts.ByKey(tx._era_payee_value).GetValueAsync();
-                tx.era_suppliernumber = payee.era_sitesuppliernumber;
-                tx.era_sitesuppliernumber = payee.era_sitesuppliernumber;
+                var payee = await ctx.contacts.ByKey(payment._era_payee_value).GetValueAsync();
+                payment.era_suppliernumber = payee.era_sitesuppliernumber;
+                payment.era_sitesuppliernumber = payee.era_sitesuppliernumber;
 
-                ctx.SetLink(tx, nameof(era_etransfertransaction.era_Payee_contact), payee);
+                ctx.SetLink(payment, nameof(era_etransfertransaction.era_Payee_contact), payee);
             }
 
+            ctx.UpdateObject(payment);
             await ctx.SaveChangesAsync();
 
             ctx.DetachAll();
 
-            var id = (await ctx.era_etransfertransactions.ByKey(tx.era_etransfertransactionid).GetValueAsync(ct)).era_name;
+            var id = (await ctx.era_etransfertransactions.ByKey(payment.era_etransfertransactionid).GetValueAsync(ct)).era_name;
 
             return new SavePaymentResponse { Id = id };
         }
