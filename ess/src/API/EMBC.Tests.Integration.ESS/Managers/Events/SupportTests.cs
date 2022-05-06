@@ -197,7 +197,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 FileId = TestData.EvacuationFileId,
                 ReprintReason = "test",
                 RequestingUserId = TestData.Tier4TeamMemberId,
-                SupportId = TestData.SupportIds.First()
+                SupportId = TestData.CurrenntRunSupportIds.First()
             });
 
             printRequestId.ShouldNotBeNullOrEmpty();

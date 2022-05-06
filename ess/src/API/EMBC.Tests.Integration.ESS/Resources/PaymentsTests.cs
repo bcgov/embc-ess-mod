@@ -29,7 +29,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SavePayment_InteracPayment_Saved()
         {
-            var linkedSupportIds = TestData.SupportIds;
+            var linkedSupportIds = TestData.CurrentRunETransferSupportIds.Take(2);
             var payment = new InteracSupportPayment
             {
                 Status = PaymentStatus.Pending,
@@ -80,7 +80,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         NotificationPhone = "1234567890",
                         SecurityAnswer = "answer",
                         SecurityQuestion = "question",
-                        LinkedSupportIds = TestData.SupportIds,
+                        LinkedSupportIds = TestData.CurrenntRunSupportIds,
                         PayeeId = registrantId
                     }
             };
