@@ -218,7 +218,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
         Approved,
         Paid,
         Cancelled,
-        UnderReview
+        UnderReview,
+        Issued
     }
 
     public enum SupportVoidReason

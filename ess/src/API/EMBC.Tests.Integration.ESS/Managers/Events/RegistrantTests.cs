@@ -226,7 +226,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var inviteId = await manager.Handle(new InviteRegistrantCommand
             {
                 RegistrantId = registrantId,
-                Email = "test@nowhere.notavailable",
+                Email = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca",
                 RequestingUserId = null
             });
             inviteId.ShouldNotBeNullOrEmpty();
@@ -243,7 +243,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var inviteId = await manager.Handle(new InviteRegistrantCommand
             {
                 RegistrantId = registrantId,
-                Email = "test@nowhere.notavailable",
+                Email = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca",
                 RequestingUserId = null
             });
 
@@ -269,14 +269,14 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var firstInviteId = dp.Protect(await manager.Handle(new InviteRegistrantCommand
             {
                 RegistrantId = registrantId,
-                Email = "test@nowhere.notavailable",
+                Email = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca",
                 RequestingUserId = null
             }));
 
             var secondInviteId = dp.Protect(await manager.Handle(new InviteRegistrantCommand
             {
                 RegistrantId = registrantId,
-                Email = "test@nowhere.notavailable",
+                Email = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca",
                 RequestingUserId = null
             }));
 
