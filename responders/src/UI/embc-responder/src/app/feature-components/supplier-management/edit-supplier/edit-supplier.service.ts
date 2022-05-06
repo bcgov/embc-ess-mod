@@ -26,7 +26,10 @@ export class EditSupplierService {
         this.editedSupplier.address
       ),
       contact: this.editedSupplier.contact,
-      gstNumber: this.editedSupplier.gstNumber,
+      gstNumber:
+        this.supplierManagementService.convertSupplierGSTNumbertoString(
+          this.editedSupplier.supplierGstNumber
+        ),
       id: this.editedSupplier.id,
       legalName: this.editedSupplier.legalName,
       name: this.editedSupplier.name,
