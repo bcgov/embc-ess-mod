@@ -970,19 +970,6 @@ export class StepEssFileService {
     });
   }
 
-  public getTaskEndDate(): string {
-    if (
-      this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.NewEssFile ||
-      this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.NewRegistration
-    ) {
-      return this.userService?.currentProfile?.taskStartDate;
-    } else {
-      return this.selectedEssFileVal?.task?.from;
-    }
-  }
-
   /**
    * Sets the tab status for the Complete ESS File wizard
    */
@@ -999,6 +986,19 @@ export class StepEssFileService {
       }
       return tab;
     });
+  }
+
+  public getTaskEndDate(): string {
+    if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+        WizardType.NewEssFile ||
+      this.appBaseService?.wizardProperties?.wizardType ===
+        WizardType.NewRegistration
+    ) {
+      return this.userService?.currentProfile?.taskStartDate;
+    } else {
+      return this.selectedEssFileVal?.task?.from;
+    }
   }
 
   checkForEdit(): boolean {
