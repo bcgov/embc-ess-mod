@@ -222,6 +222,7 @@ export class WizardAdapterService {
         .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
         .subscribe({
           next: (evacuationFileModel) => {
+            this.stepEssFileService.needsAssessmentSubmitFlag = true;
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
             this.stepEssFileService.essTabs =
               this.wizardDataService.createNewESSFileSteps();
@@ -247,6 +248,7 @@ export class WizardAdapterService {
         .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
         .subscribe({
           next: (evacuationFileModel) => {
+            this.stepEssFileService.needsAssessmentSubmitFlag = true;
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
             this.stepEssFileService.essTabs =
               this.wizardDataService.createNewESSFileSteps();
