@@ -11,7 +11,10 @@ namespace EMBC.Tests.Integration.ESS
     public class DynamicsTestData
     {
         private Random random = new Random();
+
+        private string runId = Guid.NewGuid().ToString().Substring(0, 4);
         private readonly EssContext essContext;
+
         private readonly string testPrefix;
         private readonly era_essteam team;
         private readonly era_essteam otherTeam;
@@ -66,7 +69,16 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveSupplierName => inactiveSupplier.era_suppliername;
         public string InactiveSupplierLegalName => inactiveSupplier.era_name;
         public string InactiveSupplierGST => inactiveSupplier.era_gstnumber;
-        public string[] SupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name.ToString()).ToArray();
+        public string[] SupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name).ToArray();
+
+        public string[] CurrenntRunSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
+            .Where(s => s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
+            .Select(s => s.era_name).ToArray();
+
+        public string[] CurrentRunETransferSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
+            .Where(s => s.era_supportdeliverytype == 174360001 && s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
+            .Select(s => s.era_name).ToArray();
+
         public string[] HouseholdMemberIds => evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(s => s.era_householdmemberid?.ToString() ?? string.Empty).ToArray();
 
         public DynamicsTestData(EssContext essContext)
@@ -77,9 +89,8 @@ namespace EMBC.Tests.Integration.ESS
             bc = essContext.era_provinceterritorieses.Where(c => c.era_code == "BC").Single();
 #if DEBUG
             this.testPrefix = $"autotest-dev";
-            //this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
 #else
-            this.testPrefix = $"autotest-{Guid.NewGuid().ToString().Substring(0, 4)}";
+            this.testPrefix = $"autotest-{runId}";
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
@@ -130,9 +141,8 @@ namespace EMBC.Tests.Integration.ESS
             if (evacuationfile == null)
             {
                 evacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-digital");
-                var supports = CreateEvacueeSupports(evacuationfile, this.contact, this.tier4TeamMember);
-                //CreateReferralPrint(evacuationfile, this.tier4TeamMember, supports);
             }
+            CreateEvacueeSupports(evacuationfile, this.contact, this.tier4TeamMember, runId);
 
             var paperEvacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
@@ -142,9 +152,8 @@ namespace EMBC.Tests.Integration.ESS
             if (paperEvacuationfile == null)
             {
                 paperEvacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-paper", testPrefix + "-paper");
-                var supports = CreateEvacueeSupports(paperEvacuationfile, this.contact, this.tier4TeamMember);
-                //CreateReferralPrint(paperEvacuationfile, this.tier4TeamMember, supports);
             }
+            CreateEvacueeSupports(paperEvacuationfile, this.contact, this.tier4TeamMember, runId);
 
             essContext.SaveChanges();
 
@@ -335,7 +344,7 @@ namespace EMBC.Tests.Integration.ESS
             return file;
         }
 
-        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file, contact contact, era_essteamuser creator)
+        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file, contact contact, era_essteamuser creator, string runId)
         {
             var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
             var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
@@ -343,7 +352,7 @@ namespace EMBC.Tests.Integration.ESS
             var referrals = referralSupportTypes.Select((t, i) => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
-                era_name = $"{file.era_name}-referral-{i}",
+                era_suppliernote = $"{file.era_name}-ref-{runId}-{i}",
                 era_validfrom = DateTime.UtcNow.AddDays(-3),
                 era_validto = DateTime.UtcNow.AddDays(3),
                 era_supporttype = t,
@@ -354,7 +363,7 @@ namespace EMBC.Tests.Integration.ESS
             var etransfers = etransferSupportTypes.Select((t, i) => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
-                era_name = $"{file.era_name}-etransfer-{i}",
+                era_suppliernote = $"{file.era_name}-et-{runId}-{i}",
                 era_validfrom = DateTime.UtcNow.AddDays(-3),
                 era_validto = DateTime.UtcNow.AddDays(3),
                 era_supporttype = t,

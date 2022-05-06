@@ -41,22 +41,27 @@ namespace EMBC.ESS.Resources.Payments
     {
         private readonly IWebProxy casWebProxy;
         private readonly IMapper mapper;
+        private readonly ICasSystemConfigurationProvider casSystemConfigurationProvider;
 
-        public CasGateway(IWebProxy casWebProxy, IMapper mapper)
+        public CasGateway(IWebProxy casWebProxy, IMapper mapper, ICasSystemConfigurationProvider casSystemConfigurationProvider)
         {
             this.casWebProxy = casWebProxy;
             this.mapper = mapper;
+            this.casSystemConfigurationProvider = casSystemConfigurationProvider;
         }
 
         public async Task<string> CreateInvoice(string batchName, era_etransfertransaction payment, CancellationToken ct)
         {
-            //TODO: get from Dynamics sys config values
-            var payGroup = "EMB INC";
-            var distributedAccount = "105.15006.10120.5185.1500000.000000.0000";
+            var config = await casSystemConfigurationProvider.Get(ct);
 
             var invoice = new Invoice
             {
-                PayGroup = payGroup,
+                PayGroup = config.PayGroup,
+                CurrencyCode = config.CurrencyCode,
+                Terms = config.InvoiceTerms,
+                InvoiceType = config.InvoiceType,
+                RemittanceCode = config.InvoiceRemittanceCode,
+                SpecialHandling = config.InvoiceSpecialHandling,
                 InvoiceBatchName = batchName,
                 SupplierNumber = payment.era_suppliernumber,
                 SupplierSiteNumber = payment.era_sitesuppliernumber,
@@ -75,8 +80,10 @@ namespace EMBC.ESS.Resources.Payments
                     new InvoiceLineDetail
                     {
                         InvoiceLineNumber = 1,
-                        DefaultDistributionAccount = distributedAccount,
-                        InvoiceLineAmount = payment.era_totalamount.Value
+                        DefaultDistributionAccount = config.DefaultDistributionAccount,
+                        InvoiceLineAmount = payment.era_totalamount.Value,
+                        LineCode = config.InvoiceLineCode,
+                        InvoiceLineType = config.InvoiceLineType
                     }
                 }
             };
@@ -89,6 +96,7 @@ namespace EMBC.ESS.Resources.Payments
 
         public async Task<(string SupplierNumber, string SiteCode)> CreateSupplier(contact contact, CancellationToken ct)
         {
+            var config = await casSystemConfigurationProvider.Get(ct);
             var response = await casWebProxy.CreateSupplierAsync(new CreateSupplierRequest
             {
                 SubCategory = "Individual",
@@ -97,8 +105,7 @@ namespace EMBC.ESS.Resources.Payments
                         {
                             new Supplieraddress
                             {
-                                //TODO: get from dynamics
-                                ProviderId = "CAS_SU_AT_ESS",
+                                ProviderId = config.ProviderId,
                                 AddressLine1 = contact.address1_line1.ToCasAddressLine(),
                                 AddressLine2 = contact.address1_line2?.ToCasAddressLine(),
                                 AddressLine3 = contact.address1_line3?.ToCasAddressLine(),
@@ -126,10 +133,10 @@ namespace EMBC.ESS.Resources.Payments
 
         public async Task<IEnumerable<InvoiceItem>> QueryInvoices(string status, DateTime? statusChangedFrom, CancellationToken ct)
         {
+            var config = await casSystemConfigurationProvider.Get(ct);
             var response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
             {
-                //TODO: get from Dynamics config
-                PayGroup = "EMB INC",
+                PayGroup = config.PayGroup,
                 PaymentStatusDateFrom = statusChangedFrom,
                 PaymentStatus = status
             }, ct);
@@ -143,8 +150,7 @@ namespace EMBC.ESS.Resources.Payments
                 if (!int.TryParse(queryParams.Get("page"), out var nextPageNumber)) break;
                 response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
                 {
-                    //TODO: get from Dynamics config
-                    PayGroup = "EMB INC",
+                    PayGroup = config.PayGroup,
                     PageNumber = nextPageNumber
                 }, ct);
                 items.AddRange(response.Items);
