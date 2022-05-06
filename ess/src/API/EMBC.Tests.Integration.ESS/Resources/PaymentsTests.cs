@@ -36,7 +36,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 Amount = 100.00m,
                 RecipientFirstName = "first",
                 RecipientLastName = "last",
-                NotificationEmail = "email@unit.test",
+                NotificationEmail = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca",
                 NotificationPhone = "1234567890",
                 SecurityAnswer = "answer",
                 SecurityQuestion = "question",
@@ -61,12 +61,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
             readPayment.LinkedSupportIds.ShouldBe(payment.LinkedSupportIds);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task SendPaymentToCas_InteracPayment_Sent()
+        [Theory(Skip = RequiresVpnConnectivity)]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SendPaymentToCas_InteracPayment_Sent(bool newPayee)
         {
-            var registrantId = TestData.ContactId;
-
-            var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
+            var registrantId = newPayee ? await CreateNewRegistrant() : TestData.ContactId;
 
             var payments = new[]
             {
@@ -76,7 +76,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         Amount = 100.00m,
                         RecipientFirstName = "first",
                         RecipientLastName = "last",
-                        NotificationEmail = "email@unit.test",
+                        NotificationEmail = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca",
                         NotificationPhone = "1234567890",
                         SecurityAnswer = "answer",
                         SecurityQuestion = "question",
@@ -95,12 +95,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 CasBatchName = TestData.TestPrefix,
                 Items = payments.Select(p => new CasPayment
                 {
-                    PaymentId = p.Id,
-                    PayeeDetails = new CasPayeeDetails
-                    {
-                        SupplierNumber = payeeDetails.CasSupplierNumber,
-                        SupplierSiteCode = payeeDetails.CasSupplierSiteNumber
-                    }
+                    PaymentId = p.Id
                 })
             });
 
@@ -118,30 +113,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task GetPayeeDetails_NewEvacuee_CasSupplierCreated()
-        {
-            var registrantId = await CreateNewRegistrant();
-            var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
-            payeeDetails.CasSupplierNumber.ShouldNotBeNullOrEmpty();
-            payeeDetails.CasSupplierSiteNumber.ShouldNotBeNullOrEmpty();
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task GetPayeeDetails_ExistingEvacuee_CasSupplierSaved()
-        {
-            var registrantId = TestData.ContactId;
-
-            //query supplier
-            var payeeDetails = (GetCasPayeeDetailsResponse)await repository.Query(new GetCasPayeeDetailsRequest { PayeeId = registrantId });
-            payeeDetails.CasSupplierNumber.ShouldNotBeNullOrEmpty();
-            payeeDetails.CasSupplierSiteNumber.ShouldNotBeNullOrEmpty();
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
         {
             //query payments
-            var startDate = DateTime.Now.AddDays(-1);
+            var startDate = DateTime.Now.AddDays(-7);
             var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate });
 
             response.Payments.ShouldNotBeEmpty();

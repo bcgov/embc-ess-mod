@@ -45,7 +45,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                new IncidentalsSupport {
                    SupportDelivery = new Interac
                    {
-                       NotificationEmail = "test@test.test",
+                       NotificationEmail = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca",
                        NotificationMobile = "+000-000-0000",
                        ReceivingRegistrantId = TestData.ContactId
                    },

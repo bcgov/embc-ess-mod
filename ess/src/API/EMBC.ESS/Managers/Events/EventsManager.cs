@@ -101,7 +101,7 @@ namespace EMBC.ESS.Managers.Events
             this.supportingEngine = supportingEngine;
             this.paymentRepository = paymentRepository;
             this.env = env;
-            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository);
+            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository, paymentRepository);
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -734,6 +734,7 @@ namespace EMBC.ESS.Managers.Events
                         Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports)
                     });
 
+                    //TODO: merge to a tx per support and handle failure
                     foreach (var support in response.Flags)
                     {
                         // store flags
@@ -811,44 +812,9 @@ namespace EMBC.ESS.Managers.Events
                 if (foundPayments)
                 {
                     logger.LogInformation("Found {0} pending payments", pendingPayments.Length);
-                    var casPayments = new List<CasPayment>();
-
-                    foreach (var payment in pendingPayments)
-                    {
-                        if (string.IsNullOrEmpty(payment.PayeeId))
-                        {
-                            logger.LogError($"Cannot send payment {payment.Id}: no payee is associated with this payment");
-                            await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
-                            {
-                                PaymentId = payment.Id,
-                                ToPaymentStatus = PaymentStatus.Failed,
-                                Reason = "no payee is associated with this payment"
-                            });
-                            continue;
-                        }
-                        // get payee cas details
-                        var payeeDetails = (GetCasPayeeDetailsResponse)await paymentRepository.Query(new GetCasPayeeDetailsRequest
-                        {
-                            PayeeId = payment.PayeeId
-                        });
-                        if (string.IsNullOrEmpty(payeeDetails.CasSupplierNumber))
-                        {
-                            logger.LogError($"Skipping payment {payment.Id}: Payee {payment.PayeeId} doesn't have CAS supplier details");
-                            continue;
-                        }
-                        var casPayment = new CasPayment
-                        {
-                            PaymentId = payment.Id,
-                            PayeeDetails = new CasPayeeDetails
-                            {
-                                SupplierNumber = payeeDetails.CasSupplierNumber,
-                                SupplierSiteCode = payeeDetails.CasSupplierSiteNumber
-                            }
-                        };
-                        casPayments.Add(casPayment);
-                    }
 
                     var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
+                    var casPayments = pendingPayments.Select(p => new CasPayment { PaymentId = p.Id });
                     var result = (SendPaymentToCasResponse)await paymentRepository.Manage(new SendPaymentToCasRequest
                     {
                         CasBatchName = casBatchName,
@@ -857,11 +823,11 @@ namespace EMBC.ESS.Managers.Events
 
                     if (result.SentItems.Any())
                     {
-                        logger.LogInformation($"Sent {result.SentItems.Count()} to CAS");
+                        logger.LogInformation("Batch {0}: sent {1} payments to CAS", casBatchName, result.SentItems.Count());
                     }
                     if (result.FailedItems.Any())
                     {
-                        logger.LogError($"Failed to send {result.SentItems.Count()} to CAS");
+                        logger.LogInformation("Batch {0}: failed to send {1} payments to CAS", casBatchName, result.FailedItems.Count());
                         foreach (var failedItem in result.FailedItems)
                         {
                             logger.LogError("Failed to send payment {0} to CAS: {1}", failedItem.Id, failedItem.Reason);

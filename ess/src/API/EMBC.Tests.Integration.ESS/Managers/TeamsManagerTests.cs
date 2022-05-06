@@ -28,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             var newMember = new TeamMember
             {
-                Email = "email@email.com",
+                Email = $"{uniqueSignature}eraunitest@test.gov.bc.ca",
                 FirstName = uniqueSignature + "-first",
                 LastName = uniqueSignature + "-last",
                 IsActive = true,
@@ -84,7 +84,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             var newMember = new TeamMember
             {
-                Email = "email@email.com",
+                Email = $"{uniqueSignature}eraunitest@test.gov.bc.ca",
                 FirstName = uniqueSignature + "-to-deactivate",
                 LastName = uniqueSignature + "-to-deactivate",
                 IsActive = true,
@@ -135,7 +135,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             var newMember = new TeamMember
             {
-                Email = "email@email.com",
+                Email = $"{uniqueSignature}eraunitest@test.gov.bc.ca",
                 FirstName = uniqueSignature + "-to-deactivate",
                 LastName = uniqueSignature + "-to-deactivate",
                 IsActive = true,
@@ -386,7 +386,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
                     FirstName = $"{uniqueSignature}-Test",
                     LastName = $"{uniqueSignature}-Contact",
                     Phone = "6049877897",
-                    Email = "suppliercontact@email.com"
+                    Email = $"{uniqueSignature}eraunitest@test.gov.bc.ca"
                 },
                 Team = new EMBC.ESS.Shared.Contracts.Teams.SupplierTeam
                 {

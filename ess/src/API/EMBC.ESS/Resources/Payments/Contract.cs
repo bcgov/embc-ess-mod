@@ -45,10 +45,12 @@ namespace EMBC.ESS.Resources.Payments
     public enum PaymentStatus
     {
         Pending = 1,
+        Sending = 174360000,
         Sent = 174360001,
         Paid = 2,
         Failed = 174360002,
         Cancelled = 174360003,
+        Issued = 174360004
     }
 
     public class InteracSupportPayment : Payment
@@ -68,6 +70,7 @@ namespace EMBC.ESS.Resources.Payments
     {
         public PaymentStatus? ByStatus { get; set; }
         public string ById { get; set; }
+        public string ByLinkedSupportId { get; set; }
         public int? LimitNumberOfItems { get; set; }
     }
 
@@ -85,8 +88,6 @@ namespace EMBC.ESS.Resources.Payments
     public class CasPayment
     {
         public string PaymentId { get; set; }
-
-        public CasPayeeDetails PayeeDetails { get; set; }
     }
 
     public class CasPayeeDetails
@@ -99,17 +100,6 @@ namespace EMBC.ESS.Resources.Payments
     {
         public IEnumerable<string> SentItems { get; set; } = Array.Empty<string>();
         public IEnumerable<(string Id, string Reason)> FailedItems { get; set; } = Array.Empty<(string Id, string Reason)>();
-    }
-
-    public class GetCasPayeeDetailsRequest : QueryPaymentRequest
-    {
-        public string PayeeId { get; set; }
-    }
-
-    public class GetCasPayeeDetailsResponse : QueryPaymentResponse
-    {
-        public string CasSupplierNumber { get; set; }
-        public string CasSupplierSiteNumber { get; set; }
     }
 
     public class GetCasPaymentStatusRequest : QueryPaymentRequest

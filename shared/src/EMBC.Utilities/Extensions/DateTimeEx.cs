@@ -4,8 +4,11 @@ namespace EMBC.Utilities.Extensions
 {
     public static class DateTimeEx
     {
+        public static DateTime UtcNowWithKind => DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Utc);
+
         public static DateTime ToPST(this DateTime date)
         {
+            if (date.Kind == DateTimeKind.Unspecified) date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
             return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZone());
         }
 

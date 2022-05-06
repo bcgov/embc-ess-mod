@@ -174,7 +174,10 @@
             >
               <div class="col-md-5"><b>e-Transfer Recipient</b></div>
               <div class="col-md-5">
-                <p>{{ element.issuedToPersonName }}</p>
+                <p>
+                  {{ element.recipientFirstName }}
+                  {{ element.recipientLastName }}
+                </p>
               </div>
 
               <div class="col-md-5"><b>e-Transfer Notification</b></div>
@@ -185,7 +188,7 @@
 
               <div class="col-md-5"><b>e-Transfer Security Answer</b></div>
               <div class="col-md-5">
-                <p></p>
+                <p>{{ element.securityAnswer }}</p>
               </div>
             </div>
           </div>

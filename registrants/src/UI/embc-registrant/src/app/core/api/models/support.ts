@@ -17,6 +17,10 @@ export interface Support {
   method?: SupportMethod;
   nofificationMobile?: null | string;
   notificationEmail?: null | string;
+  recipientFirstName?: null | string;
+  recipientLastName?: null | string;
+  securityAnswer?: null | string;
+  securityQuestion?: null | string;
   status?: SupportStatus;
   subCategory?: SupportSubCategory;
   supplierAddress?: null | Address;
