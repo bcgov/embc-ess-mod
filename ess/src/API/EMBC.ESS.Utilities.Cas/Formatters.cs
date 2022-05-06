@@ -19,6 +19,8 @@ namespace EMBC.ESS.Utilities.Cas
 
         public static string ToCasCity(this string city) => city.StripSpecialCharacters().TrimTo(25);
 
+        public static string ToCasTelephoneNumber(this string s) => Regex.Replace(s, @"^(\+)|\D", "$1", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
         public static string ToCasAddressLine(this string s) => s.StripSpecialCharacters().TrimTo(35);
 
         public static string StripCasSiteNumberBrackets(this string siteNumber) => siteNumber.Replace('[', ' ').Replace(']', ' ').Trim();

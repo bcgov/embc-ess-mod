@@ -50,17 +50,37 @@ namespace EMBC.ESS.Resources.Payments
 
         public async Task<string> CreateInvoice(string batchName, era_etransfertransaction payment, CancellationToken ct)
         {
-            var invoice = mapper.Map<Invoice>(payment);
             //TODO: get from Dynamics sys config values
-            invoice.PayGroup = "EMB INC";
+            var payGroup = "EMB INC";
             var distributedAccount = "105.15006.10120.5185.1500000.000000.0000";
-            invoice.InvoiceBatchName = batchName;
-            var lineItemNumber = 1;
-            foreach (var lineItem in invoice.InvoiceLineDetails)
+
+            var invoice = new Invoice
             {
-                lineItem.InvoiceLineNumber = lineItemNumber++;
-                lineItem.DefaultDistributionAccount = distributedAccount;
-            }
+                PayGroup = payGroup,
+                InvoiceBatchName = batchName,
+                SupplierNumber = payment.era_suppliernumber,
+                SupplierSiteNumber = payment.era_sitesuppliernumber,
+                InvoiceNumber = payment.era_name,
+                DateInvoiceReceived = payment.era_dateinvoicereceived.Value.UtcDateTime,
+                GlDate = payment.era_gldate.Value.UtcDateTime,
+                InvoiceDate = payment.era_invoicedate.Value.UtcDateTime,
+                InvoiceAmount = payment.era_totalamount.Value,
+                InteracEmail = payment.era_emailaddress,
+                InteracMobileCountryCode = payment.era_phonenumber == null ? null : "1",
+                InteracMobileNumber = payment.era_phonenumber?.ToCasTelephoneNumber(),
+                RemittanceMessage1 = payment.era_securityquestion?.TrimTo(40),
+                RemittanceMessage2 = payment.era_securityanswer?.TrimTo(64),
+                InvoiceLineDetails = new[]
+                {
+                    new InvoiceLineDetail
+                    {
+                        InvoiceLineNumber = 1,
+                        DefaultDistributionAccount = distributedAccount,
+                        InvoiceLineAmount = payment.era_totalamount.Value
+                    }
+                }
+            };
+
             var response = await casWebProxy.CreateInvoiceAsync(invoice, ct);
             if (!response.IsSuccess()) throw new CasException($"{response.CASReturnedMessages}");
 
