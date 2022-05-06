@@ -340,7 +340,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ToArray();
 
             //return (await ParallelLoadEvacuationFilesAsync(readCtx, files)).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase)).ToArray();
-            await Parallel.ForEachAsync(files, ct, (f, ct) => new ValueTask(ParallelLoadEvacuationFileAsync(readCtx, f, ct)));
+            await Parallel.ForEachAsync(files, ct, async (f, ct) => await ParallelLoadEvacuationFileAsync(readCtx, f, ct));
 
             return mapper.Map<IEnumerable<EvacuationFile>>(files, opt => opt.Items["MaskSecurityPhrase"] = query.MaskSecurityPhrase.ToString());
         }

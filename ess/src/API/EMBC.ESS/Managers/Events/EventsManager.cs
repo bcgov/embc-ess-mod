@@ -268,7 +268,7 @@ namespace EMBC.ESS.Managers.Events
             var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(cases).ToArray();
 
             var ct = new CancellationTokenSource().Token;
-            await Parallel.ForEachAsync(files, (f, ct) => new ValueTask(evacuationFileLoader.Load(f, ct)));
+            await Parallel.ForEachAsync(files, async (f, ct) => await evacuationFileLoader.Load(f, ct));
 
             return new EvacuationFilesQueryResponse { Items = files };
         }
@@ -321,7 +321,7 @@ namespace EMBC.ESS.Managers.Events
 
             var ct = new CancellationTokenSource().Token;
             //await System.Threading.Tasks.Task.WhenAll(householdMemberTasks.Union(profileTasks));
-            await Parallel.ForEachAsync(householdMemberTasks.Union(profileTasks), ct, (t, ct) => new ValueTask(t));
+            await Parallel.ForEachAsync(householdMemberTasks.Union(profileTasks), ct, async (t, ct) => await t);
 
             var profileResults = profiles.ToArray();
             var fileResults = files.ToArray();
@@ -703,7 +703,7 @@ namespace EMBC.ESS.Managers.Events
             })).Items);
 
             var ct = new CancellationTokenSource().Token;
-            await Parallel.ForEachAsync(supports, ct, (s, ct) => new ValueTask(evacuationFileLoader.Load(s, ct)));
+            await Parallel.ForEachAsync(supports, ct, async (s, ct) => await evacuationFileLoader.Load(s, ct));
             return new SearchSupportsQueryResponse
             {
                 Items = supports

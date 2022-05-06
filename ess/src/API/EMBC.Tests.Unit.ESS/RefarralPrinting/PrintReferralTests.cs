@@ -70,14 +70,14 @@ namespace EMBC.Tests.Unit.ESS.Prints
         [Fact]
         public async Task MultipleHtmlGenerationLoadTest()
         {
-            await Parallel.ForEachAsync(Enumerable.Range(0, 10), new ParallelOptions { MaxDegreeOfParallelism = 10 }, (i, ct) =>
-              {
-                  var requestingUser = GeneratePrintRequestingUser();
-                  var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
-                  var summaryItems = GetSummaryFromReferrals(referrals);
-                  var title = $"supportstest-{i}";
-                  return new ValueTask(ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title));
-              });
+            await Parallel.ForEachAsync(Enumerable.Range(0, 10), new ParallelOptions { MaxDegreeOfParallelism = 10 }, async (i, ct) =>
+               {
+                   var requestingUser = GeneratePrintRequestingUser();
+                   var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
+                   var summaryItems = GetSummaryFromReferrals(referrals);
+                   var title = $"supportstest-{i}";
+                   await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
+               });
         }
 
         private PrintRequestingUser GeneratePrintRequestingUser() =>
