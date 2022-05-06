@@ -128,7 +128,7 @@ namespace EMBC.ESS.Resources.Payments
                 SupplierName = Formatters.ToCasSupplierName(contact.firstname, contact.lastname)
             }, ct);
             if (response == null || !response.SupplierAddress.Any()) return null;
-            return (SupplierNumber: response.Suppliername, SiteCode: response.SupplierAddress.First().Suppliersitecode.StripCasSiteNumberBrackets());
+            return (SupplierNumber: response.Suppliernumber, SiteCode: response.SupplierAddress.First().Suppliersitecode.StripCasSiteNumberBrackets());
         }
 
         public async Task<IEnumerable<InvoiceItem>> QueryInvoices(string status, DateTime? statusChangedFrom, CancellationToken ct)
