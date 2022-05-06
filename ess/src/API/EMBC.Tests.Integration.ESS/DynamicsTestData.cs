@@ -251,7 +251,7 @@ namespace EMBC.Tests.Integration.ESS
                 gendercode = random.Next(1, 3),
                 address1_line1 = this.testPrefix + "-line1",
                 address1_line2 = this.testPrefix + "-line2",
-                address1_postalcode = "v2v 2v2",
+                address1_postalcode = "V8Z 7X9",
                 address1_country = "CAN",
                 address1_stateorprovince = "BC",
                 birthdate = new Date(1999, 5, 10)

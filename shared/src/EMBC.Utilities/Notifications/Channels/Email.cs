@@ -76,7 +76,7 @@ namespace EMBC.Utilities.Notifications.Channels
         public string? SmtpUsername { get; set; }
         public string? SmtpPassword { get; set; }
         public bool SmtpEnableSSL { get; set; }
-        public EmailAddress DefaultSender { get; set; } = new EmailAddress { Name = "ERA Notifications", Address = "era-no-reply@gov.bc.ca" };
+        public EmailAddress DefaultSender { get; set; } = new EmailAddress { Name = "ERA Notifications", Address = "era-no-reply@test.gov.bc.ca" };
 
         public bool HasCredentials => !string.IsNullOrEmpty(SmtpUsername) && !string.IsNullOrEmpty(SmtpPassword);
     }

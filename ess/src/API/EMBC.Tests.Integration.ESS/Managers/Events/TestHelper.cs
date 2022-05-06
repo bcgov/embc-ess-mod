@@ -108,7 +108,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             {
                 FirstName = $"{uniqueIdentifier}_first",
                 LastName = $"{uniqueIdentifier}_last",
-                Email = $"{uniqueIdentifier}@test.na",
+                Email = $"{uniqueIdentifier}eratest@test.gov.bc.ca",
                 DateOfBirth = "12/13/2000",
                 Gender = "M",
                 PrimaryAddress = address,
