@@ -817,6 +817,9 @@ namespace EMBC.Responders.API.Controllers
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.SecurityAnswer, opts => opts.Ignore())
+                .ForMember(d => d.SecurityQuestion, opts => opts.Ignore())
+                .ForMember(d => d.RelatedPaymentId, opts => opts.Ignore())
                 ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.ClothingSupport, ClothingSupport>()

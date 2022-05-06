@@ -101,7 +101,7 @@ namespace EMBC.ESS.Managers.Events
             this.supportingEngine = supportingEngine;
             this.paymentRepository = paymentRepository;
             this.env = env;
-            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository);
+            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository, paymentRepository);
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)

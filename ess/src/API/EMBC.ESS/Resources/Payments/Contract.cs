@@ -70,6 +70,7 @@ namespace EMBC.ESS.Resources.Payments
     {
         public PaymentStatus? ByStatus { get; set; }
         public string ById { get; set; }
+        public string ByLinkedSupportId { get; set; }
         public int? LimitNumberOfItems { get; set; }
     }
 

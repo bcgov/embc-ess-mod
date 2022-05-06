@@ -158,8 +158,8 @@ namespace EMBC.Registrants.API.Mappers
                         d.NotificationEmail = eTransfer.NotificationEmail;
                         d.RecipientFirstName = eTransfer.RecipientFirstName;
                         d.RecipientLastName = eTransfer.RecipientLastName;
-                        d.SecurityQuestion = "*update* question";
-                        d.SecurityAnswer = "*update* answer";
+                        d.SecurityQuestion = eTransfer.SecurityQuestion;
+                        d.SecurityAnswer = eTransfer.SecurityAnswer;
                     }
                     else
                     {

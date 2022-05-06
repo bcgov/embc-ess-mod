@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
@@ -13,6 +14,8 @@ namespace EMBC.ESS.Resources.Supports
     {
         private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
+
+        private static CancellationToken CreateCancellationToken() => new CancellationTokenSource().Token;
 
         public SupportRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
@@ -77,7 +80,6 @@ namespace EMBC.ESS.Resources.Supports
 
         private async Task<AssignSupportToQueueCommandResult> Handle(SubmitSupportForApprovalCommand cmd)
         {
-            await Task.CompletedTask;
             var ctx = essContextFactory.Create();
 
             var queues = (await ctx.queues.GetAllPagesAsync()).ToArray();
@@ -181,9 +183,10 @@ namespace EMBC.ESS.Resources.Supports
 
         private async Task<SearchSupportQueryResult> Handle(SearchSupportsQuery query)
         {
+            var ct = CreateCancellationToken();
             var ctx = essContextFactory.CreateReadOnly();
-            var supports = (await Search(ctx, query)).ToArray();
-            await Parallel.ForEachAsync(supports, (s, ct) => new ValueTask(LoadSupportDetails(ctx, s)));
+            var supports = (await Search(ctx, query, ct)).ToArray();
+            await Parallel.ForEachAsync(supports, ct, async (s, ct) => await LoadSupportDetails(ctx, s, ct));
 
             var results = new SearchSupportQueryResult { Items = mapper.Map<IEnumerable<Support>>(supports).ToArray() };
 
@@ -192,7 +195,7 @@ namespace EMBC.ESS.Resources.Supports
             return results;
         }
 
-        private static async Task<IEnumerable<era_evacueesupport>> Search(EssContext ctx, SearchSupportsQuery query)
+        private static async Task<IEnumerable<era_evacueesupport>> Search(EssContext ctx, SearchSupportsQuery query, CancellationToken ct)
         {
             if (string.IsNullOrEmpty(query.ById) &&
                 string.IsNullOrEmpty(query.ByManualReferralId) &&
@@ -207,7 +210,7 @@ namespace EMBC.ESS.Resources.Supports
                 if (file == null) return Array.Empty<era_evacueesupport>();
 
                 ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
-                await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+                await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), ct);
                 IEnumerable<era_evacueesupport> supports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId;
                 if (!string.IsNullOrEmpty(query.ById)) supports = supports.Where(s => s.era_name == query.ById);
                 if (!string.IsNullOrEmpty(query.ByManualReferralId)) supports = supports.Where(s => s.era_manualsupport == query.ByManualReferralId);
@@ -225,21 +228,27 @@ namespace EMBC.ESS.Resources.Supports
             supportsQuery = supportsQuery.OrderBy(s => s.createdon);
             if (query.LimitNumberOfResults.HasValue) supportsQuery = supportsQuery.Take(query.LimitNumberOfResults.Value);
 
-            return await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync();
+            return await ((DataServiceQuery<era_evacueesupport>)supportsQuery).GetAllPagesAsync(ct);
         }
 
-        private static async Task LoadSupportDetails(EssContext ctx, era_evacueesupport support)
+        private static async Task LoadSupportDetails(EssContext ctx, era_evacueesupport support, CancellationToken ct)
         {
             ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
-            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_EvacuationFileId));
-            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
-            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport));
+            var tasks = new List<Task>();
+
+            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_EvacuationFileId), ct));
+            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport), ct));
+            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_supportflag_EvacueeSupport), ct));
+            tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_etransfertransaction_era_evacueesuppo), ct));
+
+            await Task.WhenAll(tasks);
+
             foreach (var flag in support.era_era_evacueesupport_era_supportflag_EvacueeSupport)
             {
                 if (flag._era_supportduplicate_value.HasValue)
                 {
                     ctx.AttachTo(nameof(EssContext.era_supportflags), flag);
-                    await ctx.LoadPropertyAsync(flag, nameof(era_supportflag.era_SupportDuplicate));
+                    await ctx.LoadPropertyAsync(flag, nameof(era_supportflag.era_SupportDuplicate), ct);
                 }
             }
         }

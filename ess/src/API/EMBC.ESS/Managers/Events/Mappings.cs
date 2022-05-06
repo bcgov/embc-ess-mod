@@ -200,7 +200,9 @@ namespace EMBC.ESS.Managers.Events
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
                 .IncludeAllDerived()
-                .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.SecurityQuestion, opts => opts.Ignore())
+                .ForMember(d => d.SecurityAnswer, opts => opts.Ignore())
+                .ForMember(d => d.RelatedPaymentId, opts => opts.Ignore())
                 ;
 
             CreateMap<ClothingSupport, Shared.Contracts.Events.ClothingSupport>()

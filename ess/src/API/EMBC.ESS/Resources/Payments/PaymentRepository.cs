@@ -97,25 +97,42 @@ namespace EMBC.ESS.Resources.Payments
 
         private async Task<SearchPaymentResponse> Handle(SearchPaymentRequest request)
         {
-            if (string.IsNullOrEmpty(request.ById) && !request.ByStatus.HasValue)
+            if (string.IsNullOrEmpty(request.ById) && string.IsNullOrEmpty(request.ByLinkedSupportId) && !request.ByStatus.HasValue)
                 throw new ArgumentException("Payments query must have at least one criteria", nameof(request));
 
             var ct = CreateCancellationToken();
             var ctx = essContextFactory.CreateReadOnly();
 
-            IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
-            if (!string.IsNullOrEmpty(request.ById)) query = query.Where(tx => tx.era_name == request.ById);
-            if (request.ByStatus.HasValue) query = query.Where(tx => tx.statuscode == (int)request.ByStatus.Value);
-            query = query.OrderBy(q => q.createdon);
-            if (request.LimitNumberOfItems.HasValue) query = query.Take(request.LimitNumberOfItems.Value);
+            IEnumerable<era_etransfertransaction> payments = Array.Empty<era_etransfertransaction>();
+            if (!string.IsNullOrEmpty(request.ByLinkedSupportId))
+            {
+                // search only for a single support
+                var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == request.ByLinkedSupportId)).GetAllPagesAsync(ct)).SingleOrDefault();
+                if (support != null)
+                {
+                    ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
+                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_etransfertransaction_era_evacueesuppo));
+                    payments = support.era_era_etransfertransaction_era_evacueesuppo;
+                    if (request.ByStatus.HasValue) payments = payments.Where(p => p.statuscode == (int)request.ByStatus.Value);
+                    if (!string.IsNullOrEmpty(request.ById)) payments = payments.Where(p => p.era_name == request.ById);
+                }
+            }
+            else
+            {
+                // search all payments
+                IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
+                if (!string.IsNullOrEmpty(request.ById)) query = query.Where(tx => tx.era_name == request.ById);
+                if (request.ByStatus.HasValue) query = query.Where(tx => tx.statuscode == (int)request.ByStatus.Value);
+                query = query.OrderBy(q => q.createdon);
+                if (request.LimitNumberOfItems.HasValue) query = query.Take(request.LimitNumberOfItems.Value);
 
-            var txs = (await ((DataServiceQuery<era_etransfertransaction>)query).GetAllPagesAsync(ct)).ToArray();
-            txs.AsParallel().ForAll(tx => ctx.AttachTo(nameof(EssContext.era_etransfertransactions), tx));
-            await Parallel.ForEachAsync(txs, ct, (tx, ct) => new ValueTask(ctx.LoadPropertyAsync(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), ct)));
-
+                payments = (await ((DataServiceQuery<era_etransfertransaction>)query).GetAllPagesAsync(ct)).ToArray();
+                payments.AsParallel().ForAll(tx => ctx.AttachTo(nameof(EssContext.era_etransfertransactions), tx));
+                await Parallel.ForEachAsync(payments, ct, async (tx, ct) => await ctx.LoadPropertyAsync(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), ct));
+            }
             ctx.DetachAll();
 
-            return new SearchPaymentResponse { Items = mapper.Map<IEnumerable<Payment>>(txs).ToArray() };
+            return new SearchPaymentResponse { Items = mapper.Map<IEnumerable<Payment>>(payments).ToArray() };
         }
 
         private async Task<SendPaymentToCasResponse> Handle(SendPaymentToCasRequest request)
