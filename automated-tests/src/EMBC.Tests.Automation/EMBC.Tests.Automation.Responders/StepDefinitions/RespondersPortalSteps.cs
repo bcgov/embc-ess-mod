@@ -87,6 +87,60 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //Wizard STEP 2:
             //fill evacuation details
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/evacuation-details");
+            evacueeRegistration.EvacuationDetailsFormReqFields();
+            evacueeRegistration.NextButton();
+
+            //fill household members
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/household-members");
+            evacueeRegistration.HouseholdMembersMinForm();
+            evacueeRegistration.NextButton();
+
+            //fill animals
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/animals");
+            evacueeRegistration.AnimalsMinForm();
+            evacueeRegistration.NextButton();
+
+            //fill needs assessments
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/needs");
+            evacueeRegistration.NeedsAssessmentsForm();
+            evacueeRegistration.NextButton();
+
+            //fill secret phrase
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/security-phrase");
+            evacueeRegistration.SecurityPhraseForm();
+            evacueeRegistration.NextButton();
+
+            //review ESS File and submit
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/review");
+            evacueeRegistration.SaveEssFileButton();
+            evacueeRegistration.WizardNextStepButton();
+
+            //Wizard STEP 3:
+            //add support
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            evacueeRegistration.AddSupportsButton();
+
+            //select support
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            evacueeRegistration.SelectSupportForm();
+
+            //add support details
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            evacueeRegistration.SupportFoodDetailsForm();
+
+            //add support delivery
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            evacueeRegistration.SupportDeliveryForm();
+            evacueeRegistration.CloseButton();
+
+            //process support
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            evacueeRegistration.ProcessSupportButton();
+
+            //review process support
+            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
+            evacueeRegistration.ProcessDraftForm();
 
 
 

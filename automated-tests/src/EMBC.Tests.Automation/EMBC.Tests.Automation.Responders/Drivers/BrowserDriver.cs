@@ -8,8 +8,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
     /// <summary>
     /// Manages a browser instance using Selenium
     /// </summary>
-    //public class BrowserDriver : IDisposable
-    public class BrowserDriver
+    public class BrowserDriver : IDisposable
     {
         private readonly Lazy<IWebDriver> currentWebDriverLazy;
         private readonly Lazy<IConfiguration> configurationLazy;
@@ -38,8 +37,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
             options.AddArguments("start-maximized");
 
             var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), options);
-            //chromeDriver.Url = Configuration.GetValue<string>("baseUrl");
-            chromeDriver.Url = "http://localhost:6200";
+            chromeDriver.Url = Configuration.GetValue<string>("baseUrl");
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
 
@@ -57,19 +55,19 @@ namespace EMBC.Tests.Automation.Responders.Drivers
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
         /// </summary>
-        //public void Dispose()
-        //{
-        //    if (_isDisposed)
-        //    {
-        //        return;
-        //    }
+        public void Dispose()
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
 
-        //    if (currentWebDriverLazy.IsValueCreated)
-        //    {
-        //        Current.Quit();
-        //    }
+            if (currentWebDriverLazy.IsValueCreated)
+            {
+                Current.Quit();
+            }
 
-        //    _isDisposed = true;
-        //}
+            _isDisposed = true;
+        }
     }
 }
