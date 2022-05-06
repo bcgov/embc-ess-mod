@@ -125,14 +125,14 @@ namespace EMBC.ESS.Resources.Payments
             var processedPayments = new List<string>();
             var failedPayments = new List<(string Id, string Reason)>();
 
-            foreach (var casPayment in request.Items)
+            await Parallel.ForEachAsync(request.Items, ct, async (casPayment, ct) =>
             {
                 var result = await SendPaymentToCas(essContextFactory.Create(), casPayment.PaymentId, request.CasBatchName, ct);
                 if (result.Success)
                     processedPayments.Add(casPayment.PaymentId);
                 else
                     failedPayments.Add((casPayment.PaymentId, result.ErrorMessage));
-            }
+            });
 
             return new SendPaymentToCasResponse
             {
