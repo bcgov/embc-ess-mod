@@ -47,6 +47,9 @@ namespace EMBC.ESS.Resources.Payments
 
         private async Task<SavePaymentResponse> Handle(SavePaymentRequest request)
         {
+            if (request.Payment.PayeeId == null) throw new ArgumentNullException(nameof(request.Payment.PayeeId));
+            if (request.Payment is InteracSupportPayment isp && !isp.LinkedSupportIds.Any()) throw new ArgumentException("Interac payment must be linked to at least one support");
+
             var ct = CreateCancellationToken();
             var ctx = essContextFactory.Create();
 
