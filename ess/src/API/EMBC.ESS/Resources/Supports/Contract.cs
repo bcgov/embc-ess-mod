@@ -224,6 +224,7 @@ namespace EMBC.ESS.Resources.Supports
         Cancelled = 174360004,
         UnderReview = 174360005,
         PendingScan = 174360006,
+        Issued = 174360007
     }
 
     public enum SupportVoidReason

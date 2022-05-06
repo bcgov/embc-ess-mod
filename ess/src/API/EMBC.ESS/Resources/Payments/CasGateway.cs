@@ -77,12 +77,13 @@ namespace EMBC.ESS.Resources.Payments
                         {
                             new Supplieraddress
                             {
+                                //TODO: get from dynamics
                                 ProviderId = "CAS_SU_AT_ESS",
                                 AddressLine1 = contact.address1_line1.StripSpecialCharacters(),
                                 AddressLine2 = contact.address1_line2?.StripSpecialCharacters(),
                                 AddressLine3 = contact.address1_line3?.StripSpecialCharacters(),
                                 City = (contact.era_City?.era_jurisdictionname ?? contact.address1_city).ToCasCity(),
-                                Postalcode = contact.address1_postalcode.ToCasPostalCode(),
+                                PostalCode = contact.address1_postalcode.ToCasPostalCode(),
                                 Province = contact.era_ProvinceState.era_code,
                                 Country = "CA",
                             }
