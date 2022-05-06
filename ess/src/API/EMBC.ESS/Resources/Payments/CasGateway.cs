@@ -79,12 +79,12 @@ namespace EMBC.ESS.Resources.Payments
                             {
                                 //TODO: get from dynamics
                                 ProviderId = "CAS_SU_AT_ESS",
-                                AddressLine1 = contact.address1_line1.StripSpecialCharacters(),
-                                AddressLine2 = contact.address1_line2?.StripSpecialCharacters(),
-                                AddressLine3 = contact.address1_line3?.StripSpecialCharacters(),
+                                AddressLine1 = contact.address1_line1.ToCasAddressLine(),
+                                AddressLine2 = contact.address1_line2?.ToCasAddressLine(),
+                                AddressLine3 = contact.address1_line3?.ToCasAddressLine(),
                                 City = (contact.era_City?.era_jurisdictionname ?? contact.address1_city).ToCasCity(),
                                 PostalCode = contact.address1_postalcode.ToCasPostalCode(),
-                                Province = contact.era_ProvinceState.era_code,
+                                Province = contact.era_ProvinceState?.era_code ?? "BC",
                                 Country = "CA",
                             }
                         }
