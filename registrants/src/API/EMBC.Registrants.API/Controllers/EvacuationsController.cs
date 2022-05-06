@@ -303,6 +303,10 @@ namespace EMBC.Registrants.API.Controllers
         public string? IssuedToPersonName { get; set; }
         public string? NotificationEmail { get; set; }
         public string? NofificationMobile { get; set; }
+        public string? RecipientFirstName { get; set; }
+        public string? RecipientLastName { get; set; }
+        public string? SecurityQuestion { get; set; }
+        public string? SecurityAnswer { get; set; }
     }
 
     public class ClothingSupport : Support

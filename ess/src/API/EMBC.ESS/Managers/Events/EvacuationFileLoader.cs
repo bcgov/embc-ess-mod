@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Evacuees;
+using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Supports;
 using EMBC.ESS.Resources.Tasks;
@@ -20,13 +21,15 @@ namespace EMBC.ESS.Managers.Events
         private readonly ISupplierRepository supplierRepository;
         private readonly ISupportRepository supportRepository;
         private readonly IEvacueesRepository evacueesRepository;
+        private readonly IPaymentRepository paymentRepository;
 
         public EvacuationFileLoader(IMapper mapper,
             ITeamRepository teamRepository,
             ITaskRepository taskRepository,
             ISupplierRepository supplierRepository,
             ISupportRepository supportRepository,
-            IEvacueesRepository evacueesRepository)
+            IEvacueesRepository evacueesRepository,
+            IPaymentRepository paymentRepository)
         {
             this.mapper = mapper;
             this.teamRepository = teamRepository;
@@ -34,6 +37,7 @@ namespace EMBC.ESS.Managers.Events
             this.supplierRepository = supplierRepository;
             this.supportRepository = supportRepository;
             this.evacueesRepository = evacueesRepository;
+            this.paymentRepository = paymentRepository;
         }
 
         public async System.Threading.Tasks.Task Load(EvacuationFile file, CancellationToken ct)
@@ -104,6 +108,18 @@ namespace EMBC.ESS.Managers.Events
                 {
                     interac.RecipientFirstName = recipient.FirstName;
                     interac.RecipientLastName = recipient.LastName;
+                }
+
+                var payment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+                {
+                    ByLinkedSupportId = support.Id
+                })).Items.Where(p => p.Status != PaymentStatus.Cancelled).Cast<InteracSupportPayment>().OrderByDescending(p => p.CreatedOn).FirstOrDefault();
+
+                if (payment != null && payment is InteracSupportPayment interacPayment)
+                {
+                    interac.SecurityAnswer = interacPayment.SecurityAnswer;
+                    interac.SecurityQuestion = interacPayment.SecurityAnswer;
+                    interac.RelatedPaymentId = interacPayment.Id;
                 }
             }
         }

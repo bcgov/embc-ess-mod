@@ -130,6 +130,9 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string ReceivingRegistrantId { get; set; }
         public string RecipientFirstName { get; set; }
         public string RecipientLastName { get; set; }
+        public string SecurityQuestion { get; set; }
+        public string SecurityAnswer { get; set; }
+        public string RelatedPaymentId { get; set; }
     }
 
     public class SupplierDetails
