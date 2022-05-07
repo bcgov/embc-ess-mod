@@ -50,27 +50,12 @@ namespace EMBC.ESS.Resources.Supports
 
     public class SubmitSupportForApprovalCommand : ManageSupportCommand
     {
-        public IEnumerable<string> SupportIds { get; set; }
-    }
-
-    public class AssignSupportToQueueCommandResult : ManageSupportCommandResult
-    { }
-
-    public class SetFlagsCommand : ManageSupportCommand
-    {
         public string SupportId { get; set; }
+
         public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
     }
 
-    public class SetFlagCommandResult : ManageSupportCommandResult
-    { }
-
-    public class ClearFlagsCommand : ManageSupportCommand
-    {
-        public string SupportId { get; set; }
-    }
-
-    public class ClearFlagCommandResult : ManageSupportCommandResult
+    public class AssignSupportToQueueCommandResult : ManageSupportCommandResult
     { }
 
     public class SupportStatusTransition

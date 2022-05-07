@@ -320,7 +320,6 @@ namespace EMBC.ESS.Managers.Events
             });
 
             var ct = new CancellationTokenSource().Token;
-            //await System.Threading.Tasks.Task.WhenAll(householdMemberTasks.Union(profileTasks));
             await Parallel.ForEachAsync(householdMemberTasks.Union(profileTasks), ct, async (t, ct) => await t);
 
             var profileResults = profiles.ToArray();
@@ -712,6 +711,8 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand _)
         {
+            var ct = new CancellationTokenSource().Token;
+
             var foundSupports = true;
             //handle limited number of pending support at a time
             while (foundSupports)
@@ -734,21 +735,13 @@ namespace EMBC.ESS.Managers.Events
                         Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(pendingScanSupports)
                     });
 
-                    //TODO: merge to a tx per support and handle failure
-                    foreach (var support in response.Flags)
+                    await Parallel.ForEachAsync(response.Flags, ct, async (sf, ct) =>
                     {
-                        // store flags
-                        await supportRepository.Manage(new SetFlagsCommand
+                        await supportRepository.Manage(new SubmitSupportForApprovalCommand
                         {
-                            SupportId = support.Key.Id,
-                            Flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(support.Value)
+                            SupportId = sf.Key.Id,
+                            Flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(sf.Value)
                         });
-                    }
-
-                    // submit supports for approval
-                    await supportRepository.Manage(new SubmitSupportForApprovalCommand
-                    {
-                        SupportIds = pendingScanSupports.Select(s => s.Id).ToArray()
                     });
                 }
             }
