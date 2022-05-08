@@ -27,7 +27,7 @@ namespace EMBC.ESS.Resources.Supports
     {
     }
 
-    public class SaveEvacuationFileSupportCommand : ManageSupportCommand
+    public class SaveEvacuationFileSupportsCommand : ManageSupportCommand
     {
         public string FileId { get; set; }
         public IEnumerable<Support> Supports { get; set; }
@@ -209,7 +209,8 @@ namespace EMBC.ESS.Resources.Supports
         Cancelled = 174360004,
         UnderReview = 174360005,
         PendingScan = 174360006,
-        Issued = 174360007
+        Issued = 174360007,
+        Processing = 174360008
     }
 
     public enum SupportVoidReason

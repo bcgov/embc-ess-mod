@@ -60,7 +60,7 @@ namespace EMBC.ESS.Resources.Payments
                 payment.era_etransfertransactionid = Guid.NewGuid();
                 ctx.AddToera_etransfertransactions(payment);
                 // create in locking status
-                UpdatePaymentStatus(ctx, payment, PaymentStatus.Sending); //TODO: change to creating
+                UpdatePaymentStatus(ctx, payment, PaymentStatus.Processing);
                 await ctx.SaveChangesAsync(ct);
                 // release from lock
                 UpdatePaymentStatus(ctx, payment, request.Payment.Status);

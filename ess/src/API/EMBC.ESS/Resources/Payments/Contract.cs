@@ -51,7 +51,7 @@ namespace EMBC.ESS.Resources.Payments
         Failed = 174360002,
         Cancelled = 174360003,
         Issued = 174360004,
-        //Creating = 174360005,
+        Processing = 174360005
     }
 
     public class InteracSupportPayment : Payment

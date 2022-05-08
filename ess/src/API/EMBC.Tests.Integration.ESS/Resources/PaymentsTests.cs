@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Resources.Payments;
-using EMBC.Tests.Integration.ESS.Managers.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -80,7 +79,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         NotificationPhone = "1234567890",
                         SecurityAnswer = "answer",
                         SecurityQuestion = "question",
-                        LinkedSupportIds = TestData.CurrenntRunSupportIds,
+                        LinkedSupportIds = TestData.CurrentRunSupportIds,
                         PayeeId = registrantId
                     }
             };

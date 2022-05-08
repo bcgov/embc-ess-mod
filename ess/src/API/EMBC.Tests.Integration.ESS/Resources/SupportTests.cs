@@ -71,7 +71,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
             {
                 FileId = evacuationFileId,
                 Supports = newSupports
@@ -166,7 +166,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
             {
                 FileId = evacuationFileId,
                 Supports = paperSupports
@@ -305,7 +305,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 IssuedOn = now
             };
 
-            var supportId = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var supportId = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
             {
                 FileId = fileId,
                 Supports = new[] { support }

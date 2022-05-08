@@ -36,8 +36,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            file = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
             var email = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca";
+            var householdMembers = file.HouseholdMembers.Select(m => m.Id).ToArray();
+
             var supports = new Support[]
             {
                 new ClothingSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = email, ReceivingRegistrantId = registrant.Id } },
@@ -55,6 +58,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             {
                 s.From = DateTime.UtcNow;
                 s.To = DateTime.UtcNow.AddDays(3);
+                s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
+                s.IncludedHouseholdMembers = householdMembers.TakeRandom();
             }
 
             var printRequestId = await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
@@ -93,52 +98,23 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
                 support.IssuedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
                 support.IssuedBy.ShouldNotBeNull().Id.ShouldBe(TestData.Tier4TeamMemberId);
+                support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
             }
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanVoidReferral()
         {
-            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            var file = CreateNewTestEvacuationFile(registrant);
-
-            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
-            file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
-
-            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-
-            var email = $"{TestData.TestPrefix}eraunitest@test.gov.bc.ca";
-            var supports = new Support[]
-            {
-                new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
-                new IncidentalsSupport { SupportDelivery = new Interac { NotificationEmail = email, ReceivingRegistrantId = registrant.Id } },
-                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
-                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
-                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
-            };
-
-            foreach (var s in supports)
-            {
-                s.From = DateTime.UtcNow;
-                s.To = DateTime.UtcNow.AddDays(3);
-            }
-
-            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
-
-            var support = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.First(s => s.SupportDelivery is Referral);
-
+            var fileId = TestData.EvacuationFileId;
+            var supportId = TestData.CurrentRunReferralSupportIds.TakeRandom(1).Single();
             await manager.Handle(new VoidSupportCommand
             {
                 FileId = fileId,
-                SupportId = support.Id,
+                SupportId = supportId,
                 VoidReason = SupportVoidReason.ErrorOnPrintedReferral
             });
 
-            var updatedSupport = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Single(s => s.Id == support.Id);
+            var updatedSupport = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Single(s => s.Id == supportId);
 
             updatedSupport.Status.ShouldBe(SupportStatus.Void);
         }
@@ -146,45 +122,39 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanCancelETransfer()
         {
-            var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
-            var file = CreateNewTestEvacuationFile(registrant);
+            var fileId = TestData.EvacuationFileId;
+            var registrantId = TestData.ContactId;
+            var uniqueId = TestHelper.GenerateNewUniqueId(TestData.TestPrefix);
+            var email = $"{uniqueId}eraunitest@test.gov.bc.ca";
 
-            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
-            file.NeedsAssessment.CompletedBy = new TeamMember { Id = TestData.Tier4TeamMemberId };
-
-            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-
-            var supports = new Support[]
+            var support = new IncidentalsSupport
             {
-                new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
-                new IncidentalsSupport { SupportDelivery = new Interac { NotificationEmail = "test@test.com", ReceivingRegistrantId = registrant.Id } },
-                new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
-                new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
-                new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
+                TotalAmount = 100,
+                SupportDelivery = new Interac
+                {
+                    NotificationEmail = email,
+                    ReceivingRegistrantId = registrantId,
+                }
             };
 
-            foreach (var s in supports)
-            {
-                s.From = DateTime.UtcNow;
-                s.To = DateTime.UtcNow.AddDays(3);
-            }
+            support.From = DateTime.UtcNow;
+            support.To = DateTime.UtcNow.AddDays(3);
+            support.IssuedBy = new TeamMember { DisplayName = "autotest R" };
+            support.IncludedHouseholdMembers = TestData.HouseholdMemberIds.TakeRandom();
 
-            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, Supports = new[] { support }, RequestingUserId = TestData.Tier4TeamMemberId });
 
-            var support = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.First(s => s.SupportDelivery is ETransfer);
+            var supportId = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items
+                .Where(s => s.SupportDelivery is Interac i && i.NotificationEmail != null && i.NotificationEmail.StartsWith(uniqueId)).ShouldHaveSingleItem().Id;
 
             await manager.Handle(new CancelSupportCommand
             {
                 FileId = fileId,
-                SupportId = support.Id,
+                SupportId = supportId,
                 Reason = "need to cancel"
             });
 
-            var updatedSupport = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Single(s => s.Id == support.Id);
+            var updatedSupport = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Single(s => s.Id == supportId);
 
             updatedSupport.Status.ShouldBe(SupportStatus.Cancelled);
         }
@@ -197,7 +167,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 FileId = TestData.EvacuationFileId,
                 ReprintReason = "test",
                 RequestingUserId = TestData.Tier4TeamMemberId,
-                SupportId = TestData.CurrenntRunSupportIds.First()
+                SupportId = TestData.CurrentRunSupportIds.First()
             });
 
             printRequestId.ShouldNotBeNullOrEmpty();
@@ -261,6 +231,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = paperFile });
 
+            paperFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+            var householdMembers = paperFile.HouseholdMembers.Select(m => m.Id).ToArray();
+
             var supports = new Support[]
             {
                 new ClothingSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierAId } } },
@@ -281,6 +254,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
                 ((Referral)s.SupportDelivery).ManualReferralId = $"{TestData.TestPrefix}-paperreferral";
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
+                s.IncludedHouseholdMembers = householdMembers.TakeRandom();
             }
 
             await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, Supports = supports, RequestingUserId = TestData.Tier4TeamMemberId });
@@ -309,6 +283,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
                 support.IssuedBy.ShouldNotBeNull().DisplayName.ShouldBe(sourceSupport.IssuedBy.DisplayName);
                 support.IssuedOn.ShouldNotBeNull().ShouldBe(sourceSupport.IssuedOn.ShouldNotBeNull());
+                support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
             }
         }
 
@@ -353,7 +328,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SearchSupports_ManualReferralId_CorrectListOfSupports()
         {
-            var fileId = TestData.PaperEvacuationFileId;
+            var fileId = TestData.PaperEvacuationFilePaperId;
+            var paperFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+            var householdMembers = paperFile.HouseholdMembers.Select(m => m.Id).ToArray();
 
             var newSupports = new Support[]
             {
@@ -378,6 +355,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
                 ((Referral)s.SupportDelivery).ManualReferralId = paperReferralId;
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
+                s.IncludedHouseholdMembers = householdMembers.TakeRandom();
             }
 
             await manager.Handle(new ProcessPaperSupportsCommand { FileId = fileId, RequestingUserId = TestData.Tier4TeamMemberId, Supports = newSupports });
@@ -392,95 +370,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 support.OriginatingNeedsAssessmentId.ShouldBe(TestData.PaperEvacuationFileNeedsAssessmentId);
                 referral.ManualReferralId.ShouldBe(paperReferralId);
             }
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ProcessPendingSupportsCommand_PendingScanSupports_FlagsAdded()
-        {
-            var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
-            registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
-            var firstFile = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
-            var secondFile = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
-
-            firstFile.Id = await TestHelper.SaveEvacuationFile(manager, firstFile);
-            secondFile.Id = await TestHelper.SaveEvacuationFile(manager, secondFile);
-
-            firstFile = await TestHelper.GetEvacuationFileById(manager, firstFile.Id) ?? null!;
-            secondFile = await TestHelper.GetEvacuationFileById(manager, secondFile.Id) ?? null!;
-
-            var firstFileSupports = new Support[]
-            {
-                new ClothingSupport { }
-            };
-
-            var now1 = DateTime.UtcNow;
-            foreach (var support in firstFileSupports)
-            {
-                support.FileId = TestData.EvacuationFileId;
-                support.From = now1;
-                support.To = now1.AddMinutes(1);
-                support.SupportDelivery = new Interac { ReceivingRegistrantId = registrant.Id };
-                support.IncludedHouseholdMembers = firstFile.HouseholdMembers.Select(m => m.Id).ToArray();
-            }
-
-            //process first file support
-            await manager.Handle(new ProcessSupportsCommand
-            {
-                FileId = firstFile.Id,
-                RequestingUserId = TestData.Tier4TeamMemberId,
-                Supports = firstFileSupports
-            });
-
-            firstFileSupports = (await manager.Handle(new SearchSupportsQuery { FileId = firstFile.Id })).Items.Where(S => S.SupportDelivery is Interac).ToArray();
-            firstFileSupports.ShouldNotBeEmpty();
-            firstFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingApproval);
-
-            //process pending supports of first file
-            await manager.Handle(new ProcessPendingSupportsCommand());
-
-            //first file should not have flags on the supports
-            firstFileSupports = (await manager.Handle(new SearchSupportsQuery { FileId = firstFile.Id })).Items.Where(S => S.SupportDelivery is Interac).ToArray();
-            firstFileSupports.ShouldNotBeEmpty();
-            firstFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingApproval && !s.Flags.Any());
-
-            var secondFileSupports = new Support[]
-            {
-                    new ClothingSupport { }
-            };
-
-            var now2 = DateTime.UtcNow;
-            foreach (var support in secondFileSupports)
-            {
-                support.FileId = TestData.EvacuationFileId;
-                support.From = now1;
-                support.To = now1.AddMinutes(1);
-                support.SupportDelivery = new Interac { ReceivingRegistrantId = registrant.Id };
-                support.IncludedHouseholdMembers = secondFile.HouseholdMembers.Select(m => m.Id).ToArray();
-            }
-            //process supports in second file
-            await manager.Handle(new ProcessSupportsCommand
-            {
-                FileId = secondFile.Id,
-                RequestingUserId = TestData.Tier4TeamMemberId,
-                Supports = secondFileSupports
-            });
-
-            //process pending supports of second file
-            await manager.Handle(new ProcessPendingSupportsCommand());
-
-            //second file should  have flags on the supports
-            secondFileSupports = (await manager.Handle(new SearchSupportsQuery { FileId = secondFile.Id })).Items.Where(S => S.SupportDelivery is Interac).ToArray();
-            secondFileSupports.ShouldNotBeEmpty();
-            secondFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingApproval && s.Flags.SingleOrDefault(f => f is DuplicateSupportFlag) != null);
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ProcessApprovedSupportsCommand_ApprovedSupports_PaymentsAdded()
-        {
-            var fileId = TestData.EvacuationFileId;
-            var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Where(S => S.Status == SupportStatus.Approved).ToArray();
-            approvedSupports.ShouldNotBeEmpty();
-            await manager.Handle(new ProcessApprovedSupportsCommand());
         }
     }
 }

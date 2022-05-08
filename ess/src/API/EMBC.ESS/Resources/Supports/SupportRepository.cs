@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace EMBC.ESS.Resources.Supports
             var ct = CreateCancellationToken();
             return cmd switch
             {
-                SaveEvacuationFileSupportCommand c => await Handle(c, ct),
+                SaveEvacuationFileSupportsCommand c => await Handle(c, ct),
                 ChangeSupportStatusCommand c => await Handle(c, ct),
                 SubmitSupportForApprovalCommand c => await Handle(c, ct),
 
@@ -97,43 +98,6 @@ namespace EMBC.ESS.Resources.Supports
             return new AssignSupportToQueueCommandResult();
         }
 
-        private async Task<SaveEvacuationFileSupportCommandResult> Handle(SaveEvacuationFileSupportCommand cmd, CancellationToken ct)
-        {
-            var ctx = essContextFactory.Create();
-            var file = (await ((DataServiceQuery<era_evacuationfile>)ctx.era_evacuationfiles
-                .Expand(f => f.era_CurrentNeedsAssessmentid)
-                .Where(f => f.era_name == cmd.FileId))
-                .ExecuteAsync(ct))
-                .SingleOrDefault();
-
-            if (file == null) throw new ArgumentException($"Evacuation file {cmd.FileId} not found");
-
-            var mappedSupports = mapper.Map<IEnumerable<era_evacueesupport>>(cmd.Supports).ToArray();
-
-            foreach (var support in mappedSupports)
-            {
-                if (support.era_name == null)
-                {
-                    await CreateSupport(ctx, file, support, ct);
-                }
-                else
-                {
-                    await UpdateSupport(ctx, file, support, ct);
-                }
-            }
-
-            await ctx.SaveChangesAsync(ct);
-
-            ctx.DetachAll();
-
-            await Parallel.ForEachAsync(mappedSupports.Where(s => s.era_name == null), ct,
-                async (s, ct) => s.era_name = await ctx.era_evacueesupports.ByKey(s.era_evacueesupportid).Select(s => s.era_name).GetValueAsync(ct));
-
-            ctx.DetachAll();
-
-            return new SaveEvacuationFileSupportCommandResult { Supports = mapper.Map<IEnumerable<Support>>(mappedSupports) };
-        }
-
         private async Task<ManageSupportCommandResult> Handle(ChangeSupportStatusCommand cmd, CancellationToken ct)
         {
             var ctx = essContextFactory.Create();
@@ -142,7 +106,7 @@ namespace EMBC.ESS.Resources.Supports
             {
                 var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == item.SupportId)).GetAllPagesAsync()).SingleOrDefault();
                 if (support == null) throw new InvalidOperationException($"Support {item.SupportId} not found, can't update its status");
-                ChangeSupportStatus(ctx, support, item.ToStatus, item.Reason);
+                SetSupportStatus(ctx, support, item.ToStatus, item.Reason);
                 ctx.UpdateObject(support);
                 changesSupportIds.Add(item.SupportId);
             }
@@ -150,6 +114,27 @@ namespace EMBC.ESS.Resources.Supports
             await ctx.SaveChangesAsync(ct);
             ctx.DetachAll();
             return new ChangeSupportStatusCommandResult { Ids = changesSupportIds.ToArray() };
+        }
+
+        private static void SetSupportStatus(EssContext ctx, era_evacueesupport support, SupportStatus status, string changeReason)
+        {
+            var supportDeliveryType = (SupportMethod)support.era_supportdeliverytype;
+
+            switch (status)
+            {
+                case SupportStatus.Void when supportDeliveryType == SupportMethod.Referral:
+                    support.era_voidreason = (int)Enum.Parse<SupportVoidReason>(changeReason);
+                    ctx.DeactivateObject(support, (int)status);
+                    break;
+
+                case SupportStatus.Cancelled when supportDeliveryType == SupportMethod.ETransfer:
+                    ctx.DeactivateObject(support, (int)status);
+                    break;
+
+                default:
+                    support.statuscode = (int)status;
+                    break;
+            }
         }
 
         private async Task<SearchSupportQueryResult> Handle(SearchSupportsQuery query, CancellationToken ct)
@@ -226,8 +211,61 @@ namespace EMBC.ESS.Resources.Supports
             }
         }
 
+        private async Task<SaveEvacuationFileSupportCommandResult> Handle(SaveEvacuationFileSupportsCommand cmd, CancellationToken ct)
+        {
+            var ctx = essContextFactory.Create();
+            var file = (await ((DataServiceQuery<era_evacuationfile>)ctx.era_evacuationfiles
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
+                .Where(f => f.era_name == cmd.FileId))
+                .ExecuteAsync(ct))
+                .SingleOrDefault();
+
+            if (file == null) throw new ArgumentException($"Evacuation file {cmd.FileId} not found");
+
+            await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), ct);
+            var fileHouseholdMembersIds = file.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(m => m.era_householdmemberid).ToArray();
+
+            var supports = new List<era_evacueesupport>();
+
+            foreach (var s in cmd.Supports)
+            {
+                var support = mapper.Map<era_evacueesupport>(s);
+                var supportHouseholdMembersIds = support.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid).ToArray();
+
+                var householdMembers = file.era_era_evacuationfile_era_householdmember_EvacuationFileid
+                    .Where(m => supportHouseholdMembersIds.Contains(m.era_householdmemberid.Value))
+                    .ToArray();
+
+                // check all household members are accounted for
+                if (householdMembers.Length != s.IncludedHouseholdMembers.Count())
+                    throw new InvalidOperationException($"Support has household members which do not exist in evacuation file {cmd.FileId}");
+
+                // map tracked household members
+                support.era_era_householdmember_era_evacueesupport = new Collection<era_householdmember>(householdMembers);
+
+                await CreateSupport(ctx, file, support, ct);
+
+                supports.Add(support);
+            }
+
+            await ctx.SaveChangesAsync(ct);
+
+            ctx.DetachAll();
+
+            // load the generated support ids
+            await Parallel.ForEachAsync(supports, ct,
+                async (s, ct) => s.era_name = await ctx.era_evacueesupports.ByKey(s.era_evacueesupportid).Select(s => s.era_name).GetValueAsync(ct));
+
+            ctx.DetachAll();
+
+            return new SaveEvacuationFileSupportCommandResult { Supports = mapper.Map<IEnumerable<Support>>(supports) };
+        }
+
         private static async Task CreateSupport(EssContext ctx, era_evacuationfile file, era_evacueesupport support, CancellationToken ct)
         {
+            var validationErrors = ValidateSupportInvariants(support).ToArray();
+            if (validationErrors.Any()) throw new InvalidOperationException($"Failed to create a support in file {file.era_name}:  {string.Join(';', validationErrors)}");
+
             support.era_evacueesupportid = Guid.NewGuid();
 
             ctx.AddToera_evacueesupports(support);
@@ -238,67 +276,16 @@ namespace EMBC.ESS.Resources.Supports
             if (support._era_grouplodgingcityid_value.HasValue)
                 ctx.SetLink(support, nameof(era_evacueesupport.era_GroupLodgingCityID), ctx.LookupJurisdictionByCode(support._era_grouplodgingcityid_value?.ToString()));
 
-            var teamMember = await ctx.era_essteamusers.ByKey(support._era_issuedbyid_value).GetValueAsync(ct);
-            if (teamMember == null) throw new InvalidOperationException($"team member {support._era_issuedbyid_value} not found");
-            ctx.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
-
             AssignHouseholdMembersToSupport(ctx, support, support.era_era_householdmember_era_evacueesupport);
-            AssignSupplierToSupport(ctx, support);
-            AssignETransferRecipientToSupport(ctx, support);
+            await AssignTeamMemberToSupport(ctx, support, ct);
+            await AssignSupplierToSupport(ctx, support, ct);
+            await AssignETransferRecipientToSupport(ctx, support, ct);
         }
 
-        private static async Task UpdateSupport(EssContext ctx, era_evacuationfile file, era_evacueesupport support, CancellationToken ct)
+        private static IEnumerable<string> ValidateSupportInvariants(era_evacueesupport support)
         {
-            var existingSupport = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports
-                .Where(s => s.era_name == support.era_name))
-                .ExecuteAsync(ct))
-                .SingleOrDefault();
-
-            if (existingSupport == null) throw new ArgumentException($"Support {support.era_name} not found");
-            if (existingSupport._era_evacuationfileid_value != file.era_evacuationfileid)
-                throw new InvalidOperationException($"Support {support.era_name} not found in file {file.era_name}");
-
-            await ctx.LoadPropertyAsync(existingSupport, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport), ct);
-            var currentHouseholdMembers = existingSupport.era_era_householdmember_era_evacueesupport.ToArray();
-
-            ctx.Detach(existingSupport);
-            // foreach (var member in existingSupport.era_era_householdmember_era_evacueesupport) essContext.Detach(member);
-
-            support.era_evacueesupportid = existingSupport.era_evacueesupportid;
-            ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
-            ctx.SetLink(support, nameof(era_evacueesupport.era_GroupLodgingCityID), ctx.LookupJurisdictionByCode(support._era_grouplodgingcityid_value?.ToString()));
-
-            var teamMember = ctx.era_essteamusers.ByKey(support._era_issuedbyid_value).GetValue();
-            ctx.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
-
-            ctx.UpdateObject(support);
-            // remove household members no longer part of the support
-            RemoveHouseholdMembersFromSupport(ctx, support, currentHouseholdMembers.Where(m => !support.era_era_householdmember_era_evacueesupport.Any(im => im.era_householdmemberid == m.era_householdmemberid)));
-            // add household members to support
-            AssignHouseholdMembersToSupport(ctx, support, support.era_era_householdmember_era_evacueesupport.Where(m => !currentHouseholdMembers.Any(im => im.era_householdmemberid == m.era_householdmemberid)));
-            AssignSupplierToSupport(ctx, support);
-            AssignETransferRecipientToSupport(ctx, support);
-        }
-
-        private static void ChangeSupportStatus(EssContext ctx, era_evacueesupport support, SupportStatus status, string changeReason)
-        {
-            var supportDeliveryType = (SupportMethod)support.era_supportdeliverytype;
-
-            switch (status)
-            {
-                case SupportStatus.Void when supportDeliveryType == SupportMethod.Referral:
-                    support.era_voidreason = (int)Enum.Parse<SupportVoidReason>(changeReason);
-                    ctx.DeactivateObject(support, (int)status);
-                    break;
-
-                case SupportStatus.Cancelled when supportDeliveryType == SupportMethod.ETransfer:
-                    ctx.DeactivateObject(support, (int)status);
-                    break;
-
-                default:
-                    support.statuscode = (int)status;
-                    break;
-            }
+            if (!support.era_era_householdmember_era_evacueesupport.Any()) yield return "No household members associated";
+            if (!support._era_issuedbyid_value.HasValue) yield return "No issuing team member";
         }
 
         private static void AssignHouseholdMembersToSupport(EssContext ctx, era_evacueesupport support, IEnumerable<era_householdmember> householdMembers)
@@ -309,32 +296,31 @@ namespace EMBC.ESS.Resources.Supports
             }
         }
 
-        private static void RemoveHouseholdMembersFromSupport(EssContext essContext, era_evacueesupport support, IEnumerable<era_householdmember> householdMembers)
-        {
-            foreach (var member in householdMembers)
-            {
-                essContext.DeleteLink(member, nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
-            }
-        }
-
-        private static void AssignSupplierToSupport(EssContext ctx, era_evacueesupport support)
+        private static async Task AssignSupplierToSupport(EssContext ctx, era_evacueesupport support, CancellationToken ct)
         {
             if (support._era_supplierid_value.HasValue)
             {
-                var supplier = ctx.era_suppliers.Where(s => s.era_supplierid == support._era_supplierid_value && s.statecode == (int)EntityState.Active).SingleOrDefault();
-                if (supplier == null) throw new ArgumentException($"Supplier id {support._era_supplierid_value} not found or is not active");
+                var supplier = await ctx.era_suppliers.ByKey(support._era_supplierid_value).GetValueAsync(ct);
+                if (supplier == null || supplier.statecode != (int)EntityState.Active) throw new ArgumentException($"Supplier id {support._era_supplierid_value} not found or is not active");
                 ctx.SetLink(support, nameof(era_evacueesupport.era_SupplierId), supplier);
             }
         }
 
-        private static void AssignETransferRecipientToSupport(EssContext ctx, era_evacueesupport support)
+        private static async Task AssignETransferRecipientToSupport(EssContext ctx, era_evacueesupport support, CancellationToken ct)
         {
             if (support._era_payeeid_value.HasValue)
             {
-                var registrant = ctx.contacts.Where(s => s.contactid == support._era_payeeid_value && s.statecode == (int)EntityState.Active).SingleOrDefault();
-                if (registrant == null) throw new ArgumentException($"Registrant id {support._era_payeeid_value} not found or is not active");
+                var registrant = await ctx.contacts.ByKey(support._era_payeeid_value).GetValueAsync(ct);
+                if (registrant == null || registrant.statecode != (int)EntityState.Active) throw new ArgumentException($"Registrant id {support._era_payeeid_value} not found or is not active");
                 ctx.SetLink(support, nameof(era_evacueesupport.era_PayeeId), registrant);
             }
+        }
+
+        private static async Task AssignTeamMemberToSupport(EssContext ctx, era_evacueesupport support, CancellationToken ct)
+        {
+            var teamMember = await ctx.era_essteamusers.ByKey(support._era_issuedbyid_value).GetValueAsync(ct);
+            if (teamMember == null || teamMember.statecode != (int)EntityState.Active) throw new InvalidOperationException($"team member {support._era_issuedbyid_value} not found or is not active");
+            ctx.SetLink(support, nameof(era_evacueesupport.era_IssuedById), teamMember);
         }
     }
 }
