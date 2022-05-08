@@ -118,7 +118,7 @@ namespace EMBC.ESS.Resources.Payments
     {
         public string PaymentId { get; set; }
         public CasPaymentStatus Status { get; set; }
-        public DateTime? StatusChangeDate { get; set; }
+        public DateTime StatusChangeDate { get; set; }
         public string CasReferenceNumber { get; set; }
         public string StatusDescription { get; set; }
     }
@@ -141,6 +141,7 @@ namespace EMBC.ESS.Resources.Payments
 
     public class UpdateCasPaymentStatusResponse : ManagePaymentResponse
     {
-        public string PaymentId { get; set; }
+        public bool Success { get; set; }
+        public string? FailureReason { get; set; }
     }
 }

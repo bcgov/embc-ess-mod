@@ -116,14 +116,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
         {
             //query payments
-            var startDate = DateTime.Now.AddDays(-7);
+            var startDate = DateTime.Now.AddDays(-14);
             var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate });
 
             response.Payments.ShouldNotBeEmpty();
             //response.Payments.ShouldAllBe(p => p.StatusChangeDate >= startDate);
             foreach (var payment in response.Payments)
             {
-                payment.StatusChangeDate.ShouldNotBeNull().ShouldBeGreaterThanOrEqualTo(startDate);
+                payment.StatusChangeDate.ShouldBeGreaterThanOrEqualTo(startDate);
             }
         }
     }

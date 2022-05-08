@@ -21,6 +21,7 @@ using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.PdfGenerator;
+using EMBC.Utilities.Caching;
 using EMBC.Utilities.Notifications;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
@@ -53,6 +54,7 @@ namespace EMBC.ESS.Managers.Events
         private readonly IConfiguration configuration;
         private readonly ISupportingEngine supportingEngine;
         private readonly IPaymentRepository paymentRepository;
+        private readonly ICache cache;
         private readonly EvacuationFileLoader evacuationFileLoader;
         private readonly IWebHostEnvironment env;
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
@@ -78,7 +80,8 @@ namespace EMBC.ESS.Managers.Events
             IDataProtectionProvider dataProtectionProvider,
             IConfiguration configuration,
             ISupportingEngine supportingEngine,
-            IPaymentRepository paymentRepository)
+            IPaymentRepository paymentRepository,
+            ICache cache)
         {
             this.logger = logger;
             this.mapper = mapper;
@@ -100,6 +103,7 @@ namespace EMBC.ESS.Managers.Events
             this.configuration = configuration;
             this.supportingEngine = supportingEngine;
             this.paymentRepository = paymentRepository;
+            this.cache = cache;
             this.env = env;
             evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository, paymentRepository);
         }
@@ -839,42 +843,89 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(ReconcilePaymentsCommand _)
         {
-            var sentPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ByStatus = PaymentStatus.Sent })).Items;
+            var ct = new CancellationTokenSource().Token;
+            var lastPollDate = await CalculateEarliestDateForPolling(ct);
+            logger.LogInformation($"Polling for CAS payments after {lastPollDate}");
 
-            var queryPaymentStatusesFrom = sentPayments.Where(p => p is InteracSupportPayment).Cast<InteracSupportPayment>().OrderBy(p => p.SentOn).FirstOrDefault()?.SentOn;
+            var issuedCasPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
+            {
+                ChangedFrom = lastPollDate,
+                InStatus = CasPaymentStatus.Pending
+            })).Payments.ToArray();
+            logger.LogInformation("Reconciling {0} issued payments", issuedCasPayments.Length);
 
-            logger.LogInformation($"Polling for CAS payments after {queryPaymentStatusesFrom}");
-
-            var updatedFailedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Failed })).Payments.ToArray();
-            logger.LogInformation("Reconciling {0} failed payments", updatedFailedPayments.Length);
-
-            foreach (var payment in updatedFailedPayments)
+            foreach (var payment in issuedCasPayments.AsParallel())
             {
                 var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
                 {
                     PaymentId = payment.PaymentId,
-                    ToPaymentStatus = PaymentStatus.Paid,
+                    ToPaymentStatus = PaymentStatus.Issued,
                     CasReferenceNumber = payment.CasReferenceNumber,
-                    StatusChangeDate = payment.StatusChangeDate.Value
+                    StatusChangeDate = payment.StatusChangeDate
                 });
-                if (response.PaymentId == null) logger.LogError($"Failed to update payment {payment.PaymentId}");
+                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
             }
 
-            var updatedPaidPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest { ChangedFrom = queryPaymentStatusesFrom, InStatus = CasPaymentStatus.Paid })).Payments.ToArray();
-            logger.LogInformation("Reconciling {0} paid payments", updatedFailedPayments.Length);
+            var failedCasPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
+            {
+                ChangedFrom = lastPollDate,
+                InStatus = CasPaymentStatus.Failed
+            })).Payments.ToArray();
+            logger.LogInformation("Reconciling {0} failed payments", failedCasPayments.Length);
 
-            foreach (var payment in updatedFailedPayments)
+            foreach (var payment in failedCasPayments.AsParallel())
             {
                 var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
                 {
                     PaymentId = payment.PaymentId,
                     ToPaymentStatus = PaymentStatus.Failed,
                     CasReferenceNumber = payment.CasReferenceNumber,
-                    StatusChangeDate = payment.StatusChangeDate.Value,
+                    StatusChangeDate = payment.StatusChangeDate
+                });
+                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
+            }
+
+            var paidPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
+            {
+                ChangedFrom = lastPollDate,
+                InStatus = CasPaymentStatus.Paid
+            })).Payments.ToArray();
+            logger.LogInformation("Reconciling {0} paid payments", failedCasPayments.Length);
+
+            foreach (var payment in failedCasPayments.AsParallel())
+            {
+                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                {
+                    PaymentId = payment.PaymentId,
+                    ToPaymentStatus = PaymentStatus.Paid,
+                    CasReferenceNumber = payment.CasReferenceNumber,
+                    StatusChangeDate = payment.StatusChangeDate,
                     Reason = payment.StatusDescription
                 });
-                if (response.PaymentId == null) logger.LogError($"Failed to update payment {payment.PaymentId}");
+                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
             }
+
+            // set the last poll time to -5 mins to account for system clock differences
+            await cache.Set(paymentPollingCacheKey, DateTime.UtcNow.AddMinutes(-5), TimeSpan.FromDays(7), ct);
+        }
+
+        private const string paymentPollingCacheKey = "CASPollDate";
+
+        private async Task<DateTime> CalculateEarliestDateForPolling(CancellationToken ct)
+        {
+            var lastPollDate = await cache.Get<DateTime?>(paymentPollingCacheKey, ct);
+            if (lastPollDate.HasValue) return lastPollDate.Value;
+
+            var sentPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ByStatus = PaymentStatus.Sent })).Items;
+
+            // calculate date of last status update: the earliest date of the payments in status 'Sent'
+            lastPollDate = sentPayments
+                .Where(p => p is InteracSupportPayment)
+                .Cast<InteracSupportPayment>()
+                .OrderBy(p => p.SentOn)
+                .FirstOrDefault()?.SentOn ?? new DateTime(2022, 6, 7);
+
+            return lastPollDate.Value;
         }
     }
 }
