@@ -355,6 +355,7 @@ namespace EMBC.ESS.Resources.Payments
                 case PaymentStatus.Pending:
                 case PaymentStatus.Sent:
                 case PaymentStatus.Sending:
+                case PaymentStatus.Processing:
                 case PaymentStatus.Failed:
                 case PaymentStatus.Issued:
                     ctx.ActivateObject(payment, (int)status);
