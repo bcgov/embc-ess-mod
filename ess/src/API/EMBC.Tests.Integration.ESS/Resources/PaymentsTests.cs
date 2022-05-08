@@ -39,7 +39,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 NotificationPhone = "1234567890",
                 SecurityAnswer = "answer",
                 SecurityQuestion = "question",
-                LinkedSupportIds = linkedSupportIds
+                LinkedSupportIds = linkedSupportIds,
+                PayeeId = TestData.ContactId
             };
 
             var paymentId = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
