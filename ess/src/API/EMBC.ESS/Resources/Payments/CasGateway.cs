@@ -96,6 +96,10 @@ namespace EMBC.ESS.Resources.Payments
 
         public async Task<(string SupplierNumber, string SiteCode)> CreateSupplier(contact contact, CancellationToken ct)
         {
+            if (string.IsNullOrEmpty(contact.address1_postalcode)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.address1_postalcode));
+            if (string.IsNullOrEmpty(contact.firstname)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.firstname));
+            if (string.IsNullOrEmpty(contact.lastname)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.lastname));
+
             var config = await casSystemConfigurationProvider.Get(ct);
             var response = await casWebProxy.CreateSupplierAsync(new CreateSupplierRequest
             {
@@ -106,7 +110,7 @@ namespace EMBC.ESS.Resources.Payments
                             new Supplieraddress
                             {
                                 ProviderId = config.ProviderId,
-                                AddressLine1 = contact.address1_line1.ToCasAddressLine(),
+                                AddressLine1 = contact.address1_line1?.ToCasAddressLine(),
                                 AddressLine2 = contact.address1_line2?.ToCasAddressLine(),
                                 AddressLine3 = contact.address1_line3?.ToCasAddressLine(),
                                 City = (contact.era_City?.era_jurisdictionname ?? contact.address1_city).ToCasCity(),
@@ -122,6 +126,10 @@ namespace EMBC.ESS.Resources.Payments
 
         public async Task<(string SupplierNumber, string SiteCode)?> GetSupplier(contact contact, CancellationToken ct)
         {
+            if (string.IsNullOrEmpty(contact.address1_postalcode)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.address1_postalcode));
+            if (string.IsNullOrEmpty(contact.firstname)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.firstname));
+            if (string.IsNullOrEmpty(contact.lastname)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.lastname));
+
             var response = await casWebProxy.GetSupplierAsync(new GetSupplierRequest
             {
                 PostalCode = contact.address1_postalcode.ToCasPostalCode(),
