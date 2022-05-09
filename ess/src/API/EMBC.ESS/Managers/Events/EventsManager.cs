@@ -852,7 +852,6 @@ namespace EMBC.ESS.Managers.Events
                 ChangedFrom = lastPollDate,
                 InStatus = CasPaymentStatus.Pending
             })).Payments.ToArray();
-            logger.LogInformation("Reconciling {0} issued payments", issuedCasPayments.Length);
 
             foreach (var payment in issuedCasPayments.AsParallel())
             {
@@ -865,13 +864,29 @@ namespace EMBC.ESS.Managers.Events
                 });
                 if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
             }
+            var paidPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
+            {
+                ChangedFrom = lastPollDate,
+                InStatus = CasPaymentStatus.Paid
+            })).Payments.ToArray();
+
+            foreach (var payment in paidPayments.AsParallel())
+            {
+                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                {
+                    PaymentId = payment.PaymentId,
+                    ToPaymentStatus = PaymentStatus.Paid,
+                    CasReferenceNumber = payment.CasReferenceNumber,
+                    StatusChangeDate = payment.StatusChangeDate
+                });
+                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
+            }
 
             var failedCasPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
             {
                 ChangedFrom = lastPollDate,
                 InStatus = CasPaymentStatus.Failed
             })).Payments.ToArray();
-            logger.LogInformation("Reconciling {0} failed payments", failedCasPayments.Length);
 
             foreach (var payment in failedCasPayments.AsParallel())
             {
@@ -880,33 +895,22 @@ namespace EMBC.ESS.Managers.Events
                     PaymentId = payment.PaymentId,
                     ToPaymentStatus = PaymentStatus.Failed,
                     CasReferenceNumber = payment.CasReferenceNumber,
-                    StatusChangeDate = payment.StatusChangeDate
-                });
-                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
-            }
-
-            var paidPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
-            {
-                ChangedFrom = lastPollDate,
-                InStatus = CasPaymentStatus.Paid
-            })).Payments.ToArray();
-            logger.LogInformation("Reconciling {0} paid payments", failedCasPayments.Length);
-
-            foreach (var payment in failedCasPayments.AsParallel())
-            {
-                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
-                {
-                    PaymentId = payment.PaymentId,
-                    ToPaymentStatus = PaymentStatus.Paid,
-                    CasReferenceNumber = payment.CasReferenceNumber,
                     StatusChangeDate = payment.StatusChangeDate,
                     Reason = payment.StatusDescription
                 });
                 if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
             }
 
+            var nextPollDate = DateTime.SpecifyKind(DateTime.UtcNow.AddMinutes(-5), DateTimeKind.Utc);
+
+            logger.LogInformation("Reconciled {0} issued payments, {1} failed payments, {2} paid payments; setting polling date to {3} UTC",
+                issuedCasPayments.Length,
+                paidPayments.Length,
+                failedCasPayments.Length,
+                nextPollDate);
+
             // set the last poll time to -5 mins to account for system clock differences
-            await cache.Set(paymentPollingCacheKey, DateTime.UtcNow.AddMinutes(-5), TimeSpan.FromDays(7), ct);
+            await cache.Set(paymentPollingCacheKey, nextPollDate, TimeSpan.FromDays(7), ct);
         }
 
         private const string paymentPollingCacheKey = "CASPollDate";
