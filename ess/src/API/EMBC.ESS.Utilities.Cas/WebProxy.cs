@@ -48,6 +48,7 @@ namespace EMBC.ESS.Utilities.Cas
             };
 
             var token = await httpClient.RequestClientCredentialsTokenAsync(request, ct);
+            if (token.IsError) throw token.Exception;
             token.HttpResponse.EnsureSuccessStatusCode();
 
             return token.AccessToken;

@@ -58,7 +58,7 @@ namespace EMBC.ESS.Resources.Payments
                 InvoiceLineCode = configValues.SingleOrDefault(cv => cv.era_key.Equals("Line Code", StringComparison.OrdinalIgnoreCase))?.era_value ?? "DR",
                 InvoiceTerms = configValues.SingleOrDefault(cv => cv.era_key.Equals("Terms", StringComparison.OrdinalIgnoreCase))?.era_value ?? "IMMEDIATE",
                 InvoiceLineType = configValues.SingleOrDefault(cv => cv.era_key.Equals("Type", StringComparison.OrdinalIgnoreCase))?.era_value ?? "Item",
-                PayGroup = configValues.SingleOrDefault(cv => cv.era_key.Equals("Pay Group", StringComparison.OrdinalIgnoreCase))?.era_value,
+                PayGroup = configValues.SingleOrDefault(cv => cv.era_key.Equals("Pay Group", StringComparison.OrdinalIgnoreCase))?.era_value ?? "EMB IN",
                 InvoiceRemittanceCode = configValues.SingleOrDefault(cv => cv.era_key.Equals("Remittance Code", StringComparison.OrdinalIgnoreCase))?.era_value ?? "01",
                 InvoiceSpecialHandling = configValues.SingleOrDefault(cv => cv.era_key.Equals("Special Handling", StringComparison.OrdinalIgnoreCase))?.era_value ?? "N",
                 ProviderId = configValues.SingleOrDefault(cv => cv.era_key.Equals("Provider ID", StringComparison.OrdinalIgnoreCase))?.era_value ?? "CAS_SU_AT_ESS"

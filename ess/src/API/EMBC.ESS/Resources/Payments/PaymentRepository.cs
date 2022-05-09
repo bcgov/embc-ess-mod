@@ -7,6 +7,7 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.Extensions.Logging;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Payments
@@ -16,14 +17,16 @@ namespace EMBC.ESS.Resources.Payments
         private readonly IMapper mapper;
         private readonly IEssContextFactory essContextFactory;
         private readonly ICasGateway casGateway;
+        private readonly ILogger<PaymentRepository> logger;
 
         private static CancellationToken CreateCancellationToken() => new CancellationTokenSource().Token;
 
-        public PaymentRepository(IMapper mapper, IEssContextFactory essContextFactory, ICasGateway casGateway)
+        public PaymentRepository(IMapper mapper, IEssContextFactory essContextFactory, ICasGateway casGateway, ILogger<PaymentRepository> logger)
         {
             this.mapper = mapper;
             this.essContextFactory = essContextFactory;
             this.casGateway = casGateway;
+            this.logger = logger;
         }
 
         public async Task<ManagePaymentResponse> Manage(ManagePaymentRequest request) =>
@@ -237,6 +240,7 @@ namespace EMBC.ESS.Resources.Payments
             }
             catch (Exception e)
             {
+                logger.LogError(e, "Failed to send payment {0} to CAS", paymentId);
                 payment.era_processingresponse = e.Message;
                 UpdatePaymentStatus(ctx, payment, PaymentStatus.Failed);
                 ctx.UpdateObject(payment);
