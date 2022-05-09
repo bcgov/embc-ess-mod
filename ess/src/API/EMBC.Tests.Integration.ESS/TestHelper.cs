@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
 
-namespace EMBC.Tests.Integration.ESS.Managers.Events
+namespace EMBC.Tests.Integration.ESS
 {
     public static class TestHelper
     {
@@ -127,5 +128,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
         public static async Task<string> SaveEvacuationFile(EventsManager manager, EvacuationFile file) =>
             await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+
+        public static IEnumerable<T> TakeRandom<T>(this T[] list) => list.TakeRandom(Random.Shared.Next(1, list.Length));
+
+        public static IEnumerable<T> TakeRandom<T>(this T[] list, int numberOfItems) => list.Skip(Random.Shared.Next(list.Length - numberOfItems)).Take(numberOfItems);
     }
 }

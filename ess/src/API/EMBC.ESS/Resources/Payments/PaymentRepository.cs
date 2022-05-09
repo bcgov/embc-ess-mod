@@ -60,7 +60,7 @@ namespace EMBC.ESS.Resources.Payments
                 payment.era_etransfertransactionid = Guid.NewGuid();
                 ctx.AddToera_etransfertransactions(payment);
                 // create in locking status
-                UpdatePaymentStatus(ctx, payment, PaymentStatus.Sending); //TODO: change to creating
+                UpdatePaymentStatus(ctx, payment, PaymentStatus.Processing);
                 await ctx.SaveChangesAsync(ct);
                 // release from lock
                 UpdatePaymentStatus(ctx, payment, request.Payment.Status);
@@ -270,7 +270,7 @@ namespace EMBC.ESS.Resources.Payments
                 {
                     PaymentId = p.Invoicenumber,
                     Status = CasStatusResolver(p.Paymentstatus),
-                    StatusChangeDate = p.Paymentstatusdate,
+                    StatusChangeDate = p.Paymentstatusdate.Value,
                     CasReferenceNumber = p.Paymentnumber?.ToString(),
                     StatusDescription = p.Voidreason
                 })
@@ -301,6 +301,7 @@ namespace EMBC.ESS.Resources.Payments
             paymentStatus switch
             {
                 PaymentStatus.Failed => SupportStatus.UnderReview,
+                PaymentStatus.Issued => SupportStatus.Issued,
                 PaymentStatus.Paid => SupportStatus.Paid,
                 _ => throw new NotImplementedException($"missing map from payment status {paymentStatus} to support status")
             };
@@ -326,18 +327,30 @@ namespace EMBC.ESS.Resources.Payments
             var ct = CreateCancellationToken();
             var ctx = essContextFactory.Create();
 
-            var tx = (await ((DataServiceQuery<era_etransfertransaction>)ctx.era_etransfertransactions.Where(t => t.era_name == request.PaymentId)).ExecuteAsync(ct)).SingleOrDefault();
-            if (tx == null) return new UpdateCasPaymentStatusResponse { };
-            await ctx.LoadPropertyAsync(tx, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), ct);
+            var payment = (await ((DataServiceQuery<era_etransfertransaction>)ctx.era_etransfertransactions.Where(t => t.era_name == request.PaymentId)).ExecuteAsync(ct)).SingleOrDefault();
+            if (payment == null) return new UpdateCasPaymentStatusResponse { Success = false, FailureReason = $"payment not found" };
 
-            UpdatePaymentStatus(ctx, tx, request.ToPaymentStatus);
-            tx.era_casresponsedate = request.StatusChangeDate;
-            tx.era_casreferencenumber = request.CasReferenceNumber;
-            tx.era_processingresponse = request.Reason;
+            // guard for current payment status
+            var paymentStatus = (PaymentStatus)payment.statuscode;
+            if (paymentStatus == PaymentStatus.Processing || paymentStatus == PaymentStatus.Sending)
+            {
+                return new UpdateCasPaymentStatusResponse { Success = false, FailureReason = $"payment is in status {paymentStatus}" };
+            }
 
-            ctx.UpdateObject(tx);
+            // guard against changing a later status
+            if (payment.era_casresponsedate > request.StatusChangeDate)
+            {
+                return new UpdateCasPaymentStatusResponse { Success = false, FailureReason = $"payment was already updated to {paymentStatus} at {payment.era_casresponsedate}" };
+            }
 
-            foreach (var support in tx.era_era_etransfertransaction_era_evacueesuppo)
+            payment.era_casresponsedate = request.StatusChangeDate;
+            payment.era_casreferencenumber = request.CasReferenceNumber;
+            payment.era_processingresponse = request.Reason;
+            UpdatePaymentStatus(ctx, payment, request.ToPaymentStatus);
+            ctx.UpdateObject(payment);
+
+            await ctx.LoadPropertyAsync(payment, nameof(era_etransfertransaction.era_era_etransfertransaction_era_evacueesuppo), ct);
+            foreach (var support in payment.era_era_etransfertransaction_era_evacueesuppo)
             {
                 UpdateSupportStatus(ctx, support, ResolveSupportStatus(request.ToPaymentStatus));
                 ctx.UpdateObject(support);
@@ -345,7 +358,7 @@ namespace EMBC.ESS.Resources.Payments
 
             await ctx.SaveChangesAsync(ct);
 
-            return new UpdateCasPaymentStatusResponse { PaymentId = request.PaymentId };
+            return new UpdateCasPaymentStatusResponse { Success = true };
         }
 
         private static void UpdatePaymentStatus(EssContext ctx, era_etransfertransaction payment, PaymentStatus status)
@@ -355,6 +368,7 @@ namespace EMBC.ESS.Resources.Payments
                 case PaymentStatus.Pending:
                 case PaymentStatus.Sent:
                 case PaymentStatus.Sending:
+                case PaymentStatus.Processing:
                 case PaymentStatus.Failed:
                 case PaymentStatus.Issued:
                     ctx.ActivateObject(payment, (int)status);

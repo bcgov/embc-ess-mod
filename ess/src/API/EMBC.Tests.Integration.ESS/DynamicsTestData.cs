@@ -71,12 +71,16 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveSupplierGST => inactiveSupplier.era_gstnumber;
         public string[] SupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name).ToArray();
 
-        public string[] CurrenntRunSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
+        public string[] CurrentRunSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
             .Where(s => s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
             .Select(s => s.era_name).ToArray();
 
         public string[] CurrentRunETransferSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
             .Where(s => s.era_supportdeliverytype == 174360001 && s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
+            .Select(s => s.era_name).ToArray();
+
+        public string[] CurrentRunReferralSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
+            .Where(s => s.era_supportdeliverytype == 174360000 && s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
             .Select(s => s.era_name).ToArray();
 
         public string[] HouseholdMemberIds => evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(s => s.era_householdmemberid?.ToString() ?? string.Empty).ToArray();

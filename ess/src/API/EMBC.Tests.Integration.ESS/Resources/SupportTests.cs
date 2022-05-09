@@ -71,7 +71,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
             {
                 FileId = evacuationFileId,
                 Supports = newSupports
@@ -166,7 +166,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
             {
                 FileId = evacuationFileId,
                 Supports = paperSupports
@@ -256,101 +256,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task SetFlags_TwoFlags_FlagsAdded()
-        {
-            var uniqueId = TestData.TestPrefix;
-            var householdMembers = TestData.HouseholdMemberIds;
-            var now = DateTime.UtcNow;
-            var fileId = TestData.EvacuationFileId;
-
-            var newSupports = new Support[]
-            {
-                new ClothingSupport {
-                   SupportDelivery = new Referral
-                   {
-                        SupplierId = TestData.SupplierAId,
-                        SupplierNotes = $"{uniqueId}-notes",
-                        IssuedToPersonName = "test person",
-                   },
-                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IncludedHouseholdMembers = householdMembers,
-                   From = now,
-                   To = now.AddDays(3),
-                   IssuedOn = now
-                },
-                new ClothingSupport {
-                   SupportDelivery = new Interac
-                   {
-                        NotificationEmail = "test@email",
-                        NotificationMobile = "12345",
-                        ReceivingRegistrantId = TestData.ContactId,
-                        RecipientFirstName = "test",
-                        RecipientLastName = "test"
-                   },
-                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IncludedHouseholdMembers = householdMembers,
-                   From = now,
-                   To = now.AddDays(3),
-                   IssuedOn = now
-                },
-            };
-
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
-            {
-                FileId = fileId,
-                Supports = newSupports
-            })).Supports.Select(s => s.Id).ToArray();
-
-            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
-
-            var flaggedSupport = supports.First(s => s.SupportDelivery is ETransfer && s.Status == SupportStatus.PendingScan);
-            var duplicateSupport = supports.First(s => s.SupportDelivery is Referral && s.Status == SupportStatus.Active);
-
-            var flags = new SupportFlag[]
-            {
-                new DuplicateSupportFlag { DuplicatedSupportId = duplicateSupport.Id },
-                new AmountOverridenSupportFlag { Approver = "test" }
-            };
-            await supportRepository.Manage(new SetFlagsCommand
-            {
-                SupportId = flaggedSupport.Id,
-                Flags = flags
-            });
-
-            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = flaggedSupport.Id })).Items.ShouldHaveSingleItem();
-
-            support.Flags.Count().ShouldBe(flags.Length);
-
-            foreach (var flag in support.Flags)
-            {
-                if (flag is DuplicateSupportFlag df)
-                {
-                    var sourceFlag = (DuplicateSupportFlag)flags[0];
-                    df.DuplicatedSupportId.ShouldBe(sourceFlag.DuplicatedSupportId);
-                }
-                if (flag is AmountOverridenSupportFlag af)
-                {
-                    var sourceFlag = (AmountOverridenSupportFlag)flags[1];
-                    af.Approver.ShouldBe(sourceFlag.Approver);
-                }
-            }
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task ClearFlags_NoFlags()
-        {
-            var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
-
-            var supportWithFlags = supports.First(s => s.Flags.Any());
-
-            await supportRepository.Manage(new ClearFlagsCommand { SupportId = supportWithFlags.Id });
-
-            var supportWithoutFlags = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportWithFlags.Id })).Items.ShouldHaveSingleItem();
-
-            supportWithoutFlags.Flags.ShouldBeEmpty();
-        }
-
-        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task QuerySupports_ByStatus_ReturnCorrectSupports()
         {
             var sampleSupports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
@@ -376,47 +281,54 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task AssignToApprovalQueue_Support_Assigned()
+        public async Task SubmitSupportForApproval_SupportWithFlags_AssignedToApprovalQueue()
         {
             var uniqueId = TestData.TestPrefix;
             var householdMembers = TestData.HouseholdMemberIds;
             var now = DateTime.UtcNow;
             var fileId = TestData.EvacuationFileId;
 
-            var newSupports = new Support[]
+            var support = new ClothingSupport
             {
-                new ClothingSupport {
-                   SupportDelivery = new Interac
-                   {
-                        NotificationEmail = "test@email",
-                        NotificationMobile = "12345",
-                        ReceivingRegistrantId = TestData.ContactId,
-                        RecipientFirstName = "test",
-                        RecipientLastName = "test"
-                   },
-                   CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
-                   IncludedHouseholdMembers = householdMembers,
-                   From = now,
-                   To = now.AddDays(3),
-                   IssuedOn = now
-                }
+                SupportDelivery = new Interac
+                {
+                    NotificationEmail = "test@email",
+                    NotificationMobile = "12345",
+                    ReceivingRegistrantId = TestData.ContactId,
+                    RecipientFirstName = "test",
+                    RecipientLastName = "test"
+                },
+                CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                IncludedHouseholdMembers = householdMembers,
+                From = now,
+                To = now.AddDays(3),
+                IssuedOn = now
             };
 
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportCommand
+            var supportId = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
             {
                 FileId = fileId,
-                Supports = newSupports
-            })).Supports.Select(s => s.Id).ToArray();
+                Supports = new[] { support }
+            })).Supports.ShouldHaveSingleItem().Id;
 
-            var pendingScanSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByStatus = SupportStatus.PendingScan })).Items.First();
+            var flags = new[]
+            {
+                new AmountOverridenSupportFlag{ Approver = "test" }
+            };
+
+            //should be in pending scan
+            ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByStatus = SupportStatus.PendingScan })).Items.Where(s => s.Id == supportId).ShouldHaveSingleItem();
 
             await supportRepository.Manage(new SubmitSupportForApprovalCommand
             {
-                SupportIds = new[] { pendingScanSupport.Id }
+                SupportId = supportId,
+                Flags = flags
             });
 
-            var pendingApprovalSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = pendingScanSupport.Id })).Items.ShouldHaveSingleItem();
+            //should be in pending approval
+            var pendingApprovalSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
             pendingApprovalSupport.Status.ShouldBe(SupportStatus.PendingApproval);
+            pendingApprovalSupport.Flags.ShouldHaveSingleItem().ShouldBeAssignableTo<AmountOverridenSupportFlag>().ShouldNotBeNull().Approver.ShouldBe(flags[0].Approver);
         }
     }
 }

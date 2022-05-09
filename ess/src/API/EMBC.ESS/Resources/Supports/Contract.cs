@@ -27,7 +27,7 @@ namespace EMBC.ESS.Resources.Supports
     {
     }
 
-    public class SaveEvacuationFileSupportCommand : ManageSupportCommand
+    public class SaveEvacuationFileSupportsCommand : ManageSupportCommand
     {
         public string FileId { get; set; }
         public IEnumerable<Support> Supports { get; set; }
@@ -50,27 +50,12 @@ namespace EMBC.ESS.Resources.Supports
 
     public class SubmitSupportForApprovalCommand : ManageSupportCommand
     {
-        public IEnumerable<string> SupportIds { get; set; }
-    }
-
-    public class AssignSupportToQueueCommandResult : ManageSupportCommandResult
-    { }
-
-    public class SetFlagsCommand : ManageSupportCommand
-    {
         public string SupportId { get; set; }
+
         public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
     }
 
-    public class SetFlagCommandResult : ManageSupportCommandResult
-    { }
-
-    public class ClearFlagsCommand : ManageSupportCommand
-    {
-        public string SupportId { get; set; }
-    }
-
-    public class ClearFlagCommandResult : ManageSupportCommandResult
+    public class AssignSupportToQueueCommandResult : ManageSupportCommandResult
     { }
 
     public class SupportStatusTransition
@@ -224,7 +209,8 @@ namespace EMBC.ESS.Resources.Supports
         Cancelled = 174360004,
         UnderReview = 174360005,
         PendingScan = 174360006,
-        Issued = 174360007
+        Issued = 174360007,
+        Processing = 174360008
     }
 
     public enum SupportVoidReason
