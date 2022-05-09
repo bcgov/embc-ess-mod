@@ -151,11 +151,11 @@ objects:
                     name: ${APP_NAME}-mygovbc-captcha-service-secrets
               resources:
                 limits:
-                  cpu: 50m
-                  memory: 256Mi
+                  cpu: 30m
+                  memory: 128Mi
                 requests:
                   cpu: 10m
-                  memory: 128Mi
+                  memory: 64Mi
               image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/mygovbc-captcha-service:${TAG}
               imagePullPolicy: Always
               ports:
@@ -177,9 +177,9 @@ objects:
                   path: /status
                   port: 8080
                   scheme: HTTP
-                initialDelaySeconds: 60
+                initialDelaySeconds: 30
                 timeoutSeconds: 5
-                periodSeconds: 15
+                periodSeconds: 10
                 successThreshold: 1
                 failureThreshold: 5
               readinessProbe:
@@ -235,4 +235,4 @@ objects:
             name: memory
             target:
               type: Utilization
-              averageUtilization: 150
+              averageUtilization: 175

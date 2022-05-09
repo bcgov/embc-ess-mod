@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Net.Http;
-using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
@@ -25,7 +21,6 @@ namespace OAuthServer
             try
             {
                 var host = CreateHostBuilder(args).Build();
-                MigrateOperationalDatabase(host);
                 host.Run();
                 return 0;
             }
@@ -76,15 +71,5 @@ namespace OAuthServer
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-        private static void MigrateOperationalDatabase(IHost host)
-        {
-            using var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
-
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            logger.LogInformation("Migrating PersistedGrantDbContext");
-            scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
-            logger.LogInformation("PersistedGrantDbContext migration completed");
-        }
     }
 }

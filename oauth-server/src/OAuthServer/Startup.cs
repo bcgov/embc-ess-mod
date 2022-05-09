@@ -94,17 +94,31 @@ namespace OAuthServer
                     options.UserInteraction.LogoutUrl = "~/logout";
                     options.IssuerUri = configuration.GetValue("IDENTITYSERVER_ISSUER_URI", (string)null);
                 })
-
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder => builder.UseSqlite(connectionString, sql => sql.MigrationsAssembly(typeof(Startup).Assembly.FullName));
-                    options.EnableTokenCleanup = true;
-                })
                 .AddInMemoryApiScopes(config.ApiScopes)
                 .AddInMemoryClients(config.Clients)
                 .AddInMemoryIdentityResources(config.IdentityResources)
                 .AddInMemoryApiResources(config.ApiResources)
-                .AddInMemoryCaching();
+                ;
+
+            if (!string.IsNullOrEmpty(redisConnectionString))
+            {
+                builder
+                    .AddOperationalStore(opts =>
+                    {
+                        opts.RedisConnectionString = redisConnectionString;
+                        opts.KeyPrefix = applicationName;
+                    }).AddRedisCaching(opts =>
+                    {
+                        opts.RedisConnectionString = redisConnectionString;
+                        opts.KeyPrefix = applicationName;
+                    });
+            }
+            else
+            {
+                builder
+                    .AddInMemoryPersistedGrants()
+                    .AddInMemoryCaching();
+            }
 
             services.AddTestUsers(configuration);
 
