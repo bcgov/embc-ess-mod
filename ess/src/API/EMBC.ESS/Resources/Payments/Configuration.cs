@@ -9,6 +9,7 @@ namespace EMBC.ESS.Resources.Payments
         {
             configurationServices.Services.AddTransient<IPaymentRepository, PaymentRepository>();
             configurationServices.Services.AddTransient<ICasGateway, CasGateway>();
+            configurationServices.Services.AddTransient<ICasSystemConfigurationProvider, CasSystemConfigurationProvider>();
         }
     }
 }

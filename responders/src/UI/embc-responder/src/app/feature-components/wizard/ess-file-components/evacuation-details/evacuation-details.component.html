@@ -192,7 +192,9 @@
                       (change)="evacPrimaryAddressChange($event)"
                       required
                     >
-                      <mat-radio-button [value]="'Yes'">Yes</mat-radio-button>
+                      <mat-radio-button id="addressYesOption" [value]="'Yes'"
+                        >Yes</mat-radio-button
+                      >
                       <div class="prim-address">
                         <p
                           [innerHTML]="
@@ -201,7 +203,9 @@
                           "
                         ></p>
                       </div>
-                      <mat-radio-button [value]="'No'">No</mat-radio-button>
+                      <mat-radio-button id="addressNoOption" [value]="'No'"
+                        >No</mat-radio-button
+                      >
                       <mat-error
                         class="custom-mat-error"
                         *ngIf="
@@ -317,6 +321,7 @@
                 >
                   <mat-radio-button
                     *ngFor="let option of insuranceOption"
+                    [id]="option.value"
                     [value]="option.value"
                   >
                     {{ option.name }}

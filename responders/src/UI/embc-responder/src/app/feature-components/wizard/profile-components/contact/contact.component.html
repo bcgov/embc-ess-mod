@@ -35,14 +35,22 @@
               (change)="hideContact($event)"
               required
             >
-              <mat-radio-button class="primary-radio-button" [value]="true">
+              <mat-radio-button
+                class="primary-radio-button"
+                [value]="true"
+                id="yesOption"
+              >
                 <span><b>Yes</b></span> - You can contact me about my current
                 registration. I understand that I can be contacted at any point
                 during the registration process including before and after I
                 proceed to the nearest reception centre upon completing my
                 registration.
               </mat-radio-button>
-              <mat-radio-button class="primary-radio-button" [value]="false">
+              <mat-radio-button
+                class="primary-radio-button"
+                [value]="false"
+                id="noOption"
+              >
                 <span><b>No</b></span> - You cannot contact me about my current
                 registration. I understand that it is my responsibility to
                 proceed to the nearest reception centre upon completing my

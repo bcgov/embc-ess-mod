@@ -468,6 +468,7 @@
                   <div class="row">
                     <div class="col-md-12">
                       <mat-checkbox
+                        id="allMembers"
                         [checked]="isChecked()"
                         [indeterminate]="isIndeterminate()"
                         (change)="$event ? selectAll($event) : null"

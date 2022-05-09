@@ -96,7 +96,7 @@ namespace EMBC.ESS.Resources.Reports
             //return files;
 
             tasks.AsParallel().ForAll(t => ctx.AttachTo(nameof(EssContext.era_tasks), t));
-            await Parallel.ForEachAsync(tasks, ct, (t, ct) => new ValueTask(ctx.LoadPropertyAsync(t, nameof(era_task.era_era_task_era_evacuationfileId), ct)));
+            await Parallel.ForEachAsync(tasks, ct, async (t, ct) => await ctx.LoadPropertyAsync(t, nameof(era_task.era_era_task_era_evacuationfileId), ct));
             tasks.AsParallel().ForAll(t => { foreach (var file in t.era_era_task_era_evacuationfileId) file.era_TaskId = t; });
 
             return tasks.SelectMany(t => t.era_era_task_era_evacuationfileId);
@@ -106,7 +106,7 @@ namespace EMBC.ESS.Resources.Reports
         {
             //load files' properties
             //await files.Select(file => ParallelLoadEvacueeAsync(ctx, file)).ToArray().ForEachAsync(10, t => t);
-            await Parallel.ForEachAsync(files, ct, (f, ct) => new ValueTask(ParallelLoadEvacueeAsync(ctx, f, ct)));
+            await Parallel.ForEachAsync(files, ct, async (f, ct) => await ParallelLoadEvacueeAsync(ctx, f, ct));
 
             //var members = new List<era_householdmember>();
 
@@ -171,7 +171,7 @@ namespace EMBC.ESS.Resources.Reports
         {
             //load files' properties
             //await files.Select(file => ParallelLoadSupportAsync(ctx, file)).ToArray().ForEachAsync(10, t => t);
-            await Parallel.ForEachAsync(files, ct, (f, ct) => new ValueTask(ParallelLoadSupportAsync(ctx, f, ct)));
+            await Parallel.ForEachAsync(files, ct, async (f, ct) => await ParallelLoadSupportAsync(ctx, f, ct));
 
             //var supports = new List<era_evacueesupport>();
 

@@ -4,7 +4,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Address Line 1</mat-label>
         <input
-          [formControlName]="'addressLine1'"
+          formControlName="addressLine1"
           matInput
           placeholder="Address Line 1"
           maxlength="100"
@@ -27,7 +27,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Address Line 2</mat-label>
         <input
-          [formControlName]="'addressLine2'"
+          formControlName="addressLine2"
           matInput
           placeholder="Address Line 2"
           maxlength="100"
@@ -43,7 +43,7 @@
         <input
           maxlength="100"
           type="text"
-          [formControlName]="'community'"
+          formControlName="community"
           matInput
           placeholder="City"
           [matAutocomplete]="auto"
@@ -53,6 +53,7 @@
           <mat-option
             *ngFor="let option of filteredOptions | async"
             [value]="option"
+            [id]="option.name"
           >
             {{ option.name }}
           </mat-option>
@@ -89,7 +90,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Postal Code</mat-label>
         <input
-          [formControlName]="'postalCode'"
+          formControlName="postalCode"
           matInput
           placeholder="Postal Code"
         />

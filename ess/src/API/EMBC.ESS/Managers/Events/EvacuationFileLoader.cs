@@ -73,7 +73,7 @@ namespace EMBC.ESS.Managers.Events
 
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
             file.Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports);
-            await Parallel.ForEachAsync(file.Supports, ct, (s, ct) => new ValueTask(Load(s, ct)));
+            await Parallel.ForEachAsync(file.Supports, ct, async (s, ct) => await Load(s, ct));
         }
 
         public async System.Threading.Tasks.Task Load(Shared.Contracts.Events.Support support, CancellationToken ct)
