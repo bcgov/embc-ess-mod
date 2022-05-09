@@ -35,7 +35,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.IO.Abstractions" Version="16.1.25" />
+        <PackageReference Include="System.IO.Abstractions" Version="17.0.3" />
         <PackageReference Include="Xrm.Tools.CRMWebAPI" Version="1.0.25" />
     </ItemGroup>
     <ItemGroup>
