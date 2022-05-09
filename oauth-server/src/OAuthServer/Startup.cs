@@ -106,11 +106,11 @@ namespace OAuthServer
                     .AddOperationalStore(opts =>
                     {
                         opts.RedisConnectionString = redisConnectionString;
-                        opts.KeyPrefix = applicationName;
+                        //opts.KeyPrefix = applicationName;
                     }).AddRedisCaching(opts =>
                     {
                         opts.RedisConnectionString = redisConnectionString;
-                        opts.KeyPrefix = applicationName;
+                        //opts.KeyPrefix = applicationName;
                     });
             }
             else
