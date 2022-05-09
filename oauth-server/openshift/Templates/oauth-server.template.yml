@@ -61,7 +61,6 @@ objects:
         app: ${APP_NAME}-oauth-server
     stringData:
       REDIS_CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING}
-      ConnectionStrings__DefaultConnection: "Data Source=/dpkeys/IdentityServer.db;"
       identityProviders__bcsc__clientId : "${BCSC_CLIENTID}"
       identityProviders__bcsc__clientSecret : "${BCSC_CLIENTSECRET}"
       identityProviders__bcsc__metadataAddress : "${BCSC_METADATAADDRESS}"
@@ -167,7 +166,7 @@ objects:
                   memory: 256Mi
                 requests:
                   cpu: 10m
-                  memory: 64Mi
+                  memory: 128Mi
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
                   value: "/ssl/tls.crt"
