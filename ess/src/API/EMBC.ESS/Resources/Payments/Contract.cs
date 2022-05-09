@@ -51,7 +51,7 @@ namespace EMBC.ESS.Resources.Payments
         Failed = 174360002,
         Cancelled = 174360003,
         Issued = 174360004,
-        //Creating = 174360005,
+        Processing = 174360005
     }
 
     public class InteracSupportPayment : Payment
@@ -118,7 +118,7 @@ namespace EMBC.ESS.Resources.Payments
     {
         public string PaymentId { get; set; }
         public CasPaymentStatus Status { get; set; }
-        public DateTime? StatusChangeDate { get; set; }
+        public DateTime StatusChangeDate { get; set; }
         public string CasReferenceNumber { get; set; }
         public string StatusDescription { get; set; }
     }
@@ -141,6 +141,7 @@ namespace EMBC.ESS.Resources.Payments
 
     public class UpdateCasPaymentStatusResponse : ManagePaymentResponse
     {
-        public string PaymentId { get; set; }
+        public bool Success { get; set; }
+        public string? FailureReason { get; set; }
     }
 }

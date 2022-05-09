@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Resources.Payments;
-using EMBC.Tests.Integration.ESS.Managers.Events;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -40,7 +39,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 NotificationPhone = "1234567890",
                 SecurityAnswer = "answer",
                 SecurityQuestion = "question",
-                LinkedSupportIds = linkedSupportIds
+                LinkedSupportIds = linkedSupportIds,
+                PayeeId = TestData.ContactId
             };
 
             var paymentId = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
@@ -80,7 +80,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         NotificationPhone = "1234567890",
                         SecurityAnswer = "answer",
                         SecurityQuestion = "question",
-                        LinkedSupportIds = TestData.CurrenntRunSupportIds,
+                        LinkedSupportIds = TestData.CurrentRunSupportIds,
                         PayeeId = registrantId
                     }
             };
@@ -116,14 +116,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
         {
             //query payments
-            var startDate = DateTime.Now.AddDays(-7);
+            var startDate = DateTime.Now.AddDays(-14);
             var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate });
 
             response.Payments.ShouldNotBeEmpty();
             //response.Payments.ShouldAllBe(p => p.StatusChangeDate >= startDate);
             foreach (var payment in response.Payments)
             {
-                payment.StatusChangeDate.ShouldNotBeNull().ShouldBeGreaterThanOrEqualTo(startDate);
+                payment.StatusChangeDate.ShouldBeGreaterThanOrEqualTo(startDate);
             }
         }
     }

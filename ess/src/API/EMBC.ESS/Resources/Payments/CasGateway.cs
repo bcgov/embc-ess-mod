@@ -146,11 +146,13 @@ namespace EMBC.ESS.Resources.Payments
             //get all pages
             while (response.Next != null)
             {
-                var queryParams = HttpUtility.ParseQueryString(new Uri(response.Next.Ref).PathAndQuery);
+                var queryParams = HttpUtility.ParseQueryString(new Uri(response.Next.Ref).Query);
                 if (!int.TryParse(queryParams.Get("page"), out var nextPageNumber)) break;
                 response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
                 {
                     PayGroup = config.PayGroup,
+                    PaymentStatusDateFrom = statusChangedFrom,
+                    PaymentStatus = status,
                     PageNumber = nextPageNumber
                 }, ct);
                 items.AddRange(response.Items);
