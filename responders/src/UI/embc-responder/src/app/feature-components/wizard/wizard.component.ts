@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 import * as globalConst from '../../core/services/global-constants';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { WizardAdapterService } from './wizard-adapter.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
