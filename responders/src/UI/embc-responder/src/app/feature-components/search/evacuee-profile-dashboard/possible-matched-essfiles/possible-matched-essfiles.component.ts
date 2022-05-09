@@ -9,16 +9,13 @@ import {
 } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 import { Router } from '@angular/router';
-import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuation-file-search-result.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
-import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { PossibleMatchedEssfilesService } from './possible-matched-essfiles.service';
 
 @Component({
   selector: 'app-possible-matched-essfiles',
@@ -34,13 +31,11 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   public color = '#169BD5';
 
   constructor(
-    private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
     private essFileService: EssFileService,
     private alertService: AlertService,
     private router: Router,
-    private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private possibleMatchedEssfilesService: PossibleMatchedEssfilesService
   ) {}
 
   ngOnInit(): void {}
@@ -90,20 +85,16 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
   linkToESSFile(fileId: string) {
     this.essFileService.getFileFromId(fileId).subscribe({
       next: (essFile) => {
-        const householdMemberId = this.getRegistrantIdToLink(
-          essFile.householdMembers
-        );
-        this.setSelectedFile(essFile.id);
-        this.evacueeSessionService.fileLinkFlag = 'Y';
-        this.evacueeSessionService.securityPhraseOpenedFrom =
-          'responder-access/search/evacuee-profile-dashboard';
-        this.evacueeSessionService.fileLinkMetaData = {
+        const householdMemberId =
+          this.possibleMatchedEssfilesService.getRegistrantIdToLink(
+            essFile.householdMembers,
+            this.evacueeProfile
+          );
+        this.possibleMatchedEssfilesService.setLinkMetaData(
           fileId,
-          linkRequest: {
-            householdMemberId,
-            registantId: this.evacueeProfile.id
-          }
-        };
+          householdMemberId,
+          this.evacueeProfile.id
+        );
         this.router.navigate(['responder-access/search/security-phrase']);
       },
       error: (error) => {
@@ -146,33 +137,5 @@ export class PossibleMatchedEssfilesComponent implements OnInit, OnChanges {
           );
         }
       });
-  }
-
-  private getRegistrantIdToLink(
-    householdMembers: Array<EvacuationFileHouseholdMember>
-  ): string {
-    for (const member of householdMembers) {
-      if (
-        member.firstName === this.evacueeProfile.personalDetails.firstName &&
-        member.lastName === this.evacueeProfile.personalDetails.lastName &&
-        member.dateOfBirth === this.evacueeProfile.personalDetails.dateOfBirth
-      ) {
-        return member.id;
-      }
-    }
-    return null;
-  }
-
-  private setSelectedFile(fileId: string) {
-    this.appBaseService.appModel.selectedEssFile = {
-      id: fileId,
-      evacuatedFromAddress: null,
-      needsAssessment: null,
-      primaryRegistrantId: null,
-      registrationLocation: null,
-      task: null
-    };
-
-    this.computeState.triggerEvent();
   }
 }

@@ -88,7 +88,7 @@ export const mealRateSheet: DialogContent = {
     2
   )}</div></div><div class="row primary"><div class="col-md-2">Total</div><div class="col-md-4 bold">\$${mealRate.total.toFixed(
     2
-  )} (incl. GST)</div></div><p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>`,
+  )} </div></div><p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>`,
   cancelButton: 'Close'
 };
 

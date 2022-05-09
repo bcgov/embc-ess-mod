@@ -109,6 +109,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    */
   save(): void {
     this.stepEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.needsAssessmentSubmitFlag = false;
     this.saveLoader = true;
 
     if (!this.appBaseService?.appModel?.selectedEssFile?.id) {
