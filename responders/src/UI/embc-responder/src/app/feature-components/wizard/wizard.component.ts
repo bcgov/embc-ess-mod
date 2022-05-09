@@ -43,15 +43,6 @@ export class WizardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadDefaultStep();
     this.cd.detectChanges();
-
-    // Scroll to top when navigating. "scrollPositionRestoration" option doesn't work for Mat-Sidenav-Content.
-    this.scrollSubscription = this.router.events.subscribe((ev: any) => {
-      if (ev instanceof NavigationEnd) {
-        document
-          .querySelector('.mat-sidenav-content')
-          .scroll({ left: 0, top: 0 });
-      }
-    });
   }
 
   /**
@@ -178,7 +169,6 @@ export class WizardComponent implements OnInit, OnDestroy {
    * When wizard is closed, end Angular Material "scroll to top" subscription
    */
   ngOnDestroy() {
-    this.scrollSubscription.unsubscribe();
     this.wizardAdapterService.clearWizard();
     this.clearCachedServices();
   }

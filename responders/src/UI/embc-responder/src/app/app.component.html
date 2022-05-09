@@ -1,14 +1,4 @@
-<div
-  class="main-border"
-  [ngStyle]="
-    environment !== null && environment !== undefined
-      ? {
-          padding: '0px 5px 5px 5px',
-          'background-color': environment?.bannerColor
-        }
-      : { padding: '0px' }
-  "
->
+<div class="main-border">
   <app-outage-banner
     *ngIf="outageService.getShowOutageBanner() | async"
     (closeEvent)="closeOutageBanner($event)"
@@ -18,9 +8,34 @@
     *ngIf="environment !== null && environment !== undefined"
   ></app-environment-banner>
 
-  <app-header *ngIf="show"></app-header>
+  <app-header
+    *ngIf="show"
+    [ngStyle]="
+      environment !== null && environment !== undefined
+        ? {
+            border: 'solid ' + environment?.bannerColor,
+            'border-width': '0px 5px 0px 5px'
+          }
+        : { padding: '0px' }
+    "
+  ></app-header>
 
-  <main class="fill-body main-container background">
+  <main
+    class="fill-body main-container background"
+    [ngStyle]="
+      environment !== null && environment !== undefined
+        ? show
+          ? {
+              border: 'solid ' + environment?.bannerColor,
+              'border-width': '0px 5px 0px 5px'
+            }
+          : {
+              border: 'solid ' + environment?.bannerColor,
+              'border-width': '0px 5px 5px 5px'
+            }
+        : { padding: '0px' }
+    "
+  >
     <div class="app-error">
       <app-alert></app-alert>
     </div>
@@ -30,7 +45,18 @@
     </div>
   </main>
 
-  <div *ngIf="show" class="footer mt-auto">
+  <div
+    *ngIf="show"
+    class="footer mt-auto"
+    [ngStyle]="
+      environment !== null && environment !== undefined
+        ? {
+            border: 'solid ' + environment?.bannerColor,
+            'border-width': '0px 5px 5px 5px'
+          }
+        : { padding: '0px' }
+    "
+  >
     <app-footer></app-footer>
   </div>
 
