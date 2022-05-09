@@ -133,7 +133,7 @@
           ></p>
         </div>
       </div>
-      <div class="row button-div" *ngIf="!file?.isPaperBasedFile">
+      <div class="row button-div" *ngIf="file?.isFileCompleted">
         <button
           class="button-p proceed-button"
           (click)="linkToESSFile(file?.id)"
@@ -141,7 +141,7 @@
           Link to this ESS File
         </button>
       </div>
-      <div class="row" *ngIf="file?.isPaperBasedFile">
+      <div class="row" *ngIf="!file?.isFileCompleted">
         <p class="warning">
           Cannot link to an ESS File without a security phrase.
         </p>

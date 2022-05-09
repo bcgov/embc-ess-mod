@@ -92,6 +92,7 @@ export class StepEssFileService {
   private securityPhraseVal: string;
   private originalPhraseVal: string;
   private editedSecurityPhraseVal: boolean;
+  private needsAssessmentSubmitFlagVal: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -111,6 +112,14 @@ export class StepEssFileService {
 
   public set selectedEssFile(essFile: EvacuationFileModel) {
     this.selectedEssFileVal = essFile;
+  }
+
+  public get needsAssessmentSubmitFlag(): boolean {
+    return this.needsAssessmentSubmitFlagVal;
+  }
+
+  public set needsAssessmentSubmitFlag(needsAssessmentSubmitFlagVal: boolean) {
+    this.needsAssessmentSubmitFlagVal = needsAssessmentSubmitFlagVal;
   }
 
   public get primaryRegistrantId(): string {
@@ -888,7 +897,6 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkForPartialUpdates(form: FormGroup): boolean {
-    console.log(form);
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
       const control = form.controls[field] as
@@ -970,19 +978,6 @@ export class StepEssFileService {
     });
   }
 
-  public getTaskEndDate(): string {
-    if (
-      this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.NewEssFile ||
-      this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.NewRegistration
-    ) {
-      return this.userService?.currentProfile?.taskStartDate;
-    } else {
-      return this.selectedEssFileVal?.task?.from;
-    }
-  }
-
   /**
    * Sets the tab status for the Complete ESS File wizard
    */
@@ -999,6 +994,19 @@ export class StepEssFileService {
       }
       return tab;
     });
+  }
+
+  public getTaskEndDate(): string {
+    if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+        WizardType.NewEssFile ||
+      this.appBaseService?.wizardProperties?.wizardType ===
+        WizardType.NewRegistration
+    ) {
+      return this.userService?.currentProfile?.taskStartDate;
+    } else {
+      return this.selectedEssFileVal?.task?.from;
+    }
   }
 
   checkForEdit(): boolean {

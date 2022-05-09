@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
@@ -9,12 +7,6 @@ import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.ser
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { BcscInviteDialogComponent } from 'src/app/shared/components/dialog-components/bcsc-invite-dialog/bcsc-invite-dialog.component';
-import { EssFileExistsComponent } from 'src/app/shared/components/dialog-components/ess-file-exists/ess-file-exists.component';
-import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
-import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../core/services/global-constants';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.service';
@@ -34,7 +26,6 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   paperBasedEssFile: string;
 
   constructor(
-    private dialog: MatDialog,
     private router: Router,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
@@ -46,42 +37,14 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (
-      this.appBaseService?.appModel?.selectedProfile
-        ?.householdMemberRegistrantId !== undefined
-    ) {
-      this.evacueeProfileId =
-        this.appBaseService?.appModel?.selectedProfile?.householdMemberRegistrantId;
-    } else {
-      this.evacueeProfileId =
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
-    }
+    this.evacueeProfileId =
+      this.evacueeProfileDashboardService.fetchProfileId();
 
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
     this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
-    if (this.evacueeSessionService.fileLinkStatus === 'S') {
-      this.openLinkDialog(globalConst.essFileLinkMessage)
-        .afterClosed()
-        .subscribe({
-          next: (value) => {
-            this.evacueeSessionService.fileLinkFlag = null;
-            this.evacueeSessionService.fileLinkMetaData = null;
-            this.evacueeSessionService.fileLinkStatus = null;
-          }
-        });
-    } else if (this.evacueeSessionService.fileLinkStatus === 'E') {
-      this.openLinkDialog(globalConst.essFileLinkErrorMessage)
-        .afterClosed()
-        .subscribe({
-          next: (value) => {
-            this.evacueeSessionService.fileLinkFlag = null;
-            this.evacueeSessionService.fileLinkMetaData = null;
-            this.evacueeSessionService.fileLinkStatus = null;
-          }
-        });
-    }
+    this.evacueeProfileDashboardService.showFileLinkingPopups();
   }
 
   /**
@@ -89,29 +52,15 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * profile status
    */
   openStatusDefinition(): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: StatusDefinitionDialogComponent
-      },
-      height: '550px',
-      width: '580px'
-    });
+    this.evacueeProfileDashboardService.openStatusDefinition();
   }
 
   /**
    * Verifies the evacuee
    */
   verifyEvacuee(): void {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          component: VerifyEvacueeDialogComponent,
-          content: globalConst.verifyEvacueeProfile,
-          profileData: this.evacueeProfile
-        },
-        height: '550px',
-        width: '620px'
-      })
+    this.evacueeProfileDashboardService
+      .openVerifyDialog(this.evacueeProfile)
       .afterClosed()
       .subscribe({
         next: (value) => {
@@ -136,7 +85,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
               this.navigateToWizard();
             } else {
               this.isLoading = false;
-              this.openEssFileExistsDialog(
+              this.evacueeProfileDashboardService.openEssFileExistsDialog(
                 this.evacueeSearchService.paperBasedEssFile
               );
             }
@@ -170,16 +119,12 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     });
   }
 
+  /**
+   * Sends bc services card invite
+   */
   sendEmail(): void {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          component: BcscInviteDialogComponent,
-          profileData: this.evacueeProfile?.contactDetails?.email
-        },
-        height: '520px',
-        width: '600px'
-      })
+    this.evacueeProfileDashboardService
+      .openEmailInviteDialog(this.evacueeProfile?.contactDetails?.email)
       .afterClosed()
       .subscribe({
         next: (emailId) => {
@@ -208,23 +153,6 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   }
 
   /**
-   * Open the dialog to indicate evacuee has been successfully
-   * verified
-   *
-   * @param text Text to be displayed
-   */
-  private openSuccessModal(content: DialogContent): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content
-      },
-      height: '230px',
-      width: '630px'
-    });
-  }
-
-  /**
    * Calls the API to verify the Registrant Profile
    */
   private verifyProfile(): void {
@@ -234,9 +162,10 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       .subscribe({
         next: (evacueeProfile) => {
           this.evacueeProfile = evacueeProfile;
-          // console.log(this.evacueeProfile);
           this.isLoading = !this.isLoading;
-          this.openSuccessModal(globalConst.successfulVerification);
+          this.evacueeProfileDashboardService.openSuccessModal(
+            globalConst.successfulVerification
+          );
         },
         error: (error) => {
           this.isLoading = !this.isLoading;
@@ -262,7 +191,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
           !this.isPaperBased &&
           !this.evacueeProfile?.securityQuestions?.length
         ) {
-          this.openIncompleteProfileDialog(
+          this.evacueeProfileDashboardService.openIncompleteProfileDialog(
             globalConst.incompleteProfileMessage
           );
         }
@@ -272,52 +201,6 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.getProfileError);
       }
-    });
-  }
-
-  /**
-   * Opens link success dialog box
-   *
-   * @returns mat dialog reference
-   */
-  private openLinkDialog(displayMessage: DialogContent) {
-    return this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content: displayMessage
-      },
-      width: '530px'
-    });
-  }
-
-  /**
-   * Opens incomplete profile dialog
-   */
-  private openIncompleteProfileDialog(content: DialogContent): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content
-      },
-      height: '260px',
-      width: '630px'
-    });
-  }
-
-  /**
-   * opens a dialog that notices the user that the paper based ESS File number already exists
-   *
-   * @param essFile the paper based essFile number to display on the dialog
-   */
-  private openEssFileExistsDialog(essFile: string): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: EssFileExistsComponent,
-        content: { title: 'Paper ESS File Already Exists' },
-        essFile
-      },
-      height: '400px',
-      width: '493px'
     });
   }
 

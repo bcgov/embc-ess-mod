@@ -17,7 +17,6 @@ import { HouseholdMembersService } from './household-members.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { HouseholdMemberType } from 'src/app/core/api/models';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
@@ -49,7 +48,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
   constructor(
     public stepEssFileService: StepEssFileService,
-    private evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
@@ -318,7 +316,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
       this.wizardService.setEditStatus({
         tabName: 'householdMember',
-        tabUpdateStatus: isFormUpdated
+        tabUpdateStatus:
+          isFormUpdated || this.stepEssFileService.needsAssessmentSubmitFlag
       });
       this.stepEssFileService.updateEditedFormStatus();
     }
@@ -343,17 +342,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.stepEssFileService.haveSpecialDiet,
         Validators.required
       ],
-      specialDietDetails: [
-        this.stepEssFileService.specialDietDetails ?? ''
-        // [
-        //   this.customValidation
-        //     .conditionalValidation(
-        //       () => this.householdForm.get('hasSpecialDiet').value === 'Yes',
-        //       this.customValidation.whitespaceValidator()
-        //     )
-        //     .bind(this.customValidation)
-        // ]
-      ],
+      specialDietDetails: [this.stepEssFileService.specialDietDetails ?? ''],
       hasMedication: [
         this.stepEssFileService.takeMedication,
         Validators.required
