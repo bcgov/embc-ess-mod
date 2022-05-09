@@ -540,7 +540,9 @@
 
   <div *ngIf="!evacueeSessionService.isPaperBased" class="row">
     <div class="col-md-8 accept-box">
-      <mat-checkbox (change)="certificationChangeEvent($event)"
+      <mat-checkbox
+        id="processDraftCert"
+        (change)="certificationChangeEvent($event)"
         >I certify that a supervisor or ESSD has checked my work and approved
         the above supports for distribution to the evacuee.
       </mat-checkbox>
