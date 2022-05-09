@@ -33,14 +33,14 @@ namespace EMBC.ESS.Utilities.Dynamics
             services
                 .AddHttpClient("adfs_token")
                 .SetHandlerLifetime(TimeSpan.FromMinutes(30))
-                 .AddPolicyHandler((sp, request) =>
-                 {
-                     var ctx = request.GetPolicyExecutionContext() ?? new Context();
-                     ctx["_serviceprovider"] = sp;
-                     ctx["_source"] = "adfs-circuitbreaker";
-                     request.SetPolicyExecutionContext(ctx);
-                     return adfsTokenErrorHandlingPolicy;
-                 })
+                .AddPolicyHandler((sp, request) =>
+                {
+                    var ctx = request.GetPolicyExecutionContext() ?? new Context();
+                    ctx["_serviceprovider"] = sp;
+                    ctx["_source"] = "adfs-circuitbreaker";
+                    request.SetPolicyExecutionContext(ctx);
+                    return adfsTokenErrorHandlingPolicy;
+                })
                ;
 
             services.AddSingleton<ISecurityTokenProvider, ADFSSecurityTokenProvider>();
