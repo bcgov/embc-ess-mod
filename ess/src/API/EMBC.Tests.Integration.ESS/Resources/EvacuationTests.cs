@@ -76,6 +76,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var onceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
             var updatedNeedsAssessment = onceUpdatedFile.NeedsAssessment;
             var targetNeedsAssessmentId = updatedNeedsAssessment.Id;
+
+            needsAssessment.Id.ShouldNotBe(targetNeedsAssessmentId);
+
             updatedNeedsAssessment.HouseholdMembers = fileToUpdate.HouseholdMembers;
             updatedNeedsAssessment.HouseholdMembers.Count().ShouldBeGreaterThan(1);
 

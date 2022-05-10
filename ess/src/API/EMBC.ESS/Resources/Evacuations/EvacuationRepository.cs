@@ -306,7 +306,7 @@ namespace EMBC.ESS.Resources.Evacuations
                         .ToArray());
 
                 var naHouseholdMembers = (await ((DataServiceQuery<era_era_householdmember_era_needassessment>)ctx.era_era_householdmember_era_needassessmentset
-                    .Where(m => m.era_needassessmentid == file.era_CurrentNeedsAssessmentid.era_needassessmentid))
+                    .Where(m => m.era_needassessmentid == file._era_currentneedsassessmentid_value))
                     .GetAllPagesAsync(ct))
                     .ToArray();
 
@@ -406,6 +406,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .Select(n =>
                 {
                     n.era_EvacuationFile.era_CurrentNeedsAssessmentid = n;
+                    n.era_EvacuationFile._era_currentneedsassessmentid_value = n.era_needassessmentid;
                     return n.era_EvacuationFile;
                 });
         }
