@@ -58,13 +58,14 @@ namespace OAuthServer
                 });
                 services.AddDataProtection()
                     .SetApplicationName(applicationName)
-                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), "data-protection-keys");
+                    .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), $"{applicationName}-data-protection-keys");
             }
             else
             {
                 Log.Warning("Configuring {0} to use in-memory cache", applicationName);
                 services.AddDistributedMemoryCache();
-                var dpBuilder = services.AddDataProtection()
+                var dpBuilder = services
+                    .AddDataProtection()
                     .SetApplicationName(applicationName);
 
                 if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
@@ -106,11 +107,11 @@ namespace OAuthServer
                     .AddOperationalStore(opts =>
                     {
                         opts.RedisConnectionString = redisConnectionString;
-                        opts.KeyPrefix = applicationName;
+                        opts.KeyPrefix = "{" + applicationName + "}";
                     }).AddRedisCaching(opts =>
                     {
                         opts.RedisConnectionString = redisConnectionString;
-                        opts.KeyPrefix = applicationName;
+                        opts.KeyPrefix = "{" + applicationName + "}";
                     });
             }
             else
