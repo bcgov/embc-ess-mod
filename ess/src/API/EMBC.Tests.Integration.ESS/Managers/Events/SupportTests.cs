@@ -371,5 +371,30 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 referral.ManualReferralId.ShouldBe(paperReferralId);
             }
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ScanSupports_FlagsRaised()
+        {
+            var supports = (await manager.Handle(new SearchSupportsQuery { FileId = TestData.EvacuationFileId })).Items;
+
+            var supportToDuplicate = supports.Where(s => s is IncidentalsSupport).Last();
+            supportToDuplicate.Id = null;
+            supportToDuplicate.From = supportToDuplicate.From.AddMinutes(1);
+            supportToDuplicate.To = supportToDuplicate.To.AddMinutes(1);
+
+            await manager.Handle(new ProcessSupportsCommand
+            {
+                FileId = TestData.EvacuationFileId,
+                Supports = new[] { supportToDuplicate },
+                RequestingUserId = TestData.Tier4TeamMemberId,
+                IncludeSummaryInReferralsPrintout = false
+            });
+
+            await manager.Handle(new ProcessPendingSupportsCommand());
+
+            var processedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = TestData.EvacuationFileId })).Items;
+            var flaggedSupport = processedSupports.Where(s => s is IncidentalsSupport && s.From == supportToDuplicate.From).ShouldHaveSingleItem();
+            flaggedSupport.Flags.Where(f => f is DuplicateSupportFlag d && d.DuplicatedSupportId == supportToDuplicate.Id).ShouldHaveSingleItem();
+        }
     }
 }

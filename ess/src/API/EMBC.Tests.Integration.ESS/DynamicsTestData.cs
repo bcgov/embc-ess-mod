@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Utilities.Dynamics;
@@ -26,8 +27,8 @@ namespace EMBC.Tests.Integration.ESS
         private readonly contact contact;
         private readonly era_task activeTask;
         private readonly era_task inactiveTask;
-        private readonly era_evacuationfile evacuationfile;
-        private readonly era_evacuationfile paperEvacuationFile;
+        private readonly era_evacuationfile testEvacuationfile;
+        private readonly era_evacuationfile testPaperEvacuationFile;
         private readonly era_supplier supplierA;
         private readonly era_supplier supplierB;
         private readonly era_supplier supplierC;
@@ -53,11 +54,11 @@ namespace EMBC.Tests.Integration.ESS
         public string ContactFirstName => contact.firstname;
         public string ContactLastName => contact.lastname;
         public string ContactDateOfBirth => $"{contact.birthdate.GetValueOrDefault().Month:D2}/{contact.birthdate.GetValueOrDefault().Day:D2}/{contact.birthdate.GetValueOrDefault().Year:D4}";
-        public string EvacuationFileId => evacuationfile.era_name;
-        public string PaperEvacuationFileId => paperEvacuationFile.era_name;
-        public string PaperEvacuationFilePaperId => paperEvacuationFile.era_paperbasedessfile;
-        public string EvacuationFileCurrentNeedsAssessmentId => evacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
-        public string PaperEvacuationFileNeedsAssessmentId => paperEvacuationFile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
+        public string EvacuationFileId => testEvacuationfile.era_name;
+        public string PaperEvacuationFileId => testPaperEvacuationFile.era_name;
+        public string PaperEvacuationFilePaperId => testPaperEvacuationFile.era_paperbasedessfile;
+        public string EvacuationFileCurrentNeedsAssessmentId => testEvacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
+        public string PaperEvacuationFileNeedsAssessmentId => testPaperEvacuationFile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
         public string EvacuationFileSecurityPhrase => testPrefix + "-securityphrase";
         public string SupplierAId => supplierA.era_supplierid.GetValueOrDefault().ToString();
         public string SupplierAName => supplierA.era_suppliername;
@@ -69,21 +70,21 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveSupplierName => inactiveSupplier.era_suppliername;
         public string InactiveSupplierLegalName => inactiveSupplier.era_name;
         public string InactiveSupplierGST => inactiveSupplier.era_gstnumber;
-        public string[] SupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name).ToArray();
+        public string[] SupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name).ToArray();
 
-        public string[] CurrentRunSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
+        public string[] CurrentRunSupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
             .Where(s => s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
             .Select(s => s.era_name).ToArray();
 
-        public string[] CurrentRunETransferSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
+        public string[] CurrentRunETransferSupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
             .Where(s => s.era_supportdeliverytype == 174360001 && s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
             .Select(s => s.era_name).ToArray();
 
-        public string[] CurrentRunReferralSupportIds => evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
+        public string[] CurrentRunReferralSupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
             .Where(s => s.era_supportdeliverytype == 174360000 && s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
             .Select(s => s.era_name).ToArray();
 
-        public string[] HouseholdMemberIds => evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(s => s.era_householdmemberid?.ToString() ?? string.Empty).ToArray();
+        public string[] HouseholdMemberIds => testEvacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(s => s.era_householdmemberid?.ToString() ?? string.Empty).ToArray();
 
         public DynamicsTestData(EssContext essContext)
         {
@@ -146,6 +147,11 @@ namespace EMBC.Tests.Integration.ESS
             {
                 evacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-digital");
             }
+            else
+            {
+                essContext.LoadProperty(evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+                essContext.LoadProperty(evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            }
             CreateEvacueeSupports(evacuationfile, this.contact, this.tier4TeamMember, runId);
 
             var paperEvacuationfile = essContext.era_evacuationfiles
@@ -157,6 +163,11 @@ namespace EMBC.Tests.Integration.ESS
             {
                 paperEvacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-paper", testPrefix + "-paper");
             }
+            else
+            {
+                essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+                essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            }
             CreateEvacueeSupports(paperEvacuationfile, this.contact, this.tier4TeamMember, runId);
 
             essContext.SaveChanges();
@@ -165,21 +176,21 @@ namespace EMBC.Tests.Integration.ESS
             essContext.SaveChanges();
             essContext.DetachAll();
 
-            this.evacuationfile = essContext.era_evacuationfiles
+            this.testEvacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
                 .Where(f => f.era_evacuationfileid == evacuationfile.era_evacuationfileid).Single();
 
-            essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
-            essContext.LoadProperty(this.evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            essContext.LoadProperty(this.testEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+            essContext.LoadProperty(this.testEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
 
-            this.paperEvacuationFile = essContext.era_evacuationfiles
+            this.testPaperEvacuationFile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Expand(f => f.era_Registrant)
                 .Where(f => f.era_evacuationfileid == paperEvacuationfile.era_evacuationfileid).Single();
 
-            essContext.LoadProperty(this.paperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
-            essContext.LoadProperty(this.paperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            essContext.LoadProperty(this.testPaperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+            essContext.LoadProperty(this.testPaperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
 
             essContext.DetachAll();
         }
@@ -331,7 +342,7 @@ namespace EMBC.Tests.Integration.ESS
                 era_lastname = $"{testPrefix}-member-no-registrant-last",
                 era_gender = random.Next(1, 3),
                 era_isprimaryregistrant = false
-            });
+            }).ToArray();
 
             foreach (var member in householdMembers)
             {
@@ -345,6 +356,7 @@ namespace EMBC.Tests.Integration.ESS
                 }
             }
 
+            file.era_era_evacuationfile_era_householdmember_EvacuationFileid = new Collection<era_householdmember>(householdMembers);
             return file;
         }
 
@@ -363,7 +375,7 @@ namespace EMBC.Tests.Integration.ESS
                 era_supportdeliverytype = 174360000, //referral
                 statuscode = 1, //active
                 statecode = 0
-            });
+            }).ToArray();
             var etransfers = etransferSupportTypes.Select((t, i) => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
@@ -375,7 +387,7 @@ namespace EMBC.Tests.Integration.ESS
                 era_totalamount = 100m,
                 statuscode = 174360002, //approved
                 statecode = 0
-            });
+            }).ToArray();
 
             foreach (var support in referrals)
             {
@@ -393,7 +405,18 @@ namespace EMBC.Tests.Integration.ESS
                 essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), contact);
             }
 
-            return referrals.Concat(etransfers).ToArray();
+            var supports = referrals.Concat(etransfers).ToArray();
+            var householdMembers = file.era_era_evacuationfile_era_householdmember_EvacuationFileid.ToArray();
+            foreach (var support in supports)
+            {
+                var supportHouseholdMembers = householdMembers.TakeRandom();
+                foreach (var member in supportHouseholdMembers)
+                {
+                    essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
+                }
+            }
+
+            return supports;
         }
 
         private era_referralprint CreateReferralPrint(era_evacuationfile file, era_essteamuser member, IEnumerable<era_evacueesupport> supports)
