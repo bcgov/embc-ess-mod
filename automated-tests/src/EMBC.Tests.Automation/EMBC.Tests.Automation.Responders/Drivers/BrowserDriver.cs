@@ -13,7 +13,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
     {
         private readonly Lazy<IWebDriver> currentWebDriverLazy;
         private readonly Lazy<IConfiguration> configurationLazy;
-        private bool _isDisposed;
+        //private bool _isDisposed;
 
         public BrowserDriver()
         {
