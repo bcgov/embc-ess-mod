@@ -33,12 +33,16 @@ main {
   padding-top: 0px !important;
 }
 
-html,
-body {
+html {
   height: 100%;
+  overflow: auto;
 }
 body {
+  height: 100%;
   margin: 0;
+}
+app-root {
+  height: 100%;
 }
 
 .background {
