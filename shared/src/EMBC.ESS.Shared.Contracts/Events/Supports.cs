@@ -148,21 +148,21 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public class ClothingSupport : Support
     {
         public bool ExtremeWinterConditions { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string ApproverName { get; set; }
     }
 
     public class IncidentalsSupport : Support
     {
         public string ApprovedItems { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string ApproverName { get; set; }
     }
 
     public class FoodGroceriesSupport : Support
     {
         public int NumberOfDays { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string ApproverName { get; set; }
     }
 
@@ -171,7 +171,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public int NumberOfBreakfastsPerPerson { get; set; }
         public int NumberOfLunchesPerPerson { get; set; }
         public int NumberOfDinnersPerPerson { get; set; }
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 
     public class LodgingHotelSupport : Support
@@ -208,7 +208,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
 
     public class TransportationOtherSupport : Support
     {
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string TransportMode { get; set; }
     }
 

@@ -30,8 +30,8 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
 
             var supports = new Support[]
             {
-                new ClothingSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00, ApproverName = "test approver" },
-                new IncidentalsSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00, ApproverName = "test approver" },
+                new ClothingSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00m, ApproverName = "test approver" },
+                new IncidentalsSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00m, ApproverName = "test approver" },
             };
 
             foreach (var support in supports)
@@ -53,7 +53,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             {
                 FileId = fileId,
                 SupportDelivery = new Interac(),
-                TotalAmount = 100.00,
+                TotalAmount = 100.00m,
                 IncludedHouseholdMembers = householdMembers,
                 From = from.AddMinutes(1),
                 To = to.AddMinutes(1),
@@ -85,7 +85,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             {
                 FileId = fileId,
                 SupportDelivery = new Interac(),
-                TotalAmount = 100.00,
+                TotalAmount = 100.00m,
                 IncludedHouseholdMembers = householdMembers,
                 From = from,
                 To = to,

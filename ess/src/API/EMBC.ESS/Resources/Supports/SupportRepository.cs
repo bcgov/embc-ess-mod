@@ -55,47 +55,67 @@ namespace EMBC.ESS.Resources.Supports
         {
             var ctx = essContextFactory.Create();
 
-            var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId)).GetAllPagesAsync()).SingleOrDefault();
+            var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId)).ExecuteAsync(ct)).SingleOrDefault();
             if (support == null) throw new InvalidOperationException($"Support {cmd.SupportId} not found");
+            if (support.statuscode == (int)SupportStatus.Processing) throw new InvalidOperationException($"Support {cmd.SupportId} is already being processed");
 
-            var flagTypes = (await ctx.era_supportflagtypes.GetAllPagesAsync()).ToArray();
-            foreach (var flag in cmd.Flags)
-            {
-                var supportFlag = mapper.Map<era_supportflag>(flag);
-                ctx.AddToera_supportflags(supportFlag);
-                ctx.SetLink(supportFlag, nameof(era_supportflag.era_FlagType), flagTypes.Single(t => t.era_supportflagtypeid == supportFlag._era_flagtype_value));
-                ctx.SetLink(supportFlag, nameof(era_supportflag.era_EvacueeSupport), support);
-                if (flag is DuplicateSupportFlag dup)
-                {
-                    var duplicateSupport = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == dup.DuplicatedSupportId))
-                        .GetAllPagesAsync()).SingleOrDefault();
-                    if (duplicateSupport == null) throw new InvalidOperationException($"Support {dup.DuplicatedSupportId} not found");
-                    ctx.SetLink(supportFlag, nameof(era_supportflag.era_SupportDuplicate), duplicateSupport);
-                }
-            }
-            var queues = (await ctx.queues.GetAllPagesAsync()).ToArray();
-
-            var queue = queues.Single(q => q.queueid == (cmd.Flags.Any() ? ReviewQueueId : ApprovalQueueId));
-            var queueItem = new queueitem
-            {
-                queueitemid = Guid.NewGuid(),
-                objecttypecode = 10056 //support type picklist value
-            };
-
-            // create queue item
-            ctx.AddToqueueitems(queueItem);
-            ctx.SetLink(queueItem, nameof(queueItem.queueid), queue);
-            ctx.SetLink(queueItem, nameof(queueItem.objectid_era_evacueesupport), support);
-
-            // update support status
-            support.statuscode = (int)SupportStatus.PendingApproval;
+            //lock the support
+            var currentSupportStatus = (SupportStatus)support.statuscode;
+            SetSupportStatus(ctx, support, SupportStatus.Processing);
             ctx.UpdateObject(support);
+            await ctx.SaveChangesAsync(ct);
 
-            await ctx.SaveChangesAsync();
+            try
+            {
+                var flagTypes = (await ctx.era_supportflagtypes.GetAllPagesAsync()).ToArray();
+                foreach (var flag in cmd.Flags)
+                {
+                    var supportFlag = mapper.Map<era_supportflag>(flag);
+                    ctx.AddToera_supportflags(supportFlag);
+                    ctx.SetLink(supportFlag, nameof(era_supportflag.era_FlagType), flagTypes.Single(t => t.era_supportflagtypeid == supportFlag._era_flagtype_value));
+                    ctx.SetLink(supportFlag, nameof(era_supportflag.era_EvacueeSupport), support);
+                    if (flag is DuplicateSupportFlag dup)
+                    {
+                        var duplicateSupport = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == dup.DuplicatedSupportId))
+                            .GetAllPagesAsync()).SingleOrDefault();
+                        if (duplicateSupport == null) throw new InvalidOperationException($"Support {dup.DuplicatedSupportId} not found");
+                        ctx.SetLink(supportFlag, nameof(era_supportflag.era_SupportDuplicate), duplicateSupport);
+                    }
+                }
+                var queues = (await ctx.queues.GetAllPagesAsync()).ToArray();
 
-            ctx.DetachAll();
+                var queue = queues.Single(q => q.queueid == (cmd.Flags.Any() ? ReviewQueueId : ApprovalQueueId));
+                var queueItem = new queueitem
+                {
+                    queueitemid = Guid.NewGuid(),
+                    objecttypecode = 10056 //support type picklist value
+                };
 
-            return new AssignSupportToQueueCommandResult();
+                // create queue item
+                ctx.AddToqueueitems(queueItem);
+                ctx.SetLink(queueItem, nameof(queueItem.queueid), queue);
+                ctx.SetLink(queueItem, nameof(queueItem.objectid_era_evacueesupport), support);
+
+                // unlock the support
+                SetSupportStatus(ctx, support, SupportStatus.PendingApproval);
+                ctx.UpdateObject(support);
+
+                await ctx.SaveChangesAsync(ct);
+
+                return new AssignSupportToQueueCommandResult();
+            }
+            catch (Exception)
+            {
+                //unlock to the previous status
+                SetSupportStatus(ctx, support, currentSupportStatus);
+                await ctx.SaveChangesAsync(ct);
+                ctx.UpdateObject(support);
+                throw;
+            }
+            finally
+            {
+                ctx.DetachAll();
+            }
         }
 
         private async Task<ManageSupportCommandResult> Handle(ChangeSupportStatusCommand cmd, CancellationToken ct)
@@ -116,7 +136,7 @@ namespace EMBC.ESS.Resources.Supports
             return new ChangeSupportStatusCommandResult { Ids = changesSupportIds.ToArray() };
         }
 
-        private static void SetSupportStatus(EssContext ctx, era_evacueesupport support, SupportStatus status, string changeReason)
+        private static void SetSupportStatus(EssContext ctx, era_evacueesupport support, SupportStatus status, string? changeReason = null)
         {
             var supportDeliveryType = (SupportMethod)support.era_supportdeliverytype;
 

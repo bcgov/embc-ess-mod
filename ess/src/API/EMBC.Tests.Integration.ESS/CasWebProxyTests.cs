@@ -53,7 +53,7 @@ namespace EMBC.Tests.Integration.ESS
                 },
                 InteracEmail = $"{uniqueId}eraunittest@test.gov.bc.ca",
                 InteracMobileCountryCode = "1",
-                InteracMobileNumber = "1231231234",
+                InteracMobileNumber = "6040000000",
                 RemittanceMessage1 = "security question",
                 RemittanceMessage2 = "answer"
             };
