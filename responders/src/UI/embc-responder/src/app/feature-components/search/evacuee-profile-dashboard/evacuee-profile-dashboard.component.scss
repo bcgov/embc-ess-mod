@@ -208,3 +208,40 @@
   cursor: default !important;
   pointer-events: none;
 }
+
+.services-card-container {
+  position: relative;
+}
+
+.services-card-img-container {
+  left: 50px;
+  border-width: 0px;
+  position: absolute;
+  width: 127px;
+  height: 127px;
+  display: flex;
+  top: 45px;
+}
+
+.bc-services-card-img {
+  border-width: 0px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 127px;
+  height: 127px;
+}
+
+.services-card-border {
+  border-width: 0px;
+  position: absolute;
+  left: 45px;
+  top: 44px;
+  width: 137px;
+  height: 132px;
+  box-sizing: border-box;
+  border-width: 7px;
+  border-style: solid;
+  border-color: rgba(20, 89, 151, 1);
+  border-radius: 10px;
+}
