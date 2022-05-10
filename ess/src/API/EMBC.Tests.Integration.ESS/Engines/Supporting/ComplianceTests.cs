@@ -30,8 +30,8 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
 
             var supports = new Support[]
             {
-                new ClothingSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00, ApproverName = "test approver" },
-                new IncidentalsSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00, ApproverName = "test approver" },
+                new ClothingSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00m, ApproverName = "test approver" },
+                new IncidentalsSupport  { FileId = fileId, SupportDelivery = new Referral(), TotalAmount = 100.00m, ApproverName = "test approver" },
             };
 
             foreach (var support in supports)
@@ -53,10 +53,10 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             {
                 FileId = fileId,
                 SupportDelivery = new Interac(),
-                TotalAmount = 100.00,
+                TotalAmount = 100.00m,
                 IncludedHouseholdMembers = householdMembers,
-                From = from,
-                To = to,
+                From = from.AddMinutes(1),
+                To = to.AddMinutes(1),
                 CreatedBy = new TeamMember { Id = TestData.Tier4TeamMemberId }
             };
 
@@ -70,7 +70,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             var response = (CheckSupportComplianceResponse)await engine.Validate(new CheckSupportComplianceRequest { Supports = new[] { checkedSupport } });
             var flags = response.Flags.ShouldHaveSingleItem();
             flags.Key.Id.ShouldBe(checkedSupport.Id);
-            flags.Value.ShouldHaveSingleItem().ShouldBeOfType<DuplicateSupportFlag>().DuplicatedSupportId.ShouldBe(duplicateSupportId);
+            flags.Value.Where(f => f is DuplicateSupportFlag d && d.DuplicatedSupportId == duplicateSupportId).ShouldHaveSingleItem();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
@@ -85,11 +85,11 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             {
                 FileId = fileId,
                 SupportDelivery = new Interac(),
-                TotalAmount = 100.00,
+                TotalAmount = 100.00m,
                 IncludedHouseholdMembers = householdMembers,
                 From = from,
                 To = to,
-                ApproverName = "test approver",
+                ApproverName = TestHelper.GenerateNewUniqueId(TestData.TestPrefix),
                 CreatedBy = new TeamMember { Id = TestData.Tier4TeamMemberId }
             };
 
@@ -103,7 +103,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             var response = (CheckSupportComplianceResponse)await engine.Validate(new CheckSupportComplianceRequest { Supports = new[] { checkedSupport } });
             var flags = response.Flags.ShouldHaveSingleItem();
             flags.Key.Id.ShouldBe(checkedSupport.Id);
-            flags.Value.ShouldHaveSingleItem().ShouldBeOfType<AmountExceededSupportFlag>().Approver.ShouldBe(checkedSupport.ApproverName);
+            flags.Value.Where(f => f is AmountExceededSupportFlag d && d.Approver == checkedSupport.ApproverName).ShouldHaveSingleItem();
         }
     }
 }

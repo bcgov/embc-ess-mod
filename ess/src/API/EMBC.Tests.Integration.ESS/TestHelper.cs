@@ -117,8 +117,49 @@ namespace EMBC.Tests.Integration.ESS
             };
         }
 
+        public static IEnumerable<Support> CreateSupports(string prefix, EvacuationFile file)
+        {
+            var householdMemberIds = file.HouseholdMembers.Select(m => m.Id).ToArray();
+            var from = DateTime.UtcNow.AddDays(-1);
+            var to = DateTime.UtcNow.AddDays(2);
+            var supports = new Support[]
+            {
+                new ClothingSupport { TotalAmount =  RandomAmount() },
+                new IncidentalsSupport { TotalAmount = RandomAmount() },
+                new FoodGroceriesSupport {TotalAmount = RandomAmount()},
+                new FoodRestaurantSupport { TotalAmount = RandomAmount() },
+                new LodgingBilletingSupport() { NumberOfNights = RandomInt()},
+                new LodgingGroupSupport { NumberOfNights = RandomInt(), FacilityCommunityCode = file.EvacuatedFromAddress.Community },
+                new LodgingHotelSupport { NumberOfNights = RandomInt(), NumberOfRooms = RandomInt() },
+                new TransportationOtherSupport { TotalAmount = RandomAmount() },
+                new TransportationTaxiSupport { FromAddress = "test",ToAddress="test" },
+            };
+
+            Func<Support, SupportDelivery> createSupportDelivery = sup =>
+                sup switch
+                {
+                    IncidentalsSupport s => new Interac { NotificationEmail = $"{prefix}unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
+
+                    _ => new Referral { IssuedToPersonName = $"{prefix}-unitest" },
+                };
+
+            foreach (var support in supports)
+            {
+                support.FileId = file.Id;
+                support.IncludedHouseholdMembers = householdMemberIds.TakeRandom();
+                support.From = from;
+                support.To = to;
+                support.SupportDelivery = createSupportDelivery(support);
+            }
+
+            return supports;
+        }
+
         public static async Task<RegistrantProfile?> GetRegistrantByUserId(EventsManager manager, string userId) =>
             (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
+
+        public static async Task<RegistrantProfile?> GetRegistrantById(EventsManager manager, string id) =>
+            (await manager.Handle(new RegistrantsQuery { Id = id })).Items.SingleOrDefault();
 
         public static async Task<EvacuationFile?> GetEvacuationFileById(EventsManager manager, string fileId) =>
             (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.SingleOrDefault();
@@ -132,5 +173,9 @@ namespace EMBC.Tests.Integration.ESS
         public static IEnumerable<T> TakeRandom<T>(this T[] list) => list.TakeRandom(Random.Shared.Next(1, list.Length));
 
         public static IEnumerable<T> TakeRandom<T>(this T[] list, int numberOfItems) => list.Skip(Random.Shared.Next(list.Length - numberOfItems)).Take(numberOfItems);
+
+        public static decimal RandomAmount() => decimal.Round(Convert.ToDecimal(Random.Shared.NextDouble() * 100), 2);
+
+        public static int RandomInt(int min = 1, int max = 10) => Random.Shared.Next(min, max);
     }
 }
