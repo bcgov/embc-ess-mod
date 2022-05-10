@@ -306,7 +306,7 @@ namespace EMBC.ESS.Resources.Evacuations
                         .ToArray());
 
                 var naHouseholdMembers = (await ((DataServiceQuery<era_era_householdmember_era_needassessment>)ctx.era_era_householdmember_era_needassessmentset
-                    .Where(m => m.era_needassessmentid == file._era_currentneedsassessmentid_value))
+                    .Where(m => m.era_needassessmentid == file.era_CurrentNeedsAssessmentid.era_needassessmentid))
                     .GetAllPagesAsync(ct))
                     .ToArray();
 

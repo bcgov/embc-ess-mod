@@ -60,6 +60,35 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task Query_FileByNeedsAssessmentId_ReturnsHouseholdMembersForThatAssessment()
+        {
+            var fileToUpdate = (await evacuationRepository.Query(new EvacuationFilesQuery
+            {
+                FileId = TestEssFileNumber,
+            })).Items.Cast<EvacuationFile>().Single();
+
+            var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
+            var needsAssessment = fileToUpdate.NeedsAssessment;
+
+            needsAssessment.HouseholdMembers = needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant);
+            needsAssessment.HouseholdMembers.ShouldHaveSingleItem();
+
+            var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = fileToUpdate })).Id;
+
+            var onceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
+            var updatedNeedsAssessment = onceUpdatedFile.NeedsAssessment;
+            var targetNeedsAssessmentId = updatedNeedsAssessment.Id;
+            updatedNeedsAssessment.HouseholdMembers = fileToUpdate.HouseholdMembers;
+            updatedNeedsAssessment.HouseholdMembers.Count().ShouldBeGreaterThan(1);
+
+            fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = onceUpdatedFile })).Id;
+
+            var twiceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = targetNeedsAssessmentId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
+
+            twiceUpdatedFile.NeedsAssessment.HouseholdMembers.ShouldHaveSingleItem();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanGetNoEvacuationFilesByRelatedNeedsAssessmentIdOnly()
         {
             var caseQuery = new EvacuationFilesQuery
