@@ -406,6 +406,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .Select(n =>
                 {
                     n.era_EvacuationFile.era_CurrentNeedsAssessmentid = n;
+                    n.era_EvacuationFile._era_currentneedsassessmentid_value = n.era_needassessmentid;
                     return n.era_EvacuationFile;
                 });
         }
