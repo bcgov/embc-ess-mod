@@ -8,11 +8,12 @@ namespace EMBC.Tests.Automation.Responders.Drivers
     /// <summary>
     /// Manages a browser instance using Selenium
     /// </summary>
-    public class BrowserDriver : IDisposable
+    //public class BrowserDriver : IDisposable
+    public class BrowserDriver
     {
         private readonly Lazy<IWebDriver> currentWebDriverLazy;
         private readonly Lazy<IConfiguration> configurationLazy;
-        private bool _isDisposed;
+        //private bool _isDisposed;
 
         public BrowserDriver()
         {
@@ -55,7 +56,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
         /// </summary>
-        public void Dispose()
+        /*public void Dispose()
         {
             if (_isDisposed)
             {
@@ -68,6 +69,6 @@ namespace EMBC.Tests.Automation.Responders.Drivers
             }
 
             _isDisposed = true;
-        }
+        }*/
     }
 }
