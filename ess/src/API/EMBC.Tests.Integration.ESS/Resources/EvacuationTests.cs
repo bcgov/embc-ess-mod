@@ -67,9 +67,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 FileId = TestEssFileNumber,
             })).Items.Cast<EvacuationFile>().Single();
 
-            var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
             var needsAssessment = fileToUpdate.NeedsAssessment;
-
             needsAssessment.HouseholdMembers = needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant);
             needsAssessment.HouseholdMembers.ShouldHaveSingleItem();
 
@@ -84,7 +82,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = onceUpdatedFile })).Id;
 
             var twiceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = targetNeedsAssessmentId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
-
             twiceUpdatedFile.NeedsAssessment.HouseholdMembers.ShouldHaveSingleItem();
         }
 
