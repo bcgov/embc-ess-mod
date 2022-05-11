@@ -43,7 +43,6 @@
 
                 <input
                   matInput
-                  type="password"
                   maxlength="50"
                   autocomplete="off"
                   formControlName="securityPhrase"
@@ -78,18 +77,6 @@
                 </mat-error>
               </mat-form-field>
             </div>
-
-            <!-- <div class="row checkbox-row" *ngIf="wizardType === 'new-ess-file'">
-              <div class="col-12">
-                <mat-checkbox
-                  class="example-margin"
-                  (change)="bypassCheckboxChanged($event)"
-                  formControlName="bypassPhrase"
-                >
-                  Bypass security phrase for manual entry of paper ESS file.
-                </mat-checkbox>
-              </div>
-            </div> -->
 
             <div
               class="row edit-phrase-row"
