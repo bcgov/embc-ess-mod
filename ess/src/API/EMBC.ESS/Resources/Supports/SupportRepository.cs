@@ -32,6 +32,7 @@ namespace EMBC.ESS.Resources.Supports
                 SaveEvacuationFileSupportsCommand c => await Handle(c, ct),
                 ChangeSupportStatusCommand c => await Handle(c, ct),
                 SubmitSupportForApprovalCommand c => await Handle(c, ct),
+                FailSupportCommand c => await Handle(c, ct),
 
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
@@ -48,10 +49,7 @@ namespace EMBC.ESS.Resources.Supports
             };
         }
 
-        private static readonly Guid ApprovalQueueId = new("a4f0fbbe-89a1-ec11-b831-00505683fbf4");
-        private static readonly Guid ReviewQueueId = new("e969aae7-8aa1-ec11-b831-00505683fbf4");
-
-        private async Task<AssignSupportToQueueCommandResult> Handle(SubmitSupportForApprovalCommand cmd, CancellationToken ct)
+        private async Task<SubmitSupportForApprovalCommandResult> Handle(SubmitSupportForApprovalCommand cmd, CancellationToken ct)
         {
             var ctx = essContextFactory.Create();
 
@@ -82,19 +80,10 @@ namespace EMBC.ESS.Resources.Supports
                         ctx.SetLink(supportFlag, nameof(era_supportflag.era_SupportDuplicate), duplicateSupport);
                     }
                 }
-                var queues = (await ctx.queues.GetAllPagesAsync()).ToArray();
+                var queues = (await ctx.queues.GetAllPagesAsync(ct)).ToArray();
 
-                var queue = queues.Single(q => q.queueid == (cmd.Flags.Any() ? ReviewQueueId : ApprovalQueueId));
-                var queueItem = new queueitem
-                {
-                    queueitemid = Guid.NewGuid(),
-                    objecttypecode = 10056 //support type picklist value
-                };
-
-                // create queue item
-                ctx.AddToqueueitems(queueItem);
-                ctx.SetLink(queueItem, nameof(queueItem.queueid), queue);
-                ctx.SetLink(queueItem, nameof(queueItem.objectid_era_evacueesupport), support);
+                var queue = queues.Single(q => q.queueid == (cmd.Flags.Any() ? SupportQueue.Review.QueueId : SupportQueue.Approval.QueueId));
+                AssignSupportToQueue(ctx, support, queue);
 
                 // unlock the support
                 SetSupportStatus(ctx, support, SupportStatus.PendingApproval);
@@ -102,7 +91,7 @@ namespace EMBC.ESS.Resources.Supports
 
                 await ctx.SaveChangesAsync(ct);
 
-                return new AssignSupportToQueueCommandResult();
+                return new SubmitSupportForApprovalCommandResult();
             }
             catch (Exception)
             {
@@ -116,6 +105,51 @@ namespace EMBC.ESS.Resources.Supports
             {
                 ctx.DetachAll();
             }
+        }
+
+        private static void AssignSupportToQueue(EssContext ctx, era_evacueesupport support, queue queue)
+        {
+            var queueItem = new queueitem
+            {
+                queueitemid = Guid.NewGuid(),
+                objecttypecode = 10056 //support type pick list value
+            };
+
+            // create queue item
+            ctx.AddToqueueitems(queueItem);
+            ctx.SetLink(queueItem, nameof(queueItem.queueid), queue);
+            ctx.SetLink(queueItem, nameof(queueItem.objectid_era_evacueesupport), support);
+        }
+
+        private async Task<FailSupportCommandResult> Handle(FailSupportCommand cmd, CancellationToken ct)
+        {
+            var ctx = essContextFactory.Create();
+
+            var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync(ct);
+            if (support == null) throw new InvalidOperationException($"Support {cmd.SupportId} not found");
+
+            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
+
+            var queue = await ctx.queues.Where(q => q.queueid == SupportQueue.Error.QueueId).SingleOrDefaultAsync(ct);
+            if (queue == null) throw new InvalidOperationException($"Error queue {SupportQueue.Error.QueueId} not found");
+            AssignSupportToQueue(ctx, support, queue);
+            SetSupportStatus(ctx, support, SupportStatus.UnderReview);
+            support.era_etransferapproved = 174360001; //no
+            support.era_etransfertransactioncreated = false;
+            ctx.UpdateObject(support);
+
+            var bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
+            if (bpf != null)
+            {
+                //activate the business workflow to a specific stage
+                ctx.ActivateObject(bpf, 1);
+                var processStage = await ctx.processstages.Where(ps => ps.stagename == "Internal Qualified Receiver Review").SingleOrDefaultAsync(ct);
+                if (processStage != null) ctx.SetLink(bpf, nameof(era_essevacueeetransfersupport.activestageid), processStage);
+            }
+
+            await ctx.SaveChangesAsync(ct);
+
+            return new FailSupportCommandResult();
         }
 
         private async Task<ManageSupportCommandResult> Handle(ChangeSupportStatusCommand cmd, CancellationToken ct)
@@ -243,7 +277,6 @@ namespace EMBC.ESS.Resources.Supports
             if (file == null) throw new ArgumentException($"Evacuation file {cmd.FileId} not found");
 
             await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), ct);
-            var fileHouseholdMembersIds = file.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(m => m.era_householdmemberid).ToArray();
 
             var supports = new List<era_evacueesupport>();
 

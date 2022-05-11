@@ -802,13 +802,15 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(ProcessPendingPaymentsCommand _)
         {
+            var ct = new CancellationTokenSource().Token;
             var foundPayments = true;
+
             while (foundPayments)
             {
                 var pendingPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
                 {
                     ByStatus = PaymentStatus.Pending,
-                    LimitNumberOfItems = 20
+                    LimitNumberOfItems = 25
                 })).Items.ToArray();
 
                 foundPayments = pendingPayments.Any();
@@ -818,25 +820,33 @@ namespace EMBC.ESS.Managers.Events
                     logger.LogInformation("Found {0} pending payments", pendingPayments.Length);
 
                     var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
-                    var casPayments = pendingPayments.Select(p => new CasPayment { PaymentId = p.Id });
-                    var result = (SendPaymentToCasResponse)await paymentRepository.Manage(new SendPaymentToCasRequest
+                    var result = (IssuePaymentsResponse)await paymentRepository.Manage(new IssuePaymentsRequest
                     {
-                        CasBatchName = casBatchName,
-                        Items = casPayments
+                        BatchId = casBatchName,
+                        PaymentIds = pendingPayments.Select(p => p.Id)
                     });
 
-                    if (result.SentItems.Any())
+                    logger.LogInformation("Batch {0} results: {1} issued; {2} failed", casBatchName, result.IssuedPayments.Count(), result.FailedPayments.Count());
+                    await Parallel.ForEachAsync(result.FailedPayments, ct, async (failedPayment, ct) =>
                     {
-                        logger.LogInformation("Batch {0}: sent {1} payments to CAS", casBatchName, result.SentItems.Count());
-                    }
-                    if (result.FailedItems.Any())
-                    {
-                        logger.LogInformation("Batch {0}: failed to send {1} payments to CAS", casBatchName, result.FailedItems.Count());
-                        foreach (var failedItem in result.FailedItems)
+                        switch (failedPayment.Error)
                         {
-                            logger.LogError("Failed to send payment {0} to CAS: {1}", failedItem.Id, failedItem.Reason);
+                            case CasException e:
+                                await paymentRepository.Manage(new UpdateCasPaymentStatusRequest { PaymentId = failedPayment.Id, ToPaymentStatus = PaymentStatus.Cancelled });
+                                var payment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ById = failedPayment.Id })).Items
+                                    .Cast<InteracSupportPayment>()
+                                    .SingleOrDefault();
+                                await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
+                                {
+                                    await supportRepository.Manage(new FailSupportCommand { SupportId = supportId });
+                                });
+                                break;
+
+                            default:
+                                logger.LogError(failedPayment.Error, $"Failed to issue payment {failedPayment.Id}: {failedPayment.Error?.Message}");
+                                break;
                         }
-                    }
+                    });
                 }
             }
         }

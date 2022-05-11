@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using EMBC.ESS.Resources.Evacuations;
@@ -11,20 +10,20 @@ namespace EMBC.Tests.Integration.ESS
 {
     public class DynamicsTestData
     {
-        private Random random = new Random();
+        private readonly Random random = new Random();
 
-        private string runId = Guid.NewGuid().ToString().Substring(0, 4);
+        private readonly string runId = Guid.NewGuid().ToString().Substring(0, 4);
         private readonly EssContext essContext;
 
         private readonly string testPrefix;
-        private readonly era_essteam team;
-        private readonly era_essteam otherTeam;
+        private readonly era_essteam testTeam;
+        private readonly era_essteam otherTestTeam;
         private readonly era_essteamuser tier4TeamMember;
         private readonly era_essteamuser otherTeamMember;
         private readonly string activeTaskId;
         private readonly string inactiveTaskId;
         private readonly era_jurisdiction[] jurisdictions;
-        private readonly contact contact;
+        private readonly contact testContact;
         private readonly era_task activeTask;
         private readonly era_task inactiveTask;
         private readonly era_evacuationfile testEvacuationfile;
@@ -39,21 +38,21 @@ namespace EMBC.Tests.Integration.ESS
         public string[] Commmunities => jurisdictions.Select(j => j.era_jurisdictionid.GetValueOrDefault().ToString()).ToArray();
 
         public string TestPrefix => testPrefix;
-        public string TeamId => team.era_essteamid.GetValueOrDefault().ToString();
-        public string TeamName => team.era_name;
-        public string OtherTeamId => otherTeam.era_essteamid.GetValueOrDefault().ToString();
-        public string TeamCommunityId => team.era_ESSTeam_ESSTeamArea_ESSTeamID.First()._era_jurisdictionid_value.GetValueOrDefault().ToString();
+        public string TeamId => testTeam.era_essteamid.GetValueOrDefault().ToString();
+        public string TeamName => testTeam.era_name;
+        public string OtherTeamId => otherTestTeam.era_essteamid.GetValueOrDefault().ToString();
+        public string TeamCommunityId => testTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.First()._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string OtherCommunityId => jurisdictions.Last().era_jurisdictionid.GetValueOrDefault().ToString();
         public string Tier4TeamMemberId => tier4TeamMember.era_essteamuserid.GetValueOrDefault().ToString();
         public string OtherTeamMemberId => otherTeamMember.era_essteamuserid.GetValueOrDefault().ToString();
         public string ActiveTaskId => activeTaskId;
         public string ActiveTaskCommunity => activeTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string InactiveTaskId => inactiveTaskId;
-        public string ContactId => contact.contactid.GetValueOrDefault().ToString();
-        public string ContactUserId => contact.era_bcservicescardid;
-        public string ContactFirstName => contact.firstname;
-        public string ContactLastName => contact.lastname;
-        public string ContactDateOfBirth => $"{contact.birthdate.GetValueOrDefault().Month:D2}/{contact.birthdate.GetValueOrDefault().Day:D2}/{contact.birthdate.GetValueOrDefault().Year:D4}";
+        public string ContactId => testContact.contactid.GetValueOrDefault().ToString();
+        public string ContactUserId => testContact.era_bcservicescardid;
+        public string ContactFirstName => testContact.firstname;
+        public string ContactLastName => testContact.lastname;
+        public string ContactDateOfBirth => $"{testContact.birthdate.GetValueOrDefault().Month:D2}/{testContact.birthdate.GetValueOrDefault().Day:D2}/{testContact.birthdate.GetValueOrDefault().Year:D4}";
         public string EvacuationFileId => testEvacuationfile.era_name;
         public string PaperEvacuationFileId => testPaperEvacuationFile.era_name;
         public string PaperEvacuationFilePaperId => testPaperEvacuationFile.era_paperbasedessfile;
@@ -104,38 +103,38 @@ namespace EMBC.Tests.Integration.ESS
             if (existingTeam != null)
             {
                 essContext.LoadProperty(existingTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
-                this.team = existingTeam;
+                this.testTeam = existingTeam;
 
-                this.CreateTeamMember(team, Guid.NewGuid(), "-second");
-                CreateTeamMember(team, Guid.NewGuid(), "-third");
-                CreateTeamMember(team, Guid.NewGuid(), "-fourth");
+                this.CreateTeamMember(testTeam, Guid.NewGuid(), "-second");
+                CreateTeamMember(testTeam, Guid.NewGuid(), "-third");
+                CreateTeamMember(testTeam, Guid.NewGuid(), "-fourth");
             }
             else
             {
-                this.team = CreateTeam(Guid.NewGuid());
+                this.testTeam = CreateTeam(Guid.NewGuid());
             }
             var otherTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team-other").SingleOrDefault();
             if (otherTeam != null)
             {
                 essContext.LoadProperty(otherTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
-                this.otherTeam = otherTeam;
+                this.otherTestTeam = otherTeam;
             }
             else
             {
-                this.otherTeam = CreateTeam(Guid.NewGuid(), "-other");
+                this.otherTestTeam = CreateTeam(Guid.NewGuid(), "-other");
             }
             this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(activeTaskId, DateTime.UtcNow);
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(inactiveTaskId, DateTime.UtcNow.AddDays(-7));
 
             this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").SingleOrDefault()
-                ?? CreateTeamMember(team, Guid.NewGuid());
+                ?? CreateTeamMember(testTeam, Guid.NewGuid());
             this.otherTeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first-other" && tu.era_lastname == this.testPrefix + "-last-other").SingleOrDefault()
-                ?? CreateTeamMember(this.otherTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Teams.TeamUserRoleOptionSet.Tier1);
-            this.contact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").SingleOrDefault() ?? CreateContact(); ;
+                ?? CreateTeamMember(this.otherTestTeam, Guid.NewGuid(), "-other", EMBC.ESS.Resources.Teams.TeamUserRoleOptionSet.Tier1);
+            this.testContact = essContext.contacts.Where(c => c.firstname == this.testPrefix + "-first" && c.lastname == this.testPrefix + "-last").SingleOrDefault() ?? CreateContact();
 
-            this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").SingleOrDefault() ?? CreateSupplier("A", this.team);
-            this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").SingleOrDefault() ?? CreateSupplier("B", this.team);
-            this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").SingleOrDefault() ?? CreateSupplier("C", this.otherTeam);
+            this.supplierA = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-A").SingleOrDefault() ?? CreateSupplier("A", this.testTeam);
+            this.supplierB = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-B").SingleOrDefault() ?? CreateSupplier("B", this.testTeam);
+            this.supplierC = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-C").SingleOrDefault() ?? CreateSupplier("C", this.otherTestTeam);
             this.inactiveSupplier = essContext.era_suppliers.Where(c => c.era_name == testPrefix + "-supplier-inactive").SingleOrDefault() ?? CreateSupplier("inactive", null);
 
             var evacuationfile = essContext.era_evacuationfiles
@@ -145,14 +144,13 @@ namespace EMBC.Tests.Integration.ESS
 
             if (evacuationfile == null)
             {
-                evacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-digital");
+                evacuationfile = CreateEvacuationFile(this.testContact, testPrefix + "-digital");
             }
             else
             {
-                essContext.LoadProperty(evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
                 essContext.LoadProperty(evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
             }
-            CreateEvacueeSupports(evacuationfile, this.contact, this.tier4TeamMember, runId);
+            CreateEvacueeSupports(evacuationfile, this.testContact, this.tier4TeamMember, runId);
 
             var paperEvacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
@@ -161,14 +159,13 @@ namespace EMBC.Tests.Integration.ESS
 
             if (paperEvacuationfile == null)
             {
-                paperEvacuationfile = CreateEvacuationFile(this.contact, testPrefix + "-paper", testPrefix + "-paper");
+                paperEvacuationfile = CreateEvacuationFile(this.testContact, testPrefix + "-paper", testPrefix + "-paper");
             }
             else
             {
-                essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
                 essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
             }
-            CreateEvacueeSupports(paperEvacuationfile, this.contact, this.tier4TeamMember, runId);
+            CreateEvacueeSupports(paperEvacuationfile, this.testContact, this.tier4TeamMember, runId);
 
             essContext.SaveChanges();
 
@@ -206,10 +203,10 @@ namespace EMBC.Tests.Integration.ESS
             };
             essContext.AddToera_essteams(team);
 
-            var assignedCommunities = essContext.era_essteamareas.ToArray().Select(a => a._era_jurisdictionid_value).OrderBy(id => id).ToList();
-            if (this.team != null)
+            var assignedCommunities = essContext.era_essteamareas.Select(a => a._era_jurisdictionid_value).OrderBy(id => id).ToList();
+            if (this.testTeam != null)
             {
-                assignedCommunities.Add(this.team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value);
+                assignedCommunities.Add(this.testTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value);
             }
 
             var jurisdictionsToAssign = jurisdictions.Where(j => !assignedCommunities.Contains(j.era_jurisdictionid.GetValueOrDefault())).Take(1).ToArray();
@@ -254,7 +251,7 @@ namespace EMBC.Tests.Integration.ESS
             };
             essContext.AddToera_tasks(task);
 
-            var jurisdiction = jurisdictions.Where(j => j.era_jurisdictionid == team.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value).SingleOrDefault();
+            var jurisdiction = jurisdictions.SingleOrDefault(j => j.era_jurisdictionid == testTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value);
             if (jurisdiction != null)
             {
                 essContext.SetLink(task, nameof(era_task.era_JurisdictionID), jurisdiction);
@@ -325,7 +322,7 @@ namespace EMBC.Tests.Integration.ESS
                 era_isprimaryregistrant = true
             };
 
-            var householdMembers = Enumerable.Range(1, random.Next(1, 10)).Select(i => new era_householdmember
+            var householdMembers = Enumerable.Range(1, random.Next(1, 5)).Select(i => new era_householdmember
             {
                 era_householdmemberid = Guid.NewGuid(),
                 era_dateofbirth = new Date(2000 + i, i, i),
@@ -360,7 +357,7 @@ namespace EMBC.Tests.Integration.ESS
             return file;
         }
 
-        private IEnumerable<era_evacueesupport> CreateEvacueeSupports(era_evacuationfile file, contact contact, era_essteamuser creator, string runId)
+        private void CreateEvacueeSupports(era_evacuationfile file, contact contact, era_essteamuser creator, string runId)
         {
             var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
             var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
@@ -394,7 +391,6 @@ namespace EMBC.Tests.Integration.ESS
                 essContext.AddToera_evacueesupports(support);
                 essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);
                 essContext.SetLink(support, nameof(era_evacueesupport.era_IssuedById), creator);
-                essContext.SetLink(support, nameof(era_evacueesupport.era_PayeeId), contact);
             }
 
             foreach (var support in etransfers)
@@ -415,28 +411,6 @@ namespace EMBC.Tests.Integration.ESS
                     essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
                 }
             }
-
-            return supports;
-        }
-
-        private era_referralprint CreateReferralPrint(era_evacuationfile file, era_essteamuser member, IEnumerable<era_evacueesupport> supports)
-        {
-            var referralPrint = new era_referralprint()
-            {
-                era_referralprintid = Guid.NewGuid(),
-                era_name = testPrefix + "-referral",
-            };
-
-            essContext.AddToera_referralprints(referralPrint);
-            essContext.SetLink(referralPrint, nameof(era_referralprint.era_ESSFileId), file);
-            essContext.SetLink(referralPrint, nameof(era_referralprint.era_RequestingUserId), member);
-
-            foreach (var support in supports)
-            {
-                essContext.AddLink(referralPrint, nameof(era_referralprint.era_era_referralprint_era_evacueesupport), support);
-            }
-
-            return referralPrint;
         }
 
         private era_supplier CreateSupplier(string identifier, era_essteam? assignedTeam)
@@ -457,7 +431,7 @@ namespace EMBC.Tests.Integration.ESS
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCountry), canada);
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedProvinceState), bc);
 
-            if (assignedTeam != null) AssignSupplierToTeam(supplier, team);
+            if (assignedTeam != null) AssignSupplierToTeam(supplier, testTeam);
 
             return supplier;
         }

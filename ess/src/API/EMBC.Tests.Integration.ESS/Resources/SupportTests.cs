@@ -283,7 +283,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SubmitSupportForApproval_SupportWithFlags_AssignedToApprovalQueue()
         {
-            var uniqueId = TestData.TestPrefix;
             var householdMembers = TestData.HouseholdMemberIds;
             var now = DateTime.UtcNow;
             var fileId = TestData.EvacuationFileId;
@@ -329,6 +328,17 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var pendingApprovalSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
             pendingApprovalSupport.Status.ShouldBe(SupportStatus.PendingApproval);
             pendingApprovalSupport.Flags.ShouldHaveSingleItem().ShouldBeAssignableTo<AmountOverridenSupportFlag>().ShouldNotBeNull().Approver.ShouldBe(flags[0].Approver);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task FailSupport_AssignedToErrorQueue()
+        {
+            var supportId = TestData.CurrentRunETransferSupportIds.TakeRandom(1).Single();
+
+            await supportRepository.Manage(new FailSupportCommand { SupportId = supportId });
+
+            var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
+            support.Status.ShouldBe(SupportStatus.UnderReview);
         }
     }
 }
