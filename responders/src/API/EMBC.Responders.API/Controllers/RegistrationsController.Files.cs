@@ -554,10 +554,9 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask))
                 .AfterMap((s, d) =>
                 {
-                    var primaryRegistrant = s.HouseholdMembers.SingleOrDefault(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == s.PrimaryRegistrantId);
-                    if (primaryRegistrant == null) throw new Exception($"Could not find the primary registrant in household member list");
-                    d.PrimaryRegistrantFirstName = primaryRegistrant.FirstName;
-                    d.PrimaryRegistrantLastName = primaryRegistrant.LastName;
+                    var primaryRegistrant = s.HouseholdMembers.FirstOrDefault(m => m.IsPrimaryRegistrant);
+                    d.PrimaryRegistrantFirstName = primaryRegistrant?.FirstName;
+                    d.PrimaryRegistrantLastName = primaryRegistrant?.LastName;
                 })
                 ;
 
