@@ -20,7 +20,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             handleBars.RegisterHelper("zeroIndex", (output, context, arguments) =>
             {
                 var incoming = (string)arguments[0];
-                output.WriteSafeString(incoming[0]);
+                output.WriteSafeString(incoming.ToUpperInvariant()[0]);
             });
             handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
             {
@@ -116,6 +116,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 var volunteerFirstName = requestingUser.FirstName;
                 var volunteerLastName = requestingUser.LastName;
                 var itemResult = template(summary);
+                var essNumber = summary.EssNumber;
                 items.Append(itemResult);
 
                 if (summaryBreakCount == 3 || printedCount == summaryItems.Count())
@@ -124,7 +125,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                     handlebars.RegisterTemplate("summaryItemsPartial", items.ToString());
 
                     var mainTemplate = handlebars.Compile(await LoadTemplate(ReferalMainViews.Summary.ToString()));
-                    var data = new { volunteerFirstName, volunteerLastName, purchaserName, displayWatermark };
+                    var data = new { volunteerFirstName, volunteerLastName, purchaserName, displayWatermark, essNumber };
                     html.Append(mainTemplate(data));
                     html.Append(PageBreak);
                     items.Clear();

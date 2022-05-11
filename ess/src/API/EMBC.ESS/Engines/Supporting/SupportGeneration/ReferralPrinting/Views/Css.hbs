@@ -27,8 +27,6 @@
     .content {
         width: 21.6cm;
         padding: 0 0.75cm;
-        background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NDcuMDkgNTQ3LjA5Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZvbnQtc2l6ZTo3MnB4O2ZpbGw6I2YxZjJmMjtmb250LWZhbWlseTpNeXJpYWRQcm8tQm9sZCwgTXlyaWFkIFBybztmb250LXdlaWdodDo3MDA7fS5jbHMtMntsZXR0ZXItc3BhY2luZzowLjAzZW07fS5jbHMtM3tsZXR0ZXItc3BhY2luZzotMC4wM2VtO30uY2xzLTR7bGV0dGVyLXNwYWNpbmc6LTAuMDFlbTt9LmNscy01e2xldHRlci1zcGFjaW5nOjAuMDJlbTt9LmNscy02e2xldHRlci1zcGFjaW5nOjAuMDFlbTt9LmNscy03e2xldHRlci1zcGFjaW5nOi0wLjAxZW07fS5jbHMtOHtsZXR0ZXItc3BhY2luZzowLjAyZW07fS5jbHMtOXtsZXR0ZXItc3BhY2luZzowZW07fS5jbHMtMTB7bGV0dGVyLXNwYWNpbmc6MC4wMWVtO30uY2xzLTExe2xldHRlci1zcGFjaW5nOi0wLjA3ZW07fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT5Bc3NldCAxPC90aXRsZT48ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiPjx0ZXh0IGNsYXNzPSJjbHMtMSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTIuNzMgNDIuNjEpIHJvdGF0ZSg0NSkiPjx0c3BhbiBjbGFzcz0iY2xzLTIiPkU8L3RzcGFuPjx0c3BhbiBjbGFzcz0iY2xzLTMiIHg9IjQwLjMyIiB5PSIwIj5WPC90c3Bhbj48dHNwYW4gY2xhc3M9ImNscy00IiB4PSI4My43MyIgeT0iMCI+QTwvdHNwYW4+PHRzcGFuIGNsYXNzPSJjbHMtNSIgeD0iMTMwLjYxIiB5PSIwIj5DVUU8L3RzcGFuPjx0c3BhbiBjbGFzcz0iY2xzLTYiIHg9IjI2NS4zMiIgeT0iMCI+RSA8L3RzcGFuPjx0c3BhbiBjbGFzcz0iY2xzLTciIHg9IjMxOS42IiB5PSIwIj5DPC90c3Bhbj48dHNwYW4gY2xhc3M9ImNscy04IiB4PSIzNjEuNzkiIHk9IjAiPk88L3RzcGFuPjx0c3BhbiBjbGFzcz0iY2xzLTkiIHg9IjQxNC44NiIgeT0iMCI+UDwvdHNwYW4+PHRzcGFuIGNsYXNzPSJjbHMtNiIgeD0iNDU2LjY5IiB5PSIwIj5ZPC90c3Bhbj48dHNwYW4gY2xhc3M9ImNscy0xMCIgeD0iNTAwLjc1IiB5PSIwIj4gPC90c3Bhbj48dHNwYW4gY2xhc3M9ImNscy04IiB4PSI1MTYuMDIiIHk9IjAiPk9OPC90c3Bhbj48dHNwYW4gY2xhc3M9ImNscy0xMSIgeD0iNjIwLjIiIHk9IjAiPkw8L3RzcGFuPjx0c3BhbiB4PSI2NTIuMDIiIHk9IjAiPlk8L3RzcGFuPjwvdGV4dD48L2c+PC9nPjwvc3ZnPg==');
-        background-repeat: repeat-y;
     }
 
     body {
@@ -556,6 +554,21 @@
         position: absolute;
         top: 8cm;
         left: -1.5cm;
+        text-transform: uppercase;
+        word-wrap: break-word;
+        text-align: center;
+    }
+
+    .summary-watermark {
+        transform: rotate(42deg);
+        opacity: 0.4;
+        color: #ccc;
+        font-size: 6em;
+        font-weight: bold;
+        z-index: -5000;
+        position: absolute;
+        top: 10cm;
+        left: -1cm;
         text-transform: uppercase;
         word-wrap: break-word;
         text-align: center;
