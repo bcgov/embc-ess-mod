@@ -10,7 +10,7 @@ namespace EMBC.ESS.Resources.Reports
         public Mappings()
         {
             CreateMap<era_householdmember, Evacuee>()
-                .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_name))
+                .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_paperbasedessfile ?? s.era_EvacuationFileid.era_name))
                 .ForMember(d => d.RegistrationCompleted, opts => opts.Ignore())
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_name))
                 .ForMember(d => d.TaskStartDate, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_TaskId == null ? null : s.era_EvacuationFileid.era_TaskId.era_taskstartdate.Value.UtcDateTime.ToPST().ToString("yyyy/MM/dd")))
@@ -157,7 +157,7 @@ namespace EMBC.ESS.Resources.Reports
             };
 
             CreateMap<era_evacueesupport, Support>()
-                .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_name))
+                .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_paperbasedessfile ?? s.era_EvacuationFileId.era_name))
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_name))
                 .ForMember(d => d.TaskStartDate, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_taskstartdate.Value.UtcDateTime.ToPST().ToString("yyyy/MM/dd")))
                 .ForMember(d => d.TaskStartTime, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_taskstartdate.Value.UtcDateTime.ToPST().ToString("hh:mm tt")))
@@ -172,7 +172,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.RegistrationCompletedDate, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileId.era_registrationcompleteddate.Value.UtcDateTime.ToPST().ToString("yyyy/MM/dd") : null))
                 .ForMember(d => d.RegistrationCompletedTime, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_registrationcompleteddate.HasValue ? s.era_EvacuationFileId.era_registrationcompleteddate.Value.UtcDateTime.ToPST().ToString("hh:mm tt") : null))
                 .ForMember(d => d.PurchaserOfGoods, opts => opts.MapFrom(s => s.era_purchaserofgoods))
-                .ForMember(d => d.SupportNumber, opts => opts.MapFrom(s => s.era_name))
+                .ForMember(d => d.SupportNumber, opts => opts.MapFrom(s => s.era_manualsupport ?? s.era_name))
                 .ForMember(d => d.SupportType, opts => opts.MapFrom(s => resolveSupportType(s.era_supporttype)))
                 .ForMember(d => d.SubSupportType, opts => opts.MapFrom(s => resolveSupportSubType(s.era_supporttype)))
                 .ForMember(d => d.ValidFromDate, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime.ToPST().ToString("yyyy/MM/dd") : null))
