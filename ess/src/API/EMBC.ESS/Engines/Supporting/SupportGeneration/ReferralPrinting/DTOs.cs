@@ -69,6 +69,16 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public string FromTime { get; set; }
         public string ToDate { get; set; }
         public string ToTime { get; set; }
+        public string TotalAmountPrinted { get; set; }
+        public int NumBreakfasts { get; set; }
+        public int NumLunches { get; set; }
+        public int NumDinners { get; set; }
+        public int NumDaysMeals { get; set; }
+        public int NumNights { get; set; }
+        public int NumRooms { get; set; }
+        public string FromAddress { get; set; }
+        public string ToAddress { get; set; }
+        public string OtherTransportModeDetails { get; set; }
         public PrintSupplier Supplier { get; set; }
         public bool IsEtransfer { get; set; }
         public NotificationInformation NotificationInformation { get; set; }

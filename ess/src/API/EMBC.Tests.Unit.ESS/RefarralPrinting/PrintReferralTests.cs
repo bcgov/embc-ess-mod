@@ -126,7 +126,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                         .RuleFor(o => o.Province, f => f.Address.State())
                         .Generate())
                     .RuleFor(o => o.Evacuees, f => f.Make(f.Random.Number(20), () => new Faker<PrintEvacuee>()
-                        .RuleFor(o => o.EvacueeTypeCode, f => f.PickRandom(new[] { "M", "A", "C" }))
+                        .RuleFor(o => o.EvacueeTypeCode, f => f.PickRandom(new[] { "F", "A", "C" }))
                         .RuleFor(o => o.FirstName, f => f.Person.FirstName)
                         .RuleFor(o => o.LastName, f => f.Person.LastName)
                         .Generate()))
