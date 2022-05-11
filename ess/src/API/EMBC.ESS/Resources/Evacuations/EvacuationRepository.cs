@@ -14,13 +14,11 @@ namespace EMBC.ESS.Resources.Evacuations
 {
     public class EvacuationRepository : IEvacuationRepository
     {
-        private readonly EssContext essContext;
         private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
 
         public EvacuationRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
-            essContext = essContextFactory.Create();
             this.essContextFactory = essContextFactory;
             this.mapper = mapper;
         }
@@ -56,34 +54,43 @@ namespace EMBC.ESS.Resources.Evacuations
 
         private async Task<ManageEvacuationFileCommandResult> HandleSubmitEvacuationFileNeedsAssessment(SubmitEvacuationFileNeedsAssessment cmd)
         {
+            var ctx = essContextFactory.Create();
+            var ct = new CancellationTokenSource().Token;
+
             if (string.IsNullOrEmpty(cmd.EvacuationFile.Id))
             {
-                return new ManageEvacuationFileCommandResult { Id = await Create(cmd.EvacuationFile) };
+                return new ManageEvacuationFileCommandResult { Id = await Create(ctx, cmd.EvacuationFile, ct) };
             }
             else
             {
-                return new ManageEvacuationFileCommandResult { Id = await Update(cmd.EvacuationFile) };
+                return new ManageEvacuationFileCommandResult { Id = await Update(ctx, cmd.EvacuationFile, ct) };
             }
         }
 
         private async Task<ManageEvacuationFileCommandResult> HandleLinkEvacuationFileRegistrant(LinkEvacuationFileRegistrant cmd)
         {
-            return new ManageEvacuationFileCommandResult { Id = await LinkRegistrant(cmd.FileId, cmd.RegistrantId, cmd.HouseholdMemberId) };
+            var ctx = essContextFactory.Create();
+            var ct = new CancellationTokenSource().Token;
+
+            return new ManageEvacuationFileCommandResult { Id = await LinkRegistrant(ctx, cmd.FileId, cmd.RegistrantId, cmd.HouseholdMemberId, ct) };
         }
 
         private async Task<ManageEvacuationFileCommandResult> HandleSaveEvacuationFileNote(SaveEvacuationFileNote cmd)
         {
+            var ctx = essContextFactory.Create();
+            var ct = new CancellationTokenSource().Token;
+
             if (string.IsNullOrEmpty(cmd.Note.Id))
             {
-                return new ManageEvacuationFileCommandResult { Id = await CreateNote(cmd.FileId, cmd.Note) };
+                return new ManageEvacuationFileCommandResult { Id = await CreateNote(ctx, cmd.FileId, cmd.Note, ct) };
             }
             else
             {
-                return new ManageEvacuationFileCommandResult { Id = await UpdateNote(cmd.FileId, cmd.Note) };
+                return new ManageEvacuationFileCommandResult { Id = await UpdateNote(ctx, cmd.FileId, cmd.Note, ct) };
             }
         }
 
-        public async Task<string> Create(EvacuationFile evacuationFile)
+        public async Task<string> Create(EssContext essContext, EvacuationFile evacuationFile, CancellationToken ct)
         {
             VerifyEvacuationFileInvariants(evacuationFile);
 
@@ -95,13 +102,13 @@ namespace EMBC.ESS.Resources.Evacuations
 
             essContext.AddToera_evacuationfiles(file);
             essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
-            AssignPrimaryRegistrant(file, primaryContact);
-            AssignToTask(file, evacuationFile.TaskId);
-            AddPets(file);
+            AssignPrimaryRegistrant(essContext, file, primaryContact);
+            AssignToTask(essContext, file, evacuationFile.TaskId);
+            AddPets(essContext, file);
 
-            AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
+            AddNeedsAssessment(essContext, file, file.era_CurrentNeedsAssessmentid);
 
-            await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
 
             essContext.Detach(file);
 
@@ -113,21 +120,18 @@ namespace EMBC.ESS.Resources.Evacuations
             return essFileNumber;
         }
 
-        public async Task<string> Update(EvacuationFile evacuationFile)
+        public async Task<string> Update(EssContext essContext, EvacuationFile evacuationFile, CancellationToken ct)
         {
             var currentFile = essContext.era_evacuationfiles
                 .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
             if (currentFile == null) throw new ArgumentException($"Evacuation file {evacuationFile.Id} not found");
 
-            await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-            await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
+            await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), ct);
+            await essContext.LoadPropertyAsync(currentFile, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), ct);
             VerifyEvacuationFileInvariants(evacuationFile, currentFile);
 
             essContext.DetachAll();
-            RemovePets(currentFile);
-
-            var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
-            if (primaryContact == null) throw new ArgumentException($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
+            RemovePets(essContext, currentFile);
 
             var file = mapper.Map<era_evacuationfile>(evacuationFile);
             file.era_evacuationfileid = currentFile.era_evacuationfileid;
@@ -136,20 +140,19 @@ namespace EMBC.ESS.Resources.Evacuations
             essContext.SetLink(file, nameof(era_evacuationfile.era_EvacuatedFromID), essContext.LookupJurisdictionByCode(file._era_evacuatedfromid_value?.ToString()));
 
             essContext.UpdateObject(file);
-            AssignPrimaryRegistrant(file, primaryContact);
-            AssignToTask(file, evacuationFile.TaskId);
-            AddPets(file);
+            AssignToTask(essContext, file, evacuationFile.TaskId);
+            AddPets(essContext, file);
 
-            AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
+            AddNeedsAssessment(essContext, file, file.era_CurrentNeedsAssessmentid);
 
-            await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
 
             essContext.DetachAll();
 
             return file.era_name;
         }
 
-        private void AddNeedsAssessment(era_evacuationfile file, era_needassessment needsAssessment)
+        private static void AddNeedsAssessment(EssContext essContext, era_evacuationfile file, era_needassessment needsAssessment)
         {
             essContext.AddToera_needassessments(needsAssessment);
             essContext.SetLink(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), needsAssessment);
@@ -177,18 +180,18 @@ namespace EMBC.ESS.Resources.Evacuations
                     member.era_householdmemberid = Guid.NewGuid();
                     essContext.AddToera_householdmembers(member);
                 }
-                AssignHouseholdMember(file, member);
-                AssignHouseholdMember(needsAssessment, member);
+                AssignHouseholdMember(essContext, file, member);
+                AssignHouseholdMember(essContext, needsAssessment, member);
             }
         }
 
-        private void AssignPrimaryRegistrant(era_evacuationfile file, contact primaryContact)
+        private static void AssignPrimaryRegistrant(EssContext essContext, era_evacuationfile file, contact primaryContact)
         {
             essContext.AddLink(primaryContact, nameof(primaryContact.era_evacuationfile_Registrant), file);
             essContext.SetLink(file, nameof(era_evacuationfile.era_Registrant), primaryContact);
         }
 
-        private void AssignToTask(era_evacuationfile file, string taskId)
+        private static void AssignToTask(EssContext essContext, era_evacuationfile file, string taskId)
         {
             if (string.IsNullOrEmpty(taskId)) return;
             var task = essContext.era_tasks.Where(t => t.era_name == taskId).SingleOrDefault();
@@ -196,7 +199,7 @@ namespace EMBC.ESS.Resources.Evacuations
             essContext.AddLink(task, nameof(era_task.era_era_task_era_evacuationfileId), file);
         }
 
-        private void AssignHouseholdMember(era_evacuationfile file, era_householdmember member)
+        private static void AssignHouseholdMember(EssContext essContext, era_evacuationfile file, era_householdmember member)
         {
             if (member._era_registrant_value != null)
             {
@@ -208,12 +211,12 @@ namespace EMBC.ESS.Resources.Evacuations
             essContext.SetLink(member, nameof(era_householdmember.era_EvacuationFileid), file);
         }
 
-        private void AssignHouseholdMember(era_needassessment needsAssessment, era_householdmember member)
+        private static void AssignHouseholdMember(EssContext essContext, era_needassessment needsAssessment, era_householdmember member)
         {
             essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_needassessment), needsAssessment);
         }
 
-        private void AddPets(era_evacuationfile file)
+        private static void AddPets(EssContext essContext, era_evacuationfile file)
         {
             foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
             {
@@ -223,7 +226,7 @@ namespace EMBC.ESS.Resources.Evacuations
             }
         }
 
-        private void RemovePets(era_evacuationfile file)
+        private static void RemovePets(EssContext essContext, era_evacuationfile file)
         {
             foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
             {
@@ -232,7 +235,7 @@ namespace EMBC.ESS.Resources.Evacuations
             }
         }
 
-        private void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile, era_evacuationfile currentFile = null)
+        private static void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile, era_evacuationfile currentFile = null)
         {
             //Check invariants
             if (string.IsNullOrEmpty(evacuationFile.PrimaryRegistrantId))
@@ -267,7 +270,7 @@ namespace EMBC.ESS.Resources.Evacuations
             }
         }
 
-        public async Task<string> LinkRegistrant(string fileId, string registrantId, string householdMemberId)
+        private static async Task<string> LinkRegistrant(EssContext essContext, string fileId, string registrantId, string householdMemberId, CancellationToken ct)
         {
             var member = essContext.era_householdmembers.Where(m => m.era_householdmemberid == Guid.Parse(householdMemberId)).SingleOrDefault();
             if (member == null) throw new ArgumentException($"Household member with id {householdMemberId} not found");
@@ -275,13 +278,10 @@ namespace EMBC.ESS.Resources.Evacuations
             if (registrant == null) throw new ArgumentException($"Registrant with id {registrantId} not found");
 
             essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
-            await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
 
             return fileId;
         }
-
-        //private EvacuationFile MapEvacuationFile(era_evacuationfile file, bool maskSecurityPhrase = true) =>
-        //    mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 
         private static async Task ParallelLoadEvacuationFileAsync(EssContext ctx, era_evacuationfile file, CancellationToken ct)
         {
@@ -411,7 +411,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 });
         }
 
-        public async Task<string> CreateNote(string fileId, Note note)
+        private async Task<string> CreateNote(EssContext essContext, string fileId, Note note, CancellationToken ct)
         {
             var file = essContext.era_evacuationfiles
                 .Where(f => f.era_name == fileId).SingleOrDefault();
@@ -428,17 +428,16 @@ namespace EMBC.ESS.Resources.Evacuations
                 var user = essContext.era_essteamusers.Where(u => u.era_essteamuserid == newNote._era_essteamuserid_value).SingleOrDefault();
                 if (user != null) essContext.AddLink(user, nameof(era_essteamuser.era_era_essteamuser_era_essfilenote_ESSTeamUser), newNote);
             }
-            await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
 
             essContext.DetachAll();
 
             return newNote.era_essfilenoteid.ToString();
         }
 
-        public async Task<string> UpdateNote(string fileId, Note note)
+        private async Task<string> UpdateNote(EssContext essContext, string fileId, Note note, CancellationToken ct)
         {
-            var existingNote = essContext.era_essfilenotes
-                .Where(n => n.era_essfilenoteid == new Guid(note.Id)).SingleOrDefault();
+            var existingNote = await essContext.era_essfilenotes.ByKey(new Guid(note.Id)).GetValueAsync(ct);
             essContext.DetachAll();
 
             if (existingNote == null) throw new ArgumentException($"Evacuation file note {note.Id} not found");
@@ -449,7 +448,7 @@ namespace EMBC.ESS.Resources.Evacuations
             essContext.AttachTo(nameof(EssContext.era_essfilenotes), updatedNote);
             essContext.UpdateObject(updatedNote);
 
-            await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
 
             essContext.DetachAll();
 
