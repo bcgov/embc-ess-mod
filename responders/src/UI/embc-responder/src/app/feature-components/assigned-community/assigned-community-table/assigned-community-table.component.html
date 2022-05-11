@@ -56,7 +56,9 @@
           </ng-template>
           <span *ngIf="column?.ref === 'action' && row.conflict">
             <img
-              matTooltip="This communtiy is claimed by {{ row?.teamName }}"
+              matTooltip="This communtiy is being supported by {{
+                row?.teamName
+              }}"
               matTooltipClass="tooltip-red"
               src="/assets/images/exclaimation.svg"
               height="25"

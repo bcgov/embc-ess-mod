@@ -127,6 +127,7 @@
                     >
                     <mat-error
                       *ngIf="
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
                         supportDetailsFormControl?.paperSupportNumber.hasError(
                           'minlength'
                         )
@@ -136,6 +137,7 @@
                     >
                     <mat-error
                       *ngIf="
+                        supportDetailsFormControl?.paperSupportNumber.invalid &&
                         supportDetailsFormControl?.paperSupportNumber.hasError(
                           'pattern'
                         )

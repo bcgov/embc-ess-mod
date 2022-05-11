@@ -145,8 +145,9 @@ export class SupportDetailsComponent implements OnInit {
     );
     const dateDiff =
       new Date(taskEndDate).getTime() - new Date(taskStartDate).getTime();
+    const noOfDaysCalc = dateDiff / (1000 * 60 * 60 * 24);
 
-    const counter = dateDiff / (1000 * 60 * 60 * 24) > 30 ? 30 : dateDiff;
+    const counter = noOfDaysCalc > 30 ? 30 : noOfDaysCalc;
 
     for (let i = 1; i <= counter; i++) {
       this.noOfDaysList.push(i);
@@ -388,7 +389,6 @@ export class SupportDetailsComponent implements OnInit {
       .subscribe({
         next: (value) => {
           this.showLoader = !this.showLoader;
-          console.log(value);
           const draftList = this.referralCreationService.getDraftSupport();
           const duplicateReferralList: Support[] = [...value, ...draftList];
           const filteredReferrals = duplicateReferralList.filter(
@@ -398,17 +398,7 @@ export class SupportDetailsComponent implements OnInit {
               referrals.subCategory ===
                 this.stepSupportsService?.supportTypeToAdd?.value
           );
-
-          this.supportDetailsForm
-            .get('paperSupportNumber')
-            .setValidators([
-              this.customValidation
-                .userNameExistsValidator(filteredReferrals.length > 0)
-                .bind(this.customValidation)
-            ]);
-          this.supportDetailsForm
-            .get('paperSupportNumber')
-            .updateValueAndValidity();
+          this.updateFormValidations(filteredReferrals);
           if (value) {
             this.supportDetailsForm
               .get('paperSupportNumber')
@@ -569,5 +559,35 @@ export class SupportDetailsComponent implements OnInit {
         ]
       ]
     });
+  }
+
+  private updateFormValidations(filteredReferrals) {
+    this.supportDetailsForm
+      .get('paperSupportNumber')
+      .setValidators([
+        this.customValidation
+          .userNameExistsValidator(filteredReferrals.length > 0)
+          .bind(this.customValidation),
+        this.customValidation
+          .conditionalValidation(
+            () => this.evacueeSessionService.isPaperBased,
+            this.customValidation.whitespaceValidator()
+          )
+          .bind(this.customValidation),
+
+        this.customValidation
+          .conditionalValidation(
+            () => this.evacueeSessionService.isPaperBased,
+            Validators.minLength(8)
+          )
+          .bind(this.customValidation),
+        this.customValidation
+          .conditionalValidation(
+            () => this.evacueeSessionService.isPaperBased,
+            Validators.pattern(globalConst.supportNumberPattern)
+          )
+          .bind(this.customValidation)
+      ]);
+    this.supportDetailsForm.get('paperSupportNumber').updateValueAndValidity();
   }
 }
