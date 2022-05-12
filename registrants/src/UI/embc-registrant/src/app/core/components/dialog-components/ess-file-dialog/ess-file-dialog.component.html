@@ -20,17 +20,20 @@
   </div>
 
   <div class="row button-row justify-content-between">
-    <button class="button-s button-width" mat-button (click)="cancel()">
-      No, Cancel
-    </button>
-
-    <button
-      class="button-p button-width confirm-button"
-      mat-button
-      (click)="confirm()"
-    >
-      Yes, Continue
-    </button>
+    <div class="col">
+      <button class="button-s button-width" mat-button (click)="cancel()">
+        No, Cancel
+      </button>
+    </div>
+    <div class="col">
+      <button
+        class="button-p button-width confirm-button"
+        mat-button
+        (click)="confirm()"
+      >
+        Yes, Continue
+      </button>
+    </div>
   </div>
 </ng-container>
 

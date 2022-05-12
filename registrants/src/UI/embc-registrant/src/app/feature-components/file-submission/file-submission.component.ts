@@ -70,7 +70,6 @@ export class FileSubmissionComponent implements OnInit {
           component: BcscInviteDialogComponent,
           initDialog: this.profileDataService?.contactDetails?.email
         },
-        height: '520px',
         width: '600px'
       })
       .afterClosed()
