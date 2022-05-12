@@ -23,7 +23,6 @@ export class DisableBackGuard
           component: InformationDialogComponent,
           content: globalConst.invalidGoBack
         },
-        height: '220px',
         width: '400px'
       });
       return false;
