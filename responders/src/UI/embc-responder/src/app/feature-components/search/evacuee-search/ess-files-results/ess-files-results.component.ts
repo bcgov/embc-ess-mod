@@ -164,7 +164,6 @@ export class EssFilesResultsComponent
         component: InformationDialogComponent,
         content: globalConst.disabledESSFileMessage
       },
-      height: '390px',
       width: '520px'
     });
   }
@@ -175,7 +174,6 @@ export class EssFilesResultsComponent
         component: InformationDialogComponent,
         content: globalConst.unableAccessFileMessage
       },
-      height: '285px',
       width: '493px'
     });
   }

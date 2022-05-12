@@ -99,7 +99,6 @@ export class EvacueeProfileDashboardService {
         content: { title: 'Paper ESS File Already Exists' },
         essFile
       },
-      height: '400px',
       width: '493px'
     });
   }
@@ -128,7 +127,6 @@ export class EvacueeProfileDashboardService {
         component: InformationDialogComponent,
         content
       },
-      height: '260px',
       width: '630px'
     });
   }
@@ -145,7 +143,6 @@ export class EvacueeProfileDashboardService {
         component: InformationDialogComponent,
         content
       },
-      height: '230px',
       width: '630px'
     });
   }
@@ -159,7 +156,6 @@ export class EvacueeProfileDashboardService {
       data: {
         component: StatusDefinitionDialogComponent
       },
-      height: '550px',
       width: '580px'
     });
   }
@@ -177,7 +173,6 @@ export class EvacueeProfileDashboardService {
         content: globalConst.verifyEvacueeProfile,
         profileData: profile
       },
-      height: '550px',
       width: '620px'
     });
   }
@@ -188,7 +183,6 @@ export class EvacueeProfileDashboardService {
         component: BcscInviteDialogComponent,
         profileData: email
       },
-      height: '520px',
       width: '600px'
     });
   }

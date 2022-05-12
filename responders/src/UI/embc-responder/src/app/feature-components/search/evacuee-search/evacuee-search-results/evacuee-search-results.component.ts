@@ -153,7 +153,6 @@ export class EvacueeSearchResultsComponent implements OnInit {
         content: { title: 'Paper ESS File Already Exists' },
         essFile
       },
-      height: '400px',
       width: '493px'
     });
   }

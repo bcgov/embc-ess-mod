@@ -139,7 +139,6 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
           component: VerifyEvacueeDialogComponent,
           content: globalConst.unlockFieldsProfile
         },
-        height: '410px',
         width: '620px'
       })
       .afterClosed()

@@ -171,9 +171,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
         this.dialog.open(DialogComponent, {
           data: {
             component: ViewAssessmentDialogComponent,
-            profileData: response
+            profileData: response,
+            showCloseButton: true
           },
-          height: '650px',
+          height: '85%',
           width: '720px'
         });
         this.isLoading = !this.isLoading;
@@ -188,7 +189,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
           profileData: this.selectedSupport.id,
           voidType: this.selectedSupport.method
         },
-        height: '550px',
         width: '720px'
       })
       .afterClosed()
@@ -228,7 +228,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
           component: ReprintReferralDialogComponent,
           profileData: this.selectedSupport.id
         },
-        height: '550px',
         width: '720px'
       })
       .afterClosed()
@@ -333,7 +332,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
           profileData: this.selectedSupport.id,
           voidType: this.selectedSupport.method
         },
-        height: '370px',
         width: '630px'
       })
       .afterClosed()

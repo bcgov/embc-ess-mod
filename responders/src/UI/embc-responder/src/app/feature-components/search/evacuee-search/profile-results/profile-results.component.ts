@@ -155,7 +155,6 @@ export class ProfileResultsComponent
         component: InformationDialogComponent,
         content: globalConst.unableAccessFileMessage
       },
-      height: '285px',
       width: '493px'
     });
   }

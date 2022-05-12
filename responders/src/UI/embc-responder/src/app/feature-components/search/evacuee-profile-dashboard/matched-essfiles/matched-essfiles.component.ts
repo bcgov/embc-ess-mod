@@ -90,7 +90,6 @@ export class MatchedEssfilesComponent implements OnInit {
         component: FileStatusDefinitionComponent,
         content: 'All'
       },
-      height: '650px',
       width: '500px'
     });
   }
