@@ -121,12 +121,11 @@
                 <span *ngIf="fileResult?.evacuatedFrom?.city !== null"
                   >{{ fileResult?.evacuatedFrom?.city }},</span
                 >
-                <span
-                  *ngIf="fileResult?.evacuatedFrom?.communityCode !== null"
-                  >{{ communityName(fileResult?.evacuatedFrom) }}</span
+                <span *ngIf="fileResult?.evacuatedFrom?.communityCode !== null"
+                  >{{ communityName(fileResult?.evacuatedFrom) }},</span
                 >
                 <span *ngIf="fileResult?.evacuatedFrom?.postalCode !== null">
-                  ,{{ fileResult?.evacuatedFrom?.postalCode }}
+                  {{ fileResult?.evacuatedFrom?.postalCode }}
                 </span>
               </b>
             </p>
