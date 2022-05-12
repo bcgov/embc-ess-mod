@@ -80,10 +80,10 @@ namespace EMBC.ESS.Resources.Payments
         public IEnumerable<Payment> Items { get; set; } = Array.Empty<Payment>();
     }
 
-    public class SendPaymentToCasRequest : ManagePaymentRequest
+    public class IssuePaymentsRequest : ManagePaymentRequest
     {
-        public string CasBatchName { get; set; }
-        public IEnumerable<CasPayment> Items { get; set; } = Array.Empty<CasPayment>();
+        public string BatchId { get; set; }
+        public IEnumerable<string> PaymentIds { get; set; } = Array.Empty<string>();
     }
 
     public class CasPayment
@@ -97,10 +97,10 @@ namespace EMBC.ESS.Resources.Payments
         public string SupplierSiteCode { get; set; }
     }
 
-    public class SendPaymentToCasResponse : ManagePaymentResponse
+    public class IssuePaymentsResponse : ManagePaymentResponse
     {
-        public IEnumerable<string> SentItems { get; set; } = Array.Empty<string>();
-        public IEnumerable<(string Id, string Reason)> FailedItems { get; set; } = Array.Empty<(string Id, string Reason)>();
+        public IEnumerable<string> IssuedPayments { get; set; } = Array.Empty<string>();
+        public IEnumerable<(string Id, Exception Error)> FailedPayments { get; set; } = Array.Empty<(string, Exception)>();
     }
 
     public class GetCasPaymentStatusRequest : QueryPaymentRequest

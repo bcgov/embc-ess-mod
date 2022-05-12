@@ -55,8 +55,25 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
     }
 
-    public class AssignSupportToQueueCommandResult : ManageSupportCommandResult
+    public class SubmitSupportForApprovalCommandResult : ManageSupportCommandResult
     { }
+
+    public class FailSupportCommand : ManageSupportCommand
+    {
+        public string SupportId { get; set; }
+    }
+
+    public class FailSupportCommandResult : ManageSupportCommandResult
+    { }
+
+    public class SupportQueue
+    {
+        public static readonly SupportQueue Approval = new SupportQueue { QueueId = new("a4f0fbbe-89a1-ec11-b831-00505683fbf4") };
+        public static readonly SupportQueue Review = new SupportQueue { QueueId = new("e969aae7-8aa1-ec11-b831-00505683fbf4") };
+        public static readonly SupportQueue Error = new SupportQueue { QueueId = new("f132db1c-5eb4-ec11-b832-00505683fbf4") };
+
+        internal Guid QueueId { get; private set; }
+    }
 
     public class SupportStatusTransition
     {

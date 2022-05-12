@@ -90,17 +90,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 payment.Id = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
             }
 
-            var results = (SendPaymentToCasResponse)await repository.Manage(new SendPaymentToCasRequest
+            var results = (IssuePaymentsResponse)await repository.Manage(new IssuePaymentsRequest
             {
-                CasBatchName = TestData.TestPrefix,
-                Items = payments.Select(p => new CasPayment
-                {
-                    PaymentId = p.Id
-                })
+                BatchId = TestData.TestPrefix,
+                PaymentIds = payments.Select(p => p.Id)
             });
 
-            var sentPayments = results.SentItems.ToArray();
-            var failedPayments = results.FailedItems.ToArray();
+            var sentPayments = results.IssuedPayments.ToArray();
+            var failedPayments = results.FailedPayments.ToArray();
 
             failedPayments.ShouldBeEmpty();
             sentPayments.Length.ShouldBe(payments.Length);
@@ -116,11 +113,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
         {
             //query payments
-            var startDate = DateTime.Now.AddDays(-14);
+            var startDate = DateTime.UtcNow.AddDays(-14);
             var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate });
 
             response.Payments.ShouldNotBeEmpty();
-            //response.Payments.ShouldAllBe(p => p.StatusChangeDate >= startDate);
             foreach (var payment in response.Payments)
             {
                 payment.StatusChangeDate.ShouldBeGreaterThanOrEqualTo(startDate);
