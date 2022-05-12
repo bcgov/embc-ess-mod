@@ -189,7 +189,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 .Where(pr => pr.statecode == (int)EntityState.Active && pr._era_requestinguserid_value != null)
                 .OrderByDescending(pr => pr.createdon)
                 .Take(new Random().Next(1, 20))
-                .ToArray()
                 .First();
 
             var response = await manager.Handle(new PrintRequestQuery

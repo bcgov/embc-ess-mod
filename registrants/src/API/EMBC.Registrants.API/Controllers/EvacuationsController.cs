@@ -118,7 +118,7 @@ namespace EMBC.Registrants.API.Controllers
 
             var userId = currentUserId;
             var file = mapper.Map<ESS.Shared.Contracts.Events.EvacuationFile>(evacuationFile);
-            file.PrimaryRegistrantId = userId;
+            file.PrimaryRegistrantUserId = userId;
             var fileId = await messagingClient.Send(new SubmitEvacuationFileCommand { File = file });
 
             return Ok(new RegistrationResult { ReferenceNumber = fileId });

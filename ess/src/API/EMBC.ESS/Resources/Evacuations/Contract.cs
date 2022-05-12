@@ -76,6 +76,7 @@ namespace EMBC.ESS.Resources.Evacuations
         public EvacuationAddress EvacuatedFrom { get => NeedsAssessment?.EvacuatedFrom; }
         public NeedsAssessment NeedsAssessment { get; set; }
         public string PrimaryRegistrantId { get; set; }
+        public string PrimaryRegistrantUserId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; }
         public bool IsSecurityPhraseMasked { get; set; }

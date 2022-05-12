@@ -51,6 +51,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public DateTime CreatedOn { get; set; }
         public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
+        public string PrimaryRegistrantUserId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
         public DateTime? EvacuationDate { get; set; }
