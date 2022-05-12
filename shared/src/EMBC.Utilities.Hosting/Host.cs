@@ -6,6 +6,9 @@ using System.Runtime;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Extensions;
+using Medallion.Threading;
+using Medallion.Threading.Redis;
+using Medallion.Threading.WaitHandles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -66,7 +69,7 @@ namespace EMBC.Utilities.Hosting
             }
             catch (Exception e)
             {
-                Log.Fatal(e, "An unhandled exception occured during bootstrapping");
+                Log.Fatal(e, "An unhandled exception occurred during bootstrapping");
                 return 1;
             }
         }
@@ -122,16 +125,20 @@ namespace EMBC.Utilities.Hosting
                 services.AddDataProtection()
                     .SetApplicationName(appName)
                     .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(redisConnectionString), $"{appName}-data-protection-keys");
+
+                services.AddSingleton<IDistributedSemaphoreProvider>(new RedisDistributedSynchronizationProvider(ConnectionMultiplexer.Connect(redisConnectionString).GetDatabase()));
             }
             else
             {
                 logger.LogInformation("Configuring in-memory cache");
+                var dataProtectionPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
                 services.AddDistributedMemoryCache();
                 var dpBuilder = services.AddDataProtection()
                     .SetApplicationName(appName);
 
-                var dataProtectionPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
                 if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
+
+                services.AddSingleton<IDistributedSemaphoreProvider>(new WaitHandleDistributedSynchronizationProvider());
             }
 
             services.AddDefaultHealthChecks();

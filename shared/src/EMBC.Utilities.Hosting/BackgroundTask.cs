@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cronos;
-using EMBC.Utilities.Caching;
+using Medallion.Threading;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -18,17 +16,18 @@ namespace EMBC.Utilities.Hosting
     {
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger<T> logger;
+        private readonly IDistributedSemaphoreProvider distributedSemaphoreProvider;
         private readonly CronExpression schedule;
         private readonly TimeSpan startupDelay;
-        private readonly BackgroundTaskConcurrencyManager concurrencyManager;
-        private string instanceName => Environment.MachineName;
         private readonly bool enabled;
+        private readonly IDistributedSemaphore semaphore;
         private long runNumber = 0;
 
-        public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger)
+        public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger, IDistributedSemaphoreProvider distributedSemaphoreProvider)
         {
             this.serviceProvider = serviceProvider;
             this.logger = logger;
+            this.distributedSemaphoreProvider = distributedSemaphoreProvider;
             using (var scope = serviceProvider.CreateScope())
             {
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>().GetSection($"backgroundtask:{typeof(T).Name}");
@@ -37,12 +36,9 @@ namespace EMBC.Utilities.Hosting
                 schedule = CronExpression.Parse(configuration.GetValue("schedule", task.Schedule), CronFormat.IncludeSeconds);
                 startupDelay = configuration.GetValue("initialDelay", task.InitialDelay);
                 enabled = configuration.GetValue("enabled", true);
+                var degreeOfParallelism = configuration.GetValue("degreeOfParallelism", task.DegreeOfParallelism);
 
-                concurrencyManager = new BackgroundTaskConcurrencyManager(
-                    scope.ServiceProvider.GetRequiredService<ICache>(),
-                    typeof(T).FullName ?? null!,
-                    task.DegreeOfParallelism,
-                    task.InactivityTimeout);
+                semaphore = distributedSemaphoreProvider.CreateSemaphore($"backgroundtask:{typeof(T).Name}", degreeOfParallelism);
 
                 logger.LogInformation("Starting background task: initial delay {0}, schedule: {1}, parallelism: {2}",
                     this.startupDelay, this.schedule.ToString(), task.DegreeOfParallelism);
@@ -63,16 +59,18 @@ namespace EMBC.Utilities.Hosting
 
             while (!stoppingToken.IsCancellationRequested)
             {
+                runNumber++;
                 logger.LogDebug("next run in {0}s", nextExecutionDelay.TotalSeconds);
                 await Task.Delay(nextExecutionDelay, stoppingToken);
+
                 try
                 {
-                    if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
+                    using var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(1), stoppingToken);
+                    if (handle == null)
                     {
-                        //logger.LogDebug("skipping {0}", nextExecutionDate);
+                        logger.LogDebug("skipping run {0}", runNumber);
                         continue;
                     }
-                    runNumber++;
                     logger.LogDebug("Executing run # {0}", runNumber);
                     using (var executionScope = serviceProvider.CreateScope())
                     {
@@ -107,87 +105,8 @@ namespace EMBC.Utilities.Hosting
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            logger.LogDebug("unregistering instance");
-            await concurrencyManager.Deregister(instanceName, cancellationToken);
             logger.LogInformation("stopping");
             await base.StopAsync(cancellationToken);
-        }
-    }
-
-    internal class BackgroundTaskConcurrencyManager
-    {
-        private readonly string cacheKey;
-        private readonly int concurrency;
-        private readonly TimeSpan timeout;
-        private readonly ICache cache;
-        private readonly SemaphoreSlim locker;
-
-        public BackgroundTaskConcurrencyManager(ICache cache, string taskName, int concurrency, TimeSpan timeout)
-        {
-            this.cacheKey = $"task-{taskName}";
-            this.concurrency = concurrency;
-            this.timeout = timeout;
-            this.cache = cache;
-            this.locker = new SemaphoreSlim(1, 1);
-        }
-
-        public async Task<bool> TryRegister(string serviceInstanceName, CancellationToken cancellationToken = default)
-        {
-            if (concurrency < 0) return true; // always register - no state
-
-            await locker.WaitAsync(cancellationToken);
-            try
-            {
-                // get state
-                var now = DateTime.UtcNow;
-                var state = await cache.GetOrSet(cacheKey,
-                    async () => await Task.FromResult(new ConcurrencyState { { serviceInstanceName, now } }),
-                    TimeSpan.FromMinutes(30), cancellationToken) ?? null!;
-
-                // trim expired services
-                state.Trim(timeout);
-
-                // check if the instance is already registered
-                if (state.ContainsKey(serviceInstanceName)) return true;
-
-                // register if allowed
-                if (state.Count < concurrency)
-                {
-                    state.Add(serviceInstanceName, now);
-                    await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30), cancellationToken);
-                    return true;
-                }
-
-                // not allowed and not registered
-                return false;
-            }
-            finally
-            {
-                locker.Release();
-            }
-        }
-
-        public async Task Deregister(string serviceInstanceName, CancellationToken cancellationToken = default)
-        {
-            var state = await cache.Get<ConcurrencyState>(cacheKey);
-            if (state != null && state.ContainsKey(serviceInstanceName))
-            {
-                state.Remove(serviceInstanceName);
-                state.Trim(timeout);
-                await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30), cancellationToken);
-            }
-        }
-
-        public class ConcurrencyState : Dictionary<string, DateTime>
-        {
-            public void Trim(TimeSpan timeout)
-            {
-                var now = DateTime.UtcNow;
-                foreach (var s in this.Where(s => now.Subtract(s.Value) > timeout).ToArray())
-                {
-                    Remove(s.Key);
-                }
-            }
         }
     }
 
