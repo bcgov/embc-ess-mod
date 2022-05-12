@@ -65,58 +65,6 @@ footer nav {
 .mat-toolbar {
   background: #ffffff;
 }
-// .mat-step-icon {
-//   height: 38px !important;
-//   width: 38px !important;
-//   border: 4px solid #169BD5;
-// }
-
-// .mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-edit, .mat-step-header .mat-step-icon {
-//     background-color: #FFFFFF !important;
-//     color: #169BD5 !important;
-// }
-
-// .mat-step-header .mat-step-icon-state-done {
-//   background-color: #169BD5 !important;
-//   color: #FFFFFF !important;
-// }
-
-// .mat-step-header .mat-step-label {
-//   color: #606060 !important;
-// }
-
-// .mat-step-header .mat-step-label.mat-step-label-active {
-//     color: #169BD5 !important;
-// }
-
-// .mat-step-label-selected {
-//   font-weight: normal !important;
-// }
-
-// .mat-stepper-horizontal-line {
-//   border-top-width: 2px !important;
-// }
-
-// .mat-stepper-label-position-bottom .mat-stepper-horizontal-line {
-//   top: 40px !important;
-// }
-
-// .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
-//  [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before,
-//   .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
-//    [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
-//   border-top-width: 2px !important;
-// }
-
-// .mat-stepper-label-position-bottom .mat-horizontal-stepper-header::after, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header::before {
-//   top: 40px !important;
-// }
-
-// @media screen and (max-width: 768px) {
-//   .mat-step-label {
-//     display: none !important;
-//   }
-// }
 
 .mat-button,
 .mat-flat-button,
@@ -124,10 +72,6 @@ footer nav {
 .mat-stroked-button {
   border-radius: 0px !important;
 }
-
-// .stepper-style {
-//   background-color: transparent !important;
-// }
 
 .container-frame {
   padding-top: 40px;
@@ -278,12 +222,6 @@ mat-card {
 .mat-form-field-subscript-wrapper {
   position: relative !important;
 }
-
-// .sub-heading {
-//   font-size: 16px;
-//   font-weight: bold;
-//   color: #169BD5;
-// }
 
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
 .mat-checkbox-checked.mat-accent .mat-checkbox-background {

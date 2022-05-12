@@ -118,7 +118,9 @@ export class LoadEvacueeListService {
       communityTypes
     ]).pipe(
       map((results) => {
-        this.setSupportCategories(results[0]);
+        this.setSupportCategories(
+          results[0].filter((value) => value.description !== '')
+        );
         this.setSupportSubCategories(results[1]);
         this.setSupportStatus(results[2]);
         this.setSupportMethods(results[3]);
@@ -165,7 +167,9 @@ export class LoadEvacueeListService {
       .subscribe({
         next: (categories: Code[]) => {
           categoryList = categories;
-          this.setSupportCategories(categories);
+          this.setSupportCategories(
+            categories.filter((value) => value.description !== '')
+          );
         },
         error: (error) => {
           this.alertService.clearAlert();
