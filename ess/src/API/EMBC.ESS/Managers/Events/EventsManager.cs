@@ -899,16 +899,15 @@ namespace EMBC.ESS.Managers.Events
                 if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
             }
 
+            // set the last poll time to -5 mins to account for system clock differences
             var nextPollDate = DateTime.SpecifyKind(DateTime.UtcNow.AddMinutes(-5), DateTimeKind.Utc);
+            await cache.Set(paymentPollingCacheKey, nextPollDate, TimeSpan.FromDays(7), ct);
 
-            logger.LogInformation("Reconciled {0} issued payments, {1} failed payments, {2} paid payments; setting polling date to {3} UTC",
+            logger.LogInformation("Reconciled {0} issued payments, {1} failed payments, {2} paid payments; set last polling date to {3} UTC",
                 issuedCasPayments.Length,
                 paidPayments.Length,
                 failedCasPayments.Length,
                 nextPollDate);
-
-            // set the last poll time to -5 mins to account for system clock differences
-            await cache.Set(paymentPollingCacheKey, nextPollDate, TimeSpan.FromDays(7), ct);
         }
 
         private const string paymentPollingCacheKey = "CASPollDate";
