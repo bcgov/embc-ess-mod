@@ -22,11 +22,11 @@ namespace EMBC.ESS.Resources.Metadata
             this.metadataRepository = new InternalMetadataRepository(essContextFactory, mapper);
         }
 
-        public string Schedule => "* */15 * * * *";
+        public string Schedule => "* 0 * * * *";
 
         public int DegreeOfParallelism => 1;
 
-        public TimeSpan InitialDelay => TimeSpan.FromSeconds(10);
+        public TimeSpan InitialDelay => TimeSpan.FromSeconds(15);
 
         public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(30);
 

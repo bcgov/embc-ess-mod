@@ -15,7 +15,7 @@ namespace EMBC.ESS.Resources.Metadata
         internal const string SecurityQuestionsCacheKey = "metadata:securityquestions";
         internal const string PlannedOutagesCacheKey = "metadata:plannedoutages";
 
-        internal static readonly TimeSpan CacheEntryLifetime = TimeSpan.FromMinutes(60);
+        internal static readonly TimeSpan CacheEntryLifetime = TimeSpan.FromDays(1);
 
         private readonly InternalMetadataRepository internalRepository;
         private readonly ICache cache;
