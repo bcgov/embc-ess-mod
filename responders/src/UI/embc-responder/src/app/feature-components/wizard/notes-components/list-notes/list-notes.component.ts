@@ -75,7 +75,6 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
           component: InformationDialogComponent,
           content
         },
-        height: '275px',
         width: '580px'
       })
       .afterClosed()
@@ -104,7 +103,6 @@ export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
           component: InformationDialogComponent,
           content
         },
-        height: '275px',
         width: '580px'
       })
       .afterClosed()

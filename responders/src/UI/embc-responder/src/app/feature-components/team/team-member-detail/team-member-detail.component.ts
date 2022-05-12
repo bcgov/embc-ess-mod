@@ -53,7 +53,6 @@ export class TeamMemberDetailComponent {
         data: {
           component: DeleteConfirmationDialogComponent
         },
-        height: '300px',
         width: '650px'
       })
       .afterClosed()

@@ -122,7 +122,6 @@ export class HouseholdMemberComponent implements OnInit {
           content: globalConst.dashboardViewProfile,
           profileData: memberDetails
         },
-        height: '450px',
         width: '720px'
       })
       .afterClosed()

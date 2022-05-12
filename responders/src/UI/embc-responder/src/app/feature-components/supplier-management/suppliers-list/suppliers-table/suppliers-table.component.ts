@@ -167,7 +167,6 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
         component: InformationDialogComponent,
         content: globalConst.supplierStatusDefinition
       },
-      height: '450px',
       width: '563px'
     });
   }

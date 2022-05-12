@@ -23,10 +23,6 @@
   padding: 10px;
 }
 
-.mat-dialog-content {
-  margin: 0 !important;
-  max-height: none !important;
-}
 
 .mainBody {
   display: block;
@@ -41,4 +37,8 @@
 
 .green-info {
   color: #25A800;
+}
+
+.cancel-button {
+  width: 30%;
 }
