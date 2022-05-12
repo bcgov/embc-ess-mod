@@ -62,12 +62,15 @@ namespace EMBC.Utilities.Hosting
                 runNumber++;
                 logger.LogDebug("next run in {0}s", nextExecutionDelay.TotalSeconds);
 
+                // get a lock
                 var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(5), stoppingToken);
 
+                // wait in the lock
                 await Task.Delay(nextExecutionDelay, stoppingToken);
                 if (handle == null)
                 {
                     logger.LogDebug("skipping run {0}", runNumber);
+                    // no lock
                     continue;
                 }
                 try
@@ -86,6 +89,7 @@ namespace EMBC.Utilities.Hosting
                 finally
                 {
                     nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
+                    // release the lock
                     await handle.DisposeAsync();
                 }
             }
