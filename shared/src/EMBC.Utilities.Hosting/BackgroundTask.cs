@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cronos;
 using EMBC.Utilities.Caching;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NCrontab;
 
 namespace EMBC.Utilities.Hosting
 {
@@ -18,11 +18,12 @@ namespace EMBC.Utilities.Hosting
     {
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger<T> logger;
-        private readonly CrontabSchedule schedule;
+        private readonly CronExpression schedule;
         private readonly TimeSpan startupDelay;
         private readonly BackgroundTaskConcurrencyManager concurrencyManager;
         private string instanceName => Environment.MachineName;
         private readonly bool enabled;
+        private long runNumber = 0;
 
         public BackgroundTask(IServiceProvider serviceProvider, ILogger<T> logger)
         {
@@ -31,17 +32,20 @@ namespace EMBC.Utilities.Hosting
             using (var scope = serviceProvider.CreateScope())
             {
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>().GetSection($"backgroundtask:{typeof(T).Name}");
-                var initialTask = scope.ServiceProvider.GetRequiredService<T>();
+                var task = scope.ServiceProvider.GetRequiredService<T>();
 
-                schedule = CrontabSchedule.Parse(configuration.GetValue("schedule", initialTask.Schedule), new CrontabSchedule.ParseOptions { IncludingSeconds = true });
-                startupDelay = configuration.GetValue("initialDelay", initialTask.InitialDelay);
+                schedule = CronExpression.Parse(configuration.GetValue("schedule", task.Schedule), CronFormat.IncludeSeconds);
+                startupDelay = configuration.GetValue("initialDelay", task.InitialDelay);
                 enabled = configuration.GetValue("enabled", true);
 
                 concurrencyManager = new BackgroundTaskConcurrencyManager(
                     scope.ServiceProvider.GetRequiredService<ICache>(),
                     typeof(T).FullName ?? null!,
-                    initialTask.DegreeOfParallelism,
-                    initialTask.InactivityTimeout);
+                    task.DegreeOfParallelism,
+                    task.InactivityTimeout);
+
+                logger.LogInformation("Starting background task: initial delay {0}, schedule: {1}, parallelism: {2}",
+                    this.startupDelay, this.schedule.ToString(), task.DegreeOfParallelism);
             }
         }
 
@@ -52,46 +56,47 @@ namespace EMBC.Utilities.Hosting
                 logger.LogWarning($"background task is disabled, check configuration flag 'backgroundTask:{typeof(T).Name}'");
                 return;
             }
-            await Task.Delay(startupDelay, stoppingToken);
-            var now = DateTime.UtcNow;
-            var nextExecutionDate = schedule.GetNextOccurrence(now);
 
-            logger.LogDebug("first run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(now).TotalSeconds);
+            await Task.Delay(startupDelay, stoppingToken);
+
+            var nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                now = DateTime.UtcNow;
-                if (now >= nextExecutionDate)
+                logger.LogDebug("next run in {0}s", nextExecutionDelay.TotalSeconds);
+                await Task.Delay(nextExecutionDelay, stoppingToken);
+                try
                 {
-                    try
+                    if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
                     {
-                        if (!await concurrencyManager.TryRegister(instanceName, stoppingToken))
-                        {
-                            logger.LogDebug("skipping {0}", nextExecutionDate);
-                        }
-                        else
-                        {
-                            logger.LogDebug("running {0}", nextExecutionDate);
-                            using (var executionScope = serviceProvider.CreateScope())
-                            {
-                                var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                                await task.ExecuteAsync(stoppingToken);
-                            }
-                        }
+                        //logger.LogDebug("skipping {0}", nextExecutionDate);
+                        continue;
                     }
-                    catch (Exception e)
+                    runNumber++;
+                    logger.LogDebug("Executing run # {0}", runNumber);
+                    using (var executionScope = serviceProvider.CreateScope())
                     {
-                        logger.LogError(e, "error running {0}: {1}", nextExecutionDate, e.Message);
-                    }
-                    finally
-                    {
-                        nextExecutionDate = schedule.GetNextOccurrence(now);
-                        logger.LogDebug("next run is {0} in {1}s", nextExecutionDate, nextExecutionDate.Subtract(DateTime.UtcNow).TotalSeconds);
+                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                        await task.ExecuteAsync(stoppingToken);
                     }
                 }
-                // add +/- 1 sec for randomness
-                await Task.Delay(TimeSpan.FromSeconds(5).Add(TimeSpan.FromMilliseconds(Random.Shared.Next(-1000, 1000))), stoppingToken);
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Error in run # {0}: {1}", runNumber, e.Message);
+                }
+                finally
+                {
+                    nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
+                }
             }
+        }
+
+        private TimeSpan CalculateNextExecutionDelay(DateTime utcNow)
+        {
+            var nextDate = schedule.GetNextOccurrence(utcNow);
+            if (nextDate == null) throw new InvalidOperationException("Cannot calculate the next execution date, stopping the background task");
+
+            return nextDate.Value.Subtract(utcNow);
         }
 
         public override async Task StartAsync(CancellationToken cancellationToken)
@@ -100,12 +105,12 @@ namespace EMBC.Utilities.Hosting
             await base.StartAsync(cancellationToken);
         }
 
-        public override async Task StopAsync(CancellationToken stoppingToken)
+        public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation("deregistrering instance");
-            await concurrencyManager.Deregister(instanceName, stoppingToken);
+            logger.LogDebug("unregistering instance");
+            await concurrencyManager.Deregister(instanceName, cancellationToken);
             logger.LogInformation("stopping");
-            await base.StopAsync(stoppingToken);
+            await base.StopAsync(cancellationToken);
         }
     }
 
@@ -172,16 +177,16 @@ namespace EMBC.Utilities.Hosting
                 await cache.Set(cacheKey, state, TimeSpan.FromMinutes(30), cancellationToken);
             }
         }
-    }
 
-    public class ConcurrencyState : Dictionary<string, DateTime>
-    {
-        public void Trim(TimeSpan timeout)
+        public class ConcurrencyState : Dictionary<string, DateTime>
         {
-            var now = DateTime.UtcNow;
-            foreach (var s in this.Where(s => now.Subtract(s.Value) > timeout).ToArray())
+            public void Trim(TimeSpan timeout)
             {
-                Remove(s.Key);
+                var now = DateTime.UtcNow;
+                foreach (var s in this.Where(s => now.Subtract(s.Value) > timeout).ToArray())
+                {
+                    Remove(s.Key);
+                }
             }
         }
     }

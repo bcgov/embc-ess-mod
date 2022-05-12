@@ -134,18 +134,7 @@ namespace EMBC.ESS.Managers.Events
         {
             var file = mapper.Map<Resources.Evacuations.EvacuationFile>(cmd.File);
 
-            var query = new EvacueeQuery();
-            //TODO: replace this with an explicit property for userid
-            if (Guid.TryParse(file.PrimaryRegistrantId, out var _))
-            {
-                query.EvacueeId = file.PrimaryRegistrantId;
-            }
-            else
-            {
-                query.UserId = file.PrimaryRegistrantId;
-            }
-
-            var contact = (await evacueesRepository.Query(query)).Items.SingleOrDefault();
+            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId, UserId = file.PrimaryRegistrantUserId })).Items.SingleOrDefault();
 
             if (contact == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
             file.PrimaryRegistrantId = contact.Id;

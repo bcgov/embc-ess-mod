@@ -20,7 +20,6 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.era_paperbasedessfile, opts => opts.Ignore())
                 .ForMember(d => d.era_essfilestatus, opts => opts.Ignore())
                 .ForMember(d => d.era_evacuationfiledate, opts => opts.MapFrom(s => s.EvacuationDate))
-                .ForMember(d => d.era_securityphrase, opts => opts.Ignore())
                 .ForMember(d => d.era_CurrentNeedsAssessmentid, opts => opts.MapFrom(s => s.NeedsAssessment))
                 .ForPath(d => d.era_CurrentNeedsAssessmentid.era_registrationlocation, opts => opts.MapFrom(s => s.RegistrationLocation))
                 .ForMember(d => d.era_securityphrase, opts => opts.MapFrom(s => s.SecurityPhraseChanged ? s.SecurityPhrase : null))
@@ -28,7 +27,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d._era_evacuatedfromid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
-                .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault())))
+                .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.FirstOrDefault(n => n.Type == NoteType.PetCarePlans))))
                 .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ManualFileId))
                 .ForMember(d => d.era_registrationcompleteddate, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.era_interviewername, opts => opts.MapFrom(s => s.CompletedBy))
@@ -47,6 +46,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.modifiedon.Value.UtcDateTime))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => s._era_registrant_value))
+                .ForMember(d => d.PrimaryRegistrantUserId, opts => opts.MapFrom(s => s.era_Registrant.era_bcservicescardid))
                 .ForMember(d => d.SecurityPhrase, opts => opts.ConvertUsing<SecurityPhraseConverter, string>(s => s.era_securityphrase))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.IsSecurityPhraseMasked, opts => opts.MapFrom((s, d, _, ctx) => SecurityPhraseConverter.ShouldMaskSecretPhrase(ctx)))
@@ -87,9 +87,9 @@ namespace EMBC.ESS.Resources.Evacuations
                   .ForMember(d => d.era_medicationrequirement, opts => opts.MapFrom(s => s.TakeMedication))
                   .ForMember(d => d.era_hasenoughsupply, opts => opts.MapFrom(s => s.HaveMedicalSupplies))
                   .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
-                  .ForMember(d => d.era_householdrecoveryplan, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.RecoveryPlan).FirstOrDefault())))
-                  .ForMember(d => d.era_evacuationimpacttohousehold, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.EvacuationImpact).FirstOrDefault())))
-                  .ForMember(d => d.era_externalreferralsdetails, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.Where(n => n.Type == NoteType.ExternalReferralServices).FirstOrDefault())))
+                  .ForMember(d => d.era_householdrecoveryplan, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.FirstOrDefault(n => n.Type == NoteType.RecoveryPlan))))
+                  .ForMember(d => d.era_evacuationimpacttohousehold, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.FirstOrDefault(n => n.Type == NoteType.EvacuationImpact))))
+                  .ForMember(d => d.era_externalreferralsdetails, opts => opts.MapFrom(s => resolveNoteContent(s.Notes.FirstOrDefault(n => n.Type == NoteType.ExternalReferralServices))))
                   .ForMember(d => d.era_haschildcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.ChildCare)))
                   .ForMember(d => d.era_hasfirstaidreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.FirstAid)))
                   .ForMember(d => d.era_hasinquiryreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Inquiry)))
@@ -104,7 +104,7 @@ namespace EMBC.ESS.Resources.Evacuations
                   .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
                   ;
 
-            CreateMap<era_needassessment, EvacuationAddress>(MemberList.None)
+            CreateMap<era_needassessment, EvacuationAddress>()
                   .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
                   .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
                   .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
@@ -161,7 +161,6 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_gender))
 
                 .ReverseMap()
-
                 .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : (Guid?)null))
                 .ForMember(d => d.era_isprimaryregistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
                 .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => DateTime.Parse(s.DateOfBirth).CalculatetAge() < 19))
@@ -179,7 +178,8 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_name))
 
                 .ReverseMap()
-
+                .ValidateMemberList(MemberList.Source)
+                .ForSourceMember(s => s.Id, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_animalid, opts => opts.MapFrom(s => Guid.NewGuid()))
                 .ForMember(d => d.era_numberofpets, opts => opts.MapFrom(s => s.Quantity))
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Type));

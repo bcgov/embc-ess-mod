@@ -10,9 +10,6 @@ namespace EMBC.Tests.Integration.ESS
 {
     public class DynamicsTestData
     {
-        private readonly Random random = new Random();
-
-        private readonly string runId = Guid.NewGuid().ToString().Substring(0, 4);
         private readonly EssContext essContext;
 
         private readonly string testPrefix;
@@ -70,18 +67,8 @@ namespace EMBC.Tests.Integration.ESS
         public string InactiveSupplierLegalName => inactiveSupplier.era_name;
         public string InactiveSupplierGST => inactiveSupplier.era_gstnumber;
         public string[] SupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name).ToArray();
-
-        public string[] CurrentRunSupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
-            .Where(s => s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
-            .Select(s => s.era_name).ToArray();
-
-        public string[] CurrentRunETransferSupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
-            .Where(s => s.era_supportdeliverytype == 174360001 && s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
-            .Select(s => s.era_name).ToArray();
-
-        public string[] CurrentRunReferralSupportIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId
-            .Where(s => s.era_supportdeliverytype == 174360000 && s.era_suppliernote != null && s.era_suppliernote.Contains($"-{runId}-"))
-            .Select(s => s.era_name).ToArray();
+        public string[] ReferralIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Where(s => s.era_supportdeliverytype == 174360000).Select(s => s.era_name).ToArray();
+        public string[] ETransferIds => testEvacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId.Where(s => s.era_supportdeliverytype == 174360001).Select(s => s.era_name).ToArray();
 
         public string[] HouseholdMemberIds => testEvacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid.Select(s => s.era_householdmemberid?.ToString() ?? string.Empty).ToArray();
 
@@ -94,7 +81,7 @@ namespace EMBC.Tests.Integration.ESS
 #if DEBUG
             this.testPrefix = $"autotest-dev";
 #else
-            this.testPrefix = $"autotest-{runId}";
+            this.testPrefix = $"autotest-{TestHelper.GenerateNewUniqueId(string.Empty)}";
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
@@ -149,8 +136,8 @@ namespace EMBC.Tests.Integration.ESS
             else
             {
                 essContext.LoadProperty(evacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+                CreateEvacueeSupports(evacuationfile, this.testContact, this.tier4TeamMember, testPrefix);
             }
-            CreateEvacueeSupports(evacuationfile, this.testContact, this.tier4TeamMember, runId);
 
             var paperEvacuationfile = essContext.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
@@ -160,12 +147,12 @@ namespace EMBC.Tests.Integration.ESS
             if (paperEvacuationfile == null)
             {
                 paperEvacuationfile = CreateEvacuationFile(this.testContact, testPrefix + "-paper", testPrefix + "-paper");
+                CreateEvacueeSupports(paperEvacuationfile, this.testContact, this.tier4TeamMember, testPrefix);
             }
             else
             {
                 essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
             }
-            CreateEvacueeSupports(paperEvacuationfile, this.testContact, this.tier4TeamMember, runId);
 
             essContext.SaveChanges();
 
@@ -192,7 +179,7 @@ namespace EMBC.Tests.Integration.ESS
             essContext.DetachAll();
         }
 
-        public string RandomCommunity => Commmunities.Skip(random.Next(jurisdictions.Length - 1)).First().ToString();
+        public string RandomCommunity => Commmunities.Skip(Random.Shared.Next(jurisdictions.Length - 1)).First().ToString();
 
         private era_essteam CreateTeam(Guid id, string suffix = "")
         {
@@ -269,7 +256,7 @@ namespace EMBC.Tests.Integration.ESS
                 firstname = this.testPrefix + "-first",
                 lastname = this.testPrefix + "-last",
                 era_bcservicescardid = this.testPrefix + "-userId",
-                gendercode = random.Next(1, 3),
+                gendercode = Random.Shared.Next(1, 3),
                 address1_line1 = this.testPrefix + "-line1",
                 address1_line2 = this.testPrefix + "-line2",
                 address1_postalcode = "V8Z 7X9",
@@ -322,13 +309,13 @@ namespace EMBC.Tests.Integration.ESS
                 era_isprimaryregistrant = true
             };
 
-            var householdMembers = Enumerable.Range(1, random.Next(1, 5)).Select(i => new era_householdmember
+            var householdMembers = Enumerable.Range(1, Random.Shared.Next(1, 5)).Select(i => new era_householdmember
             {
                 era_householdmemberid = Guid.NewGuid(),
                 era_dateofbirth = new Date(2000 + i, i, i),
                 era_firstname = $"{testPrefix}-member-first-{i}",
                 era_lastname = $"{testPrefix}-member-last-{i}",
-                era_gender = random.Next(1, 3),
+                era_gender = Random.Shared.Next(1, 3),
                 era_isprimaryregistrant = false
             }).Prepend(primaryMember)
             .Append(new era_householdmember
@@ -337,7 +324,7 @@ namespace EMBC.Tests.Integration.ESS
                 era_dateofbirth = new Date(1998, 1, 2),
                 era_firstname = $"{testPrefix}-member-no-registrant-first",
                 era_lastname = $"{testPrefix}-member-no-registrant-last",
-                era_gender = random.Next(1, 3),
+                era_gender = Random.Shared.Next(1, 3),
                 era_isprimaryregistrant = false
             }).ToArray();
 
@@ -357,7 +344,7 @@ namespace EMBC.Tests.Integration.ESS
             return file;
         }
 
-        private void CreateEvacueeSupports(era_evacuationfile file, contact contact, era_essteamuser creator, string runId)
+        private void CreateEvacueeSupports(era_evacuationfile file, contact contact, era_essteamuser creator, string prefix)
         {
             var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
             var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
@@ -365,7 +352,7 @@ namespace EMBC.Tests.Integration.ESS
             var referrals = referralSupportTypes.Select((t, i) => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
-                era_suppliernote = $"{file.era_name}-ref-{runId}-{i}",
+                era_suppliernote = $"{prefix}-ref-{i}",
                 era_validfrom = DateTime.UtcNow.AddDays(-3),
                 era_validto = DateTime.UtcNow.AddDays(3),
                 era_supporttype = t,
@@ -376,7 +363,7 @@ namespace EMBC.Tests.Integration.ESS
             var etransfers = etransferSupportTypes.Select((t, i) => new era_evacueesupport
             {
                 era_evacueesupportid = Guid.NewGuid(),
-                era_suppliernote = $"{file.era_name}-et-{runId}-{i}",
+                era_suppliernote = $"{prefix}-etr-{i}",
                 era_validfrom = DateTime.UtcNow.AddDays(-3),
                 era_validto = DateTime.UtcNow.AddDays(3),
                 era_supporttype = t,
@@ -427,7 +414,7 @@ namespace EMBC.Tests.Integration.ESS
             };
 
             essContext.AddToera_suppliers(supplier);
-            essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCity), jurisdictions.Skip(random.Next(jurisdictions.Length - 1)).First());
+            essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCity), jurisdictions.Skip(Random.Shared.Next(jurisdictions.Length - 1)).First());
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCountry), canada);
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedProvinceState), bc);
 

@@ -18,7 +18,7 @@ namespace EMBC.ESS.Resources.Payments
 
         public Task<string> CreateInvoice(string batchName, era_etransfertransaction payment, CancellationToken ct);
 
-        public Task<IEnumerable<InvoiceItem>> QueryInvoices(string status, DateTime? statusChangedFrom, CancellationToken ct);
+        public Task<IEnumerable<InvoiceItem>> QueryInvoices(string status, DateTime? statusChangedFrom, DateTime? statusChangedTo, CancellationToken ct);
     }
 
     [Serializable]
@@ -139,13 +139,14 @@ namespace EMBC.ESS.Resources.Payments
             return (SupplierNumber: response.Suppliernumber, SiteCode: response.SupplierAddress.First().Suppliersitecode.StripCasSiteNumberBrackets());
         }
 
-        public async Task<IEnumerable<InvoiceItem>> QueryInvoices(string status, DateTime? statusChangedFrom, CancellationToken ct)
+        public async Task<IEnumerable<InvoiceItem>> QueryInvoices(string status, DateTime? statusChangedFrom, DateTime? statusChangedTo, CancellationToken ct)
         {
             var config = await casSystemConfigurationProvider.Get(ct);
             var response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
             {
                 PayGroup = config.PayGroup,
                 PaymentStatusDateFrom = statusChangedFrom,
+                PaymentStatusDateTo = statusChangedTo,
                 PaymentStatus = status
             }, ct);
 
