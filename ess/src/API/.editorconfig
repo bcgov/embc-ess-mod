@@ -76,7 +76,7 @@ csharp_style_var_for_built_in_types = true:silent
 csharp_style_var_when_type_is_apparent = true:silent
 csharp_style_var_elsewhere = true:silent
 # Expression-bodied members
-csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_methods = false:suggestion
 csharp_style_expression_bodied_constructors = false:silent
 csharp_style_expression_bodied_operators = false:silent
 csharp_style_expression_bodied_properties = true:silent
@@ -308,6 +308,9 @@ dotnet_diagnostic.S1172.severity = suggestion
 
 # S125: Sections of code should not be commented out
 dotnet_diagnostic.S125.severity = suggestion
+
+# IDE0022: Use block body for methods
+dotnet_diagnostic.IDE0022.severity = suggestion
 
 [*.vb]
 # Modifier preferences

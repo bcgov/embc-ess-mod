@@ -84,7 +84,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             foreach (var support in supports)
             {
-                var sourceSupport = newSupports.Where(s => s.GetType() == support.GetType()).Single();
+                var sourceSupport = newSupports.Single(s => s.GetType() == support.GetType());
 
                 if (sourceSupport.IncludedHouseholdMembers.Any())
                     support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
@@ -179,7 +179,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             foreach (var support in supports)
             {
-                var sourceSupport = paperSupports.Where(s => s.GetType() == support.GetType()).Single();
+                var sourceSupport = paperSupports.Single(s => s.GetType() == support.GetType());
                 var sourceReferral = (Referral)sourceSupport.SupportDelivery;
 
                 var referral = support.SupportDelivery.ShouldBeAssignableTo<Referral>().ShouldNotBeNull();
@@ -333,7 +333,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task FailSupport_AssignedToErrorQueue()
         {
-            var supportId = TestData.CurrentRunETransferSupportIds.TakeRandom(1).Single();
+            var supportId = TestData.ETransferIds.TakeRandom(1).Single();
 
             await supportRepository.Manage(new FailSupportCommand { SupportId = supportId });
 

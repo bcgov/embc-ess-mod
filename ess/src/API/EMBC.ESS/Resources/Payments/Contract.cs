@@ -106,6 +106,7 @@ namespace EMBC.ESS.Resources.Payments
     public class GetCasPaymentStatusRequest : QueryPaymentRequest
     {
         public DateTime? ChangedFrom { get; set; }
+        public DateTime? ChangedTo { get; set; }
         public CasPaymentStatus? InStatus { get; set; }
     }
 

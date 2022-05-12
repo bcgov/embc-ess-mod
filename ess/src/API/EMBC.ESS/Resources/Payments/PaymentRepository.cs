@@ -277,7 +277,7 @@ namespace EMBC.ESS.Resources.Payments
             var invoices = new List<InvoiceItem>();
             foreach (var status in casStatuses)
             {
-                invoices.AddRange(await casGateway.QueryInvoices(status, request.ChangedFrom, ct));
+                invoices.AddRange(await casGateway.QueryInvoices(status, request.ChangedFrom, request.ChangedTo, ct));
             }
 
             return new GetCasPaymentStatusResponse

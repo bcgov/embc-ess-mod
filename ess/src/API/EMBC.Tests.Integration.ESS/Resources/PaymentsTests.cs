@@ -28,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task SavePayment_InteracPayment_Saved()
         {
-            var linkedSupportIds = TestData.CurrentRunETransferSupportIds.Take(2);
+            var linkedSupportIds = TestData.ETransferIds.Take(2);
             var payment = new InteracSupportPayment
             {
                 Status = PaymentStatus.Pending,
@@ -80,7 +80,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         NotificationPhone = null,
                         SecurityAnswer = "answer",
                         SecurityQuestion = "question",
-                        LinkedSupportIds = TestData.CurrentRunSupportIds,
+                        LinkedSupportIds = TestData.ETransferIds.TakeRandom(),
                         PayeeId = registrantId
                     }
             };
@@ -112,14 +112,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
         {
-            //query payments
             var startDate = DateTime.UtcNow.AddDays(-14);
-            var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate });
+            var endDate = DateTime.UtcNow.AddDays(-13);
+
+            var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate, ChangedTo = endDate });
 
             response.Payments.ShouldNotBeEmpty();
             foreach (var payment in response.Payments)
             {
-                payment.StatusChangeDate.ShouldBeGreaterThanOrEqualTo(startDate);
+                payment.StatusChangeDate.ShouldBeGreaterThanOrEqualTo(startDate.ToLocalTime());
+                payment.StatusChangeDate.ShouldBeLessThanOrEqualTo(endDate.ToLocalTime());
             }
         }
     }
