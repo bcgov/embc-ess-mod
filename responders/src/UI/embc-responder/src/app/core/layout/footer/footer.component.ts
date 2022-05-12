@@ -25,7 +25,6 @@ export class FooterComponent implements OnInit {
           component: InformationDialogComponent,
           content: this.versionDialog(content)
         },
-        height: '345px',
         width: '530px'
       });
     });

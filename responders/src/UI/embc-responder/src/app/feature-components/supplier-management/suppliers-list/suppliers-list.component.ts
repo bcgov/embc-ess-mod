@@ -108,7 +108,6 @@ export class SuppliersListComponent implements OnInit {
             component: InformationDialogComponent,
             content: globalConst.updateSupplierStatus
           },
-          height: '260px',
           width: '600px'
         })
         .afterClosed()
@@ -169,7 +168,6 @@ export class SuppliersListComponent implements OnInit {
             component: InformationDialogComponent,
             content: globalConst.updateSupplierStatus
           },
-          height: '260px',
           width: '600px'
         })
         .afterClosed()

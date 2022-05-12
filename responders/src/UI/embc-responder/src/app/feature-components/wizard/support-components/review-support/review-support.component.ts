@@ -297,7 +297,6 @@ export class ReviewSupportComponent implements OnInit {
             component: InformationDialogComponent,
             content: globalConst.paperProcessSupports
           },
-          height: '250px',
           width: '630px'
         })
         .afterClosed()

@@ -21,7 +21,11 @@
 </div>
 
 <mat-dialog-content>
-  <div class="row mainBody">
-    <ng-template #target></ng-template>
-  </div>
+  <ng-template #target></ng-template>
 </mat-dialog-content>
+
+<mat-dialog-actions *ngIf="showCloseButton">
+  <button mat-button mat-dialog-close class="button-s cancel-button">
+    Cancel
+  </button>
+</mat-dialog-actions>

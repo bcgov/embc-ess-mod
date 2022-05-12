@@ -150,7 +150,6 @@ export class SupplierDetailComponent implements OnInit {
           component: InformationDialogComponent,
           content: globalConst.deleteSupplierFromList
         },
-        height: '300px',
         width: '650px'
       })
       .afterClosed()
@@ -267,7 +266,6 @@ export class SupplierDetailComponent implements OnInit {
           component: InformationDialogComponent,
           content: globalConst.rescindSupplierFromList
         },
-        height: '250px',
         width: '600px'
       })
       .afterClosed()
