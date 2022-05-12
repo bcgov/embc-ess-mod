@@ -3,9 +3,15 @@
     <h1>Process Supports</h1>
     <p>
       By clicking "Proceed", the supports will be processed & no longer
-      editable. A PDF will be created for all referrals, which can then be
-      printed or emailed. Please select if you would like to include an evacuee
-      summary with the referrals.
+      editable. A PDF will be created for all supports, which can then be
+      printed or emailed.
+      <span *ngIf="includesEtranfer"
+        >All e-Transfer requests will be submitted for approval.</span
+      >
+    </p>
+    <p *ngIf="!includesEtranfer">
+      Please select if you would like to include an evacuee summary with the
+      referrals.
     </p>
   </div>
 </div>
