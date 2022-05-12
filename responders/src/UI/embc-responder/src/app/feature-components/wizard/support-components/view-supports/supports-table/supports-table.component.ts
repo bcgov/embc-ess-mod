@@ -207,7 +207,9 @@ export class SupportsTableComponent
         if (element?.subCategory === SupportSubCategory.Food_Groceries) {
           const foodGroceriesSupport = element as FoodGroceriesSupport;
           rate =
-            globalConst.groceriesRate.rate * foodGroceriesSupport.numberOfDays;
+            globalConst.groceriesRate.rate *
+            foodGroceriesSupport.includedHouseholdMembers.length *
+            foodGroceriesSupport.numberOfDays;
           return foodGroceriesSupport.totalAmount > rate;
         } else {
           return false;
