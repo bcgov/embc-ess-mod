@@ -106,7 +106,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         public async Task CanVoidReferral()
         {
             var fileId = TestData.EvacuationFileId;
-            var supportId = TestData.CurrentRunReferralSupportIds.TakeRandom(1).Single();
+            var supportId = TestData.ReferralIds.TakeRandom(1).Single();
             await manager.Handle(new VoidSupportCommand
             {
                 FileId = fileId,
@@ -167,7 +167,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 FileId = TestData.EvacuationFileId,
                 ReprintReason = "test",
                 RequestingUserId = TestData.Tier4TeamMemberId,
-                SupportId = TestData.CurrentRunSupportIds.First()
+                SupportId = TestData.SupportIds.TakeRandom(1).Single()
             });
 
             printRequestId.ShouldNotBeNullOrEmpty();

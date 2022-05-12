@@ -138,7 +138,8 @@ namespace EMBC.Tests.Integration.ESS
             Func<Support, SupportDelivery> createSupportDelivery = sup =>
                 sup switch
                 {
-                    IncidentalsSupport s => new Interac { NotificationEmail = $"{prefix}unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
+                    IncidentalsSupport s => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
+                    ClothingSupport s => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
 
                     _ => new Referral { IssuedToPersonName = $"{prefix}-unitest" },
                 };
@@ -169,6 +170,27 @@ namespace EMBC.Tests.Integration.ESS
 
         public static async Task<string> SaveEvacuationFile(EventsManager manager, EvacuationFile file) =>
             await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+
+        public static async Task<IEnumerable<Support>> CreateSupports(EventsManager manager, EvacuationFile file, string RequestingUserId, string prefix)
+        {
+            var newSupports = CreateSupports(prefix, file);
+
+            await manager.Handle(new ProcessSupportsCommand
+            {
+                FileId = file.Id,
+                Supports = newSupports,
+                IncludeSummaryInReferralsPrintout = false,
+                RequestingUserId = RequestingUserId
+            });
+
+            await manager.Handle(new ProcessPendingSupportsCommand());
+
+            var supports = (await manager.Handle(new SearchSupportsQuery { FileId = file.Id })).Items;
+
+            return supports.Where(s => (s.SupportDelivery is Interac i && i.NotificationEmail.StartsWith(prefix)) ||
+                (s.SupportDelivery is Referral r && r.IssuedToPersonName.StartsWith(prefix)))
+                .ToArray();
+        }
 
         public static IEnumerable<T> TakeRandom<T>(this T[] list) => list.TakeRandom(Random.Shared.Next(1, list.Length));
 
