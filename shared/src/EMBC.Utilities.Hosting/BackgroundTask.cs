@@ -61,23 +61,22 @@ namespace EMBC.Utilities.Hosting
             {
                 runNumber++;
                 logger.LogDebug("next run in {0}s", nextExecutionDelay.TotalSeconds);
-                await Task.Delay(nextExecutionDelay, stoppingToken);
 
+                var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(5), stoppingToken);
+
+                await Task.Delay(nextExecutionDelay, stoppingToken);
+                if (handle == null)
+                {
+                    logger.LogDebug("skipping run {0}", runNumber);
+                    continue;
+                }
                 try
                 {
-                    await using (var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(10), stoppingToken))
+                    logger.LogDebug("executing run # {0}", runNumber);
+                    using (var executionScope = serviceProvider.CreateScope())
                     {
-                        if (handle == null)
-                        {
-                            logger.LogDebug("skipping run {0}", runNumber);
-                            continue;
-                        }
-                        logger.LogDebug("executing run # {0}", runNumber);
-                        using (var executionScope = serviceProvider.CreateScope())
-                        {
-                            var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                            await task.ExecuteAsync(stoppingToken);
-                        }
+                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                        await task.ExecuteAsync(stoppingToken);
                     }
                 }
                 catch (Exception e)
@@ -87,6 +86,7 @@ namespace EMBC.Utilities.Hosting
                 finally
                 {
                     nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
+                    await handle.DisposeAsync();
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace EMBC.Utilities.Hosting
         private TimeSpan CalculateNextExecutionDelay(DateTime utcNow)
         {
             var nextDate = schedule.GetNextOccurrence(utcNow);
-            if (nextDate == null) throw new InvalidOperationException("cannot calculate the next execution date, stopping the background task");
+            if (nextDate == null) throw new InvalidOperationException("Cannot calculate the next execution date, stopping the background task");
 
             return nextDate.Value.Subtract(utcNow);
         }
