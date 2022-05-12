@@ -22,6 +22,7 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact testContact;
         private readonly era_task activeTask;
+        private readonly era_task inactiveTask;
         private readonly era_evacuationfile testEvacuationfile;
         private readonly era_evacuationfile testPaperEvacuationFile;
         private readonly era_supplier supplierA;
