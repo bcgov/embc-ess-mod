@@ -81,7 +81,7 @@ namespace EMBC.Tests.Integration.ESS
 #if DEBUG
             this.testPrefix = $"autotest-dev";
 #else
-            this.testPrefix = $"autotest-{runId}";
+            this.testPrefix = $"autotest-{TestHelper.GenerateNewUniqueId(string.Empty)}";
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
