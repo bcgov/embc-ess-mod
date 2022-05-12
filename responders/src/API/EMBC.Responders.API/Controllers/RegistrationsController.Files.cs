@@ -543,6 +543,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.Supports, opts => opts.Ignore())
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.PrimaryRegistrantUserId, opts => opts.Ignore())
                 ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.EvacuationFile, EvacuationFile>()
