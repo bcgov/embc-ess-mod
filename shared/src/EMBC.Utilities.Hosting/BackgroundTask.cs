@@ -40,7 +40,7 @@ namespace EMBC.Utilities.Hosting
 
                 semaphore = distributedSemaphoreProvider.CreateSemaphore($"backgroundtask:{typeof(T).Name}", degreeOfParallelism);
 
-                logger.LogInformation("Starting background task: initial delay {0}, schedule: {1}, parallelism: {2}",
+                logger.LogInformation("starting background task: initial delay {0}, schedule: {1}, parallelism: {2}",
                     this.startupDelay, this.schedule.ToString(), task.DegreeOfParallelism);
             }
         }
@@ -65,22 +65,24 @@ namespace EMBC.Utilities.Hosting
 
                 try
                 {
-                    using var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(1), stoppingToken);
-                    if (handle == null)
+                    await using (var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(10), stoppingToken))
                     {
-                        logger.LogDebug("skipping run {0}", runNumber);
-                        continue;
-                    }
-                    logger.LogDebug("Executing run # {0}", runNumber);
-                    using (var executionScope = serviceProvider.CreateScope())
-                    {
-                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                        await task.ExecuteAsync(stoppingToken);
+                        if (handle == null)
+                        {
+                            logger.LogDebug("skipping run {0}", runNumber);
+                            continue;
+                        }
+                        logger.LogDebug("executing run # {0}", runNumber);
+                        using (var executionScope = serviceProvider.CreateScope())
+                        {
+                            var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                            await task.ExecuteAsync(stoppingToken);
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, "Error in run # {0}: {1}", runNumber, e.Message);
+                    logger.LogError(e, "error in run # {0}: {1}", runNumber, e.Message);
                 }
                 finally
                 {
@@ -92,7 +94,7 @@ namespace EMBC.Utilities.Hosting
         private TimeSpan CalculateNextExecutionDelay(DateTime utcNow)
         {
             var nextDate = schedule.GetNextOccurrence(utcNow);
-            if (nextDate == null) throw new InvalidOperationException("Cannot calculate the next execution date, stopping the background task");
+            if (nextDate == null) throw new InvalidOperationException("cannot calculate the next execution date, stopping the background task");
 
             return nextDate.Value.Subtract(utcNow);
         }
