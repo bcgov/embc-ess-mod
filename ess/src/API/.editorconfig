@@ -306,6 +306,9 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 # S1172: Unused method parameters should be removed
 dotnet_diagnostic.S1172.severity = suggestion
 
+# S125: Sections of code should not be commented out
+dotnet_diagnostic.S125.severity = suggestion
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion
