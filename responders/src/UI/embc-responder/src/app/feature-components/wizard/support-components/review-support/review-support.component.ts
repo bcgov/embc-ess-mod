@@ -317,7 +317,6 @@ export class ReviewSupportComponent implements OnInit {
               component: ProcessSupportsDialogComponent,
               includesEtranfer: this.includesEtranfer()
             },
-            height: '440px',
             width: '630px'
           })
           .afterClosed()
