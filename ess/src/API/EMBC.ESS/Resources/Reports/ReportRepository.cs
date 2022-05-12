@@ -136,6 +136,7 @@ namespace EMBC.ESS.Resources.Reports
             var loadTasks = new List<Task>();
             loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId), ct));
             loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_EvacuatedFromID), ct));
+            if (file.era_CurrentNeedsAssessmentid == null) loadTasks.Add(ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct));
 
             var supports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports
                 .Expand(s => s.era_SupplierId)
