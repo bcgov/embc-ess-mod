@@ -66,15 +66,16 @@ namespace EMBC.Utilities.Hosting
                 var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(5), stoppingToken);
 
                 // wait in the lock
-                await Task.Delay(nextExecutionDelay, stoppingToken);
-                if (handle == null)
-                {
-                    logger.LogDebug("skipping run {0}", runNumber);
-                    // no lock
-                    continue;
-                }
                 try
                 {
+                    await Task.Delay(nextExecutionDelay, stoppingToken);
+                    if (handle == null)
+                    {
+                        logger.LogDebug("skipping run {0}", runNumber);
+                        // no lock
+                        continue;
+                    }
+
                     logger.LogDebug("executing run # {0}", runNumber);
                     using (var executionScope = serviceProvider.CreateScope())
                     {
@@ -90,7 +91,7 @@ namespace EMBC.Utilities.Hosting
                 {
                     nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
                     // release the lock
-                    await handle.DisposeAsync();
+                    if (handle != null) await handle.DisposeAsync();
                 }
             }
         }
