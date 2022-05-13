@@ -100,15 +100,16 @@ namespace OAuthServer
 
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
+                var redisPrefix = configuration.GetValue("REDIS_KEY_PREFIX", string.Empty);
                 builder
                     .AddOperationalStore(opts =>
                     {
                         opts.RedisConnectionString = redisConnectionString;
-                        opts.KeyPrefix = "{" + applicationName + "}";
+                        opts.KeyPrefix = redisPrefix;
                     }).AddRedisCaching(opts =>
                     {
                         opts.RedisConnectionString = redisConnectionString;
-                        opts.KeyPrefix = "{" + applicationName + "}";
+                        opts.KeyPrefix = redisPrefix;
                     });
             }
             else
