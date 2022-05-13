@@ -20,7 +20,6 @@ import { AddressModel } from 'src/app/core/models/address.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
-import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -47,9 +46,7 @@ export class ReviewSupportComponent implements OnInit {
     private router: Router,
     private locationService: LocationsService,
     private referralService: ReferralCreationService,
-    private stepSupportsService: StepSupportsService,
     private reviewSupportService: ReviewSupportService,
-    private stepSupportsServices: StepSupportsService,
     private alertService: AlertService,
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
