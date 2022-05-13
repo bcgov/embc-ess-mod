@@ -71,21 +71,28 @@ namespace EMBC.Utilities.Hosting
                     await Task.Delay(nextExecutionDelay, stoppingToken);
                     if (handle == null)
                     {
-                        logger.LogDebug("skipping run {0}", runNumber);
                         // no lock
+                        logger.LogDebug("skipping run {0}", runNumber);
                         continue;
                     }
-
-                    logger.LogDebug("executing run # {0}", runNumber);
-                    using (var executionScope = serviceProvider.CreateScope())
+                    try
                     {
-                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                        await task.ExecuteAsync(stoppingToken);
+                        // do work
+                        logger.LogDebug("executing run # {0}", runNumber);
+                        using (var executionScope = serviceProvider.CreateScope())
+                        {
+                            var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                            await task.ExecuteAsync(stoppingToken);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "error in run # {0}: {1}", runNumber, e.Message);
                     }
                 }
-                catch (Exception e)
+                catch (TaskCanceledException)
                 {
-                    logger.LogError(e, "error in run # {0}: {1}", runNumber, e.Message);
+                    //do nothing if wait was interrupted
                 }
                 finally
                 {
