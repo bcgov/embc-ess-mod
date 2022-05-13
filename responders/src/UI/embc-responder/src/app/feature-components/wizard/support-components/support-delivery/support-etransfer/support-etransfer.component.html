@@ -6,9 +6,9 @@
   </div>
   <div class="row">
     <div class="col-md-4">
-      <p>
+      <p class="bold dialog-title">
         {{ supportDeliveryFormControl?.recipientLastName.value }},
-        {{ supportDeliveryFormControl?.recipientFirstName.value }}
+        {{ supportDeliveryFormControl?.recipientFirstName.value | titlecase }}
       </p>
     </div>
   </div>
