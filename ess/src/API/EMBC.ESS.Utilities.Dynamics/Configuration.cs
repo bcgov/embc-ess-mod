@@ -60,7 +60,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                 .AddODataClientHandler<DynamicsODataClientHandler>()
                 .AddHttpClient()
                 .ConfigureHttpClient(c => c.Timeout = options.HttpClientTimeout)
-                .SetHandlerLifetime(TimeSpan.FromMinutes(options.TimeoutInSeconds))
+                .SetHandlerLifetime(TimeSpan.FromMinutes(30))
                 .AddPolicyHandler((sp, request) =>
                 {
                     var ctx = request.GetPolicyExecutionContext() ?? new Context();
