@@ -3,8 +3,10 @@
     <h1>Process Supports</h1>
     <p>
       By clicking "Proceed", the supports will be processed & no longer
-      editable. A PDF will be created for all supports, which can then be
-      printed or emailed.
+      editable. A PDF will be created for all
+      <span *ngIf="includesEtranfer">supports,</span>
+      <span *ngIf="!includesEtranfer">referrals,</span>
+      which can then be printed or emailed.
       <span *ngIf="includesEtranfer"
         >All e-Transfer requests will be submitted for approval.</span
       >
