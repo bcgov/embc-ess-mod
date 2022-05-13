@@ -21,8 +21,11 @@ namespace EMBC.Utilities.Messaging
             var response = await dispatcherClient.DispatchAsync(request, new CallOptions(deadline: DateTime.UtcNow.AddSeconds(118), headers: new Metadata()));
             if (response.Error)
             {
-                var errorType = Type.GetType(response.ErrorType, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
-                var exception = (Exception)(Activator.CreateInstance(errorType, response.ErrorMessage) ?? null!);
+                var errorType = Type.GetType(response.ErrorType, an => Assembly.Load(an.Name ?? null!), null, false, true);
+                var exception = errorType != null
+                    ? (Exception)(Activator.CreateInstance(errorType, response.ErrorMessage) ?? null!)
+                    : new Exception(response.ErrorMessage);
+
                 throw exception;
                 //var serializer = new System.Runtime.Serialization.DataContractSerializer(errorType);
                 //using var ms = new MemoryStream(response.Data.ToByteArray());

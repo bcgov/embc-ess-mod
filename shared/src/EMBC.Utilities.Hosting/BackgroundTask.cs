@@ -66,31 +66,39 @@ namespace EMBC.Utilities.Hosting
                 var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(5), stoppingToken);
 
                 // wait in the lock
-                await Task.Delay(nextExecutionDelay, stoppingToken);
-                if (handle == null)
-                {
-                    logger.LogDebug("skipping run {0}", runNumber);
-                    // no lock
-                    continue;
-                }
                 try
                 {
-                    logger.LogDebug("executing run # {0}", runNumber);
-                    using (var executionScope = serviceProvider.CreateScope())
+                    await Task.Delay(nextExecutionDelay, stoppingToken);
+                    if (handle == null)
                     {
-                        var task = executionScope.ServiceProvider.GetRequiredService<T>();
-                        await task.ExecuteAsync(stoppingToken);
+                        // no lock
+                        logger.LogDebug("skipping run {0}", runNumber);
+                        continue;
+                    }
+                    try
+                    {
+                        // do work
+                        logger.LogDebug("executing run # {0}", runNumber);
+                        using (var executionScope = serviceProvider.CreateScope())
+                        {
+                            var task = executionScope.ServiceProvider.GetRequiredService<T>();
+                            await task.ExecuteAsync(stoppingToken);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "error in run # {0}: {1}", runNumber, e.Message);
                     }
                 }
-                catch (Exception e)
+                catch (TaskCanceledException)
                 {
-                    logger.LogError(e, "error in run # {0}: {1}", runNumber, e.Message);
+                    //do nothing if wait was interrupted
                 }
                 finally
                 {
                     nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
                     // release the lock
-                    await handle.DisposeAsync();
+                    if (handle != null) await handle.DisposeAsync();
                 }
             }
         }
