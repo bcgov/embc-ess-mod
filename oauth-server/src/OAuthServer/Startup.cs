@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -26,7 +25,6 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
 using Serilog;
-using Serilog.Events;
 using StackExchange.Redis;
 
 namespace OAuthServer
@@ -73,11 +71,10 @@ namespace OAuthServer
 
             services.AddControllers();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
             var configFile = configuration.GetValue("IDENTITYSERVER_CONFIG_FILE", (string)null);
             if (string.IsNullOrEmpty(configFile) || !File.Exists(configFile))
             {
-                throw new Exception($"Config file not found: check env var IDENTITYSERVER_CONFIG_FILE={configFile}");
+                throw new InvalidOperationException($"Config file not found: check env var IDENTITYSERVER_CONFIG_FILE={configFile}");
             }
             var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(configFile));
 
@@ -232,6 +229,7 @@ namespace OAuthServer
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
+            services.AddOpenTelemetry(applicationName);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -243,22 +241,7 @@ namespace OAuthServer
                 IdentityModelEventSource.ShowPII = true;
             }
 
-            //app.UseHttpsRedirection();
-
-            app.UseSerilogRequestLogging(opts =>
-            {
-                opts.GetLevel = ExcludeHealthChecks;
-                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
-                {
-                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
-                    diagCtx.Set("Host", httpCtx.Request.Host);
-                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
-                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
-                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
-                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
-                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
-                };
-            });
+            app.SetDefaultRequestLogging();
 
             app.UseForwardedHeaders();
             app.UseRouting();
@@ -279,15 +262,5 @@ namespace OAuthServer
                 });
             });
         }
-
-        //inspired by https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-excluding-health-check-endpoints-from-serilog-request-logging/
-        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
-        ex != null
-            ? LogEventLevel.Error
-            : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
-                ? LogEventLevel.Error
-                : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
-                    ? LogEventLevel.Verbose
-                    : LogEventLevel.Information;
     }
 }

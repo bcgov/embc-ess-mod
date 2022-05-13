@@ -127,7 +127,7 @@ export function getSummaryRes(TEST_TYPE: string, data: any) {
     let dateString = getDateString();
     let timeString = getTimeString();
     let descriptor = getSummaryFileDescriptor();
-    let fileName: string = `${TEST_TYPE}${descriptor}.${dateString}.${timeString}.summary`;
+    let fileName: string = `results/${TEST_TYPE}${descriptor}.${dateString}.${timeString}.summary`;
     let res: any = {
         'stdout': textSummary(data, { indent: ' ', enableColors: true }), // Show the text summary to stdout...
     };
