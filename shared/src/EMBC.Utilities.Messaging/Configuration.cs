@@ -121,7 +121,7 @@ namespace EMBC.Utilities.Messaging
                 configurationServices.Services.TryAddSingleton<ResolverFactory>(new DnsResolverFactory(refreshInterval: TimeSpan.FromSeconds(15)));
                 configurationServices.Services.TryAddSingleton<LoadBalancerFactory, RoundRobinBalancerFactory>();
                 configurationServices.Services.TryAddTransient<ClientAuthenticationInterceptor>();
-                if (options.Url == null) throw new Exception($"Messaging url is missing - can't configure messaging client");
+                if (options.Url == null) throw new InvalidOperationException($"Messaging url is missing - can't configure messaging client");
                 configurationServices.Services.AddGrpcClient<Dispatcher.DispatcherClient>((sp, opts) =>
                 {
                     opts.Address = options.Url;
@@ -165,8 +165,7 @@ namespace EMBC.Utilities.Messaging
                             }
                         }
                     };
-                }).AddInterceptor<ClientAuthenticationInterceptor>(InterceptorScope.Client)
-                .EnableCallContextPropagation(opts => opts.SuppressContextNotFoundErrors = true);
+                }).AddInterceptor<ClientAuthenticationInterceptor>(InterceptorScope.Client);
 
                 configurationServices.Services
                     .Configure<OauthTokenProviderOptions>(configurationServices.Configuration.GetSection("messaging:oauth"))
