@@ -94,6 +94,7 @@
                     <mat-option
                       *ngFor="let option of filteredOptions | async"
                       [value]="option"
+                      [id]="option.name"
                     >
                       {{ option.name }}
                     </mat-option>
@@ -273,6 +274,7 @@
                       <mat-option
                         *ngFor="let option of mailingFilteredOptions | async"
                         [value]="option"
+                        [id]="option.name"
                       >
                         {{ option.name }}
                       </mat-option>
