@@ -13,12 +13,14 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
     {
         private readonly Lazy<IWebDriver> currentWebDriverLazy;
         private readonly Lazy<IConfiguration> configurationLazy;
-        //private bool _isDisposed;
+        private bool _isDisposed;
+        private readonly bool closeBrowserOnDispose;
 
         public BrowserDriver()
         {
             currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
             configurationLazy = new Lazy<IConfiguration>(ReadConfiguration);
+            closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", false);
         }
 
         /// <summary>
@@ -57,19 +59,19 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
         /// </summary>
         /// Commented out until pipeline integration begins; easier to troubleshoot element issues with the browser open.
-        /*public void Dispose()
+        public void Dispose()
         {
             if (_isDisposed)
             {
                 return;
             }
 
-            if (currentWebDriverLazy.IsValueCreated)
+            if (currentWebDriverLazy.IsValueCreated && closeBrowserOnDispose)
             {
                 Current.Quit();
             }
 
             _isDisposed = true;
-        }*/
+        }
     }
 }

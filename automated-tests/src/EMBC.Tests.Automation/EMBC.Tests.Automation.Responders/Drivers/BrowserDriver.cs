@@ -8,17 +8,18 @@ namespace EMBC.Tests.Automation.Responders.Drivers
     /// <summary>
     /// Manages a browser instance using Selenium
     /// </summary>
-    //public class BrowserDriver : IDisposable
-    public class BrowserDriver
+    public class BrowserDriver : IDisposable
     {
         private readonly Lazy<IWebDriver> currentWebDriverLazy;
         private readonly Lazy<IConfiguration> configurationLazy;
-        //private bool _isDisposed;
+        private bool _isDisposed;
+        private readonly bool closeBrowserOnDispose;
 
         public BrowserDriver()
         {
             currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
             configurationLazy = new Lazy<IConfiguration>(ReadConfiguration);
+            closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", false);
         }
 
         /// <summary>
@@ -56,19 +57,19 @@ namespace EMBC.Tests.Automation.Responders.Drivers
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
         /// </summary>
-        //public void Dispose()
-        //{
-        //    if (_isDisposed)
-        //    {
-        //        return;
-        //    }
+        public void Dispose()
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
 
-        //    if (currentWebDriverLazy.IsValueCreated)
-        //    {
-        //        Current.Quit();
-        //    }
+            if (currentWebDriverLazy.IsValueCreated && closeBrowserOnDispose)
+            {
+                Current.Quit();
+            }
 
-        //    _isDisposed = true;
-        //}
+            _isDisposed = true;
+        }
     }
 }
