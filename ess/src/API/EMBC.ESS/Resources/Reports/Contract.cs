@@ -329,8 +329,8 @@ namespace EMBC.ESS.Resources.Reports
         [Display(Name = "Lodging Address")]
         public string LodgingAddress { get; set; }
 
-        [Display(Name = "Bileting City")]
-        public string BiletingCity { get; set; }
+        [Display(Name = "Billeting City")]
+        public string BilletingCity { get; set; }
 
         [Display(Name = "Group Lodging City")]
         public string GroupLodgingCity { get; set; }
@@ -359,7 +359,7 @@ namespace EMBC.ESS.Resources.Reports
         Food_Groceries = 174360000,
         Food_Restaurant = 174360001,
         Lodging_Hotel = 174360002,
-        Lodging_Bileting = 174360003,
+        Lodging_Billeting = 174360003,
         Lodging_Group = 174360004,
         Incidentals = 174360005,
         Clothing = 174360006,
