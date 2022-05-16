@@ -17,4 +17,4 @@ Scenario: Evacuee paper based new Registration
 
 Scenario: Add Interac Support to Online ESS File
 	Given I log in with BCeID user ess.developerA1
-	When I create a interact support
+	When I create an Interac support
