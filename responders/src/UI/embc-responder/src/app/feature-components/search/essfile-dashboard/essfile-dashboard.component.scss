@@ -174,3 +174,8 @@ a:not(.btn):focus {
 .col-wide-icon {
   width: 38px;
 }
+
+.address-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
