@@ -93,7 +93,7 @@ namespace EMBC.ESS.Resources.Reports
                         break;
 
                     case (int)SupportType.Lodging_Hotel:
-                    case (int)SupportType.Lodging_Bileting:
+                    case (int)SupportType.Lodging_Billeting:
                     case (int)SupportType.Lodging_Group:
                         res = "Lodging";
                         break;
@@ -134,8 +134,8 @@ namespace EMBC.ESS.Resources.Reports
                         res = "Hotel";
                         break;
 
-                    case (int)SupportType.Lodging_Bileting:
-                        res = "Bileting";
+                    case (int)SupportType.Lodging_Billeting:
+                        res = "Billeting";
                         break;
 
                     case (int)SupportType.Lodging_Group:
@@ -201,7 +201,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.Fax, opts => opts.MapFrom(s => s.era_SupplierId != null ? s.era_SupplierId.era_fax : null))
                 .ForMember(d => d.LodgingName, opts => opts.MapFrom(s => s.era_lodgingname))
                 .ForMember(d => d.LodgingAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
-                .ForMember(d => d.BiletingCity, opts => opts.MapFrom(s => s.era_lodgingcity))
+                .ForMember(d => d.BilletingCity, opts => opts.MapFrom(s => s.era_lodgingcity))
                 .ForMember(d => d.GroupLodgingCity, opts => opts.MapFrom(s => s.era_GroupLodgingCityID != null ? s.era_GroupLodgingCityID.era_jurisdictionname : null))
                 .ForMember(d => d.LodgingContactNumber, opts => opts.MapFrom(s => s.era_lodgingcontactnumber))
                 .ForMember(d => d.LodgingEmail, opts => opts.MapFrom(s => s.era_lodgingemailaddress))
