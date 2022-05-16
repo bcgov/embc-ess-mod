@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EMBC.Tests.Automation.Responders.StepDefinitions
+﻿namespace EMBC.Tests.Automation.Responders.StepDefinitions
 {
     [Binding]
     public sealed class RespondersPortalSteps
@@ -19,7 +13,6 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
         [When(@"I complete a new online evacuee registration")]
         public void CompleteNewOnlineRegistration()
         {
-
             //click on Sign in to the Task #
             evacueeRegistration.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
             evacueeRegistration.SignInTaskButton();
@@ -44,7 +37,6 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //click new evacuee registration
             evacueeRegistration.NewEvacueeRegButton();
-
 
             //Wizard STEP 1:
             //click next on Collection Notice
@@ -127,9 +119,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //review process support
             evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
             evacueeRegistration.WizardOnlineProcessSupportsForm();
-
         }
-
 
         [When(@"I complete a new paper based evacuee registration")]
         public void CompleteNewPaperBasedRegistration()
@@ -158,7 +148,6 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //click new evacuee registration
             evacueeRegistration.NewEvacueeRegButton();
-
 
             //Wizard STEP 1:
             //click next on Collection Notice
@@ -235,7 +224,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             evacueeRegistration.WizardPaperBasedProcessSupportsForm();
         }
 
-        [When(@"I create a interact support")]
+        [When(@"I create an Interac support")]
         public void CreateInteracSupport()
         {
             //click on Sign in to the Task #
@@ -269,10 +258,6 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //Passing ESS File Step
             evacueeRegistration.WizardEditESSFilePassStep();
             evacueeRegistration.WizardNextStepButton();
-
-
-
-
         }
 
         [Then(@"A registration is completed with an active support")]

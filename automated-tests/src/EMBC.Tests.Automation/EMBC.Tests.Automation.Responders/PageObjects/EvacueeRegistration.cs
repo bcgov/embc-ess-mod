@@ -1,19 +1,11 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
-using Protractor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EMBC.Tests.Automation.Responders.PageObjects
 {
     public class EvacueeRegistration : PageObjectBase
     {
         public EvacueeRegistration(IWebDriver webDriver) : base(webDriver)
-        {}
+        { }
 
         //TASK FUNCTIONS
         public void SignInTaskButton()
@@ -23,7 +15,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void EnterTaskNumber(string taskName)
         {
-
             Wait();
 
             var taskNumberField = webDriver.FindElement(By.CssSelector("input[formcontrolname='taskNumber']"));
@@ -44,7 +35,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             digitalRegCard.Click();
 
             this.ButtonElement("Next");
-
         }
 
         public void SelectPaperBasedRegistrationType()
@@ -53,7 +43,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             digitalRegCard.Click();
 
             this.ButtonElement("Next");
-
         }
 
         public void SelectGovernmentID()
@@ -65,7 +54,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void FillOnlineSearchEvacueeForm(string firstName, string lastName, string dob)
         {
-            
             Wait();
 
             var firstNameInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='firstName']"));
@@ -111,15 +99,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var selectedEssFileElement = "//app-ess-files-results[1]/div[" + essFileNbr + "]/mat-card[1]/div[1]/div[1]/a[1]";
             var selectedEssFileLink = webDriver.FindElement(By.XPath(selectedEssFileElement));
             selectedEssFileLink.Click();
-            
         }
 
         public void ESSFileDashEditButton()
         {
             ButtonElement("Edit ESS File");
         }
-
-        
 
         //WIZARD FUNCTIONS
         //STEP 1: Profile
@@ -141,7 +126,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardEvacueeDetailsForm(string gender)
         {
-
             var genderSelect = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='gender']"));
             genderSelect.SendKeys(gender);
 
@@ -165,7 +149,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             citySelect.Click();
 
             ((IJavaScriptExecutor)webDriver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight - 200)");
-            
+
             Wait();
 
             var yesRadioButton2 = webDriver.FindElement(By.CssSelector("[formcontrolname='isNewMailingAddress'] mat-radio-button"));
@@ -205,7 +189,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardMinContactForm()
         {
-
             Wait();
 
             this.NoRadioButton();
@@ -214,7 +197,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardMaxContactForm(string phoneNumber, string email)
         {
-
             Wait();
 
             this.YesRadioButton();
@@ -269,27 +251,23 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardReviewProfileForm()
         {
-            
             ((IJavaScriptExecutor)webDriver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight - 200)");
 
             Wait();
 
             this.YesRadioButton();
             this.ButtonElement("Save Profile");
-            
         }
 
         public void WizardNextStepButton()
         {
             Wait();
             this.ButtonElement("Proceed to Next Step");
-
         }
 
         //Step 2: ESS File
         public void WizardOnlineEvacDetailsFormReqFields(string facilityLocation, string householdAffected)
         {
-
             Wait();
 
             var evacAddressRadioBttn = webDriver.FindElement(By.Id("addressYesOption"));
@@ -303,17 +281,14 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var insuranceRadioButton = webDriver.FindElement(By.CssSelector("mat-radio-group[formcontrolname='insurance'] mat-radio-button[id='Yes']"));
             insuranceRadioButton.Click();
 
-
             var evacDescriptionTextarea = webDriver.FindElement(By.CssSelector("textarea[formcontrolname='householdAffected']"));
             evacDescriptionTextarea.SendKeys(householdAffected);
 
             this.ButtonElement("Next");
-
         }
 
         public void WizardPaperBasedEvacDetailsFormReqFields(string interviewer, string initials, string completedDate, string completedTime, string addressLine1, string city, string facilityLocation, string householdAffected)
         {
-
             Wait();
 
             var interviewerInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='firstName']"));
@@ -339,7 +314,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             var citySelect = webDriver.FindElement(By.Id("Victoria"));
             citySelect.Click();
-           
 
             var facilityNameInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='facilityName']"));
             facilityNameInput.SendKeys(facilityLocation);
@@ -350,12 +324,10 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var insuranceRadioButton = webDriver.FindElement(By.CssSelector("mat-radio-group[formcontrolname='insurance'] mat-radio-button[id='Yes']"));
             insuranceRadioButton.Click();
 
-
             var evacDescriptionTextarea = webDriver.FindElement(By.CssSelector("textarea[formcontrolname='householdAffected']"));
             evacDescriptionTextarea.SendKeys(householdAffected);
 
             this.ButtonElement("Next");
-
         }
 
         public void WizardHouseholdMembersMinForm()
@@ -417,7 +389,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             medicineSupplyYesRadioButton.Click();
 
             ButtonElement("Next");
-
         }
 
         public void AnimalsMinForm()
@@ -473,7 +444,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             ((IJavaScriptExecutor)webDriver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight - 500)");
 
             var needsTransportYesRadioBttn = webDriver.FindElement(By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideTransportation']/mat-radio-button[1]"));
-            
+
             Wait();
             needsTransportYesRadioBttn.Click();
 
@@ -504,7 +475,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             reviewSaveTab.Click();
 
             ButtonElement("Save ESS File");
-
         }
 
         public void WizardReviewEssFile()
@@ -512,12 +482,10 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             this.ButtonElement("Save");
         }
 
-
         //Step 3: Supports
         public void WizardAddSupport()
         {
             this.ButtonElement("+ Add Supports");
-
         }
 
         public void WizardSelectSupportForm(string supportType)
@@ -547,7 +515,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             totalAmountInput.SendKeys(mealValue);
 
             this.ButtonElement("Next - Support Delivery");
-
         }
 
         public void SupportPaperBasedHotelDetailsForm(string interviewer, string interviewerInitials, string completedDate, string validToDate, string validTime, string nbrRooms)
@@ -569,7 +536,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var completeDateInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='paperCompletedOn']"));
             completeDateInput.SendKeys(completedDate);
 
-
             var validFromDateInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='fromDate']"));
             validFromDateInput.SendKeys(completedDate);
 
@@ -582,7 +548,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var validToTimeInput = webDriver.FindElement(By.CssSelector("input[formcontrolname='toTime']"));
             validToTimeInput.SendKeys(validTime);
 
-
             ((IJavaScriptExecutor)webDriver).ExecuteScript("window.scrollTo(0, document.body.scrollHeight - 200)");
             Wait();
 
@@ -592,9 +557,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var nbrOfRoomsSelect = webDriver.FindElement(By.CssSelector("mat-select[formcontrolname='noOfRooms']"));
             nbrOfRoomsSelect.SendKeys(nbrRooms);
 
-
             this.ButtonElement("Next - Support Delivery");
-
         }
 
         public void SupportDeliveryForm(string responsibleName)
@@ -621,7 +584,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             supplierSelect.Click();
 
             this.ButtonElement("Next - Save Support");
-
         }
 
         public void SuccessSupportPopUp()
@@ -634,12 +596,11 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
             this.ButtonElement("Process Draft Support/s");
+            Wait(10000);
         }
 
         public void WizardOnlineProcessSupportsForm()
         {
-            
-
             var certificateCheckBox = webDriver.FindElement(By.Id("processDraftCert"));
             certificateCheckBox.Click();
 
@@ -648,20 +609,16 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var buttons = webDriver.FindElements(By.TagName("button"));
             var proceedBttn = buttons.Should().ContainSingle(b => b.Text.Contains("Proceed")).Subject;
             proceedBttn.Click();
-
         }
 
         public void WizardPaperBasedProcessSupportsForm()
         {
-
             this.ButtonElement("Process Support/s");
 
             var buttons = webDriver.FindElements(By.TagName("button"));
             var proceedBttn = buttons.Should().ContainSingle(b => b.Text.Contains("Proceed")).Subject;
             proceedBttn.Click();
-
         }
-
 
         // ASSERT FUNCTIONS
         public void SupportCreatedSuccessfully()
@@ -673,16 +630,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         }
 
         // PRIVATE FUNCTIONS
-        private void ButtonElement(string bttnName)
-        {
-            Wait();
-
-            IJavaScriptExecutor js = (IJavaScriptExecutor)webDriver;
-            
-            var buttons = webDriver.FindElements(By.TagName("button"));
-            var selectedBttn = buttons.Should().ContainSingle(b => b.Text.Contains(bttnName)).Subject;
-            js.ExecuteScript("arguments[0].click()", selectedBttn);
-        }
 
         private void YesRadioButton()
         {
@@ -696,6 +643,5 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var yesRadioButton = webDriver.FindElement(By.Id("noOption"));
             yesRadioButton.Click();
         }
-
     }
 }

@@ -39,7 +39,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
             var options = new ChromeOptions();
             options.AddArguments("start-maximized");
 
-            var chromeDriver = new ChromeDriver((ChromeDriverService?)ChromeDriverService.CreateDefaultService(), options);
+            var chromeDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), options);
             chromeDriver.Url = Configuration.GetValue<string>("baseUrl");
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
