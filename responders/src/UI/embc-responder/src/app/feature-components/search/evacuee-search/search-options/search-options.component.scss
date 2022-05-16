@@ -29,6 +29,18 @@
   pointer-events: none;
 }
 
+.disabled img {
+  filter: invert(82%) sepia(9%) saturate(17%) hue-rotate(340deg) brightness(91%) contrast(87%);
+}
+
+.disabled p {
+  color: #bababa !important;
+}
+
+.disabled span {
+  color: #bababa !important;
+}
+
 .selected-card {
   background-color: rgba(242, 242, 242, 1);
   border-width: 3px;
