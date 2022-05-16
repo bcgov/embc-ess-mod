@@ -56,19 +56,19 @@ namespace EMBC.Tests.Automation.Responders.Drivers
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
         /// </summary>
-        /*public void Dispose()
-        {
-            if (_isDisposed)
-            {
-                return;
-            }
+        //public void Dispose()
+        //{
+        //    if (_isDisposed)
+        //    {
+        //        return;
+        //    }
 
-            if (currentWebDriverLazy.IsValueCreated)
-            {
-                Current.Quit();
-            }
+        //    if (currentWebDriverLazy.IsValueCreated)
+        //    {
+        //        Current.Quit();
+        //    }
 
-            _isDisposed = true;
-        }*/
+        //    _isDisposed = true;
+        //}
     }
 }
