@@ -4,7 +4,7 @@
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">First Name</mat-label>
         <input
-          [formControlName]="'firstName'"
+          formControlName="firstName"
           matInput
           maxlength="100"
           placeholder="First Name"
@@ -26,7 +26,7 @@
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">Last Name</mat-label>
         <input
-          [formControlName]="'lastName'"
+          formControlName="lastName"
           matInput
           maxlength="100"
           placeholder="Last Name"
@@ -44,7 +44,7 @@
     </div>
     <div class="col-md-4 check-box-col">
       <mat-checkbox
-        [formControlName]="'sameLastName'"
+        formControlName="sameLastName"
         (change)="sameLastNameEvent($event)"
         >Same as main applicant
       </mat-checkbox>
@@ -57,7 +57,7 @@
         <mat-label>Initials</mat-label>
         <input
           maxlength="10"
-          [formControlName]="'initials'"
+          formControlName="initials"
           matInput
           placeholder="Initials"
         />
@@ -69,7 +69,7 @@
     <div class="col-md-5">
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">Gender</mat-label>
-        <mat-select [formControlName]="'gender'">
+        <mat-select formControlName="gender">
           <mat-option *ngFor="let gen of gender" [value]="gen.value">
             {{ gen.name }}
           </mat-option>
@@ -89,7 +89,7 @@
       <mat-form-field type="date" appearance="outline">
         <mat-label class="requiredField">Date of Birth</mat-label>
         <input
-          [formControlName]="'dateOfBirth'"
+          formControlName="dateOfBirth"
           matInput
           placeholder="mm/dd/yyyy"
           [textMask]="{ mask: dateMask, keepCharPositions: true }"
