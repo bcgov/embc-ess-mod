@@ -102,6 +102,25 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             this.ButtonElement("Search");
         }
 
+        //EVACUEE AND ESS FILE DASHBOARD FUNCTIONS
+
+        public void SelectESSFileFromSearch(int essFileNbr)
+        {
+            Wait();
+
+            var selectedEssFileElement = "//app-ess-files-results[1]/div[" + essFileNbr + "]/mat-card[1]/div[1]/div[1]/a[1]";
+            var selectedEssFileLink = webDriver.FindElement(By.XPath(selectedEssFileElement));
+            selectedEssFileLink.Click();
+            
+        }
+
+        public void ESSFileDashEditButton()
+        {
+            ButtonElement("Edit ESS File");
+        }
+
+        
+
         //WIZARD FUNCTIONS
         //STEP 1: Profile
         public void NewEvacueeRegButton()
@@ -474,6 +493,20 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             this.ButtonElement("Next");
         }
 
+        public void WizardEditESSFilePassStep()
+        {
+            ButtonElement("Next");
+
+            var houseHoldMembersCheckBox = webDriver.FindElement(By.XPath("//app-household-members[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/div[3]/div[1]/mat-table[1]/mat-header-row[1]/th[1]/mat-checkbox[1]"));
+            houseHoldMembersCheckBox.Click();
+
+            var reviewSaveTab = webDriver.FindElement(By.XPath("//app-step-ess-file[1]/div[1]/nav[1]/div[2]/div[1]/div[1]/a[6]/span[1]"));
+            reviewSaveTab.Click();
+
+            ButtonElement("Save ESS File");
+
+        }
+
         public void WizardReviewEssFile()
         {
             this.ButtonElement("Save");
@@ -627,38 +660,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var proceedBttn = buttons.Should().ContainSingle(b => b.Text.Contains("Proceed")).Subject;
             proceedBttn.Click();
 
-        }
-
-        public void SelectEvacuee() // to be deleted
-        {
-            var firstEvacueeOption = webDriver.FindElement(By.XPath("/app-profile-results[1]/div[1]/mat-card[1]/div[1]/div[1]/a[1]"));
-            firstEvacueeOption.Click();
-            Wait();
-            webDriver.FindElement(By.XPath("//span[contains(text(),'ESS File # 160819')]")).Click();
-            Wait();
-            webDriver.FindElement(By.XPath("//button[contains(text(),'Proceed to ESS File')]")).Click();
-            Wait();
-            webDriver.FindElement(By.XPath("//body/app-root[1]/div[1]/main[1]/div[2]/app-responder-access[1]/mat-sidenav-container[1]/mat-sidenav-content[1]/div[1]/app-search-registration[1]/app-essfile-dashboard[1]/div[2]/div[5]/div[2]/button[1]")).Click();
-            Wait();
-            ButtonElement("Next");
-            Wait();
-            webDriver.FindElement(By.XPath("/html[1]/body[1]/app-root[1]/div[1]/main[1]/div[2]/app-wizard[1]/div[1]/mat-sidenav-container[1]/mat-sidenav-content[1]/app-step-ess-file[1]/div[1]/div[3]/app-household-members[1]/div[1]/div[2]/div[1]/div[1]/div[1]/form[1]/div[3]/div[1]/mat-table[1]/mat-header-row[1]/th[1]/mat-checkbox[1]")).Click();
-            Wait();
-            webDriver.FindElement(By.XPath("/html[1]/body[1]/app-root[1]/div[1]/main[1]/div[2]/app-wizard[1]/div[1]/mat-sidenav-container[1]/mat-sidenav-content[1]/app-step-ess-file[1]/div[1]/nav[1]/div[2]/div[1]/div[1]/a[6]/span[1]")).Click();
-            Wait();
-            ButtonElement("Save ESS File");
-            Wait();
-            ButtonElement("Proceed to Next Step");
-            Wait();
-            webDriver.FindElement(By.XPath("//td[contains(text(),'D0000003579')]")).Click();
-            Wait();
-            webDriver.FindElement(By.XPath("//span[contains(text(),'Reprint Referral')]")).Click();
-            Wait();
-            webDriver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[2]/div[1]/mat-dialog-container[1]/app-dialog[1]/mat-dialog-content[1]/app-reprint-referral-dialog[1]/form[1]/div[1]/div[1]/mat-form-field[1]/div[1]/div[1]/div[3]/mat-select[1]")).Click();
-            webDriver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[4]/div[1]/div[1]/div[1]/mat-option[2]")).Click();
-            var proceedBttn = webDriver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[2]/div[1]/mat-dialog-container[1]/app-dialog[1]/mat-dialog-content[1]/app-reprint-referral-dialog[1]/div[4]/div[2]/button[1]"));
-            proceedBttn.Click();
-            Wait();
         }
 
 

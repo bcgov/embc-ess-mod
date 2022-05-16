@@ -193,6 +193,9 @@ this.ScenarioInitialize(scenarioInfo);
 #line 19
  testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
+#line 20
+ testRunner.When("I create a interact support", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
             }
             this.ScenarioCleanup();
         }

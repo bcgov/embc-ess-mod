@@ -235,6 +235,46 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             evacueeRegistration.WizardPaperBasedProcessSupportsForm();
         }
 
+        [When(@"I create a interact support")]
+        public void CreateInteracSupport()
+        {
+            //click on Sign in to the Task #
+            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
+            evacueeRegistration.SignInTaskButton();
+
+            //insert a task number
+            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task");
+            evacueeRegistration.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
+
+            //assign a task number
+            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task-details");
+            evacueeRegistration.SignInTask();
+
+            //select a registration type
+            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/evacuee");
+            evacueeRegistration.SelectOnlineRegistrationType();
+
+            //choose presented gov-id option
+            evacueeRegistration.SelectGovernmentID();
+
+            //fill evacuee information search
+            evacueeRegistration.FillOnlineSearchEvacueeForm("Automation", "MayThirteen", "05131999");
+
+            //Select an ESS File
+            evacueeRegistration.SelectESSFileFromSearch(2);
+
+            //Click on Edit ESS File Button
+            evacueeRegistration.ESSFileDashEditButton();
+
+            //Passing ESS File Step
+            evacueeRegistration.WizardEditESSFilePassStep();
+            evacueeRegistration.WizardNextStepButton();
+
+
+
+
+        }
+
         [Then(@"A registration is completed with an active support")]
         public void SupportCreated()
         {
