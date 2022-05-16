@@ -4,6 +4,7 @@ import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-ess-file-details',
@@ -13,7 +14,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 export class EssFileDetailsComponent implements OnInit {
   essFile: EvacuationFileModel;
 
-  memberListDisplay: HouseholdMemberModel[];
+  memberListDisplay: EvacuationFileHouseholdMember[];
 
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
   petColumns: string[] = ['type', 'quantity'];
@@ -34,7 +35,14 @@ export class EssFileDetailsComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.memberListDisplay =
+      this.essFile?.needsAssessment?.householdMembers.sort(
+        (a, b) =>
+          Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
+          new Date(a.dateOfBirth).valueOf() - new Date(b.dateOfBirth).valueOf()
+      );
+  }
 
   /**
    * Maps needs assessment api value to UI string

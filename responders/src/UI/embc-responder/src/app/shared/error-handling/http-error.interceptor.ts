@@ -6,26 +6,19 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { throwError, Observable, of } from 'rxjs';
 import { catchError, delay, mergeMap, retryWhen } from 'rxjs/operators';
-import { AlertService } from '../components/alert/alert.service';
-import { ErrorDialogService } from './error-dialog/error-dialog.service';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  constructor(
-    private errorDialogService: ErrorDialogService,
-    private router: Router,
-    private alertService: AlertService
-  ) {}
+  constructor() {}
 
   public intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      this.delayedRetry(2000, 2),
+      this.delayedRetry(2000, 2, request.url),
       catchError((error: HttpErrorResponse) => {
         return throwError(() => this.errorHandler(error));
       })
@@ -34,7 +27,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
   private delayedRetry(
     delayMs: number,
-    maxRetry: number
+    maxRetry: number,
+    requestUrl: string
   ): (src: Observable<any>) => Observable<any> {
     let retries = maxRetry;
     return (src: Observable<any>) =>
@@ -42,11 +36,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         retryWhen((errors) =>
           errors.pipe(
             delay(delayMs),
-            mergeMap((error) =>
-              retries-- > 0
-                ? of(error)
-                : throwError(() => this.errorHandler(error))
-            )
+            mergeMap((error) => {
+              if (
+                (error.status !== 404 && !requestUrl.includes('/api/Tasks/')) ||
+                error.status !== 403
+              ) {
+                return retries-- > 0
+                  ? of(error)
+                  : throwError(() => this.errorHandler(error));
+              }
+              return throwError(() => this.errorHandler(error));
+            })
           )
         )
       );

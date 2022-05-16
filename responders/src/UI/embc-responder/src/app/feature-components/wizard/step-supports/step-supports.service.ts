@@ -204,7 +204,7 @@ export class StepSupportsService {
         this.supportDetails.fromTime
       ),
       includedHouseholdMembers: members,
-      needsAssessmentId: this.evacueeSessionService?.evacFile.id,
+      // needsAssessmentId: this.evacueeSessionService?.evacFile.id,
       status: SupportStatus.Draft,
       to: this.dateConversionService.createDateTimeString(
         this.supportDetails.toDate,
@@ -215,12 +215,6 @@ export class StepSupportsService {
       subCategory: null,
       supportDelivery: referral
     };
-
-    // const support: Support = {
-    //   ...support,
-    //   method: SupportMethod.Referral,
-    //   supportDelivery: referral
-    // };
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
       this.referralService.createMealReferral(support, this.supportDetails);
     } else if (
