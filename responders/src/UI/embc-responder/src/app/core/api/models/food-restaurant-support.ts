@@ -3,11 +3,11 @@
 import { Support } from './support';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
-export interface FoodRestaurantSupport extends Support {
-  category: SupportCategory;
-  numberOfBreakfastsPerPerson: number;
-  numberOfDinnersPerPerson: number;
-  numberOfLunchesPerPerson: number;
-  subCategory: SupportSubCategory;
-  totalAmount: number;
-}
+export type FoodRestaurantSupport = Support & {
+'category': SupportCategory;
+'subCategory': SupportSubCategory;
+'numberOfBreakfastsPerPerson': number;
+'numberOfLunchesPerPerson': number;
+'numberOfDinnersPerPerson': number;
+'totalAmount': number;
+};
