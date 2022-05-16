@@ -183,7 +183,7 @@ export class ExistingSupportDetailsService {
     this.stepSupportsService.supportDetails = {
       externalReferenceId: (
         selectedSupport.supportDelivery as Referral
-      ).manualReferralId?.substr(1),
+      ).manualReferralId?.substring(1),
       issuedBy: selectedSupport.issuedBy,
       issuedOn: selectedSupport.issuedOn,
       fromDate: selectedSupport.from,
