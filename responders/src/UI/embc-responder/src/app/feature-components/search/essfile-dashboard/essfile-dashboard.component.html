@@ -156,14 +156,14 @@
     </div>
 
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 address-col">
         <span class="bold" *ngIf="essFile?.evacuatedFromAddress?.addressLine1">
-          {{ essFile?.evacuatedFromAddress?.addressLine1 }},</span
+          {{ essFile?.evacuatedFromAddress?.addressLine1 }}</span
         >
         <span
           *ngIf="essFile?.evacuatedFromAddress?.addressLine2 !== null"
           class="bold"
-          >{{ essFile?.evacuatedFromAddress?.addressLine2 }}</span
+          >, {{ essFile?.evacuatedFromAddress?.addressLine2 }}</span
         >
       </div>
     </div>
