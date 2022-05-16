@@ -2,6 +2,6 @@
 /* eslint-disable */
 import { SupportDelivery } from './support-delivery';
 import { SupportMethod } from './support-method';
-export interface ETransfer extends SupportDelivery {
-  method: SupportMethod;
-}
+export type ETransfer = SupportDelivery & {
+'method': SupportMethod;
+};

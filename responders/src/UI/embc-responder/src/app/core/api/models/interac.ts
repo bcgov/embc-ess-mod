@@ -1,10 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import { ETransfer } from './e-transfer';
-export interface Interac extends ETransfer {
-  notificationEmail?: null | string;
-  notificationMobile?: null | string;
-  receivingRegistrantId: string;
-  recipientFirstName?: string;
-  recipientLastName?: string;
-}
+export type Interac = ETransfer & {
+'receivingRegistrantId': string;
+'recipientFirstName'?: string;
+'recipientLastName'?: string;
+'notificationEmail'?: string | null;
+'notificationMobile'?: string | null;
+};
