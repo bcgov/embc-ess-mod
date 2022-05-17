@@ -30,6 +30,7 @@ export class SearchOptionsComponent implements OnInit {
     this.workflows = this.appBaseService?.appModel?.selectedEssTask?.workflows;
     const enabledWorkflows = this.workflows?.filter((w) => w.enabled);
     if (
+      enabledWorkflows &&
       enabledWorkflows.length === 1 &&
       enabledWorkflows[0].name === 'paper-data-entry'
     ) {
