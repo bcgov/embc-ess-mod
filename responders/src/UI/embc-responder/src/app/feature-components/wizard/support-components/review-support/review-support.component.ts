@@ -361,7 +361,7 @@ export class ReviewSupportComponent implements OnInit {
             const printWindow = document.createElement('iframe');
             printWindow.style.display = 'none';
             document.body.appendChild(printWindow);
-            printWindow.contentDocument.write(text);
+            printWindow.contentDocument.body.innerHTML = text;
 
             //delay to allow browser a chance to load images before showing print screen
             setTimeout(() => {
