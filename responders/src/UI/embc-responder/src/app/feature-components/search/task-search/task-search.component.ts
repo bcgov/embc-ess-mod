@@ -22,13 +22,11 @@ export class TaskSearchComponent implements OnInit {
     private customValidation: CustomValidationService,
     private router: Router,
     private taskSearchService: TaskSearchService,
-    private alertService: AlertService,
-    private appBaseService: AppBaseService
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
     this.constructTaskSearchForm();
-    this.appBaseService.clear();
   }
 
   /**

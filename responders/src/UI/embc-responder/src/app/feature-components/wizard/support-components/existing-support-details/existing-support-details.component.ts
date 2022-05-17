@@ -30,6 +30,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { DownloadService } from '../../../../core/services/utility/download.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -51,13 +52,13 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private referralCreationService: ReferralCreationService,
     private alertService: AlertService,
     public evacueeSessionService: EvacueeSessionService,
-    private loadEvacueeListService: LoadEvacueeListService
+    private loadEvacueeListService: LoadEvacueeListService,
+    private downloadService: DownloadService
   ) {}
 
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
-    console.log(this.selectedSupport);
   }
 
   back() {
@@ -245,17 +246,9 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 next: (response) => {
                   response
                     .text()
-                    .then((text) => {
-                      const printWindow = document.createElement('iframe');
-                      printWindow.style.display = 'none';
-                      document.body.appendChild(printWindow);
-                      printWindow.contentDocument.write(text);
-                      setTimeout(() => {
-                        printWindow.contentWindow.print();
-                        document.body.removeChild(printWindow);
-
-                        this.isLoading = !this.isLoading;
-                      }, 300);
+                    .then(async (text) => {
+                      await this.downloadService.printHTML(window, text);
+                      this.isLoading = !this.isLoading;
                     })
                     .catch((error) => {
                       throw error;
