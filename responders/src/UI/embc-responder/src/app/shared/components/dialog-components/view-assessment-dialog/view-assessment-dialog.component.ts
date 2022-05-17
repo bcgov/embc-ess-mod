@@ -55,7 +55,7 @@ export class ViewAssessmentDialogComponent implements OnInit {
     } else if (this.profileData?.needsAssessment?.specialDietDetails === null) {
       return 'Yes';
     } else {
-      return 'Yes' + this.profileData?.needsAssessment?.specialDietDetails;
+      return 'Yes - ' + this.profileData?.needsAssessment?.specialDietDetails;
     }
   }
 }
