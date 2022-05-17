@@ -248,7 +248,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
                       const printWindow = document.createElement('iframe');
                       printWindow.style.display = 'none';
                       document.body.appendChild(printWindow);
-                      printWindow.contentDocument.write(text);
+                      printWindow.contentDocument.body.innerHTML = text;
                       setTimeout(() => {
                         printWindow.contentWindow.print();
                         document.body.removeChild(printWindow);
