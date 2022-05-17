@@ -30,6 +30,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+import { DownloadService } from '../../../../core/services/utility/download.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -51,7 +52,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private referralCreationService: ReferralCreationService,
     private alertService: AlertService,
     public evacueeSessionService: EvacueeSessionService,
-    private loadEvacueeListService: LoadEvacueeListService
+    private loadEvacueeListService: LoadEvacueeListService,
+    private downloadService: DownloadService
   ) {}
 
   ngOnInit(): void {
@@ -244,30 +246,9 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 next: (response) => {
                   response
                     .text()
-                    .then((text) => {
-                      const printWindow = document.createElement('iframe');
-                      printWindow.style.display = 'none';
-                      document.body.appendChild(printWindow);
-                      setTimeout(() => {
-                        //wrapping this in a timeout fixes pdf display issues for FF
-                        printWindow.contentDocument.body.innerHTML = text;
-                      }, 0);
-
-                      //delay to allow browser a chance to load images before showing print screen
-                      setTimeout(() => {
-                        //Chrome doesn't save with the iframe title name like it's supposed to, so set the document title to ensure the correct pdf name
-                        const originalTital = document.title;
-                        const titleMatch = text.match(/<title>(.+)<\/title>/);
-                        let fileName = document.title;
-                        if (titleMatch) fileName = titleMatch[1];
-                        document.title = fileName;
-                        printWindow.contentWindow.print();
-                        document.body.removeChild(printWindow);
-
-                        document.title = originalTital;
-
-                        this.isLoading = !this.isLoading;
-                      }, 300);
+                    .then(async (text) => {
+                      await this.downloadService.printHTML(text);
+                      this.isLoading = !this.isLoading;
                     })
                     .catch((error) => {
                       throw error;

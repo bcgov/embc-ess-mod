@@ -29,6 +29,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { DownloadService } from '../../../../core/services/utility/download.service';
 
 @Component({
   selector: 'app-review-support',
@@ -50,7 +51,8 @@ export class ReviewSupportComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
-    public appBaseService: AppBaseService
+    public appBaseService: AppBaseService,
+    private downloadService: DownloadService
   ) {}
 
   ngOnInit(): void {
@@ -357,34 +359,14 @@ export class ReviewSupportComponent implements OnInit {
       next: (response) => {
         response
           .text()
-          .then((text) => {
-            const printWindow = document.createElement('iframe');
-            printWindow.style.display = 'none';
-            document.body.appendChild(printWindow);
-            setTimeout(() => {
-              //wrapping this in a timeout fixes pdf display issues for FF
-              printWindow.contentDocument.body.innerHTML = text;
-            }, 0);
+          .then(async (text) => {
+            await this.downloadService.printHTML(text);
 
-            //delay to allow browser a chance to load images before showing print screen
-            setTimeout(() => {
-              //Chrome doesn't save with the iframe title name like it's supposed to, so set the document title to ensure the correct pdf name
-              const originalTital = document.title;
-              const titleMatch = text.match(/<title>(.+)<\/title>/);
-              let fileName = document.title;
-              if (titleMatch) fileName = titleMatch[1];
-              document.title = fileName;
-              printWindow.contentWindow.print();
-              document.body.removeChild(printWindow);
-
-              document.title = originalTital;
-
-              //Clearing Draft supports array and updating the supports list for the selected ESS File
-              this.referralService.clearDraftSupport();
-              this.reviewSupportService.updateExistingSupportsList();
-              this.showLoader = !this.showLoader;
-              this.router.navigate(['/ess-wizard/add-supports']);
-            }, 300);
+            //Clearing Draft supports array and updating the supports list for the selected ESS File
+            this.referralService.clearDraftSupport();
+            this.reviewSupportService.updateExistingSupportsList();
+            this.showLoader = !this.showLoader;
+            this.router.navigate(['/ess-wizard/add-supports']);
           })
           .catch((error) => {
             throw error;
