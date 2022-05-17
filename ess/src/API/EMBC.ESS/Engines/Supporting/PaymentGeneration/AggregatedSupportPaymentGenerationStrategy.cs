@@ -49,7 +49,7 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
                             RecipientLastName = paymentGroup.Key.RecipientLastName,
                             SecurityAnswer = fileId,
                             SecurityQuestion = "What is your ESS File Number?",
-                            Status = PaymentStatus.Pending,
+                            Status = PaymentStatus.Created,
                             PayeeId = payeeId
                         });
                         amount = 0;

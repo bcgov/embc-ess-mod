@@ -12,8 +12,8 @@ namespace EMBC.ESS.Resources.Payments
             CreateMap<Payment, era_etransfertransaction>(MemberList.Source)
                 .IncludeAllDerived()
                 .ForSourceMember(s => s.Id, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.Status, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_totalamount, opts => opts.MapFrom(s => s.Amount))
-                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.Status))
                 .ForMember(d => d.era_processingresponse, opts => opts.MapFrom(s => s.FailureReason))
                 .ForMember(d => d._era_payee_value, opts => opts.MapFrom(s => s.PayeeId))
                 .ReverseMap()
@@ -43,7 +43,7 @@ namespace EMBC.ESS.Resources.Payments
                 .ForMember(d => d.NotificationPhone, opts => opts.MapFrom(s => s.era_phonenumber))
                 .ForMember(d => d.SecurityAnswer, opts => opts.MapFrom(s => s.era_securityanswer))
                 .ForMember(d => d.SecurityQuestion, opts => opts.MapFrom(s => s.era_securityquestion))
-                .ForMember(d => d.LinkedSupportIds, opts => opts.MapFrom(s => s.era_era_etransfertransaction_era_evacueesuppo.Select(s => s.era_name)))
+                .ForMember(d => d.LinkedSupportIds, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_etransfertransacti.Select(s => s.era_name)))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
                 .ForMember(d => d.SentOn, opts => opts.MapFrom(s => s.era_invoicedate.Value.DateTime))
                 ;
