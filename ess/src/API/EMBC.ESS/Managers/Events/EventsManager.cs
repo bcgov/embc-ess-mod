@@ -826,7 +826,7 @@ namespace EMBC.ESS.Managers.Events
                                     .SingleOrDefault();
                                 await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
                                 {
-                                    await supportRepository.Manage(new FailSupportCommand { SupportId = supportId });
+                                    await supportRepository.Manage(new SubmitSupportForReviewCommand { SupportId = supportId });
                                 });
                                 break;
 

@@ -43,22 +43,13 @@ namespace EMBC.ESS.Resources.Supports
                 _ => null
             };
 
-            Func<Support, SupportStatus> resolveSupportStatus = s => s switch
-            {
-                // default e-transfer
-                var sup when sup.IsEtransfer == true && sup.Status == SupportStatus.Active => SupportStatus.PendingScan,
-                // expired referral
-                var sup when sup.To < DateTime.UtcNow && sup.Status == SupportStatus.Active => SupportStatus.Expired,
-
-                _ => s.Status
-            };
             CreateMap<Support, era_evacueesupport>(MemberList.Source)
                 .IgnoreAllSourcePropertiesWithAnInaccessibleSetter()
                 .IncludeAllDerived()
                 // this is a trick to include support delivery flattening mappings when mapping to Dynamics
                 // more support deliveries should be also included here
                 .IncludeMembers(s => s.SupportDelivery as Referral, s => s.SupportDelivery as Interac)
-                // support delivery must happend at this level, can't be at the included mapping
+                // support delivery must be mapped at this level, can't be at the included mapping
                 .ForMember(d => d.era_supportdeliverytype, opts => opts.MapFrom(s => resolveSupportDelieveryType(s.SupportDelivery)))
                 .ForSourceMember(s => s.SupportDelivery, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.IncludedHouseholdMembers, opts => opts.DoNotValidate())
@@ -70,8 +61,6 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
-                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => resolveSupportStatus(s)))
-                .ForMember(d => d.era_era_householdmember_era_evacueesupport, opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
                 .ForMember(d => d._era_issuedbyid_value, opts => opts.MapFrom(s => s.CreatedByTeamMemberId))
                 .ForMember(d => d.era_paperreferralcompletedon, opts => opts.MapFrom(s => s.IsPaperReferral ? s.IssuedOn : null))
               ;

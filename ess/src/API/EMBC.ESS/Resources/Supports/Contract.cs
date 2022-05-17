@@ -27,13 +27,13 @@ namespace EMBC.ESS.Resources.Supports
     {
     }
 
-    public class SaveEvacuationFileSupportsCommand : ManageSupportCommand
+    public class CreateNewSupportsCommand : ManageSupportCommand
     {
         public string FileId { get; set; }
         public IEnumerable<Support> Supports { get; set; }
     }
 
-    public class SaveEvacuationFileSupportCommandResult : ManageSupportCommandResult
+    public class CreateNewSupportsCommandResult : ManageSupportCommandResult
     {
         public IEnumerable<Support> Supports { get; set; }
     }
@@ -58,22 +58,13 @@ namespace EMBC.ESS.Resources.Supports
     public class SubmitSupportForApprovalCommandResult : ManageSupportCommandResult
     { }
 
-    public class FailSupportCommand : ManageSupportCommand
+    public class SubmitSupportForReviewCommand : ManageSupportCommand
     {
         public string SupportId { get; set; }
     }
 
-    public class FailSupportCommandResult : ManageSupportCommandResult
+    public class SubmitSupportForReviewCommandResult : ManageSupportCommandResult
     { }
-
-    public class SupportQueue
-    {
-        public static readonly SupportQueue Approval = new SupportQueue { QueueId = new("a4f0fbbe-89a1-ec11-b831-00505683fbf4") };
-        public static readonly SupportQueue Review = new SupportQueue { QueueId = new("e969aae7-8aa1-ec11-b831-00505683fbf4") };
-        public static readonly SupportQueue Error = new SupportQueue { QueueId = new("f132db1c-5eb4-ec11-b832-00505683fbf4") };
-
-        internal Guid QueueId { get; private set; }
-    }
 
     public class SupportStatusTransition
     {
@@ -217,9 +208,14 @@ namespace EMBC.ESS.Resources.Supports
 
     public enum SupportStatus
     {
+        // referrals
+
         Active = 1,
         Expired = 174360000,
         Void = 2,
+
+        // e-transfers
+
         PendingApproval = 174360001,
         Approved = 174360002,
         Paid = 174360003,
@@ -227,7 +223,6 @@ namespace EMBC.ESS.Resources.Supports
         UnderReview = 174360005,
         PendingScan = 174360006,
         Issued = 174360007,
-        Processing = 174360008
     }
 
     public enum SupportVoidReason
