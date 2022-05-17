@@ -50,9 +50,15 @@ export class PossibleMatchedEssfilesService {
   ): string {
     for (const member of householdMembers) {
       if (
-        member.firstName === evacueeProfile.personalDetails.firstName &&
-        member.lastName === evacueeProfile.personalDetails.lastName &&
-        member.dateOfBirth === evacueeProfile.personalDetails.dateOfBirth
+        member.firstName.localeCompare(
+          evacueeProfile.personalDetails.firstName
+        ) &&
+        member.lastName.localeCompare(
+          evacueeProfile.personalDetails.lastName
+        ) &&
+        member.dateOfBirth.localeCompare(
+          evacueeProfile.personalDetails.dateOfBirth
+        )
       ) {
         return member.id;
       }
