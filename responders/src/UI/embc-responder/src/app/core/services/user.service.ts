@@ -10,6 +10,7 @@ import {
   ClaimType
 } from './authorization.service';
 import { CacheService } from './cache.service';
+import { AppBaseService } from './helper/appBase.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class UserService {
   constructor(
     private profileService: ProfileService,
     private authorizationService: AuthorizationService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private appBaseService: AppBaseService
   ) {}
 
   public async loadUserProfile(): Promise<UserProfile> {
@@ -98,6 +100,7 @@ export class UserService {
   }
 
   public clearAppStorage(): void {
+    this.appBaseService.clear();
     this.cacheService.remove('loggedInTaskNumber');
     this.cacheService.remove('loggedInTaskCommunity');
     this.cacheService.remove('memberRoles');
