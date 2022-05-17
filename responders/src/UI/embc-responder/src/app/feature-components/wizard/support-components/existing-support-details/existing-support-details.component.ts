@@ -57,7 +57,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
-    console.log(this.selectedSupport);
   }
 
   back() {

@@ -36,4 +36,26 @@ export class ViewAssessmentDialogComponent implements OnInit {
       (ins) => ins.apiValue === incomingValue
     )?.name;
   }
+
+  /**
+   * Maps insurance api value to UI string
+   *
+   * @param incomingValue needs assessment value
+   * @returns
+   */
+  mapInsuranceValues(incomingValue: string | null): string {
+    return globalConst.insuranceOptions.find(
+      (ins) => ins.value === incomingValue
+    )?.name;
+  }
+
+  mapDietaryValue(): string {
+    if (!this.profileData?.needsAssessment?.haveSpecialDiet) {
+      return 'No';
+    } else if (this.profileData?.needsAssessment?.specialDietDetails === null) {
+      return 'Yes';
+    } else {
+      return 'Yes' + this.profileData?.needsAssessment?.specialDietDetails;
+    }
+  }
 }
