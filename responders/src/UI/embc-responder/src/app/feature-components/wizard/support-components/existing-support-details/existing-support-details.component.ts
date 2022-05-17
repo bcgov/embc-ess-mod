@@ -247,7 +247,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
                   response
                     .text()
                     .then(async (text) => {
-                      await this.downloadService.printHTML(text);
+                      await this.downloadService.printHTML(window, text);
                       this.isLoading = !this.isLoading;
                     })
                     .catch((error) => {

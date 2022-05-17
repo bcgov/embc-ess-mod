@@ -14,11 +14,11 @@ export class DownloadService {
     win.document.body.removeChild(link);
   }
 
-  public printHTML(html: string): Promise<void> {
+  public printHTML(win: Window, html: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const printWindow = document.createElement('iframe');
+      const printWindow = win.document.createElement('iframe');
       printWindow.style.display = 'none';
-      document.body.appendChild(printWindow);
+      win.document.body.appendChild(printWindow);
       setTimeout(() => {
         //wrapping this in a timeout fixes pdf display issues for FF
         printWindow.contentDocument.body.innerHTML = html;
@@ -27,15 +27,15 @@ export class DownloadService {
       //delay to allow browser a chance to load images before showing print screen
       setTimeout(() => {
         //Chrome doesn't save with the iframe title name like it's supposed to, so set the document title to ensure the correct pdf name
-        const originalTital = document.title;
+        const originalTital = win.document.title;
         const titleMatch = html.match(/<title>(.+)<\/title>/);
-        let fileName = document.title;
+        let fileName = win.document.title;
         if (titleMatch) fileName = titleMatch[1];
-        document.title = fileName;
+        win.document.title = fileName;
         printWindow.contentWindow.print();
-        document.body.removeChild(printWindow);
+        win.document.body.removeChild(printWindow);
 
-        document.title = originalTital;
+        win.document.title = originalTital;
         resolve();
       }, 300);
     });

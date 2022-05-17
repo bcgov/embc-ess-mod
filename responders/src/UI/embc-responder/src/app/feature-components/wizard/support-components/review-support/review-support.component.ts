@@ -360,7 +360,7 @@ export class ReviewSupportComponent implements OnInit {
         response
           .text()
           .then(async (text) => {
-            await this.downloadService.printHTML(text);
+            await this.downloadService.printHTML(window, text);
 
             //Clearing Draft supports array and updating the supports list for the selected ESS File
             this.referralService.clearDraftSupport();
