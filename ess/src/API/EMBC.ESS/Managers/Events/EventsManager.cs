@@ -817,7 +817,6 @@ namespace EMBC.ESS.Managers.Events
                         try
                         {
                             logger.LogError(failedPayment.Error, $"Failed to issue payment {failedPayment.Id}: {failedPayment.Error?.Message}");
-                            await paymentRepository.Manage(new CancelPaymentRequest { PaymentId = failedPayment.Id, Reason = failedPayment.Error.Message });
                             var payment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ById = failedPayment.Id })).Items
                                 .Cast<InteracSupportPayment>()
                                 .SingleOrDefault();
@@ -825,6 +824,7 @@ namespace EMBC.ESS.Managers.Events
                             {
                                 await supportRepository.Manage(new SubmitSupportForReviewCommand { SupportId = supportId });
                             });
+                            await paymentRepository.Manage(new CancelPaymentRequest { PaymentId = failedPayment.Id, Reason = failedPayment.Error.Message });
                         }
                         catch (Exception ex)
                         {
