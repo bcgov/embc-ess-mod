@@ -3,268 +3,279 @@
     [Binding]
     public sealed class RespondersPortalSteps
     {
-        private readonly EvacueeRegistration evacueeRegistration;
+        private readonly AssignTask assignTask;
+        private readonly SearchEvacuee searchEvacuee;
+        private readonly ESSFileDashboard essFileDashboard;
+        private readonly WizardProfile wizardProfile;
+        private readonly WizardEssFile wizardEssFile;
+        private readonly WizardSupport wizardSupport;
 
         public RespondersPortalSteps(BrowserDriver driver)
         {
-            this.evacueeRegistration = new EvacueeRegistration(driver.Current);
+            
+            this.assignTask = new AssignTask(driver.Current);
+            this.searchEvacuee = new SearchEvacuee(driver.Current);
+            this.essFileDashboard = new ESSFileDashboard(driver.Current);
+            this.wizardProfile = new WizardProfile(driver.Current);
+            this.wizardEssFile = new WizardEssFile(driver.Current);
+            this.wizardSupport = new WizardSupport(driver.Current);
         }
 
         [When(@"I complete a new online evacuee registration")]
         public void CompleteNewOnlineRegistration()
         {
             //click on Sign in to the Task #
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
-            evacueeRegistration.SignInTaskButton();
+            assignTask.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
+            assignTask.SignInTaskButton();
 
             //insert a task number
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task");
-            evacueeRegistration.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
+            assignTask.CurrentLocation.Should().Be("/responder-access/search/task");
+            assignTask.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
 
             //assign a task number
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task-details");
-            evacueeRegistration.SignInTask();
+            assignTask.CurrentLocation.Should().Be("/responder-access/search/task-details");
+            assignTask.SignInTask();
 
             //select a registration type
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/evacuee");
-            evacueeRegistration.SelectOnlineRegistrationType();
+            searchEvacuee.CurrentLocation.Should().Be("/responder-access/search/evacuee");
+            searchEvacuee.SelectOnlineRegistrationType();
 
             //choose presented gov-id option
-            evacueeRegistration.SelectGovernmentID();
+            searchEvacuee.SelectGovernmentID();
 
             //fill evacuee information search
-            evacueeRegistration.FillOnlineSearchEvacueeForm("Automation", "MayThirteen", "05131999");
+            searchEvacuee.FillOnlineSearchEvacueeForm("Automation", "MayThirteen", "05131999");
 
             //click new evacuee registration
-            evacueeRegistration.NewEvacueeRegButton();
+            wizardProfile.NewEvacueeRegButton();
 
             //Wizard STEP 1:
             //click next on Collection Notice
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/collection-notice");
-            evacueeRegistration.WizardCollectionNotice();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/collection-notice");
+            wizardProfile.WizardCollectionNotice();
 
             //click yes on restriction page
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/restriction");
-            evacueeRegistration.WizardRestriction();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/restriction");
+            wizardProfile.WizardRestriction();
 
             //fill evacuee details form
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/evacuee-details");
-            evacueeRegistration.WizardEvacueeDetailsForm("Female");
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/evacuee-details");
+            wizardProfile.WizardEvacueeDetailsForm("Female");
 
             //fill address form
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/address");
-            evacueeRegistration.WizardMinAddressForm("1012 Douglas St", "Victoria");
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/address");
+            wizardProfile.WizardMinAddressForm("1012 Douglas St", "Victoria");
 
             //fill contact form
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/contact");
-            evacueeRegistration.WizardMaxContactForm("4569999999", "test@test.ca");
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/contact");
+            wizardProfile.WizardMaxContactForm("4569999999", "test@test.ca");
 
             //fill security questions
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/security-questions");
-            evacueeRegistration.WizardSecurityQuestions();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/security-questions");
+            wizardProfile.WizardSecurityQuestions("What was the name of your first pet?", "In what city or town was your mother born?", "Where was your first job?", "Daisy", "Vancouver", "McDonalds");
 
             //review profile and submit
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/review");
-            evacueeRegistration.WizardReviewProfileForm();
-            evacueeRegistration.WizardNextStepButton();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/review");
+            wizardProfile.WizardReviewProfileForm();
+            wizardProfile.WizardNextStepButton();
 
             //Wizard STEP 2:
             //fill evacuation details
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/evacuation-details");
-            evacueeRegistration.WizardOnlineEvacDetailsFormReqFields("Victoria EMBC Main Centre", "House loss");
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/evacuation-details");
+            wizardEssFile.WizardOnlineEvacDetailsFormReqFields("Victoria EMBC Main Centre", "House loss");
 
             //fill household members
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/household-members");
-            evacueeRegistration.WizardHouseholdMembersMinForm();
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/household-members");
+            wizardEssFile.WizardHouseholdMembersMinForm();
 
             //fill animals
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/animals");
-            evacueeRegistration.AnimalsMinForm();
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/animals");
+            wizardEssFile.AnimalsMinForm();
 
             //fill needs assessments
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/needs");
-            evacueeRegistration.WizardNeedsAssessmentsForm();
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/needs");
+            wizardEssFile.WizardNeedsAssessmentsForm();
 
             //fill secret phrase
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/security-phrase");
-            evacueeRegistration.WizardSecurityPhraseForm("Sesame");
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/security-phrase");
+            wizardEssFile.WizardSecurityPhraseForm("Sesame");
 
             //review ESS File and submit
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/review");
-            evacueeRegistration.WizardReviewEssFile();
-            evacueeRegistration.WizardNextStepButton();
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/review");
+            wizardEssFile.WizardReviewEssFile();
+            wizardEssFile.WizardNextStepButton();
 
             //Wizard STEP 3:
             //add support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
-            evacueeRegistration.WizardAddSupport();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
 
             //select support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
-            evacueeRegistration.WizardSelectSupportForm("Food - Groceries");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Food - Groceries");
 
             //add support details
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
-            evacueeRegistration.SupportFoodDetailsForm("3", "50.50");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.SupportFoodDetailsForm("3", "50.50");
 
             //add support delivery
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
-            evacueeRegistration.SupportDeliveryForm("Adrien Doe");
-            evacueeRegistration.SuccessSupportPopUp();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportDeliveryForm("Adrien Doe");
+            wizardSupport.SuccessSupportPopUp();
 
             //process support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
-            evacueeRegistration.WizardProcessDraftSupports();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardProcessDraftSupports();
 
             //review process support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
-            evacueeRegistration.WizardOnlineProcessSupportsForm();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
+            wizardSupport.WizardOnlineProcessSupportsForm();
         }
 
         [When(@"I complete a new paper based evacuee registration")]
         public void CompleteNewPaperBasedRegistration()
         {
             //click on Sign in to the Task #
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
-            evacueeRegistration.SignInTaskButton();
+            assignTask.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
+            assignTask.SignInTaskButton();
 
             //insert a task number
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task");
-            evacueeRegistration.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
+            assignTask.CurrentLocation.Should().Be("/responder-access/search/task");
+            assignTask.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
 
             //assign a task number
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task-details");
-            evacueeRegistration.SignInTask();
+            assignTask.CurrentLocation.Should().Be("/responder-access/search/task-details");
+            assignTask.SignInTask();
 
             //select a registration type
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/evacuee");
-            evacueeRegistration.SelectPaperBasedRegistrationType();
+            searchEvacuee.CurrentLocation.Should().Be("/responder-access/search/evacuee");
+            searchEvacuee.SelectPaperBasedRegistrationType();
 
             //choose presented gov-id option
-            evacueeRegistration.SelectGovernmentID();
+            searchEvacuee.SelectGovernmentID();
 
             //fill evacuee information search
-            evacueeRegistration.FillPaperBasedSearchEvacueeForm("Automation", "Maythirteen", "05131999");
+            searchEvacuee.FillPaperBasedSearchEvacueeForm("Automation", "Maythirteen", "05131999");
 
             //click new evacuee registration
-            evacueeRegistration.NewEvacueeRegButton();
+            wizardProfile.NewEvacueeRegButton();
 
             //Wizard STEP 1:
             //click next on Collection Notice
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/collection-notice");
-            evacueeRegistration.WizardCollectionNotice();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/collection-notice");
+            wizardProfile.WizardCollectionNotice();
 
             //click yes on restriction page
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/restriction");
-            evacueeRegistration.WizardRestriction();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/restriction");
+            wizardProfile.WizardRestriction();
 
             //fill evacuee details form
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/evacuee-details");
-            evacueeRegistration.WizardEvacueeDetailsForm("Female");
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/evacuee-details");
+            wizardProfile.WizardEvacueeDetailsForm("Female");
 
             //fill address form
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/address");
-            evacueeRegistration.WizardMaxAddressForm("Australia", "1012 Exford St", "Brisbane");
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/address");
+            wizardProfile.WizardMaxAddressForm("Australia", "1012 Exford St", "Brisbane");
 
             //fill contact form
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/contact");
-            evacueeRegistration.WizardMinContactForm();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/contact");
+            wizardProfile.WizardMinContactForm();
 
             //review profile and submit
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/review");
-            evacueeRegistration.WizardReviewProfileForm();
-            evacueeRegistration.WizardNextStepButton();
+            wizardProfile.CurrentLocation.Should().Be("/ess-wizard/evacuee-profile/review");
+            wizardProfile.WizardReviewProfileForm();
+            wizardProfile.WizardNextStepButton();
 
             //Wizard STEP 2:
             //fill evacuation details
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/evacuation-details");
-            evacueeRegistration.WizardPaperBasedEvacDetailsFormReqFields("John", "S", "05/13/2022", "1500", "1012 Douglas St", "Victoria", "Victoria EMBC Main Centre", "House loss");
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/evacuation-details");
+            wizardEssFile.WizardPaperBasedEvacDetailsFormReqFields("John", "S", "05/13/2022", "1500", "1012 Douglas St", "Victoria", "Victoria EMBC Main Centre", "House loss");
 
             //fill household members
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/household-members");
-            evacueeRegistration.WizardHouseholdMembersMaxForm("Anne", "Doe", "Female", "09/12/2001", "Lactose intolerant");
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/household-members");
+            wizardEssFile.WizardHouseholdMembersMaxForm("Anne", "Doe", "Female", "09/12/2001", "Lactose intolerant");
 
             //fill animals
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/animals");
-            evacueeRegistration.AnimalsMaxForm("Dogs", "2");
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/animals");
+            wizardEssFile.AnimalsMaxForm("Dogs", "2");
 
             //fill needs assessments
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/needs");
-            evacueeRegistration.WizardNeedsAssessmentsForm();
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/needs");
+            wizardEssFile.WizardNeedsAssessmentsForm();
 
             //review ESS File and submit
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/ess-file/review");
-            evacueeRegistration.WizardReviewEssFile();
-            evacueeRegistration.WizardNextStepButton();
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/review");
+            wizardEssFile.WizardReviewEssFile();
+            wizardEssFile.WizardNextStepButton();
 
             //Wizard STEP 3:
             //add support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
-            evacueeRegistration.WizardAddSupport();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
 
             //select support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
-            evacueeRegistration.WizardSelectSupportForm("Lodging - Hotel/Motel");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Lodging - Hotel/Motel");
 
             //add support details
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
-            evacueeRegistration.SupportPaperBasedHotelDetailsForm("John", "S", "05/13/2022", "05/20/2022", "1500", "2");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.SupportPaperBasedHotelDetailsForm("John", "S", "05/13/2022", "05/20/2022", "1500", "2");
 
             //add support delivery
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
-            evacueeRegistration.SupportDeliveryForm("Andrew Doe");
-            evacueeRegistration.SuccessSupportPopUp();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportDeliveryForm("Andrew Doe");
+            wizardSupport.SuccessSupportPopUp();
 
             //process support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
-            evacueeRegistration.WizardProcessDraftSupports();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardProcessDraftSupports();
 
             //review process support
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
-            evacueeRegistration.WizardPaperBasedProcessSupportsForm();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
+            wizardSupport.WizardPaperBasedProcessSupportsForm();
         }
 
         [When(@"I create an Interac support")]
         public void CreateInteracSupport()
         {
             //click on Sign in to the Task #
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
-            evacueeRegistration.SignInTaskButton();
+            assignTask.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
+            assignTask.SignInTaskButton();
 
             //insert a task number
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task");
-            evacueeRegistration.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
+            assignTask.CurrentLocation.Should().Be("/responder-access/search/task");
+            assignTask.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
 
             //assign a task number
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/task-details");
-            evacueeRegistration.SignInTask();
+            assignTask.CurrentLocation.Should().Be("/responder-access/search/task-details");
+            assignTask.SignInTask();
 
             //select a registration type
-            evacueeRegistration.CurrentLocation.Should().Be("/responder-access/search/evacuee");
-            evacueeRegistration.SelectOnlineRegistrationType();
+            searchEvacuee.CurrentLocation.Should().Be("/responder-access/search/evacuee");
+            searchEvacuee.SelectOnlineRegistrationType();
 
             //choose presented gov-id option
-            evacueeRegistration.SelectGovernmentID();
+            searchEvacuee.SelectGovernmentID();
 
             //fill evacuee information search
-            evacueeRegistration.FillOnlineSearchEvacueeForm("Automation", "MayThirteen", "05131999");
+            searchEvacuee.FillOnlineSearchEvacueeForm("Automation", "MayThirteen", "05131999");
 
             //Select an ESS File
-            evacueeRegistration.SelectESSFileFromSearch(2);
+            essFileDashboard.SelectESSFileFromSearch(2);
 
             //Click on Edit ESS File Button
-            evacueeRegistration.ESSFileDashEditButton();
+            essFileDashboard.ESSFileDashEditButton();
 
             //Passing ESS File Step
-            evacueeRegistration.WizardEditESSFilePassStep();
-            evacueeRegistration.WizardNextStepButton();
+            wizardEssFile.WizardEditESSFilePassStep();
+            wizardEssFile.WizardNextStepButton();
         }
 
         [Then(@"A registration is completed with an active support")]
         public void SupportCreated()
         {
-            evacueeRegistration.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
-            evacueeRegistration.SupportCreatedSuccessfully();
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            Assert.True(wizardSupport.GetSupportStatus().Equals("Active")); ;
         }
     }
 }
