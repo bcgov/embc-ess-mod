@@ -105,7 +105,7 @@ export class ReferralDetailsComponent implements OnInit {
     ).description;
   }
 
-  updatePanelState(state: boolean) {
-    this.allExpandStateUpdate.emit(state);
+  updatePanelState(stateUpdate: boolean) {
+    this.allExpandStateUpdate.emit(stateUpdate);
   }
 }

@@ -189,7 +189,6 @@ export class OutageService {
         )
         .subscribe({
           next: (response) => {
-
             if (response !== null) {
               if (!this.outageInfoIsEqual(response)) {
                 this.outageDialogCounter = 0;
