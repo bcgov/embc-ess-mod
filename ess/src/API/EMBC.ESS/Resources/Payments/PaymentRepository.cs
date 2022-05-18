@@ -353,7 +353,7 @@ namespace EMBC.ESS.Resources.Payments
             if (payment == null) throw new InvalidOperationException($"payment {paymentId} not found");
 
             // guard for current payment status
-            if (!new[] { PaymentStatus.Sent }.Contains((PaymentStatus)payment.statuscode))
+            if (!new[] { PaymentStatus.Failed }.Contains((PaymentStatus)payment.statuscode))
                 throw new InvalidOperationException($"cannot cancel payment {paymentId} as it in status {(PaymentStatus)payment.statuscode}");
 
             UpdatePaymentStatus(ctx, payment, PaymentStatus.Cancelled);
