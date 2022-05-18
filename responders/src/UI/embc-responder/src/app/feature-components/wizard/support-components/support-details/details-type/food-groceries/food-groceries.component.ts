@@ -44,7 +44,7 @@ export class FoodGroceriesComponent
     }
     if (changes.noOfDays) {
       this.days = this.noOfDays;
-      this.referralForm.get('noOfMeals').patchValue(this.noOfDays + 1);
+      this.referralForm.get('noOfMeals').patchValue(this.noOfDays);
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();

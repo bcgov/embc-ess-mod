@@ -35,9 +35,9 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
     }
     if (changes.noOfDays) {
       this.days = this.noOfDays;
-      this.referralForm.get('noOfBreakfast').patchValue(this.noOfDays + 1);
-      this.referralForm.get('noOfLunches').patchValue(this.noOfDays + 1);
-      this.referralForm.get('noOfDinners').patchValue(this.noOfDays + 1);
+      this.referralForm.get('noOfBreakfast').patchValue(this.noOfDays);
+      this.referralForm.get('noOfLunches').patchValue(this.noOfDays);
+      this.referralForm.get('noOfDinners').patchValue(this.noOfDays);
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();
