@@ -15,6 +15,6 @@ Scenario: Evacuee paper based new Registration
 	When I complete a new paper based evacuee registration
 	Then A registration is completed with an active support
 
-Scenario: Add Interac Support to Online ESS File
-	Given I log in with BCeID user ess.developerA1
-	When I create an Interac support
+#Scenario: Add Interac Support to Online ESS File
+#	Given I log in with BCeID user ess.developerA1
+#	When I create an Interac support
