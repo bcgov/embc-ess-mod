@@ -1,8 +1,8 @@
 <mat-accordion>
   <mat-expansion-panel
     [expanded]="allExpandState"
-    (opened)="panelOpenState = true"
-    (closed)="panelOpenState = false"
+    (opened)="panelOpenState = true; updatePanelState(true)"
+    (closed)="panelOpenState = false; updatePanelState(false)"
   >
     <mat-expansion-panel-header class="headerPanel">
       <!-- <div class="panelHeader"> -->
