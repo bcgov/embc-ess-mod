@@ -1,4 +1,3 @@
-import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 import { generateAnonymousRegistration } from './generators/registrants/registration';
 import { generateEvacuationFile } from './generators/registrants/evacuation-file';
@@ -7,9 +6,12 @@ import { fillInForm, getHTTPParams, getIterationName, logError, navigate } from 
 
 // @ts-ignore
 import { RegistrantTestParameters, MAX_VU, MAX_ITER } from '../load-test.parameters-APP_TARGET';
+import { MyHttp } from './http';
+import { fail } from 'k6';
 
 const testParams = RegistrantTestParameters;
 const baseUrl = testParams.baseUrl;
+const http = new MyHttp();
 const urls = {
   //Metadata
   config: `${baseUrl}/api/Configuration`,
@@ -70,7 +72,7 @@ const getAuthToken = () => {
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to get auth token`);
     logError(response);
-    return;
+    fail(`Registrants - ${getIterationName()}: failed to get auth token`);
   }
   return response.json();
 }
@@ -111,8 +113,7 @@ const getCommunities = () => {
   formFailRate.add(response.status !== 200);
   loadCommunities.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.error(`Registrants - ${getIterationName()}: failed to get communities`);
-    return;
+    fail(`Registrants - ${getIterationName()}: failed to get communities`);
   }
   return response.json();
 }
@@ -145,8 +146,7 @@ const getSecurityQuestions = () => {
   formFailRate.add(response.status !== 200);
   loadSecurityQuestions.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.error(`Registrants - ${getIterationName()}: failed to get security questions`);
-    return;
+    fail(`Registrants - ${getIterationName()}: failed to get security questions`);
   }
   return response.json();
 }
@@ -162,6 +162,7 @@ const submitAnonymousRegistration = (communities: any, security_questions: any) 
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to submit anonymous registration`);
     logError(response, payload);
+    fail(`Registrants - ${getIterationName()}: failed to submit anonymous registration`);
   }
   else {
     console.log(`Registrants - ${getIterationName()}: Anonymous submission successful`);
@@ -177,7 +178,7 @@ const getCurrentProfileExists = (token: any) => {
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to check if profile exists`);
     logError(response);
-    return;
+    fail(`Registrants - ${getIterationName()}: failed to check if profile exists`);
   }
   return response.json();
 }
@@ -191,7 +192,7 @@ const getCurrentProfile = (token: any) => {
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to get current profile`);
     logError(response);
-    return;
+    fail(`Registrants - ${getIterationName()}: failed to get current profile`);
   }
   return response.json();
 }
@@ -207,6 +208,7 @@ const createProfile = (token: any, communities: any, security_questions: any) =>
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed to create profile`);
     logError(response, payload);
+    fail(`Registrants - ${getIterationName()}: failed to create profile`);
   } else {
     // console.log(`Registrants - ${getIterationName()}: created profile`);
   }
@@ -223,6 +225,7 @@ const submitEvacuationFile = (token: any, profile: any, communities: any) => {
   if (response.status !== 200) {
     console.error(`Registrants - ${getIterationName()}: failed submit evacuation file`);
     logError(response, payload);
+    fail(`Registrants - ${getIterationName()}: failed submit evacuation file`);
   } else {
     console.log(`Registrants - ${getIterationName()}: successfully submitted file`);
   }
