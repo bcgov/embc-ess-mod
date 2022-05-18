@@ -3,7 +3,9 @@ import {
   OnInit,
   Input,
   ViewEncapsulation,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   animate,
@@ -41,6 +43,7 @@ export class ReferralDetailsComponent implements OnInit {
   @Input() referralDataSource: Support[];
   @Input() referralsDate: string;
   @Input() allExpandState: boolean;
+  @Output() allExpandStateUpdate = new EventEmitter<boolean>();
 
   panelOpenState = false;
   columnsToDisplay = ['provider', 'type', 'issuedTo', 'referral', 'amount'];
@@ -100,5 +103,9 @@ export class ReferralDetailsComponent implements OnInit {
     return this.supportService.supportStatus.find(
       (statusValue) => statusValue.value === enumToText
     ).description;
+  }
+
+  updatePanelState(stateUpdate: boolean) {
+    this.allExpandStateUpdate.emit(stateUpdate);
   }
 }

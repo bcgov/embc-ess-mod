@@ -10,7 +10,6 @@ export class CustomDate implements PipeTransform {
         const customDateFormat = moment(dateOfBirth, 'MM-DD-YYYY').format(
           'DD-MMM-YYYY'
         );
-        // console.log(customDateFormat);
         return customDateFormat;
       }
     }

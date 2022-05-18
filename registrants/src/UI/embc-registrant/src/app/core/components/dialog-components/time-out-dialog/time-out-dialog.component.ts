@@ -20,7 +20,6 @@ export class TimeOutDialogComponent implements OnInit {
       this.outputEvent.emit('close');
     });
     this.idle.onTimeoutWarning.subscribe((countdown) => {
-      console.log('You will time out in ' + countdown + ' seconds!');
       this.countdown = countdown;
     });
   }
