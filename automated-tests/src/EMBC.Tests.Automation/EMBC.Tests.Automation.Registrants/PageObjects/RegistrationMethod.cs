@@ -15,7 +15,6 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void SelfRegister()
         {
-
             webDriver.FindElements(By.TagName("button")).Single(b => b.Text.Contains("Self-Register")).Click();
         }
     }
