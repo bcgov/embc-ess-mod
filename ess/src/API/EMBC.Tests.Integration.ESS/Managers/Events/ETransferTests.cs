@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
@@ -77,8 +79,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             foreach (var support in secondFileSupports)
             {
                 support.FileId = TestData.EvacuationFileId;
-                support.From = now1;
-                support.To = now1.AddMinutes(1);
+                support.From = now2;
+                support.To = now2.AddMinutes(1);
                 support.SupportDelivery = new Interac { ReceivingRegistrantId = registrant.Id };
                 support.IncludedHouseholdMembers = secondFile.HouseholdMembers.Select(m => m.Id).ToArray();
             }
@@ -102,10 +104,64 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task ProcessApprovedSupportsCommand_ApprovedSupports_PaymentsAdded()
         {
-            var fileId = TestData.EvacuationFileId;
-            var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = fileId })).Items.Where(S => S.Status == SupportStatus.Approved).ToArray();
+            var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = TestData.EvacuationFileId })).Items
+                .Where(s => s.Status == SupportStatus.Approved && ((Interac)s.SupportDelivery).RelatedPaymentId == null)
+                .ToArray();
+
             approvedSupports.ShouldNotBeEmpty();
+
+            var supportsToProcess = approvedSupports.TakeRandom(1).ToArray();
+
+            var supportIdsToApprove = supportsToProcess.Select(s => s.Id).ToArray();
+            await QueueApprovedSupports(supportIdsToApprove);
+
             await manager.Handle(new ProcessApprovedSupportsCommand());
+
+            var fileSupports = (await manager.Handle(new SearchSupportsQuery
+            {
+                FileId = TestData.EvacuationFileId
+            })).Items.Where(s => supportIdsToApprove.Contains(s.Id)).ToArray();
+
+            fileSupports.ShouldNotBeEmpty();
+
+            foreach (var support in fileSupports)
+            {
+                ((Interac)support.SupportDelivery).RelatedPaymentId.ShouldNotBeNull();
+            }
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ProcessPendingPaymentsCommand_ApprovedSupports_PaymentsAdded()
+        {
+            var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = TestData.EvacuationFileId })).Items
+                .Where(s => s.Status == SupportStatus.Approved)
+                .ToArray();
+
+            approvedSupports.ShouldNotBeEmpty();
+
+            var sut = approvedSupports.TakeRandom(1).Select(s => s.Id);
+            await QueueApprovedSupports(sut);
+
+            await manager.Handle(new ProcessApprovedSupportsCommand());
+            await manager.Handle(new ProcessPendingPaymentsCommand());
+
+            var updatedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = TestData.EvacuationFileId })).Items
+                .Where(s => s.Status == SupportStatus.Approved);
+
+            updatedSupports.Select(s => s.Id).ShouldNotBeOneOf(sut);
+        }
+
+        private async Task QueueApprovedSupports(IEnumerable<string> supportIds)
+        {
+            var ctx = Services.GetRequiredService<IEssContextFactory>().Create();
+
+            foreach (var supportId in supportIds)
+            {
+                var support = await ctx.era_evacueesupports.Where(s => s.era_name == supportId).SingleOrDefaultAsync();
+                support.era_queueprocessingstatus = (int)EMBC.ESS.Resources.Payments.QueueStatus.Pending;
+                ctx.UpdateObject(support);
+            }
+            await ctx.SaveChangesAsync();
         }
     }
 }

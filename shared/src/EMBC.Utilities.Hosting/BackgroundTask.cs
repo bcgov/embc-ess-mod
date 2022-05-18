@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Cronos;
@@ -32,13 +33,15 @@ namespace EMBC.Utilities.Hosting
             {
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>().GetSection($"backgroundtask:{typeof(T).Name}");
                 var task = scope.ServiceProvider.GetRequiredService<T>();
+                var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? Assembly.GetEntryAssembly()?.GetName().Name ?? string.Empty;
 
                 schedule = CronExpression.Parse(configuration.GetValue("schedule", task.Schedule), CronFormat.IncludeSeconds);
                 startupDelay = configuration.GetValue("initialDelay", task.InitialDelay);
                 enabled = configuration.GetValue("enabled", true);
                 var degreeOfParallelism = configuration.GetValue("degreeOfParallelism", task.DegreeOfParallelism);
 
-                semaphore = distributedSemaphoreProvider.CreateSemaphore($"backgroundtask:{typeof(T).Name}", degreeOfParallelism);
+                if (!string.IsNullOrEmpty(appName)) appName += "-";
+                semaphore = distributedSemaphoreProvider.CreateSemaphore($"{appName}backgroundtask:{typeof(T).Name}", degreeOfParallelism);
 
                 logger.LogInformation("starting background task: initial delay {0}, schedule: {1}, parallelism: {2}",
                     this.startupDelay, this.schedule.ToString(), task.DegreeOfParallelism);
