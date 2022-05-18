@@ -1,4 +1,3 @@
-import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 import { generateRegistrant } from './generators/responders/registrant';
 import { generateNewPersonDetails, getPersonDetailsForIteration } from './generators/responders/person-details';
@@ -9,10 +8,13 @@ import { fillInForm, getHTTPParams, getIterationName, getRandomInt, logError, na
 
 // @ts-ignore
 import { ResponderTestParameters } from '../load-test.parameters-APP_TARGET';
+import { MyHttp } from './http';
+import { fail } from 'k6';
 
 const testParams = ResponderTestParameters;
 const baseUrl = testParams.baseUrl;
 const TASK_ID = testParams.taskId;
+const http = new MyHttp();
 
 const urls = {
   //Metadata
@@ -78,7 +80,8 @@ const getAuthToken = () => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error getting auth token`);
     logError(response);
-    return;
+    fail(`Responders - ${getIterationName()}: error getting auth token`);
+
   }
   return response.json();
 }
@@ -119,8 +122,7 @@ const getCommunities = () => {
   formFailRate.add(response.status !== 200);
   loadCommunitiesTime.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.error(`Responders - ${getIterationName()}: failed to get communities`);
-    return;
+    fail(`Responders - ${getIterationName()}: failed to get communities`);
   }
   return response.json();
 }
@@ -133,7 +135,6 @@ const getProvinces = () => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: failed to get provinces`);
   }
-  // return response.json();
 }
 
 const getCountries = () => {
@@ -144,7 +145,6 @@ const getCountries = () => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: failed to get countries`);
   }
-  // return response.json();
 }
 
 const getSecurityQuestions = () => {
@@ -153,8 +153,7 @@ const getSecurityQuestions = () => {
   formFailRate.add(response.status !== 200);
   loadSecurityQuestions.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.error(`Responders - ${getIterationName()}: failed to get security questions`);
-    return;
+    fail(`Responders - ${getIterationName()}: failed to get security questions`);
   }
   return response.json();
 }
@@ -179,7 +178,6 @@ const getMemberRole = (token: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: failed to get member roles`);
   }
-  // return response.json();
 }
 
 const getMemberLabel = (token: any) => {
@@ -191,7 +189,6 @@ const getMemberLabel = (token: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: failed to get member label`);
   }
-  // return response.json();
 }
 
 const getTaskSearchPage = (token: any) => {
@@ -203,7 +200,6 @@ const getTaskSearchPage = (token: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: failed to get task search page`);
   }
-  // return response.html();
 }
 
 const searchTasks = (token: any) => {
@@ -213,8 +209,7 @@ const searchTasks = (token: any) => {
   formFailRate.add(response.status !== 200);
   searchTaskTime.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.error(`Responders - ${getIterationName()}: error searching tasks`);
-    return;
+    fail(`Responders - ${getIterationName()}: error searching tasks`);
   }
   return response.json();
 }
@@ -228,7 +223,7 @@ const searchRegistrations = (token: any, registrant: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error searching regisrations`);
     logError(response);
-    return;
+    fail(`Responders - ${getIterationName()}: error searching regisrations`);
   }
 
   if (response.json()) {
@@ -267,7 +262,7 @@ const submitRegistrant = (token: any, registrant: any, communities: any, securit
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting registrant`);
     logError(response, payload);
-    return;
+    fail(`Responders - ${getIterationName()}: error submitting registrant`);
   }
 
   return response.json();
@@ -280,8 +275,7 @@ const getRegistrant = (token: any, regRes: any) => {
   formFailRate.add(response.status !== 200);
   loadRegistrantTime.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.error(`Responders - ${getIterationName()}: failed to get registrant`);
-    return;
+    fail(`Responders - ${getIterationName()}: failed to get registrant`);
   }
   return response.json();
 }
@@ -298,7 +292,7 @@ const submitEvacuationFile = (token: any, registrantId: any, registrant: any, co
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting file`);
     logError(response, payload);
-    return;
+    fail(`Responders - ${getIterationName()}: error submitting file`);
   }
   else {
     console.log(`Responders - ${getIterationName()}: successfully submitted file`);
@@ -319,7 +313,7 @@ const updateEvacuationFile = (token: any, file: any, registrantId: any, registra
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error updating file`);
     logError(response, payload);
-    return;
+    fail(`Responders - ${getIterationName()}: error updating file`);
   }
   else {
     console.log(`Responders - ${getIterationName()}: successfully updated file`);
@@ -338,7 +332,7 @@ const getEvacuationFile = (token: any, fileRes: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: failed to load file`);
     logError(response);
-    return;
+    fail(`Responders - ${getIterationName()}: failed to load file`);
   }
   return response.json();
 }
@@ -350,8 +344,7 @@ const getTaskSuppliers = (token: any) => {
   formFailRate.add(response.status !== 200);
   loadTaskSuppliersTime.add(response.timings.waiting);
   if (response.status !== 200) {
-    console.error(`Responders - ${getIterationName()}: failed to get task suppliers`);
-    return;
+    fail(`Responders - ${getIterationName()}: failed to get task suppliers`);
   }
   return response.json();
 }
@@ -368,7 +361,7 @@ const submitSupports = (token: any, file: any, suppliers: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting supports`);
     logError(response, payload);
-    return;
+    fail(`Responders - ${getIterationName()}: error submitting supports`);
   }
 
   return response.json();
@@ -386,6 +379,7 @@ const submitPrintRequest = (token: any, file: any, printRequest: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error getting pdf`);
     logError(response);
+    fail(`Responders - ${getIterationName()}: error getting pdf`);
   }
   else {
     console.log(`Responders - ${getIterationName()}: successfully received pdf`);
@@ -406,7 +400,7 @@ const submitFileNote = (token: any, file: any) => {
   if (response.status !== 200) {
     console.error(`Responders - ${getIterationName()}: error submitting note`);
     logError(response, payload);
-    return;
+    fail(`Responders - ${getIterationName()}: error submitting note`);
   }
   else {
     console.log(`Responders - ${getIterationName()}: successfully submitted note`);
