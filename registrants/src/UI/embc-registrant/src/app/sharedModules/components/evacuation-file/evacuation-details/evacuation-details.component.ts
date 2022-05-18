@@ -45,7 +45,6 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        // console.log('prev:', event.url);
         this.previousUrl = event.url;
       });
   }
@@ -112,11 +111,6 @@ export class EvacuationDetailsComponent implements OnInit, AfterViewInit {
 
   expandDetails(): void {
     this.allExpandState = !this.allExpandState;
-    if (this.allExpandState) {
-      this.referralDetailsText = 'close all';
-    } else {
-      this.referralDetailsText = 'expand all';
-    }
   }
 
   private splitReferralsByDate(referrals: Support[]): Map<string, Support[]> {

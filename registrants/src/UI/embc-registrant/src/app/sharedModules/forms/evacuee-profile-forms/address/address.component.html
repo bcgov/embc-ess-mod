@@ -1,5 +1,3 @@
-<!-- {{primaryAddressForm.status }}
-{{primaryAddressForm.value | json}} -->
 <form [formGroup]="primaryAddressForm">
   <mat-card class="card-align">
     <mat-card-content>
@@ -8,6 +6,12 @@
         <div class="col-md-12">
           <label id="isBcAddress-radio-group-label" class="requiredField"
             >Is your <b>primary residence</b> within British Columbia?</label
+          >
+          <br />
+          <mat-hint class="radio-hint red-text"
+            >A valid B.C. postal code must be entered in order to be eligible to
+            receive an e-Transfer for qualifying supports in the event of an
+            evacuation.</mat-hint
           >
           <br />
           <mat-hint class="radio-hint"

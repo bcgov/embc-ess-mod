@@ -1,4 +1,6 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 
 namespace EMBC.Tests.Automation.Responders.PageObjects
 {
@@ -24,6 +26,43 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             var buttons = webDriver.FindElements(By.TagName("button"));
             var selectedBtn = buttons.Should().ContainSingle(b => b.Text.Contains(btnContent)).Subject;
             js.ExecuteScript("arguments[0].click()", selectedBtn);
+        }
+
+        protected void YesRadioButton()
+        {
+            Wait();
+
+            var js = (IJavaScriptExecutor)webDriver;
+            var yesradiobutton = webDriver.FindElement(By.Id("yesOption"));
+
+            js.ExecuteScript("arguments[0].scrollIntoView();", yesradiobutton);
+
+            Wait();
+            yesradiobutton.Click();
+        }
+
+        protected void NoRadioButton()
+        {
+            var js = (IJavaScriptExecutor)webDriver;
+
+            var noradiobutton = webDriver.FindElement(By.Id("noOption"));
+            js.ExecuteScript("arguments[0].scrollIntoView();", noradiobutton);
+
+            Wait();
+            noradiobutton.Click();
+        }
+
+        protected void RadioButtonElement(By element)
+        {
+            Wait();
+
+            var js = (IJavaScriptExecutor)webDriver;
+            var selectedRadioBttn = webDriver.FindElement(element);
+
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectedRadioBttn);
+
+            Wait();
+            selectedRadioBttn.Click();
         }
     }
 }

@@ -119,12 +119,12 @@
         </div>
         <div class="col-2 row mainReferralsLink" (click)="expandDetails()">
           <div class="col-md-6 allReferrals">
-            <a>{{ referralDetailsText }}</a>
+            <a>{{ this.allExpandState ? 'close all' : 'expand all' }}</a>
           </div>
           <div class="col-md-6 row">
             <div class="col-md-9" style="height: 6px">
               <img
-                [ngClass]="allExpandState ? 'rotate180' : 'none'"
+                [ngClass]="allExpandState ? 'none' : 'rotate180'"
                 src="../../../../assets/images/expand_arrow.png"
                 height="15"
                 width="18"
@@ -139,6 +139,7 @@
         [referralDataSource]="referralData.get(key)"
         [referralsDate]="key"
         [allExpandState]="allExpandState"
+        (allExpandStateUpdate)="allExpandState = $event"
       >
       </app-referral-details>
     </mat-card-content>
