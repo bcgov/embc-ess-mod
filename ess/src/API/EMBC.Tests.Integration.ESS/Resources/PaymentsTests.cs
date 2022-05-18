@@ -31,7 +31,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var linkedSupportIds = TestData.ETransferIds.Take(2);
             var payment = new InteracSupportPayment
             {
-                Status = PaymentStatus.Pending,
+                Status = PaymentStatus.Created,
                 Amount = 100.00m,
                 RecipientFirstName = "first",
                 RecipientLastName = "last",
@@ -43,7 +43,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 PayeeId = TestData.ContactId
             };
 
-            var paymentId = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
+            var paymentId = ((CreatePaymentResponse)await repository.Manage(new CreatePaymentRequest { Payment = payment })).Id;
             paymentId.ShouldNotBeNullOrEmpty();
 
             var readPayment = ((SearchPaymentResponse)await repository.Query(new SearchPaymentRequest { ById = paymentId })).Items
@@ -72,7 +72,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 new InteracSupportPayment
                     {
-                        Status = PaymentStatus.Pending,
+                        Status = PaymentStatus.Created,
                         Amount = 100.00m,
                         RecipientFirstName = "first",
                         RecipientLastName = "last",
@@ -87,10 +87,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             foreach (var payment in payments)
             {
-                payment.Id = ((SavePaymentResponse)await repository.Manage(new SavePaymentRequest { Payment = payment })).Id;
+                payment.Id = ((CreatePaymentResponse)await repository.Manage(new CreatePaymentRequest { Payment = payment })).Id;
             }
 
-            var results = (IssuePaymentsResponse)await repository.Manage(new IssuePaymentsRequest
+            var results = (IssuePaymentsBatchResponse)await repository.Manage(new IssuePaymentsBatchRequest
             {
                 BatchId = TestData.TestPrefix,
                 PaymentIds = payments.Select(p => p.Id)
@@ -110,10 +110,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task GetPaymentStatus_ExistingPayment_StatusReturned()
+        public async Task GetCasPaymentStatus_ExistingPayment_StatusReturned()
         {
-            var startDate = DateTime.UtcNow.AddDays(-14);
-            var endDate = DateTime.UtcNow.AddDays(-13);
+            var startDate = DateTime.Parse("2022-04-28");
+            var endDate = DateTime.Parse("2022-04-29");
 
             var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate, ChangedTo = endDate });
 

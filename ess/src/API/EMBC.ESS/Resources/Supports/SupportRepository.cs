@@ -11,12 +11,21 @@ using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Supports
 {
-    public class SupportRepository : ISupportRepository
+    internal class SupportRepository : ISupportRepository
     {
         private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
 
         private static CancellationToken CreateCancellationToken() => new CancellationTokenSource().Token;
+
+        private struct SupportQueue
+        {
+            public static readonly SupportQueue EAApproval = new SupportQueue { QueueId = new("a4f0fbbe-89a1-ec11-b831-00505683fbf4") };
+            public static readonly SupportQueue EAReview = new SupportQueue { QueueId = new("e969aae7-8aa1-ec11-b831-00505683fbf4") };
+            public static readonly SupportQueue QRReview = new SupportQueue { QueueId = new("f132db1c-5eb4-ec11-b832-00505683fbf4") };
+
+            public Guid QueueId { get; private set; }
+        }
 
         public SupportRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
@@ -29,10 +38,10 @@ namespace EMBC.ESS.Resources.Supports
             var ct = CreateCancellationToken();
             return cmd switch
             {
-                SaveEvacuationFileSupportsCommand c => await Handle(c, ct),
+                CreateNewSupportsCommand c => await Handle(c, ct),
                 ChangeSupportStatusCommand c => await Handle(c, ct),
                 SubmitSupportForApprovalCommand c => await Handle(c, ct),
-                FailSupportCommand c => await Handle(c, ct),
+                SubmitSupportForReviewCommand c => await Handle(c, ct),
 
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
@@ -53,86 +62,60 @@ namespace EMBC.ESS.Resources.Supports
         {
             var ctx = essContextFactory.Create();
 
-            var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId)).ExecuteAsync(ct)).SingleOrDefault();
+            var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
             if (support == null) throw new InvalidOperationException($"Support {cmd.SupportId} not found");
-            if (support.statuscode == (int)SupportStatus.Processing) throw new InvalidOperationException($"Support {cmd.SupportId} is already being processed");
+            if (support.statuscode != (int)SupportStatus.PendingScan)
+                throw new InvalidOperationException($"Support {cmd.SupportId} is in status {(SupportStatus)support.statuscode} and cannot be submitted for approval - expecting PendingScan status");
 
-            //lock the support
-            var currentSupportStatus = (SupportStatus)support.statuscode;
-            SetSupportStatus(ctx, support, SupportStatus.Processing);
-            ctx.UpdateObject(support);
-            await ctx.SaveChangesAsync(ct);
-
-            try
+            // create flags
+            var flagTypes = (await ctx.era_supportflagtypes.GetAllPagesAsync()).ToArray();
+            foreach (var flag in cmd.Flags)
             {
-                var flagTypes = (await ctx.era_supportflagtypes.GetAllPagesAsync()).ToArray();
-                foreach (var flag in cmd.Flags)
+                var supportFlag = mapper.Map<era_supportflag>(flag);
+                ctx.AddToera_supportflags(supportFlag);
+                ctx.SetLink(supportFlag, nameof(era_supportflag.era_FlagType), flagTypes.Single(t => t.era_supportflagtypeid == supportFlag._era_flagtype_value));
+                ctx.SetLink(supportFlag, nameof(era_supportflag.era_EvacueeSupport), support);
+                if (flag is DuplicateSupportFlag dup)
                 {
-                    var supportFlag = mapper.Map<era_supportflag>(flag);
-                    ctx.AddToera_supportflags(supportFlag);
-                    ctx.SetLink(supportFlag, nameof(era_supportflag.era_FlagType), flagTypes.Single(t => t.era_supportflagtypeid == supportFlag._era_flagtype_value));
-                    ctx.SetLink(supportFlag, nameof(era_supportflag.era_EvacueeSupport), support);
-                    if (flag is DuplicateSupportFlag dup)
-                    {
-                        var duplicateSupport = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == dup.DuplicatedSupportId))
-                            .GetAllPagesAsync()).SingleOrDefault();
-                        if (duplicateSupport == null) throw new InvalidOperationException($"Support {dup.DuplicatedSupportId} not found");
-                        ctx.SetLink(supportFlag, nameof(era_supportflag.era_SupportDuplicate), duplicateSupport);
-                    }
+                    var duplicateSupport = await ctx.era_evacueesupports.Where(s => s.era_name == dup.DuplicatedSupportId).SingleOrDefaultAsync();
+                    if (duplicateSupport == null) throw new InvalidOperationException($"Support {dup.DuplicatedSupportId} not found");
+                    ctx.SetLink(supportFlag, nameof(era_supportflag.era_SupportDuplicate), duplicateSupport);
                 }
-                var queues = (await ctx.queues.GetAllPagesAsync(ct)).ToArray();
-
-                var queue = queues.Single(q => q.queueid == (cmd.Flags.Any() ? SupportQueue.Review.QueueId : SupportQueue.Approval.QueueId));
-                AssignSupportToQueue(ctx, support, queue);
-
-                // unlock the support
-                SetSupportStatus(ctx, support, SupportStatus.PendingApproval);
-                ctx.UpdateObject(support);
-
-                await ctx.SaveChangesAsync(ct);
-
-                return new SubmitSupportForApprovalCommandResult();
             }
-            catch (Exception)
-            {
-                //unlock to the previous status
-                SetSupportStatus(ctx, support, currentSupportStatus);
-                await ctx.SaveChangesAsync(ct);
-                ctx.UpdateObject(support);
-                throw;
-            }
-            finally
-            {
-                ctx.DetachAll();
-            }
+
+            // assign to EA queue
+            var queueId = cmd.Flags.Any() ? SupportQueue.EAReview.QueueId : SupportQueue.EAApproval.QueueId;
+            var queue = await ctx.queues.Where(q => q.queueid == queueId).SingleOrDefaultAsync(ct);
+            if (queue == null) throw new InvalidOperationException($"Error queue {SupportQueue.QRReview.QueueId} not found");
+            AssignSupportToQueue(ctx, support, queue);
+
+            SetSupportStatus(ctx, support, SupportStatus.PendingApproval);
+            ctx.UpdateObject(support);
+
+            await ctx.SaveChangesAsync(ct);
+            ctx.DetachAll();
+
+            return new SubmitSupportForApprovalCommandResult();
         }
 
-        private static void AssignSupportToQueue(EssContext ctx, era_evacueesupport support, queue queue)
-        {
-            var queueItem = new queueitem
-            {
-                queueitemid = Guid.NewGuid(),
-                objecttypecode = 10056 //support type pick list value
-            };
-
-            // create queue item
-            ctx.AddToqueueitems(queueItem);
-            ctx.SetLink(queueItem, nameof(queueItem.queueid), queue);
-            ctx.SetLink(queueItem, nameof(queueItem.objectid_era_evacueesupport), support);
-        }
-
-        private async Task<FailSupportCommandResult> Handle(FailSupportCommand cmd, CancellationToken ct)
+        private async Task<SubmitSupportForReviewCommandResult> Handle(SubmitSupportForReviewCommand cmd, CancellationToken ct)
         {
             var ctx = essContextFactory.Create();
 
             var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync(ct);
             if (support == null) throw new InvalidOperationException($"Support {cmd.SupportId} not found");
 
+            // guard on current status
+            if (!new[] { SupportStatus.Approved, SupportStatus.Issued }.Contains((SupportStatus)support.statuscode))
+                throw new InvalidOperationException($"Support {cmd.SupportId} is in status {(SupportStatus)support.statuscode} and cannot be submitted for review - expecting Approved or Issued statuses");
+
             await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
 
-            var queue = await ctx.queues.Where(q => q.queueid == SupportQueue.Error.QueueId).SingleOrDefaultAsync(ct);
-            if (queue == null) throw new InvalidOperationException($"Error queue {SupportQueue.Error.QueueId} not found");
+            // assign to QR review queue
+            var queue = await ctx.queues.Where(q => q.queueid == SupportQueue.QRReview.QueueId).SingleOrDefaultAsync(ct);
+            if (queue == null) throw new InvalidOperationException($"Error queue {SupportQueue.QRReview.QueueId} not found");
             AssignSupportToQueue(ctx, support, queue);
+
             SetSupportStatus(ctx, support, SupportStatus.UnderReview);
             support.era_etransferapproved = 174360001; //no
             support.era_etransfertransactioncreated = false;
@@ -149,7 +132,21 @@ namespace EMBC.ESS.Resources.Supports
 
             await ctx.SaveChangesAsync(ct);
 
-            return new FailSupportCommandResult();
+            return new SubmitSupportForReviewCommandResult();
+        }
+
+        private static void AssignSupportToQueue(EssContext ctx, era_evacueesupport support, queue queue)
+        {
+            var queueItem = new queueitem
+            {
+                queueitemid = Guid.NewGuid(),
+                objecttypecode = 10056 //support type pick list value
+            };
+
+            // create queue item
+            ctx.AddToqueueitems(queueItem);
+            ctx.SetLink(queueItem, nameof(queueItem.queueid), queue);
+            ctx.SetLink(queueItem, nameof(queueItem.objectid_era_evacueesupport), support);
         }
 
         private async Task<ManageSupportCommandResult> Handle(ChangeSupportStatusCommand cmd, CancellationToken ct)
@@ -265,7 +262,7 @@ namespace EMBC.ESS.Resources.Supports
             }
         }
 
-        private async Task<SaveEvacuationFileSupportCommandResult> Handle(SaveEvacuationFileSupportsCommand cmd, CancellationToken ct)
+        private async Task<CreateNewSupportsCommandResult> Handle(CreateNewSupportsCommand cmd, CancellationToken ct)
         {
             var ctx = essContextFactory.Create();
             var file = (await ((DataServiceQuery<era_evacuationfile>)ctx.era_evacuationfiles
@@ -283,18 +280,15 @@ namespace EMBC.ESS.Resources.Supports
             foreach (var s in cmd.Supports)
             {
                 var support = mapper.Map<era_evacueesupport>(s);
-                var supportHouseholdMembersIds = support.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid).ToArray();
-
-                var householdMembers = file.era_era_evacuationfile_era_householdmember_EvacuationFileid
-                    .Where(m => supportHouseholdMembersIds.Contains(m.era_householdmemberid.Value))
-                    .ToArray();
-
-                // check all household members are accounted for
-                if (householdMembers.Length != s.IncludedHouseholdMembers.Count())
-                    throw new InvalidOperationException($"Support has household members which do not exist in evacuation file {cmd.FileId}");
+                var supportHouseholdMembersIds = s.IncludedHouseholdMembers.Select(m => Guid.Parse(m)).ToArray();
 
                 // map tracked household members
-                support.era_era_householdmember_era_evacueesupport = new Collection<era_householdmember>(householdMembers);
+                support.era_era_householdmember_era_evacueesupport = new Collection<era_householdmember>(
+                    file.era_era_evacuationfile_era_householdmember_EvacuationFileid.Where(m => supportHouseholdMembersIds.Contains(m.era_householdmemberid.Value)).ToArray());
+
+                // check all household members are accounted for
+                if (support.era_era_householdmember_era_evacueesupport.Count != supportHouseholdMembersIds.Length)
+                    throw new InvalidOperationException($"Support has household members which do not exist in evacuation file {cmd.FileId}");
 
                 await CreateSupport(ctx, file, support, ct);
 
@@ -311,7 +305,7 @@ namespace EMBC.ESS.Resources.Supports
 
             ctx.DetachAll();
 
-            return new SaveEvacuationFileSupportCommandResult { Supports = mapper.Map<IEnumerable<Support>>(supports) };
+            return new CreateNewSupportsCommandResult { Supports = mapper.Map<IEnumerable<Support>>(supports) };
         }
 
         private static async Task CreateSupport(EssContext ctx, era_evacuationfile file, era_evacueesupport support, CancellationToken ct)
@@ -320,6 +314,14 @@ namespace EMBC.ESS.Resources.Supports
             if (validationErrors.Any()) throw new InvalidOperationException($"Failed to create a support in file {file.era_name}:  {string.Join(';', validationErrors)}");
 
             support.era_evacueesupportid = Guid.NewGuid();
+            if (support.era_supportdeliverytype == (int)SupportMethod.ETransfer)
+            {
+                SetSupportStatus(ctx, support, SupportStatus.PendingScan);
+            }
+            else
+            {
+                SetSupportStatus(ctx, support, support.era_validto <= DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
+            }
 
             ctx.AddToera_evacueesupports(support);
             ctx.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), support);

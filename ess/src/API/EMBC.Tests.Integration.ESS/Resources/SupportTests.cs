@@ -71,7 +71,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
+            var newSupportIds = ((CreateNewSupportsCommandResult)await supportRepository.Manage(new CreateNewSupportsCommand
             {
                 FileId = evacuationFileId,
                 Supports = newSupports
@@ -166,7 +166,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                }
             };
 
-            var newSupportIds = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
+            var newSupportIds = ((CreateNewSupportsCommandResult)await supportRepository.Manage(new CreateNewSupportsCommand
             {
                 FileId = evacuationFileId,
                 Supports = paperSupports
@@ -304,7 +304,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 IssuedOn = now
             };
 
-            var supportId = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
+            var supportId = ((CreateNewSupportsCommandResult)await supportRepository.Manage(new CreateNewSupportsCommand
             {
                 FileId = fileId,
                 Supports = new[] { support }
@@ -333,9 +333,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task FailSupport_AssignedToErrorQueue()
         {
-            var supportId = TestData.ETransferIds.TakeRandom(1).Single();
+            //var supportId = TestData.ETransferIds.TakeRandom(1).Single();
+            var supportId = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByStatus = SupportStatus.Approved, LimitNumberOfResults = 10 })).Items.ToArray().TakeRandom(1).ShouldHaveSingleItem().Id;
 
-            await supportRepository.Manage(new FailSupportCommand { SupportId = supportId });
+            await supportRepository.Manage(new SubmitSupportForReviewCommand { SupportId = supportId });
 
             var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
             support.Status.ShouldBe(SupportStatus.UnderReview);

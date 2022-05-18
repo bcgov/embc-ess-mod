@@ -782,7 +782,7 @@ namespace EMBC.ESS.Managers.Events
 
                     foreach (var payment in payments)
                     {
-                        await paymentRepository.Manage(new SavePaymentRequest { Payment = payment });
+                        await paymentRepository.Manage(new CreatePaymentRequest { Payment = payment });
                     }
                 }
             }
@@ -791,52 +791,53 @@ namespace EMBC.ESS.Managers.Events
         public async System.Threading.Tasks.Task Handle(ProcessPendingPaymentsCommand _)
         {
             var ct = new CancellationTokenSource().Token;
-            var foundPayments = true;
 
-            while (foundPayments)
+            var waitingToBeIssuedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
             {
-                var pendingPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+                ByStatus = PaymentStatus.Created,
+                ByQueueStatus = QueueStatus.Pending,
+            })).Items.ToArray();
+
+            logger.LogInformation("Found {0} pending payments", waitingToBeIssuedPayments.Length);
+
+            var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
+            var result = (IssuePaymentsBatchResponse)await paymentRepository.Manage(new IssuePaymentsBatchRequest
+            {
+                BatchId = casBatchName,
+                PaymentIds = waitingToBeIssuedPayments.Select(p => p.Id)
+            });
+
+            logger.LogInformation("Batch {0} results: {1} issued; {2} failed", casBatchName, result.IssuedPayments.Count(), result.FailedPayments.Count());
+            await Parallel.ForEachAsync(result.FailedPayments, ct, async (failedPayment, ct) =>
+            {
+                switch (failedPayment.Error)
                 {
-                    ByStatus = PaymentStatus.Pending,
-                    LimitNumberOfItems = 25
-                })).Items.ToArray();
-
-                foundPayments = pendingPayments.Any();
-
-                if (foundPayments)
-                {
-                    logger.LogInformation("Found {0} pending payments", pendingPayments.Length);
-
-                    var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
-                    var result = (IssuePaymentsResponse)await paymentRepository.Manage(new IssuePaymentsRequest
-                    {
-                        BatchId = casBatchName,
-                        PaymentIds = pendingPayments.Select(p => p.Id)
-                    });
-
-                    logger.LogInformation("Batch {0} results: {1} issued; {2} failed", casBatchName, result.IssuedPayments.Count(), result.FailedPayments.Count());
-                    await Parallel.ForEachAsync(result.FailedPayments, ct, async (failedPayment, ct) =>
-                    {
-                        switch (failedPayment.Error)
+                    case CasException e:
+                        // CAS validation error - cancel payment and send supports for QR review
+                        try
                         {
-                            case CasException e:
-                                await paymentRepository.Manage(new UpdateCasPaymentStatusRequest { PaymentId = failedPayment.Id, ToPaymentStatus = PaymentStatus.Cancelled });
-                                var payment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ById = failedPayment.Id })).Items
-                                    .Cast<InteracSupportPayment>()
-                                    .SingleOrDefault();
-                                await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
-                                {
-                                    await supportRepository.Manage(new FailSupportCommand { SupportId = supportId });
-                                });
-                                break;
-
-                            default:
-                                logger.LogError(failedPayment.Error, $"Failed to issue payment {failedPayment.Id}: {failedPayment.Error?.Message}");
-                                break;
+                            logger.LogError(failedPayment.Error, $"Failed to issue payment {failedPayment.Id}: {failedPayment.Error?.Message}");
+                            await paymentRepository.Manage(new CancelPaymentRequest { PaymentId = failedPayment.Id, Reason = failedPayment.Error.Message });
+                            var payment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ById = failedPayment.Id })).Items
+                                .Cast<InteracSupportPayment>()
+                                .SingleOrDefault();
+                            await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
+                            {
+                                await supportRepository.Manage(new SubmitSupportForReviewCommand { SupportId = supportId });
+                            });
                         }
-                    });
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, $"Failed to cancel payment {failedPayment.Id} after a failure to issue: {ex.Message}");
+                        }
+                        break;
+
+                    default:
+                        // payments are kept in the queue
+                        logger.LogError(failedPayment.Error, $"Failed to issue payment {failedPayment.Id}: {failedPayment.Error?.Message}");
+                        break;
                 }
-            }
+            });
         }
 
         public async System.Threading.Tasks.Task Handle(ReconcilePaymentsCommand _)
@@ -845,68 +846,68 @@ namespace EMBC.ESS.Managers.Events
             var lastPollDate = await CalculateEarliestDateForPolling(ct);
             logger.LogInformation($"Polling for CAS payments after {lastPollDate}");
 
-            var issuedCasPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
+            var issuedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
             {
                 ChangedFrom = lastPollDate,
                 InStatus = CasPaymentStatus.Pending
             })).Payments.ToArray();
 
-            foreach (var payment in issuedCasPayments.AsParallel())
-            {
-                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
-                {
-                    PaymentId = payment.PaymentId,
-                    ToPaymentStatus = PaymentStatus.Issued,
-                    CasReferenceNumber = payment.CasReferenceNumber,
-                    StatusChangeDate = payment.StatusChangeDate
-                });
-                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
-            }
+            await Parallel.ForEachAsync(issuedPayments, ct, async (payment, ct) =>
+             {
+                 try
+                 {
+                     await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = payment });
+                 }
+                 catch (Exception e)
+                 {
+                     logger.LogError(e, $"Failed to reconcile issued payment {payment.PaymentId}: {e.Message}");
+                 }
+             });
+
             var paidPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
             {
                 ChangedFrom = lastPollDate,
                 InStatus = CasPaymentStatus.Paid
             })).Payments.ToArray();
 
-            foreach (var payment in paidPayments.AsParallel())
+            await Parallel.ForEachAsync(paidPayments, ct, async (payment, ct) =>
             {
-                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                try
                 {
-                    PaymentId = payment.PaymentId,
-                    ToPaymentStatus = PaymentStatus.Paid,
-                    CasReferenceNumber = payment.CasReferenceNumber,
-                    StatusChangeDate = payment.StatusChangeDate
-                });
-                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
-            }
+                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = payment });
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, $"Failed to  reconcile paid  payment {payment.PaymentId}: {e.Message}");
+                }
+            });
 
-            var failedCasPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
+            var failedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
             {
                 ChangedFrom = lastPollDate,
                 InStatus = CasPaymentStatus.Failed
             })).Payments.ToArray();
 
-            foreach (var payment in failedCasPayments.AsParallel())
+            await Parallel.ForEachAsync(failedPayments, ct, async (payment, ct) =>
             {
-                var response = (UpdateCasPaymentStatusResponse)await paymentRepository.Manage(new UpdateCasPaymentStatusRequest
+                try
                 {
-                    PaymentId = payment.PaymentId,
-                    ToPaymentStatus = PaymentStatus.Failed,
-                    CasReferenceNumber = payment.CasReferenceNumber,
-                    StatusChangeDate = payment.StatusChangeDate,
-                    Reason = payment.StatusDescription
-                });
-                if (!response.Success) logger.LogError($"Failed to update payment {payment.PaymentId}: {response.FailureReason}");
-            }
+                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = payment });
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, $"Failed to reconcile failed payment {payment.PaymentId}: {e.Message}");
+                }
+            });
 
             // set the last poll time to -5 mins to account for system clock differences
             var nextPollDate = DateTime.SpecifyKind(DateTime.UtcNow.AddMinutes(-5), DateTimeKind.Utc);
             await cache.Set(paymentPollingCacheKey, nextPollDate, TimeSpan.FromDays(7), ct);
 
             logger.LogInformation("Reconciled {0} issued payments, {1} failed payments, {2} paid payments; set last polling date to {3} UTC",
-                issuedCasPayments.Length,
+                issuedPayments.Length,
                 paidPayments.Length,
-                failedCasPayments.Length,
+                failedPayments.Length,
                 nextPollDate);
         }
 
@@ -917,14 +918,15 @@ namespace EMBC.ESS.Managers.Events
             var lastPollDate = await cache.Get<DateTime?>(paymentPollingCacheKey, ct);
             if (lastPollDate.HasValue) return lastPollDate.Value;
 
-            var sentPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ByStatus = PaymentStatus.Sent })).Items;
+            var earliestSentPayment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+            {
+                ByStatus = PaymentStatus.Sent,
+                ByQueueStatus = QueueStatus.Pending,
+                LimitNumberOfItems = 1,
+            })).Items.Cast<InteracSupportPayment>().FirstOrDefault();
 
             // calculate date of last status update: the earliest date of the payments in status 'Sent'
-            lastPollDate = sentPayments
-                .Where(p => p is InteracSupportPayment)
-                .Cast<InteracSupportPayment>()
-                .OrderBy(p => p.SentOn)
-                .FirstOrDefault()?.SentOn ?? new DateTime(2022, 6, 7);
+            lastPollDate = earliestSentPayment?.SentOn ?? new DateTime(2022, 6, 7);
 
             return lastPollDate.Value;
         }

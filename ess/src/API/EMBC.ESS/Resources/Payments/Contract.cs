@@ -23,12 +23,12 @@ namespace EMBC.ESS.Resources.Payments
     public abstract class QueryPaymentResponse
     { }
 
-    public class SavePaymentRequest : ManagePaymentRequest
+    public class CreatePaymentRequest : ManagePaymentRequest
     {
         public Payment Payment { get; set; }
     }
 
-    public class SavePaymentResponse : ManagePaymentResponse
+    public class CreatePaymentResponse : ManagePaymentResponse
     {
         public string Id { get; set; }
     }
@@ -44,14 +44,19 @@ namespace EMBC.ESS.Resources.Payments
 
     public enum PaymentStatus
     {
-        Pending = 1,
-        Sending = 174360000,
+        Created = 1,
         Sent = 174360001,
         Paid = 2,
         Failed = 174360002,
         Cancelled = 174360003,
         Issued = 174360004,
-        Processing = 174360005
+    }
+
+    public enum QueueStatus
+    {
+        Pending = 174360000,
+        Processing = 174360001,
+        Failure = 174360002
     }
 
     public class InteracSupportPayment : Payment
@@ -73,6 +78,7 @@ namespace EMBC.ESS.Resources.Payments
         public string ById { get; set; }
         public string ByLinkedSupportId { get; set; }
         public int? LimitNumberOfItems { get; set; }
+        public QueueStatus? ByQueueStatus { get; set; }
     }
 
     public class SearchPaymentResponse : QueryPaymentResponse
@@ -80,7 +86,7 @@ namespace EMBC.ESS.Resources.Payments
         public IEnumerable<Payment> Items { get; set; } = Array.Empty<Payment>();
     }
 
-    public class IssuePaymentsRequest : ManagePaymentRequest
+    public class IssuePaymentsBatchRequest : ManagePaymentRequest
     {
         public string BatchId { get; set; }
         public IEnumerable<string> PaymentIds { get; set; } = Array.Empty<string>();
@@ -97,7 +103,7 @@ namespace EMBC.ESS.Resources.Payments
         public string SupplierSiteCode { get; set; }
     }
 
-    public class IssuePaymentsResponse : ManagePaymentResponse
+    public class IssuePaymentsBatchResponse : ManagePaymentResponse
     {
         public IEnumerable<string> IssuedPayments { get; set; } = Array.Empty<string>();
         public IEnumerable<(string Id, Exception Error)> FailedPayments { get; set; } = Array.Empty<(string, Exception)>();
@@ -131,18 +137,23 @@ namespace EMBC.ESS.Resources.Payments
         Paid
     }
 
-    public class UpdateCasPaymentStatusRequest : ManagePaymentRequest
+    public class ProcessCasPaymentReconciliationStatusRequest : ManagePaymentRequest
     {
-        public string PaymentId { get; set; }
-        public PaymentStatus ToPaymentStatus { get; set; }
-        public DateTime? StatusChangeDate { get; set; }
-        public string CasReferenceNumber { get; set; }
-        public string? Reason { get; set; }
+        public CasPaymentDetails CasPaymentDetails { get; set; }
     }
 
-    public class UpdateCasPaymentStatusResponse : ManagePaymentResponse
+    public class ProcessCasPaymentReconciliationStatusResponse : ManagePaymentResponse
     {
         public bool Success { get; set; }
         public string? FailureReason { get; set; }
     }
+
+    public class CancelPaymentRequest : ManagePaymentRequest
+    {
+        public string PaymentId { get; set; }
+        public string Reason { get; set; }
+    }
+
+    public class CancelPaymentResponse : ManagePaymentResponse
+    { }
 }

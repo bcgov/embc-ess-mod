@@ -39,7 +39,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
         {
             var supports = mapper.Map<IEnumerable<Support>>(r.Supports);
 
-            var procesedSupports = ((SaveEvacuationFileSupportCommandResult)await supportRepository.Manage(new SaveEvacuationFileSupportsCommand
+            var procesedSupports = ((CreateNewSupportsCommandResult)await supportRepository.Manage(new CreateNewSupportsCommand
             {
                 FileId = r.FileId,
                 Supports = supports
@@ -61,7 +61,6 @@ namespace EMBC.ESS.Engines.Supporting.SupportProcessing
                 };
             }
             //validate paper id and support types are unique
-            //TODO: validate against existing supports
             var duplicates = r.Supports.GroupBy(s => ((Shared.Contracts.Events.Referral)s.SupportDelivery).ManualReferralId).Where(g => g.GroupBy(e => e.GetType()).Any(gt => gt.Count() != 1));
             if (duplicates.Any())
             {
