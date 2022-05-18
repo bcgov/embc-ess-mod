@@ -2,7 +2,7 @@
 
 namespace EMBC.Tests.Automation.Responders.PageObjects
 {
-    public class WizardEssFile : WizardBasePageObject
+    public class WizardEssFile : WizardPageObjectBase
     {
         //ELEMENTS:
         private By evacDetailsFormEvacAddressYesRadioBttn = By.Id("addressYesOption");

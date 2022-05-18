@@ -11,6 +11,9 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
     public class SearchEvacuee : PageObjectBase
     {
         //ELEMENTS:
+        private By personFormFirstNameInput = By.CssSelector("input[formcontrolname='firstName']");
+        private By personFormLastNameInput = By.CssSelector("input[formcontrolname='lastName']");
+        private By personFormDateOfBirthInput = By.CssSelector("input[formcontrolname='dateOfBirth']");
         private By digitalRegCard = By.XPath("//mat-card/div/div/p/span[contains(text(),'evacuee registration & extensions')]");
         private By paperBasedRegCard = By.XPath("//mat-card/div/div/p/span[contains(text(),'data entry')]");
         private By searchPaperBasedEssFile = By.CssSelector("input[formcontrolname='paperBasedEssFile']");

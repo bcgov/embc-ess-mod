@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EMBC.Tests.Automation.Responders.PageObjects
 {
-    internal class WizardSupport : WizardBasePageObject
+    internal class WizardSupport : WizardPageObjectBase
     {
         //ELEMENTS:
         private By selectSupportFormTypeSelect = By.CssSelector("mat-select[formcontrolname='type']");

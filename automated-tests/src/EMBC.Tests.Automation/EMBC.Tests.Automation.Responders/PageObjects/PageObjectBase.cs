@@ -7,10 +7,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
     public abstract class PageObjectBase
     {
         protected readonly IWebDriver webDriver;
-        protected By personFormFirstNameInput = By.CssSelector("input[formcontrolname='firstName']");
-        protected By personFormLastNameInput = By.CssSelector("input[formcontrolname='lastName']");
-        protected By personFormGenderSelect = By.CssSelector("mat-select[formcontrolname='gender']");
-        protected By personFormDateOfBirthInput = By.CssSelector("input[formcontrolname='dateOfBirth']");
 
         protected PageObjectBase(IWebDriver webDriver)
         {

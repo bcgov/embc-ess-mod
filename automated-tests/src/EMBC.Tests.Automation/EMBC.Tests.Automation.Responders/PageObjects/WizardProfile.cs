@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EMBC.Tests.Automation.Responders.PageObjects
 {
-    public class WizardProfile: WizardBasePageObject
+    public class WizardProfile: WizardPageObjectBase
     {
         //ELEMENTS:
         private By addressFormIsBCAddressYesRadioBttn = By.CssSelector("[formcontrolname='isBcAddress'] mat-radio-button:nth-child(1)");
@@ -29,11 +29,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         { }
 
         //FUNCTIONS
-        public void NewEvacueeRegButton()
-        {
-            ButtonElement("New Evacuee Registration");
-        }
-
         public void WizardCollectionNotice()
         {
             ButtonElement("Next");
