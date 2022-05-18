@@ -11,7 +11,7 @@ namespace EMBC.Tests.Integration.ESS
 
         public DynamicsWebAppFixture()
         {
-            this.TestData = new DynamicsTestData(Services.CreateScope().ServiceProvider.GetRequiredService<IEssContextFactory>().Create());
+            this.TestData = new DynamicsTestData(Services.CreateScope().ServiceProvider.GetRequiredService<IEssContextFactory>());
         }
     }
 
