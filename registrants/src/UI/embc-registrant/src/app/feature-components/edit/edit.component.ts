@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { ProfileDataService } from '../profile/profile-data.service';
 import { ProfileService } from '../profile/profile.service';
 import { EditService } from './edit.service';
 import * as globalConst from '../../core/services/globalConstants';
+import { AppSessionService } from 'src/app/core/services/appSession.service';
 
 @Component({
   selector: 'app-edit',
@@ -39,12 +40,15 @@ export class EditComponent implements OnInit, OnDestroy {
     private evacuationFileDataService: EvacuationFileDataService,
     private alertService: AlertService,
     private editService: EditService,
-    private evacuationFileService: EvacuationFileService
+    private evacuationFileService: EvacuationFileService,
+    private appSessionService: AppSessionService,
+    private cd: ChangeDetectorRef
   ) {
     const navigation = this.router.getCurrentNavigation();
-    if (navigation.extras.state !== undefined) {
+    if (navigation?.extras?.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
       this.parentPageName = state.parentPageName;
+      this.appSessionService.editParentPage = state.parentPageName;
     }
   }
 
@@ -58,6 +62,7 @@ export class EditComponent implements OnInit, OnDestroy {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
+    this.cd.detectChanges();
   }
 
   /**
@@ -73,9 +78,9 @@ export class EditComponent implements OnInit, OnDestroy {
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
-      if (this.parentPageName === 'create-profile') {
+      if (this.appSessionService.editParentPage === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'dashboard') {
+      } else if (this.appSessionService.editParentPage === 'dashboard') {
         this.showLoader = !this.showLoader;
         this.profileService
           .upsertProfile(this.profileDataService.createProfileDTO())
@@ -94,7 +99,7 @@ export class EditComponent implements OnInit, OnDestroy {
               );
             }
           });
-      } else if (this.parentPageName === 'needs-assessment') {
+      } else if (this.appSessionService.editParentPage === 'needs-assessment') {
         if (this.evacuationFileDataService.essFileId === undefined) {
           this.router.navigate(
             [this.verifiedNeedsAssessments],
@@ -132,11 +137,11 @@ export class EditComponent implements OnInit, OnDestroy {
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
-      if (this.parentPageName === 'create-profile') {
+      if (this.appSessionService.editParentPage === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'dashboard') {
+      } else if (this.appSessionService.editParentPage === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard/profile']);
-      } else if (this.parentPageName === 'needs-assessment') {
+      } else if (this.appSessionService.editParentPage === 'needs-assessment') {
         if (this.evacuationFileDataService.essFileId !== undefined) {
           this.router.navigate([
             '/verified-registration/dashboard/current/' +
@@ -151,8 +156,6 @@ export class EditComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  ///verified-registration/needs-assessment
 
   /**
    * Loads the form into view

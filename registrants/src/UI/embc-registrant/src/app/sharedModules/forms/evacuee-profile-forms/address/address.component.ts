@@ -195,7 +195,6 @@ export default class AddressComponent
   sameAsPrimary(event: MatRadioChange): void {
     if (event.value === 'Yes') {
       const primaryAddress = this.primaryAddressForm.getRawValue().address;
-      // console.log(primaryAddress)
       this.primaryAddressForm.get('mailingAddress').setValue(primaryAddress);
     } else {
       this.primaryAddressForm.get('mailingAddress').reset();
