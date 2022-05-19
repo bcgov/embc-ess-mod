@@ -31,6 +31,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { DownloadService } from '../../../../core/services/utility/download.service';
+import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -243,16 +244,16 @@ export class ExistingSupportDetailsComponent implements OnInit {
                 reason
               )
               .subscribe({
-                next: (response) => {
-                  response
-                    .text()
-                    .then(async (text) => {
-                      await this.downloadService.printHTML(window, text);
-                      this.isLoading = !this.isLoading;
-                    })
-                    .catch((error) => {
-                      throw error;
-                    });
+                next: async (response) => {
+                  const blob = new Blob([response], { type: response.type });
+                  await this.downloadService.downloadFile(
+                    window,
+                    blob,
+                    `support-${
+                      this.selectedSupport.id
+                    }-${new FlatDateFormatPipe().transform(new Date())}.pdf`
+                  );
+                  this.isLoading = !this.isLoading;
                 },
                 error: (error) => {
                   this.isLoading = !this.isLoading;

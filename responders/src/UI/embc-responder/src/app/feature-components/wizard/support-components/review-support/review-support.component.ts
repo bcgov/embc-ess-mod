@@ -30,6 +30,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { DownloadService } from '../../../../core/services/utility/download.service';
+import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe';
 
 @Component({
   selector: 'app-review-support',
@@ -356,21 +357,21 @@ export class ReviewSupportComponent implements OnInit {
     const supportsDraft: Support[] = this.referralService.getDraftSupport();
     const fileId: string = this.evacueeSessionService.evacFile.id;
     this.reviewSupportService.processSupports(fileId, supportsDraft).subscribe({
-      next: (response) => {
-        response
-          .text()
-          .then(async (text) => {
-            await this.downloadService.printHTML(window, text);
+      next: async (response) => {
+        const blob = new Blob([response], { type: response.type });
+        await this.downloadService.downloadFile(
+          window,
+          blob,
+          `support-${fileId}-${new FlatDateFormatPipe().transform(
+            new Date()
+          )}.pdf`
+        );
 
-            //Clearing Draft supports array and updating the supports list for the selected ESS File
-            this.referralService.clearDraftSupport();
-            this.reviewSupportService.updateExistingSupportsList();
-            this.showLoader = !this.showLoader;
-            this.router.navigate(['/ess-wizard/add-supports']);
-          })
-          .catch((error) => {
-            throw error;
-          });
+        //Clearing Draft supports array and updating the supports list for the selected ESS File
+        this.referralService.clearDraftSupport();
+        this.reviewSupportService.updateExistingSupportsList();
+        this.showLoader = !this.showLoader;
+        this.router.navigate(['/ess-wizard/add-supports']);
       },
       error: (error) => {
         console.error('error when processing supports: ', error);
