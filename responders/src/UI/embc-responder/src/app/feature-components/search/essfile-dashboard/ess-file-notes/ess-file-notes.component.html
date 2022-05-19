@@ -19,7 +19,8 @@
               {{ note?.teamName }}
             </p>
             <p class="note-date">
-              {{ note?.addedOn | date: 'dd-MMM-yyyy hh:mm a' }}
+              {{ note?.addedOn | date: 'dd-MMM-yyyy' }} at
+              {{ note?.addedOn | date: 'hh:mm a' }}
             </p>
           </div>
           <div
