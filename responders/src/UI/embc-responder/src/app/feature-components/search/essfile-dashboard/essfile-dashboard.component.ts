@@ -36,6 +36,7 @@ export class EssfileDashboardComponent implements OnInit {
   color = '#169BD5';
   isMinor = false;
   isLinkedToBcsc = false;
+  hasPostal = false;
   eligibilityFirstName: string;
   eligibilityLastName: string;
 
@@ -61,6 +62,7 @@ export class EssfileDashboardComponent implements OnInit {
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.isMinor;
     this.isLinkedToBcsc =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.authenticatedUser;
+    this.hasPostal = this.hasPostalCode();
 
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog(globalConst.profileLinkMessage)
@@ -298,5 +300,16 @@ export class EssfileDashboardComponent implements OnInit {
         })
       );
     return lastValueFrom(profile$);
+  }
+
+  private hasPostalCode(): boolean {
+    return (
+      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+        ?.primaryAddress.postalCode !== null &&
+      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+        ?.primaryAddress.postalCode !== '' &&
+      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+        ?.primaryAddress.postalCode !== undefined
+    );
   }
 }
