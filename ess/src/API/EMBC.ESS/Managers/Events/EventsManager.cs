@@ -583,12 +583,15 @@ namespace EMBC.ESS.Managers.Events
                 PrintingMember = requestingUser
             });
 
-            //convert to pdf
-            //var content = await pdfGenerator.Generate(generatedReferrals.Content);
-            //var contentType = "application/pdf";
-
             var content = generatedReferrals.Content;
             var contentType = "text/html";
+
+            //convert to pdf
+            if (configuration.GetValue("pdfGenerator:enabled", false))
+            {
+                content = await pdfGenerator.Generate(generatedReferrals.Content);
+                contentType = "application/pdf";
+            }
 
             await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });
 
