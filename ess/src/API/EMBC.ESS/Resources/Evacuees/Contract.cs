@@ -104,8 +104,8 @@ namespace EMBC.ESS.Resources.Evacuees
         public DateTime LastModified { get; set; }
         public string LastModifiedUserId { get; set; }
         public string LastModifiedDisplayName { get; set; }
-        public bool Authenticated { get; set; }
-        public bool Verified { get; set; }
+        public bool? Authenticated { get; set; }
+        public bool? Verified { get; set; }
         public bool Minor { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

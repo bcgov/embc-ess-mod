@@ -154,7 +154,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var currentVerifiedStatus = registrant.VerifiedUser;
             var newStatus = !currentVerifiedStatus;
 
-            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus });
+            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus.HasValue ? newStatus.Value : false });
 
             var updatedRegistrant = await GetRegistrantByUserId(TestData.ContactUserId);
             updatedRegistrant.Id.ShouldBe(id);
@@ -253,8 +253,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             await manager.Handle(new ProcessRegistrantInviteCommand { InviteId = encryptedInviteId, LoggedInUserId = userId });
 
             var actualRegistrant = (await TestHelper.GetRegistrantByUserId(manager, userId)).ShouldNotBeNull();
-            actualRegistrant.AuthenticatedUser.ShouldBeTrue();
-            actualRegistrant.VerifiedUser.ShouldBeTrue();
+            actualRegistrant.AuthenticatedUser.HasValue.ShouldBeTrue();
+            actualRegistrant.AuthenticatedUser.Value.ShouldBeTrue();
+            actualRegistrant.VerifiedUser.HasValue.ShouldBeTrue();
+            actualRegistrant.VerifiedUser.Value.ShouldBeTrue();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

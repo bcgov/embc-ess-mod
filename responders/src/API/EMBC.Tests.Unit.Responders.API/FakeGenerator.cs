@@ -166,7 +166,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 FirstName = p.profile.FirstName,
                 LastName = p.profile.LastName,
                 RegistrationDate = p.profile.CreatedOn,
-                IsVerified = p.profile.VerifiedUser,
+                IsVerified = p.profile.VerifiedUser.Value,
                 PrimaryAddress = p.profile.PrimaryAddress,
                 RestrictedAccess = p.profile.RestrictedAccess,
                 RecentEvacuationFiles = p.files.MapToSearchResults()

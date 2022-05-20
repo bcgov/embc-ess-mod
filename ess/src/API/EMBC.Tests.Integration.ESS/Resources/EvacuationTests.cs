@@ -248,7 +248,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 if (householdMember.LinkedRegistrantId != null)
                 {
                     householdMember.HasAccessRestriction.ShouldNotBeNull().ShouldBe(primaryContact.RestrictedAccess);
-                    householdMember.IsVerifiedRegistrant.ShouldNotBeNull().ShouldBe(primaryContact.Verified);
+                    householdMember.IsVerifiedRegistrant.ShouldNotBeNull();
+                    householdMember.IsVerifiedRegistrant.ShouldBe(primaryContact.Verified);
                 }
                 else
                 {
