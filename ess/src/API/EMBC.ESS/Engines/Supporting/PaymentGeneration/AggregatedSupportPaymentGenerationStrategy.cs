@@ -7,14 +7,19 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
 {
     public class AggregatedSupportPaymentGenerationStrategy : IPaymentGenerationStrategy
     {
-        private const decimal amountLimit = 10000m;
+        private readonly decimal paymentAmountLimit;
+
+        public AggregatedSupportPaymentGenerationStrategy(decimal paymentAmountLimit)
+        {
+            this.paymentAmountLimit = paymentAmountLimit;
+        }
 
         public async Task<GeneratePaymentsResponse> GeneratePayments(GeneratePaymentsRequest request)
         {
             await Task.CompletedTask;
             var payments = new List<Payment>();
             // aggregate per file
-            foreach (var supportsInFile in request.Supports.GroupBy(s => (s.FileId, s.PayeeId)))
+            foreach (var supportsInFile in request.Supports.Where(s => s.Amount <= paymentAmountLimit).GroupBy(s => (s.FileId, s.PayeeId)))
             {
                 var fileId = supportsInFile.Key.FileId;
                 var payeeId = supportsInFile.Key.PayeeId;
@@ -30,7 +35,7 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
                     {
                         // aggregate supports into a single payment if possible
                         var support = supports[i];
-                        while (i < numOfSupports && amount + support.Amount <= amountLimit)
+                        while (i < numOfSupports && amount + support.Amount <= paymentAmountLimit)
                         {
                             amount += support.Amount;
                             linkedSupportIds.Add(support.SupportId);

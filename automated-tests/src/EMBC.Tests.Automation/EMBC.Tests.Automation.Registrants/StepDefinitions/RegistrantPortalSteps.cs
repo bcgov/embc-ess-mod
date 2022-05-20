@@ -5,93 +5,110 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
     [Binding]
     public sealed class RegistrantPortalSteps
     {
-        private readonly AnonymousRegistration anonymousRegistration;
+        private readonly Registration registration;
         private readonly string captchaAnswer;
+        private readonly EvacueeDashboard evacueeDashboard;
 
         public RegistrantPortalSteps(BrowserDriver driver)
         {
-            this.anonymousRegistration = new AnonymousRegistration(driver.Current);
+            registration = new Registration(driver.Current);
             captchaAnswer = driver.Configuration.GetValue<string>("captchaAnswer");
+            evacueeDashboard = new EvacueeDashboard(driver.Current);
         }
 
         [When("I complete the minimum fields on the evacuee forms")]
         public void MinimumFieldsEvacueeForms()
         {
-            anonymousRegistration.CurrentLocation.Should().Be("/non-verified-registration/collection-notice");
-            // click on 'Next' button on Collection Notice page
-            anonymousRegistration.NextButton();
+            //collection notice
+            registration.CurrentLocation.Should().Be("/non-verified-registration/collection-notice");
+            registration.CollectionNotice();
 
-            // click on 'Yes' button on Restriction page
-            anonymousRegistration.YesRadioButton();
+            //Restriction
+            registration.CurrentLocation.Should().Be("/non-verified-registration/restriction");
+            registration.UnverifiedRestriction();
 
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
+            //PROFILE CREATION:
+            //Minimum Personal Details
+            registration.CurrentLocation.Should().Be("/non-verified-registration/create-profile");
+            registration.MinimumPersonalDetails("Jane", "Doe", "Female", "01011980");
 
-            // complete the minimum Personal Details
-            anonymousRegistration.MinimumPersonalDetails();
+            //Minimum Address Form
+            registration.MinimumAddress("1012 Douglas St", "Victoria");
 
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
+            //Minimum Contact Information
+            registration.MinimumContact();
 
-            // complete the Address
-            anonymousRegistration.MinimumAddress();
+            //Security Questions
+            registration.SecurityQuestions("What was the name of your first pet?", "In what city or town was your mother born?", "Where was your first job?", "Daisy", "Vancouver", "McDonalds");
 
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
+            //ESS FILE
+            //ESS file Location
+            registration.CurrentLocation.Should().Be("/non-verified-registration/needs-assessment");
+            registration.CreateESSFileMinLocation();
 
-            // click on 'No' for Contact Information
-            anonymousRegistration.NoRadioButton();
+            //ESS file Household Members
+            registration.CreateESSFileMinHouseholdMembers();
 
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
+            //no pets entered
+            registration.CreateESSFileMinAnimals();
 
-            // complete the Security Questions
-            anonymousRegistration.SecurityQuestions();
+            //ESS file Needs
+            registration.CreateESSFileNeeds();
 
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
-
-            // enter ESS file Location
-            anonymousRegistration.CreateESSFileLocation();
-
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
-
-            // enter ESS file Household Members
-            anonymousRegistration.CreateESSFileHouseholdMembers();
-
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
-
-            // no pets entered
-            anonymousRegistration.Wait();
-
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
-
-            // enter ESS file Needs
-            anonymousRegistration.CreateESSFileNeeds();
-
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
-
-            // enter ESS file Security Phrase
-            anonymousRegistration.CreateESSFileSecurityPhrase();
-
-            // click on 'Next' button
-            anonymousRegistration.NextButton();
+            //ESS file Security Phrase
+            registration.CreateESSFileSecurityPhrase("Sesame");
         }
 
-        [Then("the CAPTCHA field is confirmed to be working")]
-        public void CAPTCHAFieldWorking()
+        [When("I create a new EssFile")]
+        public void newEssFile()
         {
-            anonymousRegistration.CAPTCHAFails();
+            evacueeDashboard.CreateNewEvent();
+        }
+
+        [When("I complete the maximum fields on the ESS file evacuee forms")]
+        public void MaximumFieldsEvacueeForms()
+        {
+            //Restriction
+            registration.CurrentLocation.Should().Be("/verified-registration/confirm-restriction");
+            registration.VerifiedRestriction();
+
+            //ESS file Location
+            registration.CurrentLocation.Should().Be("/verified-registration/needs-assessment");
+            registration.CreateESSFileMaxLocation("1012 Douglas St", "Apt 361", "Vancouver", "V6Z 1B7");
+
+            //ESS file Household Members
+            registration.CreateESSFileMaxHouseholdMembers("Andrew", "Doe", "AD","Male", "12122000", "Lactose intolerant");
+
+            //no pets entered
+            registration.CreateESSFileMaxAnimals("Cats", "3");
+
+            //ESS file Needs
+            registration.CreateESSFileNeeds();
+
+            //ESS file Security Phrase
+            registration.CreateESSFileSecurityPhrase("Sesame");
+
+            //Submit ESSFile
+            registration.SubmitEssFile();
         }
 
         [When("I submit the anonymous registration form")]
         public void SubmitForm()
         {
-            anonymousRegistration.SubmitForm(this.captchaAnswer);
+            registration.SubmitForm(this.captchaAnswer);
         }
+
+        [Then("the CAPTCHA field is confirmed to be working")]
+        public void CAPTCHAFieldWorking()
+        {
+            registration.CAPTCHAFails("Invalid");
+        }
+
+        [Then("the ESS File submission complete dialog appears")]
+        public void VerifiedSubmitForm()
+        {
+            registration.SubmitFormSuccessfully();
+        }
+        
     }
 }

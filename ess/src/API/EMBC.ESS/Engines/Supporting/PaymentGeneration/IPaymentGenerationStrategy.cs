@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
 {
@@ -9,6 +12,18 @@ namespace EMBC.ESS.Engines.Supporting.PaymentGeneration
 
     public class PaymentGenerationStrategyFactory
     {
-        public IPaymentGenerationStrategy Create() => new AggregatedSupportPaymentGenerationStrategy();
+        private readonly IServiceProvider services;
+
+        public PaymentGenerationStrategyFactory(IServiceProvider services)
+        {
+            this.services = services;
+        }
+
+        public IPaymentGenerationStrategy Create()
+        {
+            var config = services.GetRequiredService<IConfiguration>();
+            var paymentAmountLimit = config.GetValue("etransferMaxLimit", 10000m);
+            return new AggregatedSupportPaymentGenerationStrategy(paymentAmountLimit);
+        }
     }
 }
