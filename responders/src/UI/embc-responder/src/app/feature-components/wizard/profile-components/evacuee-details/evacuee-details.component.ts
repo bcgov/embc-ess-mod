@@ -10,7 +10,6 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { Subscription } from 'rxjs';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -51,7 +50,6 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
     private wizardService: WizardService,
     private appBaseService: AppBaseService

@@ -15,6 +15,7 @@ export class AppBaseService {
   public static etransferRequirementDefault?: EtransferRequirementStatus[] = [
     { statement: EtransferContent.bcServicesCard, status: false },
     { statement: EtransferContent.isNotMinor, status: false },
+    { statement: EtransferContent.hasPostalCode, status: false },
     { statement: EtransferContent.acceptTransfer, status: true },
     { statement: EtransferContent.window, status: true }
   ];
