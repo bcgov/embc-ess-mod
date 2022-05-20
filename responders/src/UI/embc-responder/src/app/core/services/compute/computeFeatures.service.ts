@@ -31,7 +31,9 @@ export class ComputeFeaturesService implements Compute {
         !this.appBaseService?.appModel?.selectedProfile
           ?.selectedEvacueeInContext?.isMinor &&
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.authenticatedUser
+          ?.authenticatedUser &&
+        this.hasPostalCode() &&
+        !this.appBaseService?.etransferProperties?.interacAllowed
     };
   }
 
@@ -95,6 +97,13 @@ export class ComputeFeaturesService implements Compute {
                 ?.selectedEvacueeInContext?.authenticatedUser
           })
         );
+      } else if (defaultVal.statement === EtransferContent.hasPostalCode) {
+        requirementContent.push(
+          Object.assign(new EtransferRequirementStatus(), {
+            statement: EtransferContent.hasPostalCode,
+            status: this.hasPostalCode()
+          })
+        );
       } else {
         requirementContent.push(
           Object.assign(new EtransferRequirementStatus(), defaultVal)
@@ -104,5 +113,16 @@ export class ComputeFeaturesService implements Compute {
     this.appBaseService.etransferProperties = {
       etransferRequirement: requirementContent
     };
+  }
+
+  private hasPostalCode(): boolean {
+    return (
+      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+        ?.primaryAddress.postalCode !== null &&
+      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+        ?.primaryAddress.postalCode !== '' &&
+      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+        ?.primaryAddress.postalCode !== undefined
+    );
   }
 }
