@@ -10,12 +10,12 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void LoginWithBcsc()
         {
-            webDriver.FindElements(By.TagName("button")).Single(b => b.Text.Contains("Log in with BC Services Card app")).Click();
+            ButtonElement("Log in with BC Services Card");
         }
 
         public void SelfRegister()
         {
-            webDriver.FindElements(By.TagName("button")).Single(b => b.Text.Contains("Self-Register")).Click();
+            ButtonElement("Self-Register");
         }
     }
 }

@@ -3,11 +3,7 @@
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">First Name</mat-label>
-        <input
-          [formControlName]="'firstName'"
-          matInput
-          placeholder="First Name"
-        />
+        <input formControlName="firstName" matInput placeholder="First Name" />
         <mat-error
           *ngIf="
             personalFormControl.firstName.invalid &&
@@ -25,7 +21,7 @@
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">Last Name</mat-label>
         <input
-          [formControlName]="'lastName'"
+          formControlName="lastName"
           matInput
           placeholder="Last Name"
           [readonly]="readOnlyInput"
@@ -42,7 +38,7 @@
     </div>
     <div class="col-md-4 align-self-center">
       <mat-checkbox
-        [formControlName]="'sameLastNameCheck'"
+        formControlName="sameLastNameCheck"
         (change)="sameLastNameEvent($event)"
         >Same as main applicant
       </mat-checkbox>
@@ -55,7 +51,7 @@
         <mat-label>Initials</mat-label>
         <input
           maxlength="100"
-          [formControlName]="'initials'"
+          formControlName="initials"
           matInput
           placeholder="Initials"
         />
@@ -67,7 +63,7 @@
     <div class="col-md-3">
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">Gender</mat-label>
-        <mat-select [formControlName]="'gender'">
+        <mat-select formControlName="gender">
           <mat-option>--Gender</mat-option>
           <mat-option *ngFor="let gen of gender" [value]="gen.value">
             {{ gen.name }}
@@ -89,7 +85,7 @@
       <mat-form-field type="date" appearance="outline">
         <mat-label class="requiredField">Date of Birth</mat-label>
         <input
-          [formControlName]="'dateOfBirth'"
+          formControlName="dateOfBirth"
           matInput
           placeholder="mm/dd/yyyy"
           [textMask]="{ mask: dateMask, keepCharPositions: true }"

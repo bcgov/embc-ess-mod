@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import { ProfileDataConflict } from './profile-data-conflict';
-export type DateOfBirthDataConflict = ProfileDataConflict & {
-'dataElementName': string;
-'conflictingValue'?: string;
-'originalValue'?: string;
-};
+export interface DateOfBirthDataConflict extends ProfileDataConflict {
+  conflictingValue?: string;
+  dataElementName: string;
+  originalValue?: string;
+}
