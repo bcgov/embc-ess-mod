@@ -119,6 +119,7 @@ namespace EMBC.ESS.Resources.Supports
             SetSupportStatus(ctx, support, SupportStatus.UnderReview);
             support.era_etransferapproved = 174360001; //no
             support.era_etransfertransactioncreated = false;
+            support.ownerid = await ctx.GetCurrentSystemUser();
             ctx.UpdateObject(support);
 
             var bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
