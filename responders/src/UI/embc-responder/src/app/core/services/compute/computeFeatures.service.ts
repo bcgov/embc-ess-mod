@@ -117,11 +117,11 @@ export class ComputeFeaturesService implements Compute {
   private hasPostalCode(): boolean {
     return (
       this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
-        ?.primaryAddress.postalCode !== null &&
+        ?.primaryAddress?.postalCode !== null &&
       this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
-        ?.primaryAddress.postalCode !== '' &&
+        ?.primaryAddress?.postalCode !== '' &&
       this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
-        ?.primaryAddress.postalCode !== undefined
+        ?.primaryAddress?.postalCode !== undefined
     );
   }
 }
