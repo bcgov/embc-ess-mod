@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
   public get signedInTask(): string {
     return this.profile.taskNumber
       ? `Task # ${this.profile.taskNumber}`
-      : `Not logged in to a task #`;
+      : `Not signed in to a task #`;
   }
 
   public get taskStatus(): string {
