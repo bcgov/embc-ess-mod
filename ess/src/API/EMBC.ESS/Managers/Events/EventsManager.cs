@@ -633,7 +633,7 @@ namespace EMBC.ESS.Managers.Events
         {
             var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
             if (evacuee == null) throw new NotFoundException($"registrant not found", cmd.RegistrantId);
-            if (evacuee.Authenticated.Value) throw new BusinessLogicException($"registrant {cmd.RegistrantId} is already authenticated");
+            if (evacuee.Authenticated.Value == true) throw new BusinessLogicException($"registrant {cmd.RegistrantId} is already authenticated");
 
             var inviteId = (await invitationRepository.Manage(new CreateNewEmailInvitation
             {
