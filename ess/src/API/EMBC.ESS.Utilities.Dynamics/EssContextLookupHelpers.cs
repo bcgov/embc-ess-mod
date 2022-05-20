@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Utilities.Dynamics
@@ -22,6 +23,12 @@ namespace EMBC.ESS.Utilities.Dynamics
         {
             if (string.IsNullOrEmpty(code) || !Guid.TryParse(code, out var parsedCode)) return null;
             return context.era_jurisdictions_cached.Value.Where(p => p.era_jurisdictionid == parsedCode).SingleOrDefault();
+        }
+
+        public static async Task<systemuser> GetCurrentSystemUser(this EssContext ctx)
+        {
+            var currentUserId = (await ctx.WhoAmI().GetValueAsync()).UserId;
+            return await ctx.systemusers.Where(su => su.systemuserid == currentUserId).SingleOrDefaultAsync();
         }
     }
 }

@@ -40,7 +40,8 @@ namespace EMBC.ESS.Utilities.Dynamics
 
         private void Client_BuildingRequest(object sender, BuildingRequestEventArgs e)
         {
-            e.RequestUri = RewriteRequestUri((DataServiceContext)sender, options.DynamicsApiEndpoint ?? null!, e.RequestUri);
+            if (e.RequestUri != null)
+                e.RequestUri = RewriteRequestUri((DataServiceContext)sender, options.DynamicsApiEndpoint ?? null!, e.RequestUri);
         }
 
         private static Uri RewriteRequestUri(DataServiceContext ctx, Uri endpointUri, Uri requestUri) =>

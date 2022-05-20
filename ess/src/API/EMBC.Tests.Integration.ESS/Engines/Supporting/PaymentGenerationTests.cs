@@ -85,5 +85,17 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             payments[2].Amount.ShouldBe(6000);
             payments[2].LinkedSupportIds.ShouldBe(new[] { "4" });
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task GeneratePayments_SingleSupportOverLimit_SinglePayment()
+        {
+            var supports = new[]
+            {
+            new PayableSupport { FileId = "1", SupportId = "1", Amount = 12000 },
+        };
+
+            var payments = ((GeneratePaymentsResponse)await engine.Generate(new GeneratePaymentsRequest { Supports = supports })).Payments.ToArray();
+            payments.ShouldBeEmpty();
+        }
     }
 }

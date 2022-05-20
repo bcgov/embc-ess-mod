@@ -22,7 +22,7 @@ namespace EMBC.ESS.Resources.Payments
     }
 
     [Serializable]
-    internal class CasException : Exception
+    public class CasException : Exception
     {
         public CasException(string message) : base(message)
         {
