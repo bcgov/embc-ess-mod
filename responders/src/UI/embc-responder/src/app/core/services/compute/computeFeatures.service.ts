@@ -18,7 +18,6 @@ export class ComputeFeaturesService implements Compute {
     this.computeEtransferEligibility();
     this.computeEtransferRequirementContent();
     this.triggerCaching();
-    console.log(this.appBaseService);
   }
 
   triggerCaching() {
@@ -33,7 +32,7 @@ export class ComputeFeaturesService implements Compute {
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
           ?.authenticatedUser &&
         this.hasPostalCode() &&
-        !this.appBaseService?.etransferProperties?.interacAllowed
+        this.appBaseService?.etransferProperties?.interacAllowed
     };
   }
 
