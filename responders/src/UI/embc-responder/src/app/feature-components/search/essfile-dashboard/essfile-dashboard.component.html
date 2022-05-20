@@ -207,7 +207,55 @@
         >
       </div>
     </div>
+
     <div
+      *ngIf="
+        !appBaseService?.etransferProperties?.isRegistrantEtransferEligible
+      "
+    >
+      <ng-container *ngIf="isMinor; else bcscCheck">
+        <div class="row">
+          <div class="col-md-12 bold">
+            {{ eligibilityLastName | uppercase }},
+            {{ eligibilityFirstName | titlecase }}
+            is a minor and is not eligible for e-Transfer
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #bcscCheck>
+        <ng-container *ngIf="!isLinkedToBcsc; else postalCheck">
+          <div class="row">
+            <div class="col-md-12 bold">
+              {{ eligibilityLastName | uppercase }},
+              {{ eligibilityFirstName | titlecase }}
+              must have a profile linked to BC Services Card to be eligible
+            </div>
+          </div>
+        </ng-container>
+      </ng-template>
+      <ng-template #postalCheck>
+        <ng-container *ngIf="!hasPostal; else unavailable">
+          <div class="row">
+            <div class="col-md-12 bold">
+              {{ eligibilityLastName | uppercase }},
+              {{ eligibilityFirstName | titlecase }}
+              does not have a B.C. postal code and is not eligible for
+              e-Transfer
+            </div>
+          </div>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #unavailable>
+        <div class="row">
+          <div class="col-md-12 bold">
+            Interac e-Transfer is not currently available.
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- <div
       *ngIf="
         !appBaseService?.etransferProperties?.isRegistrantEtransferEligible
       "
@@ -227,7 +275,7 @@
           must have a profile linked to BC Services Card to be eligible
         </div>
       </ng-template>
-    </div>
+    </div> -->
 
     <div
       *ngIf="appBaseService?.etransferProperties?.isRegistrantEtransferEligible"
