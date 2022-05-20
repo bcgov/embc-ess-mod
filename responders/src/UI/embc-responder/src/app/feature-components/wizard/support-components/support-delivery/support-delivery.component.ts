@@ -16,6 +16,7 @@ import { ComputeRulesService } from '../../../../core/services/computeRules.serv
 import { ETransferStatus } from '../../../../core/models/appBase.model';
 import { SupportMethod } from '../../../../core/api/models/support-method';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { SupportSubCategory } from '../../../../core/api/models';
 
 @Component({
   selector: 'app-support-delivery',
@@ -301,6 +302,13 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       },
       width: '720px'
     });
+  }
+
+  hideRateSheet(): boolean {
+    return (
+      this.stepSupportsService?.supportTypeToAdd?.value !==
+      SupportSubCategory.Lodging_Group
+    );
   }
 
   setSupportMethod(method: SupportMethod) {
