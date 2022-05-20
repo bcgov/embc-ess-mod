@@ -6,7 +6,7 @@
         <mat-label>Pet Type</mat-label>
         <input
           matInput
-          [formControlName]="'type'"
+          formControlName="type"
           placeholder="Pet Type i.e. dog/cat/hamster"
           maxlength="100"
         />
@@ -34,7 +34,7 @@
         <mat-label>How Many?</mat-label>
         <input
           matInput
-          [formControlName]="'quantity'"
+          formControlName="quantity"
           placeholder="How many"
           maxlength="3"
         />
