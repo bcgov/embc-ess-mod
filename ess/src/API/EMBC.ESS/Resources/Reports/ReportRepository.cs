@@ -62,16 +62,12 @@ namespace EMBC.ESS.Resources.Reports
 
             if (!string.IsNullOrEmpty(query.FileId)) filesQuery = filesQuery.Where(f => f.era_name == query.FileId || f.era_paperbasedessfile == query.FileId);
             if (!string.IsNullOrEmpty(query.EvacuatedFrom)) filesQuery = filesQuery.Where(f => f._era_evacuatedfromid_value == Guid.Parse(query.EvacuatedFrom));
-
-            var files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync(ct)).ToArray();
-            if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase)).ToArray();
-            if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo)).ToArray();
             if (!string.IsNullOrEmpty(query.TimePeriod))
             {
                 var startDate = DateTime.UtcNow;
                 switch (query.TimePeriod)
                 {
-                    case "24hrs":
+                    case "24h":
                         {
                             startDate = startDate.AddDays(-1);
                             break;
@@ -99,8 +95,12 @@ namespace EMBC.ESS.Resources.Reports
                     default:
                         break;
                 }
-                files = files.Where(f => f.createdon <= startDate).ToArray();
+                filesQuery = filesQuery.Where(f => f.createdon >= startDate);
             }
+
+            var files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync(ct)).ToArray();
+            if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase)).ToArray();
+            if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo)).ToArray();
 
             return files;
         }

@@ -27,7 +27,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
                 IncludePersonalInfo = false,
-                TimePeriod = "24hrs"
+                TimePeriod = "24h"
             });
 
             res.Content.ShouldNotBeEmpty();
