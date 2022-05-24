@@ -25,6 +25,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 
 @Component({
   selector: 'app-support-details',
@@ -55,7 +56,8 @@ export class SupportDetailsComponent implements OnInit {
     public evacueeSessionService: EvacueeSessionService,
     private alertService: AlertService,
     private referralCreationService: ReferralCreationService,
-    private dateConversionService: DateConversionService
+    private dateConversionService: DateConversionService,
+    private computeState: ComputeRulesService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -338,6 +340,7 @@ export class SupportDetailsComponent implements OnInit {
     } else {
       this.stepSupportsService.supportDetails =
         this.supportDetailsForm.getRawValue();
+      this.computeState.triggerEvent();
       if (this.evacueeSessionService.isPaperBased) {
         this.mapPaperFields();
       }
