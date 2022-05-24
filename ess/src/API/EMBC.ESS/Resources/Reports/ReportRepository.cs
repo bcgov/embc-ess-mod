@@ -62,6 +62,8 @@ namespace EMBC.ESS.Resources.Reports
 
             if (!string.IsNullOrEmpty(query.FileId)) filesQuery = filesQuery.Where(f => f.era_name == query.FileId || f.era_paperbasedessfile == query.FileId);
             if (!string.IsNullOrEmpty(query.EvacuatedFrom)) filesQuery = filesQuery.Where(f => f._era_evacuatedfromid_value == Guid.Parse(query.EvacuatedFrom));
+            if (query.StartDate.HasValue) filesQuery = filesQuery.Where(f => f.createdon >= query.StartDate.Value);
+            if (query.EndDate.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.EndDate.Value);
 
             var files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync(ct)).ToArray();
             if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase)).ToArray();
