@@ -209,7 +209,8 @@ export class ReportingComponent implements OnInit {
       evacuatedFrom: [''],
       evacuatedFromCommCode: [''],
       evacuatedTo: [''],
-      evacuatedToCommCode: ['']
+      evacuatedToCommCode: [''],
+      
     });
   }
 

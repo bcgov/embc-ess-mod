@@ -34,6 +34,7 @@ namespace EMBC.ESS.Managers.Reports
                 TaskNumber = query.TaskNumber,
                 EvacuatedFrom = query.EvacuatedFrom,
                 EvacuatedTo = query.EvacuatedTo,
+                TimePeriod = query.TimePeriod
             };
 
             var results = (await reportRepository.QueryEvacuee(evacueeQuery)).Items;

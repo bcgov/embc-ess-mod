@@ -24,6 +24,9 @@ namespace EMBC.ESS.Resources.Reports
 
         [Display(Name = "Evacuted To")]
         public string EvacuatedTo { get; set; }
+
+        [Display(Name = "Time Period")]
+        public string TimePeriod { get; set; }
     }
 
     public class EvacueeQueryResult

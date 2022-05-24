@@ -66,6 +66,41 @@ namespace EMBC.ESS.Resources.Reports
             var files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync(ct)).ToArray();
             if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase)).ToArray();
             if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo)).ToArray();
+            if (!string.IsNullOrEmpty(query.TimePeriod))
+            {
+                var startDate = DateTime.UtcNow;
+                switch (query.TimePeriod)
+                {
+                    case "24hrs":
+                        {
+                            startDate = startDate.AddDays(-1);
+                            break;
+                        }
+                    case "1w":
+                        {
+                            startDate = startDate.AddDays(-7);
+                            break;
+                        }
+                    case "1m":
+                        {
+                            startDate = startDate.AddMonths(-1);
+                            break;
+                        }
+                    case "3m":
+                        {
+                            startDate = startDate.AddMonths(-3);
+                            break;
+                        }
+                    case "6m":
+                        {
+                            startDate = startDate.AddMonths(-6);
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                files = files.Where(f => f.createdon <= startDate).ToArray();
+            }
 
             return files;
         }

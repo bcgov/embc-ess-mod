@@ -6,6 +6,7 @@
         public string FileId { get; set; }
         public string EvacuatedFrom { get; set; }
         public string EvacuatedTo { get; set; }
+        public string TimePeriod { get; set; }
         public bool IncludePersonalInfo { get; set; }
     }
 
@@ -15,6 +16,7 @@
         public string FileId { get; set; }
         public string EvacuatedFrom { get; set; }
         public string EvacuatedTo { get; set; }
+        public string TimePeriod { get; set; }
     }
 
     public class ReportQueryResult
