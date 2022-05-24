@@ -37,7 +37,8 @@ export class ReportsService extends BaseService {
     fileId?: string;
     evacuatedFrom?: string;
     evacuatedTo?: string;
-    timePeriod?: string;
+    from?: string;
+    to?: string;
   }): Observable<StrictHttpResponse<Blob>> {
 
     const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetEvacueeReportPath, 'get');
@@ -46,7 +47,8 @@ export class ReportsService extends BaseService {
       rb.query('fileId', params.fileId, {});
       rb.query('evacuatedFrom', params.evacuatedFrom, {});
       rb.query('evacuatedTo', params.evacuatedTo, {});
-      rb.query('timePeriod', params.timePeriod, {});
+      rb.query('from', params.from, {});
+      rb.query('to', params.to, {});
     }
 
     return this.http.request(rb.build({
@@ -71,7 +73,8 @@ export class ReportsService extends BaseService {
     fileId?: string;
     evacuatedFrom?: string;
     evacuatedTo?: string;
-    timePeriod?: string;
+    from?: string;
+    to?: string;
   }): Observable<Blob> {
 
     return this.reportsGetEvacueeReport$Response(params).pipe(
@@ -95,7 +98,8 @@ export class ReportsService extends BaseService {
     fileId?: string;
     evacuatedFrom?: string;
     evacuatedTo?: string;
-    timePeriod?: string;
+    from?: string;
+    to?: string;
   }): Observable<StrictHttpResponse<Blob>> {
 
     const rb = new RequestBuilder(this.rootUrl, ReportsService.ReportsGetSupportReportPath, 'get');
@@ -104,7 +108,8 @@ export class ReportsService extends BaseService {
       rb.query('fileId', params.fileId, {});
       rb.query('evacuatedFrom', params.evacuatedFrom, {});
       rb.query('evacuatedTo', params.evacuatedTo, {});
-      rb.query('timePeriod', params.timePeriod, {});
+      rb.query('from', params.from, {});
+      rb.query('to', params.to, {});
     }
 
     return this.http.request(rb.build({
@@ -129,7 +134,8 @@ export class ReportsService extends BaseService {
     fileId?: string;
     evacuatedFrom?: string;
     evacuatedTo?: string;
-    timePeriod?: string;
+    from?: string;
+    to?: string;
   }): Observable<Blob> {
 
     return this.reportsGetSupportReport$Response(params).pipe(

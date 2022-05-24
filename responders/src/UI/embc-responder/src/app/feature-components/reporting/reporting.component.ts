@@ -220,12 +220,42 @@ export class ReportingComponent implements OnInit {
   }
 
   private getDataFromForm(): ReportParams {
+    const timePeriod = this.reportForm.get('timePeriod').value;
+    let from;
+    let to;
+
+    if (timePeriod) {
+      to = new Date().toISOString();
+      from = moment();
+      switch (timePeriod) {
+        case '24h':
+          from = from.add(-1, 'd');
+          break;
+        case '1w':
+          from = from.add(-1, 'w');
+          break;
+        case '1m':
+          from = from.add(-1, 'M');
+          break;
+        case '3m':
+          from = from.add(-3, 'M');
+          break;
+        case '6m':
+          from = from.add(-6, 'M');
+          break;
+        default:
+          break;
+      }
+      from = from.toDate().toISOString();
+    }
+
     const results: ReportParams = {
       taskNumber: this.reportForm.get('taskNumber').value,
       fileId: this.reportForm.get('fileId').value,
       evacuatedFrom: this.reportForm.get('evacuatedFromCommCode').value,
       evacuatedTo: this.reportForm.get('evacuatedToCommCode').value,
-      timePeriod: this.reportForm.get('timePeriod').value
+      from,
+      to
     };
 
     return results;

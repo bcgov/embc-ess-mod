@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using EMBC.ESS.Managers.Reports;
 using EMBC.ESS.Shared.Contracts.Reports;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,8 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
                 IncludePersonalInfo = false,
-                TimePeriod = "24h"
+                From = DateTime.UtcNow.AddDays(-1),
+                To = DateTime.UtcNow,
             });
 
             res.Content.ShouldNotBeEmpty();
