@@ -11,6 +11,7 @@ import {
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
 import * as moment from 'moment';
+import { CustomValidationService } from '../../core/services/customValidation.service';
 
 @Component({
   selector: 'app-reporting',
@@ -31,7 +32,8 @@ export class ReportingComponent implements OnInit {
     private builder: FormBuilder,
     private reportService: ReportsService,
     private alertService: AlertService,
-    private locationService: LocationsService
+    private locationService: LocationsService,
+    private customValidation: CustomValidationService
   ) {}
 
   ngOnInit(): void {
@@ -203,22 +205,57 @@ export class ReportingComponent implements OnInit {
    * Creates a new form to handle the addition of new supplier to the system
    */
   private createReportingForm(): void {
-    this.reportForm = this.builder.group({
-      taskNumber: [''],
-      fileId: [''],
-      evacuatedFrom: [''],
-      evacuatedFromCommCode: [''],
-      evacuatedTo: [''],
-      evacuatedToCommCode: ['']
-    });
+    this.reportForm = this.builder.group(
+      {
+        taskNumber: [''],
+        fileId: [''],
+        evacuatedFrom: [''],
+        evacuatedFromCommCode: [''],
+        evacuatedTo: [''],
+        evacuatedToCommCode: [''],
+        timePeriod: ['']
+      },
+      { validators: this.customValidation.atLeastOneValidator() }
+    );
   }
 
   private getDataFromForm(): ReportParams {
+    const timePeriod = this.reportForm.get('timePeriod').value;
+    let from;
+    let to;
+
+    if (timePeriod) {
+      to = new Date().toISOString();
+      from = moment();
+      switch (timePeriod) {
+        case '24h':
+          from = from.add(-1, 'd');
+          break;
+        case '1w':
+          from = from.add(-1, 'w');
+          break;
+        case '1m':
+          from = from.add(-1, 'M');
+          break;
+        case '3m':
+          from = from.add(-3, 'M');
+          break;
+        case '6m':
+          from = from.add(-6, 'M');
+          break;
+        default:
+          break;
+      }
+      from = from.toDate().toISOString();
+    }
+
     const results: ReportParams = {
       taskNumber: this.reportForm.get('taskNumber').value,
       fileId: this.reportForm.get('fileId').value,
       evacuatedFrom: this.reportForm.get('evacuatedFromCommCode').value,
-      evacuatedTo: this.reportForm.get('evacuatedToCommCode').value
+      evacuatedTo: this.reportForm.get('evacuatedToCommCode').value,
+      from,
+      to
     };
 
     return results;

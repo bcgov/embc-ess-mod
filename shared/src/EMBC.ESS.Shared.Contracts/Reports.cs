@@ -1,4 +1,6 @@
-﻿namespace EMBC.ESS.Shared.Contracts.Reports
+﻿using System;
+
+namespace EMBC.ESS.Shared.Contracts.Reports
 {
     public class EvacueeReportQuery : Query<ReportQueryResult>
     {
@@ -6,6 +8,8 @@
         public string FileId { get; set; }
         public string EvacuatedFrom { get; set; }
         public string EvacuatedTo { get; set; }
+        public DateTime? From { get; set; }
+        public DateTime? To { get; set; }
         public bool IncludePersonalInfo { get; set; }
     }
 
@@ -15,6 +19,8 @@
         public string FileId { get; set; }
         public string EvacuatedFrom { get; set; }
         public string EvacuatedTo { get; set; }
+        public DateTime? From { get; set; }
+        public DateTime? To { get; set; }
     }
 
     public class ReportQueryResult

@@ -337,4 +337,25 @@ export class CustomValidationService {
       return null;
     };
   }
+
+  /**
+   * Checks if at least one field has a value
+   *
+   * @returns validation error
+   */
+  atLeastOneValidator(): ValidatorFn {
+    return (control: FormGroup): { [key: string]: boolean } | null => {
+      const controls = control.controls;
+      if (controls) {
+        const theOne = Object.keys(controls).findIndex(
+          (key) => controls[key].value
+        );
+        if (theOne === -1) {
+          return {
+            atLeastOneRequired: true
+          };
+        }
+      }
+    };
+  }
 }

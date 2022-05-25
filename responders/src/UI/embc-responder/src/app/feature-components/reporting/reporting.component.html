@@ -10,8 +10,13 @@
       <mat-card>
         <p class="report-heading">Generate Report</p>
         <p>
-          When exporting a report, enter any of the fields below to narrow your
-          report results. (fill any / all fields)
+          When exporting a report, enter <b>at least 1</b> of the fields below
+          to narrow your report results.
+          <br />
+          <em
+            >Please note: The more fields entered below, the quicker the report
+            will generate.</em
+          >
         </p>
         <br />
         <form [formGroup]="reportForm">
@@ -103,6 +108,22 @@
                 <mat-error *ngIf="validateEvacuatedTo()">
                   City is invalid</mat-error
                 >
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Time Period</mat-label>
+                <mat-select formControlName="timePeriod">
+                  <mat-option [value]="null">--Select Time Period</mat-option>
+                  <mat-option value="24h">Last 24hrs</mat-option>
+                  <mat-option value="1w">Last week</mat-option>
+                  <mat-option value="1m">Last month</mat-option>
+                  <mat-option value="3m">Last 3 months</mat-option>
+                  <mat-option value="6m">Last 6 months</mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
           </div>
