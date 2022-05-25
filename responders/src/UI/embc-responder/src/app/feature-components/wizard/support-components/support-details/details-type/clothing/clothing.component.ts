@@ -90,7 +90,7 @@ export class ClothingComponent
   }
 
   checkOverlimit($event) {
-    let amount = Number($event.target.value.toString().replace(/,/g, ''));
+    const amount = Number($event.target.value.toString().replace(/,/g, ''));
     const exceedsLimit = amount > globalConst.etransferLimt;
 
     if (exceedsLimit) {
