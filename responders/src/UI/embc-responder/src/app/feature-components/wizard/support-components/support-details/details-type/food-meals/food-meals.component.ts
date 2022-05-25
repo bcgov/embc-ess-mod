@@ -8,6 +8,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -23,7 +24,10 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
   days: number;
   totalAmount = 0;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    public appBaseService: AppBaseService
+  ) {}
 
   ngAfterViewInit(): void {
     this.cd.detectChanges();
@@ -83,5 +87,20 @@ export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
       this.noOfHouseholdMembers;
     this.totalAmount = breakfastAmount + lunchAmount + dinnerAmount;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
+    this.checkOverlimit(this.totalAmount);
+  }
+
+  checkOverlimit(totalAmount: number) {
+    const exceedsLimit = totalAmount > globalConst.etransferLimt;
+
+    if (exceedsLimit) {
+      this.appBaseService.etransferProperties = {
+        isTotalAmountOverlimit: true
+      };
+    } else {
+      this.appBaseService.etransferProperties = {
+        isTotalAmountOverlimit: false
+      };
+    }
   }
 }

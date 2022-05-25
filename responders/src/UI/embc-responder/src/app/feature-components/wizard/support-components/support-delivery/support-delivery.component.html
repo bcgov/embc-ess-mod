@@ -169,6 +169,14 @@
           >
             Not Available for this Support Type
           </p>
+          <p
+            *ngIf="
+              appBaseService?.etransferProperties?.etransferStatus ===
+              eTransferStatus.overLimitIneligible
+            "
+          >
+            Not Available - Amount exceeds $10,000
+          </p>
         </div>
 
         <div

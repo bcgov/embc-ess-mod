@@ -66,6 +66,12 @@ export class ComputeFeaturesService implements Compute {
       this.appBaseService.etransferProperties = {
         etransferStatus: ETransferStatus.inEligible
       };
+    } else if (
+      this.appBaseService?.etransferProperties?.isTotalAmountOverlimit
+    ) {
+      this.appBaseService.etransferProperties = {
+        etransferStatus: ETransferStatus.overLimitIneligible
+      };
     } else {
       this.appBaseService.etransferProperties = {
         etransferStatus: ETransferStatus.available
