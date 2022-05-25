@@ -66,5 +66,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             this.ButtonElement("Search");
         }
+
     }
 }

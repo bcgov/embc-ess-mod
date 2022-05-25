@@ -19,6 +19,11 @@ Scenario: Evacuee paper based new Registration
 	And I complete a paper based registration
 	Then A paper based registration is completed with an expired support
 
-#Scenario: Add Interac Support to Online ESS File
-#	Given I log in with BCeID user ess.developerA1
-#	When I create an Interac support
+Scenario: Add Interac Support to Online ESS File
+	Given I log in with BCeID user ess.developerA1
+	And I sign into a task
+	And I search for an online evacuee
+	And I choose an ESS file from the search results
+	And I bypass ESS file wizard step
+	And I create an Interac support
+	Then A registration is completed with a pending approval interac support

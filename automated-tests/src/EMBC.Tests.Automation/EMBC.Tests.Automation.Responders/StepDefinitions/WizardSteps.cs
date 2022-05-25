@@ -98,7 +98,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //add support delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
-            wizardSupport.SupportDeliveryForm("Adrien Doe");
+            wizardSupport.SupportReferralDeliveryForm("Adrien Doe");
             wizardSupport.SuccessSupportPopUp();
 
             //process support
@@ -179,7 +179,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //add support delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
-            wizardSupport.SupportDeliveryForm("Andrew Doe");
+            wizardSupport.SupportReferralDeliveryForm("Andrew Doe");
             wizardSupport.SuccessSupportPopUp();
 
             //process support
@@ -199,6 +199,33 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             wizardEssFile.WizardNextStepButton();
         }
 
+        [StepDefinition(@"I create an Interac support")]
+        public void CreateInteracSupport()
+        {
+
+            //WIZARD STEP 3:
+            //add support
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
+
+            //select support
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Clothing");
+
+            //add support details
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.SupportClothingDetailsForm("135.99");
+
+            //add support delivery
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportInteracDeliveryForm("test@test.ca", "7886889090");
+            wizardSupport.SuccessSupportPopUp();
+
+            //process support
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardOnlineProcessSupportsForm();
+        }
+
         [StepDefinition(@"An online registration is completed with an active support")]
         public void OnlineSupportCreated()
         {
@@ -211,6 +238,13 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
         {
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
             Assert.True(wizardSupport.GetSupportStatus().Equals("Expired")); ;
+        }
+
+        [StepDefinition(@"A registration is completed with a pending approval interac support")]
+        public void OnlineInteracSupportCreated()
+        {
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            Assert.True(wizardSupport.GetSupportStatus().Equals("Pending Approval")); ;
         }
     }
 }

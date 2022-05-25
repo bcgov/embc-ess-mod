@@ -10,7 +10,10 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
     internal class WizardSupport : WizardPageObjectBase
     {
         //ELEMENTS:
+        private By viewSupportsMainTable = By.CssSelector("table[role='table']");
         private By selectSupportFormTypeSelect = By.CssSelector("mat-select[formcontrolname='type']");
+
+        private By selectWinterConditionRadioGroup = By.CssSelector("mat-radio-group[formcontrolname='extremeWinterConditions']");
 
         private By supportDetailsFormNbrDaysSelect = By.CssSelector("mat-select[formcontrolname='noOfDays']");
         private By supportDetailsFormAllMembersCheckbox = By.Id("allMembers");
@@ -25,10 +28,19 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         private By supportDetailsFormNbrOfRoomsSelect = By.CssSelector("mat-select[formcontrolname='noOfRooms']");
 
         private By supportDeliveryReferralCard = By.Id("referralCard");
+        private By supportDeliveryInteracCard = By.Id("interacCard");
+        
         private By supportDeliveryResposibleSelect = By.CssSelector("mat-select[formcontrolname='issuedTo']");
         private By supportDeliveryResponsibleNameInput = By.CssSelector("input[formcontrolname='name']");
         private By supportDeliverySupplierInput = By.CssSelector("input[formcontrolname='supplier']");
         private By supportDeliverySupplierSelect = By.XPath("//div[@role='listbox']/mat-option[1]");
+
+        private By supportDeliveryNotificationSelect = By.CssSelector("mat-select[formcontrolname='notificationPreference']");
+        private By supportDeliveryEmailMobileNotOption = By.XPath("//mat-option/span[contains(text(), 'Email & Mobile')]/ancestor::mat-option");
+        private By supportDeliveryEmailInput = By.CssSelector("input[formcontrolname='notificationEmail']");
+        private By supportDeliveryEmailConfirmInput = By.CssSelector("input[formcontrolname='notificationConfirmEmail']");
+        private By supportDeliveryMobileInput = By.CssSelector("input[formcontrolname='notificationMobile']");
+        private By supportDeliveryMobileConfirmInput = By.CssSelector("input[formcontrolname='notificationConfirmMobile']");
 
         private By processSupportFormCertificateCheckBox = By.Id("processDraftCert");
         private By viewSupportFormSupportStatus = By.XPath("//table[@role='table']/tbody/tr/td[7]");
@@ -38,7 +50,16 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardAddSupport()
         {
-            ButtonElement("+ Add Supports");
+            var mainSupportsTable = webDriver.FindElement(viewSupportsMainTable);
+            if (mainSupportsTable.Displayed)
+            {
+                ButtonElement("Add Supports");
+            }
+            else
+            {
+                ButtonElement("+ Add Supports");
+            }
+            
         }
 
         public void WizardSelectSupportForm(string supportType)
@@ -47,6 +68,17 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             webDriver.FindElement(selectSupportFormTypeSelect).SendKeys(supportType);
             ButtonElement("Next - Support Details");
+        }
+
+        public void SupportClothingDetailsForm(string totalAmount)
+        {
+            Wait();
+
+            RadioButtonElement(supportDetailsFormAllMembersCheckbox);
+            var winterClothingElement = webDriver.FindElement(selectWinterConditionRadioGroup);
+            ChooseRandomOption(winterClothingElement, "extremeWinterConditions");
+            webDriver.FindElement(supportDetailsFormtotalAmountInput).SendKeys(totalAmount);
+            ButtonElement("Next - Support Delivery");
         }
 
         public void SupportFoodDetailsForm(string nbrOfDays, string mealValue)
@@ -80,7 +112,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             ButtonElement("Next - Support Delivery");
         }
 
-        public void SupportDeliveryForm(string responsibleName)
+        public void SupportReferralDeliveryForm(string responsibleName)
         {
             var responsible = "Someone else";
 
@@ -93,6 +125,30 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(supportDeliveryResponsibleNameInput).SendKeys(responsibleName);
             webDriver.FindElement(supportDeliverySupplierInput).Click();
             webDriver.FindElement(supportDeliverySupplierSelect).Click();
+
+            ButtonElement("Next - Save Support");
+        }
+
+        public void SupportInteracDeliveryForm(string email, string phone)
+        {
+            var js = (IJavaScriptExecutor)webDriver;
+
+            webDriver.FindElement(supportDeliveryInteracCard).Click();
+            Wait();
+
+            var selectNotificationElement = webDriver.FindElement(supportDeliveryNotificationSelect);
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectNotificationElement);
+            
+            Wait();
+            selectNotificationElement.Click();
+
+            webDriver.FindElement(supportDeliveryEmailMobileNotOption).Click();
+            Wait();
+
+            webDriver.FindElement(supportDeliveryEmailInput).SendKeys(email);
+            webDriver.FindElement(supportDeliveryEmailConfirmInput).SendKeys(email);
+            webDriver.FindElement(supportDeliveryMobileInput).SendKeys(phone);
+            webDriver.FindElement(supportDeliveryMobileConfirmInput).SendKeys(phone);
 
             ButtonElement("Next - Save Support");
         }

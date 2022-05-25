@@ -37,7 +37,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         private By securityPhraseFormPhraseInput = By.CssSelector("input[formcontrolname='securityPhrase']");
 
-        private By bypassEssFileReviewTab = By.XPath("//app-step-ess-file[1]/div[1]/nav[1]/div[2]/div[1]/div[1]/a[6]/span[1]");
+        private By bypassEssFileReviewTab = By.XPath("//app-step-ess-file[1]/div[1]/nav[1]/div[1]/div[1]/div[1]/a[6]");
 
         //FUNCTIONS
         public WizardEssFile(IWebDriver webDriver) : base(webDriver)

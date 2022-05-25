@@ -10,10 +10,12 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
     public sealed class SearchSteps
     {
         private readonly SearchEvacuee searchEvacuee;
+        private readonly ESSFileDashboard essFileDashboard;
 
         public SearchSteps(BrowserDriver driver)
         {
             searchEvacuee = new SearchEvacuee(driver.Current);
+            essFileDashboard = new ESSFileDashboard(driver.Current);
         }
 
         [StepDefinition(@"I search for an online evacuee")]
@@ -27,7 +29,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             searchEvacuee.SelectGovernmentID();
 
             //fill evacuee information search
-            searchEvacuee.FillOnlineSearchEvacueeForm("Automation", "MayThirteen", "05131999");
+            searchEvacuee.FillOnlineSearchEvacueeForm("Evac", "Eight", "11191999");
         }
 
         [StepDefinition(@"I search for a paper based evacuee")]
@@ -43,5 +45,16 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //fill evacuee information search
             searchEvacuee.FillPaperBasedSearchEvacueeForm("Automation", "Maythirteen", "05131999");
         }
+
+        [StepDefinition(@"I choose an ESS file from the search results")]
+        public void EditSelectedEssFile()
+        {
+            //Select an ESS File
+            essFileDashboard.SelectESSFileFromSearch(2);
+
+            //Click on Edit ESS File Button
+            essFileDashboard.ESSFileDashEditButton();
+        }
+
     }
 }
