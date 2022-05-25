@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
@@ -29,7 +30,8 @@ export class ClothingComponent
   userTotalAmountSubscription: Subscription;
   constructor(
     private cd: ChangeDetectorRef,
-    public evacueeSessionService: EvacueeSessionService
+    public evacueeSessionService: EvacueeSessionService,
+    public appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +87,21 @@ export class ClothingComponent
     }
 
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
+  }
+
+  checkOverlimit($event) {
+    const amount = Number($event.target.value.toString().replace(/,/g, ''));
+    const exceedsLimit = amount > globalConst.etransferLimt;
+
+    if (exceedsLimit) {
+      this.appBaseService.etransferProperties = {
+        isTotalAmountOverlimit: true
+      };
+    } else {
+      this.appBaseService.etransferProperties = {
+        isTotalAmountOverlimit: false
+      };
+    }
   }
 
   validateUserTotalAmount() {
