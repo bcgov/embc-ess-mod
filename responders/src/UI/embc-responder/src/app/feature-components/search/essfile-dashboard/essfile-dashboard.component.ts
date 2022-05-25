@@ -304,11 +304,11 @@ export class EssfileDashboardComponent implements OnInit {
 
   private hasPostalCode(): boolean {
     return (
-      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress.postalCode !== null &&
-      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress.postalCode !== '' &&
-      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress.postalCode !== undefined
     );
   }
