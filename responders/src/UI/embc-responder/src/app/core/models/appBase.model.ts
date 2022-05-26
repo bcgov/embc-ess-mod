@@ -30,6 +30,7 @@ export interface EtransferProperties {
   etransferStatus?: ETransferStatus;
   interacAllowed?: boolean; //will come from backend
   etransferRequirement?: Array<EtransferRequirementStatus>;
+  isTotalAmountOverlimit?: boolean;
 }
 
 export interface SupportProperties {
@@ -46,7 +47,8 @@ export enum ETransferStatus {
   available = 'available',
   notAllowed = 'notAllowed',
   inEligible = 'ineligible',
-  unavailable = 'unavailable'
+  unavailable = 'unavailable',
+  overLimitIneligible = 'overLimitIneligible'
 }
 
 export enum EtransferContent {

@@ -71,8 +71,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; } = Array.Empty<SecurityQuestion>();
-        public bool AuthenticatedUser { get; set; }
-        public bool VerifiedUser { get; set; }
+        public bool? AuthenticatedUser { get; set; }
+        public bool? VerifiedUser { get; set; }
         public bool IsMinor { get; set; }
     }
 

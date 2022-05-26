@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
@@ -24,6 +25,12 @@ namespace EMBC.ESS.Resources.Reports
 
         [Display(Name = "Evacuted To")]
         public string EvacuatedTo { get; set; }
+
+        [Display(Name = "From")]
+        public DateTime? StartDate { get; set; }
+
+        [Display(Name = "To")]
+        public DateTime? EndDate { get; set; }
     }
 
     public class EvacueeQueryResult
