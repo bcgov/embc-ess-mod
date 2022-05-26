@@ -27,3 +27,18 @@ Scenario: Add Interac Support to Online ESS File
 	And I bypass ESS file wizard step
 	And I create an Interac support
 	Then A registration is completed with a pending approval interac support
+
+#Scenario: Create new Team Member
+#	Given I log in with BCeID user ess.developerA1
+#	And I create a new team member
+#	And I search for a team member
+#	And I change a team member status
+#	And I search for a team member
+#	Then The status is deactive
+#
+#Scenario: Delete a team member
+#	Given I log in with BCeID user ess.developerA1
+#	And I search for a team member
+#	And I delete a team member
+#	And I search for a team member
+#	Then The team member does not exist
