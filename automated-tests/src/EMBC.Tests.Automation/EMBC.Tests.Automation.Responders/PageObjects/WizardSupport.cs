@@ -50,8 +50,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardAddSupport()
         {
-            var mainSupportsTable = webDriver.FindElement(viewSupportsMainTable);
-            if (mainSupportsTable.Displayed)
+            if (webDriver.FindElements(viewSupportsMainTable).Count > 0)
             {
                 ButtonElement("Add Supports");
             }

@@ -223,6 +223,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //process support
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardProcessDraftSupports();
             wizardSupport.WizardOnlineProcessSupportsForm();
         }
 
