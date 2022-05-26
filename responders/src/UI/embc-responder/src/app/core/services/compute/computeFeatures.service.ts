@@ -66,6 +66,12 @@ export class ComputeFeaturesService implements Compute {
       this.appBaseService.etransferProperties = {
         etransferStatus: ETransferStatus.inEligible
       };
+    } else if (
+      this.appBaseService?.etransferProperties?.isTotalAmountOverlimit
+    ) {
+      this.appBaseService.etransferProperties = {
+        etransferStatus: ETransferStatus.overLimitIneligible
+      };
     } else {
       this.appBaseService.etransferProperties = {
         etransferStatus: ETransferStatus.available
@@ -116,11 +122,11 @@ export class ComputeFeaturesService implements Compute {
 
   private hasPostalCode(): boolean {
     return (
-      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress?.postalCode !== null &&
-      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress?.postalCode !== '' &&
-      this.appBaseService?.appModel?.selectedProfile.selectedEvacueeInContext
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress?.postalCode !== undefined
     );
   }

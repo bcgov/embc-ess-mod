@@ -15,6 +15,8 @@ export const phoneMask = [
   /\d/
 ];
 
+export const etransferLimt = 10000;
+
 export const mealRate = {
   total: 53,
   breakfast: 12.75,
