@@ -286,7 +286,7 @@ namespace EMBC.ESS.Resources.Payments
         private static IEnumerable<string> MapCasStatus(CasPaymentStatus? s) =>
             s switch
             {
-                CasPaymentStatus.Paid => new[] { "RECONCILED", "RECONCILED UNACCOUNTED" },
+                CasPaymentStatus.Paid => new[] { "RECONCILED", "RECONCILED UNACCOUNTED", "CLEARED" },
                 CasPaymentStatus.Pending => new[] { "NEGOTIABLE" },
                 CasPaymentStatus.Failed => new[] { "VOIDED" },
 
@@ -297,6 +297,7 @@ namespace EMBC.ESS.Resources.Payments
             s.ToUpperInvariant() switch
             {
                 "RECONCILED" => CasPaymentStatus.Paid,
+                "CLEARED" => CasPaymentStatus.Paid,
                 "RECONCILED UNACCOUNTED" => CasPaymentStatus.Paid,
                 "VOIDED" => CasPaymentStatus.Failed,
                 "NEGOTIABLE" => CasPaymentStatus.Pending,
