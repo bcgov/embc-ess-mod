@@ -20,9 +20,9 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             var user = users.SingleOrDefault(u => u.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
             if (user == null) throw new InvalidOperationException($"User {userName} not found in the test configuration");
-            bceid.Wait(3000);
+            bceid.Wait(5000);
             bceid.Login(user.UserName, user.Password);
-            bceid.Wait(3000);
+            bceid.Wait(5000);
         }
     }
 
