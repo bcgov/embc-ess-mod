@@ -15,9 +15,14 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         public void SelectESSFileFromSearch(int essFileNbr)
         {
             Wait();
+            var js = (IJavaScriptExecutor)webDriver;
 
-            var selectedEssFileElement = "//app-ess-files-results[1]/div[" + essFileNbr + "]/mat-card[1]/div[1]/div[1]/a[1]";
+            var selectedEssFileElement = "//app-ess-files-results[1]/div[" + essFileNbr + "]/mat-card[1]/div[1]/div[1]/div[1]/div[1]/a[1]";
             var selectedEssFileLink = webDriver.FindElement(By.XPath(selectedEssFileElement));
+
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectedEssFileLink);
+
+            Wait();
             selectedEssFileLink.Click();
         }
 

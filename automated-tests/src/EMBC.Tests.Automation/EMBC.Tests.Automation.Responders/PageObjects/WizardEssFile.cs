@@ -7,7 +7,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         //ELEMENTS:
         private By evacDetailsFormEvacAddressYesRadioBttn = By.Id("addressYesOption");
         private By evacDetailsFacilityNameInput = By.CssSelector("input[formcontrolname='facilityName']");
-        private By evacDetailsInsuranceRadioBttn = By.CssSelector("mat-radio-group[formcontrolname='insurance'] mat-radio-button[id='Yes']");
+        private By evacDetailsInsuranceGroup = By.CssSelector("mat-radio-group[formcontrolname='insurance']");
         private By evacDetailsDescriptionTextarea = By.CssSelector("textarea[formcontrolname='householdAffected']");
         
         private By evacDetailsCompletedDateInput = By.CssSelector("input[formcontrolname='paperCompletedOn']");
@@ -29,15 +29,15 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         private By animalFormQuantityInput = By.CssSelector("input[formcontrolname='quantity']");
         private By animalFormHasPetFoodYesRadioBttn = By.CssSelector("mat-radio-group[formcontrolname='hasPetsFood'] mat-radio-button:nth-child(1)");
 
-        private By needsFormFoodYesRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideFood']/mat-radio-button[1]");
-        private By needsFormLodgeYesRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideLodging']/mat-radio-button[1]");
-        private By needsFormClothesYesRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideClothing']/mat-radio-button[1]");
-        private By needsFormTransportYesRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideTransportation']/mat-radio-button[1]");
-        private By needsFormIncidentalYesRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='canEvacueeProvideIncidentals']/mat-radio-button[1]");
+        private By needsFormFoodGroup = By.CssSelector("mat-radio-group[formcontrolname='canEvacueeProvideFood']");
+        private By needsFormLodgeGroup = By.CssSelector("mat-radio-group[formcontrolname='canEvacueeProvideLodging']");
+        private By needsFormClothesGroup = By.CssSelector("mat-radio-group[formcontrolname='canEvacueeProvideClothing']");
+        private By needsFormTransportGroup = By.CssSelector("mat-radio-group[formcontrolname='canEvacueeProvideTransportation']");
+        private By needsFormIncidentalGroup = By.CssSelector("mat-radio-group[formcontrolname='canEvacueeProvideIncidentals']");
 
         private By securityPhraseFormPhraseInput = By.CssSelector("input[formcontrolname='securityPhrase']");
 
-        private By bypassEssFileReviewTab = By.XPath("//app-step-ess-file[1]/div[1]/nav[1]/div[2]/div[1]/div[1]/a[6]/span[1]");
+        private By bypassEssFileReviewTab = By.XPath("//app-step-ess-file[1]/div[1]/nav[1]/div[1]/div[1]/div[1]/a[6]");
 
         //FUNCTIONS
         public WizardEssFile(IWebDriver webDriver) : base(webDriver)
@@ -49,7 +49,10 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             RadioButtonElement(evacDetailsFormEvacAddressYesRadioBttn);
             webDriver.FindElement(evacDetailsFacilityNameInput).SendKeys(facilityLocation);
-            RadioButtonElement(evacDetailsInsuranceRadioBttn);
+
+            var evacDetailsInsuranceGroupElement = webDriver.FindElement(evacDetailsInsuranceGroup);
+            ChooseRandomOption(evacDetailsInsuranceGroupElement, "insurance");
+
             webDriver.FindElement(evacDetailsDescriptionTextarea).SendKeys(householdAffected);
             ButtonElement("Next");
         }
@@ -71,7 +74,10 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             citySelect.Click();
 
             webDriver.FindElement(evacDetailsFacilityNameInput).SendKeys(facilityLocation);
-            RadioButtonElement(evacDetailsInsuranceRadioBttn);
+
+            var evacDetailsInsuranceGroupElement = webDriver.FindElement(evacDetailsInsuranceGroup);
+            ChooseRandomOption(evacDetailsInsuranceGroupElement, "insurance");
+            
             webDriver.FindElement(evacDetailsDescriptionTextarea).SendKeys(householdAffected);
             ButtonElement("Next");
         }
@@ -128,12 +134,18 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            RadioButtonElement(needsFormFoodYesRadioBttn);
-            RadioButtonElement(needsFormLodgeYesRadioBttn);
-            RadioButtonElement(needsFormClothesYesRadioBttn);
-            RadioButtonElement(needsFormTransportYesRadioBttn);
-            RadioButtonElement(needsFormIncidentalYesRadioBttn);
- 
+            var needsFormFoodGroupElement = webDriver.FindElement(needsFormFoodGroup);
+            var needsFormLodgeGroupElement = webDriver.FindElement(needsFormLodgeGroup);
+            var needsFormClothesGroupElement = webDriver.FindElement(needsFormClothesGroup);
+            var needsFormTransportGroupElement = webDriver.FindElement(needsFormTransportGroup);
+            var needsFormIncidentalGroupElement = webDriver.FindElement(needsFormIncidentalGroup);
+
+            ChooseRandomOption(needsFormFoodGroupElement, "canEvacueeProvideFood");
+            ChooseRandomOption(needsFormLodgeGroupElement, "canEvacueeProvideLodging");
+            ChooseRandomOption(needsFormClothesGroupElement, "canEvacueeProvideClothing");
+            ChooseRandomOption(needsFormTransportGroupElement, "canEvacueeProvideTransportation");
+            ChooseRandomOption(needsFormIncidentalGroupElement, "canEvacueeProvideIncidentals");
+
             ButtonElement("Next");
         }
 

@@ -9,20 +9,36 @@ Scenario: Evacuee online new Registration
 	Given I log in with BCeID user ess.developerA1
 	When I sign into a task
 	And  I search for an online evacuee
-	And I complete an online profile wizard step
-	And I complete an online ESS File wizard step
-	And I complete an online referral support wizard step
-	Then A registration is completed with an active support
+	And I complete an online registration
+	Then An online registration is completed with an active support
 
 Scenario: Evacuee paper based new Registration
 	Given I log in with BCeID user ess.developerA1
 	When I sign into a task
 	And I search for a paper based evacuee
-	And I complete a paper based profile wizard step
-	And I complete a paper based ESS File wizard step
-	And I complete a paper based referral support wizard step
+	And I complete a paper based registration
 	Then A paper based registration is completed with an expired support
 
-#Scenario: Add Interac Support to Online ESS File
+Scenario: Add Interac Support to Online ESS File
+	Given I log in with BCeID user ess.developerA1
+	And I sign into a task
+	And I search for an online evacuee
+	And I choose an ESS file from the search results
+	And I bypass ESS file wizard step
+	And I create an Interac support
+	Then A registration is completed with a pending approval interac support
+
+#Scenario: Create new Team Member
 #	Given I log in with BCeID user ess.developerA1
-#	When I create an Interac support
+#	And I create a new team member
+#	And I search for a team member
+#	And I change a team member status
+#	And I search for a team member
+#	Then The status is deactive
+#
+#Scenario: Delete a team member
+#	Given I log in with BCeID user ess.developerA1
+#	And I search for a team member
+#	And I delete a team member
+#	And I search for a team member
+#	Then The team member does not exist

@@ -64,5 +64,20 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             Wait();
             selectedRadioBttn.Click();
         }
+
+        protected void ChooseRandomOption(IWebElement parentElement, string parentElementName)
+        {
+            Random random = new Random();
+            var js = (IJavaScriptExecutor)webDriver;
+
+            var childrenElements = parentElement.FindElements(By.TagName("mat-radio-button"));
+            int index = random.Next(1, childrenElements.Count + 1);
+            var selectedRadioBttnLocator = "mat-radio-group[formcontrolname='" + parentElementName + "'] mat-radio-button:nth-child(" + index + ")";
+            var selectedRadioBttn = webDriver.FindElement(By.CssSelector(selectedRadioBttnLocator));
+
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectedRadioBttn);
+            Wait();
+            selectedRadioBttn.Click();
+        }
     }
 }
