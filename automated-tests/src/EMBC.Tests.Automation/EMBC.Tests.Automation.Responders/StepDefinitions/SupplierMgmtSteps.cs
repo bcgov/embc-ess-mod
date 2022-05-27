@@ -22,15 +22,15 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/suppliers-list");
             supplierManagement.AddNewSupplierTab();
             supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/add-supplier");
-            supplierManagement.AddNewSupplier("Automation Testers Org", "Automation Machine", "334545545", "7878", "1289 Main St", "Office 345", "Vancouver", "V6Z2H7", "Test", "Auto", "4576867876", "autotest@test.ca");
+            supplierManagement.AddNewSupplier("Automation Testers Org", "Automation Machine", "1289 Main St", "Office 345", "Vancouver", "V6Z2H7", "Test", "Auto", "4576867876", "autotest@test.ca");
         }
 
         [StepDefinition(@"I search for a supplier")]
-        public void SearchTeamMember()
+        public void SearchSupplier()
         {
             supplierManagement.EnterSupplierManagement();
-            supplierManagement.CurrentLocation.Should().Be("/responder-access/responder-management/details/member-list");
-            supplierManagement.SearchSupplier("automationTeam");
+            supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/suppliers-list");
+            supplierManagement.SearchSupplier("Automation Testers Org");
         }
 
         [StepDefinition(@"I change a supplier status")]
@@ -40,17 +40,17 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
         }
 
         [StepDefinition(@"The supplier status is deactive")]
-        public void MemberStatusDeactive()
+        public void SupplierStatusDeactive()
         {
             supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/suppliers-list");
-            Assert.True(supplierManagement.GetMemberStatus().Equals("Deactivated")); ;
+            Assert.True(supplierManagement.GetSupplierStatus().Equals("Deactivated")); ;
         }
 
         [StepDefinition(@"I delete a supplier")]
         public void DeleteSupplier()
         {
             supplierManagement.SelectSupplier();
-            supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/supplier-detail?type=supplier");
+            supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/supplier-detail");
             supplierManagement.DeleteSupplier();
         }
 

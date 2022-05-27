@@ -37,7 +37,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void SelectGovernmentID()
         {
-            this.RadioButtonElement(By.Id("yesOption"));
+            this.FocusAndClick(By.Id("yesOption"));
             this.ButtonElement("Next");
         }
 
@@ -54,8 +54,8 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void FillPaperBasedSearchEvacueeForm(string firstName, string lastName, string dob)
         {
-            Random random = new Random();
-            var essfile = random.Next(0, 1000000).ToString("D6");
+            
+            var essfile = Randomizer("D6");
 
             Wait();
 

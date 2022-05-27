@@ -43,7 +43,7 @@ Scenario: Delete a team member
 	And I search for a team member
 	Then The team member does not exist
 
-Scenario: Create a new supplier
+Scenario: 01 Create a new supplier
 	Given I log in with BCeID user ess.developerA1
 	And I create a new supplier
 	And I search for a supplier
@@ -51,7 +51,12 @@ Scenario: Create a new supplier
 	And I search for a supplier
 	Then The supplier status is deactive
 
-Scenario: Delete a supplier
+Scenario: 02 Add Mutual Aid to supplier
+	Given I log in with BCeID user ess.developerA1
+	And I search for a supplier
+
+
+Scenario: 04 Delete a supplier
 	Given I log in with BCeID user ess.developerA1
 	And I search for a supplier
 	And I delete a supplier

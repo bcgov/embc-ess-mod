@@ -28,19 +28,19 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
 
         private By searchSupplierInput = By.Id("searchInput");
-        private By suppliersManagementMainTableRows = By.CssSelector("table[role='table'] tbody tr");
+        private By searchSupplierButton = By.XPath("(//button/span[contains(text(), 'Search')]/ancestor::button)[1]");
+        private By suppliersManagementMainTableRows = By.XPath("(//table[@role='table'])[1]/tbody/tr");
         private By suppliersManagementMainTableFirstRows = By.CssSelector("table[role='table'] tbody tr:nth-child(1)");
-        private By suppliersManagementMainTableFirstRowStatus = By.CssSelector("table[role='table'] tbody tr:nth-child(1) td:nth-child(6)");
+        private By suppliersManagementMainTableFirstRowStatus = By.CssSelector("table[role='table'] tbody tr:nth-child(1) td:nth-child(5)");
         private By suppliersManagementStatusToggle = By.TagName("mat-slide-toggle");
 
-        private By deleteTeamMemberCheckBox = By.Id("confirmDelete");
 
         public SupplierManagement(IWebDriver webDriver) : base(webDriver)
         { }
 
         public void EnterSupplierManagement()
         {
-            webDriver.FindElement(suppliersMgmtTab).Click();
+            FocusAndClick(suppliersMgmtTab);
         }
 
         public void AddNewSupplierTab()
@@ -48,8 +48,11 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(addSupplierTab).Click();
         }
 
-        public void AddNewSupplier(string legalName, string name, string gstPart1, string gstPart2, string addressLine1, string addressLine2, string city, string zipcode, string lastName, string firstName, string phone, string email)
+        public void AddNewSupplier(string legalName, string name, string addressLine1, string addressLine2, string city, string zipcode, string lastName, string firstName, string phone, string email)
         {
+            var gstPart1 = Randomizer("D9");
+            var gstPart2 = Randomizer("D4");
+
             Wait();
             webDriver.FindElement(addSupplierLegalNameInput).SendKeys(legalName);
             webDriver.FindElement(addSupplierNameInput).SendKeys(name);
@@ -82,7 +85,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             webDriver.FindElement(searchSupplierInput).Clear();
             webDriver.FindElement(searchSupplierInput).SendKeys(searchInput);
-            ButtonElement("Search");
+            FocusAndClick(searchSupplierButton);
 
         }
 
@@ -96,6 +99,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
             webDriver.FindElement(suppliersManagementMainTableFirstRows).Click();
+        }
+
+        public void AddMutualAidByTeamName(string teamName)
+        {
+            webDriver.FindElement(addSupplierCitySelect).SendKeys(teamName);
+            webDriver.FindElement(By.Id(teamName)).Click();
         }
 
         public void DeleteSupplier()
@@ -112,7 +121,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         // ASSERT FUNCTIONS
 
-        public string GetMemberStatus()
+        public string GetSupplierStatus()
         {
             Wait();
             return webDriver.FindElement(suppliersManagementMainTableFirstRowStatus).Text;

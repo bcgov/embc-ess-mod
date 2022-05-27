@@ -304,14 +304,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Create a new supplier")]
+        [Xunit.SkippableFactAttribute(DisplayName="01 Create a new supplier")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "Create a new supplier")]
-        public void CreateANewSupplier()
+        [Xunit.TraitAttribute("Description", "01 Create a new supplier")]
+        public void _01CreateANewSupplier()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a new supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("01 Create a new supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 46
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -344,14 +344,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Delete a supplier")]
+        [Xunit.SkippableFactAttribute(DisplayName="02 Add Mutual Aid to supplier")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "Delete a supplier")]
-        public void DeleteASupplier()
+        [Xunit.TraitAttribute("Description", "02 Add Mutual Aid to supplier")]
+        public void _02AddMutualAidToSupplier()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete a supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("02 Add Mutual Aid to supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 54
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -368,13 +368,41 @@ this.ScenarioInitialize(scenarioInfo);
 #line 56
  testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 57
- testRunner.And("I delete a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="04 Delete a supplier")]
+        [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
+        [Xunit.TraitAttribute("Description", "04 Delete a supplier")]
+        public void _04DeleteASupplier()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("04 Delete a supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 59
+this.ScenarioInitialize(scenarioInfo);
 #line hidden
-#line 58
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 60
+ testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 61
  testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 59
+#line 62
+ testRunner.And("I delete a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 63
+ testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 64
  testRunner.Then("The supplier does not exist", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
