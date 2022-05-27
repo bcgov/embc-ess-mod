@@ -25,7 +25,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //insert a task number
             assignTask.CurrentLocation.Should().Be("/responder-access/search/task");
-            assignTask.EnterTaskNumber("UNIT-TEST-ACTIVE-TASK");
+            assignTask.EnterTaskNumber("1234");
 
             //assign a task number
             assignTask.CurrentLocation.Should().Be("/responder-access/search/task-details");

@@ -43,14 +43,14 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             searchEvacuee.SelectGovernmentID();
 
             //fill evacuee information search
-            searchEvacuee.FillPaperBasedSearchEvacueeForm("Automation", "Maythirteen", "05131999");
+            searchEvacuee.FillPaperBasedSearchEvacueeForm("Automation", "Maytwentysix", "05262000");
         }
 
         [StepDefinition(@"I choose an ESS file from the search results")]
         public void EditSelectedEssFile()
         {
             //Select an ESS File
-            essFileDashboard.SelectESSFileFromSearch(2);
+            essFileDashboard.SelectESSFileFromSearch(3);
 
             //Click on Edit ESS File Button
             essFileDashboard.ESSFileDashEditButton();
