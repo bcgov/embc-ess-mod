@@ -10,7 +10,7 @@ import * as globalConst from '../../../core/services/global-constants';
 export class SupplierDetailService {
   constructor(
     private supplierService: SupplierService,
-    private router: Router,
+    protected router: Router,
     private alertService: AlertService
   ) {}
 

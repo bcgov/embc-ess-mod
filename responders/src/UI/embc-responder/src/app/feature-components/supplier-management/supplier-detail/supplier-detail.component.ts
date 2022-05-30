@@ -75,8 +75,15 @@ export class SupplierDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // if selectedSupplier is not defined, go back to the main suppliers list page
+    if (this.selectedSupplier === undefined) {
+      this.router.navigate([
+        '/responder-access/supplier-management/suppliers-list'
+      ]);
+    }
+
     // sets the current user's role to check access
-    this.loggedInRole = this.userService.currentProfile.role;
+    this.loggedInRole = this.userService?.currentProfile?.role;
 
     // Creates the mutual aid search form
     this.createSearchMutualAidForm();
@@ -241,7 +248,6 @@ export class SupplierDetailComponent implements OnInit {
   searchEssTeamByName(essTeam: Team): void {
     this.essTeamsListResult = [];
     this.noneResults = false;
-    console.log(essTeam);
     this.essTeamsListResult.push(essTeam);
   }
 

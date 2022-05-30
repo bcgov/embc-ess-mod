@@ -13,6 +13,7 @@ import { OutageService } from './feature-components/outage/outage.service';
 import { EnvironmentBannerService } from './core/layout/environment-banner/environment-banner.service';
 import { Subscription } from 'rxjs';
 import { LoadEvacueeListService } from './core/services/load-evacuee-list.service';
+import { SupplierService } from './core/services/suppliers.service';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
     private locationService: LocationsService,
     private loadTeamListService: LoadTeamListService,
     private loadEvacueeListService: LoadEvacueeListService,
+    private supplierService: SupplierService,
     private timeOutService: TimeoutService
   ) {
     this.router.events.subscribe((e) => {
@@ -73,6 +75,8 @@ export class AppComponent implements OnInit {
         const evacuee =
           await this.loadEvacueeListService.loadStaticEvacueeLists();
         const team = await this.loadTeamListService.loadStaticTeamLists();
+        const suppliersAid =
+          await this.supplierService.loadStaticMutualAidSuppliersList();
 
         const nextRoute = decodeURIComponent(
           userProfile.requiredToSignAgreement
