@@ -13,16 +13,24 @@ import {
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
 import { SupplierListItemModel } from '../models/supplier-list-item.model';
+import { CacheService } from './cache.service';
+import * as globalConst from '../services/global-constants';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupplierService {
+  private mutualAidEssTeams: Team[];
+
   constructor(
     private locationServices: LocationsService,
     private suppliersService: SuppliersService,
     private supplierManagementService: SupplierManagementService,
-    private teamsService: TeamsService
+    private teamsService: TeamsService,
+    private cacheService: CacheService,
+    private alertService: AlertService
   ) {}
 
   /**
@@ -281,9 +289,66 @@ export class SupplierService {
       .suppliersRemoveSupplierSharedWithTeam({ supplierId, sharedTeamId })
       .pipe(
         mergeMap((result) => {
-          console.log(result);
           return this.getMutualAidSuppliersList();
         })
       );
+  }
+
+  /**
+   * Calls the getMutualAidByEssTeam API to fill the complete list of mutual Aid option for suppliers management
+   *
+   * @returns a list of all Ess Teams
+   */
+  loadStaticMutualAidSuppliersList(): Promise<void> {
+    const mutualAid$ = this.getMutualAidByEssTeam().pipe(
+      map((results) => {
+        this.setMutualAidEssTeams(results);
+      })
+    );
+
+    return lastValueFrom(mutualAid$);
+  }
+
+  /**
+   * Gets a list of all ESS Teams existing in the ERA System and saves it in cache
+   *
+   * @returns a list of ESS Teams
+   */
+  public getMutualAidEssTeamsList(): Team[] {
+    return this.mutualAidEssTeams
+      ? this.mutualAidEssTeams
+      : JSON.parse(this.cacheService.get('mutualAidEssTeams'))
+      ? JSON.parse(this.cacheService.get('mutualAidEssTeams'))
+      : this.getMutualAidEssTeams();
+  }
+
+  /**
+   * Gets a list of ESS Teams calling the REST API Service
+   *
+   * @returns a list os ESS Teams
+   */
+  private getMutualAidEssTeams(): Team[] {
+    const essTeams: Team[] = [];
+    this.getMutualAidByEssTeam().subscribe({
+      next: (essTeamsResult) => {
+        this.setMutualAidEssTeams(essTeamsResult);
+        this.mutualAidEssTeams = essTeamsResult;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.systemError);
+      }
+    });
+    return this.mutualAidEssTeams || [];
+  }
+
+  /**
+   * Sets a list of ESS Teams
+   *
+   * @param essTeams a list os ESS Teams
+   */
+  private setMutualAidEssTeams(essTeams: Team[]): void {
+    this.mutualAidEssTeams = essTeams;
+    this.cacheService.set('mutualAidEssTeams', essTeams);
   }
 }

@@ -128,7 +128,7 @@ export class UserService {
     this.cacheService.remove('editWizardFlag');
     this.cacheService.remove('memberFlag');
     this.cacheService.remove('selectedSupplier');
-    this.cacheService.remove('essTeams');
+    this.cacheService.remove('mutualAidEssTeams');
     this.cacheService.remove('selectedTeamMember');
     this.cacheService.remove('wizardMenu');
 

@@ -35,7 +35,7 @@ export class SuppliersListComponent implements OnInit {
   loggedInRole: string;
 
   constructor(
-    private listSupplierDataService: SupplierListDataService,
+    private supplierListDataService: SupplierListDataService,
     private dialog: MatDialog,
     private router: Router,
     private userService: UserService,
@@ -53,11 +53,11 @@ export class SuppliersListComponent implements OnInit {
 
   ngOnInit(): void {
     this.addSupplierService.clearAddedSupplier();
-    this.filtersToLoad = this.listSupplierDataService.filtersToLoad;
+    this.filtersToLoad = this.supplierListDataService.filtersToLoad;
     this.primarySuppliersColumns =
-      this.listSupplierDataService.primarySupplierColumns;
+      this.supplierListDataService.primarySupplierColumns;
     this.mutualAidSuppliersColumns =
-      this.listSupplierDataService.mutualAidSupplierColumns;
+      this.supplierListDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService.currentProfile.role;
 
     this.getPrimarySuppliersList();
@@ -88,11 +88,11 @@ export class SuppliersListComponent implements OnInit {
    * @param $event Selected team member object
    */
   openSupplierDetails($event: SupplierListItem): void {
-    this.listSupplierDataService.getSupplierDetails($event.id, 'supplier');
+    this.supplierListDataService.getSupplierDetails($event.id, 'supplier');
   }
 
   openMutualAidDetails($event: SupplierListItem): void {
-    this.listSupplierDataService.getSupplierDetails($event.id, 'mutualAid');
+    this.supplierListDataService.getSupplierDetails($event.id, 'mutualAid');
   }
 
   /**
@@ -239,7 +239,7 @@ export class SuppliersListComponent implements OnInit {
       displayText = globalConst.addSupplierMessage;
     }
     setTimeout(() => {
-      this.listSupplierDataService.openConfirmation(displayText);
+      this.supplierListDataService.openConfirmation(displayText);
     }, 500);
   }
 

@@ -40,7 +40,6 @@ export class SupplierListDataService {
   ];
 
   private selectedSupplier: SupplierModel;
-  private essTeams: Team[];
   private nonMutualAidEssTeams: Team[];
 
   constructor(
@@ -123,9 +122,9 @@ export class SupplierListDataService {
     this.supplierServices.getSupplierById(supplierId).subscribe({
       next: (supplier) => {
         this.setSelectedSupplier(supplier);
-
-        const essTeams: Team[] = this.getEssTeamsList();
-        const filteredEssTeams = this.filterEssTeams(essTeams);
+        const essTeamsList: Team[] =
+          this.supplierServices.getMutualAidEssTeamsList();
+        const filteredEssTeams = this.filterEssTeams(essTeamsList);
         this.setNonMutualAidTeams(filteredEssTeams);
 
         this.router.navigate(
@@ -150,7 +149,7 @@ export class SupplierListDataService {
   public filterEssTeams(allEssTeamList: Team[]): Team[] {
     let filteredEssTeams: Team[] = [];
 
-    // Filtering the ESS Teams that are already has a mutual Aid relationship with this supplier
+    // Filtering the ESS Teams that already has a mutual Aid relationship with this supplier
     filteredEssTeams = allEssTeamList.filter((e) => {
       return !this.selectedSupplier.sharedWithTeams.find((item) => {
         return item.id === e.id;
@@ -161,46 +160,6 @@ export class SupplierListDataService {
     filteredEssTeams = filteredEssTeams.filter((e) => {
       return e.id !== this.selectedSupplier?.team?.id;
     });
-
     return filteredEssTeams;
-  }
-
-  /**
-   * Gets a list of ESS Teams calling the REST API Service
-   *
-   * @returns a list os ESS Teams
-   */
-  public getEssTeams(): Team[] {
-    let essTeams: Team[] = [];
-    this.supplierServices.getMutualAidByEssTeam().subscribe({
-      next: (essTeamsResult) => {
-        essTeams = essTeamsResult;
-        this.setEssTeams(essTeamsResult);
-      }
-    });
-    return essTeams;
-  }
-
-  /**
-   * Gets a list of all ESS Teams existing in the ERA System and saves it in cache
-   *
-   * @returns a list of ESS Teams
-   */
-  public getEssTeamsList(): Team[] {
-    return this.essTeams
-      ? this.essTeams
-      : JSON.parse(this.cacheService.get('essTeams'))
-      ? JSON.parse(this.cacheService.get('essTeams'))
-      : this.getEssTeams();
-  }
-
-  /**
-   * Sets a list of ESS Teams
-   *
-   * @param essTeams a list os ESS Teams
-   */
-  private setEssTeams(essTeams: Team[]): void {
-    this.essTeams = essTeams;
-    this.cacheService.set('essTeams', essTeams);
   }
 }
