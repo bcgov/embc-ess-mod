@@ -108,7 +108,11 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     this.appBaseService.wizardProperties = {
       wizardType: WizardType.EditRegistration,
       lastCompletedStep: null,
-      editFlag: true,
+      editFlag:
+        !this.appBaseService?.appModel?.selectedProfile
+          ?.selectedEvacueeInContext?.authenticatedUser &&
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+          ?.verifiedUser, // true,
       memberFlag: false
     };
     this.computeState.triggerEvent();
