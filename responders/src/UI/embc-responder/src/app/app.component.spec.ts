@@ -41,6 +41,8 @@ import { MockTeamListService } from './unit-tests/mockTeamList.service';
 import { ResponderAccessComponent } from './feature-components/responder-access/responder-access.component';
 import { LoadEvacueeListService } from './core/services/load-evacuee-list.service';
 import { MockEvacueeListService } from './unit-tests/mockEvacueeList.service';
+import { SupplierService } from './core/services/suppliers.service';
+import { MockSupplierService } from './unit-tests/mockSuppliers.service';
 //import { MockEventRouter } from './unit-tests/mockEventRouter.service';
 
 @Component({ selector: 'app-environment-banner', template: '' })
@@ -68,6 +70,7 @@ describe('AppComponent', () => {
   let locService;
   let teamService;
   let evacueeService;
+  let supplierService;
   //let router: Router;
   const routerMock = {
     navigate: jasmine.createSpy('navigate'),
@@ -142,6 +145,10 @@ describe('AppComponent', () => {
           {
             provide: LoadEvacueeListService,
             useClass: MockEvacueeListService
+          },
+          {
+            provide: SupplierService,
+            useClass: MockSupplierService
           }
         ]
       }).compileComponents();
@@ -162,6 +169,7 @@ describe('AppComponent', () => {
     locService = TestBed.inject(LocationsService);
     teamService = TestBed.inject(LoadTeamListService);
     evacueeService = TestBed.inject(LoadEvacueeListService);
+    supplierService = TestBed.inject(SupplierService);
   });
 
   it('should create the app', () => {

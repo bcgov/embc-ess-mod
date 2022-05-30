@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { TabModel } from 'src/app/core/models/tab.model';
-import { SupplierListDataService } from './suppliers-list/supplier-list-data.service';
 
 @Component({
   selector: 'app-supplier-management',
@@ -23,9 +22,7 @@ export class SupplierManagementComponent implements OnInit {
     }
   ];
 
-  constructor(private supplierListDataService: SupplierListDataService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.supplierListDataService.getEssTeams();
-  }
+  ngOnInit(): void {}
 }
