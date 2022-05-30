@@ -117,7 +117,7 @@ namespace EMBC.ESS.Resources.Supports
             AssignSupportToQueue(ctx, support, queue);
 
             SetSupportStatus(ctx, support, SupportStatus.UnderReview);
-            support.era_etransferapproved = 174360001; //no
+            support.era_etransferapproved = 174360000; //yes per https://justice.gov.bc.ca/jira/browse/EMBCESSMOD-4041
             support.era_etransfertransactioncreated = false;
             support.ownerid = await ctx.GetCurrentSystemUser();
             ctx.UpdateObject(support);
