@@ -602,8 +602,14 @@ export class WizardDataService {
   public createNewEditProfileSteps(): Array<TabModel> {
     const profileTabs: Array<TabModel> = new Array<TabModel>();
     let tab: TabModel;
-    for (const tabs of this.evacueeEditProfileTabs) {
-      profileTabs.push({ ...tab, ...tabs });
+    if (this.evacueeSessionService.isPaperBased) {
+      for (const tabs of this.paperEvacueeProfileTabs) {
+        profileTabs.push({ ...tab, ...tabs });
+      }
+    } else {
+      for (const tabs of this.evacueeEditProfileTabs) {
+        profileTabs.push({ ...tab, ...tabs });
+      }
     }
     return profileTabs;
   }
