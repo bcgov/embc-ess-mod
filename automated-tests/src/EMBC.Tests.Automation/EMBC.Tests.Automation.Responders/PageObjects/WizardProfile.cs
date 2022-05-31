@@ -50,13 +50,13 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            RadioButtonElement(addressFormIsBCAddressYesRadioBttn);
+            FocusAndClick(addressFormIsBCAddressYesRadioBttn);
 
             webDriver.FindElement(addressFormAddressLine1Input).SendKeys(addressLine1);
             webDriver.FindElement(addressFormCityInput).SendKeys(city);
             webDriver.FindElement(By.Id(city)).Click();
 
-            RadioButtonElement(addressFormIsMailingAddressYesRadioBttn);
+            FocusAndClick(addressFormIsMailingAddressYesRadioBttn);
             ButtonElement("Next");
         }
 
@@ -70,7 +70,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(addressFormAddressLine1Input).SendKeys(addressLine1);
             webDriver.FindElement(addressFormCityInput).SendKeys(city);
 
-            RadioButtonElement(addressFormIsMailingAddressYesRadioBttn);
+            FocusAndClick(addressFormIsMailingAddressYesRadioBttn);
             ButtonElement("Next");
         }
 

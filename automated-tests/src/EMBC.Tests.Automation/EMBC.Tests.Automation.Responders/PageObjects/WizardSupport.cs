@@ -73,7 +73,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            RadioButtonElement(supportDetailsFormAllMembersCheckbox);
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
             var winterClothingElement = webDriver.FindElement(selectWinterConditionRadioGroup);
             ChooseRandomOption(winterClothingElement, "extremeWinterConditions");
             webDriver.FindElement(supportDetailsFormtotalAmountInput).SendKeys(totalAmount);
@@ -85,15 +85,14 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             Wait();
 
             webDriver.FindElement(supportDetailsFormNbrDaysSelect).SendKeys(nbrOfDays);
-            RadioButtonElement(supportDetailsFormAllMembersCheckbox);
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
             webDriver.FindElement(supportDetailsFormtotalAmountInput).SendKeys(mealValue);
             ButtonElement("Next - Support Delivery");
         }
 
         public void SupportPaperBasedHotelDetailsForm(string interviewer, string interviewerInitials, string completedDate, string validToDate, string validTime, string nbrRooms)
         {
-            Random random = new Random();
-            var supportNbr = random.Next(0, 1000000).ToString("D8");
+            var supportNbr = Randomizer("D8");
 
             Wait();
 
@@ -106,7 +105,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(supportDetailsFormValidToDateInput).SendKeys(validToDate);
             webDriver.FindElement(supportDetailsFormValidToTimeInput).SendKeys(validTime);
 
-            RadioButtonElement(supportDetailsFormAllMembersCheckbox);
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
             webDriver.FindElement(supportDetailsFormNbrOfRoomsSelect).SendKeys(nbrRooms);
             ButtonElement("Next - Support Delivery");
         }
@@ -167,7 +166,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardOnlineProcessSupportsForm()
         {
-            RadioButtonElement(processSupportFormCertificateCheckBox);
+            FocusAndClick(processSupportFormCertificateCheckBox);
             ButtonElement("Process Support/s");
             ButtonElement("Proceed");
         }

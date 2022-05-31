@@ -52,17 +52,17 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             noradiobutton.Click();
         }
 
-        protected void RadioButtonElement(By element)
+        protected void FocusAndClick(By element)
         {
             Wait();
 
             var js = (IJavaScriptExecutor)webDriver;
-            var selectedRadioBttn = webDriver.FindElement(element);
+            var selectedElement = webDriver.FindElement(element);
 
-            js.ExecuteScript("arguments[0].scrollIntoView();", selectedRadioBttn);
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectedElement);
 
             Wait();
-            selectedRadioBttn.Click();
+            selectedElement.Click();
         }
 
         protected void ChooseRandomOption(IWebElement parentElement, string parentElementName)
@@ -78,6 +78,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             js.ExecuteScript("arguments[0].scrollIntoView();", selectedRadioBttn);
             Wait();
             selectedRadioBttn.Click();
+        }
+
+        protected string Randomizer(string digits)
+        {
+            Random random = new Random();
+            return random.Next(0, 1000000).ToString(digits);
         }
     }
 }

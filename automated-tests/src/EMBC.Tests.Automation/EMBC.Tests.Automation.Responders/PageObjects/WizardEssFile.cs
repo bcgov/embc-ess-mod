@@ -47,7 +47,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            RadioButtonElement(evacDetailsFormEvacAddressYesRadioBttn);
+            FocusAndClick(evacDetailsFormEvacAddressYesRadioBttn);
             webDriver.FindElement(evacDetailsFacilityNameInput).SendKeys(facilityLocation);
 
             var evacDetailsInsuranceGroupElement = webDriver.FindElement(evacDetailsInsuranceGroup);
@@ -86,9 +86,9 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            RadioButtonElement(householdFormHasMembersNoRadioBttn);
-            RadioButtonElement(householfFormHasDietaryReqsNoRadioBttn);
-            RadioButtonElement(householdFormHasMedicineReqNoRadioBttn);
+            FocusAndClick(householdFormHasMembersNoRadioBttn);
+            FocusAndClick(householfFormHasDietaryReqsNoRadioBttn);
+            FocusAndClick(householdFormHasMedicineReqNoRadioBttn);
             ButtonElement("Next");
         }
 
@@ -96,7 +96,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            RadioButtonElement(householdFormHasMembersYesRadioBttn);
+            FocusAndClick(householdFormHasMembersYesRadioBttn);
 
             Wait();
 
@@ -106,27 +106,27 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(personFormDateOfBirthInput).SendKeys(dob);
             ButtonElement("Save");
 
-            RadioButtonElement(householfFormHasDietaryReqsYesRadioBttn);
+            FocusAndClick(householfFormHasDietaryReqsYesRadioBttn);
             webDriver.FindElement(householdFormDietDetailsTextarea).SendKeys(dietDetails);
-            RadioButtonElement(householdFormHasMedicineReqYesRadioBttn);
-            RadioButtonElement(householdFormMedicineSupplyYesRadioBttn);
+            FocusAndClick(householdFormHasMedicineReqYesRadioBttn);
+            FocusAndClick(householdFormMedicineSupplyYesRadioBttn);
             ButtonElement("Next");
         }
 
         public void AnimalsMinForm()
         {
-            RadioButtonElement(animalFormHasPetsNoRadioBttn);
+            FocusAndClick(animalFormHasPetsNoRadioBttn);
             ButtonElement("Next");
         }
 
         public void AnimalsMaxForm(string petType, string petQuantity)
         {
-            RadioButtonElement(animalFormHasPetsYesRadioBttn);
+            FocusAndClick(animalFormHasPetsYesRadioBttn);
             webDriver.FindElement(animalFormTypeInput).SendKeys(petType);
             webDriver.FindElement(animalFormQuantityInput).SendKeys(petQuantity);
             ButtonElement("Save");
 
-            RadioButtonElement(animalFormHasPetFoodYesRadioBttn);
+            FocusAndClick(animalFormHasPetFoodYesRadioBttn);
             ButtonElement("Next");
         }
 
