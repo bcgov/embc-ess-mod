@@ -101,7 +101,8 @@ namespace OAuthServer
                 ;
 
             var redisOperationalStore = configuration.GetValue("IDENTITYSERVER_REDIS_OPERATIONALSTORE", false);
-            var redisPrefix = configuration.GetValue("IDENTITYSERVER_REDIS_KEY_PREFIX", string.Empty);
+            var redisPrefix = configuration.GetValue("IDENTITYSERVER_REDIS_KEY_PREFIX", (string)null);
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             if (redisOperationalStore && !string.IsNullOrEmpty(redisConnectionString))
             {
@@ -113,9 +114,8 @@ namespace OAuthServer
                         opts.KeyPrefix = redisPrefix;
                     });
             }
-            else
+            else if (!string.IsNullOrEmpty(connectionString))
             {
-                var connectionString = configuration.GetConnectionString("DefaultConnection");
                 Log.Information("Configuring Identity Server operational store to use Sqlite");
                 builder
                     .AddOperationalStore(options =>
@@ -123,6 +123,11 @@ namespace OAuthServer
                         options.ConfigureDbContext = builder => builder.UseSqlite(connectionString, sql => sql.MigrationsAssembly(typeof(Startup).Assembly.FullName));
                         options.EnableTokenCleanup = true;
                     });
+            }
+            else
+            {
+                Log.Information("Configuring Identity Server operational store to use in-memory");
+                builder.AddOperationalStore();
             }
 
             var redisCache = configuration.GetValue("IDENTITYSERVER_REDIS_CACHE", false);
@@ -134,11 +139,6 @@ namespace OAuthServer
                     opts.RedisConnectionString = redisConnectionString;
                     opts.KeyPrefix = redisPrefix;
                 });
-            }
-            else
-            {
-                Log.Information("Configuring Identity Server cache to in-memory");
-                builder.AddInMemoryCaching();
             }
 
             services.AddTestUsers(configuration);
