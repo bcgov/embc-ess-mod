@@ -286,7 +286,7 @@ namespace EMBC.ESS.Resources.Payments
         private static IEnumerable<string> MapCasStatus(CasPaymentStatus? s) =>
             s switch
             {
-                CasPaymentStatus.Paid => new[] { "RECONCILED", "RECONCILED UNACCOUNTED", "CLEARED" },
+                CasPaymentStatus.Paid => new[] { "RECONCILED" },
                 CasPaymentStatus.Pending => new[] { "NEGOTIABLE" },
                 CasPaymentStatus.Failed => new[] { "VOIDED" },
 
