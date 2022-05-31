@@ -76,7 +76,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
             ButtonElement("Delete User");
-            RadioButtonElement(deleteTeamMemberCheckBox);
+            FocusAndClick(deleteTeamMemberCheckBox);
             ButtonElement("Yes, Delete this User");
 
             Wait();
