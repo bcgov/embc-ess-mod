@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -47,6 +48,7 @@ namespace OAuthServer
             var redisConnectionString = configuration.GetValue<string>("REDIS_CONNECTIONSTRING", null);
             var dataProtectionPath = configuration.GetValue<string>("KEY_RING_PATH", null);
             var applicationName = configuration.GetValue("APP_NAME", Assembly.GetExecutingAssembly().GetName().Name);
+
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 Log.Information("Configuring {0} to use Redis cache", applicationName);
@@ -98,15 +100,14 @@ namespace OAuthServer
                 .AddInMemoryApiResources(config.ApiResources)
                 ;
 
-            if (!string.IsNullOrEmpty(redisConnectionString))
+            var redisOperationalStore = configuration.GetValue("IDENTITYSERVER_REDIS_OPERATIONALSTORE", false);
+            var redisPrefix = configuration.GetValue("IDENTITYSERVER_REDIS_KEY_PREFIX", string.Empty);
+
+            if (redisOperationalStore && !string.IsNullOrEmpty(redisConnectionString))
             {
-                var redisPrefix = configuration.GetValue("REDIS_KEY_PREFIX", string.Empty);
+                Log.Information("Configuring Identity Server operational store to use Redis with prefix '{0}'", redisPrefix);
                 builder
                     .AddOperationalStore(opts =>
-                    {
-                        opts.RedisConnectionString = redisConnectionString;
-                        opts.KeyPrefix = redisPrefix;
-                    }).AddRedisCaching(opts =>
                     {
                         opts.RedisConnectionString = redisConnectionString;
                         opts.KeyPrefix = redisPrefix;
@@ -114,9 +115,30 @@ namespace OAuthServer
             }
             else
             {
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                Log.Information("Configuring Identity Server operational store to use Sqlite");
                 builder
-                    .AddInMemoryPersistedGrants()
-                    .AddInMemoryCaching();
+                    .AddOperationalStore(options =>
+                    {
+                        options.ConfigureDbContext = builder => builder.UseSqlite(connectionString, sql => sql.MigrationsAssembly(typeof(Startup).Assembly.FullName));
+                        options.EnableTokenCleanup = true;
+                    });
+            }
+
+            var redisCache = configuration.GetValue("IDENTITYSERVER_REDIS_CACHE", false);
+            if (redisCache && !string.IsNullOrEmpty(redisConnectionString))
+            {
+                Log.Information("Configuring Identity Server cache to use Redis with prefix '{0}'", redisPrefix);
+                builder.AddRedisCaching(opts =>
+                {
+                    opts.RedisConnectionString = redisConnectionString;
+                    opts.KeyPrefix = redisPrefix;
+                });
+            }
+            else
+            {
+                Log.Information("Configuring Identity Server cache to in-memory");
+                builder.AddInMemoryCaching();
             }
 
             services.AddTestUsers(configuration);
