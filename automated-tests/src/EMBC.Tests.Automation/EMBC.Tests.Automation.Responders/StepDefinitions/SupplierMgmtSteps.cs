@@ -60,5 +60,21 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/suppliers-list");
             Assert.True(supplierManagement.GetTotalSearchNumber().Equals(0));
         }
+
+        [StepDefinition(@"I select a supplier for mutual aid")]
+        public void AddMutualAid()
+        {
+            supplierManagement.SelectSupplier();
+            supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/supplier-detail");
+            supplierManagement.AddMutualAidEssTeam("QA Team");
+        }
+
+        [StepDefinition(@"I rescind a supplier")]
+        public void RescindSupplier()
+        {
+            supplierManagement.SelectSupplier();
+            supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/supplier-detail");
+            supplierManagement.RescindMutualAid();
+        }
     }
 }

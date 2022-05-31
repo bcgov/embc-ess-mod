@@ -34,6 +34,13 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         private By suppliersManagementMainTableFirstRowStatus = By.CssSelector("table[role='table'] tbody tr:nth-child(1) td:nth-child(5)");
         private By suppliersManagementStatusToggle = By.TagName("mat-slide-toggle");
 
+        private By addMutualAidESSTeamInput = By.CssSelector("input[formcontrolname='essTeam']");
+        private By addMutualAidEssTeamOption = By.CssSelector("div[role='listbox'] mat-option");
+        private By addMutualAidEssTeamRadioGroup = By.CssSelector("mat-radio-group[formcontrolname='selectedEssTeam']");
+
+        private By rescindMutualAidTable = By.CssSelector("table[role='table']");
+        private By rescindMutualAidRescindSupplierLink = By.XPath("//a[contains(text(), 'Rescind Supplier')]");
+
 
         public SupplierManagement(IWebDriver webDriver) : base(webDriver)
         { }
@@ -119,8 +126,31 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             ButtonElement("Close");
         }
 
-        // ASSERT FUNCTIONS
+        public void AddMutualAidEssTeam(string essTeam)
+        {
+            Wait();
+            webDriver.FindElement(addMutualAidESSTeamInput).SendKeys(essTeam);
+            FocusAndClick(addMutualAidEssTeamOption);
 
+            var essTeamRadioGroupElement = webDriver.FindElement(addMutualAidEssTeamRadioGroup);
+            ChooseRandomOption(essTeamRadioGroupElement, "selectedEssTeam");
+            ButtonElement("Add this ESS Team");
+
+        }
+
+        public void RescindMutualAid()
+        {
+            webDriver.FindElement(rescindMutualAidTable);
+            FocusAndClick(rescindMutualAidRescindSupplierLink);
+
+            Wait();
+            ButtonElement("Yes, Remove ESS Team");
+
+            Wait();
+
+        }
+
+        // ASSERT FUNCTIONS
         public string GetSupplierStatus()
         {
             Wait();
