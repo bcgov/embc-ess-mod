@@ -92,7 +92,6 @@ namespace OAuthServer
                     .AddSource(appName)
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: appName, serviceVersion: "1.0.0.0")).AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
-                    .AddGrpcCoreInstrumentation()
                     .AddGrpcClientInstrumentation()
                     .AddRedisInstrumentation();
             });
