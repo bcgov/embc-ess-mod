@@ -112,7 +112,7 @@ export class AddSupplierComponent implements OnInit {
   private constructAddForm(): void {
     this.addForm = this.builder.group({
       supplierLegalName: ['', [this.customValidation.whitespaceValidator()]],
-      supplierName: [''],
+      supplierName: ['', [this.customValidation.whitespaceValidator()]],
       gstNumber: this.builder.group(
         {
           part1: [
