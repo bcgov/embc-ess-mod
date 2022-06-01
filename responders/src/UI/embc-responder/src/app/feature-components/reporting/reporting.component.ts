@@ -20,7 +20,7 @@ import { CustomValidationService } from '../../core/services/customValidation.se
 })
 export class ReportingComponent implements OnInit {
   reportForm: FormGroup;
-  // showLoader = false;
+  showErrorMessage = false;
   color = '#FFFFFF';
   isLoading = false;
   cityFrom: Community[] = [];
@@ -57,55 +57,71 @@ export class ReportingComponent implements OnInit {
   }
 
   evacueeReport(): void {
-    this.isLoading = !this.isLoading;
-    this.reportService
-      .reportsGetEvacueeReport(this.getDataFromForm())
-      .subscribe({
-        next: (reportResponse) => {
-          // Downloading a csv document:
-          const blob = new Blob([reportResponse], { type: 'text/csv' });
-          const url = window.URL.createObjectURL(blob);
-          const anchor = document.createElement('a');
-          anchor.download =
-            'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
-          anchor.href = url;
-          document.body.appendChild(anchor);
-          anchor.click();
-          document.body.removeChild(anchor);
-          this.isLoading = !this.isLoading;
-        },
-        error: (error) => {
-          this.isLoading = !this.isLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.evacueeReportError);
-        }
-      });
+    if (!this.reportForm.valid) {
+      this.showErrorMessage = true;
+    } else {
+      this.showErrorMessage = false;
+      this.isLoading = !this.isLoading;
+      this.reportService
+        .reportsGetEvacueeReport(this.getDataFromForm())
+        .subscribe({
+          next: (reportResponse) => {
+            // Downloading a csv document:
+            const blob = new Blob([reportResponse], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.download =
+              'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
+            anchor.href = url;
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            this.isLoading = !this.isLoading;
+          },
+          error: (error) => {
+            this.isLoading = !this.isLoading;
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.evacueeReportError
+            );
+          }
+        });
+    }
   }
 
   supportReport(): void {
-    this.isLoading = !this.isLoading;
-    this.reportService
-      .reportsGetSupportReport(this.getDataFromForm())
-      .subscribe({
-        next: (reportResponse) => {
-          // Downloading a csv document:
-          const blob = new Blob([reportResponse], { type: 'text/csv' });
-          const url = window.URL.createObjectURL(blob);
-          const anchor = document.createElement('a');
-          anchor.download =
-            'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
-          anchor.href = url;
-          document.body.appendChild(anchor);
-          anchor.click();
-          document.body.removeChild(anchor);
-          this.isLoading = !this.isLoading;
-        },
-        error: (error) => {
-          this.isLoading = !this.isLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.evacueeReportError);
-        }
-      });
+    if (!this.reportForm.valid) {
+      this.showErrorMessage = true;
+    } else {
+      this.showErrorMessage = false;
+      this.isLoading = !this.isLoading;
+      this.reportService
+        .reportsGetSupportReport(this.getDataFromForm())
+        .subscribe({
+          next: (reportResponse) => {
+            // Downloading a csv document:
+            const blob = new Blob([reportResponse], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.download =
+              'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
+            anchor.href = url;
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            this.isLoading = !this.isLoading;
+          },
+          error: (error) => {
+            this.isLoading = !this.isLoading;
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.evacueeReportError
+            );
+          }
+        });
+    }
   }
 
   /**
