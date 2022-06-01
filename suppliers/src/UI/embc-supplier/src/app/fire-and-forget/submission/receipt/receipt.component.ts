@@ -20,10 +20,10 @@ export class ReceiptComponent implements OnInit{
     component = 'R';
     reloadedFiles: any;
     reloadedFiles2: any;
-    noOfAttachments: number = 1;
+    noOfAttachments = 1;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, 
-        private supplierService: SupplierService, private customValidator: CustomValidationService) {}
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef,
+                private supplierService: SupplierService, private customValidator: CustomValidationService) {}
 
     ngOnInit() {
         if (this.supplierService.isReload){
@@ -95,7 +95,7 @@ export class ReceiptComponent implements OnInit{
      */
     createReferralFormArray() {
         return this.builder.group({
-             referralDate : [null, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator), 
+             referralDate : [null, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator),
                 Validators.pattern(globalConst.datePattern)]],
              receiptNumber: [''],
              referralRows: this.builder.array([
@@ -115,8 +115,8 @@ export class ReceiptComponent implements OnInit{
     }
 
      /**
-     * Injects referral tempate to the view
-     */
+      * Injects referral tempate to the view
+      */
     injectTemplateReferral() {
         this.referrals.push(this.createReferralFormArray());
         this.cd.detectChanges();
@@ -201,7 +201,8 @@ export class ReceiptComponent implements OnInit{
      */
     createReferralFormArrayWithValues(referral: any) {
         return this.builder.group({
-             referralDate : [referral.referralDate, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator),
+             referralDate : [referral.referralDate, [Validators.required,
+                this.customValidator.futureDateValidator().bind(this.customValidator),
                 Validators.pattern(globalConst.datePattern)]],
              receiptNumber: [referral.receiptNumber],
              referralRows: this.builder.array([
