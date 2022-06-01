@@ -10,8 +10,9 @@ export class AuthGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
         return this.authService.hasValidToken().then(valid => {
-            if (valid)
+            if (valid) {
                 return Promise.resolve(true);
+            }
             else {
                 this.router.navigate(['/public']);
             }

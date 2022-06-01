@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
@@ -28,13 +28,13 @@ export class ReferralComponent implements OnInit {
     supportList: any;
     reloadedFiles: any;
     reloadedFiles2: any;
-    noOfAttachments: number = 1;
+    noOfAttachments = 1;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
-        private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
-        private customValidator: CustomValidationService, config: NgbDatepickerConfig) {
+                private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
+                private customValidator: CustomValidationService, config: NgbDatepickerConfig) {
         config.minDate = { year: 1900, month: 1, day: 1 };
-        config.maxDate = { year: new Date().getFullYear(), month: new Date().getMonth()+1, day: new Date().getDate() };
+        config.maxDate = { year: new Date().getFullYear(), month: new Date().getMonth() + 1, day: new Date().getDate() };
         config.outsideDays = 'hidden';
         config.firstDayOfWeek = 7;
     }
@@ -56,7 +56,8 @@ export class ReferralComponent implements OnInit {
     }
 
     get rowControl() {
-        return (this.referralForm.controls.referralRows as FormArray).controls;
+        // return (this.referralForm.controls.referralRows as FormArray).controls;
+        return this.referralForm.get('referralRows')['controls'] as FormArray;
     }
 
     ngOnInit() {
@@ -103,11 +104,12 @@ export class ReferralComponent implements OnInit {
 
     createRowForm() {
         return this.builder.group({
-            supportProvided: [''],
+            supportProvided: ['', Validators.required],
             description: [''],
-            gst: [''],
-            amount: ['']
-        }, { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) });
+            gst: ['', Validators.required],
+            amount: ['', this.customValidator.amountGreaterValidator()]
+        });
+        // { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) }
     }
 
     onChanges() {
@@ -171,9 +173,9 @@ export class ReferralComponent implements OnInit {
             supportProvided: [row.supportProvided],
             description: [row.description],
             gst: [row.gst],
-            amount: [row.amount]
-        },
-            { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) });
+            amount: [row.amount, this.customValidator.amountGreaterValidator()]
+        });
+        // { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) }
     }
 
     checkAttachmentLength(control: []) {

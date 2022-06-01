@@ -51,11 +51,11 @@ export class SubmissionComponent implements OnInit {
             .subscribe(value => {
                 this.updateOnVisibility();
             });
-            this.supplierForm.get('supplierBC').valueChanges.subscribe(
+        this.supplierForm.get('supplierBC').valueChanges.subscribe(
                 value => {
                     this.updateRadioVisibility();
                 }
-            )
+            );
         this.repopulateFormData();
         this.supplierService.isReload = false;
     }
@@ -116,7 +116,7 @@ export class SubmissionComponent implements OnInit {
     initializeForm() {
         this.supplierForm = this.builder.group({
             supplierLegalName: ['', Validators.required],
-            supplierName: [''],
+            supplierName: ['', Validators.required],
             location: [''],
             gstNumber: ['', [Validators.required, Validators.minLength(17)]],
             remitToOtherBusiness: [''],
@@ -226,7 +226,7 @@ export class SubmissionComponent implements OnInit {
     createInvoiceFormArray() {
         return this.builder.group({
             invoiceNumber: ['', [Validators.required, this.customValidator.invoiceValidator(this.invoices).bind(this.customValidator)]],
-            invoiceDate: [null, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator), 
+            invoiceDate: [null, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator),
                 Validators.pattern(globalConst.datePattern)]],
             invoiceAttachments: this.builder.array([], [Validators.required]),
             referralList: ['', Validators.required],
@@ -436,7 +436,7 @@ export class SubmissionComponent implements OnInit {
         this.supplierForm.get('remittanceAddress.state').updateValueAndValidity();
     }
 
-    updateRadioVisibility () {
+    updateRadioVisibility() {
         this.supplierForm.get('remittanceAddress.province').updateValueAndValidity();
     }
 

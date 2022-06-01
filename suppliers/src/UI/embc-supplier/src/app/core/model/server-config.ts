@@ -1,4 +1,4 @@
-import { OidcConfiguration } from "../services/config.service";
+import { OidcConfiguration } from '../services/config.service';
 
 export class ServerConfig {
     environment: string;

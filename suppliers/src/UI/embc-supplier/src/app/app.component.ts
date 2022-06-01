@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SupplierHttpService } from './core/services/supplierHttp.service';
 import { SupplierService } from './core/services/supplier.service';
 import { ConfigGuard } from './core/guards/config.guard';
@@ -13,12 +13,12 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent{
+export class AppComponent implements OnInit, OnDestroy{
   title = 'embc-supplier';
 
   noticeMsg: SafeHtml = '';
   maintMsg: SafeHtml = '';
-  siteDown: boolean = false;
+  siteDown = false;
 
   bannerSubscription: Subscription;
   listItemSubscription: Subscription;
@@ -36,12 +36,13 @@ export class AppComponent{
 
   ngOnInit() {
     // This is set in constructor
-    if (!this.configService.getServerConfig())
+    if (!this.configService.getServerConfig()) {
       this.configService.setServerConfig(this.supplierHttp.getServerConfig());
-      
+    }
+
     this.bannerSubscription = this.configService.getServerConfig().subscribe(config => {
-      this.noticeMsg = (config.noticeMsg) ? this.sanitizer.bypassSecurityTrustHtml(config.noticeMsg) : "";
-      this.maintMsg = (config.maintMsg) ? this.sanitizer.bypassSecurityTrustHtml(config.maintMsg) : "";
+      this.noticeMsg = (config.noticeMsg) ? this.sanitizer.bypassSecurityTrustHtml(config.noticeMsg) : '';
+      this.maintMsg = (config.maintMsg) ? this.sanitizer.bypassSecurityTrustHtml(config.maintMsg) : '';
       this.siteDown = config.siteDown;
     }, err => {
       console.log(err);

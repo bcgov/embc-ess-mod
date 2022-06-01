@@ -23,7 +23,6 @@ namespace EMBC.Responders.API
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
             var services = configurationServices.Services;
-            var env = configurationServices.Environment;
 
             services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
             {
@@ -61,8 +60,6 @@ namespace EMBC.Responders.API
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                configurationServices.Configuration.GetSection("jwt").Bind(options);
-
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = true,
@@ -77,6 +74,10 @@ namespace EMBC.Responders.API
                     ValidateActor = true,
                     ValidateIssuerSigningKey = true,
                 };
+                //attempt to fix a strange behaviour in production
+                options.Audience = configurationServices.Configuration.GetValue("JWT_AUDIENCE", string.Empty);
+                configurationServices.Configuration.GetSection("jwt").Bind(options);
+
                 options.Events = new JwtBearerEvents
                 {
                     OnAuthenticationFailed = async c =>
