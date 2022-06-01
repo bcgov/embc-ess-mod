@@ -20,12 +20,14 @@ export class ConfigGuard implements CanActivate {
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
     // Always allow error page to load
-    if (state.url === '/error')
+    if (state.url === '/error') {
       return true;
+    }
 
     // This is set in app.component.ts
-    if (!this.configService.getServerConfig())
+    if (!this.configService.getServerConfig()) {
       this.configService.setServerConfig(this.supplierHttp.getServerConfig());
+    }
 
     return this.configService.getServerConfig().pipe(
       map(config => {

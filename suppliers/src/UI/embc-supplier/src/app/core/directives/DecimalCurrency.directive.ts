@@ -18,7 +18,7 @@ export class DecimalCurrencyDirective {
 
         const current: string = this.el.nativeElement.value;
         const position = this.el.nativeElement.selectionStart;
-        const next: string = [current.slice(0, position), event.key == 'Decimal' ? '.' : event.key, current.slice(position)].join('');
+        const next: string = [current.slice(0, position), event.key === 'Decimal' ? '.' : event.key, current.slice(position)].join('');
         if (next && !String(next).match(this.regex)) {
             event.preventDefault();
         }

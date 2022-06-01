@@ -21,10 +21,11 @@ export class ConfigService {
         if (this.authConfig != null) {
             return of(this.authConfig);
         }
-        
+
         // This is set in app.component.ts
-        if (!this.getServerConfig())
+        if (!this.getServerConfig()) {
             this.setServerConfig(this.supplierHttp.getServerConfig());
+        }
 
         return this.getServerConfig().pipe(tap((c: any) => {
             this.authConfig = { ...c };
