@@ -57,7 +57,7 @@ export class ReferralComponent implements OnInit {
 
     get rowControl() {
         // return (this.referralForm.controls.referralRows as FormArray).controls;
-        return this.referralForm.get('referralRows').controls as FormArray;
+        return this.referralForm.get('referralRows')['controls'] as FormArray;
     }
 
     ngOnInit() {
