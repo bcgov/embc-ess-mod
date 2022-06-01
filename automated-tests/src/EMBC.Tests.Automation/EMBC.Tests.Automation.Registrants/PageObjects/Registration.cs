@@ -25,7 +25,6 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         private By securityQuestionsFormAnswer3Input = By.CssSelector("input[formcontrolname='answer3']");
 
         private By locationFormInsuranceOptions = By.CssSelector("mat-radio-group[formcontrolname='insurance']");
-        //private By locationFormInsuranceYesRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='insurance']/mat-radio-button[1]");
 
         private By householdMembersHasSpecialDietYesRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='haveSpecialDiet']/mat-radio-button[1]");
         private By householdMembersHasSpecialDietNoRadioBttn = By.XPath("//mat-radio-group[@formcontrolname='haveSpecialDiet']/mat-radio-button[2]");
@@ -48,7 +47,6 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         private By submitFormCAPTCHAInput = By.Name("answer");
         private By submitFormIncorrectCAPTCHAError = By.XPath("//body[contains(.,' Incorrect answer, please try again. ')]");
         private By submissionCompleteDialog = By.XPath("//mat-dialog-container[contains(.,' Submission Complete')]");
-        private By submitFormSaveButton = By.ClassName("save-button");
 
         public Registration(IWebDriver webDriver) : base(webDriver)
         { }
@@ -261,6 +259,8 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public void SubmitForm(string captchaAnswer)
         {
+            var js = (IJavaScriptExecutor)webDriver;
+
             if (string.IsNullOrWhiteSpace(captchaAnswer)) throw new ArgumentNullException(nameof(captchaAnswer));
             //create the captcha automation answer - captcha is limited to 6 characters
             var answer = captchaAnswer.Substring(0, 6);
@@ -271,7 +271,10 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
             Wait(2000);
 
-            var saveButton = webDriver.FindElement(submitFormSaveButton);
+            var buttons = webDriver.FindElements(By.TagName("button"));
+            var saveButton = buttons.Should().ContainSingle(b => b.Text.Contains("Save & Submit")).Subject;
+            js.ExecuteScript("arguments[0].scrollIntoView();", saveButton);
+
             saveButton.Enabled.Should().BeTrue();
             saveButton.Click();
         }
