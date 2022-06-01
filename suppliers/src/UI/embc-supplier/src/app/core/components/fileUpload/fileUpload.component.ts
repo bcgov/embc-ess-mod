@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { ToastService } from 'src/app/core/services/toast.service';
-import {WarningService} from 'src/app/core/services/warning.service'
-import * as constant from 'src/app/core/services/globalConstants'
+import {WarningService} from 'src/app/core/services/warning.service';
+import * as constant from 'src/app/core/services/globalConstants';
 
 @Component({
     selector: 'app-file-upload',
@@ -16,7 +16,7 @@ export class FileUploadComponent implements OnInit {
     @Input() reloadedFiles: any;
     showToast = false;
     @Input() noOfAttachments: number;
-    attachSizeError: boolean = false;
+    attachSizeError = false;
 
     constructor(public toastService: ToastService, public warningService: WarningService) { }
 
@@ -47,13 +47,13 @@ export class FileUploadComponent implements OnInit {
                 // this.toastService.show(constant.zeroFileMessage, { delay: 9500 });
             } else if (!constant.allowedFileTypes.includes(e.type)) {
                 this.warningService.warningModal(constant.fileTypeMessage);
-                //alert(constant.fileTypeMessage);
+                // alert(constant.fileTypeMessage);
                 // this.showToast = !this.showToast;
                 // this.toastService.show(constant.fileTypeMessage, { delay: 9500 });
             } else if (!constant.fileNameFormat.test(e.name)) {
                 this.warningService.warningModal(constant.invalidFileNameMessage);
-                //this.showToast = !this.showToast;
-                //this.toastService.show(constant.invalidFileNameMessage, { delay: 9500 });
+                // this.showToast = !this.showToast;
+                // this.toastService.show(constant.invalidFileNameMessage, { delay: 9500 });
             } else if (this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
                 this.attachSizeError = true;
                 setTimeout(function() {
@@ -68,7 +68,7 @@ export class FileUploadComponent implements OnInit {
 
     /**
      * Deletes the attachment
-     * @param fileIndex : array index of attachment to be deleted 
+     * @param fileIndex : array index of attachment to be deleted
      */
     deleteAttachedInvoice(fileIndex: number) {
         this.invoiceAttachments.splice(fileIndex, 1);

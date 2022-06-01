@@ -20,15 +20,16 @@ export class DevGuard implements CanActivate {
 
   public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     // This is set in app.component.ts
-    if (!this.configService.getServerConfig())
+    if (!this.configService.getServerConfig()) {
       this.configService.setServerConfig(this.supplierHttp.getServerConfig());
+    }
 
     return this.configService.getServerConfig().pipe(
       map(config => {
         // If code is up in PROD, prevent from loading whatever is behind this guard.
         this.configResult = config;
 
-        if (this.configResult.environment === "production") {
+        if (this.configResult.environment === 'production') {
           this.router.navigate(['/']);
           return false;
         }

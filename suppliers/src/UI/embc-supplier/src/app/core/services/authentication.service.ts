@@ -4,7 +4,7 @@ import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    private isConfigSet: boolean = false;
+    private isConfigSet = false;
     constructor(
         private oauthService: OAuthService,
         private configService: ConfigService

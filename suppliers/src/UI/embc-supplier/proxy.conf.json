@@ -1,7 +1,8 @@
 {
   "/api/*": {
-    "target": "http://localhost:5000",
+    "target": "https://era-suppliers-dev.apps.silver.devops.gov.bc.ca/",
     "secure": false,
+    "changeOrigin": true,
     "logLevel": "debug"
   }
 }
