@@ -74,8 +74,7 @@ namespace EMBC.Responders.API
                     ValidateActor = true,
                     ValidateIssuerSigningKey = true,
                 };
-                //attempt to fix a strange behaviour in production
-                options.Audience = configurationServices.Configuration.GetValue("JWT_AUDIENCE", string.Empty);
+
                 configurationServices.Configuration.GetSection("jwt").Bind(options);
 
                 options.Events = new JwtBearerEvents
