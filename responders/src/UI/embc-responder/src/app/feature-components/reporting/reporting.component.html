@@ -127,6 +127,10 @@
               </mat-form-field>
             </div>
           </div>
+
+          <div class="error" *ngIf="showErrorMessage">
+            A minimum of one field is required to generate a report.
+          </div>
         </form>
         <div class="row">
           <div class="col-md-3">
@@ -134,7 +138,6 @@
               class="button-p button-width"
               mat-button
               (click)="evacueeReport()"
-              [disabled]="!reportForm.valid || isLoading"
             >
               <img
                 class="img-align"
@@ -143,13 +146,6 @@
                 width="17"
               />
               Evacuee Report
-              <!-- <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
-                [color]="color"
-              >
-              </app-loader> -->
             </button>
           </div>
           <div class="col-md-3">
@@ -157,7 +153,6 @@
               class="button-p button-width"
               mat-button
               (click)="supportReport()"
-              [disabled]="!reportForm.valid || isLoading"
             >
               <img
                 class="img-align"
@@ -166,13 +161,6 @@
                 width="17"
               />
               Support Report
-              <!-- <app-loader
-                [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
-                [color]="color"
-              >
-              </app-loader> -->
             </button>
           </div>
         </div>
