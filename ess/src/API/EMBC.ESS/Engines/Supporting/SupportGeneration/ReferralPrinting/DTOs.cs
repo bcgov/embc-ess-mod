@@ -86,9 +86,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 
     public class PrintSupplier
     {
-        //public string Id { get; set; }
-        //public bool Active { get; set; }
         public string Name { get; set; }
+        public string LegalName { get; set; }
 
         public string Address { get; set; }
         public string City { get; set; }

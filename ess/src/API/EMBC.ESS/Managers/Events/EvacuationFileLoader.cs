@@ -94,7 +94,8 @@ namespace EMBC.ESS.Managers.Events
                 var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
                 if (supplier != null)
                 {
-                    referral.SupplierDetails.Name = supplier.LegalName;
+                    referral.SupplierDetails.Name = supplier.Name;
+                    referral.SupplierDetails.LegalName = supplier.LegalName;
                     referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Events.Address>(supplier.Address);
                     referral.SupplierDetails.TeamId = supplier.Team?.Id;
                     referral.SupplierDetails.TeamName = supplier.Team?.Name;
@@ -115,7 +116,7 @@ namespace EMBC.ESS.Managers.Events
                     ByLinkedSupportId = support.Id
                 })).Items.Where(p => p.Status != PaymentStatus.Cancelled).Cast<InteracSupportPayment>().OrderByDescending(p => p.CreatedOn).FirstOrDefault();
 
-                if (payment != null && payment is InteracSupportPayment interacPayment)
+                if (payment is InteracSupportPayment interacPayment)
                 {
                     interac.SecurityAnswer = interacPayment.SecurityAnswer;
                     interac.SecurityQuestion = interacPayment.SecurityAnswer;
