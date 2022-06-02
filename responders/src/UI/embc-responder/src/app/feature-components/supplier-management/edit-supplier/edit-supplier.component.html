@@ -36,7 +36,16 @@
                 maxlength="100"
                 matInput
                 placeholder="Supplier Name"
+                required
               />
+              <mat-error
+                *ngIf="
+                  editFormControl.supplierName.invalid &&
+                  editFormControl.supplierName.hasError('whitespaceError')
+                "
+              >
+                Supplier Name is required</mat-error
+              >
             </mat-form-field>
           </div>
         </div>

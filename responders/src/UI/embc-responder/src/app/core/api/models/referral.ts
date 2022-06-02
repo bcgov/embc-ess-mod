@@ -8,6 +8,7 @@ export type Referral = SupportDelivery & {
 'method': SupportMethod;
 'supplierId': string;
 'supplierName'?: string;
+'supplierLegalName'?: string;
 'supplierAddress'?: Address;
 'supplierNotes'?: string;
 'issuedToPersonName': string;

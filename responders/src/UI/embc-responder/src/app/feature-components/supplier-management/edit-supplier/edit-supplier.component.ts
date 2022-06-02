@@ -38,7 +38,13 @@ export class EditSupplierComponent implements OnInit {
     private customValidation: CustomValidationService,
     private router: Router,
     private editSupplierService: EditSupplierService
-  ) {}
+  ) {
+    if (this.editSupplierService.editedSupplier === undefined) {
+      this.router.navigate([
+        '/responder-access/supplier-management/suppliers-list'
+      ]);
+    }
+  }
 
   ngOnInit(): void {
     this.createEditForm();
@@ -114,7 +120,10 @@ export class EditSupplierComponent implements OnInit {
         this.editSupplierService.editedSupplier?.legalName ?? '',
         [this.customValidation.whitespaceValidator()]
       ],
-      supplierName: [this.editSupplierService.editedSupplier?.name ?? ''],
+      supplierName: [
+        this.editSupplierService.editedSupplier?.name ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       gstNumber: this.formBuilder.group(
         {
           part1: [
@@ -181,15 +190,15 @@ export class EditSupplierComponent implements OnInit {
   private createContactEditForm(): FormGroup {
     return this.formBuilder.group({
       lastName: [
-        this.editSupplierService.editedSupplier.contact?.lastName ?? '',
+        this.editSupplierService.editedSupplier?.contact?.lastName ?? '',
         [this.customValidation.whitespaceValidator()]
       ],
       firstName: [
-        this.editSupplierService.editedSupplier.contact?.firstName ?? '',
+        this.editSupplierService.editedSupplier?.contact?.firstName ?? '',
         [this.customValidation.whitespaceValidator()]
       ],
       phone: [
-        this.editSupplierService.editedSupplier.contact?.phone ?? '',
+        this.editSupplierService.editedSupplier?.contact?.phone ?? '',
         [
           Validators.required,
           this.customValidation
@@ -198,7 +207,7 @@ export class EditSupplierComponent implements OnInit {
         ]
       ],
       email: [
-        this.editSupplierService.editedSupplier.contact?.email ?? '',
+        this.editSupplierService?.editedSupplier?.contact?.email ?? '',
         [Validators.email]
       ]
     });
