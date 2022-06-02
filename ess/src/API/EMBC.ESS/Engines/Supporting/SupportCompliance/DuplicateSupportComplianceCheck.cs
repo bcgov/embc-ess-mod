@@ -36,6 +36,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
 
             var similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
                 s.era_name != checkedSupport.era_name && s.era_supporttype == type &&
+                s.statuscode != (int)SupportStatus.Cancelled && s.statuscode != (int)SupportStatus.Void &&
                 ((s.era_validfrom >= from && s.era_validfrom <= to) ||
                 (s.era_validto >= from && s.era_validto <= to))))
                 .GetAllPagesAsync()).ToArray();
