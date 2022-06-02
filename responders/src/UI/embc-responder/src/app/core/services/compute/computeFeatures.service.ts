@@ -127,7 +127,9 @@ export class ComputeFeaturesService implements Compute {
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress?.postalCode !== '' &&
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.primaryAddress?.postalCode !== undefined
+        ?.primaryAddress?.postalCode !== undefined &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.primaryAddress?.stateProvince.code === 'BC'
     );
   }
 }
