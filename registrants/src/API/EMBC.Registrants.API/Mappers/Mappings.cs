@@ -132,6 +132,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Method, opts => opts.Ignore())
                 .ForMember(d => d.SupplierId, opts => opts.Ignore())
                 .ForMember(d => d.SupplierName, opts => opts.Ignore())
+                .ForMember(d => d.SupplierLegalName, opts => opts.Ignore())
                 .ForMember(d => d.SupplierAddress, opts => opts.Ignore())
                 .ForMember(d => d.IssuedToPersonName, opts => opts.Ignore())
                 .ForMember(d => d.ManualReferralId, opts => opts.Ignore())
@@ -148,6 +149,7 @@ namespace EMBC.Registrants.API.Mappers
                         d.Method = SupportMethod.Referral;
                         d.SupplierId = referral.SupplierDetails?.Id;
                         d.SupplierName = referral.SupplierDetails?.Name;
+                        d.SupplierLegalName = referral.SupplierDetails?.LegalName;
                         d.SupplierAddress = ctx.Mapper.Map<Address>(referral.SupplierDetails?.Address);
                         d.IssuedToPersonName = referral.IssuedToPersonName;
                         d.ManualReferralId = referral.ManualReferralId;

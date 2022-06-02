@@ -298,6 +298,7 @@ namespace EMBC.Registrants.API.Controllers
         public string? SupplierId { get; set; }
 
         public string? SupplierName { get; set; }
+        public string? SupplierLegalName { get; set; }
         public Address? SupplierAddress { get; set; }
 
         public string? IssuedToPersonName { get; set; }
