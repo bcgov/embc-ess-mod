@@ -115,7 +115,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> VoidSupport(string fileId, string supportId, SupportVoidReason voidReason)
         {
-            var result = await messagingClient.Send(new VoidSupportCommand
+            await messagingClient.Send(new VoidSupportCommand
             {
                 FileId = fileId,
                 SupportId = supportId,
@@ -137,7 +137,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CancelSupport(string fileId, string supportId)
         {
-            var result = await messagingClient.Send(new CancelSupportCommand
+            await messagingClient.Send(new CancelSupportCommand
             {
                 FileId = fileId,
                 SupportId = supportId,
@@ -493,6 +493,7 @@ namespace EMBC.Responders.API.Controllers
         public string SupplierId { get; set; }
 
         public string SupplierName { get; set; }
+        public string SupplierLegalName { get; set; }
         public Address SupplierAddress { get; set; }
         public string SupplierNotes { get; set; }
 
@@ -734,21 +735,18 @@ namespace EMBC.Responders.API.Controllers
             var clonedReader = reader;
             while (clonedReader.Read())
             {
-                if (clonedReader.TokenType == JsonTokenType.PropertyName)
+                if (clonedReader.TokenType == JsonTokenType.PropertyName && clonedReader.GetString().Equals(nameof(SupportDelivery.Method), StringComparison.OrdinalIgnoreCase))
                 {
-                    if (clonedReader.GetString().Equals(nameof(SupportDelivery.Method), StringComparison.OrdinalIgnoreCase))
+                    clonedReader.Read();
+                    var method = clonedReader.GetString();
+                    if (!Enum.TryParse<SupportMethod>(method, true, out var deliveryMethod)) throw new JsonException($"Failed to parse method {method}");
+                    return deliveryMethod switch
                     {
-                        clonedReader.Read();
-                        var method = clonedReader.GetString();
-                        if (!Enum.TryParse<SupportMethod>(method, true, out var deliveryMethod)) throw new JsonException($"Failed to parse method {method}");
-                        return deliveryMethod switch
-                        {
-                            SupportMethod.Referral => JsonSerializer.Deserialize<Referral>(ref reader, options),
-                            SupportMethod.ETransfer => JsonSerializer.Deserialize<Interac>(ref reader, options),
+                        SupportMethod.Referral => JsonSerializer.Deserialize<Referral>(ref reader, options),
+                        SupportMethod.ETransfer => JsonSerializer.Deserialize<Interac>(ref reader, options),
 
-                            _ => throw new JsonException($"Don't know how to deserialize SupportMethod {deliveryMethod}")
-                        };
-                    }
+                        _ => throw new JsonException($"Don't know how to deserialize SupportMethod {deliveryMethod}")
+                    };
                 }
             }
             throw new JsonException("SupportDelivery doesn't have a Method property");
@@ -798,6 +796,7 @@ namespace EMBC.Responders.API.Controllers
                 .IncludeAllDerived()
                 .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
                 .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
+                .ForMember(d => d.SupplierLegalName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.LegalName : null))
                 .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
                 .ReverseMap()
                 .IncludeAllDerived()
