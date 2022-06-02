@@ -257,7 +257,6 @@ namespace EMBC.ESS.Managers.Events
 
             CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Events.SupplierDetails>()
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.Contact == null ? null : s.Contact.Phone))
-                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.LegalName))
                 ;
 
             CreateMap<Resources.Teams.TeamMember, Shared.Contracts.Events.TeamMember>()
