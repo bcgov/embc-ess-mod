@@ -139,7 +139,7 @@
           </form>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="wizardType !== 'new-registration'">
           <mat-card class="tips-card">
             <div>
               <img
@@ -157,6 +157,24 @@
             <p class="tips-info">
               If these details need to be updated, the evacuee can log into
               their BC Services Card and update this information.
+            </p>
+          </mat-card>
+        </div>
+
+        <div class="col-md-4" *ngIf="wizardType === 'new-registration'">
+          <mat-card class="tips-card">
+            <div>
+              <img
+                class="img-align"
+                src="/assets/images/tips-lightbulb.svg"
+                height="63"
+                width="62"
+              />
+              <span class="tips-heading"><b>Tip: </b>Editable Details</span>
+            </div>
+            <p class="tips-info">
+              If you need to update either first name, last name or date of
+              birth, please start a new search using the correct infomation.
             </p>
           </mat-card>
         </div>
