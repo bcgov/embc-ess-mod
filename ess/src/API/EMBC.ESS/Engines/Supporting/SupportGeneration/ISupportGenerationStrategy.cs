@@ -6,7 +6,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
 {
     internal interface ISupportGenerationStrategy
     {
-        Task<GenerateResponse> Generate(GenerateRequest generateRequest);
+        Task<GenerateResponse> Generate(GenerateRequest request);
     }
 
     internal class SupportGenerationStrategyStragetyFactory
