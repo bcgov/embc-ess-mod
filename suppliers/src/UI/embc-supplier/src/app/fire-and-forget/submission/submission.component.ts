@@ -115,14 +115,14 @@ export class SubmissionComponent implements OnInit {
 
     initializeForm() {
         this.supplierForm = this.builder.group({
-            supplierLegalName: ['', Validators.required],
-            supplierName: ['', Validators.required],
+            supplierLegalName: ['', this.customValidator.whitespaceValidator()],
+            supplierName: ['', this.customValidator.whitespaceValidator()],
             location: [''],
             gstNumber: ['', [Validators.required, Validators.minLength(17)]],
             remitToOtherBusiness: [''],
             businessName: ['', [this.customValidator.conditionalValidation(
                 () => this.supplierForm.get('remitToOtherBusiness').value,
-                Validators.required
+                this.customValidator.whitespaceValidator()
             ).bind(this.customValidator)]],
             businessCountry: ['', [this.customValidator.conditionalValidation(
                 () => this.supplierForm.get('remitToOtherBusiness').value,
@@ -131,7 +131,7 @@ export class SubmissionComponent implements OnInit {
             supplierBC: [''],
 
             address: this.builder.group({
-                address1: ['', Validators.required],
+                address1: ['', this.customValidator.whitespaceValidator()],
                 address2: [''],
                 city: ['', Validators.required],
                 province: [globalConst.defaultProvince.name],
@@ -140,8 +140,8 @@ export class SubmissionComponent implements OnInit {
             }),
 
             contactPerson: this.builder.group({
-                firstName: ['', Validators.required],
-                lastName: ['', Validators.required],
+                firstName: ['', this.customValidator.whitespaceValidator()],
+                lastName: ['', this.customValidator.whitespaceValidator()],
                 email: ['', Validators.email],
                 phone: ['', [Validators.required, Validators.minLength(12)]],
                 fax: ['', Validators.minLength(12)],
@@ -150,7 +150,7 @@ export class SubmissionComponent implements OnInit {
             remittanceAddress: this.builder.group({
                 address1: ['', [this.customValidator.conditionalValidation(
                     () => this.supplierForm.get('remitToOtherBusiness').value,
-                    Validators.required
+                    this.customValidator.whitespaceValidator()
                 ).bind(this.customValidator)]],
                 address2: [''],
                 city: ['', [this.customValidator.conditionalValidation(
@@ -173,7 +173,7 @@ export class SubmissionComponent implements OnInit {
                 this.customValidator.conditionalValidation(
                     () => this.supplierForm.get('remitToOtherBusiness').value &&
                         this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.defaultCountry),
-                    Validators.required
+                        this.customValidator.whitespaceValidator()
                 ).bind(this.customValidator)]],
                 zipCode: ['', [Validators.pattern(globalConst.zipCodePattern),
                 this.customValidator.conditionalValidation(

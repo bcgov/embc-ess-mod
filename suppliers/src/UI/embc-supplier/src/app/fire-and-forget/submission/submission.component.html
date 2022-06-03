@@ -44,7 +44,7 @@
                 <div
                   *ngIf="control.supplierLegalName?.invalid && (control.supplierLegalName?.dirty || control.supplierLegalName?.touched)"
                   class="text-danger">
-                  <div *ngIf="control.supplierLegalName?.errors.required">
+                  <div *ngIf="control.supplierLegalName?.errors.whitespaceError">
                     Supplier Legal name is required
                   </div>
                 </div>
@@ -65,7 +65,7 @@
                   <div
                   *ngIf="control.supplierName?.invalid && (control.supplierName?.dirty || control.supplierName?.touched)"
                   class="text-danger">
-                  <div *ngIf="control.supplierName?.errors.required">
+                  <div *ngIf="control.supplierName?.errors.whitespaceError">
                     Supplier name is required
                   </div>
                 </div>
@@ -108,7 +108,7 @@
                   <div
                     *ngIf="control.address['controls'].address1?.invalid && (control.address['controls'].address1?.dirty || control.address['controls'].address1?.touched)"
                     class="text-danger">
-                    <div *ngIf="control.address['controls'].address1?.errors.required">
+                    <div *ngIf="control.address['controls'].address1?.errors.whitespaceError">
                       Address is required
                     </div>
                   </div>
@@ -189,7 +189,7 @@
                   <div
                     *ngIf="control.contactPerson['controls'].firstName?.invalid && (control.contactPerson['controls'].firstName?.dirty || control.contactPerson['controls'].firstName?.touched)"
                     class="text-danger">
-                    <div *ngIf="control.contactPerson['controls'].firstName?.errors.required">
+                    <div *ngIf="control.contactPerson['controls'].firstName?.errors.whitespaceError">
                       First Name is required
                     </div>
                   </div>
@@ -205,7 +205,7 @@
                   <div
                     *ngIf="control.contactPerson['controls'].lastName?.invalid && (control.contactPerson['controls'].lastName?.dirty || control.contactPerson['controls'].lastName?.touched)"
                     class="text-danger">
-                    <div *ngIf="control.contactPerson['controls'].lastName?.errors.required">
+                    <div *ngIf="control.contactPerson['controls'].lastName?.errors.whitespaceError">
                       Last Name is required
                     </div>
                   </div>
@@ -277,7 +277,7 @@
                     <div
                       *ngIf="control.businessName?.invalid && (control.businessName?.dirty || control.businessName?.touched)"
                       class="text-danger">
-                      <div *ngIf="control.businessName?.errors.required">
+                      <div *ngIf="control.businessName?.errors.whitespaceError">
                         Legal Business Name is required
                       </div>
                     </div>
@@ -332,7 +332,7 @@
                       <div
                         *ngIf="control.remittanceAddress['controls'].address1?.invalid && (control.remittanceAddress['controls'].address1?.dirty || control.remittanceAddress['controls'].address1?.touched)"
                         class="text-danger">
-                        <div *ngIf="control.remittanceAddress['controls'].address1?.errors.required">
+                        <div *ngIf="control.remittanceAddress['controls'].address1?.errors.whitespaceError">
                           Address is required
                         </div>
                       </div>
