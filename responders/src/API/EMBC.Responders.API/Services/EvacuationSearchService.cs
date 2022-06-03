@@ -11,7 +11,7 @@ namespace EMBC.Responders.API.Services
 {
     public interface IEvacuationSearchService
     {
-        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string ManualFileId, MemberRole userRole);
+        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string manualFileId, MemberRole userRole);
 
         Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId);
 

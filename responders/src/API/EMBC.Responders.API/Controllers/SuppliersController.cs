@@ -301,8 +301,8 @@ namespace EMBC.Responders.API.Controllers
         {
             CreateMap<ESS.Shared.Contracts.Teams.Supplier, SupplierListItem>()
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Teams.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
-                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null ? context.Options.Items["UserTeamId"].Equals(s.Team.Id) : false))
-                .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null ? context.Options.Items["UserTeamId"].Equals(s.Team.Id) && s.SharedWithTeams.Count() > 0 : false))
+                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null && context.Options.Items["UserTeamId"].Equals(s.Team.Id)))
+                .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null && context.Options.Items["UserTeamId"].Equals(s.Team.Id) && s.SharedWithTeams.Any()))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Teams.Supplier, Supplier>()
