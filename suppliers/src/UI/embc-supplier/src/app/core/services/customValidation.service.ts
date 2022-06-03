@@ -111,6 +111,18 @@ export class CustomValidationService {
         };
     }
 
+    /**
+     * Validation to avoid white spaces only as input
+     */
+    whitespaceValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+          if (control.value !== undefined) {
+            if ((control.value || '').trim().length === 0) {
+              return { whitespaceError: true };
+            }
+          }
+        };
+      }
 }
 
 
