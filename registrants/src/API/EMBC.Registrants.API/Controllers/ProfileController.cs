@@ -113,7 +113,6 @@ namespace EMBC.Registrants.API.Controllers
             var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
             if (profile == null) return NotFound(userId);
 
-            //TODO: map to user profile from BCSC
             var userProfile = GetUserFromPrincipal();
             var conflicts = ProfilesConflictDetector.DetectConflicts(mapper.Map<Profile>(profile), userProfile);
             return Ok(conflicts);

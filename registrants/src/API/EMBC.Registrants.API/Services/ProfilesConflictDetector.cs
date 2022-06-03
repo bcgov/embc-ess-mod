@@ -33,7 +33,6 @@ namespace EMBC.Registrants.API.Services
                     ConflictingValue = target.PrimaryAddress,
                 };
             }
-            yield break;
         }
 
         private static bool AddressEquals(this Address address, Address other) =>
