@@ -62,7 +62,7 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
           file: EvacuationFileModel;
         };
         this.essFile = state.file;
-        this.supportList = state.file.supports.sort(
+        this.supportList = state.file?.supports?.sort(
           (a, b) =>
             new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
         );
