@@ -73,6 +73,26 @@ export class SupportsTableComponent
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportList) {
       this.dataSource = new MatTableDataSource(this.supportList);
+
+      this.dataSource.sortingDataAccessor = (item: Support, property) => {
+        switch (property) {
+          case 'supplierName':
+            if (item.method === SupportMethod.ETransfer) {
+              return item.method;
+            } else if (
+              item.subCategory === SupportSubCategory.Lodging_Billeting
+            ) {
+              return (item as LodgingBilletingSupport).hostName;
+            } else if (item.subCategory === SupportSubCategory.Lodging_Group) {
+              return (item as LodgingGroupSupport).facilityName;
+            } else {
+              return (item.supportDelivery as Referral).supplierName;
+            }
+          default:
+            return item[property];
+        }
+      };
+
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.cd.detectChanges();
