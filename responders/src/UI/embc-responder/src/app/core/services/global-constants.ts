@@ -519,9 +519,9 @@ export const verifyRegistrantProfileError =
 export const bcscInviteError =
   'Unable to send BC Services Card invitation at this time. Please try again later';
 export const getProfileEssFilesError =
-  'Unable to verify get the ESS Files associated to the registrant at this time. Please try again later';
+  'Unable to retrieve ESS Files associated to the registrant at this time. Please try again later';
 export const getPossibleEssfileMatchError =
-  'Unable to get possible ESS Files associated to the registrant at this time. Please try again later';
+  'Unable to retrieve possible ESS Files matches associated to the registrant at this time. Please try again later';
 export const fileDashboardError =
   'Unable to load ESS File at this time. Please try again later';
 export const supplierCheckerror =
