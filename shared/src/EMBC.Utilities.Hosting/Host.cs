@@ -6,6 +6,7 @@ using System.Runtime;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Extensions;
+using Hellang.Middleware.ProblemDetails;
 using Medallion.Threading;
 using Medallion.Threading.Redis;
 using Medallion.Threading.WaitHandles;
@@ -72,10 +73,15 @@ namespace EMBC.Utilities.Hosting
                 Log.Fatal(e, "An unhandled exception occurred during bootstrapping");
                 return 1;
             }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public IHostBuilder CreateHost(string? assembliesPrefix = null)
         {
+#pragma warning disable S3885 // "Assembly.Load" should be used
             var assemblies = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "*.dll", SearchOption.TopDirectoryOnly)
                  .Where(assembly =>
                  {
@@ -84,6 +90,7 @@ namespace EMBC.Utilities.Hosting
                  })
                  .Select(assembly => Assembly.LoadFrom(assembly))
                  .ToArray();
+#pragma warning restore S3885 // "Assembly.Load" should be used
 
             return CreateHost(assemblies);
         }
@@ -95,7 +102,7 @@ namespace EMBC.Utilities.Hosting
                      // add secrets json file if exists in the hosting assembly
                      opts.AddUserSecrets(Assembly.GetEntryAssembly(), true, true);
                  })
-                .UseSerilog((ctx, config) => Logging.ConfigureSerilog(ctx, config, appName))
+                .UseSerilog((ctx, services, config) => Logging.ConfigureSerilog(ctx, services, config, appName))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureServices((ctx, services) =>
@@ -145,7 +152,12 @@ namespace EMBC.Utilities.Hosting
 
             services
                 .AddHttpContextAccessor()
-                .AddResponseCompression(opts => opts.EnableForHttps = true);
+                .AddResponseCompression(opts => opts.EnableForHttps = true)
+                .AddProblemDetails(opts =>
+                {
+                    opts.IncludeExceptionDetails = (ctx, ex) => hostEnvironment.IsDevelopment();
+                    opts.ShouldLogUnhandledException = (ctx, ex, problem) => false;
+                });
 
             var mvcBuilder = services.AddControllers();
             foreach (var assembly in assemblies)
@@ -198,21 +210,12 @@ namespace EMBC.Utilities.Hosting
         {
             var logger = app.ApplicationServices.GetRequiredService<ILogger<Host>>();
 
-            if (env.IsDevelopment())
-            {
-                app.Use(ErrorHandling.WriteDevelopmentResponse);
-            }
-            else
-            {
-                app.Use(ErrorHandling.WriteProductionResponse);
-            }
-
             logger.LogInformation("Starting configuration of {appName}", appName);
 
-            app.SetDefaultRequestLogging();
-
+            app.UseProblemDetails();
             app.UseResponseCompression();
             app.UseForwardedHeaders();
+            app.SetDefaultRequestLogging();
             app.UseRouting();
             app.UseCors();
 

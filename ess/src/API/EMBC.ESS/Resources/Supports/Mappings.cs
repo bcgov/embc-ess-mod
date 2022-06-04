@@ -318,7 +318,7 @@ namespace EMBC.ESS.Resources.Supports
                 DuplicateSupportFlag.FlagTypeId => context.Mapper.Map<DuplicateSupportFlag>(source),
                 AmountOverridenSupportFlag.FlagTypeId => context.Mapper.Map<AmountOverridenSupportFlag>(source),
 
-                _ => throw new NotImplementedException($"Unknown flg type id '{source._era_flagtype_value}'")
+                _ => throw new NotImplementedException($"Support flag {source.era_name}: unknown flag type id '{source._era_flagtype_value}'")
             };
 
         public era_supportflag Convert(SupportFlag source, era_supportflag destination, ResolutionContext context) =>

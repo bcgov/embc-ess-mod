@@ -49,19 +49,12 @@ namespace EMBC.Utilities.Messaging
             }
             catch (Exception e)
             {
-                //var serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(EssApplicationException));
-                //using var ms = new MemoryStream();
-                //var writer = XmlDictionaryWriter.CreateTextWriter(ms);
-                //serializer.WriteObject(writer, e);
-
                 var reply = new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
                     Error = true,
                     ErrorType = e.GetType().AssemblyQualifiedName,
                     ErrorMessage = e.Message,
-                    ErrorDetails = e.ToString(),
-                    //Data = UnsafeByteOperations.UnsafeWrap(ms.ToArray())
                 };
                 sw.Stop();
 

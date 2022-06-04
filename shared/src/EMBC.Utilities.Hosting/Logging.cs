@@ -19,10 +19,11 @@ namespace EMBC.Utilities.Hosting
     {
         public const string LogOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}";
 
-        public static void ConfigureSerilog(HostBuilderContext hostBuilderContext, LoggerConfiguration loggerConfiguration, string appName)
+        public static void ConfigureSerilog(HostBuilderContext hostBuilderContext, IServiceProvider services, LoggerConfiguration loggerConfiguration, string appName)
         {
             loggerConfiguration
                 .ReadFrom.Configuration(hostBuilderContext.Configuration)
+                .ReadFrom.Services(services)
                 .Enrich.WithMachineName()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
@@ -35,9 +36,6 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithClientIp()
                 .Enrich.WithSpan()
                 .WriteTo.Console(outputTemplate: LogOutputTemplate)
-#if DEBUG
-            //.WriteTo.File($"./{appName}_errors.log", LogEventLevel.Error)
-#endif
             ;
 
             var splunkUrl = hostBuilderContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
@@ -70,8 +68,10 @@ namespace EMBC.Utilities.Hosting
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
                     diagCtx.Set("User", httpCtx.User.Identity?.Name ?? string.Empty);
-                    diagCtx.Set("Host", httpCtx.Request.Host);
+                    diagCtx.Set("Host", httpCtx.Request.Host.Value);
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength?.ToString() ?? string.Empty);
+                    diagCtx.Set("Protocol", httpCtx.Request.Protocol);
+                    diagCtx.Set("Scheme", httpCtx.Request.Scheme);
                 };
             });
 

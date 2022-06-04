@@ -25,11 +25,12 @@
         <PackageReference Include="Cronos" Version="0.7.1" />
         <PackageReference Include="DistributedLock.Redis" Version="1.0.1" />
         <PackageReference Include="DistributedLock.WaitHandles" Version="1.0.0" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.45.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.46.0" />
+        <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.4.2" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />
         <PackageReference Include="OpenTelemetry.Contrib.Instrumentation.GrpcCore" Version="1.0.0-beta3" />
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.2.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.3.0" />
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9" />
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9" />
         <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.0.0-rc9" />
@@ -41,7 +42,7 @@
         <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
         <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
         <PackageReference Include="Serilog.Enrichers.Span" Version="2.3.0" />
-        <PackageReference Include="Serilog.Exceptions" Version="8.1.0" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.2.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
         <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
         <PackageReference Include="StackExchange.Redis" Version="2.5.61" />

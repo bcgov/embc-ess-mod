@@ -10,7 +10,7 @@ using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -25,14 +25,14 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IUserService userService;
-        private readonly ILogger<ProfileController> logger;
+        private readonly IDiagnosticContext diagnosticsContext;
 
-        public ProfileController(IMessagingClient messagingClient, IMapper mapper, IUserService userService, ILogger<ProfileController> logger)
+        public ProfileController(IMessagingClient messagingClient, IMapper mapper, IUserService userService, IDiagnosticContext diagnosticsContext)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.userService = userService;
-            this.logger = logger;
+            this.diagnosticsContext = diagnosticsContext;
         }
 
         /// <summary>
@@ -53,17 +53,22 @@ namespace EMBC.Responders.API.Controllers
 
             if (currentMember == null)
             {
-                logger.LogError("Login failure userName {0}, user ID {1}, sourceSystem: {2}: {3}", userName, userId, sourceSystem, $"User {userName} not found");
+                diagnosticsContext.Set("error", $"Login failure userName {userName}, user ID {userId}, sourceSystem: {sourceSystem}: {$"User {userName} not found"}");
                 return Forbid();
             }
             if (currentMember.ExternalUserId != null && currentMember.ExternalUserId != userId)
-                throw new Exception($"User {userName} has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
+            {
+                diagnosticsContext.Set("error", $"User {userName} has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
+                return Forbid();
+            }
             if (currentMember.ExternalUserId == null && currentMember.LastSuccessfulLogin.HasValue)
-                throw new Exception($"User {userName} has no external id but somehow logged in already");
-
+            {
+                diagnosticsContext.Set("error", $"User {userName} has no external id but somehow logged in already");
+            }
             if (!currentMember.LastSuccessfulLogin.HasValue || string.IsNullOrEmpty(currentMember.ExternalUserId))
             {
                 currentMember.ExternalUserId = userId;
+                return Forbid();
             }
 
             currentMember.LastSuccessfulLogin = DateTime.UtcNow;

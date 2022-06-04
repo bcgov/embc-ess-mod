@@ -20,7 +20,6 @@ message ReplyEnvelope {
     bool Error = 30;
     string ErrorType = 31;
     string ErrorMessage = 32;
-    string ErrorDetails = 33;
 }
 
 service Dispatcher {
