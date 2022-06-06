@@ -94,13 +94,16 @@ namespace EMBC.Utilities.Hosting
                 builder
                     .AddConsoleExporter()
                     .AddSource(appName)
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: appName, serviceVersion: "1.0.0.0")).AddHttpClientInstrumentation()
+                    .SetResourceBuilder(ResourceBuilder
+                        .CreateDefault()
+                        .AddService(serviceName: appName, serviceVersion: Environment.GetEnvironmentVariable("VERSION")))
+                    .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddGrpcCoreInstrumentation()
                     .AddGrpcClientInstrumentation()
                     .AddRedisInstrumentation();
             });
-            services.AddSingleton(TracerProvider.Default.GetTracer(appName));
+            //services.AddSingleton(TracerProvider.Default.GetTracer(appName));
 
             return services;
         }
