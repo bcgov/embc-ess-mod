@@ -140,17 +140,22 @@ namespace EMBC.ESS.Resources.Payments
             var processedPayments = new ConcurrentBag<string>();
             var failedPayments = new ConcurrentBag<(string Id, Exception Error)>();
 
-            await Parallel.ForEachAsync(request.PaymentIds, ct, async (paymentId, ct) =>
+            await Parallel.ForEachAsync(request.PaymentIds, new ParallelOptions { MaxDegreeOfParallelism = 1, CancellationToken = ct }, async (paymentId, ct) =>
             {
+                var ctx = essContextFactory.Create();
                 try
                 {
-                    await SendPaymentToCas(essContextFactory.Create(), paymentId, request.BatchId, ct);
+                    await SendPaymentToCas(ctx, paymentId, request.BatchId, ct);
 
                     processedPayments.Add(paymentId);
                 }
                 catch (Exception e)
                 {
                     failedPayments.Add((paymentId, e));
+                }
+                finally
+                {
+                    ctx.DetachAll();
                 }
             });
 
@@ -181,35 +186,7 @@ namespace EMBC.ESS.Resources.Payments
                 var validations = ValidatePaymentBeforeSendingToCas(payment).ToArray();
                 if (validations.Any()) throw new CasException($"Payment {payment.era_name} validation errors: {string.Join(';', validations)}");
 
-                // lock payment
-                payment.era_queueprocessingstatus = (int)QueueStatus.Processing;
-                await ctx.SaveChangesAsync(ct);
-
-                var payee = (await ((DataServiceQuery<contact>)ctx.contacts
-                    .Expand(c => c.era_ProvinceState)
-                    .Expand(c => c.era_Country)
-                    .Expand(c => c.era_City)
-                    .Where(c => c.contactid == payment._era_payee_value))
-                    .ExecuteAsync(ct))
-                    .SingleOrDefault();
-
-                if (payee.era_suppliernumber == null)
-                {
-                    // search CAS for supplier information
-                    var supplierDetails = await casGateway.GetSupplier(payee, ct);
-
-                    if (supplierDetails == null)
-                    {
-                        // create new supplier in CAS
-                        supplierDetails = await casGateway.CreateSupplier(payee, ct);
-                    }
-                    payee.era_suppliernumber = supplierDetails.Value.SupplierNumber;
-                    payee.era_sitesuppliernumber = supplierDetails.Value.SiteCode;
-
-                    // store supplier info
-                    ctx.UpdateObject(payee);
-                    await ctx.SaveChangesAsync(ct);
-                }
+                var payee = await GetPayee(ctx, payment._era_payee_value.Value, ct);
 
                 // update CAS related fields
                 var now = DateTime.UtcNow;
@@ -218,9 +195,17 @@ namespace EMBC.ESS.Resources.Payments
                 payment.era_dateinvoicereceived = now;
                 payment.era_suppliernumber = payee.era_suppliernumber;
                 payment.era_sitesuppliernumber = payee.era_sitesuppliernumber;
+                // lock payment
+                payment.era_queueprocessingstatus = (int)QueueStatus.Processing;
 
-                //send to CAS
+                await ctx.SaveChangesAsync(ct);
+                ctx.Detach(payment);
+
+                // send to CAS
                 await casGateway.CreateInvoice(batch, payment, ct);
+
+                // successful send
+                payment = await ctx.era_etransfertransactions.ByKey(payment.era_etransfertransactionid).GetValueAsync();
                 payment.era_processingresponse = string.Empty;
                 UpdatePaymentStatus(ctx, payment, PaymentStatus.Sent);
                 payment.era_queueprocessingstatus = (int)QueueStatus.Pending;
@@ -230,7 +215,8 @@ namespace EMBC.ESS.Resources.Payments
             }
             catch (CasException e)
             {
-                // fail the payment
+                // validation error - fail the payment
+                payment = await ctx.era_etransfertransactions.ByKey(payment.era_etransfertransactionid).GetValueAsync();
                 payment.era_processingresponse = e.Message;
                 UpdatePaymentStatus(ctx, payment, PaymentStatus.Failed);
                 payment.era_queueprocessingstatus = null;
@@ -241,7 +227,8 @@ namespace EMBC.ESS.Resources.Payments
             }
             catch (Exception e)
             {
-                // put payment back in Pending queue for retry
+                // general error - put payment back in Pending queue for retry
+                payment = await ctx.era_etransfertransactions.ByKey(payment.era_etransfertransactionid).GetValueAsync();
                 payment.era_processingresponse = e.Message;
                 UpdatePaymentStatus(ctx, payment, PaymentStatus.Created);
                 payment.era_queueprocessingstatus = (int)QueueStatus.Pending;
@@ -250,6 +237,43 @@ namespace EMBC.ESS.Resources.Payments
                 await ctx.SaveChangesAsync(ct);
                 throw;
             }
+        }
+
+        private async Task<contact> GetPayee(EssContext ctx, Guid payeeId, CancellationToken ct)
+        {
+            var payee = (await ((DataServiceQuery<contact>)ctx.contacts
+                  .Expand(c => c.era_ProvinceState)
+                  .Expand(c => c.era_Country)
+                  .Expand(c => c.era_City)
+                  .Where(c => c.contactid == payeeId))
+                  .ExecuteAsync(ct))
+                  .SingleOrDefault();
+
+            if (payee == null) throw new InvalidOperationException($"Payee {payeeId} was not found");
+
+            if (payee.era_suppliernumber == null)
+            {
+                ctx.Detach(payee);
+                // search CAS for supplier information
+                var supplierDetails = await casGateway.GetSupplier(payee, ct);
+
+                if (supplierDetails == null)
+                {
+                    // create new supplier in CAS
+                    supplierDetails = await casGateway.CreateSupplier(payee, ct);
+                }
+
+                //save supplier info post CAS API call
+                payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                payee.era_suppliernumber = supplierDetails.Value.SupplierNumber;
+                payee.era_sitesuppliernumber = supplierDetails.Value.SiteCode;
+
+                // store supplier info
+                ctx.UpdateObject(payee);
+                await ctx.SaveChangesAsync(ct);
+            }
+
+            return payee;
         }
 
         private static IEnumerable<string> ValidatePaymentBeforeSendingToCas(era_etransfertransaction payment)
