@@ -50,6 +50,7 @@ namespace EMBC.ESS.Resources.Payments
         Failed = 174360002,
         Cancelled = 174360003,
         Issued = 174360004,
+        Cleared = 174360005,
     }
 
     public enum QueueStatus
@@ -92,17 +93,6 @@ namespace EMBC.ESS.Resources.Payments
         public IEnumerable<string> PaymentIds { get; set; } = Array.Empty<string>();
     }
 
-    public class CasPayment
-    {
-        public string PaymentId { get; set; }
-    }
-
-    public class CasPayeeDetails
-    {
-        public string SupplierNumber { get; set; }
-        public string SupplierSiteCode { get; set; }
-    }
-
     public class IssuePaymentsBatchResponse : ManagePaymentResponse
     {
         public IEnumerable<string> IssuedPayments { get; set; } = Array.Empty<string>();
@@ -134,7 +124,7 @@ namespace EMBC.ESS.Resources.Payments
     {
         Pending,
         Failed,
-        Paid
+        Cleared
     }
 
     public class ProcessCasPaymentReconciliationStatusRequest : ManagePaymentRequest
@@ -155,5 +145,13 @@ namespace EMBC.ESS.Resources.Payments
     }
 
     public class CancelPaymentResponse : ManagePaymentResponse
+    { }
+
+    public class MarkPaymentAsPaidRequest : ManagePaymentRequest
+    {
+        public string PaymentId { get; set; }
+    }
+
+    public class MarkPaymentAsPaidResponse : ManagePaymentResponse
     { }
 }

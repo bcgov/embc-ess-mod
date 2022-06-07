@@ -34,6 +34,7 @@ namespace EMBC.ESS.Resources.Payments
                 IssuePaymentsBatchRequest r => await Handle(r, CreateCancellationToken()),
                 ProcessCasPaymentReconciliationStatusRequest r => await Handle(r, CreateCancellationToken()),
                 CancelPaymentRequest r => await Handle(r, CreateCancellationToken()),
+                MarkPaymentAsPaidRequest r => await Handle(r, CreateCancellationToken()),
 
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
@@ -56,9 +57,8 @@ namespace EMBC.ESS.Resources.Payments
 
             var payment = mapper.Map<era_etransfertransaction>(request.Payment);
             payment.era_etransfertransactionid = Guid.NewGuid();
-            payment.statuscode = (int)PaymentStatus.Created;
-            payment.era_queueprocessingstatus = (int)QueueStatus.Pending;
             ctx.AddToera_etransfertransactions(payment);
+            TransitionPaymentToStatus(ctx, payment, PaymentStatus.Created);
 
             if (request.Payment is InteracSupportPayment ip)
             {
@@ -195,9 +195,9 @@ namespace EMBC.ESS.Resources.Payments
                 payment.era_dateinvoicereceived = now;
                 payment.era_suppliernumber = payee.era_suppliernumber;
                 payment.era_sitesuppliernumber = payee.era_sitesuppliernumber;
+
                 // lock payment
                 payment.era_queueprocessingstatus = (int)QueueStatus.Processing;
-
                 await ctx.SaveChangesAsync(ct);
                 ctx.Detach(payment);
 
@@ -207,8 +207,7 @@ namespace EMBC.ESS.Resources.Payments
                 // successful send
                 payment = await ctx.era_etransfertransactions.ByKey(payment.era_etransfertransactionid).GetValueAsync();
                 payment.era_processingresponse = string.Empty;
-                UpdatePaymentStatus(ctx, payment, PaymentStatus.Sent);
-                payment.era_queueprocessingstatus = (int)QueueStatus.Pending;
+                TransitionPaymentToStatus(ctx, payment, PaymentStatus.Sent);
 
                 ctx.UpdateObject(payment);
                 await ctx.SaveChangesAsync(ct);
@@ -218,8 +217,7 @@ namespace EMBC.ESS.Resources.Payments
                 // validation error - fail the payment
                 payment = await ctx.era_etransfertransactions.ByKey(payment.era_etransfertransactionid).GetValueAsync();
                 payment.era_processingresponse = e.Message;
-                UpdatePaymentStatus(ctx, payment, PaymentStatus.Failed);
-                payment.era_queueprocessingstatus = null;
+                TransitionPaymentToStatus(ctx, payment, PaymentStatus.Failed);
                 ctx.UpdateObject(payment);
 
                 await ctx.SaveChangesAsync(ct);
@@ -230,8 +228,7 @@ namespace EMBC.ESS.Resources.Payments
                 // general error - put payment back in Pending queue for retry
                 payment = await ctx.era_etransfertransactions.ByKey(payment.era_etransfertransactionid).GetValueAsync();
                 payment.era_processingresponse = e.Message;
-                UpdatePaymentStatus(ctx, payment, PaymentStatus.Created);
-                payment.era_queueprocessingstatus = (int)QueueStatus.Pending;
+                TransitionPaymentToStatus(ctx, payment, PaymentStatus.Created);
                 ctx.UpdateObject(payment);
 
                 await ctx.SaveChangesAsync(ct);
@@ -310,7 +307,7 @@ namespace EMBC.ESS.Resources.Payments
         private static IEnumerable<string> MapCasStatus(CasPaymentStatus? s) =>
             s switch
             {
-                CasPaymentStatus.Paid => new[] { "RECONCILED" },
+                CasPaymentStatus.Cleared => new[] { "RECONCILED" },
                 CasPaymentStatus.Pending => new[] { "NEGOTIABLE" },
                 CasPaymentStatus.Failed => new[] { "VOIDED" },
 
@@ -320,9 +317,9 @@ namespace EMBC.ESS.Resources.Payments
         private static CasPaymentStatus ResolveCasStatus(string? s) =>
             s.ToUpperInvariant() switch
             {
-                "RECONCILED" => CasPaymentStatus.Paid,
-                "CLEARED" => CasPaymentStatus.Paid,
-                "RECONCILED UNACCOUNTED" => CasPaymentStatus.Paid,
+                "RECONCILED" => CasPaymentStatus.Cleared,
+                "CLEARED" => CasPaymentStatus.Cleared,
+                "RECONCILED UNACCOUNTED" => CasPaymentStatus.Cleared,
                 "VOIDED" => CasPaymentStatus.Failed,
                 "NEGOTIABLE" => CasPaymentStatus.Pending,
 
@@ -332,7 +329,7 @@ namespace EMBC.ESS.Resources.Payments
         private static PaymentStatus ResolvePaymentStatus(CasPaymentStatus status) =>
             status switch
             {
-                CasPaymentStatus.Paid => PaymentStatus.Paid,
+                CasPaymentStatus.Cleared => PaymentStatus.Cleared,
                 CasPaymentStatus.Pending => PaymentStatus.Issued,
                 CasPaymentStatus.Failed => PaymentStatus.Failed,
 
@@ -351,20 +348,19 @@ namespace EMBC.ESS.Resources.Payments
             if (!new[] { PaymentStatus.Sent, PaymentStatus.Issued }.Contains((PaymentStatus)payment.statuscode))
                 throw new InvalidOperationException($"cannot reconcile payment {paymentId} as it in status {(PaymentStatus)payment.statuscode}");
 
-            // skip in flight payments
-            //if (payment.era_queueprocessingstatus == (int)QueueStatus.Processing)
-
             // guard against changing a later status
-            if (payment.era_casresponsedate > request.CasPaymentDetails.StatusChangeDate) throw new InvalidOperationException($"Payment {paymentId} was already reconciled on {payment.era_casresponsedate}");
+            if (payment.era_casresponsedate > request.CasPaymentDetails.StatusChangeDate)
+                throw new InvalidOperationException($"Payment {paymentId} was already reconciled on {payment.era_casresponsedate}");
 
             payment.era_casresponsedate = request.CasPaymentDetails.StatusChangeDate;
             payment.era_casreferencenumber = request.CasPaymentDetails.CasReferenceNumber;
             payment.era_processingresponse = request.CasPaymentDetails.StatusDescription;
-            UpdatePaymentStatus(ctx, payment, ResolvePaymentStatus(request.CasPaymentDetails.Status));
+            TransitionPaymentToStatus(ctx, payment, ResolvePaymentStatus(request.CasPaymentDetails.Status));
 
             ctx.UpdateObject(payment);
 
             await ctx.SaveChangesAsync(ct);
+            ctx.DetachAll();
 
             return new ProcessCasPaymentReconciliationStatusResponse { };
         }
@@ -381,27 +377,55 @@ namespace EMBC.ESS.Resources.Payments
             if (!new[] { PaymentStatus.Failed }.Contains((PaymentStatus)payment.statuscode))
                 throw new InvalidOperationException($"cannot cancel payment {paymentId} as it in status {(PaymentStatus)payment.statuscode}");
 
-            UpdatePaymentStatus(ctx, payment, PaymentStatus.Cancelled);
+            TransitionPaymentToStatus(ctx, payment, PaymentStatus.Cancelled);
 
             payment.era_processingresponse = request.Reason;
-            await ctx.SaveChangesAsync(ct);
             ctx.UpdateObject(payment);
+            await ctx.SaveChangesAsync(ct);
+            ctx.DetachAll();
             return new CancelPaymentResponse { };
         }
 
-        private static void UpdatePaymentStatus(EssContext ctx, era_etransfertransaction payment, PaymentStatus status)
+        private async Task<MarkPaymentAsPaidResponse> Handle(MarkPaymentAsPaidRequest request, CancellationToken ct)
+        {
+            var ctx = essContextFactory.Create();
+
+            var paymentId = request.PaymentId;
+            var payment = await ctx.era_etransfertransactions.Where(t => t.era_name == paymentId).SingleOrDefaultAsync();
+            if (payment == null) throw new InvalidOperationException($"payment {paymentId} not found");
+
+            // guard for current payment status
+            if (!new[] { PaymentStatus.Cleared }.Contains((PaymentStatus)payment.statuscode))
+                throw new InvalidOperationException($"cannot mark payment {paymentId} as paid as it in status {(PaymentStatus)payment.statuscode}");
+
+            TransitionPaymentToStatus(ctx, payment, PaymentStatus.Paid);
+
+            await ctx.SaveChangesAsync(ct);
+            ctx.UpdateObject(payment);
+            ctx.DetachAll();
+            return new MarkPaymentAsPaidResponse { };
+        }
+
+        private static void TransitionPaymentToStatus(EssContext ctx, era_etransfertransaction payment, PaymentStatus status)
         {
             switch (status)
             {
-                case PaymentStatus.Created:
                 case PaymentStatus.Sent:
-                case PaymentStatus.Failed:
-                case PaymentStatus.Issued:
+                    payment.era_queueprocessingstatus = null;
                     ctx.ActivateObject(payment, (int)status);
                     break;
 
-                case PaymentStatus.Paid:
+                case PaymentStatus.Created:
+                case PaymentStatus.Failed:
+                case PaymentStatus.Issued:
+                case PaymentStatus.Cleared:
+                    payment.era_queueprocessingstatus = (int)QueueStatus.Pending;
+                    ctx.ActivateObject(payment, (int)status);
+                    break;
+
                 case PaymentStatus.Cancelled:
+                case PaymentStatus.Paid:
+                    payment.era_queueprocessingstatus = null;
                     ctx.DeactivateObject(payment, (int)status);
                     break;
 
