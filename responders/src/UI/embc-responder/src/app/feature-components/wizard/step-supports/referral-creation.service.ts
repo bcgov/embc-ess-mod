@@ -280,8 +280,6 @@ export class ReferralCreationService {
       facilityName: supportDelivery.details.hostName
     };
     this.groupReferral = groupReferral;
-
-    console.log(this.groupReferral);
   }
 
   createClothingReferral(

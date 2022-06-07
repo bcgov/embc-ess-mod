@@ -56,27 +56,32 @@ export class SupportDetailsService {
   }
 
   mealForm(): FormGroup {
-    return this.formBuilder.group({
-      noOfBreakfast: [
-        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
-          ?.noOfBreakfast ?? '',
-        [Validators.required]
-      ],
-      noOfLunches: [
-        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
-          ?.noOfLunches ?? '',
-        [Validators.required]
-      ],
-      noOfDinners: [
-        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
-          ?.noOfDinners ?? '',
-        [Validators.required]
-      ],
-      totalAmount: [
-        (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
-          ?.totalAmount ?? ''
-      ]
-    });
+    return this.formBuilder.group(
+      {
+        noOfBreakfast: [
+          (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+            ?.noOfBreakfast ?? '',
+          [Validators.required]
+        ],
+        noOfLunches: [
+          (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+            ?.noOfLunches ?? '',
+          [Validators.required]
+        ],
+        noOfDinners: [
+          (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+            ?.noOfDinners ?? '',
+          [Validators.required]
+        ],
+        totalAmount: [
+          (this.stepSupportsService?.supportDetails?.referral as RestaurantMeal)
+            ?.totalAmount ?? ''
+        ]
+      },
+      {
+        validators: [this.customValidation.totalMealsValidator()]
+      }
+    );
   }
 
   groceriesForm(): FormGroup {

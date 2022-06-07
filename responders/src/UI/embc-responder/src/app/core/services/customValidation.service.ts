@@ -358,4 +358,20 @@ export class CustomValidationService {
       }
     };
   }
+
+  /**
+   * Checks if the total of meals is > 0
+   */
+  totalMealsValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== undefined) {
+        const breakfastNbr = +control.get('noOfBreakfast').value;
+        const lunchNbr = +control.get('noOfLunches').value;
+        const dinnerNbr = +control.get('noOfDinners').value;
+        if (breakfastNbr + lunchNbr + dinnerNbr === 0) {
+          return { totalMealsError: true };
+        }
+      }
+    };
+  }
 }
