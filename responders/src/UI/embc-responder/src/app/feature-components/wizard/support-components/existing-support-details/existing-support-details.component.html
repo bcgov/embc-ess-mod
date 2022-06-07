@@ -610,9 +610,21 @@
 
   <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
     <div class="col-md-4 box-text-color">e-transfer Recipient:</div>
-    <div class="col-md-4 bold">
+    <div
+      class="col-md-4 bold"
+      *ngIf="
+        interac?.recipientFirstName !== undefined &&
+          interac?.recipientLastName !== undefined;
+        else draftRecipient
+      "
+    >
       {{ interac?.recipientFirstName }} {{ interac?.recipientLastName }}
     </div>
+    <ng-template #draftRecipient>
+      <div class="col-md-4 bold">
+        {{ getMemberFullName(interac?.receivingRegistrantId) }}
+      </div>
+    </ng-template>
   </div>
 
   <div class="row row-padding" *ngIf="selectedSupport?.method === 'ETransfer'">
@@ -624,7 +636,8 @@
     class="row row-padding"
     *ngIf="
       selectedSupport?.method === 'ETransfer' &&
-      interac?.notificationEmail !== null
+      interac?.notificationEmail !== null &&
+      interac?.notificationEmail !== ''
     "
   >
     <div class="col-md-4 box-text-color">Email Address:</div>
@@ -637,7 +650,8 @@
     class="row row-padding"
     *ngIf="
       selectedSupport?.method === 'ETransfer' &&
-      interac?.notificationMobile !== null
+      interac?.notificationMobile !== null &&
+      interac?.notificationMobile !== ''
     "
   >
     <div class="col-md-4 box-text-color">Mobile Number:</div>
