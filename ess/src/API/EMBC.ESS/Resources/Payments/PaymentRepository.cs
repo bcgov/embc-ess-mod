@@ -35,6 +35,7 @@ namespace EMBC.ESS.Resources.Payments
                 ProcessCasPaymentReconciliationStatusRequest r => await Handle(r, CreateCancellationToken()),
                 CancelPaymentRequest r => await Handle(r, CreateCancellationToken()),
                 MarkPaymentAsPaidRequest r => await Handle(r, CreateCancellationToken()),
+                MarkPaymentAsIssuedRequest r => await Handle(r, CreateCancellationToken()),
 
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
@@ -358,7 +359,6 @@ namespace EMBC.ESS.Resources.Payments
             TransitionPaymentToStatus(ctx, payment, ResolvePaymentStatus(request.CasPaymentDetails.Status));
 
             ctx.UpdateObject(payment);
-
             await ctx.SaveChangesAsync(ct);
             ctx.DetachAll();
 
@@ -383,6 +383,7 @@ namespace EMBC.ESS.Resources.Payments
             ctx.UpdateObject(payment);
             await ctx.SaveChangesAsync(ct);
             ctx.DetachAll();
+
             return new CancelPaymentResponse { };
         }
 
@@ -400,10 +401,33 @@ namespace EMBC.ESS.Resources.Payments
 
             TransitionPaymentToStatus(ctx, payment, PaymentStatus.Paid);
 
-            await ctx.SaveChangesAsync(ct);
             ctx.UpdateObject(payment);
+            await ctx.SaveChangesAsync(ct);
             ctx.DetachAll();
+
             return new MarkPaymentAsPaidResponse { };
+        }
+
+        private async Task<MarkPaymentAsIssuedResponse> Handle(MarkPaymentAsIssuedRequest request, CancellationToken ct)
+        {
+            var ctx = essContextFactory.Create();
+
+            var paymentId = request.PaymentId;
+            var payment = await ctx.era_etransfertransactions.Where(t => t.era_name == paymentId).SingleOrDefaultAsync();
+            if (payment == null) throw new InvalidOperationException($"payment {paymentId} not found");
+
+            // guard for current payment status
+            if (!new[] { PaymentStatus.Issued }.Contains((PaymentStatus)payment.statuscode))
+                throw new InvalidOperationException($"cannot mark payment {paymentId} as issued as it in status {(PaymentStatus)payment.statuscode}");
+
+            TransitionPaymentToStatus(ctx, payment, PaymentStatus.Issued);
+            payment.era_queueprocessingstatus = (int)QueueStatus.None;
+
+            ctx.UpdateObject(payment);
+            await ctx.SaveChangesAsync(ct);
+            ctx.DetachAll();
+
+            return new MarkPaymentAsIssuedResponse { };
         }
 
         private static void TransitionPaymentToStatus(EssContext ctx, era_etransfertransaction payment, PaymentStatus status)
@@ -411,7 +435,7 @@ namespace EMBC.ESS.Resources.Payments
             switch (status)
             {
                 case PaymentStatus.Sent:
-                    payment.era_queueprocessingstatus = null;
+                    payment.era_queueprocessingstatus = (int)QueueStatus.None;
                     ctx.ActivateObject(payment, (int)status);
                     break;
 
@@ -425,7 +449,7 @@ namespace EMBC.ESS.Resources.Payments
 
                 case PaymentStatus.Cancelled:
                 case PaymentStatus.Paid:
-                    payment.era_queueprocessingstatus = null;
+                    payment.era_queueprocessingstatus = (int)QueueStatus.None;
                     ctx.DeactivateObject(payment, (int)status);
                     break;
 

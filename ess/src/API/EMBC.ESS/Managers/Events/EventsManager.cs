@@ -856,6 +856,7 @@ namespace EMBC.ESS.Managers.Events
             {
                 try
                 {
+                    await paymentRepository.Manage(new MarkPaymentAsIssuedRequest { PaymentId = payment.Id });
                     await supportRepository.Manage(new ChangeSupportStatusCommand
                     {
                         Items = payment.LinkedSupportIds.Select(s => new SupportStatusTransition { SupportId = s, ToStatus = Resources.Supports.SupportStatus.Issued })

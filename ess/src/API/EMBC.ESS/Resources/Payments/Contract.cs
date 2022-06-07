@@ -55,6 +55,7 @@ namespace EMBC.ESS.Resources.Payments
 
     public enum QueueStatus
     {
+        None = -1,
         Pending = 174360000,
         Processing = 174360001,
         Failure = 174360002
@@ -153,5 +154,13 @@ namespace EMBC.ESS.Resources.Payments
     }
 
     public class MarkPaymentAsPaidResponse : ManagePaymentResponse
+    { }
+
+    public class MarkPaymentAsIssuedRequest : ManagePaymentRequest
+    {
+        public string PaymentId { get; set; }
+    }
+
+    public class MarkPaymentAsIssuedResponse : ManagePaymentResponse
     { }
 }
