@@ -795,50 +795,98 @@ namespace EMBC.ESS.Managers.Events
         {
             var ct = new CancellationTokenSource().Token;
 
-            var waitingToBeIssuedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+            var newPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
             {
                 ByStatus = PaymentStatus.Created,
                 ByQueueStatus = QueueStatus.Pending,
-            })).Items.ToArray();
+            })).Items.Cast<InteracSupportPayment>().ToArray();
 
-            logger.LogInformation("Found {0} pending payments", waitingToBeIssuedPayments.Length);
+            logger.LogInformation("Found {0} new payments", newPayments.Length);
 
-            var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
-            var result = (IssuePaymentsBatchResponse)await paymentRepository.Manage(new IssuePaymentsBatchRequest
+            if (newPayments.Any())
             {
-                BatchId = casBatchName,
-                PaymentIds = waitingToBeIssuedPayments.Select(p => p.Id)
-            });
-
-            logger.LogInformation("Batch {0} results: {1} issued; {2} failed", casBatchName, result.IssuedPayments.Count(), result.FailedPayments.Count());
-            await Parallel.ForEachAsync(result.FailedPayments, ct, async (failedPayment, ct) =>
-            {
-                switch (failedPayment.Error)
+                var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
+                var result = (IssuePaymentsBatchResponse)await paymentRepository.Manage(new IssuePaymentsBatchRequest
                 {
-                    case CasException e:
-                        // CAS validation error - cancel payment and send supports for QR review
-                        try
+                    BatchId = casBatchName,
+                    PaymentIds = newPayments.Select(p => p.Id)
+                });
+
+                logger.LogInformation("Batch {0} results: {1} issued; {2} failed", casBatchName, result.IssuedPayments.Count(), result.FailedPayments.Count());
+
+                var failedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+                {
+                    ByStatus = PaymentStatus.Failed,
+                    ByQueueStatus = QueueStatus.Pending,
+                })).Items.Cast<InteracSupportPayment>().ToArray();
+
+                logger.LogInformation("Found {0} failed payments", failedPayments.Length);
+                await Parallel.ForEachAsync(failedPayments, ct, async (payment, ct) =>
+                {
+                    try
+                    {
+                        await paymentRepository.Manage(new CancelPaymentRequest { PaymentId = payment.Id, Reason = payment.FailureReason });
+                        await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
                         {
-                            logger.LogError(failedPayment.Error, $"Failed to issue payment {failedPayment.Id}: {failedPayment.Error?.Message}");
-                            var payment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest { ById = failedPayment.Id })).Items
-                                .Cast<InteracSupportPayment>()
-                                .SingleOrDefault();
-                            await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
+                            try
                             {
                                 await supportRepository.Manage(new SubmitSupportForReviewCommand { SupportId = supportId });
-                            });
-                            await paymentRepository.Manage(new CancelPaymentRequest { PaymentId = failedPayment.Id, Reason = failedPayment.Error.Message });
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.LogError(ex, $"Failed to cancel payment {failedPayment.Id} after a failure to issue: {ex.Message}");
-                        }
-                        break;
+                            }
+                            catch (Exception e)
+                            {
+                                logger.LogError(e, "Payment {0}, support {1}: failed to submit for review", payment.Id, supportId);
+                            }
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "Failed to cancel payment {0}", payment.Id);
+                    }
+                });
+            }
 
-                    default:
-                        // payments are kept in the queue
-                        logger.LogError(failedPayment.Error, $"Failed to issue payment {failedPayment.Id}: {failedPayment.Error?.Message}");
-                        break;
+            var issuedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+            {
+                ByStatus = PaymentStatus.Issued,
+                ByQueueStatus = QueueStatus.Pending,
+            })).Items.Cast<InteracSupportPayment>().ToArray();
+
+            logger.LogInformation("Found {0} issued payments", issuedPayments.Length);
+            await Parallel.ForEachAsync(issuedPayments, ct, async (payment, ct) =>
+            {
+                try
+                {
+                    await supportRepository.Manage(new ChangeSupportStatusCommand
+                    {
+                        Items = payment.LinkedSupportIds.Select(s => new SupportStatusTransition { SupportId = s, ToStatus = Resources.Supports.SupportStatus.Issued })
+                    });
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "payment {0}: failed to transition related supports to status Issued", payment.Id);
+                }
+            });
+
+            var clearedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+            {
+                ByStatus = PaymentStatus.Cleared,
+                ByQueueStatus = QueueStatus.Pending,
+            })).Items.Cast<InteracSupportPayment>().ToArray();
+
+            logger.LogInformation("Found {0} cleared payments", clearedPayments.Length);
+            await Parallel.ForEachAsync(clearedPayments, ct, async (payment, ct) =>
+            {
+                try
+                {
+                    await paymentRepository.Manage(new MarkPaymentAsPaidRequest { PaymentId = payment.Id });
+                    await supportRepository.Manage(new ChangeSupportStatusCommand
+                    {
+                        Items = payment.LinkedSupportIds.Select(s => new SupportStatusTransition { SupportId = s, ToStatus = Resources.Supports.SupportStatus.Paid })
+                    });
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "payment{0}: failed to mark as paid", payment.Id);
                 }
             });
         }
@@ -855,33 +903,33 @@ namespace EMBC.ESS.Managers.Events
                 InStatus = CasPaymentStatus.Pending
             })).Payments.ToArray();
 
-            await Parallel.ForEachAsync(issuedPayments, ct, async (payment, ct) =>
+            await Parallel.ForEachAsync(issuedPayments, ct, async (paymentDetails, ct) =>
              {
                  try
                  {
-                     await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = payment });
+                     await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = paymentDetails });
                  }
                  catch (Exception e)
                  {
-                     logger.LogError(e, $"Failed to reconcile issued payment {payment.PaymentId}: {e.Message}");
+                     logger.LogError(e, $"Failed to reconcile issued payment {paymentDetails.PaymentId}: {e.Message}");
                  }
              });
 
-            var paidPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
+            var clearedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
             {
                 ChangedFrom = lastPollDate,
-                InStatus = CasPaymentStatus.Paid
+                InStatus = CasPaymentStatus.Cleared
             })).Payments.ToArray();
 
-            await Parallel.ForEachAsync(paidPayments, ct, async (payment, ct) =>
+            await Parallel.ForEachAsync(clearedPayments, ct, async (paymentDetails, ct) =>
             {
                 try
                 {
-                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = payment });
+                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = paymentDetails });
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, $"Failed to  reconcile paid  payment {payment.PaymentId}: {e.Message}");
+                    logger.LogError(e, $"Failed to reconcile cleared payment {paymentDetails.PaymentId}: {e.Message}");
                 }
             });
 
@@ -891,15 +939,15 @@ namespace EMBC.ESS.Managers.Events
                 InStatus = CasPaymentStatus.Failed
             })).Payments.ToArray();
 
-            await Parallel.ForEachAsync(failedPayments, ct, async (payment, ct) =>
+            await Parallel.ForEachAsync(failedPayments, ct, async (paymentDetails, ct) =>
             {
                 try
                 {
-                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = payment });
+                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = paymentDetails });
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, $"Failed to reconcile failed payment {payment.PaymentId}: {e.Message}");
+                    logger.LogError(e, $"Failed to reconcile failed payment {paymentDetails.PaymentId}: {e.Message}");
                 }
             });
 
@@ -907,9 +955,9 @@ namespace EMBC.ESS.Managers.Events
             var nextPollDate = DateTime.SpecifyKind(DateTime.UtcNow.AddMinutes(-5), DateTimeKind.Utc);
             await cache.Set(paymentPollingCacheKey, nextPollDate, TimeSpan.FromDays(7), ct);
 
-            logger.LogInformation("Reconciled {0} issued payments, {1} failed payments, {2} paid payments; set last polling date to {3} UTC",
+            logger.LogInformation("Reconciled {0} issued payments, {1} failed payments, {2} cleared payments; set last polling date to {3} UTC",
                 issuedPayments.Length,
-                paidPayments.Length,
+                clearedPayments.Length,
                 failedPayments.Length,
                 nextPollDate);
         }
