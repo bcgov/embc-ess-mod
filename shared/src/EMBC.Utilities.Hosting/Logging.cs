@@ -36,7 +36,7 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithClientIp()
                 .Enrich.WithSpan()
                 .WriteTo.Console(outputTemplate: LogOutputTemplate)
-            ;
+                ;
 
             var splunkUrl = hostBuilderContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
             var splunkToken = hostBuilderContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
@@ -103,7 +103,6 @@ namespace EMBC.Utilities.Hosting
                     .AddGrpcClientInstrumentation()
                     .AddRedisInstrumentation();
             });
-            //services.AddSingleton(TracerProvider.Default.GetTracer(appName));
 
             return services;
         }

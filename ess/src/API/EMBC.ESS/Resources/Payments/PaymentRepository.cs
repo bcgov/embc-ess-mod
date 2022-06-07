@@ -66,7 +66,7 @@ namespace EMBC.ESS.Resources.Payments
                 // link the payment to the related supports
                 foreach (var supportId in ip.LinkedSupportIds)
                 {
-                    var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == supportId)).ExecuteAsync(ct)).SingleOrDefault();
+                    var support = await ctx.era_evacueesupports.Where(s => s.era_name == supportId).SingleOrDefaultAsync();
                     if (support == null) throw new InvalidOperationException($"support id {supportId} not found");
                     ctx.AddLink(support, nameof(era_evacueesupport.era_era_evacueesupport_era_etransfertransacti), payment);
                     // set the flag on support so it would not be processed again
