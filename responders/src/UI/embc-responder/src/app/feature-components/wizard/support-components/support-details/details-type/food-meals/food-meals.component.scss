@@ -12,3 +12,11 @@
   color: red;
   font-style: italic;
 }
+
+.select-error::ng-deep .mat-form-field-outline {
+  border: red 1px solid;
+}
+
+.error-message {
+  margin-bottom: 10px;
+}
