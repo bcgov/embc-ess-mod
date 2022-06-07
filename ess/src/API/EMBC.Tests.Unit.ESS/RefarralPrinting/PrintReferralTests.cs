@@ -76,7 +76,7 @@ namespace EMBC.Tests.Unit.ESS.Prints
                    var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
                    var summaryItems = GetSummaryFromReferrals(referrals);
                    var title = $"supportstest-{i}";
-                   await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
+                   (await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title)).ShouldNotBeEmpty();
                });
         }
 
