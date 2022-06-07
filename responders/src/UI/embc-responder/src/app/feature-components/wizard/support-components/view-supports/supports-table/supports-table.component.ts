@@ -78,15 +78,17 @@ export class SupportsTableComponent
         switch (property) {
           case 'supplierName':
             if (item.method === SupportMethod.ETransfer) {
-              return item.method;
+              return item.method.toLowerCase();
             } else if (
               item.subCategory === SupportSubCategory.Lodging_Billeting
             ) {
-              return (item as LodgingBilletingSupport).hostName;
+              return (item as LodgingBilletingSupport).hostName.toLowerCase();
             } else if (item.subCategory === SupportSubCategory.Lodging_Group) {
-              return (item as LodgingGroupSupport).facilityName;
+              return (item as LodgingGroupSupport).facilityName.toLowerCase();
             } else {
-              return (item.supportDelivery as Referral).supplierName;
+              return (
+                item.supportDelivery as Referral
+              ).supplierName.toLowerCase();
             }
           default:
             return item[property];
