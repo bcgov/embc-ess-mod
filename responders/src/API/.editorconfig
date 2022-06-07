@@ -66,7 +66,7 @@ csharp_style_var_for_built_in_types = true:silent
 csharp_style_var_when_type_is_apparent = true:silent
 csharp_style_var_elsewhere = true:silent
 # Expression-bodied members
-csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_methods = false:suggestion
 csharp_style_expression_bodied_constructors = false:silent
 csharp_style_expression_bodied_operators = false:silent
 csharp_style_expression_bodied_properties = true:silent
@@ -242,6 +242,9 @@ dotnet_diagnostic.SA1633.severity = silent
 
 # S101: Types should be named in PascalCase
 dotnet_diagnostic.S101.severity = suggestion
+
+# IDE0022: Use block body for methods
+dotnet_diagnostic.IDE0022.severity = suggestion
 
 [*.vb]
 # Modifier preferences

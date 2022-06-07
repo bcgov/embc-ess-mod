@@ -381,4 +381,25 @@ export class ExistingSupportDetailsComponent implements OnInit {
       return 'Mobile';
     }
   }
+
+  /**
+   * Returns the full name of the igiven householmember ID
+   *
+   * @param memberId the member ID
+   * @returns the Full LAST NAME, First Name of the given household member ID
+   */
+  getMemberFullName(memberId: string): string {
+    const lastName =
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.find(
+        (member) =>
+          member.id === memberId || member.linkedRegistrantId === memberId
+      ).lastName;
+    const firstName =
+      this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.find(
+        (member) =>
+          member.id === memberId || member.linkedRegistrantId === memberId
+      ).firstName;
+
+    return firstName.toLocaleUpperCase() + ' ' + lastName.toUpperCase();
+  }
 }
