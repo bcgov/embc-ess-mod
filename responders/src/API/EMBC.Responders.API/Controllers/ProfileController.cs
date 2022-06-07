@@ -53,25 +53,19 @@ namespace EMBC.Responders.API.Controllers
 
             if (currentMember == null)
             {
-                diagnosticsContext.Set("error", $"Login failure userName {userName}, user ID {userId}, sourceSystem: {sourceSystem}: {$"User {userName} not found"}");
+                diagnosticsContext.Set("error", $"User {userId} ({userName}@{sourceSystem}) not found");
                 return Forbid();
             }
             if (currentMember.ExternalUserId != null && currentMember.ExternalUserId != userId)
             {
-                diagnosticsContext.Set("error", $"User {userName} has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
-                return Forbid();
-            }
-            if (currentMember.ExternalUserId == null && currentMember.LastSuccessfulLogin.HasValue)
-            {
-                diagnosticsContext.Set("error", $"User {userName} has no external id but somehow logged in already");
-            }
-            if (!currentMember.LastSuccessfulLogin.HasValue || string.IsNullOrEmpty(currentMember.ExternalUserId))
-            {
-                currentMember.ExternalUserId = userId;
+                diagnosticsContext.Set("error", $"User {userName}@{sourceSystem} already has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
                 return Forbid();
             }
 
+            currentMember.ExternalUserId = userId;
             currentMember.LastSuccessfulLogin = DateTime.UtcNow;
+
+            diagnosticsContext.Set("login", $"User {userId} ({userName}@{sourceSystem}) logged in successfully");
 
             // Update current user
             await messagingClient.Send(new SaveTeamMemberCommand
