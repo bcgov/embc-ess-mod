@@ -309,7 +309,9 @@ export class EssfileDashboardComponent implements OnInit {
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.primaryAddress.postalCode !== '' &&
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-        ?.primaryAddress.postalCode !== undefined
+        ?.primaryAddress.postalCode !== undefined &&
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
+        ?.primaryAddress?.stateProvince?.code === 'BC'
     );
   }
 }
