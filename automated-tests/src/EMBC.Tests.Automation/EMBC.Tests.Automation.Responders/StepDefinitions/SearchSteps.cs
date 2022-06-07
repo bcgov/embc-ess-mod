@@ -29,7 +29,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             searchEvacuee.SelectGovernmentID();
 
             //fill evacuee information search
-            searchEvacuee.FillOnlineSearchEvacueeForm("Evac", "Eight", "11191999");
+            searchEvacuee.FillOnlineSearchEvacueeForm("Evac", "Thirtythree", "04052002");
         }
 
         [StepDefinition(@"I search for a paper based evacuee")]
@@ -50,7 +50,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
         public void EditSelectedEssFile()
         {
             //Select an ESS File
-            essFileDashboard.SelectESSFileFromSearch(3);
+            essFileDashboard.SelectESSFileFromSearch(2);
 
             //Click on Edit ESS File Button
             essFileDashboard.ESSFileDashEditButton();
