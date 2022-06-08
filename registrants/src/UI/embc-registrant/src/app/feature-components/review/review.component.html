@@ -206,7 +206,28 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3">City:</div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code === 'CAN' ||
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code === 'USA'
+            "
+          >
+            City:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code !== 'USA'
+            "
+          >
+            City/ Jurisdiction:
+          </div>
           <div
             class="col-md-3"
             *ngIf="
@@ -233,7 +254,35 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3">Postal Code:</div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code === 'CAN'
+            "
+          >
+            Postal Code:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code === 'USA'
+            "
+          >
+            Zip Code:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code !== 'USA'
+            "
+          >
+            Postal/ Zip Code:
+          </div>
           <div class="col-md-3">
             {{
               (formCreationService.addressForm$ | async)?.value?.address
@@ -242,7 +291,25 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3">Province:</div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code === 'CAN'
+            "
+          >
+            Province:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.address
+                ?.country?.code === 'USA'
+            "
+          >
+            State:
+          </div>
+
           <div class="col-md-3">
             {{
               (formCreationService.addressForm$ | async)?.value?.address
@@ -300,7 +367,28 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3">City:</div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code === 'CAN' ||
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code === 'USA'
+            "
+          >
+            City:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code !== 'USA'
+            "
+          >
+            City/ Jurisdiction:
+          </div>
           <div
             class="col-md-3"
             *ngIf="
@@ -327,7 +415,35 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3">Postal Code:</div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code === 'CAN'
+            "
+          >
+            Postal Code:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code === 'USA'
+            "
+          >
+            Zip Code:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code !== 'USA'
+            "
+          >
+            Postal/ Zip Code:
+          </div>
           <div class="col-md-3">
             {{
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
@@ -336,7 +452,24 @@
           </div>
         </div>
         <div class="row info-detail">
-          <div class="col-md-3">Province:</div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code === 'CAN'
+            "
+          >
+            Province:
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress
+                ?.country?.code === 'USA'
+            "
+          >
+            State:
+          </div>
           <div class="col-md-3">
             {{
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
