@@ -156,7 +156,7 @@ namespace EMBC.ESS.Resources.Supports
             var changesSupportIds = new List<string>();
             foreach (var item in cmd.Items)
             {
-                var support = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s => s.era_name == item.SupportId)).GetAllPagesAsync()).SingleOrDefault();
+                var support = await ctx.era_evacueesupports.Where(s => s.era_name == item.SupportId).SingleOrDefaultAsync(ct);
                 if (support == null) throw new InvalidOperationException($"Support {item.SupportId} not found, can't update its status");
                 SetSupportStatus(ctx, support, item.ToStatus, item.Reason);
                 ctx.UpdateObject(support);

@@ -859,7 +859,7 @@ namespace EMBC.ESS.Managers.Events
                     await paymentRepository.Manage(new MarkPaymentAsIssuedRequest { PaymentId = payment.Id });
                     await supportRepository.Manage(new ChangeSupportStatusCommand
                     {
-                        Items = payment.LinkedSupportIds.Select(s => new SupportStatusTransition { SupportId = s, ToStatus = Resources.Supports.SupportStatus.Issued })
+                        Items = payment.LinkedSupportIds.Select(s => new SupportStatusTransition { SupportId = s, ToStatus = Resources.Supports.SupportStatus.Issued }).ToArray()
                     });
                 }
                 catch (Exception e)
@@ -882,7 +882,7 @@ namespace EMBC.ESS.Managers.Events
                     await paymentRepository.Manage(new MarkPaymentAsPaidRequest { PaymentId = payment.Id });
                     await supportRepository.Manage(new ChangeSupportStatusCommand
                     {
-                        Items = payment.LinkedSupportIds.Select(s => new SupportStatusTransition { SupportId = s, ToStatus = Resources.Supports.SupportStatus.Paid })
+                        Items = payment.LinkedSupportIds.Select(s => new SupportStatusTransition { SupportId = s, ToStatus = Resources.Supports.SupportStatus.Paid }).ToArray()
                     });
                 }
                 catch (Exception e)
