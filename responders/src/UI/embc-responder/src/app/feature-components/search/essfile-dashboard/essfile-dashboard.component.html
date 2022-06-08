@@ -65,7 +65,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <span class="field-label">Restriction Status:</span>
+        <span class="field-label">Restriction Status: </span>
         <span
           [ngClass]="{
             'not-restricted-field': !essFile?.isRestricted,
@@ -113,13 +113,13 @@
     <div class="row">
       <div class="col-md-12">
         <div *ngIf="essFile?.task?.taskNumber; else noTask">
-          <span class="field-label">Task Start Date:</span>
+          <span class="field-label">Task Start Date: </span>
           <span *ngIf="essFile?.task" class="bold">{{
             essFile?.task?.from | date: 'dd-MMM-yyyy'
           }}</span>
         </div>
         <ng-template #noTask>
-          <span class="field-label">Task Start Date:</span>
+          <span class="field-label">Task Start Date: </span>
           <span class="bold"> n/a</span>
         </ng-template>
       </div>
@@ -128,7 +128,7 @@
     <div class="row">
       <div class="col-md-12">
         <div *ngIf="essFile?.task?.taskNumber; else noTask">
-          <span class="field-label">Task End Date:</span>
+          <span class="field-label">Task End Date: </span>
           <span
             [ngClass]="{
               'complete-task-date': essFile?.status === 'Completed',
@@ -138,7 +138,7 @@
           >
         </div>
         <ng-template #noTask>
-          <span class="field-label">Task End Date:</span>
+          <span class="field-label">Task End Date: </span>
           <span class="bold"> n/a</span>
         </ng-template>
       </div>
