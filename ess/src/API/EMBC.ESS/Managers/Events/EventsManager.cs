@@ -62,7 +62,7 @@ namespace EMBC.ESS.Managers.Events
         public EventsManager(
             ILogger<EventsManager> logger,
             IMapper mapper,
-            IEvacueesRepository contactRepository,
+            IEvacueesRepository evacueesRepository,
             IInvitationRepository invitationRepository,
             ITemplateProviderResolver templateProviderResolver,
             IEvacuationRepository evacuationRepository,
@@ -85,7 +85,7 @@ namespace EMBC.ESS.Managers.Events
         {
             this.logger = logger;
             this.mapper = mapper;
-            this.evacueesRepository = contactRepository;
+            this.evacueesRepository = evacueesRepository;
             this.invitationRepository = invitationRepository;
             this.templateProviderResolver = templateProviderResolver;
             this.evacuationRepository = evacuationRepository;
@@ -105,25 +105,25 @@ namespace EMBC.ESS.Managers.Events
             this.paymentRepository = paymentRepository;
             this.cache = cache;
             this.env = env;
-            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, evacueesRepository, paymentRepository);
+            evacuationFileLoader = new EvacuationFileLoader(mapper, teamRepository, taskRepository, supplierRepository, supportRepository, this.evacueesRepository, paymentRepository);
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
         {
             var file = mapper.Map<Resources.Evacuations.EvacuationFile>(cmd.File);
-            var contact = mapper.Map<Evacuee>(cmd.SubmitterProfile);
+            var evacuee = mapper.Map<Evacuee>(cmd.SubmitterProfile);
 
-            file.PrimaryRegistrantId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact })).EvacueeId;
+            file.PrimaryRegistrantId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee })).EvacueeId;
             file.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = file.PrimaryRegistrantId;
 
             var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
-            if (!string.IsNullOrEmpty(contact.Email))
+            if (!string.IsNullOrEmpty(evacuee.Email))
             {
                 await SendEmailNotification(
                     SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
-                    email: contact.Email,
-                    name: $"{contact.LastName}, {contact.FirstName}",
+                    email: evacuee.Email,
+                    name: $"{evacuee.LastName}, {evacuee.FirstName}",
                     tokens: new[] { KeyValuePair.Create("fileNumber", caseId) });
             }
 
@@ -134,10 +134,10 @@ namespace EMBC.ESS.Managers.Events
         {
             var file = mapper.Map<Resources.Evacuations.EvacuationFile>(cmd.File);
 
-            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId, UserId = file.PrimaryRegistrantUserId })).Items.SingleOrDefault();
+            var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId, UserId = file.PrimaryRegistrantUserId })).Items.SingleOrDefault();
 
-            if (contact == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
-            file.PrimaryRegistrantId = contact.Id;
+            if (evacuee == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
+            file.PrimaryRegistrantId = evacuee.Id;
 
             if (!string.IsNullOrEmpty(file.Id))
             {
@@ -150,13 +150,13 @@ namespace EMBC.ESS.Managers.Events
 
             var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
-            if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
+            if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(evacuee.Email))
             {
                 //notify registrant of the new file and has email
                 await SendEmailNotification(
                     SubmissionTemplateType.NewEvacuationFileSubmission,
-                    email: contact.Email,
-                    name: $"{contact.LastName}, {contact.FirstName}",
+                    email: evacuee.Email,
+                    name: $"{evacuee.LastName}, {evacuee.FirstName}",
                     tokens: new[] { KeyValuePair.Create("fileNumber", caseId) });
             }
 
@@ -165,15 +165,15 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
-            var contact = mapper.Map<Evacuee>(cmd.Profile);
-            var result = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact });
+            var evacuee = mapper.Map<Evacuee>(cmd.Profile);
+            var result = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee });
 
-            if (string.IsNullOrEmpty(cmd.Profile.Id) && !string.IsNullOrEmpty(contact.Email))
+            if (string.IsNullOrEmpty(cmd.Profile.Id) && !string.IsNullOrEmpty(evacuee.Email))
             {
                 await SendEmailNotification(
                     SubmissionTemplateType.NewProfileRegistration,
-                    email: contact.Email,
-                    name: $"{contact.LastName}, {contact.FirstName}",
+                    email: evacuee.Email,
+                    name: $"{evacuee.LastName}, {evacuee.FirstName}",
                     tokens: Array.Empty<KeyValuePair<string, string>>());
             }
 
@@ -199,10 +199,10 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
         {
-            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
-            if (contact == null) throw new NotFoundException($"Could not find existing Registrant with id {cmd.RegistrantId}", cmd.RegistrantId);
-            contact.Verified = cmd.Verified;
-            var res = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = contact });
+            var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = cmd.RegistrantId })).Items.SingleOrDefault();
+            if (evacuee == null) throw new NotFoundException($"Could not find existing Registrant with id {cmd.RegistrantId}", cmd.RegistrantId);
+            evacuee.Verified = cmd.Verified;
+            var res = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee });
             return res.EvacueeId;
         }
 
@@ -225,13 +225,13 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<RegistrantsQueryResponse> Handle(RegistrantsQuery query)
         {
-            var contacts = (await evacueesRepository.Query(new EvacueeQuery
+            var evacuees = (await evacueesRepository.Query(new EvacueeQuery
             {
                 EvacueeId = query.Id,
                 UserId = query.UserId
             })).Items;
 
-            var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
+            var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(evacuees);
 
             return new RegistrantsQueryResponse { Items = registrants };
         }
@@ -354,12 +354,12 @@ namespace EMBC.ESS.Managers.Events
 
         public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
         {
-            var contact = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = query.RegistrantId, MaskSecurityAnswers = false })).Items.FirstOrDefault();
+            var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = query.RegistrantId, MaskSecurityAnswers = false })).Items.FirstOrDefault();
 
-            if (contact == null) throw new NotFoundException($"registrant {query.RegistrantId} not found", query.RegistrantId);
+            if (evacuee == null) throw new NotFoundException($"registrant {query.RegistrantId} not found", query.RegistrantId);
 
             var numberOfCorrectAnswers = query.Answers
-                .Select(a => contact.SecurityQuestions.Any(q => a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase) && a.Question.Equals(q.Question, StringComparison.OrdinalIgnoreCase)))
+                .Select(a => evacuee.SecurityQuestions.Any(q => a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase) && a.Question.Equals(q.Question, StringComparison.OrdinalIgnoreCase)))
                 .Count(a => a);
             return new VerifySecurityQuestionsResponse { NumberOfCorrectAnswers = numberOfCorrectAnswers };
         }
@@ -680,16 +680,16 @@ namespace EMBC.ESS.Managers.Events
             var evacueeWithUserId = (await evacueesRepository.Query(new EvacueeQuery { UserId = cmd.LoggedInUserId })).Items.SingleOrDefault();
             if (evacueeWithUserId != null) throw new BusinessLogicException($"registrant {evacueeWithUserId.Id} is already associated with user id {evacueeWithUserId.UserId}");
 
-            // associate the contact with the user id and mark as verified and authenticated
+            // associate the evacauee with the user id and mark as verified and authenticated
             evacuee.UserId = cmd.LoggedInUserId;
             evacuee.Authenticated = true;
             evacuee.Verified = true;
-            var contactId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee })).EvacueeId;
+            var evacueeId = (await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee })).EvacueeId;
 
             // mark invite as used
             await invitationRepository.Manage(new CompleteInvitation { InviteId = invite.InviteId });
 
-            return contactId;
+            return evacueeId;
         }
 
         public async Task<SearchSupportsQueryResponse> Handle(Shared.Contracts.Events.SearchSupportsQuery query)
