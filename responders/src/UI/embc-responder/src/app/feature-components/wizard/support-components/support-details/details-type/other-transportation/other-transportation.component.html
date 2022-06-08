@@ -56,8 +56,10 @@
         >
         <mat-error
           *ngIf="
-            referralFormControl?.totalAmount.invalid &&
-            referralFormControl?.totalAmount.hasError('pattern')
+            (referralFormControl?.totalAmount.invalid &&
+              referralFormControl?.totalAmount.hasError('pattern')) ||
+            (referralFormControl?.totalAmount.invalid &&
+              referralFormControl?.totalAmount.hasError('totalZeroError'))
           "
         >
           Invalid amount</mat-error

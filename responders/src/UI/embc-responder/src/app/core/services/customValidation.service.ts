@@ -374,4 +374,18 @@ export class CustomValidationService {
       }
     };
   }
+
+  /**
+   * Checks if the total amount is > 0
+   */
+  totalZeroValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control || control.value !== '') {
+        const totalAmount = +control.value;
+        if (totalAmount <= 0) {
+          return { totalZeroError: true };
+        }
+      }
+    };
+  }
 }
