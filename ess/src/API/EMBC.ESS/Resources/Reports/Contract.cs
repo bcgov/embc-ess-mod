@@ -258,6 +258,9 @@ namespace EMBC.ESS.Resources.Reports
         [Display(Name = "Sub Support Type")]
         public string SubSupportType { get; set; }
 
+        [Display(Name = "Support Delivery Type")]
+        public string SupportDeliveryType { get; set; }
+
         [Display(Name = "Valid From Date")]
         public string ValidFromDate { get; set; }
 
@@ -373,6 +376,12 @@ namespace EMBC.ESS.Resources.Reports
         Transportation_Taxi = 174360007,
         Transportation_Other = 174360008,
 #pragma warning restore CA1707 // Identifiers should not contain underscores
+    }
+
+    public enum SupportMethod
+    {
+        Referral = 174360000,
+        ETransfer = 174360001
     }
 
 #pragma warning restore CA1008 // Enums should have zero value
