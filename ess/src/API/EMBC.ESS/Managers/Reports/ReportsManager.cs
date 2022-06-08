@@ -65,6 +65,8 @@ namespace EMBC.ESS.Managers.Reports
                 TaskNumber = query.TaskNumber,
                 EvacuatedFrom = query.EvacuatedFrom,
                 EvacuatedTo = query.EvacuatedTo,
+                StartDate = query.From,
+                EndDate = query.To,
             };
 
             var supports = (await reportRepository.QuerySupport(supportQuery)).Items;
