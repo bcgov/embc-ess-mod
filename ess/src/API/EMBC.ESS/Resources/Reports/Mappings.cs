@@ -156,6 +156,25 @@ namespace EMBC.ESS.Resources.Reports
                 return res;
             };
 
+            Func<era_evacueesupport?, string> resolveSupportDeliveryType = s =>
+            {
+                var res = string.Empty;
+                switch (s.era_supportdeliverytype)
+                {
+                    case (int)SupportMethod.ETransfer:
+                        res = "e-Transfer";
+                        break;
+
+                    case (int)SupportMethod.Referral:
+                        res = string.IsNullOrEmpty(s.era_manualsupport) ? "Digital Referral" : "Paper Referral";
+                        break;
+
+                    default:
+                        break;
+                }
+                return res;
+            };
+
             CreateMap<era_evacueesupport, Support>()
                 .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_paperbasedessfile ?? s.era_EvacuationFileId.era_name))
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.era_EvacuationFileId == null ? null : s.era_EvacuationFileId.era_TaskId == null ? null : s.era_EvacuationFileId.era_TaskId.era_name))
@@ -175,6 +194,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.SupportNumber, opts => opts.MapFrom(s => s.era_manualsupport ?? s.era_name))
                 .ForMember(d => d.SupportType, opts => opts.MapFrom(s => resolveSupportType(s.era_supporttype)))
                 .ForMember(d => d.SubSupportType, opts => opts.MapFrom(s => resolveSupportSubType(s.era_supporttype)))
+                .ForMember(d => d.SupportDeliveryType, opts => opts.MapFrom(s => resolveSupportDeliveryType(s)))
                 .ForMember(d => d.ValidFromDate, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime.ToPST().ToString("yyyy/MM/dd") : null))
                 .ForMember(d => d.ValidFromTime, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime.ToPST().ToString("hh:mm tt") : null))
                 .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.era_validfrom.HasValue && s.era_validto.HasValue ? (s.era_validto.Value.DateTime - s.era_validfrom.Value.DateTime).Days : 0))
