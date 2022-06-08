@@ -33,6 +33,10 @@ table {
   color: #fff;
 }
 
+::ng-deep .mat-sort-header-container {
+  border: 0px !important;
+}
+
 .info-image img:last-child {
   display: none;
   }
