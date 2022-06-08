@@ -25,6 +25,7 @@ export interface Support {
   subCategory?: SupportSubCategory;
   supplierAddress?: null | Address;
   supplierId?: null | string;
+  supplierLegalName?: null | string;
   supplierName?: null | string;
   to?: string;
 }
