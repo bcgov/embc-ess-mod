@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
@@ -15,6 +16,8 @@ namespace EMBC.ESS.Resources.Evacuees
         private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
 
+        private CancellationToken GetCancellationToken() => new CancellationTokenSource().Token;
+
         public EvacueesRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
             essContext = essContextFactory.Create();
@@ -25,45 +28,45 @@ namespace EMBC.ESS.Resources.Evacuees
         public async Task<ManageEvacueeCommandResult> Manage(ManageEvacueeCommand cmd) =>
             cmd switch
             {
-                SaveEvacuee command => await Handle(command),
-                DeleteEvacuee command => await Handle(command),
+                SaveEvacuee command => await Handle(command, GetCancellationToken()),
+                DeleteEvacuee command => await Handle(command, GetCancellationToken()),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
 
         public async Task<EvacueeQueryResult> Query(EvacueeQuery query) =>
             query switch
             {
-                EvacueeQuery q => await Handle(q),
+                EvacueeQuery q => await Handle(q, GetCancellationToken()),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
 
         public async Task<ManageInvitationCommandResult> Manage(ManageInvitationCommand cmd) =>
             cmd switch
             {
-                CreateNewEmailInvitation command => await Handle(command),
-                CompleteInvitation command => await Handle(command),
+                CreateNewEmailInvitation command => await Handle(command, GetCancellationToken()),
+                CompleteInvitation command => await Handle(command, GetCancellationToken()),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
 
         public async Task<InvitationQueryResult> Query(InvitationQuery query) =>
             query switch
             {
-                EmailInvitationQuery q => await Handle(q),
+                EmailInvitationQuery q => await Handle(q, GetCancellationToken()),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
 
-        private async Task<ManageEvacueeCommandResult> Handle(SaveEvacuee cmd)
+        private async Task<ManageEvacueeCommandResult> Handle(SaveEvacuee cmd, CancellationToken ct)
         {
             if (cmd.Evacuee.SecurityQuestions.Count() > 3) throw new ArgumentException($"Registrant can have a max of 3 Security Questions");
             var contact = mapper.Map<contact>(cmd.Evacuee);
-            var existingContact = contact.contactid.HasValue
+            var existingContact = await (contact.contactid.HasValue
                 ? essContext.contacts
                     .Expand(c => c.era_Country)
                     .Expand(c => c.era_MailingCountry)
                     .Expand(c => c.era_ProvinceState)
                     .Expand(c => c.era_MailingProvinceState)
-                    .Where(c => c.contactid == contact.contactid.Value).SingleOrDefault()
-                : GetContactIdForBcscId(contact.era_bcservicescardid);
+                    .Where(c => c.contactid == contact.contactid.Value).SingleOrDefaultAsync(ct)
+                : GetContactIdForBcscId(contact.era_bcservicescardid, ct));
 
             essContext.DetachAll();
 
@@ -87,27 +90,27 @@ namespace EMBC.ESS.Resources.Evacuees
             essContext.SetLink(contact, nameof(contact.era_MailingProvinceState), essContext.LookupStateProvinceByCode(cmd.Evacuee.MailingAddress.StateProvince));
             essContext.SetLink(contact, nameof(contact.era_MailingCity), essContext.LookupJurisdictionByCode(cmd.Evacuee.MailingAddress.Community));
 
-            var results = await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
 
             essContext.DetachAll();
 
             return new ManageEvacueeCommandResult { EvacueeId = contact.contactid.ToString() };
         }
 
-        private contact GetContactIdForBcscId(string bcscId) =>
+        private async Task<contact> GetContactIdForBcscId(string bcscId, CancellationToken ct) =>
             string.IsNullOrEmpty(bcscId)
                 ? null
-                : essContext.contacts
+                : await essContext.contacts
                     .Where(c => c.era_bcservicescardid == bcscId)
-                    .SingleOrDefault();
+                    .SingleOrDefaultAsync(ct);
 
-        private async Task<ManageEvacueeCommandResult> Handle(DeleteEvacuee cmd)
+        private async Task<ManageEvacueeCommandResult> Handle(DeleteEvacuee cmd, CancellationToken ct)
         {
-            var contact = essContext.contacts.Where(c => c.contactid == Guid.Parse(cmd.Id)).SingleOrDefault();
+            var contact = await essContext.contacts.Where(c => c.contactid == Guid.Parse(cmd.Id)).SingleOrDefaultAsync(ct);
             if (contact != null)
             {
                 essContext.DeleteObject(contact);
-                await essContext.SaveChangesAsync();
+                await essContext.SaveChangesAsync(ct);
             }
 
             essContext.DetachAll();
@@ -115,7 +118,7 @@ namespace EMBC.ESS.Resources.Evacuees
             return new ManageEvacueeCommandResult { EvacueeId = cmd.Id };
         }
 
-        private async Task<EvacueeQueryResult> Handle(EvacueeQuery query)
+        private async Task<EvacueeQueryResult> Handle(EvacueeQuery query, CancellationToken ct)
         {
             if (query.UserId == null && query.EvacueeId == null) throw new ArgumentNullException($"Must query registrants by user id or contact id");
 
@@ -133,14 +136,14 @@ namespace EMBC.ESS.Resources.Evacuees
             if (!string.IsNullOrEmpty(query.EvacueeId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.EvacueeId));
             if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
 
-            var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
+            var contacts = await contactQuery.GetAllPagesAsync(ct);
 
             return new EvacueeQueryResult { Items = mapper.Map<IEnumerable<Evacuee>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
         }
 
-        private async Task<ManageInvitationCommandResult> Handle(CreateNewEmailInvitation cmd)
+        private async Task<ManageInvitationCommandResult> Handle(CreateNewEmailInvitation cmd, CancellationToken ct)
         {
-            var contact = await essContext.contacts.ByKey(Guid.Parse(cmd.EvacueeId)).GetValueAsync();
+            var contact = await essContext.contacts.ByKey(Guid.Parse(cmd.EvacueeId)).GetValueAsync(ct);
             var invitingTeamMember = string.IsNullOrEmpty(cmd.RequestingUserId)
                 ? null
                 : essContext.era_essteamusers.Where(m => m.statecode == (int)EntityState.Active && m.era_essteamuserid == Guid.Parse(cmd.RequestingUserId)).Single();
@@ -148,7 +151,7 @@ namespace EMBC.ESS.Resources.Evacuees
             //deactivate all current invites for this contact
             var currentInvites = await ((DataServiceQuery<era_evacueeemailinvite>)essContext.era_evacueeemailinvites
                 .Where(i => i.statecode == (int)EntityState.Active && i._era_registrant_value == Guid.Parse(cmd.EvacueeId)))
-                .GetAllPagesAsync();
+                .GetAllPagesAsync(ct);
 
             foreach (var currentInvite in currentInvites)
             {
@@ -168,18 +171,18 @@ namespace EMBC.ESS.Resources.Evacuees
             essContext.SetLink(newInvite, nameof(era_evacueeemailinvite.era_Registrant), contact);
             if (invitingTeamMember != null) essContext.SetLink(newInvite, nameof(era_evacueeemailinvite.era_ESSTeamUser), invitingTeamMember);
 
-            await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
 
             essContext.DetachAll();
 
             return new ManageInvitationCommandResult { InviteId = newInvite.era_evacueeemailinviteid.ToString() };
         }
 
-        private async Task<InvitationQueryResult> Handle(EmailInvitationQuery query)
+        private async Task<InvitationQueryResult> Handle(EmailInvitationQuery query, CancellationToken ct)
         {
             var invites = await ((DataServiceQuery<era_evacueeemailinvite>)essContext.era_evacueeemailinvites
                 .Where(i => i.statecode == (int)EntityState.Active && i.era_evacueeemailinviteid == Guid.Parse(query.InviteId)))
-                .GetAllPagesAsync();
+                .GetAllPagesAsync(ct);
 
             essContext.DetachAll();
 
@@ -189,16 +192,16 @@ namespace EMBC.ESS.Resources.Evacuees
             };
         }
 
-        private async Task<ManageInvitationCommandResult> Handle(CompleteInvitation cmd)
+        private async Task<ManageInvitationCommandResult> Handle(CompleteInvitation cmd, CancellationToken ct)
         {
-            var invite = essContext.era_evacueeemailinvites
+            var invite = await essContext.era_evacueeemailinvites
             .Where(i => i.statecode == (int)EntityState.Active && i.era_evacueeemailinviteid == Guid.Parse(cmd.InviteId))
-            .SingleOrDefault();
+            .SingleOrDefaultAsync(ct);
 
             if (invite != null)
             {
                 essContext.DeactivateObject(invite, (int)EmailInviteStatus.Used);
-                await essContext.SaveChangesAsync();
+                await essContext.SaveChangesAsync(ct);
             }
 
             return new ManageInvitationCommandResult { InviteId = cmd.InviteId };
