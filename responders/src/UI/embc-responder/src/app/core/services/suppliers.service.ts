@@ -228,7 +228,6 @@ export class SupplierService {
   claimSupplier(supplierId: string): Observable<Array<SupplierListItem>> {
     return this.suppliersService.suppliersClaimSupplier({ supplierId }).pipe(
       mergeMap((result) => {
-        console.log(result);
         return this.getMainSuppliersList();
       })
     );
@@ -268,7 +267,6 @@ export class SupplierService {
       .suppliersAddSupplierSharedWithTeam({ supplierId, sharedTeamId })
       .pipe(
         mergeMap((result) => {
-          console.log(result);
           return this.getMutualAidSuppliersList();
         })
       );

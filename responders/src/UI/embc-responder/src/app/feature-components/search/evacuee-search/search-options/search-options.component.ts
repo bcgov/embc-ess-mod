@@ -26,7 +26,6 @@ export class SearchOptionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.appBaseService?.appModel?.selectedEssTask);
     this.workflows = this.appBaseService?.appModel?.selectedEssTask?.workflows;
     const enabledWorkflows = this.workflows?.filter((w) => w.enabled);
     if (

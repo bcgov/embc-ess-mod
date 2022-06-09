@@ -37,7 +37,6 @@ export class EssFileNotesComponent implements OnInit, AfterViewInit {
         const state = this.router.getCurrentNavigation().extras.state as {
           notes: Array<Note>;
         };
-        console.log(state.notes);
         this.notesList = state.notes;
       }
     }
