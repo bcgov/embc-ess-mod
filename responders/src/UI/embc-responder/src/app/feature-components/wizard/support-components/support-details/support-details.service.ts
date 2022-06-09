@@ -98,7 +98,11 @@ export class SupportDetailsService {
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
           ?.userTotalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
@@ -147,7 +151,11 @@ export class SupportDetailsService {
       totalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as OtherTransport)
           ?.totalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ]
     });
   }
@@ -202,7 +210,11 @@ export class SupportDetailsService {
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)
           ?.userTotalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
@@ -242,7 +254,11 @@ export class SupportDetailsService {
       userTotalAmount: [
         (this.stepSupportsService?.supportDetails?.referral as Clothing)
           ?.userTotalAmount ?? '',
-        [Validators.required, Validators.pattern(globalConst.currencyPattern)]
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ],
       approverName: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)

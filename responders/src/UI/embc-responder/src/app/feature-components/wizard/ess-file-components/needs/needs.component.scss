@@ -27,6 +27,11 @@ mat-form-field {
   width: 40%;
 }
 
+.break-margin {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
 @media (max-width: 600px) {
   .mat-radio-button ~ .mat-radio-button {
     margin-left: 16px;

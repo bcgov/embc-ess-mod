@@ -94,7 +94,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             var items = new StringBuilder();
             foreach (var summary in summaryItems)
             {
-                summaryBreakCount += 1;
+                summaryBreakCount += summary.IsEtransfer ? 2 : 1;
                 printedCount += 1;
                 var partialViewType = summary.Type;
                 var partialViewDisplayName = partialViewType.GetType()
@@ -119,7 +119,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 var essNumber = summary.EssNumber;
                 items.Append(itemResult);
 
-                if (summaryBreakCount == 3 || printedCount == summaryItems.Count())
+                if (summaryBreakCount >= 3 || printedCount == summaryItems.Count())
                 {
                     summaryBreakCount = 0;
                     handlebars.RegisterTemplate("summaryItemsPartial", items.ToString());

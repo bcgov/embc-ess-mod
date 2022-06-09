@@ -211,6 +211,11 @@ mat-row:nth-child(even) {
   margin-bottom: 20px;
 }
 
+.break-margin {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
 @media (max-width: 1400px) {
   .cell-member-details {
     flex: 0 0 70%;
