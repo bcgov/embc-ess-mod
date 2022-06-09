@@ -34,6 +34,27 @@ export class SupplierService {
   ) {}
 
   /**
+   * Gives an array of Suppliers
+   *
+   * @returns an array of Supplier
+   */
+  getSuppliersList(
+    legalName?: string,
+    gstNumber?: string
+  ): Observable<Array<SupplierListItem>> {
+    return this.suppliersService
+      .suppliersGetSuppliers({
+        legalName,
+        gstNumber
+      })
+      .pipe(
+        map((suppliers: Array<SupplierListItem>) => {
+          return suppliers;
+        })
+      );
+  }
+
+  /**
    * Gives an array of Main Suppliers
    *
    * @returns an array of Main Supplier
@@ -228,7 +249,6 @@ export class SupplierService {
   claimSupplier(supplierId: string): Observable<Array<SupplierListItem>> {
     return this.suppliersService.suppliersClaimSupplier({ supplierId }).pipe(
       mergeMap((result) => {
-        console.log(result);
         return this.getMainSuppliersList();
       })
     );
@@ -268,7 +288,6 @@ export class SupplierService {
       .suppliersAddSupplierSharedWithTeam({ supplierId, sharedTeamId })
       .pipe(
         mergeMap((result) => {
-          console.log(result);
           return this.getMutualAidSuppliersList();
         })
       );

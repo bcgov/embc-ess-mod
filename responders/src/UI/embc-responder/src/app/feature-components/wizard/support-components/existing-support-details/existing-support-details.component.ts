@@ -318,7 +318,6 @@ export class ExistingSupportDetailsComponent implements OnInit {
   }
 
   cancelEtransfer(): void {
-    console.log(this.selectedSupport.method);
     this.dialog
       .open(DialogComponent, {
         data: {

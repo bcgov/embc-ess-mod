@@ -57,7 +57,6 @@ export class ReviewSupportComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.referralService.getDraftSupport());
     this.draftSupports = this.referralService.getDraftSupport();
   }
 

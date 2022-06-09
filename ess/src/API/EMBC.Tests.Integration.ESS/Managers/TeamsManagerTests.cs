@@ -309,11 +309,25 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var searchResults = await manager.Handle(new SuppliersQuery { TeamId = TestData.TeamId });
 
+            foreach (var supplier in searchResults.Items)
+            {
+                supplier.Team.ShouldNotBeNull().Id.ShouldNotBeNull();
+                foreach (var sharedTeam in supplier.SharedWithTeams)
+                {
+                    sharedTeam.Id.ShouldNotBeNull();
+                }
+            }
             var primarySuppliers = searchResults.Items.Where(s => s.Team.Id == TestData.TeamId);
             var mutualAidSuppliers = searchResults.Items.Where(s => s.Team.Id != TestData.TeamId);
 
-            primarySuppliers.ShouldAllBe(s => !s.SharedWithTeams.Any(t => t.Id == TestData.TeamId));
-            mutualAidSuppliers.ShouldAllBe(s => s.SharedWithTeams.Any(t => t.Id == TestData.TeamId));
+            foreach (var supplier in primarySuppliers)
+            {
+                supplier.SharedWithTeams.ShouldAllBe(t => t.Id == TestData.TeamId);
+            }
+            foreach (var supplier in mutualAidSuppliers)
+            {
+                supplier.SharedWithTeams.ShouldAllBe(t => t.Id != TestData.TeamId);
+            }
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]

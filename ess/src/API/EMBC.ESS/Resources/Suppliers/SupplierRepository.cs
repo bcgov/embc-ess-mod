@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Suppliers
 {
@@ -14,6 +14,8 @@ namespace EMBC.ESS.Resources.Suppliers
     {
         private readonly IEssContextFactory essContextFactory;
         private readonly IMapper mapper;
+
+        private CancellationToken GetCancellationToken() => new CancellationTokenSource().Token;
 
         public SupplierRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
@@ -25,29 +27,28 @@ namespace EMBC.ESS.Resources.Suppliers
         {
             return cmd switch
             {
-                SaveSupplier c => await HandleSaveSupplier(c),
+                SaveSupplier c => await HandleSaveSupplier(c, GetCancellationToken()),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
 
         public async Task<SupplierQueryResult> QuerySupplier(SupplierQuery query)
         {
-            return query.GetType().Name switch
+            return query switch
             {
-                nameof(SuppliersByTeamQuery) => await HandleQuery((SuppliersByTeamQuery)query),
-                nameof(SupplierSearchQuery) => await HandleQuery((SupplierSearchQuery)query),
+                SuppliersByTeamQuery q => await HandleQuery(q, GetCancellationToken()),
+                SupplierSearchQuery q => await HandleQuery(q, GetCancellationToken()),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        private async Task<SupplierCommandResult> HandleSaveSupplier(SaveSupplier cmd)
+        private async Task<SupplierCommandResult> HandleSaveSupplier(SaveSupplier cmd, CancellationToken ct)
         {
             var essContext = essContextFactory.Create();
 
             var supplier = mapper.Map<era_supplier>(cmd.Supplier);
             var existingSupplier = supplier.era_supplierid.HasValue
-                ? essContext.era_suppliers
-                    .Where(s => s.era_supplierid == supplier.era_supplierid.Value).SingleOrDefault()
+                ? await essContext.era_suppliers.Where(s => s.era_supplierid == supplier.era_supplierid.Value).SingleOrDefaultAsync(ct)
                     : null;
 
             if (existingSupplier == null)
@@ -59,10 +60,10 @@ namespace EMBC.ESS.Resources.Suppliers
             {
                 RemoveTeamSuppliers(essContext, existingSupplier, supplier);
                 essContext.Detach(existingSupplier);
-                supplier.era_supplierid = existingSupplier.era_supplierid;
-
-                supplier._era_primarycontact_value = existingSupplier._era_primarycontact_value;
                 essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
+
+                supplier.era_supplierid = existingSupplier.era_supplierid;
+                supplier._era_primarycontact_value = existingSupplier._era_primarycontact_value;
                 essContext.UpdateObject(supplier);
             }
 
@@ -77,66 +78,61 @@ namespace EMBC.ESS.Resources.Suppliers
             foreach (var ts in supplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
                 ts.era_active = cmd.Supplier.Status == SupplierStatus.Active;
-                ts.era_isprimarysupplier = cmd.Supplier.Team?.Id != null ? ts._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id) : false;
+                ts.era_isprimarysupplier = cmd.Supplier.Team?.Id != null && ts._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id);
             }
 
             AddTeamSuppliers(essContext, existingSupplier, supplier);
 
-            await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync(ct);
             essContext.DetachAll();
 
             return new SupplierCommandResult { SupplierId = supplier.era_supplierid.ToString() };
         }
 
-        private async Task<SupplierQueryResult> HandleQuery(SuppliersByTeamQuery queryRequest)
+        private async Task<SupplierQueryResult> HandleQuery(SuppliersByTeamQuery queryRequest, CancellationToken ct)
         {
             var essContext = essContextFactory.CreateReadOnly();
 
-            IQueryable<era_essteamsupplier> supplierQuery = essContext.era_essteamsuppliers
+            var supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
-                .Expand(s => s.era_ESSTeamID)
+                //.Expand(s => s.era_ESSTeamID)
                 .Where(s => s.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(queryRequest.TeamId)) supplierQuery = supplierQuery.Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
+            if (queryRequest.ActiveOnly) supplierQuery = supplierQuery.Where(s => s.era_active == true);
 
-            var suppliers = (await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync()).ToArray();
-            suppliers = suppliers.Where(s => s.era_SupplierId.statecode == (int)EntityState.Active).ToArray();
-            if (queryRequest.ActiveOnly) suppliers = suppliers.Where(s => s.era_active.HasValue ? s.era_active.Value : false).ToArray();
+            // get all active suppliers
+            var suppliers = (await supplierQuery.GetAllPagesAsync(ct))
+                .Select(s => s.era_SupplierId)
+                .Where(s => s.statecode == (int)EntityState.Active)
+                .ToArray();
 
-            foreach (var supplier in suppliers)
+            await Parallel.ForEachAsync(suppliers, ct, async (supplier, ct) =>
             {
-                essContext.AttachTo(nameof(EssContext.era_essteamsuppliers), supplier);
-                essContext.AttachTo(nameof(EssContext.era_suppliers), supplier.era_SupplierId);
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_PrimaryContact));
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCity));
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCountry));
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedProvinceState));
-
-                var teamSupplierQuery = essContext.era_essteamsuppliers
-                    .Expand(s => s.era_ESSTeamID)
-                    .Where(s => s._era_supplierid_value == supplier._era_supplierid_value);
-
-                var teamSuppliers = (await ((DataServiceQuery<era_essteamsupplier>)teamSupplierQuery).GetAllPagesAsync()).ToArray();
-
-                foreach (var ts in teamSuppliers)
+                essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_PrimaryContact), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedCity), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedCountry), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedProvinceState), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), ct);
+                await Parallel.ForEachAsync(supplier.era_era_supplier_era_essteamsupplier_SupplierId, ct, async (ts, ct) =>
                 {
-                    supplier.era_SupplierId.era_era_supplier_era_essteamsupplier_SupplierId.Add(ts);
-                }
-            }
-
-            var items = mapper.Map<IEnumerable<Supplier>>(suppliers.Select(s => s.era_SupplierId));
+                    essContext.AttachTo(nameof(EssContext.era_essteamsuppliers), ts);
+                    await essContext.LoadPropertyAsync(ts, nameof(era_essteamsupplier.era_ESSTeamID), ct);
+                });
+            });
 
             essContext.DetachAll();
 
-            return new SupplierQueryResult { Items = items };
+            return new SupplierQueryResult { Items = mapper.Map<IEnumerable<Supplier>>(suppliers) };
         }
 
-        private async Task<SupplierQueryResult> HandleQuery(SupplierSearchQuery queryRequest)
+        private async Task<SupplierQueryResult> HandleQuery(SupplierSearchQuery queryRequest, CancellationToken ct)
         {
             var essContext = essContextFactory.CreateReadOnly();
 
             if ((!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)) ||
-                (!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)))
+                (string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)))
             {
                 throw new ArgumentException("If searching by legal name and gst, both are required");
             }
@@ -156,7 +152,7 @@ namespace EMBC.ESS.Resources.Suppliers
             if (!string.IsNullOrEmpty(queryRequest.SupplierId)) supplierQuery = supplierQuery.Where(s => s.era_supplierid == Guid.Parse(queryRequest.SupplierId));
             if (!string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)) supplierQuery = supplierQuery.Where(s => s.era_name == queryRequest.LegalName && s.era_gstnumber == queryRequest.GSTNumber);
 
-            var suppliers = (await ((DataServiceQuery<era_supplier>)supplierQuery).GetAllPagesAsync()).ToArray();
+            var suppliers = (await supplierQuery.GetAllPagesAsync(ct)).ToArray();
 
             suppliers
                 .AsParallel()
@@ -202,7 +198,7 @@ namespace EMBC.ESS.Resources.Suppliers
 
                 if (team == null) continue;
 
-                var currentTeamSupplier = existingSupplier != null ? existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value).SingleOrDefault() : null;
+                var currentTeamSupplier = existingSupplier != null ? existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value) : null;
                 if (currentTeamSupplier == null)
                 {
                     essContext.AddToera_essteamsuppliers(ts1);
@@ -229,7 +225,7 @@ namespace EMBC.ESS.Resources.Suppliers
 
             foreach (var ts1 in existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
-                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value).SingleOrDefault();
+                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value);
                 if (currentTeamSupplier == null)
                 {
                     essContext.DeleteObject(ts1);

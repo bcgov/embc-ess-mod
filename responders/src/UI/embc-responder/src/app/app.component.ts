@@ -71,12 +71,17 @@ export class AppComponent implements OnInit {
       try {
         const nextUrl = await this.authenticationService.login();
         const userProfile = await this.userService.loadUserProfile();
+
+        //loads cache
+        //communities, provinces, countries
         const location = await this.locationService.loadStaticLocationLists();
+
+        //enum lists
         const evacuee =
           await this.loadEvacueeListService.loadStaticEvacueeLists();
+
+        //team member roles and labels
         const team = await this.loadTeamListService.loadStaticTeamLists();
-        const suppliersAid =
-          await this.supplierService.loadStaticMutualAidSuppliersList();
 
         const nextRoute = decodeURIComponent(
           userProfile.requiredToSignAgreement

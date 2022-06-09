@@ -46,7 +46,7 @@ namespace OAuthServer
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog((ctx, config) => Logging.ConfigureSerilog(ctx, config, appName))
+                .UseSerilog((ctx, services, config) => Logging.ConfigureSerilog(ctx, services, config, appName))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
