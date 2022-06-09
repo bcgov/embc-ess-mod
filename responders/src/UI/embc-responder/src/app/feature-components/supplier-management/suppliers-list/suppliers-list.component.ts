@@ -255,8 +255,6 @@ export class SuppliersListComponent implements OnInit {
         this.mutualAidList = allSuppliers.filter((supplier) => {
           return supplier.isPrimarySupplier === false;
         });
-
-        console.log(this.mutualAidList);
       },
       error: (error) => {
         this.suppliersLoader = !this.suppliersLoader;
