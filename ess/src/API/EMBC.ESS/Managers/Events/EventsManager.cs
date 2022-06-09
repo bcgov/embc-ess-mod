@@ -150,7 +150,8 @@ namespace EMBC.ESS.Managers.Events
 
             var caseId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = file })).Id;
 
-            if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(evacuee.Email))
+            var shouldEmailNotification = string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(evacuee.Email) && string.IsNullOrEmpty(file.ManualFileId);
+            if (shouldEmailNotification)
             {
                 //notify registrant of the new file and has email
                 await SendEmailNotification(
