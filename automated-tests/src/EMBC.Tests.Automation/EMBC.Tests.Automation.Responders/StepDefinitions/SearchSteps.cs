@@ -29,7 +29,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             searchEvacuee.SelectGovernmentID();
 
             //fill evacuee information search
-            searchEvacuee.FillOnlineSearchEvacueeForm("Evac", "Thirtythree", "04052002");
+            searchEvacuee.FillOnlineSearchEvacueeForm("Automation", "Thirtythree", "04052002");
         }
 
         [StepDefinition(@"I search for a paper based evacuee")]
