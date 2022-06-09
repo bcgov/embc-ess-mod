@@ -150,7 +150,6 @@ export class EvacueeProfileService {
           (
             response: Array<EvacuationFileSummary>
           ): Array<EvacuationFileSummaryModel> => {
-            console.log(response);
             if (response[0] !== null) {
               response.forEach((item) => {
                 const evacFileSummary: EvacuationFileSummaryModel = {

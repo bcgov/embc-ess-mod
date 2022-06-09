@@ -28,7 +28,6 @@ export class SupplierReviewComponent {
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        console.log(this.router.getCurrentNavigation().extras);
         const state = this.router.getCurrentNavigation().extras
           .state as SupplierModel;
         this.selectedSupplier = state;
@@ -78,7 +77,6 @@ export class SupplierReviewComponent {
     this.isSubmitted = !this.isSubmitted;
     this.supplierService.claimSupplier(this.selectedSupplier.id).subscribe({
       next: (value) => {
-        console.log(value);
         this.showLoader = !this.showLoader;
         const stateIndicator = { action: 'add' };
         this.router.navigate(

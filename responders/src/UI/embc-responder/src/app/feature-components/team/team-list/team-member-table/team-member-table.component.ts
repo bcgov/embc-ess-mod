@@ -75,9 +75,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
    * @param term user selected filters
    */
   filter(term: TableFilterValueModel): void {
-    console.log(term);
     this.data = this.dataSource.filteredData;
-    console.log(this.dataSource.filteredData);
     this.dataSource.filterPredicate = this.teamFilterPredicate;
     this.dataSource.filter = JSON.stringify(term);
 

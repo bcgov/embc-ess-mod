@@ -249,7 +249,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     if (!this.editFlag) {
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
-      console.log(this.stepSupportsService.supportDelivery);
       this.router.navigate(['/ess-wizard/add-supports/details']);
     } else {
       this.router.navigate(['/ess-wizard/add-supports/details'], {
@@ -267,7 +266,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     } else {
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
-      console.log(this.stepSupportsService.supportDelivery);
       this.stepSupportsService.saveAsDraft(this.selectedSupportMethod);
       const stateIndicator = { action: 'save' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
@@ -282,7 +280,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     } else {
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
-      console.log(this.stepSupportsService.supportDelivery);
       this.stepSupportsService.editDraft(this.selectedSupportMethod);
       const stateIndicator = { action: 'edit' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
