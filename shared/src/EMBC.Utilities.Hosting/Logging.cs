@@ -78,14 +78,13 @@ namespace EMBC.Utilities.Hosting
             return applicationBuilder;
         }
 
-        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
-              ex != null
-                  ? LogEventLevel.Error
-                  : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
-                      ? LogEventLevel.Error
-                      : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
-                          ? LogEventLevel.Verbose
-                          : LogEventLevel.Information;
+        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex)
+        {
+            if (ex != null || ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError) return LogEventLevel.Error;
+            return ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
+                    ? LogEventLevel.Verbose
+                    : LogEventLevel.Information;
+        }
 
         public static IServiceCollection AddOpenTelemetry(this IServiceCollection services, string appName)
         {

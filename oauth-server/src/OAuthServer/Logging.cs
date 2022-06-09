@@ -19,10 +19,11 @@ namespace OAuthServer
     {
         public const string LogOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}";
 
-        public static void ConfigureSerilog(HostBuilderContext hostBuilderContext, LoggerConfiguration loggerConfiguration, string appName)
+        public static void ConfigureSerilog(HostBuilderContext hostBuilderContext, IServiceProvider services, LoggerConfiguration loggerConfiguration, string appName)
         {
             loggerConfiguration
                 .ReadFrom.Configuration(hostBuilderContext.Configuration)
+                .ReadFrom.Services(services)
                 .Enrich.WithMachineName()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
@@ -34,8 +35,8 @@ namespace OAuthServer
                 .Enrich.WithClientAgent()
                 .Enrich.WithClientIp()
                 .Enrich.WithSpan()
-                .WriteTo.Console(outputTemplate: LogOutputTemplate);
-
+                .WriteTo.Console(outputTemplate: LogOutputTemplate)
+                ;
             var splunkUrl = hostBuilderContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
             var splunkToken = hostBuilderContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
             if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
@@ -66,22 +67,23 @@ namespace OAuthServer
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
                     diagCtx.Set("User", httpCtx.User.Identity?.Name ?? string.Empty);
-                    diagCtx.Set("Host", httpCtx.Request.Host);
+                    diagCtx.Set("Host", httpCtx.Request.Host.Value);
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength?.ToString() ?? string.Empty);
+                    diagCtx.Set("Protocol", httpCtx.Request.Protocol);
+                    diagCtx.Set("Scheme", httpCtx.Request.Scheme);
                 };
             });
 
             return applicationBuilder;
         }
 
-        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
-              ex != null
-                  ? LogEventLevel.Error
-                  : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
-                      ? LogEventLevel.Error
-                      : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
-                          ? LogEventLevel.Verbose
-                          : LogEventLevel.Information;
+        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex)
+        {
+            if (ex != null || ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError) return LogEventLevel.Error;
+            return ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
+                    ? LogEventLevel.Verbose
+                    : LogEventLevel.Information;
+        }
 
         public static IServiceCollection AddOpenTelemetry(this IServiceCollection services, string appName)
         {
@@ -90,9 +92,11 @@ namespace OAuthServer
                 builder
                     .AddConsoleExporter()
                     .AddSource(appName)
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName: appName, serviceVersion: "1.0.0.0")).AddHttpClientInstrumentation()
+                    .SetResourceBuilder(ResourceBuilder
+                        .CreateDefault()
+                        .AddService(serviceName: appName, serviceVersion: Environment.GetEnvironmentVariable("VERSION")))
+                    .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
-                    .AddGrpcClientInstrumentation()
                     .AddRedisInstrumentation();
             });
             services.AddSingleton(TracerProvider.Default.GetTracer(appName));
