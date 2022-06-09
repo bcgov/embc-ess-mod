@@ -166,9 +166,17 @@ namespace EMBC.ESS.Managers.Events
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
             var evacuee = mapper.Map<Evacuee>(cmd.Profile);
+
+            if (evacuee.Id == null && evacuee.UserId != null)
+            {
+                //look up evacuee by user id
+                evacuee.Id = (await evacueesRepository.Query(new EvacueeQuery { UserId = evacuee.UserId })).Items.SingleOrDefault()?.Id;
+            }
+
             var result = await evacueesRepository.Manage(new SaveEvacuee { Evacuee = evacuee });
 
-            if (string.IsNullOrEmpty(cmd.Profile.Id) && !string.IsNullOrEmpty(evacuee.Email))
+            var newEvacuee = string.IsNullOrEmpty(evacuee.Id);
+            if (newEvacuee && !string.IsNullOrEmpty(evacuee.Email))
             {
                 await SendEmailNotification(
                     SubmissionTemplateType.NewProfileRegistration,

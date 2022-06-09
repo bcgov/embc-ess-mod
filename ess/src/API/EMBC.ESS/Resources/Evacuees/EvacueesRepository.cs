@@ -58,26 +58,18 @@ namespace EMBC.ESS.Resources.Evacuees
         private async Task<ManageEvacueeCommandResult> Handle(SaveEvacuee cmd, CancellationToken ct)
         {
             if (cmd.Evacuee.SecurityQuestions.Count() > 3) throw new ArgumentException($"Registrant can have a max of 3 Security Questions");
+
             var contact = mapper.Map<contact>(cmd.Evacuee);
-            var existingContact = await (contact.contactid.HasValue
-                ? essContext.contacts
-                    .Expand(c => c.era_Country)
-                    .Expand(c => c.era_MailingCountry)
-                    .Expand(c => c.era_ProvinceState)
-                    .Expand(c => c.era_MailingProvinceState)
-                    .Where(c => c.contactid == contact.contactid.Value).SingleOrDefaultAsync(ct)
-                : GetContactIdForBcscId(contact.era_bcservicescardid, ct));
 
             essContext.DetachAll();
 
-            if (existingContact == null)
+            if (!contact.contactid.HasValue)
             {
                 contact.contactid = Guid.NewGuid();
                 essContext.AddTocontacts(contact);
             }
             else
             {
-                contact.contactid = existingContact.contactid;
                 essContext.AttachTo(nameof(EssContext.contacts), contact);
                 essContext.UpdateObject(contact);
             }
@@ -96,13 +88,6 @@ namespace EMBC.ESS.Resources.Evacuees
 
             return new ManageEvacueeCommandResult { EvacueeId = contact.contactid.ToString() };
         }
-
-        private async Task<contact> GetContactIdForBcscId(string bcscId, CancellationToken ct) =>
-            string.IsNullOrEmpty(bcscId)
-                ? null
-                : await essContext.contacts
-                    .Where(c => c.era_bcservicescardid == bcscId)
-                    .SingleOrDefaultAsync(ct);
 
         private async Task<ManageEvacueeCommandResult> Handle(DeleteEvacuee cmd, CancellationToken ct)
         {
