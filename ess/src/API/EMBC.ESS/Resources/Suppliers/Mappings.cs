@@ -36,9 +36,8 @@ namespace EMBC.ESS.Resources.Suppliers
                         d.Status = SupplierStatus.NotSet;
                     else
                         d.Status = responsibleTeam.era_active == true ? SupplierStatus.Active : SupplierStatus.Inactive;
-                });
-
-            CreateMap<Supplier, era_supplier>(MemberList.None)
+                })
+                .ReverseMap()
                 .ForMember(d => d.era_supplierid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_suppliername, opts => opts.MapFrom(s => s.Name))
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.LegalName))
@@ -56,9 +55,8 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_contactnumber))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.emailaddress))
-                ;
-
-            CreateMap<SupplierContact, era_suppliercontact>(MemberList.None)
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Source)
                 .ForMember(d => d.era_suppliercontactid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
@@ -70,9 +68,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_ESSTeamID.era_essteamid))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_ESSTeamID.era_name))
                 .ForMember(d => d.SharedWithDate, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
-                ;
-
-            CreateMap<Team, era_essteamsupplier>(MemberList.None)
+                .ReverseMap()
                 .ForMember(d => d._era_essteamid_value, opts => opts.MapFrom(s => s.Id))
                 ;
         }

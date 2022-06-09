@@ -95,32 +95,36 @@ namespace EMBC.ESS.Resources.Suppliers
 
             var supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
-                .Expand(s => s.era_ESSTeamID)
+                //.Expand(s => s.era_ESSTeamID)
                 .Where(s => s.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(queryRequest.TeamId)) supplierQuery = supplierQuery.Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
             if (queryRequest.ActiveOnly) supplierQuery = supplierQuery.Where(s => s.era_active == true);
 
-            var suppliers = await supplierQuery.GetAllPagesAsync(ct);
-
-            // filter only active suppliers records
-            suppliers = suppliers.Where(s => s.era_SupplierId.statecode == (int)EntityState.Active).ToArray();
+            // get all active suppliers
+            var suppliers = (await supplierQuery.GetAllPagesAsync(ct))
+                .Select(s => s.era_SupplierId)
+                .Where(s => s.statecode == (int)EntityState.Active)
+                .ToArray();
 
             await Parallel.ForEachAsync(suppliers, ct, async (supplier, ct) =>
             {
-                essContext.AttachTo(nameof(EssContext.era_suppliers), supplier.era_SupplierId);
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_PrimaryContact), ct);
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCity), ct);
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCountry), ct);
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_RelatedProvinceState), ct);
-                await essContext.LoadPropertyAsync(supplier.era_SupplierId, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), ct);
+                essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_PrimaryContact), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedCity), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedCountry), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedProvinceState), ct);
+                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), ct);
+                await Parallel.ForEachAsync(supplier.era_era_supplier_era_essteamsupplier_SupplierId, ct, async (ts, ct) =>
+                {
+                    essContext.AttachTo(nameof(EssContext.era_essteamsuppliers), ts);
+                    await essContext.LoadPropertyAsync(ts, nameof(era_essteamsupplier.era_ESSTeamID), ct);
+                });
             });
-
-            var items = mapper.Map<IEnumerable<Supplier>>(suppliers.Select(s => s.era_SupplierId));
 
             essContext.DetachAll();
 
-            return new SupplierQueryResult { Items = items };
+            return new SupplierQueryResult { Items = mapper.Map<IEnumerable<Supplier>>(suppliers) };
         }
 
         private async Task<SupplierQueryResult> HandleQuery(SupplierSearchQuery queryRequest, CancellationToken ct)
