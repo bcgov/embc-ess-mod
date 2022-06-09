@@ -309,6 +309,14 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var searchResults = await manager.Handle(new SuppliersQuery { TeamId = TestData.TeamId });
 
+            foreach (var supplier in searchResults.Items)
+            {
+                supplier.Team.ShouldNotBeNull().Id.ShouldNotBeNull();
+                foreach (var sharedTeam in supplier.SharedWithTeams)
+                {
+                    sharedTeam.Id.ShouldNotBeNull();
+                }
+            }
             var primarySuppliers = searchResults.Items.Where(s => s.Team.Id == TestData.TeamId);
             var mutualAidSuppliers = searchResults.Items.Where(s => s.Team.Id != TestData.TeamId);
 
