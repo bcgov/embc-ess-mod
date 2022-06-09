@@ -71,13 +71,13 @@
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef style="width: 136px">Amount</th>
         <td mat-cell *matCellDef="let element" class="row amountCell">
-          <div class="col-md-6" style="padding: 35px 20px">
+          <div class="col-6" style="padding: 35px 20px">
             <p *ngIf="element.totalAmount !== undefined">
               ${{ element.totalAmount }}
             </p>
             <p *ngIf="element.totalAmount === undefined">n/a</p>
           </div>
-          <div class="col-md-6" style="padding: 35px 20px">
+          <div class="col-6" style="padding: 35px 20px">
             <img
               src="../../../../assets/images/record_detail_arrow.svg"
               height="8"

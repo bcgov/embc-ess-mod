@@ -139,7 +139,13 @@
           </form>
         </div>
 
-        <div class="col-md-4" *ngIf="wizardType !== 'new-registration'">
+        <div
+          class="col-md-4"
+          *ngIf="
+            wizardType !== 'new-registration' &&
+            wizardType !== 'member-registration'
+          "
+        >
           <mat-card class="tips-card">
             <div>
               <img

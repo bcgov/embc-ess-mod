@@ -17,6 +17,7 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { ProfileDataService } from './profile-data.service';
 import { ProfileService } from './profile.service';
 import * as globalConst from '../../core/services/globalConstants';
+import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-profile',
@@ -235,23 +236,25 @@ export class ProfileComponent
   }
 
   private saveSecurityQuestions(questionForm: FormGroup) {
-    let anyValueSet = false;
+    //let anyValueSet = false;
+    const securityQuestions: Array<SecurityQuestion> = [];
+
     // Create SecurityQuestion objects and save to array, and check if any value set
     for (let i = 1; i <= 3; i++) {
       const question = questionForm.get(`question${i}`).value?.trim() ?? '';
-
       const answer = questionForm.get(`answer${i}`).value?.trim() ?? '';
 
-      if (question.length > 0 || answer.length > 0) {
-        anyValueSet = true;
-      }
+      // if (question.length > 0 || answer.length > 0) {
+      //   anyValueSet = true;
+      // }
 
-      this.profileDataService.securityQuestions.push({
+      securityQuestions.push({
         id: i,
         answerChanged: true,
         question,
         answer
       });
     }
+    this.profileDataService.securityQuestions = securityQuestions;
   }
 }
