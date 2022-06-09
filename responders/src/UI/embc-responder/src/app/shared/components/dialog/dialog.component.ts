@@ -31,8 +31,6 @@ export class DialogComponent implements OnInit, OnDestroy {
     this.componentRef.instance.content = this.data.content;
     this.showCloseButton = this.data.showCloseButton;
 
-    console.log(this.data);
-
     if (this.data.profileData !== null) {
       this.componentRef.instance.profileData = this.data.profileData;
     }
