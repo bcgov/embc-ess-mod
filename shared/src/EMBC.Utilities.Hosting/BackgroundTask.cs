@@ -60,17 +60,19 @@ namespace EMBC.Utilities.Hosting
 
             var nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
 
+            IDistributedSynchronizationHandle? handle = null;
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 runNumber++;
                 logger.LogDebug("next run in {0}s", nextExecutionDelay.TotalSeconds);
 
-                // get a lock
-                var handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(5), stoppingToken);
-
-                // wait in the lock
                 try
                 {
+                    // get a lock
+                    handle = await semaphore.TryAcquireAsync(TimeSpan.FromSeconds(5), stoppingToken);
+
+                    // wait in the lock
                     await Task.Delay(nextExecutionDelay, stoppingToken);
                     if (handle == null)
                     {
@@ -93,9 +95,9 @@ namespace EMBC.Utilities.Hosting
                         logger.LogError(e, "error in run # {0}: {1}", runNumber, e.Message);
                     }
                 }
-                catch (TaskCanceledException)
+                catch (Exception e)
                 {
-                    //do nothing if wait was interrupted
+                    logger.LogError(e, "Unhandled error in background job");
                 }
                 finally
                 {
