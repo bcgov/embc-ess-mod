@@ -10,7 +10,6 @@ import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { SupplierListItem } from 'src/app/core/api/models';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
-import { SupplierDetailService } from '../supplier-detail/supplier-detail.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -60,8 +59,7 @@ export class SuppliersListComponent implements OnInit {
       this.supplierListDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService.currentProfile.role;
 
-    this.getPrimarySuppliersList();
-    this.getMutualAidSuppliersList();
+    this.getSuppliersLists();
   }
 
   /**
@@ -244,13 +242,21 @@ export class SuppliersListComponent implements OnInit {
   }
 
   /**
-   * Gets the primary suppliers list from the API
+   * Gets the suppliers list from the API
    */
-  private getPrimarySuppliersList(): void {
-    this.supplierServices.getMainSuppliersList().subscribe({
-      next: (values) => {
+  private getSuppliersLists(): void {
+    this.supplierServices.getSuppliersList().subscribe({
+      next: (allSuppliers) => {
         this.suppliersLoader = !this.suppliersLoader;
-        this.suppliersList = values;
+        this.suppliersList = allSuppliers.filter((supplier) => {
+          return supplier.isPrimarySupplier === true;
+        });
+        this.mutualAidLoader = !this.mutualAidLoader;
+        this.mutualAidList = allSuppliers.filter((supplier) => {
+          return supplier.isPrimarySupplier === false;
+        });
+
+        console.log(this.mutualAidList);
       },
       error: (error) => {
         this.suppliersLoader = !this.suppliersLoader;
@@ -280,23 +286,6 @@ export class SuppliersListComponent implements OnInit {
           'danger',
           globalConst.mainSuppliersListError
         );
-      }
-    });
-  }
-
-  /**
-   * Gets the mutual aid suppliers list from the API
-   */
-  private getMutualAidSuppliersList(): void {
-    this.supplierServices.getMutualAidSuppliersList().subscribe({
-      next: (values) => {
-        this.mutualAidLoader = !this.mutualAidLoader;
-        this.mutualAidList = values;
-      },
-      error: (error) => {
-        this.mutualAidLoader = !this.mutualAidLoader;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.mutualAidListError);
       }
     });
   }
