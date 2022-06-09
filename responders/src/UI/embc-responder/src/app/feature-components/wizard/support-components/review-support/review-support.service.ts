@@ -76,7 +76,6 @@ export class ReviewSupportService {
         next: (file) => {
           this.evacueeSessionService.currentNeedsAssessment =
             file.needsAssessment;
-          // console.log(file.supports);
           const supportModel = [];
 
           file.supports.forEach((support) => {

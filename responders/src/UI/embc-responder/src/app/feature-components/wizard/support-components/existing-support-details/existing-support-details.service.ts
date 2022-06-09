@@ -146,7 +146,6 @@ export class ExistingSupportDetailsService {
     selectedSupport: Support,
     needsAssessmentForSupport: EvacuationFileModel
   ) {
-    console.log(selectedSupport);
     const members: Array<EvacuationFileHouseholdMember> =
       selectedSupport.includedHouseholdMembers.map((id) => {
         return this.mapMember(id, needsAssessmentForSupport);

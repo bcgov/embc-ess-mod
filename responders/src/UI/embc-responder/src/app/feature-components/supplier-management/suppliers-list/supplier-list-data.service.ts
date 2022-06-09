@@ -77,7 +77,7 @@ export class SupplierListDataService {
    * @returns a list of ESS Teams that are not mutual Aid to the selected supplier
    */
   public getNonMutualAidTeams(): Team[] {
-    return this.nonMutualAidEssTeams;
+    return this.nonMutualAidEssTeams || [];
   }
 
   /**

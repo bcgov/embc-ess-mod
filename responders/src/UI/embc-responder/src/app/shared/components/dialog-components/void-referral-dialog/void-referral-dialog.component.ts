@@ -27,7 +27,6 @@ export class VoidReferralDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.voidReasonForm();
-    console.log(this.voidType);
   }
 
   voidReasonForm(): void {
