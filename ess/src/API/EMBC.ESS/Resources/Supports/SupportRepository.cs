@@ -20,9 +20,9 @@ namespace EMBC.ESS.Resources.Supports
 
         private struct SupportQueue
         {
-            public static readonly SupportQueue EAApproval = new SupportQueue { QueueId = new("a4f0fbbe-89a1-ec11-b831-00505683fbf4") };
-            public static readonly SupportQueue EAReview = new SupportQueue { QueueId = new("e969aae7-8aa1-ec11-b831-00505683fbf4") };
-            public static readonly SupportQueue QRReview = new SupportQueue { QueueId = new("f132db1c-5eb4-ec11-b832-00505683fbf4") };
+            public static readonly SupportQueue EAApproval = new SupportQueue { QueueId = new Guid("a4f0fbbe-89a1-ec11-b831-00505683fbf4") };
+            public static readonly SupportQueue EAReview = new SupportQueue { QueueId = new Guid("e969aae7-8aa1-ec11-b831-00505683fbf4") };
+            public static readonly SupportQueue QRReview = new SupportQueue { QueueId = new Guid("f132db1c-5eb4-ec11-b832-00505683fbf4") };
 
             public Guid QueueId { get; private set; }
         }
