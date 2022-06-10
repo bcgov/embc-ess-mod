@@ -7,26 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Helpers
 {
-    public class ErrorParser : ControllerBase
+    public class ErrorParser
     {
         public ActionResult Parse(ServerException e)
         {
-            var responseType = Type.GetType(e.Type, an => Assembly.Load(an.Name ?? null!), null, true, true)?.Name ?? null!;
-            switch (responseType)
+            return e.Type switch
             {
-                case nameof(NotFoundException):
-                    return NotFound(e.Message);
-                case nameof(CommunitiesAlreadyAssignedException):
-                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Communities already assigned", Detail = string.Join(',', e.Message) });
-                case nameof(UsernameAlreadyExistsException):
-                    return BadRequest(new ProblemDetails { Type = responseType, Title = "User name already exists", Detail = e.Message });
-                case nameof(BusinessLogicException):
-                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Business logic error", Detail = e.Message });
-                case nameof(BusinessValidationException):
-                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Business validation error", Detail = e.Message });
-                default:
-                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Unexpected error", Detail = e.Message });
-            }
+                string t when t == typeof(NotFoundException).AssemblyQualifiedName => new NotFoundObjectResult(new ProblemDetails { Type = t, Title = "Not Found", Detail = e.Message }),
+                string t when t == typeof(CommunitiesAlreadyAssignedException).AssemblyQualifiedName => new BadRequestObjectResult(new ProblemDetails { Type = t, Title = "Communities already assigned", Detail = string.Join(',', e.Message) }),
+                string t when t == typeof(UsernameAlreadyExistsException).AssemblyQualifiedName => new BadRequestObjectResult(new ProblemDetails { Type = t, Title = "User name already exists", Detail = e.Message }),
+                string t when t == typeof(BusinessLogicException).AssemblyQualifiedName => new BadRequestObjectResult(new ProblemDetails { Type = t, Title = "Business logic error", Detail = e.Message }),
+                string t when t == typeof(BusinessValidationException).AssemblyQualifiedName => new BadRequestObjectResult(new ProblemDetails { Type = t, Title = "Business validation error", Detail = e.Message }),
+                _ => new BadRequestObjectResult(new ProblemDetails { Type = e.Type, Title = "Unexpected error", Detail = e.Message })
+            };
         }
     }
 }
