@@ -1,10 +1,20 @@
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    matSort
+    (matSortChange)="sortData($event)"
+  >
     <ng-container
       *ngFor="let column of displayedColumns"
       [matColumnDef]="column?.ref"
     >
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="arrow-color">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        [mat-sort-header]="column?.ref"
+        class="arrow-color"
+      >
         <span *ngIf="column?.label !== 'Status'; else statusLabel">{{
           column?.label
         }}</span>

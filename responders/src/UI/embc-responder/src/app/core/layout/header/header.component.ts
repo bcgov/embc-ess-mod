@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
   public ngOnInit(): void {}
 
   public homeButton(): void {
-    if (this.router.url !== '/outage') {
+    if (this.router.url !== '/outage' && this.router.url !== '/access-denied') {
       this.router.navigate(['/responder-access']);
     }
   }

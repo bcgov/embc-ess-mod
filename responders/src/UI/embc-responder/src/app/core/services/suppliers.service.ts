@@ -34,6 +34,27 @@ export class SupplierService {
   ) {}
 
   /**
+   * Gives an array of Suppliers
+   *
+   * @returns an array of Supplier
+   */
+  getSuppliersList(
+    legalName?: string,
+    gstNumber?: string
+  ): Observable<Array<SupplierListItem>> {
+    return this.suppliersService
+      .suppliersGetSuppliers({
+        legalName,
+        gstNumber
+      })
+      .pipe(
+        map((suppliers: Array<SupplierListItem>) => {
+          return suppliers;
+        })
+      );
+  }
+
+  /**
    * Gives an array of Main Suppliers
    *
    * @returns an array of Main Supplier
