@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Teams;
+using EMBC.Responders.API.Helpers;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,10 +23,12 @@ namespace EMBC.Responders.API.Controllers
     {
         private string teamId => User.FindFirstValue("user_team");
         private readonly IMessagingClient messagingClient;
+        private ErrorParser errorParser;
 
         public TeamCommunitiesAssignmentsController(IMessagingClient messagingClient)
         {
             this.messagingClient = messagingClient;
+            this.errorParser = new ErrorParser();
         }
 
         /// <summary>
@@ -69,9 +71,9 @@ namespace EMBC.Responders.API.Controllers
                 await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
                 return Ok();
             }
-            catch (CommunitiesAlreadyAssignedException e)
+            catch (ServerException e)
             {
-                return BadRequest(new ProblemDetails { Status = (int)HttpStatusCode.BadRequest, Detail = string.Join(',', e.Communities) });
+                return errorParser.Parse(e);
             }
         }
 
