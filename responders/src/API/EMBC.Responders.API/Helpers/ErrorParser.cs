@@ -15,20 +15,17 @@ namespace EMBC.Responders.API.Helpers
             switch (responseType)
             {
                 case nameof(NotFoundException):
-                    {
-                        return NotFound(e.Message);
-                    }
+                    return NotFound(e.Message);
                 case nameof(CommunitiesAlreadyAssignedException):
-                    {
-                        return BadRequest(new ProblemDetails { Type = responseType, Title = "Communities already assigned", Detail = string.Join(',', e.Message) });
-                    }
+                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Communities already assigned", Detail = string.Join(',', e.Message) });
                 case nameof(UsernameAlreadyExistsException):
-                    {
-                        return BadRequest(new ProblemDetails { Type = responseType, Title = "User name already exists", Detail = e.Message });
-                    }
+                    return BadRequest(new ProblemDetails { Type = responseType, Title = "User name already exists", Detail = e.Message });
                 case nameof(BusinessLogicException):
+                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Business logic error", Detail = e.Message });
                 case nameof(BusinessValidationException):
-                default: return BadRequest(e);
+                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Business validation error", Detail = e.Message });
+                default:
+                    return BadRequest(new ProblemDetails { Type = responseType, Title = "Unexpected error", Detail = e.Message });
             }
         }
     }
