@@ -83,6 +83,10 @@ export class AppComponent implements OnInit {
         //team member roles and labels
         const team = await this.loadTeamListService.loadStaticTeamLists();
 
+        //suppliers lists
+        const mutuaAid =
+          await this.supplierService.loadStaticMutualAidSuppliersList();
+
         const nextRoute = decodeURIComponent(
           userProfile.requiredToSignAgreement
             ? 'electronic-agreement'
