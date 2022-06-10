@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,9 +67,9 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
-            catch (UsernameAlreadyExistsException e)
+            catch (ServerException e)
             {
-                return BadRequest(e.UserName);
+                return errorParser.Parse(e);
             }
         }
 
@@ -96,13 +96,9 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = updatedMemberId });
             }
-            catch (NotFoundException)
+            catch (ServerException e)
             {
-                return NotFound(memberId);
-            }
-            catch (UsernameAlreadyExistsException e)
-            {
-                return BadRequest(e.UserName);
+                return errorParser.Parse(e);
             }
         }
 
@@ -126,9 +122,9 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
-            catch (NotFoundException)
+            catch (ServerException e)
             {
-                return NotFound(memberId);
+                return errorParser.Parse(e);
             }
         }
 
