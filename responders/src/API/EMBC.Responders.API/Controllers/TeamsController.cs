@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Teams;
+using EMBC.Responders.API.Helpers;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,11 +24,13 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
         private string teamId => User.FindFirstValue("user_team");
+        private ErrorParser errorParser;
 
         public TeamsController(IMessagingClient client, IMapper mapper)
         {
             this.client = client;
             this.mapper = mapper;
+            this.errorParser = new ErrorParser();
         }
 
         /// <summary>
