@@ -20,7 +20,10 @@ import { AppSessionService } from 'src/app/core/services/appSession.service';
 export class EditComponent implements OnInit, OnDestroy {
   componentToLoad: string;
   profileFolderPath: string;
-  navigationExtras: NavigationExtras = { state: { stepIndex: 5 } };
+  needsAssessmentNavigationExtras: NavigationExtras = {
+    state: { stepIndex: 5 }
+  };
+  profileNavigationExtras: NavigationExtras = { state: { stepIndex: 4 } };
   form$: Subscription;
   form: FormGroup;
   editHeading: string;
@@ -76,10 +79,16 @@ export class EditComponent implements OnInit, OnDestroy {
       this.currentFlow
     );
     if (this.currentFlow === 'non-verified-registration') {
-      this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
+      this.router.navigate(
+        [this.nonVerfiedRoute],
+        this.needsAssessmentNavigationExtras
+      );
     } else {
       if (this.appSessionService.editParentPage === 'create-profile') {
-        this.router.navigate([this.verifiedRoute], this.navigationExtras);
+        this.router.navigate(
+          [this.verifiedRoute],
+          this.profileNavigationExtras
+        );
       } else if (this.appSessionService.editParentPage === 'dashboard') {
         this.showLoader = !this.showLoader;
         this.profileService
@@ -103,7 +112,7 @@ export class EditComponent implements OnInit, OnDestroy {
         if (this.evacuationFileDataService.essFileId === undefined) {
           this.router.navigate(
             [this.verifiedNeedsAssessments],
-            this.navigationExtras
+            this.needsAssessmentNavigationExtras
           );
         } else {
           this.showLoader = !this.showLoader;
@@ -135,10 +144,16 @@ export class EditComponent implements OnInit, OnDestroy {
       this.currentFlow
     );
     if (this.currentFlow === 'non-verified-registration') {
-      this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
+      this.router.navigate(
+        [this.nonVerfiedRoute],
+        this.needsAssessmentNavigationExtras
+      );
     } else {
       if (this.appSessionService.editParentPage === 'create-profile') {
-        this.router.navigate([this.verifiedRoute], this.navigationExtras);
+        this.router.navigate(
+          [this.verifiedRoute],
+          this.profileNavigationExtras
+        );
       } else if (this.appSessionService.editParentPage === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard/profile']);
       } else if (this.appSessionService.editParentPage === 'needs-assessment') {
@@ -150,7 +165,7 @@ export class EditComponent implements OnInit, OnDestroy {
         } else {
           this.router.navigate(
             [this.verifiedNeedsAssessments],
-            this.navigationExtras
+            this.needsAssessmentNavigationExtras
           );
         }
       }

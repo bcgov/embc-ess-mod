@@ -11,7 +11,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -74,6 +74,48 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  sortData(sort: Sort) {
+    const data = this.incomingData.slice();
+    if (!sort.active || sort.direction === '') {
+      this.dataSource = new MatTableDataSource(data);
+      return;
+    }
+
+    this.dataSource = new MatTableDataSource(
+      data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        switch (sort.active) {
+          case 'legalName':
+            return compare(
+              a.legalName.toLowerCase(),
+              b.legalName.toLowerCase(),
+              isAsc
+            );
+          case 'name':
+            return compare(a.name.toLowerCase(), b.name.toLowerCase(), isAsc);
+          case 'team':
+            return compare(
+              a.team?.name.toLowerCase(),
+              b.team?.name.toLowerCase(),
+              isAsc
+            );
+          case 'status':
+            return compare(a.status, b.status, isAsc);
+          case 'providesMutualAid':
+            return compare(+a.providesMutualAid, +b.providesMutualAid, isAsc);
+          case 'address':
+            return compare(
+              a.address?.addressLine1.toLowerCase(),
+              b.address?.addressLine1.toLowerCase(),
+              isAsc
+            );
+          default:
+            return 0;
+        }
+      })
+    );
   }
 
   /**
@@ -171,3 +213,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
     });
   }
 }
+
+const compare = (a: number | string, b: number | string, isAsc: boolean) => {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+};
