@@ -124,7 +124,7 @@ namespace EMBC.ESS.Shared.Contracts.Teams
         {
         }
 
-        public CommunitiesAlreadyAssignedException(IEnumerable<string> communities) : base("Communitie are already assigned to another team")
+        public CommunitiesAlreadyAssignedException(IEnumerable<string> communities) : base("Communities are already assigned to another team")
         {
             Communities = communities;
         }
