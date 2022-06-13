@@ -333,12 +333,14 @@ export class SupplierService {
    *
    * @returns a list of ESS Teams
    */
-  public getMutualAidEssTeamsList(): Team[] {
-    return this.mutualAidEssTeams
-      ? this.mutualAidEssTeams
-      : JSON.parse(this.cacheService.get('mutualAidEssTeams'))
-      ? JSON.parse(this.cacheService.get('mutualAidEssTeams'))
-      : this.getMutualAidEssTeams();
+  public getMutualAidEssTeamsList(): Promise<Team[]> {
+    return new Promise<Team[]>(async (resolve, reject) => {
+      this.mutualAidEssTeams
+        ? resolve(this.mutualAidEssTeams)
+        : JSON.parse(this.cacheService.get('mutualAidEssTeams'))
+        ? resolve(JSON.parse(this.cacheService.get('mutualAidEssTeams')))
+        : resolve(this.getMutualAidEssTeams());
+    });
   }
 
   /**
@@ -346,19 +348,21 @@ export class SupplierService {
    *
    * @returns a list os ESS Teams
    */
-  private getMutualAidEssTeams(): Team[] {
-    const essTeams: Team[] = [];
-    this.getMutualAidByEssTeam().subscribe({
-      next: (essTeamsResult) => {
-        this.setMutualAidEssTeams(essTeamsResult);
-        this.mutualAidEssTeams = essTeamsResult;
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.systemError);
-      }
+  private getMutualAidEssTeams(): Promise<Team[]> {
+    return new Promise<Team[]>(async (resolve, reject) => {
+      const essTeams: Team[] = [];
+      this.getMutualAidByEssTeam().subscribe({
+        next: (essTeamsResult) => {
+          this.setMutualAidEssTeams(essTeamsResult);
+          this.mutualAidEssTeams = essTeamsResult;
+          resolve(this.mutualAidEssTeams || []);
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.systemError);
+        }
+      });
     });
-    return this.mutualAidEssTeams || [];
   }
 
   /**
