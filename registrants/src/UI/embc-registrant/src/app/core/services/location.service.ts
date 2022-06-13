@@ -168,7 +168,7 @@ export class LocationService {
     return {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
-      community: addressCommunity,
+      community: addressCommunity || addressObject.city || '',
       stateProvince: addressStateProvince,
       country: addressCountry,
       postalCode: addressObject.postalCode
