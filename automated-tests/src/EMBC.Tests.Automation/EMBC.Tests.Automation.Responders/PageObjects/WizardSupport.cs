@@ -1,4 +1,7 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -175,6 +178,24 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             ButtonElement("Process Support/s");
             ButtonElement("Proceed");
+        }
+
+        public void CancelPrintOut()
+        {
+
+            Thread.Sleep(10000);
+
+            var driver = webDriver is NgWebDriver ngDriver
+               ? ngDriver.WrappedDriver
+               : webDriver;
+         
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+
+            IWebElement element = driver.FindElement(By.TagName("print-preview-app"));
+            element.SendKeys(Keys.Tab);
+            element.SendKeys(Keys.Enter);
+
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
         }
 
         // ASSERT FUNCTIONS

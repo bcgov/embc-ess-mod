@@ -108,6 +108,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //review process support
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
             wizardSupport.WizardOnlineProcessSupportsForm();
+            wizardSupport.CancelPrintOut();
         }
 
         [StepDefinition(@"I complete a paper based registration")]

@@ -99,7 +99,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 4
- testRunner.Given("I log in with BCSC credentials EVAC00006", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I log in with BCSC credentials EVAC00033", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 5
  testRunner.Then("I am on path /verified-registration/dashboard/current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -127,7 +127,7 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 this.ScenarioStart();
 #line 8
- testRunner.Given("I log in with BCSC credentials EVAC00006", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I log in with BCSC credentials EVAC00033", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 9
  testRunner.When("I create a new EssFile", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
