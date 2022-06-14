@@ -7,28 +7,28 @@ Scenario: Responder can login to the portal
 
 Scenario: Evacuee online new Registration
 	Given I log in with BCeID user ess.developerA1
-	When I sign into a task
-	And  I search for an online evacuee
+	When I sign into a task 6789
+	And  I search for an online evacuee Automation
 	And I complete an online registration
 	Then An online registration is completed with an active support
 
 Scenario: Evacuee paper based new Registration
 	Given I log in with BCeID user ess.developerA1
-	When I sign into a task
-	And I search for a paper based evacuee
+	When I sign into a task 6789
+	And I search for a paper based evacuee Automation
 	And I complete a paper based registration
 	Then A paper based registration is completed with an expired support
 
 Scenario: Add Interac Support to Online ESS File
 	Given I log in with BCeID user ess.developerA1
-	And I sign into a task
-	And I search for an online evacuee
+	And I sign into a task 6789
+	And I search for an online evacuee Thirtyfour
 	And I choose an ESS file from the search results
 	And I bypass ESS file wizard step
 	And I create an Interac support
 	Then A registration is completed with a pending approval interac support
 
-Scenario: Create new Team Member
+Scenario: Team Member Management
 	Given I log in with BCeID user ess.developerA1
 	And I create a new team member
 	And I search for a team member
@@ -37,16 +37,8 @@ Scenario: Create new Team Member
 	And I delete a team member
 	And I search for a team member
 	Then The team member does not exist
-	
 
-#Scenario: 06 Delete a team member
-#	Given I log in with BCeID user ess.developerA1
-#	And I search for a team member
-#	And I delete a team member
-#	And I search for a team member
-#	Then The team member does not exist
-
-Scenario: Create a new supplier
+Scenario: Suppliers Management
 	Given I log in with BCeID user ess.developerA1
 	And I create a new supplier
 	And I search for a supplier
@@ -59,24 +51,8 @@ Scenario: Create a new supplier
 	And I delete a supplier
 	And I search for a supplier
 	Then The supplier does not exist
-	
 
-#Scenario: 08 Add Mutual Aid to supplier
-#	Given I log in with BCeID user ess.developerA1
-#	And I search for a supplier
-#	And I select a supplier for mutual aid
-#	Then I am on path /responder-access/supplier-management/suppliers-list
-
-#Scenario: 09 Rescind Mutual Aid of supplier
-#	Given I log in with BCeID user ess.developerA1
-#	And I search for a supplier
-#	And I rescind a supplier
-#	Then I am on path /responder-access/supplier-management/suppliers-list
-
-
-#Scenario: 10 Delete a supplier
-#	Given I log in with BCeID user ess.developerA1
-#	And I search for a supplier
-#	And I delete a supplier
-#	And I search for a supplier
-#	Then The supplier does not exist
+Scenario: Create several suppliers
+	Given I log in with BCeID user ess.developerA1
+	And I create multiple suppliers 46
+	Then I am on path /responder-access/supplier-management/suppliers-list
