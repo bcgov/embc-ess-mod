@@ -52,7 +52,7 @@ Scenario: Suppliers Management
 	And I search for a supplier
 	Then The supplier does not exist
 
-Scenario: Create several suppliers
-	Given I log in with BCeID user ess.developerA1
-	And I create multiple suppliers 46
-	Then I am on path /responder-access/supplier-management/suppliers-list
+#Scenario: Create several suppliers
+#	Given I log in with BCeID user ess.developerA1
+#	And I create multiple suppliers 46
+#	Then I am on path /responder-access/supplier-management/suppliers-list
