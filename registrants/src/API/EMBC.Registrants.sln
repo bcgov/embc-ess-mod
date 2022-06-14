@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Messaging", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Caching", "EMBC.Utilities.Caching\EMBC.Utilities.Caching.csproj", "{230F096F-6211-4775-9C31-861E8DBB48BB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMBC.Utilities.Telemetry", "EMBC.Utilities.Telemetry\EMBC.Utilities.Telemetry.csproj", "{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,18 @@ Global
 		{230F096F-6211-4775-9C31-861E8DBB48BB}.Release|x64.Build.0 = Release|Any CPU
 		{230F096F-6211-4775-9C31-861E8DBB48BB}.Release|x86.ActiveCfg = Release|Any CPU
 		{230F096F-6211-4775-9C31-861E8DBB48BB}.Release|x86.Build.0 = Release|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Debug|x64.Build.0 = Debug|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Debug|x86.Build.0 = Debug|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Release|x64.ActiveCfg = Release|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Release|x64.Build.0 = Release|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Release|x86.ActiveCfg = Release|Any CPU
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +136,7 @@ Global
 		{3737A3FE-B0CA-4E0D-953A-5819812D7EAC} = {8767FCB6-3A38-4AD6-9A74-EF442141C514}
 		{1A9DE8A8-E3D2-4D47-8198-340CA92D9D8A} = {8767FCB6-3A38-4AD6-9A74-EF442141C514}
 		{230F096F-6211-4775-9C31-861E8DBB48BB} = {8767FCB6-3A38-4AD6-9A74-EF442141C514}
+		{09D47B93-BB8F-44CE-B2FF-0ABCA6F897D1} = {8767FCB6-3A38-4AD6-9A74-EF442141C514}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DF64783-FD22-4BDE-924E-BCAD6405AD74}

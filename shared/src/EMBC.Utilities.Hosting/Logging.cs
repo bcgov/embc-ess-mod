@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
@@ -6,8 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Events;
@@ -46,6 +45,7 @@ namespace EMBC.Utilities.Hosting
             }
             else
             {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
                 loggerConfiguration
                     .WriteTo.EventCollector(
                         splunkHost: splunkUrl,
@@ -55,6 +55,7 @@ namespace EMBC.Utilities.Hosting
                             ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                         },
                         renderTemplate: false);
+#pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
                 Log.Information($"Logs will be forwarded to Splunk");
             }
         }
@@ -88,20 +89,26 @@ namespace EMBC.Utilities.Hosting
 
         public static IServiceCollection AddOpenTelemetry(this IServiceCollection services, string appName)
         {
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                builder
-                    .AddConsoleExporter()
-                    .AddSource(appName)
-                    .SetResourceBuilder(ResourceBuilder
-                        .CreateDefault()
-                        .AddService(serviceName: appName, serviceVersion: Environment.GetEnvironmentVariable("VERSION")))
-                    .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddGrpcCoreInstrumentation()
-                    .AddGrpcClientInstrumentation()
-                    .AddRedisInstrumentation();
-            });
+            //services.AddOpenTelemetryTracing(builder =>
+            //{
+            //    builder
+            //        .AddConsoleExporter()
+            //        .AddSource(appName)
+            //        .SetResourceBuilder(ResourceBuilder
+            //            .CreateDefault()
+            //            .AddService(serviceName: appName, serviceVersion: Environment.GetEnvironmentVariable("VERSION")))
+            //        .AddHttpClientInstrumentation()
+            //        .AddAspNetCoreInstrumentation()
+            //        .AddGrpcCoreInstrumentation()
+            //        .AddGrpcClientInstrumentation()
+            //        .AddRedisInstrumentation()
+            //        .AddConsoleExporter();
+            //});
+
+            //services.AddSingleton(TracerProvider.Default.GetTracer(appName));
+
+            var listener = new SerilogTraceListener.SerilogTraceListener();
+            Trace.Listeners.Add(listener);
 
             return services;
         }
