@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,16 +13,16 @@ namespace EMBC.Utilities.Caching
     {
         private readonly IDistributedCache cache;
         private readonly CacheSyncManager cacheSyncManager;
-        private readonly ILogger<Cache> logger;
+        private readonly ITelemetryReporter logger;
         private readonly string keyPrefix;
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
-        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IHostEnvironment env, ILogger<Cache> logger)
+        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IHostEnvironment env, ITelemetryProvider telemetryProvider)
         {
             this.cache = cache;
             this.cacheSyncManager = cacheSyncManager;
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<Cache>();
             this.keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? env?.ApplicationName ?? string.Empty;
         }
 

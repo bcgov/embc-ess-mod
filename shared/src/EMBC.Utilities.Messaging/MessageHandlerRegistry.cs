@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -9,12 +10,12 @@ namespace EMBC.Utilities.Messaging
 {
     internal class MessageHandlerRegistry
     {
-        private Dictionary<Type, MethodInfo> registry = new Dictionary<Type, MethodInfo>();
-        private readonly ILogger<MessageHandlerRegistry> logger;
+        private readonly Dictionary<Type, MethodInfo> registry = new Dictionary<Type, MethodInfo>();
+        private readonly ITelemetryReporter logger;
 
-        public MessageHandlerRegistry(ILogger<MessageHandlerRegistry> logger, IOptions<MessageHandlerRegistryOptions> options)
+        public MessageHandlerRegistry(ITelemetryProvider telemetryProvider, IOptions<MessageHandlerRegistryOptions> options)
         {
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<MessageHandlerRegistry>();
             foreach (var type in options.Value.RegisteredHandlers)
             {
                 Register(type);
@@ -64,7 +65,7 @@ namespace EMBC.Utilities.Messaging
 
     public class MessageHandlerRegistryOptions
     {
-        private List<Type> handlerTypes = new List<Type>();
+        private readonly List<Type> handlerTypes = new List<Type>();
         public IEnumerable<Type> RegisteredHandlers => handlerTypes;
 
         public void Add(Type handlerType) => handlerTypes.Add(handlerType);

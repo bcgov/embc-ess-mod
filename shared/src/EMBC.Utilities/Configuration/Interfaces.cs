@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EMBC.Utilities.Telemetry;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace EMBC.Utilities.Configuration
 {
@@ -14,7 +14,7 @@ namespace EMBC.Utilities.Configuration
         public IServiceCollection Services { get; set; } = null!;
         public IConfiguration Configuration { get; set; } = null!;
         public IHostEnvironment Environment { get; set; } = null!;
-        public ILogger Logger { get; set; } = null!;
+        public ITelemetryReporter Logger { get; set; } = null!;
     }
 
     public interface IConfigureComponentServices
@@ -27,7 +27,7 @@ namespace EMBC.Utilities.Configuration
         public IApplicationBuilder Application { get; set; } = null!;
         public IConfiguration Configuration { get; set; } = null!;
         public IHostEnvironment Environment { get; set; } = null!;
-        public ILogger Logger { get; set; } = null!;
+        public ITelemetryReporter Logger { get; set; } = null!;
     }
 
     public interface IConfigureComponentPipeline

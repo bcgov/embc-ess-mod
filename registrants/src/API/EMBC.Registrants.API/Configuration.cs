@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Services;
 using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Telemetry;
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -62,14 +63,14 @@ namespace EMBC.Registrants.API
                      OnTokenValidated = async ctx =>
                      {
                          await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
                          var userInfo = ctx.Principal.FindFirstValue("userInfo");
                          logger.LogDebug("{0}", userInfo);
                      },
                      OnAuthenticationFailed = async ctx =>
                      {
                          await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
                          logger.LogError(ctx.Exception, "JWT authantication failed");
                      }
                  };
@@ -85,14 +86,14 @@ namespace EMBC.Registrants.API
                      OnTokenValidated = async ctx =>
                      {
                          await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<OAuth2IntrospectionEvents>>();
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<OAuth2IntrospectionEvents>();
                          var userInfo = ctx.Principal?.FindFirst("userInfo");
                          logger.LogDebug("{0}", userInfo);
                      },
                      OnAuthenticationFailed = async ctx =>
                      {
                          await Task.CompletedTask;
-                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ILogger<JwtBearerEvents>>();
+                         var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
                          logger.LogError(ctx?.Result?.Failure, "Introspection authantication failed");
                      }
                  };

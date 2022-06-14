@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using EMBC.Utilities.Caching;
+using EMBC.Utilities.Telemetry;
 using IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,25 +21,25 @@ namespace EMBC.ESS.Utilities.Dynamics
         private readonly IHttpClientFactory httpClientFactory;
         private readonly DynamicsOptions options;
         private readonly ICache cache;
-        private readonly ILogger<ADFSSecurityTokenProvider> logger;
+        private readonly ITelemetryReporter logger;
 
         public ADFSSecurityTokenProvider(
             IHttpClientFactory httpClientFactory,
             IOptions<DynamicsOptions> options,
             ICache cache,
-            ILogger<ADFSSecurityTokenProvider> logger)
+            ITelemetryProvider telemetryProvider)
         {
             this.httpClientFactory = httpClientFactory;
             this.options = options.Value;
             this.cache = cache;
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<ADFSSecurityTokenProvider>();
         }
 
         public async Task<string> AcquireToken() => await cache.GetOrSet(cacheKey, AcquireTokenInternal, TimeSpan.FromMinutes(5)) ?? null!;
 
         private async Task<string> AcquireTokenInternal()
         {
-            logger.LogDebug("Aquiring ADFS token from {0}", options.Adfs.OAuth2TokenEndpoint.AbsoluteUri);
+            logger.LogDebug("Acquiring ADFS token from {0}", options.Adfs.OAuth2TokenEndpoint.AbsoluteUri);
             using var httpClient = httpClientFactory.CreateClient("adfs_token");
 
             var response = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
@@ -52,7 +53,7 @@ namespace EMBC.ESS.Utilities.Dynamics
                 Scope = "openid",
             });
 
-            if (response.IsError) throw new Exception(response.Error);
+            if (response.IsError) throw new InvalidOperationException(response.Error);
 
             logger.LogInformation("ADFS token acquired");
             return response.AccessToken;

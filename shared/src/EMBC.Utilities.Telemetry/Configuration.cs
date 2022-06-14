@@ -7,7 +7,7 @@ namespace EMBC.Utilities.Telemetry
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            configurationServices.Services.TryAddScoped<ITelemetryProvider, TelemetryProvider>();
+            configurationServices.Services.TryAddSingleton<ITelemetryProvider, TelemetryProvider>();
         }
     }
 }

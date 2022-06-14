@@ -3,17 +3,18 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using EMBC.Utilities.Hosting;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.Utilities.Caching
 {
     internal class CacheSyncManager : ConcurrentDictionary<string, SemaphoreSlim>, IBackgroundTask
     {
-        private readonly ILogger logger;
+        private readonly ITelemetryReporter logger;
 
-        public CacheSyncManager(ILogger<CacheSyncManager> logger)
+        public CacheSyncManager(ITelemetryProvider telemetryProvider)
         {
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<CacheSyncManager>();
         }
 
         public string Schedule => "* */1 * * * *";

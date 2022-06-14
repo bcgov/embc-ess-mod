@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -81,7 +82,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         {
             var source = (string)ctx["_source"];
             var sp = (IServiceProvider)ctx["_serviceprovider"];
-            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            var logger = sp.GetRequiredService<ITelemetryProvider>().Get(source);
             logger.LogError(r.Exception, "BREAK: {0} {1}: {2}", time, r.Result?.StatusCode, r.Result?.RequestMessage?.RequestUri);
             var reporter = sp.GetRequiredService<IEssContextStateReporter>();
             reporter.ReportBroken($"{source}: {r.Exception?.Message ?? r.Result?.StatusCode.ToString()}").ConfigureAwait(false).GetAwaiter().GetResult();
@@ -91,7 +92,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         {
             var source = (string)ctx["_source"];
             var sp = (IServiceProvider)ctx["_serviceprovider"];
-            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            var logger = sp.GetRequiredService<ITelemetryProvider>().Get(source);
             logger.LogInformation("RESET");
             var reporter = sp.GetRequiredService<IEssContextStateReporter>();
             reporter.ReportFixed().ConfigureAwait(false).GetAwaiter().GetResult();

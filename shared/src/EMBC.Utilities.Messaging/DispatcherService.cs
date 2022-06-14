@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EMBC.Utilities.Telemetry;
 using Google.Protobuf;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,7 @@ namespace EMBC.Utilities.Messaging
         {
             var serviceProvider = context.GetHttpContext().RequestServices;
             var serviceRegistry = serviceProvider.GetRequiredService<MessageHandlerRegistry>();
-            var logger = serviceProvider.GetRequiredService<ILogger<DispatcherService>>();
+            var logger = serviceProvider.GetRequiredService<ITelemetryProvider>().Get<DispatcherService>();
 
             var sw = Stopwatch.StartNew();
             try

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Telemetry;
 using Grpc.Core;
 using Grpc.Net.Client.Balancer;
 using Grpc.Net.Client.Configuration;
@@ -65,21 +66,20 @@ namespace EMBC.Utilities.Messaging
                             OnAuthenticationFailed = async c =>
                             {
                                 await Task.CompletedTask;
-                                var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                                logger.LogError(c.Exception, $"Error authenticating token");
+                                var logger = c.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get(nameof(JwtBearerEvents));
+                                logger.LogError(c.Exception, $"error authenticating token");
                             },
                             OnTokenValidated = async c =>
                             {
                                 await Task.CompletedTask;
-                                var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                                var logger = c.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get(nameof(JwtBearerEvents));
                                 if (c.Request.Headers.TryGetValue("_user", out var userToken))
                                 {
                                     var jwtHandler = new JwtSecurityTokenHandler();
                                     userToken = userToken[0].Replace("bearer ", string.Empty, true, null);
                                     if (!jwtHandler.CanReadToken(userToken)) throw new InvalidOperationException($"can't read user token");
-                                    //TODO: validate token and add as identity to the principal
                                 }
-                                logger.LogDebug("Token validated for {0}", c.Principal?.Identity?.Name);
+                                logger.LogDebug("token validated for {0}", c.Principal?.Identity?.Name);
                             }
                         };
                         opts.Validate();
@@ -138,7 +138,9 @@ namespace EMBC.Utilities.Messaging
                     };
                     if (options.AllowInvalidServerCertificate)
                     {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
                         handler.SslOptions = new SslClientAuthenticationOptions { RemoteCertificateValidationCallback = DangerousCertificationValidation };
+#pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
                     }
                     return handler;
                 }).ConfigureChannel(opts =>

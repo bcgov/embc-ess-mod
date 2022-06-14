@@ -5,19 +5,20 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Hosting;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Logging;
 
 namespace EMBC.ESS.Resources.Metadata
 {
     public class CacheUpdater : IBackgroundTask
     {
-        private readonly ILogger<CacheUpdater> logger;
+        private readonly ITelemetryReporter logger;
         private readonly ICache cache;
         private readonly IMetadataRepository metadataRepository;
 
-        public CacheUpdater(ILogger<CacheUpdater> logger, ICache cache, IEssContextFactory essContextFactory, IMapper mapper)
+        public CacheUpdater(ITelemetryProvider telemetryProvider, ICache cache, IEssContextFactory essContextFactory, IMapper mapper)
         {
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<CacheUpdater>();
             this.cache = cache;
             this.metadataRepository = new InternalMetadataRepository(essContextFactory, mapper);
         }

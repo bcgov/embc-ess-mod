@@ -4,6 +4,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using EMBC.PDFGenerator;
 using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Telemetry;
 using Grpc.Core;
 using Grpc.Net.Client.Balancer;
 using Grpc.Net.Client.Configuration;
@@ -33,36 +34,38 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                 return;
             }
 
-            var httpClientBuilder = configurationServices.Services.AddGrpcClient<Generator.GeneratorClient>(opts =>
-            {
-                opts.Address = pdfGeneratorUrl;
-            }).ConfigurePrimaryHttpMessageHandler(() =>
-            {
-                var handler = new SocketsHttpHandler()
-                {
-                    EnableMultipleHttp2Connections = true,
-                    PooledConnectionIdleTimeout = TimeSpan.FromMinutes(2),
-                    PooledConnectionLifetime = TimeSpan.FromSeconds(20),
-                    KeepAlivePingDelay = TimeSpan.FromSeconds(20),
-                    KeepAlivePingTimeout = TimeSpan.FromSeconds(20),
-                    KeepAlivePingPolicy = HttpKeepAlivePingPolicy.WithActiveRequests
-                };
-                if (allowUntrustedCertificates)
-                {
-                    handler.SslOptions = new SslClientAuthenticationOptions { RemoteCertificateValidationCallback = DangerousCertificationValidation };
-                }
-                return handler;
-            }).ConfigureChannel(opts =>
-            {
-                if (pdfGeneratorUrl.Scheme == "dns")
-                {
-                    opts.Credentials = ChannelCredentials.SecureSsl;
-                }
-                opts.ServiceConfig = new ServiceConfig
-                {
-                    LoadBalancingConfigs = { new RoundRobinConfig() },
-                    MethodConfigs =
-                        {
+            configurationServices.Services.AddGrpcClient<Generator.GeneratorClient>(opts =>
+           {
+               opts.Address = pdfGeneratorUrl;
+           }).ConfigurePrimaryHttpMessageHandler(() =>
+           {
+               var handler = new SocketsHttpHandler()
+               {
+                   EnableMultipleHttp2Connections = true,
+                   PooledConnectionIdleTimeout = TimeSpan.FromMinutes(2),
+                   PooledConnectionLifetime = TimeSpan.FromSeconds(20),
+                   KeepAlivePingDelay = TimeSpan.FromSeconds(20),
+                   KeepAlivePingTimeout = TimeSpan.FromSeconds(20),
+                   KeepAlivePingPolicy = HttpKeepAlivePingPolicy.WithActiveRequests
+               };
+               if (allowUntrustedCertificates)
+               {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
+                   handler.SslOptions = new SslClientAuthenticationOptions { RemoteCertificateValidationCallback = DangerousCertificationValidation };
+#pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
+               }
+               return handler;
+           }).ConfigureChannel(opts =>
+           {
+               if (pdfGeneratorUrl.Scheme == "dns")
+               {
+                   opts.Credentials = ChannelCredentials.SecureSsl;
+               }
+               opts.ServiceConfig = new ServiceConfig
+               {
+                   LoadBalancingConfigs = { new RoundRobinConfig() },
+                   MethodConfigs =
+                       {
                             new MethodConfig
                             {
                                 RetryPolicy = new RetryPolicy
@@ -74,9 +77,9 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                                     RetryableStatusCodes = { StatusCode.Unavailable }
                                 }
                             }
-                        }
-                };
-            }).EnableCallContextPropagation(opts => opts.SuppressContextNotFoundErrors = true);
+                       }
+               };
+           }).EnableCallContextPropagation(opts => opts.SuppressContextNotFoundErrors = true);
 
             configurationServices.Services.TryAddTransient<IPdfGenerator, PdfGenerator>();
         }

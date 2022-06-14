@@ -312,6 +312,9 @@ dotnet_diagnostic.S125.severity = suggestion
 # IDE0022: Use block body for methods
 dotnet_diagnostic.IDE0022.severity = suggestion
 
+# S101: Types should be named in PascalCase
+dotnet_diagnostic.S101.severity = suggestion
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion

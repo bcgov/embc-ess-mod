@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.Utilities.Telemetry;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
@@ -12,13 +13,13 @@ namespace EMBC.Utilities.Notifications.Channels
 {
     public class Email : INotificationChannel
     {
-        private readonly ILogger<Email> logger;
+        private readonly ITelemetryReporter logger;
         private EmailChannelOptions settings;
 
-        public Email(IOptions<EmailChannelOptions> options, ILogger<Email> logger)
+        public Email(IOptions<EmailChannelOptions> options, ITelemetryProvider telemetryProvider)
         {
             settings = options.Value;
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<Email>();
         }
 
         public async Task Send(Notification notification)

@@ -15,9 +15,9 @@ namespace EMBC.Utilities.Telemetry
             this.logger = logger;
         }
 
-        public void Report(ReportType logLevel, string template, Exception? e = null, params object[]? args)
+        public void Report(ReportType reportType, string template, Exception? e = null, params object?[] args)
         {
-            switch (logLevel)
+            switch (reportType)
             {
                 case ReportType.Debug when logger.IsEnabled(LogEventLevel.Debug):
                     Log(LogEventLevel.Debug, template, e, args);
@@ -36,7 +36,7 @@ namespace EMBC.Utilities.Telemetry
                     break;
 
                 case ReportType.Event:
-                    Report(logLevel, template, args);
+                    Report(reportType, template, args);
                     break;
 
                 default:
@@ -44,8 +44,8 @@ namespace EMBC.Utilities.Telemetry
             }
         }
 
-        private void Report(ReportType logLevel, string template, params object[]? args) => diagnosticContext.Set($"{logLevel}", string.Format(template, args));
+        private void Report(ReportType logLevel, string template, params object?[] args) => diagnosticContext.Set($"{logLevel}", string.Format(template, args));
 
-        private void Log(LogEventLevel level, string template, Exception? e, params object[]? args) => logger.Write(level, e, template, args);
+        private void Log(LogEventLevel level, string template, Exception? e, params object?[] args) => logger.Write(level, e, template, args);
     }
 }
