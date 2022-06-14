@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.Responders.API.Helpers;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,12 +21,14 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly ILogger<TasksController> logger;
+        private ErrorParser errorParser;
 
         public TasksController(IMessagingClient messagingClient, IMapper mapper, ILogger<TasksController> logger)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.logger = logger;
+            this.errorParser = new ErrorParser();
         }
 
         /// <summary>
@@ -56,9 +58,9 @@ namespace EMBC.Responders.API.Controllers
                 var suppliers = (await messagingClient.Send(new SuppliersListQuery { TaskId = taskId })).Items;
                 return Ok(mapper.Map<IEnumerable<SuppliersListItem>>(suppliers));
             }
-            catch (NotFoundException)
+            catch (ServerException e)
             {
-                return NotFound(taskId);
+                return errorParser.Parse(e);
             }
         }
 

@@ -118,24 +118,27 @@ export class SupplierListDataService {
    * @param supplierId the supplier's id
    * @param viewType the type of view to be rendered whether the details dsplayed are from a main supplier or a mutual aid.
    */
-  getSupplierDetails(supplierId: string, viewType: string): void {
-    this.supplierServices.getSupplierById(supplierId).subscribe({
-      next: (supplier) => {
-        this.setSelectedSupplier(supplier);
-        const essTeamsList: Team[] =
-          this.supplierServices.getMutualAidEssTeamsList();
-        const filteredEssTeams = this.filterEssTeams(essTeamsList);
-        this.setNonMutualAidTeams(filteredEssTeams);
+  getSupplierDetails(supplierId: string, viewType: string): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      this.supplierServices.getSupplierById(supplierId).subscribe({
+        next: async (supplier) => {
+          this.setSelectedSupplier(supplier);
+          const essTeamsList: Team[] =
+            await this.supplierServices.getMutualAidEssTeamsList();
+          const filteredEssTeams = this.filterEssTeams(essTeamsList);
+          this.setNonMutualAidTeams(filteredEssTeams);
 
-        this.router.navigate(
-          ['/responder-access/supplier-management/supplier-detail'],
-          { queryParams: { type: viewType } }
-        );
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.getSupportByIdError);
-      }
+          this.router.navigate(
+            ['/responder-access/supplier-management/supplier-detail'],
+            { queryParams: { type: viewType } }
+          );
+          resolve();
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.getSupportByIdError);
+        }
+      });
     });
   }
 
