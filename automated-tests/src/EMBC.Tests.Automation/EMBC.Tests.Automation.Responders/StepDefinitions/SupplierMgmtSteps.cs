@@ -76,5 +76,18 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/supplier-detail");
             supplierManagement.RescindMutualAid();
         }
+
+        [StepDefinition(@"I create multiple suppliers (.*)")]
+        public void CreateSeveralSuppliers(int suppliersAmount)
+        {
+            for (int i = 0; i < suppliersAmount; i++)
+            {
+                supplierManagement.EnterSupplierManagement();
+                supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/suppliers-list");
+                supplierManagement.AddNewSupplierTab();
+                supplierManagement.CurrentLocation.Should().Be("/responder-access/supplier-management/add-supplier");
+                supplierManagement.AddRandomSupplier(i);
+            }
+        }
     }
 }

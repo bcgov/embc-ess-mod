@@ -56,8 +56,7 @@ export class ReferralComponent implements OnInit {
     }
 
     get rowControl() {
-        // return (this.referralForm.controls.referralRows as FormArray).controls;
-        return this.referralForm.get('referralRows')['controls'] as FormArray;
+        return (this.referralForm.controls.referralRows as FormArray).controls;
     }
 
     ngOnInit() {
@@ -107,7 +106,10 @@ export class ReferralComponent implements OnInit {
             supportProvided: ['', Validators.required],
             description: [''],
             gst: ['', Validators.required],
-            amount: ['', this.customValidator.amountGreaterValidator()]
+            amount: ['', Validators.required]
+        },
+        {
+            validators: [this.customValidator.amountGreaterValidator()]
         });
         // { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) }
     }
@@ -170,10 +172,13 @@ export class ReferralComponent implements OnInit {
 
     createRowFormWithValues(row: any) {
         return this.builder.group({
-            supportProvided: [row.supportProvided],
+            supportProvided: [row.supportProvided, Validators.required],
             description: [row.description],
-            gst: [row.gst],
-            amount: [row.amount, this.customValidator.amountGreaterValidator()]
+            gst: [row.gst, Validators.required],
+            amount: [row.amount, Validators.required]
+        },
+        {
+            validators: [this.customValidator.amountGreaterValidator()]
         });
         // { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) }
     }

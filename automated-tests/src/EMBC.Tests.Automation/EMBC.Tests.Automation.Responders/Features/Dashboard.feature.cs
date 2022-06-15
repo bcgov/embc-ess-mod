@@ -80,16 +80,16 @@ namespace EMBC.Tests.Automation.Responders.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="01 Responder can login to the portal")]
+        [Xunit.SkippableFactAttribute(DisplayName="Responder can login to the portal")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "01 Responder can login to the portal")]
+        [Xunit.TraitAttribute("Description", "Responder can login to the portal")]
         [Xunit.TraitAttribute("Category", "responders")]
-        public void _01ResponderCanLoginToThePortal()
+        public void ResponderCanLoginToThePortal()
         {
             string[] tagsOfScenario = new string[] {
                     "responders"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("01 Responder can login to the portal", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Responder can login to the portal", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 4
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -110,14 +110,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="02 Evacuee online new Registration")]
+        [Xunit.SkippableFactAttribute(DisplayName="Evacuee online new Registration")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "02 Evacuee online new Registration")]
-        public void _02EvacueeOnlineNewRegistration()
+        [Xunit.TraitAttribute("Description", "Evacuee online new Registration")]
+        public void EvacueeOnlineNewRegistration()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("02 Evacuee online new Registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee online new Registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 8
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -132,10 +132,10 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 10
- testRunner.When("I sign into a task", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I sign into a task 6789", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 11
- testRunner.And("I search for an online evacuee", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I search for an online evacuee Automation", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 12
  testRunner.And("I complete an online registration", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -147,14 +147,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="03 Evacuee paper based new Registration")]
+        [Xunit.SkippableFactAttribute(DisplayName="Evacuee paper based new Registration")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "03 Evacuee paper based new Registration")]
-        public void _03EvacueePaperBasedNewRegistration()
+        [Xunit.TraitAttribute("Description", "Evacuee paper based new Registration")]
+        public void EvacueePaperBasedNewRegistration()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("03 Evacuee paper based new Registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee paper based new Registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 15
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -169,10 +169,10 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 17
- testRunner.When("I sign into a task", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I sign into a task 6789", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 18
- testRunner.And("I search for a paper based evacuee", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I search for a paper based evacuee Automation", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 19
  testRunner.And("I complete a paper based registration", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -184,14 +184,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="04 Add Interac Support to Online ESS File")]
+        [Xunit.SkippableFactAttribute(DisplayName="Add Interac Support to Online ESS File")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "04 Add Interac Support to Online ESS File")]
-        public void _04AddInteracSupportToOnlineESSFile()
+        [Xunit.TraitAttribute("Description", "Add Interac Support to Online ESS File")]
+        public void AddInteracSupportToOnlineESSFile()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("04 Add Interac Support to Online ESS File", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add Interac Support to Online ESS File", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 22
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -206,10 +206,10 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 24
- testRunner.And("I sign into a task", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I sign into a task 6789", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 25
- testRunner.And("I search for an online evacuee", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I search for an online evacuee Thirtyfour", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 26
  testRunner.And("I choose an ESS file from the search results", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
@@ -227,14 +227,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="05 Create new Team Member")]
+        [Xunit.SkippableFactAttribute(DisplayName="Team Member Management")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "05 Create new Team Member")]
-        public void _05CreateNewTeamMember()
+        [Xunit.TraitAttribute("Description", "Team Member Management")]
+        public void TeamMemberManagement()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("05 Create new Team Member", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Team Member Management", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 31
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -261,58 +261,27 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.And("I search for a team member", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 37
- testRunner.Then("The team member status is deactive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="06 Delete a team member")]
-        [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "06 Delete a team member")]
-        public void _06DeleteATeamMember()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("06 Delete a team member", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 39
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 40
- testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 41
- testRunner.And("I search for a team member", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 42
  testRunner.And("I delete a team member", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 43
+#line 38
  testRunner.And("I search for a team member", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 44
+#line 39
  testRunner.Then("The team member does not exist", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="07 Create a new supplier")]
+        [Xunit.SkippableFactAttribute(DisplayName="Suppliers Management")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "07 Create a new supplier")]
-        public void _07CreateANewSupplier()
+        [Xunit.TraitAttribute("Description", "Suppliers Management")]
+        public void SuppliersManagement()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("07 Create a new supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 46
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Suppliers Management", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 41
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -322,37 +291,55 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 47
+#line 42
  testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 48
+#line 43
  testRunner.And("I create a new supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 49
+#line 44
  testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 50
+#line 45
  testRunner.And("I change a supplier status", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 51
+#line 46
  testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
+#line 47
+ testRunner.And("I select a supplier for mutual aid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 48
+ testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 49
+ testRunner.And("I rescind a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 50
+ testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 51
+ testRunner.And("I delete a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
 #line 52
- testRunner.Then("The supplier status is deactive", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 53
+ testRunner.Then("The supplier does not exist", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="08 Add Mutual Aid to supplier")]
+        [Xunit.SkippableFactAttribute(DisplayName="Create several suppliers")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "08 Add Mutual Aid to supplier")]
-        public void _08AddMutualAidToSupplier()
+        [Xunit.TraitAttribute("Description", "Create several suppliers")]
+        public void CreateSeveralSuppliers()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("08 Add Mutual Aid to supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 54
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create several suppliers", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 55
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -362,88 +349,14 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 55
+#line 56
  testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 56
- testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
 #line 57
- testRunner.And("I select a supplier for mutual aid", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I create multiple suppliers 46", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 58
  testRunner.Then("I am on path /responder-access/supplier-management/suppliers-list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="09 Rescind Mutual Aid of supplier")]
-        [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "09 Rescind Mutual Aid of supplier")]
-        public void _09RescindMutualAidOfSupplier()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("09 Rescind Mutual Aid of supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 60
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 61
- testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 62
- testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 63
- testRunner.And("I rescind a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 64
- testRunner.Then("I am on path /responder-access/supplier-management/suppliers-list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="10 Delete a supplier")]
-        [Xunit.TraitAttribute("FeatureTitle", "Responders Portal homepage")]
-        [Xunit.TraitAttribute("Description", "10 Delete a supplier")]
-        public void _10DeleteASupplier()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("10 Delete a supplier", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 67
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 68
- testRunner.Given("I log in with BCeID user ess.developerA1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 69
- testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 70
- testRunner.And("I delete a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 71
- testRunner.And("I search for a supplier", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 72
- testRunner.Then("The supplier does not exist", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

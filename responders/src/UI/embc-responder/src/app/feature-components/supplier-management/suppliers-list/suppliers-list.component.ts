@@ -32,6 +32,7 @@ export class SuppliersListComponent implements OnInit {
   mutualAidLoader = false;
   statusLoading = true;
   loggedInRole: string;
+  isLoading = false;
 
   constructor(
     private supplierListDataService: SupplierListDataService,
@@ -86,11 +87,21 @@ export class SuppliersListComponent implements OnInit {
    * @param $event Selected team member object
    */
   openSupplierDetails($event: SupplierListItem): void {
-    this.supplierListDataService.getSupplierDetails($event.id, 'supplier');
+    this.isLoading = true;
+    this.supplierListDataService
+      .getSupplierDetails($event.id, 'supplier')
+      .then(() => {
+        this.isLoading = false;
+      });
   }
 
   openMutualAidDetails($event: SupplierListItem): void {
-    this.supplierListDataService.getSupplierDetails($event.id, 'mutualAid');
+    this.isLoading = true;
+    this.supplierListDataService
+      .getSupplierDetails($event.id, 'mutualAid')
+      .then(() => {
+        this.isLoading = false;
+      });
   }
 
   /**

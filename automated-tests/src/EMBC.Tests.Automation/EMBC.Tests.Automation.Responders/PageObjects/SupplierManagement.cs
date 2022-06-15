@@ -88,6 +88,49 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         }
 
+        public void AddRandomSupplier(int index)
+        {
+            var legalName = "Automation Org " + index;
+            var name = "Auto Testing " + index;
+            var gstPart1 = Randomizer("D9");
+            var gstPart2 = Randomizer("D4");
+            var addressLine1 = "1889 Main St.";
+            var addressLine2 = "Office " + index;
+            var city = "Vancouver";
+            var zipcode = "V5H 2H8";
+            var lastName = "Tester " + index;
+            var firstName = "John";
+            var phone = Randomizer("D10");
+            var email = "John.Tester" + index + "@test.ca"; 
+
+            Wait();
+            webDriver.FindElement(addSupplierLegalNameInput).SendKeys(legalName);
+            webDriver.FindElement(addSupplierNameInput).SendKeys(name);
+            webDriver.FindElement(addSupplierGstNbr1Input).SendKeys(gstPart1);
+            webDriver.FindElement(addSupplierGstNbr2Input).SendKeys(gstPart2);
+            ButtonElement("Next");
+
+            Wait();
+            webDriver.FindElement(addSupplierAddressLine1).SendKeys(addressLine1);
+            webDriver.FindElement(addSupplierAddressLine2).SendKeys(addressLine2);
+            webDriver.FindElement(addSupplierCitySelect).SendKeys(city);
+            webDriver.FindElement(By.Id(city)).Click();
+            webDriver.FindElement(addSupplierPostalCodeInput).SendKeys(zipcode);
+
+            webDriver.FindElement(addSupplierLastNameInput).SendKeys(lastName);
+            webDriver.FindElement(addSupplierFirstNameInput).SendKeys(firstName);
+            webDriver.FindElement(addSupplierPhoneInput).SendKeys(phone);
+            webDriver.FindElement(addSupplierEmailInput).SendKeys(email);
+            ButtonElement("Next");
+
+            Wait();
+            ButtonElement("Save Supplier");
+
+            Wait();
+            ButtonElement("Close");
+
+        }
+
         public void SearchSupplier(string searchInput)
         {
             webDriver.FindElement(searchSupplierInput).Clear();
