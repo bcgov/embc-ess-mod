@@ -89,7 +89,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 teamMember.Id = memberId;
                 teamMember.TeamId = teamId;
-                var member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(teamMember);
+                mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(teamMember);
                 var updatedMemberId = await client.Send(new SaveTeamMemberCommand
                 {
                     Member = mapper.Map<ESS.Shared.Contracts.Teams.TeamMember>(teamMember)
@@ -115,7 +115,7 @@ namespace EMBC.Responders.API.Controllers
         {
             try
             {
-                var reply = await client.Send(new DeleteTeamMemberCommand
+                await client.Send(new DeleteTeamMemberCommand
                 {
                     TeamId = teamId,
                     MemberId = memberId
@@ -140,7 +140,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
-            var reply = await client.Send(new ActivateTeamMemberCommand
+            await client.Send(new ActivateTeamMemberCommand
             {
                 TeamId = teamId,
                 MemberId = memberId
@@ -160,7 +160,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
-            var reply = await client.Send(new DeactivateTeamMemberCommand
+            await client.Send(new DeactivateTeamMemberCommand
             {
                 TeamId = teamId,
                 MemberId = memberId

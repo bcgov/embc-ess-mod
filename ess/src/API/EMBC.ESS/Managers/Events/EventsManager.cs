@@ -23,6 +23,7 @@ using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Notifications;
+using EMBC.Utilities.Telemetry;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +35,7 @@ namespace EMBC.ESS.Managers.Events
 {
     public class EventsManager
     {
-        private readonly ILogger<EventsManager> logger;
+        private readonly ITelemetryProvider telemetryProvider;
         private readonly IMapper mapper;
         private readonly IEvacueesRepository evacueesRepository;
         private readonly IInvitationRepository invitationRepository;
@@ -60,7 +61,7 @@ namespace EMBC.ESS.Managers.Events
         private static TeamMemberStatus[] activeOnlyStatus = new[] { TeamMemberStatus.Active };
 
         public EventsManager(
-            ILogger<EventsManager> logger,
+            ITelemetryProvider telemetryProvider,
             IMapper mapper,
             IEvacueesRepository evacueesRepository,
             IInvitationRepository invitationRepository,
@@ -83,7 +84,7 @@ namespace EMBC.ESS.Managers.Events
             IPaymentRepository paymentRepository,
             ICache cache)
         {
-            this.logger = logger;
+            this.telemetryProvider = telemetryProvider;
             this.mapper = mapper;
             this.evacueesRepository = evacueesRepository;
             this.invitationRepository = invitationRepository;
@@ -722,6 +723,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(ProcessPendingSupportsCommand _)
         {
+            var logger = telemetryProvider.Get(nameof(ProcessPendingSupportsCommand));
             var ct = new CancellationTokenSource().Token;
 
             var foundSupports = true;
@@ -760,6 +762,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(ProcessApprovedSupportsCommand _)
         {
+            var logger = telemetryProvider.Get(nameof(ProcessApprovedSupportsCommand));
             var foundSupports = true;
             while (foundSupports)
             {
@@ -802,6 +805,7 @@ namespace EMBC.ESS.Managers.Events
 
         public async System.Threading.Tasks.Task Handle(ProcessPendingPaymentsCommand _)
         {
+            var logger = telemetryProvider.Get(nameof(ProcessPendingPaymentsCommand));
             var ct = new CancellationTokenSource().Token;
 
             var newPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
@@ -904,6 +908,7 @@ namespace EMBC.ESS.Managers.Events
         public async System.Threading.Tasks.Task Handle(ReconcilePaymentsCommand _)
         {
             var ct = new CancellationTokenSource().Token;
+            var logger = telemetryProvider.Get(nameof(ReconcilePaymentsCommand));
             var lastPollDate = await CalculateEarliestDateForPolling(ct);
             logger.LogInformation($"Polling for CAS payments after {lastPollDate}");
 

@@ -1,6 +1,6 @@
 ﻿using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace EMBC.Utilities.Caching
 {
@@ -8,7 +8,7 @@ namespace EMBC.Utilities.Caching
     {
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
-            configurationServices.Services.AddSingleton(sp => new CacheSyncManager(sp.GetRequiredService<ILogger<CacheSyncManager>>()));
+            configurationServices.Services.AddSingleton(sp => new CacheSyncManager(sp.GetRequiredService<ITelemetryProvider>()));
             configurationServices.Services.AddSingleton<ICache, Cache>();
         }
     }

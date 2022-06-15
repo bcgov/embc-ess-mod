@@ -6,6 +6,7 @@ using System.Runtime;
 using System.Threading.Tasks;
 using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Extensions;
+using EMBC.Utilities.Telemetry;
 using Hellang.Middleware.ProblemDetails;
 using Medallion.Threading;
 using Medallion.Threading.Redis;
@@ -21,7 +22,7 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Events;
-using Serilog.Extensions.Logging;
+using Serilog.Extensions.Hosting;
 using StackExchange.Redis;
 
 namespace EMBC.Utilities.Hosting
@@ -40,6 +41,8 @@ namespace EMBC.Utilities.Hosting
     public class Host
     {
         private readonly string appName;
+        private TelemetryProvider telemetryProvider = null!;
+        private ITelemetryReporter hostReporter = null!;
 
         public Host(string appName)
         {
@@ -92,6 +95,8 @@ namespace EMBC.Utilities.Hosting
                  .ToArray();
 #pragma warning restore S3885 // "Assembly.Load" should be used
 
+            telemetryProvider = new TelemetryProvider(new DiagnosticContext(Log.Logger.ForContext<Host>()));
+            hostReporter = telemetryProvider.Get<Host>();
             return CreateHost(assemblies);
         }
 
@@ -112,13 +117,15 @@ namespace EMBC.Utilities.Hosting
                     .Configure((WebHostBuilderContext ctx, IApplicationBuilder app) =>
                     {
                         Configure(app, ctx.Configuration, ctx.HostingEnvironment, assemblies);
+                    }).ConfigureLogging(logging =>
+                    {
+                        //logging.AddOpenTelemetry(opts => opts.AddConsoleExporter());
                     });
                 });
 
         protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment hostEnvironment, params Assembly[] assemblies)
         {
-            var logger = new SerilogLoggerFactory(Log.Logger).CreateLogger<Host>();
-
+            var logger = hostReporter;
             logger.LogInformation("Starting service configuration of {appName}", appName);
 
             var redisConnectionString = configuration.GetValue("REDIS_CONNECTIONSTRING", string.Empty);
@@ -187,7 +194,7 @@ namespace EMBC.Utilities.Hosting
 
             services.Configure<ExceptionHandlerOptions>(opts => opts.AllowStatusCode404Response = true);
 
-            services.ConfigureComponentServices(configuration, hostEnvironment, logger, assemblies);
+            services.ConfigureComponentServices(configuration, hostEnvironment, telemetryProvider, assemblies);
 
             services.AddOpenTelemetry(appName);
 
@@ -195,7 +202,7 @@ namespace EMBC.Utilities.Hosting
             if (configuration.GetValue("backgroundTask:enabled", true))
             {
                 logger.LogInformation("Background tasks are enabled");
-                services.AddBackgroundTasks(logger, assemblies);
+                services.AddBackgroundTasks(telemetryProvider, assemblies);
             }
             else
             {
@@ -208,7 +215,7 @@ namespace EMBC.Utilities.Hosting
 
         protected virtual void Configure(IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, params Assembly[] assemblies)
         {
-            var logger = app.ApplicationServices.GetRequiredService<ILogger<Host>>();
+            var logger = hostReporter;
 
             logger.LogInformation("Starting configuration of {appName}", appName);
 
@@ -219,7 +226,7 @@ namespace EMBC.Utilities.Hosting
             app.UseRouting();
             app.UseCors();
 
-            app.ConfigureComponentPipeline(configuration, env, logger, assemblies);
+            app.ConfigureComponentPipeline(configuration, env, telemetryProvider, assemblies);
 
             app.UseEndpoints(endpoints =>
             {

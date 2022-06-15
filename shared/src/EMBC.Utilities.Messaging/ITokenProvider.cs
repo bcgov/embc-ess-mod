@@ -18,6 +18,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EMBC.Utilities.Caching;
+using EMBC.Utilities.Telemetry;
 using IdentityModel.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -34,15 +35,15 @@ namespace EMBC.Utilities.Messaging
     {
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ICache cache;
-        private readonly ILogger<OAuthTokenProvider> logger;
+        private readonly ITelemetryReporter logger;
         private readonly OauthTokenProviderOptions options;
         private const string cacheKey = "messaging_token";
 
-        public OAuthTokenProvider(IHttpClientFactory httpClientFactory, ICache cache, IOptions<OauthTokenProviderOptions> options, ILogger<OAuthTokenProvider> logger)
+        public OAuthTokenProvider(IHttpClientFactory httpClientFactory, ICache cache, IOptions<OauthTokenProviderOptions> options, ITelemetryProvider telemetryProvider)
         {
             this.httpClientFactory = httpClientFactory;
             this.cache = cache;
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<OAuthTokenProvider>();
             this.options = options.Value;
         }
 

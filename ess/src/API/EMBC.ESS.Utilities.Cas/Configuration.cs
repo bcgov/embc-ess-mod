@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using EMBC.Utilities.Configuration;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -52,7 +53,7 @@ namespace EMBC.ESS.Utilities.Cas
         {
             var source = (string)ctx["_source"];
             var sp = (IServiceProvider)ctx["_serviceprovider"];
-            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            var logger = sp.GetRequiredService<ITelemetryProvider>().Get(source);
             logger.LogError(r.Exception, "BREAK: {0} {1}: {2}", time, r.Result?.StatusCode, r.Result?.RequestMessage?.RequestUri);
         }
 
@@ -60,7 +61,7 @@ namespace EMBC.ESS.Utilities.Cas
         {
             var source = (string)ctx["_source"];
             var sp = (IServiceProvider)ctx["_serviceprovider"];
-            var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(source);
+            var logger = sp.GetRequiredService<ITelemetryProvider>().Get(source);
             logger.LogInformation("RESET");
         }
     }

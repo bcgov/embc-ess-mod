@@ -7,10 +7,10 @@ using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Teams;
 using EMBC.Responders.API.Services;
 using EMBC.Utilities.Messaging;
+using EMBC.Utilities.Telemetry;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -25,14 +25,14 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IUserService userService;
-        private readonly IDiagnosticContext diagnosticsContext;
+        private readonly ITelemetryReporter telemetryReporter;
 
-        public ProfileController(IMessagingClient messagingClient, IMapper mapper, IUserService userService, IDiagnosticContext diagnosticsContext)
+        public ProfileController(IMessagingClient messagingClient, IMapper mapper, IUserService userService, ITelemetryProvider telemetryProvider)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.userService = userService;
-            this.diagnosticsContext = diagnosticsContext;
+            this.telemetryReporter = telemetryProvider.Get<ProfileController>();
         }
 
         /// <summary>
@@ -53,20 +53,19 @@ namespace EMBC.Responders.API.Controllers
 
             if (currentMember == null)
             {
-                diagnosticsContext.Set("error", $"User {userId} ({userName}@{sourceSystem}) not found");
+                telemetryReporter.LogError($"User {userId} ({userName}@{sourceSystem}) not found");
                 return Forbid();
             }
             if (currentMember.ExternalUserId != null && currentMember.ExternalUserId != userId)
             {
-                diagnosticsContext.Set("error", $"User {userName}@{sourceSystem} already has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
+                telemetryReporter.LogError($"User {userName}@{sourceSystem} already has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
                 return Forbid();
             }
 
             currentMember.ExternalUserId = userId;
             currentMember.LastSuccessfulLogin = DateTime.UtcNow;
 
-            diagnosticsContext.Set("login", $"User {userId} ({userName}@{sourceSystem}) logged in successfully");
-
+            telemetryReporter.LogInformation($"User {userId} ({userName}@{sourceSystem}) logged in successfully");
             // Update current user
             await messagingClient.Send(new SaveTeamMemberCommand
             {

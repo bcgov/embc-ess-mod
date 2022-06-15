@@ -24,8 +24,9 @@ namespace EMBC.Tests.Unit.ESS.Utilities
             var env = new HostingEnvironment { EnvironmentName = Environments.Development };
             var opts = Options.Create(new MemoryDistributedCacheOptions());
             underlyingDistributedCache = new MemoryDistributedCache(opts);
-            cacheSyncManager = new CacheSyncManager(output.BuildLoggerFor<CacheSyncManager>());
-            cache = new Cache(underlyingDistributedCache, cacheSyncManager, env, output.BuildLoggerFor<Cache>());
+            var telemetryProvider = TestHelper.CreateTelemetryProvider(output);
+            cacheSyncManager = new CacheSyncManager(telemetryProvider);
+            cache = new Cache(underlyingDistributedCache, cacheSyncManager, env, telemetryProvider);
         }
 
         [Fact]

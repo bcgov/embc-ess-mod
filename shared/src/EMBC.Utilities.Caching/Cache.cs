@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,16 +13,16 @@ namespace EMBC.Utilities.Caching
     {
         private readonly IDistributedCache cache;
         private readonly CacheSyncManager cacheSyncManager;
-        private readonly ILogger<Cache> logger;
+        private readonly ITelemetryReporter logger;
         private readonly string keyPrefix;
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
-        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IHostEnvironment env, ILogger<Cache> logger)
+        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IHostEnvironment env, ITelemetryProvider telemetryProvider)
         {
             this.cache = cache;
             this.cacheSyncManager = cacheSyncManager;
-            this.logger = logger;
+            this.logger = telemetryProvider.Get<Cache>();
             this.keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? env?.ApplicationName ?? string.Empty;
         }
 
@@ -31,7 +32,6 @@ namespace EMBC.Utilities.Caching
             while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken))
             {
                 logger.LogDebug("{0} retrying to obtain lock", key);
-                continue;
             }
             try
             {
@@ -69,7 +69,10 @@ namespace EMBC.Utilities.Caching
         public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken)) continue;
+            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken))
+            {
+                logger.LogDebug("{0} retrying to obtain lock", key);
+            }
             try
             {
                 await Set(key, await getter(), expiration, cancellationToken);
