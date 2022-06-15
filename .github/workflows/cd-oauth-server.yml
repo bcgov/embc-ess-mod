@@ -7,12 +7,12 @@ on:
       - master
 
     paths:
-      - "oauth-server/src/**"
+      - "oauth-server/src/API/**"
       - ".github/workflows/cd-oauth-server.yml"
 
 env:
   IMAGE_NAME: oauth-server
-  WORKING_DIRECTORY: ./oauth-server/src
+  WORKING_DIRECTORY: ./oauth-server/src/API
 
 jobs:
   build:
