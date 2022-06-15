@@ -16,8 +16,8 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             this.assignTask = new AssignTask(driver.Current);
         }
 
-        [StepDefinition(@"I sign into a task")]
-        public void SignInTask()
+        [StepDefinition(@"I sign into a task (.*)")]
+        public void SignInTask(string taskNbr)
         {
             //click on Sign in to the Task #
             assignTask.CurrentLocation.Should().Be("/responder-access/responder-dashboard");
@@ -25,7 +25,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //insert a task number
             assignTask.CurrentLocation.Should().Be("/responder-access/search/task");
-            assignTask.EnterTaskNumber("1234");
+            assignTask.EnterTaskNumber(taskNbr);
 
             //assign a task number
             assignTask.CurrentLocation.Should().Be("/responder-access/search/task-details");

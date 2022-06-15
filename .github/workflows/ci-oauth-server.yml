@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "oauth-server/src/**"
+      - "oauth-server/src/API/**"
       - ".github/workflows/ci-oauth-server.yml"
 
 env:
@@ -22,5 +22,5 @@ jobs:
           install: true
 
       - name: Build image
-        working-directory: ./oauth-server/src
+        working-directory: ./oauth-server/src/API
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
