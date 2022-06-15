@@ -21,7 +21,7 @@ namespace EMBC.Tests.Unit.ESS.Utilities
 
         public DynamicsTests(ITestOutputHelper output)
         {
-            var services = TestHelper.CreateDIContainer(output).AddTestCache();
+            var diServices = TestHelper.CreateDIContainer().AddLogging(output).AddTestCache();
 
             options = new DynamicsOptions
             {
@@ -34,16 +34,16 @@ namespace EMBC.Tests.Unit.ESS.Utilities
             var config = new ConfigurationBuilder().AddConfigurationOptions("dynamics", options).Build();
             new Configuration().ConfigureServices(new EMBC.Utilities.Configuration.ConfigurationServices
             {
-                Services = services,
+                Services = diServices,
                 Environment = new HostingEnvironment { EnvironmentName = Environments.Development },
-                Logger = output.BuildLogger(),
+                Logger = TestHelper.CreateTelemetryProvider(output).Get("test"),
                 Configuration = config
             });
 
-            services.AddTransient(sp => A.Fake<ISecurityTokenProvider>());
-            services.AddTransient<IEssContextStateReporter, EssContextStateReporter>();
+            diServices.AddTransient(sp => A.Fake<ISecurityTokenProvider>());
+            diServices.AddTransient<IEssContextStateReporter, EssContextStateReporter>();
 
-            this.services = services.BuildServiceProvider(validateScopes: true);
+            this.services = diServices.BuildServiceProvider(validateScopes: true);
         }
 
         [Fact]

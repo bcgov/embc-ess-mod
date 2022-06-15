@@ -5,35 +5,30 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Messaging;
+using EMBC.Utilities.Telemetry;
 using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Core.Testing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests
+namespace EMBC.Tests.Unit.ESS
 {
     public class DispatcherServiceTests
     {
-        private Func<HttpContext> httpContextFactory;
+        private readonly Func<HttpContext> httpContextFactory;
 
         public DispatcherServiceTests(ITestOutputHelper output)
         {
-            MessageHandlerRegistryOptions messageHandlerRegistryOptions = new MessageHandlerRegistryOptions();
+            var messageHandlerRegistryOptions = new MessageHandlerRegistryOptions();
             messageHandlerRegistryOptions.Add(typeof(TestHandler));
-            MessageHandlerRegistry registry = new MessageHandlerRegistry(output.BuildLoggerFor<MessageHandlerRegistry>(), Options.Create(messageHandlerRegistryOptions));
-            ServiceCollection services = new ServiceCollection();
-            services.AddSingleton(registry);
+            var services = TestHelper.CreateDIContainer().AddLogging(output);
+            services.AddSingleton(sp => new MessageHandlerRegistry(sp.GetRequiredService<ITelemetryProvider>(), Options.Create(messageHandlerRegistryOptions)));
             services.AddTransient<TestHandler>();
-            services.AddLogging(builder =>
-            {
-                builder.AddXunit(output);
-            });
             httpContextFactory = () => new DefaultHttpContext
             {
                 RequestServices = services.BuildServiceProvider().CreateScope().ServiceProvider
@@ -61,7 +56,7 @@ namespace EMBC.Tests
             var response = await dispatcher.Dispatch(request, serverCallContext);
 
             response.ShouldNotBeNull().Data.ShouldNotBeNull().ShouldNotBeEmpty();
-            var responseType = System.Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
+            var responseType = Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
             using var ms = new MemoryStream(response.Data.ToByteArray());
             JsonSerializer.Deserialize(ms, responseType).ShouldBeOfType<string>().ShouldBe(cmd.Value);
         }
@@ -74,7 +69,7 @@ namespace EMBC.Tests
             var dispatcher = new DispatcherService();
             var cmd = new TestCommandNoReturnValue();
 
-            RequestEnvelope request = new RequestEnvelope()
+            var request = new RequestEnvelope()
             {
                 Type = cmd.GetType().AssemblyQualifiedName,
                 Data = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(cmd))
@@ -103,7 +98,7 @@ namespace EMBC.Tests
             };
             var response = await dispatcher.Dispatch(request, serverCallContext);
             response.ShouldNotBeNull().Data.ShouldNotBeNull().IsEmpty.ShouldBeFalse();
-            var responseType = System.Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
+            var responseType = Type.GetType(response.Type, an => Assembly.Load(an.Name ?? null!), null, true, true).ShouldNotBeNull();
             using var ms = new MemoryStream(response.Data.ToByteArray());
             JsonSerializer.Deserialize(ms, responseType).ShouldBeOfType<TestQueryReply>().Value.ShouldBe(query.Value);
         }

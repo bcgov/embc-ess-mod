@@ -32,7 +32,6 @@ namespace EMBC.Utilities.Caching
             while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken))
             {
                 logger.LogDebug("{0} retrying to obtain lock", key);
-                continue;
             }
             try
             {
@@ -70,7 +69,10 @@ namespace EMBC.Utilities.Caching
         public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
             var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken)) continue;
+            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken))
+            {
+                logger.LogDebug("{0} retrying to obtain lock", key);
+            }
             try
             {
                 await Set(key, await getter(), expiration, cancellationToken);

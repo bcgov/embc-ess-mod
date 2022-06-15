@@ -3,23 +3,39 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using EMBC.Utilities.Caching;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Extensions.Hosting;
 using Xunit.Abstractions;
 
 namespace EMBC.Tests.Unit.ESS
 {
     public static class TestHelper
     {
-        public static IServiceCollection CreateDIContainer(ITestOutputHelper output)
+        public static IServiceCollection CreateDIContainer()
         {
             var services = new ServiceCollection();
-            services.AddLogging(builder => builder.AddXunit(output));
+            services.AddLogging(builder => builder.AddSerilog());
             services.AddSingleton<IConfiguration>(new ConfigurationBuilder().Build());
             return services;
+        }
+
+        public static IServiceCollection AddLogging(this IServiceCollection services, ITestOutputHelper output)
+        {
+            Log.Logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger();
+            services.AddSingleton<ITelemetryProvider>(new TelemetryProvider(new DiagnosticContext(Log.Logger)));
+
+            return services;
+        }
+
+        public static TelemetryProvider CreateTelemetryProvider(ITestOutputHelper output)
+        {
+            Log.Logger = new LoggerConfiguration().WriteTo.TestOutput(output).CreateLogger();
+            return new TelemetryProvider(new DiagnosticContext(Log.Logger));
         }
 
         public static IServiceProvider Build(this IServiceCollection services)

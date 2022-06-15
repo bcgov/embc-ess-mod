@@ -4,22 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.PdfGenerator;
+using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Xunit;
 using Xunit.Abstractions;
+using Configuration = EMBC.ESS.Utilities.PdfGenerator.Configuration;
 
 namespace EMBC.Tests.Unit.ESS.Utilities
 {
     public class PdfGeneratorTests
     {
-        private readonly ServiceProvider services;
+        private readonly IServiceProvider serviceProvider;
 
         public PdfGeneratorTests(ITestOutputHelper output)
         {
-            var services = TestHelper.CreateDIContainer(output).AddTestCache();
+            var services = TestHelper.CreateDIContainer().AddLogging(output).AddTestCache();
 
             var config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>
             {
@@ -27,15 +29,15 @@ namespace EMBC.Tests.Unit.ESS.Utilities
                 { "pdfGenerator:allowInvalidServerCertificate", "true" }
             }).Build();
 
+            this.serviceProvider = services.BuildServiceProvider(validateScopes: true);
+
             new Configuration().ConfigureServices(new EMBC.Utilities.Configuration.ConfigurationServices
             {
                 Services = services,
                 Environment = new HostingEnvironment { EnvironmentName = Environments.Development },
-                Logger = output.BuildLogger(),
+                Logger = serviceProvider.GetRequiredService<ITelemetryProvider>().Get("test"),
                 Configuration = config
             });
-
-            this.services = services.BuildServiceProvider(validateScopes: true);
         }
 
         [Fact(Skip = "Run when testing remote pdf generator")]
@@ -57,7 +59,7 @@ body>
 
             var tasks = Enumerable.Range(0, 50).Select(i =>
             {
-                var generator = services.GetRequiredService<IPdfGenerator>();
+                var generator = serviceProvider.GetRequiredService<IPdfGenerator>();
                 return generator.Generate(Encoding.UTF8.GetBytes(template()));
             });
             await Task.WhenAll(tasks.ToArray());
