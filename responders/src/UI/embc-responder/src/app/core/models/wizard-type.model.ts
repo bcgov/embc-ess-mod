@@ -15,6 +15,7 @@ export interface WizardProperties {
   lastCompletedStep?: string;
   editFlag?: boolean;
   memberFlag?: boolean;
+  evacueeDetailTipText?: string;
 }
 
 export enum WizardExitMap {
