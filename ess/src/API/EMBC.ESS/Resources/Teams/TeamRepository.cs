@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Teams
 {
@@ -17,6 +17,8 @@ namespace EMBC.ESS.Resources.Teams
         //private const int DynamicsActiveStatus = 1;
         private const int DynamicsInactiveStatus = 2;
 
+        private CancellationToken GetCancellationToken() => new CancellationTokenSource().Token;
+
         public TeamRepository(IEssContextFactory essContextFactory, IMapper mapper)
         {
             this.essContextFactory = essContextFactory;
@@ -25,22 +27,21 @@ namespace EMBC.ESS.Resources.Teams
 
         public async Task<TeamQueryResponse> QueryTeams(TeamQuery query)
         {
+            var ct = GetCancellationToken();
             var context = essContextFactory.CreateReadOnly();
-            var teams = (await QueryTeams(context, query)).Concat(await QueryTeamAreas(context, query)).ToArray();
+            var teams = (await QueryTeams(context, query, ct)).Concat(await QueryTeamAreas(context, query, ct)).ToArray();
 
-            foreach (var team in teams)
+            await Parallel.ForEachAsync(teams, ct, async (team, ct) =>
             {
                 context.AttachTo(nameof(EssContext.era_essteams), team);
-                await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
-                await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId));
-            }
-
-            context.DetachAll();
+                await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID), ct);
+                await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId), ct);
+            });
 
             return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
         }
 
-        private static async Task<IEnumerable<era_essteam>> QueryTeams(EssContext ctx, TeamQuery query)
+        private static async Task<IEnumerable<era_essteam>> QueryTeams(EssContext ctx, TeamQuery query, CancellationToken ct)
         {
             if (!string.IsNullOrEmpty(query.AssignedCommunityCode)) return Array.Empty<era_essteam>();
 
@@ -50,28 +51,24 @@ namespace EMBC.ESS.Resources.Teams
 
             if (!string.IsNullOrEmpty(query.Id)) teamsQuery = teamsQuery.Where(t => t.era_essteamid == Guid.Parse(query.Id));
 
-            return await ((DataServiceQuery<era_essteam>)teamsQuery).GetAllPagesAsync();
+            return await teamsQuery.GetAllPagesAsync(ct);
         }
 
-        private static async Task<IEnumerable<era_essteam>> QueryTeamAreas(EssContext ctx, TeamQuery query)
+        private static async Task<IEnumerable<era_essteam>> QueryTeamAreas(EssContext ctx, TeamQuery query, CancellationToken ct)
         {
             if (string.IsNullOrEmpty(query.AssignedCommunityCode)) return Array.Empty<era_essteam>();
 
-            var teamAreas = ctx.era_essteamareas.Where(ta => ta._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode) && ta.statecode == (int)EntityState.Active).ToArray();
+            var teamAreas = await ctx.era_essteamareas
+                .Expand(ta => ta.era_ESSTeamID)
+                .Where(ta => ta._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode) && ta.statecode == (int)EntityState.Active)
+                .GetAllPagesAsync(ct);
 
-            foreach (var ta in teamAreas)
-            {
-                ctx.AttachTo(nameof(EssContext.era_essteamareas), ta);
-                await ctx.LoadPropertyAsync(ta, nameof(era_essteamarea.era_ESSTeamID));
-            }
-
-            var teams = teamAreas.Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
-
-            return await Task.FromResult(teams);
+            return teamAreas.Select(ta => ta.era_ESSTeamID).Where(t => t.statecode == (int)EntityState.Active).ToArray();
         }
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, TeamMemberStatus[] includeStatuses = null)
         {
+            var ct = GetCancellationToken();
             var context = essContextFactory.CreateReadOnly();
 
             var query = EssTeamUsers(context);
@@ -80,16 +77,16 @@ namespace EMBC.ESS.Resources.Teams
             if (!string.IsNullOrEmpty(userName)) query = query.Where(u => u.era_externalsystemusername.Equals(userName, StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(userId)) query = query.Where(u => u.era_essteamuserid == Guid.Parse(userId));
 
-            var users = query.ToArray();
-            context.DetachAll();
+            var users = await query.GetAllPagesAsync(ct);
 
             if (includeStatuses != null && includeStatuses.Any()) users = users.Where(u => includeStatuses.Any(s => (int)s == u.statuscode)).ToArray();
 
-            return await Task.FromResult(mapper.Map<IEnumerable<TeamMember>>(users));
+            return mapper.Map<IEnumerable<TeamMember>>(users);
         }
 
         public async Task<string> SaveMember(TeamMember teamMember)
         {
+            var ct = GetCancellationToken();
             var context = essContextFactory.Create();
 
             var essTeam = EssTeam(context, Guid.Parse(teamMember.TeamId));
@@ -97,9 +94,9 @@ namespace EMBC.ESS.Resources.Teams
 
             var essTeamUser = mapper.Map<era_essteamuser>(teamMember);
 
-            var existingMember = essTeamUser.era_essteamuserid.HasValue ? context.era_essteamusers
+            var existingMember = essTeamUser.era_essteamuserid.HasValue ? await context.era_essteamusers
                     .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == essTeamUser.era_essteamuserid.Value)
-                    .SingleOrDefault()
+                    .SingleOrDefaultAsync(ct)
                     : null;
 
             context.DetachAll();
@@ -126,7 +123,7 @@ namespace EMBC.ESS.Resources.Teams
             context.UpdateObject(essTeamUser);
             context.AttachTo(nameof(EssContext.era_essteams), essTeam);
             context.AddLink(essTeam, nameof(era_essteam.era_essteamuser_ESSTeamId), essTeamUser);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(ct);
 
             context.DetachAll();
 
@@ -135,13 +132,14 @@ namespace EMBC.ESS.Resources.Teams
 
         public async Task<string> SaveTeam(Team team)
         {
+            var ct = GetCancellationToken();
             var context = essContextFactory.Create();
 
             if (string.IsNullOrEmpty(team.Id)) throw new ArgumentException($"Team ID cannot be empty", nameof(team.Id));
             var essTeam = EssTeam(context, Guid.Parse(team.Id));
             if (essTeam == null) throw new ArgumentException($"Team {team.Id} not found");
 
-            await context.LoadPropertyAsync(essTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
+            await context.LoadPropertyAsync(essTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID), ct);
 
             //delete assigned communities not in updated list
             foreach (var community in essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.Where(ta => !team.AssignedCommunities.Any(c => c.Code == ta._era_jurisdictionid_value.ToString())))
@@ -164,7 +162,7 @@ namespace EMBC.ESS.Resources.Teams
                 context.SetLink(teamArea, nameof(era_essteamarea.era_JurisdictionID), jurisdiction);
             }
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(ct);
 
             context.DetachAll();
 
@@ -173,6 +171,7 @@ namespace EMBC.ESS.Resources.Teams
 
         public async Task<bool> DeleteMember(string teamId, string teamMemberId)
         {
+            var ct = GetCancellationToken();
             var context = essContextFactory.Create();
 
             var member = EssTeamUsers(context)
@@ -183,7 +182,7 @@ namespace EMBC.ESS.Resources.Teams
 
             context.DeactivateObject(member, (int)TeamMemberStatus.SoftDelete);
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(ct);
             context.DetachAll();
             return true;
         }
