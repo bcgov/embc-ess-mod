@@ -342,7 +342,7 @@ namespace EMBC.ESS.Managers.Events
                 fileResults = fileResults.Where(f => query.InStatuses.Contains(f.Status)).ToArray();
             }
 
-            foreach (var file in fileResults.AsParallel())
+            await Parallel.ForEachAsync(fileResults, ct, async (file, ct) =>
             {
                 if (file.TaskId != null)
                 {
@@ -353,7 +353,7 @@ namespace EMBC.ESS.Managers.Events
                         file.TaskEndDate = task.EndDate;
                     }
                 }
-            }
+            });
 
             return new EvacueeSearchQueryResponse
             {

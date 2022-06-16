@@ -85,9 +85,13 @@ namespace EMBC.ESS.Resources.Reports
 
             var tasks = (await ((DataServiceQuery<era_task>)taskQuery).GetAllPagesAsync(ct)).ToArray();
 
-            tasks.AsParallel().ForAll(t => ctx.AttachTo(nameof(EssContext.era_tasks), t));
-            await Parallel.ForEachAsync(tasks, ct, async (t, ct) => await ctx.LoadPropertyAsync(t, nameof(era_task.era_era_task_era_evacuationfileId), ct));
-            tasks.AsParallel().ForAll(t => { foreach (var file in t.era_era_task_era_evacuationfileId) file.era_TaskId = t; });
+            await Parallel.ForEachAsync(tasks, ct, async (t, ct) =>
+            {
+                ctx.AttachTo(nameof(EssContext.era_tasks), t);
+                await ctx.LoadPropertyAsync(t, nameof(era_task.era_era_task_era_evacuationfileId), ct);
+
+                foreach (var file in t.era_era_task_era_evacuationfileId) file.era_TaskId = t;
+            });
 
             return tasks.SelectMany(t => t.era_era_task_era_evacuationfileId);
         }

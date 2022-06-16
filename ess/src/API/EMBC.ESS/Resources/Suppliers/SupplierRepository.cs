@@ -162,15 +162,17 @@ namespace EMBC.ESS.Resources.Suppliers
 
             var suppliers = (await supplierQuery.GetAllPagesAsync(ct)).ToArray();
 
-            suppliers
-                .AsParallel()
-                .ForAll(s => s.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>(essContext.era_essteamsuppliers.Expand(s => s.era_ESSTeamID).Where(ts => ts._era_supplierid_value == s.era_supplierid).ToArray()));
-
-            var items = mapper.Map<IEnumerable<Supplier>>(suppliers);
-
+            await Parallel.ForEachAsync(suppliers, ct, async (supplier, ct) =>
+            {
+                var teamSuppliers = await essContext.era_essteamsuppliers
+                    .Expand(s => s.era_ESSTeamID)
+                    .Where(ts => ts._era_supplierid_value == supplier.era_supplierid)
+                    .GetAllPagesAsync(ct);
+                supplier.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>(teamSuppliers.ToArray());
+            });
             essContext.DetachAll();
 
-            return new SupplierQueryResult { Items = items };
+            return new SupplierQueryResult { Items = mapper.Map<IEnumerable<Supplier>>(suppliers) };
         }
 
         private static void AddSupplierContact(EssContext essContext, era_supplier supplier, era_suppliercontact contact)
