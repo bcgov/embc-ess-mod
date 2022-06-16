@@ -47,7 +47,7 @@ namespace EMBC.ESS.Managers.Events
                 var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id)).SingleOrDefault();
                 if (member != null)
                 {
-                    file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";
+                    file.NeedsAssessment.CompletedBy.DisplayName = FormatTeamMemberName(member);
                     file.NeedsAssessment.CompletedBy.TeamId = member.TeamId;
                     file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
                 }
@@ -58,34 +58,35 @@ namespace EMBC.ESS.Managers.Events
                 if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
             }
 
-            foreach (var note in file.Notes.AsParallel().WithCancellation(ct))
+            await Parallel.ForEachAsync(file.Notes, ct, async (note, ct) =>
             {
-                if (string.IsNullOrEmpty(note.CreatedBy?.Id)) continue;
-                var teamMembers = await teamRepository.GetMembers(null, null, note.CreatedBy.Id);
-                var member = teamMembers.SingleOrDefault();
+                if (string.IsNullOrEmpty(note.CreatedBy?.Id)) return;
+                var member = (await teamRepository.GetMembers(null, null, note.CreatedBy.Id)).SingleOrDefault();
                 if (member != null)
                 {
-                    note.CreatedBy.DisplayName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
+                    note.CreatedBy.DisplayName = FormatTeamMemberName(member);
                     note.CreatedBy.TeamId = member.TeamId;
                     note.CreatedBy.TeamName = member.TeamName;
                 }
-            }
+            });
 
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery { ByEvacuationFileId = file.Id })).Items;
             file.Supports = mapper.Map<IEnumerable<Shared.Contracts.Events.Support>>(supports);
             await Parallel.ForEachAsync(file.Supports, ct, async (s, ct) => await Load(s, ct));
         }
 
+        private static string FormatTeamMemberName(Resources.Teams.TeamMember member) => $"{member.FirstName} {member.LastName.Substring(0, 1)}.";
+
         public async System.Threading.Tasks.Task Load(Shared.Contracts.Events.Support support, CancellationToken ct)
         {
             if (!string.IsNullOrEmpty(support.CreatedBy?.Id))
             {
-                var teamMember = (await teamRepository.GetMembers(userId: support.CreatedBy.Id)).SingleOrDefault();
-                if (teamMember != null)
+                var member = (await teamRepository.GetMembers(userId: support.CreatedBy.Id)).SingleOrDefault();
+                if (member != null)
                 {
-                    support.CreatedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
-                    support.CreatedBy.TeamId = teamMember.TeamId;
-                    support.CreatedBy.TeamName = teamMember.TeamName;
+                    support.CreatedBy.DisplayName = FormatTeamMemberName(member);
+                    support.CreatedBy.TeamId = member.TeamId;
+                    support.CreatedBy.TeamName = member.TeamName;
                     if (support.IssuedBy == null) support.IssuedBy = support.CreatedBy;
                 }
             }
@@ -116,11 +117,11 @@ namespace EMBC.ESS.Managers.Events
                     ByLinkedSupportId = support.Id
                 })).Items.Where(p => p.Status != PaymentStatus.Cancelled).Cast<InteracSupportPayment>().OrderByDescending(p => p.CreatedOn).FirstOrDefault();
 
-                if (payment is InteracSupportPayment interacPayment)
+                if (payment != null)
                 {
-                    interac.SecurityAnswer = interacPayment.SecurityAnswer;
-                    interac.SecurityQuestion = interacPayment.SecurityAnswer;
-                    interac.RelatedPaymentId = interacPayment.Id;
+                    interac.SecurityAnswer = payment.SecurityAnswer;
+                    interac.SecurityQuestion = payment.SecurityAnswer;
+                    interac.RelatedPaymentId = payment.Id;
                 }
             }
         }
