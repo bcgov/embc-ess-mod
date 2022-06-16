@@ -298,12 +298,13 @@ namespace EMBC.ESS.Resources.Evacuations
             {
                 if (file.era_CurrentNeedsAssessmentid == null) await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), ct);
 
+                var members = await ((DataServiceQuery<era_householdmember>)ctx.era_householdmembers
+                    .Expand(m => m.era_Registrant)
+                    .Where(m => m._era_evacuationfileid_value == file.era_evacuationfileid))
+                    .GetAllPagesAsync(ct);
+
                 file.era_era_evacuationfile_era_householdmember_EvacuationFileid = new Collection<era_householdmember>(
-                    (await ((DataServiceQuery<era_householdmember>)ctx.era_householdmembers
-                        .Expand(m => m.era_Registrant)
-                        .Where(m => m._era_evacuationfileid_value == file.era_evacuationfileid))
-                        .GetAllPagesAsync(ct))
-                        .ToArray());
+                    members.Where(m => m.era_Registrant == null || m.era_Registrant.statecode == (int)EntityState.Active).ToArray());
 
                 var naHouseholdMembers = (await ((DataServiceQuery<era_era_householdmember_era_needassessment>)ctx.era_era_householdmember_era_needassessmentset
                     .Where(m => m.era_needassessmentid == file._era_currentneedsassessmentid_value))
