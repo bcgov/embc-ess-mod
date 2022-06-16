@@ -184,7 +184,11 @@ export class EssFilesResultsComponent
     const searchedMember = selectedFile.householdMembers.find(
       (member) => member.isSearchMatch
     );
-    if (searchedMember.id !== null && searchedMember.id !== undefined) {
+    if (
+      searchedMember &&
+      searchedMember.id !== null &&
+      searchedMember.id !== undefined
+    ) {
       const profile$ = await this.getEvacueeProfile(searchedMember.id);
     } else {
       this.appBaseService.appModel = {
