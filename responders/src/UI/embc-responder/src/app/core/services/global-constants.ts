@@ -593,3 +593,8 @@ export const paperIdQuestion =
   'Did the evacuee present any <b>government-issued photo ID</b> when the paper ESS File was completed?';
 export const digitalIdQuestion =
   'Can you present any <b>government-issued photo ID</b> to verify your identity?';
+
+export const newRegistrationTipText =
+  '<p class="tips-info">If you need to update either first name, last name or date of birth, please start a new search using the correct infomation.</p>';
+export const otherRegistrationTipText =
+  '<p class="tips-info">If an Evacuee Profile has been connected to a BC Services Card, the first name, last name and date of birth will be locked.</p><p class="tips-info">If these details need to be updated, the evacuee can log into their BC Services Card and update this information.</p>';
