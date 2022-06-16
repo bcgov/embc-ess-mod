@@ -41,7 +41,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   editFlag: boolean;
   verifiedProfile: boolean;
   authorizedUser: boolean;
-  wizardType: string;
+  tipText: string;
   showLockIcon = true;
   showUnlockLink = false;
   tabMetaData: TabModel;
@@ -60,11 +60,10 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     this.editFlag = this.appBaseService?.wizardProperties?.editFlag;
     this.verifiedProfile = this.stepEvacueeProfileService.verifiedProfile;
     this.authorizedUser = this.stepEvacueeProfileService.authorizedUser;
-    this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
+    this.tipText = this.appBaseService?.wizardProperties?.evacueeDetailTipText;
 
     this.createEvacueeDetailsForm();
     this.initDisabledFields();
-    //this.checkForFormChanges();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
