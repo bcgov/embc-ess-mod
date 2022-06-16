@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -102,24 +103,31 @@ namespace EMBC.ESS.Resources.Suppliers
             if (queryRequest.ActiveOnly) supplierQuery = supplierQuery.Where(s => s.era_active == true);
 
             // get all active suppliers
-            var suppliers = (await supplierQuery.GetAllPagesAsync(ct))
+            var foundSuppliers = (await supplierQuery.GetAllPagesAsync(ct))
                 .Select(s => s.era_SupplierId)
                 .Where(s => s.statecode == (int)EntityState.Active)
                 .ToArray();
 
-            await Parallel.ForEachAsync(suppliers, ct, async (supplier, ct) =>
+            var suppliers = new ConcurrentBag<era_supplier>();
+            await Parallel.ForEachAsync(foundSuppliers, ct, async (supplier, ct) =>
             {
+                supplier = await essContext.era_suppliers
+                    .Expand(s => s.era_PrimaryContact)
+                    .Expand(s => s.era_RelatedCity)
+                    .Expand(s => s.era_RelatedProvinceState)
+                    .Expand(s => s.era_RelatedCountry)
+                    .Where(s => s.era_supplierid == supplier.era_supplierid)
+                    .SingleOrDefaultAsync(ct);
                 essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
-                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_PrimaryContact), ct);
-                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedCity), ct);
-                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedCountry), ct);
-                await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_RelatedProvinceState), ct);
                 await essContext.LoadPropertyAsync(supplier, nameof(era_supplier.era_era_supplier_era_essteamsupplier_SupplierId), ct);
+                essContext.Detach(supplier);
                 await Parallel.ForEachAsync(supplier.era_era_supplier_era_essteamsupplier_SupplierId, ct, async (ts, ct) =>
                 {
                     essContext.AttachTo(nameof(EssContext.era_essteamsuppliers), ts);
                     await essContext.LoadPropertyAsync(ts, nameof(era_essteamsupplier.era_ESSTeamID), ct);
+                    essContext.Detach(ts);
                 });
+                suppliers.Add(supplier);
             });
 
             essContext.DetachAll();
