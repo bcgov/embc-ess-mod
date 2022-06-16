@@ -85,13 +85,42 @@ export class AddTeamMemberComponent implements OnInit {
    * Navigates to the review page
    */
   next(): void {
-    const newTeamMember: TeamMember = this.addForm.getRawValue();
-    newTeamMember.teamName = this.userService.currentProfile.teamName;
-    this.addTeamMemberService.setAddedTeamMember(newTeamMember);
-    this.router.navigate(
-      ['/responder-access/responder-management/details/review'],
-      { state: newTeamMember }
-    );
+    // Validate if username exists before sending the form
+    this.showLoader = !this.showLoader;
+    this.addTeamMemberService
+      .checkUserNameExists(this.addForm.get('userName').value)
+      .subscribe({
+        next: (value) => {
+          this.addForm
+            .get('userName')
+            .setValidators([
+              this.customValidation.whitespaceValidator(),
+              this.customValidation
+                .userNameExistsValidator(value)
+                .bind(this.customValidation)
+            ]);
+          this.addForm.get('userName').updateValueAndValidity();
+          this.showLoader = !this.showLoader;
+          if (value) {
+            this.addForm.get('userName').updateValueAndValidity();
+          } else {
+            this.addForm.updateValueAndValidity();
+
+            const newTeamMember: TeamMember = this.addForm.getRawValue();
+            newTeamMember.teamName = this.userService.currentProfile.teamName;
+            this.addTeamMemberService.setAddedTeamMember(newTeamMember);
+            this.router.navigate(
+              ['/responder-access/responder-management/details/review'],
+              { state: newTeamMember }
+            );
+          }
+        },
+        error: (error) => {
+          this.showLoader = !this.showLoader;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+        }
+      });
   }
 
   /**
