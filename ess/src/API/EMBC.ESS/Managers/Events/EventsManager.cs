@@ -826,37 +826,37 @@ namespace EMBC.ESS.Managers.Events
                 });
 
                 logger.LogInformation("Batch {0} results: {1} issued; {2} failed", casBatchName, result.IssuedPayments.Count(), result.FailedPayments.Count());
-
-                var failedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
-                {
-                    ByStatus = PaymentStatus.Failed,
-                    ByQueueStatus = QueueStatus.Pending,
-                })).Items.Cast<InteracSupportPayment>().ToArray();
-
-                logger.LogInformation("Found {0} failed payments", failedPayments.Length);
-                await Parallel.ForEachAsync(failedPayments, ct, async (payment, ct) =>
-                {
-                    try
-                    {
-                        await paymentRepository.Manage(new CancelPaymentRequest { PaymentId = payment.Id, Reason = payment.FailureReason });
-                        await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
-                        {
-                            try
-                            {
-                                await supportRepository.Manage(new SubmitSupportForReviewCommand { SupportId = supportId });
-                            }
-                            catch (Exception e)
-                            {
-                                logger.LogError(e, "Payment {0}, support {1}: failed to submit for review", payment.Id, supportId);
-                            }
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        logger.LogError(e, "Failed to cancel payment {0}", payment.Id);
-                    }
-                });
             }
+
+            var failedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
+            {
+                ByStatus = PaymentStatus.Failed,
+                ByQueueStatus = QueueStatus.Pending,
+            })).Items.Cast<InteracSupportPayment>().ToArray();
+
+            logger.LogInformation("Found {0} failed payments", failedPayments.Length);
+            await Parallel.ForEachAsync(failedPayments, ct, async (payment, ct) =>
+            {
+                try
+                {
+                    await paymentRepository.Manage(new CancelPaymentRequest { PaymentId = payment.Id, Reason = payment.FailureReason });
+                    await Parallel.ForEachAsync(payment.LinkedSupportIds, ct, async (supportId, ct) =>
+                    {
+                        try
+                        {
+                            await supportRepository.Manage(new SubmitSupportForReviewCommand { SupportId = supportId });
+                        }
+                        catch (Exception e)
+                        {
+                            logger.LogError(e, "Payment {0}, support {1}: failed to submit for review", payment.Id, supportId);
+                        }
+                    });
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Failed to cancel payment {0}", payment.Id);
+                }
+            });
 
             var issuedPayments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
             {
@@ -987,7 +987,7 @@ namespace EMBC.ESS.Managers.Events
             var earliestSentPayment = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
             {
                 ByStatus = PaymentStatus.Sent,
-                ByQueueStatus = QueueStatus.Pending,
+                ByQueueStatus = QueueStatus.None,
                 LimitNumberOfItems = 1,
             })).Items.Cast<InteracSupportPayment>().FirstOrDefault();
 
