@@ -14,7 +14,8 @@ export class ComputeWizardService implements Compute {
 
   execute() {
     this.calculateExitLink();
-    this.calculateTipText();
+    this.calculateEvacueeTipText();
+    this.calculateMemberTipText();
     this.triggerCaching();
   }
 
@@ -83,7 +84,7 @@ export class ComputeWizardService implements Compute {
     }
   }
 
-  calculateTipText() {
+  calculateEvacueeTipText() {
     if (
       this.appBaseService?.wizardProperties?.wizardType ===
       WizardType.NewRegistration
@@ -99,6 +100,24 @@ export class ComputeWizardService implements Compute {
     ) {
       this.appBaseService.wizardProperties = {
         evacueeDetailTipText: globalConst.otherRegistrationTipText
+      };
+    }
+  }
+
+  calculateMemberTipText() {
+    if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.ReviewFile
+    ) {
+      this.appBaseService.wizardProperties = {
+        memberTipText: globalConst.reviewMembersTipText
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.CompleteFile
+    ) {
+      this.appBaseService.wizardProperties = {
+        memberTipText: globalConst.completeMembersTipText
       };
     }
   }

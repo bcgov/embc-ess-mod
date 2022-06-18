@@ -16,6 +16,7 @@ export interface WizardProperties {
   editFlag?: boolean;
   memberFlag?: boolean;
   evacueeDetailTipText?: string;
+  memberTipText?: string;
 }
 
 export enum WizardExitMap {

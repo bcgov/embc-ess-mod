@@ -67,36 +67,10 @@
             </div>
             <ng-template #editEssFile>
               <div class="col-md-12 description-div">
-                <span *ngIf="wizardType === 'complete-file'">
-                  <p class="bold no-margin">
-                    Confirm the following household members should be included
-                    in this ESS File.
-                  </p>
-                  <p class="no-margin">
-                    Add any household members that are missing from the list.
-                  </p>
-                  <p class="no-margin requiredField">
-                    Any household member not selected will not receive supports.
-                  </p>
-                </span>
-
-                <span *ngIf="wizardType === 'review-file'">
-                  <p class="bold no-margin">
-                    Confirm the following household members should be included
-                    in this ESS File.
-                  </p>
-
-                  <p class="no-margin">
-                    Add any household members that are missing from the list.
-                  </p>
-                  <p class="no-margin requiredField">
-                    Any household member not selected will not receive supports.
-                  </p>
-                </span>
+                <p id="membertip-text" [innerHTML]="memberTipText"></p>
               </div>
 
               <div class="row button-justify">
-                <!-- <div class="col-md-12"> -->
                 <div class="col-md-4">
                   <button
                     class="family-button"
@@ -107,7 +81,6 @@
                     + Add Household Member
                   </button>
                 </div>
-                <!-- </div> -->
               </div>
             </ng-template>
 
