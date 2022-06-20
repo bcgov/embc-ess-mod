@@ -76,10 +76,12 @@ describe('WizardComponent-Test for New Registration', () => {
     expect(component).toBeTruthy();
   }));
 
-  it('should load NEW-REGISTRATION menu from activated route', inject(
+  it('should load NEW-REGISTRATION menu from compute wizard service', inject(
     [Router],
     (router: Router) => {
       spyOn(router, 'navigate').and.stub();
+      component.sideNavMenu = wizardDataService.newRegistrationMenu;
+      wizardService.menuItems = wizardDataService.newRegistrationMenu;
       fixture.detectChanges();
       component.ngOnInit();
       expect(component.sideNavMenu.length).toBe(4);
@@ -157,6 +159,8 @@ describe('WizardComponent-Test for New Registration', () => {
     [Router],
     (router: Router) => {
       spyOn(router, 'navigate').and.stub();
+      component.sideNavMenu = wizardDataService.newRegistrationMenu;
+      wizardService.menuItems = wizardDataService.newRegistrationMenu;
       fixture.detectChanges();
       component.ngOnInit();
       expect(router.navigate).toHaveBeenCalledWith(
@@ -169,11 +173,13 @@ describe('WizardComponent-Test for New Registration', () => {
   it('should not allow navigation to STEP-2 if STEP-1 is incomplete', inject(
     [Router],
     (router: Router) => {
-      spyOn(component, 'openLockedModal');
+      spyOn(wizardService, 'openLockedModal');
+      component.sideNavMenu = wizardDataService.newRegistrationMenu;
+      wizardService.menuItems = wizardDataService.newRegistrationMenu;
       fixture.detectChanges();
       component.ngOnInit();
       component.goToStep(true, new MouseEvent('click'), '/ess-wizard/ess-file');
-      expect(component.openLockedModal).toHaveBeenCalled();
+      expect(wizardService.openLockedModal).toHaveBeenCalled();
     }
   ));
 
@@ -181,12 +187,14 @@ describe('WizardComponent-Test for New Registration', () => {
     [Router],
     (router: Router) => {
       spyOn(router, 'navigate').and.stub();
-      spyOn(component, 'openExitModal');
+      spyOn(wizardService, 'openExitModal');
+      component.sideNavMenu = wizardDataService.newRegistrationMenu;
+      wizardService.menuItems = wizardDataService.newRegistrationMenu;
       fixture.detectChanges();
       const button = fixture.debugElement.query(By.css('.exit-button'));
       button.triggerEventHandler('click', null);
       fixture.detectChanges();
-      expect(component.openExitModal).toHaveBeenCalled();
+      expect(wizardService.openExitModal).toHaveBeenCalled();
     }
   ));
 });

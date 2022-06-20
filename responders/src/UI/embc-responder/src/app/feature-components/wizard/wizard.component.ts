@@ -26,6 +26,8 @@ export class WizardComponent implements OnInit, OnDestroy {
     private computeState: ComputeRulesService
   ) {
     this.sideNavMenu = this.appBaseService?.wizardProperties?.wizardMenu;
+    this.wizardService.menuItems =
+      this.appBaseService?.wizardProperties?.wizardMenu;
   }
 
   ngOnInit(): void {
