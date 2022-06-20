@@ -73,15 +73,26 @@ export class ConfigService {
     };
   }
 
-  public async loadEnvironmentBanner(): Promise<EnvironmentInformation> {
-    const callEnv$ = this.getEnvironment().pipe(
-      tap((env) => {
-        this.setEnvironmentBanner(env);
-      })
-    );
-
-    const envResult = await lastValueFrom(callEnv$);
-    return envResult;
+  public loadEnvironmentBanner(): Promise<EnvironmentInformation> {
+    return new Promise<EnvironmentInformation>((resolve, reject) => {
+      let environment: EnvironmentInformation = {};
+      this.getEnvironment().subscribe({
+        next: (env) => {
+          environment = env;
+          this.setEnvironmentBanner(env);
+          resolve(environment);
+        },
+        error: (error) => {
+          if (error.status === 400 || error.status === 404) {
+            this.environmentBanner = null;
+          } else {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.systemError);
+          }
+          reject(error);
+        }
+      });
+    });
   }
 
   public getEnvironmentBanner(): EnvironmentInformation {
@@ -113,7 +124,7 @@ export class ConfigService {
         this.setEnvironmentBanner(env);
       },
       error: (error) => {
-        if (error.status === 400 && error.status === 404) {
+        if (error.status === 400 || error.status === 404) {
           this.environmentBanner = null;
         } else {
           this.alertService.clearAlert();

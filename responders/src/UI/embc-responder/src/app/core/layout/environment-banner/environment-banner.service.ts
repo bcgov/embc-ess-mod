@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { lastValueFrom, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EnvironmentInformation } from '../../models/environment-information.model';
 import { CacheService } from '../../services/cache.service';
@@ -19,15 +19,27 @@ export class EnvironmentBannerService {
     private alertService: AlertService
   ) {}
 
-  public async loadEnvironmentBanner(): Promise<EnvironmentInformation> {
-    const callEnv$ = this.getEnvironment().pipe(
-      tap((env) => {
-        this.setEnvironmentBanner(env);
-      })
-    );
-
-    const envResult = await lastValueFrom(callEnv$);
-    return envResult;
+  public loadEnvironmentBanner(): Promise<EnvironmentInformation> {
+    return new Promise<EnvironmentInformation>((resolve, reject) => {
+      let environment: EnvironmentInformation = {};
+      this.getEnvironment().subscribe({
+        next: (env) => {
+          environment = env;
+          this.setEnvironmentBanner(env);
+          resolve(environment);
+        },
+        error: (error) => {
+          if (error.status === 400 || error.status === 404) {
+            this.environmentBanner = null;
+            resolve(environment);
+          } else {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.systemError);
+            reject(error);
+          }
+        }
+      });
+    });
   }
 
   public getEnvironmentBanner(): EnvironmentInformation {
@@ -56,8 +68,12 @@ export class EnvironmentBannerService {
         this.setEnvironmentBanner(env);
       },
       error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.systemError);
+        if (error.status === 400 || error.status === 404) {
+          this.environmentBanner = null;
+        } else {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.systemError);
+        }
       }
     });
     return environment;

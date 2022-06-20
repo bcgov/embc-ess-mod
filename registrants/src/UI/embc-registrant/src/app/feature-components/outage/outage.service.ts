@@ -82,7 +82,7 @@ export class OutageService {
   }
 
   public displayOutageInfoInit(): boolean {
-    if (this.outageInfo !== null) {
+    if (this.outageInfo) {
       if (
         this.outageInfo.outageStartDate !== null ||
         this.outageInfo.outageEndDate !== null
@@ -113,7 +113,7 @@ export class OutageService {
   }
 
   public routeOutageInfo(): void {
-    if (this.outageInfo !== null) {
+    if (this.outageInfo) {
       if (
         this.outageInfo.outageStartDate !== null ||
         this.outageInfo.outageEndDate !== null
@@ -159,7 +159,7 @@ export class OutageService {
   }
 
   public openOutageDialog(): void {
-    if (this.outageInfo !== null) {
+    if (this.outageInfo) {
       const now = moment();
       const outageStart = moment(this.outageInfo.outageStartDate);
       const duration = moment.duration(outageStart.diff(now));
