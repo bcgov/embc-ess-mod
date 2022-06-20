@@ -7,14 +7,20 @@ import {
 import { AppBaseService } from '../helper/appBase.service';
 import { Compute } from './compute';
 import * as globalConst from '../global-constants';
+import { WizardDataService } from 'src/app/feature-components/wizard/wizard-data.service';
 
 @Injectable()
 export class ComputeWizardService implements Compute {
-  constructor(private appBaseService: AppBaseService) {}
+  constructor(
+    private appBaseService: AppBaseService,
+    private wizardDataService: WizardDataService
+  ) {}
 
   execute() {
     this.calculateExitLink();
-    this.calculateTipText();
+    this.calculateEvacueeTipText();
+    this.calculateMemberTipText();
+    this.loadDefaultMenuItems();
     this.triggerCaching();
   }
 
@@ -83,7 +89,7 @@ export class ComputeWizardService implements Compute {
     }
   }
 
-  calculateTipText() {
+  calculateEvacueeTipText() {
     if (
       this.appBaseService?.wizardProperties?.wizardType ===
       WizardType.NewRegistration
@@ -102,4 +108,80 @@ export class ComputeWizardService implements Compute {
       };
     }
   }
+
+  calculateMemberTipText() {
+    if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.ReviewFile
+    ) {
+      this.appBaseService.wizardProperties = {
+        memberTipText: globalConst.reviewMembersTipText
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.CompleteFile
+    ) {
+      this.appBaseService.wizardProperties = {
+        memberTipText: globalConst.completeMembersTipText
+      };
+    }
+  }
+
+  loadDefaultMenuItems() {
+    if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.NewRegistration
+    ) {
+      this.appBaseService.wizardProperties = {
+        wizardMenu: this.wizardDataService.createNewRegistrationMenu()
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.NewEssFile
+    ) {
+      this.appBaseService.wizardProperties = {
+        wizardMenu: this.wizardDataService.createNewESSFileMenu()
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.EditRegistration
+    ) {
+      this.appBaseService.wizardProperties = {
+        wizardMenu: this.wizardDataService.createEditProfileMenu()
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.ReviewFile
+    ) {
+      this.appBaseService.wizardProperties = {
+        wizardMenu: this.wizardDataService.createReviewFileMenu()
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.CompleteFile
+    ) {
+      this.appBaseService.wizardProperties = {
+        wizardMenu: this.wizardDataService.createCompleteFileMenu()
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.MemberRegistration
+    ) {
+      this.appBaseService.wizardProperties = {
+        wizardMenu: this.wizardDataService.createMembersProfileMenu()
+      };
+    }
+  }
+
+  // calculateProfileTabs() {
+  //   if (
+  //     this.appBaseService?.appModel?.selectedUserPathway ===
+  //     SelectedPathType.digital
+  //   ) {
+  //   } else if (
+  //     this.appBaseService?.appModel?.selectedUserPathway ===
+  //     SelectedPathType.paperBased
+  //   ) {
+  //   }
+  // }
 }

@@ -43,7 +43,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   editMembersColumns: string[] = ['select', 'members', 'buttons'];
   membersColumns: string[] = [];
   tabUpdateSubscription: Subscription;
-  wizardType: string;
+  memberTipText: string;
   tabMetaData: TabModel;
 
   constructor(
@@ -58,7 +58,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
+    this.memberTipText = this.appBaseService?.wizardProperties?.memberTipText;
     this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
     this.addNewMember = this.stepEssFileService.addMemberIndicator;
 

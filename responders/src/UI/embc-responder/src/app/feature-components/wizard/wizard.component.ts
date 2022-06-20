@@ -1,14 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { WizardService } from './wizard.service';
-import { Subscription } from 'rxjs';
 import * as globalConst from '../../core/services/global-constants';
-import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { WizardAdapterService } from './wizard-adapter.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
@@ -20,44 +15,24 @@ import { ComputeRulesService } from 'src/app/core/services/computeRules.service'
 })
 export class WizardComponent implements OnInit, OnDestroy {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
-  scrollSubscription: Subscription;
 
   constructor(
     private router: Router,
     private wizardService: WizardService,
     private cacheService: CacheService,
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private wizardAdapterService: WizardAdapterService,
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
   ) {
-    const params = this.route.snapshot.queryParams;
-    if (params && params.type) {
-      this.wizardService.setDefaultMenuItems(params.type);
-    }
-    this.sideNavMenu = this.wizardService.menuItems;
+    this.sideNavMenu = this.appBaseService?.wizardProperties?.wizardMenu;
+    this.wizardService.menuItems =
+      this.appBaseService?.wizardProperties?.wizardMenu;
   }
 
   ngOnInit(): void {
-    this.loadDefaultStep();
+    this.wizardService.loadDefaultStep(this.sideNavMenu);
     this.cd.detectChanges();
-  }
-
-  /**
-   * Constructs the first step to be loaded by the wizard
-   */
-  loadDefaultStep(): void {
-    if (this.sideNavMenu !== null && this.sideNavMenu !== undefined) {
-      const firstStepUrl = this.sideNavMenu[0].route;
-      const firstStepId = this.sideNavMenu[0].step;
-      const firstStepTitle = this.sideNavMenu[0].title;
-
-      this.router.navigate([firstStepUrl], {
-        state: { step: firstStepId, title: firstStepTitle }
-      });
-    }
   }
 
   /**
@@ -81,7 +56,7 @@ export class WizardComponent implements OnInit, OnDestroy {
         this.wizardService.menuItems[curStep]?.incompleteMsg ||
         globalConst.stepIncompleteMessage;
 
-      this.openLockedModal(lockedMsg);
+      this.wizardService.openLockedModal(lockedMsg);
     } else if (
       !lockedIndicator &&
       (this.router.url === '/ess-wizard/add-supports/details' ||
@@ -90,7 +65,10 @@ export class WizardComponent implements OnInit, OnDestroy {
       $event.stopPropagation();
       $event.preventDefault();
 
-      this.openWarningModal(globalConst.supportInProgressMessage, targetRoute);
+      this.wizardService.openWarningModal(
+        globalConst.supportInProgressMessage,
+        targetRoute
+      );
     }
   }
 
@@ -99,70 +77,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   exit(): void {
     const navigateTo = this.appBaseService?.wizardProperties?.exitLink;
-    this.openExitModal(navigateTo);
-  }
-
-  /**
-   * Opens exit modal window
-   *
-   * @param navigateTo navigateTo url
-   */
-  openExitModal(navigateTo: string): void {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          component: InformationDialogComponent,
-          content: globalConst.exitWizardDialog
-        },
-        width: '530px'
-      })
-      .afterClosed()
-      .subscribe((event) => {
-        if (event === 'confirm') {
-          this.router.navigate([navigateTo]);
-          //.then(() => this.wizardStepService.clearWizard());
-        }
-      });
-  }
-
-  /**
-   * Opens information modal to display the step
-   * locked message
-   *
-   * @param text message to display
-   */
-  openLockedModal(content: DialogContent, title?: string) {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content,
-        title
-      },
-      width: '530px'
-    });
-  }
-
-  /**
-   * Opens information modal to display the support step
-   * warning message
-   *
-   * @param text message to display
-   */
-  openWarningModal(content: DialogContent, navigateTo: string) {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          component: InformationDialogComponent,
-          content
-        },
-        width: '530px'
-      })
-      .afterClosed()
-      .subscribe((event) => {
-        if (event === 'confirm') {
-          this.router.navigate([navigateTo]);
-        }
-      });
+    this.wizardService.openExitModal(navigateTo);
   }
 
   /**

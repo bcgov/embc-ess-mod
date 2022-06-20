@@ -598,3 +598,7 @@ export const newRegistrationTipText =
   '<p class="tips-info">If you need to update either first name, last name or date of birth, please start a new search using the correct infomation.</p>';
 export const otherRegistrationTipText =
   '<p class="tips-info">If an Evacuee Profile has been connected to a BC Services Card, the first name, last name and date of birth will be locked.</p><p class="tips-info">If these details need to be updated, the evacuee can log into their BC Services Card and update this information.</p>';
+export const reviewMembersTipText =
+  '<p class="bold no-margin">Confirm the following household members should be included in this ESS File.</p><p class="no-margin">Add any household members that are missing from the list.</p><p class="no-margin requiredField">Any household member not selected will not receive supports.</p>';
+export const completeMembersTipText =
+  '<p class="bold no-margin">Confirm the following household members should be included in this ESS File.</p><p class="no-margin">Add any household members that are missing from the list.</p><p class="no-margin requiredField">Any household member not selected will not receive supports.</p>';
