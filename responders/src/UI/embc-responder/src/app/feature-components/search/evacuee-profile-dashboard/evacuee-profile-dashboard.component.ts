@@ -112,7 +112,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         !this.appBaseService?.appModel?.selectedProfile
           ?.selectedEvacueeInContext?.authenticatedUser &&
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.verifiedUser, // true,
+          ?.verifiedUser,
       memberFlag: false
     };
     this.computeState.triggerEvent();
