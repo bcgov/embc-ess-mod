@@ -8,12 +8,15 @@ import { HouseholdMemberModel } from 'src/app/core/models/household-member.model
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { TabStatusManager } from 'src/app/core/models/tab.model';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
-import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { Community } from 'src/app/core/services/locations.service';
-import { WizardDataService } from './wizard-data.service';
 import * as _ from 'lodash';
 import * as globalConst from '../../core/services/global-constants';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
@@ -28,7 +31,8 @@ export class WizardService {
 
   constructor(
     private cacheService: CacheService,
-    private wizardDataService: WizardDataService
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   public get menuItems(): Array<WizardSidenavModel> {
@@ -42,20 +46,81 @@ export class WizardService {
     this.cacheService.set('wizardMenu', menuItems);
   }
 
-  public setDefaultMenuItems(type: string): void {
-    if (type === WizardType.NewRegistration) {
-      this.menuItems = this.wizardDataService.createNewRegistrationMenu();
-    } else if (type === WizardType.NewEssFile) {
-      this.menuItems = this.wizardDataService.createNewESSFileMenu();
-    } else if (type === WizardType.EditRegistration) {
-      this.menuItems = this.wizardDataService.createEditProfileMenu();
-    } else if (type === WizardType.ReviewFile) {
-      this.menuItems = this.wizardDataService.createReviewFileMenu();
-    } else if (type === WizardType.CompleteFile) {
-      this.menuItems = this.wizardDataService.createCompleteFileMenu();
-    } else if (type === WizardType.MemberRegistration) {
-      this.menuItems = this.wizardDataService.createMembersProfileMenu();
+  /**
+   * Constructs the first step to be loaded by the wizard
+   */
+  loadDefaultStep(sideNavMenu: Array<WizardSidenavModel>): void {
+    if (sideNavMenu !== null && sideNavMenu !== undefined) {
+      const firstStepUrl = sideNavMenu[0].route;
+      const firstStepId = sideNavMenu[0].step;
+      const firstStepTitle = sideNavMenu[0].title;
+
+      this.router.navigate([firstStepUrl], {
+        state: { step: firstStepId, title: firstStepTitle }
+      });
     }
+  }
+
+  /**
+   * Opens exit modal window
+   *
+   * @param navigateTo navigateTo url
+   */
+  openExitModal(navigateTo: string): void {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.exitWizardDialog
+        },
+        width: '530px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.router.navigate([navigateTo]);
+        }
+      });
+  }
+
+  /**
+   * Opens information modal to display the step
+   * locked message
+   *
+   * @param text message to display
+   */
+  openLockedModal(content: DialogContent, title?: string) {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content,
+        title
+      },
+      width: '530px'
+    });
+  }
+
+  /**
+   * Opens information modal to display the support step
+   * warning message
+   *
+   * @param text message to display
+   */
+  openWarningModal(content: DialogContent, navigateTo: string) {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content
+        },
+        width: '530px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.router.navigate([navigateTo]);
+        }
+      });
   }
 
   public setEditStatus(value: TabStatusManager) {

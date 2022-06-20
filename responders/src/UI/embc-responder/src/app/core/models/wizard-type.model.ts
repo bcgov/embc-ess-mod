@@ -1,4 +1,8 @@
 /* tslint:disable */
+
+import { TabModel } from './tab.model';
+import { WizardSidenavModel } from './wizard-sidenav.model';
+
 /* eslint-disable */
 export enum WizardType {
   NewRegistration = 'new-registration',
@@ -17,6 +21,9 @@ export interface WizardProperties {
   memberFlag?: boolean;
   evacueeDetailTipText?: string;
   memberTipText?: string;
+  profileTabs?: Array<TabModel>;
+  essFileTabs?: Array<TabModel>;
+  wizardMenu?: WizardSidenavModel[];
 }
 
 export enum WizardExitMap {
