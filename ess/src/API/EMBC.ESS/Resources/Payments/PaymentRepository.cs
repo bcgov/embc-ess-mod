@@ -276,7 +276,7 @@ namespace EMBC.ESS.Resources.Payments
 
         private static IEnumerable<string> ValidatePaymentBeforeSendingToCas(era_etransfertransaction payment)
         {
-            if (payment.statuscode != (int)PaymentStatus.Created) yield return $"Payment is in status {(PaymentStatus)payment.statuscode} - expected Pending status";
+            if (payment.statuscode != (int)PaymentStatus.Created) yield return $"Payment is in status {(PaymentStatus)payment.statuscode} - expected {nameof(PaymentStatus.Created)} status";
             if (!payment._era_payee_value.HasValue) yield return "Payment has no payee";
             if (!payment.era_era_evacueesupport_era_etransfertransacti.Any()) yield return "Payment is not linked to any support";
             if (string.IsNullOrEmpty(payment.era_emailaddress) && string.IsNullOrEmpty(payment.era_phonenumber)) yield return "Payment must have at least an email or a phone number";

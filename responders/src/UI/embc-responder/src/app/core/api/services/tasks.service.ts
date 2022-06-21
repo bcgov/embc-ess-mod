@@ -11,6 +11,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { EssTask } from '../models/ess-task';
 import { SuppliersListItem } from '../models/suppliers-list-item';
+import { TaskSignin } from '../models/task-signin';
 
 @Injectable({
   providedIn: 'root',
@@ -140,15 +141,15 @@ export class TasksService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `tasksSignIn()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  tasksSignIn$Response(params?: {
-    taskId?: string;
+  tasksSignIn$Response(params: {
+    body: TaskSignin
   }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, TasksService.TasksSignInPath, 'post');
     if (params) {
-      rb.query('taskId', params.taskId, {});
+      rb.body(params.body, 'application/json');
     }
 
     return this.http.request(rb.build({
@@ -166,10 +167,10 @@ export class TasksService extends BaseService {
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `tasksSignIn$Response()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  tasksSignIn(params?: {
-    taskId?: string;
+  tasksSignIn(params: {
+    body: TaskSignin
   }): Observable<void> {
 
     return this.tasksSignIn$Response(params).pipe(

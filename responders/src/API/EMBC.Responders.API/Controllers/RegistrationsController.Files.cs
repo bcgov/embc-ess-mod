@@ -313,7 +313,7 @@ namespace EMBC.Responders.API.Controllers
     public class EvacuationFileTask
     {
         [Required]
-        public string TaskNumber { get; set; } = null!;
+        public string? TaskNumber { get; set; }
 
         public string? CommunityCode { get; set; }
         public DateTime? From { get; set; }
@@ -562,9 +562,9 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<IncidentTask, EvacuationFileTask>()
-                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s == null ? null : s.Id))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s == null ? (DateTime?)null : s.StartDate))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s == null ? (DateTime?)null : s.EndDate))
                 .ForMember(d => d.Features, opts => opts.Ignore())
                 ;
 

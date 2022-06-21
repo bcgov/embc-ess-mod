@@ -40,6 +40,6 @@ export class TaskSearchService {
    * @returns void observable
    */
   taskSignIn(taskNumber: string): Observable<void> {
-    return this.taskService.tasksSignIn({ taskId: taskNumber });
+    return this.taskService.tasksSignIn({ body: { taskId: taskNumber } });
   }
 }
