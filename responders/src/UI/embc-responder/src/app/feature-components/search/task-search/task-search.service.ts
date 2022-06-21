@@ -11,7 +11,7 @@ export class TaskSearchService {
   constructor(
     private taskService: TasksService,
     private locationsService: LocationsService
-  ) { }
+  ) {}
 
   /**
    * Gets the task details from server and maps the incoming
