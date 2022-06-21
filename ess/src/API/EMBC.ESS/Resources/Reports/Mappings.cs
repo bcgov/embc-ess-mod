@@ -29,7 +29,7 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.era_dateofbirth))
-                .ForMember(d => d.Gender, opts => opts.MapFrom(s => s.era_gender))
+                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_gender))
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => string.Empty)) //the field in the wiki doesn't seem to exist
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initials))
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.address1_line1))
@@ -246,4 +246,23 @@ namespace EMBC.ESS.Resources.Reports
     }
 
 #pragma warning restore CA1008 // Enums should have zero value
+
+    public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
+    {
+        public int? Convert(string sourceMember, ResolutionContext context) => sourceMember?.ToLowerInvariant() switch
+        {
+            "male" => 1,
+            "female" => 2,
+            "x" => 3,
+            _ => null
+        };
+
+        public string Convert(int? sourceMember, ResolutionContext context) => sourceMember switch
+        {
+            1 => "Male",
+            2 => "Female",
+            3 => "X",
+            _ => null
+        };
+    }
 }
