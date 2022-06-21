@@ -24,7 +24,7 @@ namespace EMBC.ESS.Managers.Events
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
-                .ForMember(d => d.RelatedTask, opts => opts.MapFrom(s => new Shared.Contracts.Events.IncidentTask { Id = s.TaskId }))
+                .ForMember(d => d.RelatedTask, opts => opts.MapFrom(s => s.TaskId == null ? null : new Shared.Contracts.Events.IncidentTask { Id = s.TaskId }))
                 .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 

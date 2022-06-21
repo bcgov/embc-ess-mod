@@ -11,7 +11,7 @@ export class TaskSearchService {
   constructor(
     private taskService: TasksService,
     private locationsService: LocationsService
-  ) {}
+  ) { }
 
   /**
    * Gets the task details from server and maps the incoming
@@ -40,6 +40,6 @@ export class TaskSearchService {
    * @returns void observable
    */
   taskSignIn(taskNumber: string): Observable<void> {
-    return this.taskService.tasksSignIn({ taskId: taskNumber });
+    return this.taskService.tasksSignIn({ body: { taskId: taskNumber } });
   }
 }

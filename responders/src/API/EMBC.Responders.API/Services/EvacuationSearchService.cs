@@ -114,6 +114,7 @@ namespace EMBC.Responders.API.Services
 
             var mappedFile = mapper.Map<EvacuationFile>(file);
 
+            if (mappedFile.Task == null) mappedFile.Task = new EvacuationFileTask();
             mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile);
             return mappedFile;
         }
@@ -172,8 +173,8 @@ namespace EMBC.Responders.API.Services
 
             return new[]
             {
-                new EvacuationFileTaskFeature { Name = "digital-support-referrals", Enabled = file.Task.To >= DateTime.UtcNow },
-                new EvacuationFileTaskFeature { Name = "digital-support-etransfer", Enabled = etransferEnabled && file.Task.To >= DateTime.UtcNow },
+                new EvacuationFileTaskFeature { Name = "digital-support-referrals", Enabled = file.Task?.To >= DateTime.UtcNow },
+                new EvacuationFileTaskFeature { Name = "digital-support-etransfer", Enabled = etransferEnabled && (file.Task == null || !file.Task.To.HasValue || file.Task?.To >= DateTime.UtcNow) },
                 new EvacuationFileTaskFeature { Name = "paper-support-referrals", Enabled = file.ManualFileId != null },
             };
         }
@@ -209,13 +210,15 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.CreatedOn)) //temporary until files contain issued on
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask
-                {
-                    TaskNumber = s.RelatedTask.Id,
-                    CommunityCode = s.RelatedTask.CommunityCode,
-                    From = s.RelatedTask.StartDate,
-                    To = s.RelatedTask.EndDate
-                }))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null
+                    ? new EvacuationFileTask()
+                    : new EvacuationFileTask
+                    {
+                        TaskNumber = s.RelatedTask.Id,
+                        CommunityCode = s.RelatedTask.CommunityCode,
+                        From = s.RelatedTask.StartDate,
+                        To = s.RelatedTask.EndDate
+                    }))
             ;
         }
     }

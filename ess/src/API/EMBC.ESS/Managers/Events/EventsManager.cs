@@ -255,7 +255,7 @@ namespace EMBC.ESS.Managers.Events
                 if (registrant == null) throw new NotFoundException($"registrant with user id '{query.PrimaryRegistrantUserId}' not found", query.PrimaryRegistrantUserId);
                 query.PrimaryRegistrantId = registrant.Id;
             }
-            var cases = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
+            var foundFiles = (await evacuationRepository.Query(new Resources.Evacuations.EvacuationFilesQuery
             {
                 FileId = query.FileId,
                 ManualFileId = query.ManualFileId,
@@ -265,7 +265,7 @@ namespace EMBC.ESS.Managers.Events
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Evacuations.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items;
 
-            var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(cases).ToArray();
+            var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(foundFiles).ToArray();
 
             await Parallel.ForEachAsync(files, ct, async (f, ct) => await evacuationFileLoader.Load(f, ct));
 
