@@ -19,29 +19,6 @@
         <div class="row">
           <div class="col-md-4">
             <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
-              <input
-                formControlName="firstName"
-                matInput
-                placeholder="First Name"
-                maxlength="100"
-                required
-              />
-              <mat-error
-                *ngIf="
-                  nameSearchFormControl.firstName.invalid &&
-                  nameSearchFormControl.firstName.hasError('whitespaceError')
-                "
-              >
-                First Name is required</mat-error
-              >
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline">
               <mat-label>Last Name</mat-label>
               <input
                 formControlName="lastName"
@@ -57,6 +34,29 @@
                 "
               >
                 Last Name is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input
+                formControlName="firstName"
+                matInput
+                placeholder="First Name"
+                maxlength="100"
+                required
+              />
+              <mat-error
+                *ngIf="
+                  nameSearchFormControl.firstName.invalid &&
+                  nameSearchFormControl.firstName.hasError('whitespaceError')
+                "
+              >
+                First Name is required</mat-error
               >
             </mat-form-field>
           </div>
