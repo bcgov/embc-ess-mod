@@ -5,21 +5,21 @@ Scenario: Responder can login to the portal
 	Given I log in with BCeID user ess.developerA1	
 	Then I am on path /responder-access/responder-dashboard
 
-Scenario: Evacuee online new Registration
+Scenario: Evacuee Online new Registration
 	Given I log in with BCeID user ess.developerA1
 	When I sign into a task 6789
 	And  I search for an online evacuee Automation
 	And I complete an online registration
 	Then An online registration is completed with an active support
 
-Scenario: Evacuee paper based new Registration
+Scenario: Evacuee Paper Based new Registration
 	Given I log in with BCeID user ess.developerA1
 	When I sign into a task 6789
 	And I search for a paper based evacuee Automation
 	And I complete a paper based registration
 	Then A paper based registration is completed with an expired support
 
-Scenario: Add Interac Support to Online ESS File
+Scenario: Evacuee Online Registration add Interac Support
 	Given I log in with BCeID user ess.developerA1
 	And I sign into a task 6789
 	And I search for an online evacuee Thirtyfour
@@ -51,7 +51,7 @@ Scenario: Suppliers Management
 	And I delete a supplier
 	And I search for a supplier
 	Then The supplier does not exist
-
+#
 #Scenario: Create several suppliers
 #	Given I log in with BCeID user ess.developerA1
 #	And I create multiple suppliers 46

@@ -225,7 +225,11 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //process support
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
             wizardSupport.WizardProcessDraftSupports();
+
+            //review process support
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/review");
             wizardSupport.WizardOnlineProcessSupportsForm();
+            wizardSupport.CancelPrintOut();
         }
 
         [StepDefinition(@"An online registration is completed with an active support")]

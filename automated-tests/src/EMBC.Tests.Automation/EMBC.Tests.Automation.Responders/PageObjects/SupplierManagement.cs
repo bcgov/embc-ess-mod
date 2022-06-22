@@ -10,8 +10,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
     public class SupplierManagement: PageObjectBase
     {
-
-        private By suppliersMgmtTab = By.XPath("//mat-sidenav-content[1]/app-top-nav-menu[1]/mat-toolbar[1]/div[1]/a[4]");
         private By addSupplierTab = By.CssSelector("div[class='mat-tab-links'] a:nth-child(2)");
         private By addSupplierLegalNameInput = By.CssSelector("input[formcontrolname='supplierLegalName']");
         private By addSupplierNameInput = By.CssSelector("input[formcontrolname='supplierName']");
@@ -47,7 +45,9 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void EnterSupplierManagement()
         {
-            FocusAndClick(suppliersMgmtTab);
+            var baseURI = new Uri(webDriver.Url);
+            var absolutePath = new Uri(baseURI, "/responder-access/supplier-management");
+            webDriver.Navigate().GoToUrl(absolutePath);
         }
 
         public void AddNewSupplierTab()

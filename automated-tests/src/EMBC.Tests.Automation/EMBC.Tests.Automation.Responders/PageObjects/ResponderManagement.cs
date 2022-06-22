@@ -9,7 +9,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 {
     public class ResponderManagement : PageObjectBase
     {
-        private By responderMgmtTab = By.XPath("//mat-sidenav-content[1]/app-top-nav-menu[1]/mat-toolbar[1]/div[1]/a[3]");
         private By addTeamMemberTab = By.CssSelector("div[class='mat-tab-links'] a:nth-child(2)");
         private By addTeamMemberFirstNameInput = By.CssSelector("input[formcontrolname='firstName']");
         private By addTeamMemberLastNameInput = By.CssSelector("input[formcontrolname='lastName']");
@@ -29,7 +28,9 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void EnterResponderManagement()
         {
-            webDriver.FindElement(responderMgmtTab).Click();
+            var baseURI = new Uri(webDriver.Url);
+            var absolutePath = new Uri(baseURI, "/responder-access/responder-management");
+            webDriver.Navigate().GoToUrl(absolutePath);
         }
 
         public void AddNewTeamMemberTab()
@@ -63,13 +64,13 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         public void ChangeTeamMemberStatus()
         {
             Wait();
-            webDriver.FindElement(respondersManagementStatusToggle).Click();
+            FocusAndClick(respondersManagementStatusToggle);
         }
 
         public void SelectTeamMember()
         {
             Wait();
-            webDriver.FindElement(respondersManagementMainTableFirstRows).Click();
+            FocusAndClick(respondersManagementMainTableFirstRows);
         }
 
         public void DeleteTeamMember()
