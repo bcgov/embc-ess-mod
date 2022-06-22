@@ -72,6 +72,7 @@ export { SupplierResult } from './models/supplier-result';
 export { EssTask } from './models/ess-task';
 export { TaskWorkflow } from './models/task-workflow';
 export { SuppliersListItem } from './models/suppliers-list-item';
+export { TaskSignin } from './models/task-signin';
 export { AssignedCommunity } from './models/assigned-community';
 export { Team } from './models/team';
 export { TeamMember } from './models/team-member';

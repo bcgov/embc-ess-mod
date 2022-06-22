@@ -18,7 +18,7 @@ on:
     # The branches below must be a subset of the branches above
     # branches: [ master ]
   schedule:
-    - cron: '22 23 * * 1'
+    - cron: '19 01 * * 1'
   workflow_dispatch:    
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
       security-events: write
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         language: [ 'csharp', 'javascript' ]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
@@ -52,6 +52,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
+        debug: true
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
         # By default, queries listed here will override any specified in a config file.
@@ -71,8 +72,13 @@ jobs:
     #    uses a compiled language
 
     #- run: |
-    #   make bootstrap
-    #   make release
+    #   dotnet build ess/src/API/
+    #   dotnet build registrants/src/API/
+    #   dotnet build responders/src/API/
+    #   dotnet build suppliers/src/API/
+    #   dotnet build dotnet build oauth-server/src/API/
+    #   dotnet build automated-tests/src/EMBC.Tests.Automation/
+    #   dotnet build pdf-generator/src/API/
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2

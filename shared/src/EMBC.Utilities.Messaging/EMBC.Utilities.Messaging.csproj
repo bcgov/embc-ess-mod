@@ -17,7 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Dispatcher.proto" GrpcServices="Both" ProtoCompile="True" Access="Internal" />
+        <Protobuf Include=".\Dispatcher.proto" GrpcServices="Both" ProtoCompile="True" Access="Internal" />
     </ItemGroup>
 
     <ItemGroup>

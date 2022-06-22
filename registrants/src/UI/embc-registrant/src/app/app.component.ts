@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
       await this.loginService.tryLogin();
     } catch (error) {
       this.isLoading = false;
-      if (error.status === 400 && error.status === 404) {
+      if (error.status === 400 || error.status === 404) {
         this.environment = null;
       } else {
         this.isLoading = false;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -45,7 +46,20 @@ namespace EMBC.Responders.API.Controllers
             var reply = await messagingClient.Send(new TasksSearchQuery { TaskId = taskId });
             var task = reply.Items.SingleOrDefault();
             if (task == null) return NotFound(taskId);
-            return Ok(mapper.Map<ESSTask>(task));
+            var mappedTask = mapper.Map<ESSTask>(task);
+            mappedTask.Workflows = GetTaskWorkflows(task);
+            return Ok(mappedTask);
+        }
+
+        private static IEnumerable<TaskWorkflow> GetTaskWorkflows(IncidentTask incidentTask)
+        {
+            var workflows = new[]
+            {
+                new TaskWorkflow { Name = "digital-processing",  Enabled = incidentTask.Status == IncidentTaskStatus.Active },
+                new TaskWorkflow { Name = "paper-data-entry",  Enabled = true },
+                new TaskWorkflow { Name = "remote-extensions",  Enabled = false },
+            };
+            return workflows;
         }
 
         [HttpGet("{taskId}/suppliers")]
@@ -67,10 +81,10 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("signin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> SignIn(string taskId)
+        public async Task<IActionResult> SignIn(TaskSignin signin)
         {
-            var task = (await messagingClient.Send(new TasksSearchQuery { TaskId = taskId })).Items.SingleOrDefault();
-            if (task == null) return NotFound(taskId);
+            var task = (await messagingClient.Send(new TasksSearchQuery { TaskId = signin.TaskId })).Items.SingleOrDefault();
+            if (task == null) return NotFound();
             return Ok();
         }
     }
@@ -102,30 +116,19 @@ namespace EMBC.Responders.API.Controllers
         public Address Address { get; set; }
     }
 
+    public class TaskSignin
+    {
+        [Required]
+        public string TaskId { get; set; }
+    }
+
     public class TaskMapping : Profile
     {
-        private static void SetTaskWorkflows(ESSTask task, IncidentTask incidentTask)
-        {
-            var workflows = new[]
-            {
-                new TaskWorkflow { Name = "digital-processing",  Enabled = incidentTask.Status == IncidentTaskStatus.Active },
-                new TaskWorkflow { Name = "paper-data-entry",  Enabled = true },
-                new TaskWorkflow { Name = "remote-extensions",  Enabled = false },
-            };
-            task.Workflows = workflows;
-        }
-
         public TaskMapping()
         {
             CreateMap<IncidentTask, ESSTask>()
-                .ForMember(d => d.Workflows, opts => opts.Ignore())
-                .AfterMap((s, d, ctx) =>
-                {
-                    SetTaskWorkflows(d, s);
-                })
-                ;
-            CreateMap<SupplierDetails, SuppliersListItem>()
-                ;
+                .ForMember(d => d.Workflows, opts => opts.Ignore());
+            CreateMap<SupplierDetails, SuppliersListItem>();
         }
     }
 }
