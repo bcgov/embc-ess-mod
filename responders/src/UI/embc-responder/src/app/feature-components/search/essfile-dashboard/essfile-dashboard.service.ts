@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import {
   EvacuationFileHouseholdMember,
   HouseholdMemberType,
+  Note,
   RegistrantProfileSearchResult
 } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
@@ -11,8 +12,13 @@ import {
   SelectedPathType
 } from 'src/app/core/models/appBase.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import {
+  ActionPermission,
+  ClaimType
+} from 'src/app/core/services/authorization.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +33,8 @@ export class EssfileDashboardService {
   constructor(
     private cacheService: CacheService,
     private registrationService: RegistrationsService,
-    private appBaseService: AppBaseService
+    private appBaseService: AppBaseService,
+    private userService: UserService
   ) {}
 
   get essFile(): EvacuationFileModel {
@@ -121,5 +128,31 @@ export class EssfileDashboardService {
         this.displayMemberButton = HouseholdMemberButtons.viewProfile;
       }
     }
+  }
+
+  public loadNotes(notes: Note[]): Note[] {
+    let validNotes: Note[] = [];
+    if (this.hasPermission('canSeeHiddenNotes')) {
+      validNotes = notes;
+    } else {
+      validNotes = notes.filter((note) => !note.isHidden);
+    }
+
+    return validNotes.sort(
+      (a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
+    );
+  }
+
+  /**
+   * Checks if the user can permission to perform given action
+   *
+   * @param action user action
+   * @returns true/false
+   */
+  public hasPermission(action: string): boolean {
+    return this.userService.hasClaim(
+      ClaimType.action,
+      ActionPermission[action]
+    );
   }
 }
