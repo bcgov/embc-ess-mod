@@ -50,7 +50,6 @@ namespace EMBC.Tests.Automation.Responders.Drivers
 
             var chromeDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), options);
             chromeDriver.Url = Configuration.GetValue<string>("devUrl");
-           // chromeDriver.Url = "http://localhost:6200";
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
 
