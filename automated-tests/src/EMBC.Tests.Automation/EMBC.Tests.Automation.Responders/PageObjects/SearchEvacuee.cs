@@ -25,13 +25,13 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         public void SelectOnlineRegistrationType()
         {
             
-            webDriver.FindElement(digitalRegCard).Click();
+            FocusAndClick(digitalRegCard);
             this.ButtonElement("Next");
         }
 
         public void SelectPaperBasedRegistrationType()
         {
-            webDriver.FindElement(paperBasedRegCard).Click();
+            FocusAndClick(paperBasedRegCard);
             this.ButtonElement("Next");
         }
 

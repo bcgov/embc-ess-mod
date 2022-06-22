@@ -20,7 +20,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         {
             currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
             configurationLazy = new Lazy<IConfiguration>(ReadConfiguration);
-            closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", false);
+            closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", true);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         private IWebDriver CreateWebDriver()
         {
             var options = new ChromeOptions();
-            options.AddArguments("start-maximized");
+            options.AddArguments("start-maximized", "headless");
 
             var chromeDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), options);
             chromeDriver.Url = Configuration.GetValue<string>("devUrl");

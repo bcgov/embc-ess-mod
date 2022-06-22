@@ -64,7 +64,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            webDriver.FindElement(addressFormIsBCAddressNoRadioBttn).Click();
+            FocusAndClick(addressFormIsBCAddressNoRadioBttn);
             webDriver.FindElement(addressFormCountryInput).SendKeys(country);
             webDriver.FindElement(By.Id(country)).Click();
             webDriver.FindElement(addressFormAddressLine1Input).SendKeys(addressLine1);

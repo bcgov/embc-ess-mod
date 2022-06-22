@@ -2,8 +2,10 @@
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using Protractor;
+using SeleniumExtras.WaitHelpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -125,7 +127,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             webDriver.FindElement(supportDeliveryResponsibleNameInput).SendKeys(responsibleName);
             webDriver.FindElement(supportDeliverySupplierInput).Click();
-            webDriver.FindElement(supportDeliverySupplierSelect).Click();
+            FocusAndClick(supportDeliverySupplierSelect);
 
             ButtonElement("Next - Save Support");
         }
@@ -178,24 +180,58 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             ButtonElement("Process Support/s");
             ButtonElement("Proceed");
+
+            
         }
 
         public void CancelPrintOut()
         {
 
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
+
+            string currentHandle = webDriver.CurrentWindowHandle;
+            ReadOnlyCollection<string> originalHandles = webDriver.WindowHandles;
+
+
+            WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(60));
+            string popupWindowHandle = wait.Until<string>((d) =>
+            {
+                string foundHandle = null;
+
+                // Subtract out the list of known handles. In the case of a single
+                // popup, the newHandles list will only have one value.
+                List<string> newHandles = webDriver.WindowHandles.Except(originalHandles).ToList();
+                if (newHandles.Count > 0)
+                {
+                    foundHandle = newHandles[0];
+                }
+
+                return foundHandle;
+            });
+            //w.Until(ExpectedConditions.ElementExists(webDriver.WindowHandles.Count > 1);
 
             var driver = webDriver is NgWebDriver ngDriver
                ? ngDriver.WrappedDriver
                : webDriver;
-         
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
 
-            IWebElement element = driver.FindElement(By.TagName("print-preview-app"));
-            element.SendKeys(Keys.Tab);
-            element.SendKeys(Keys.Enter);
+            //if (driver.WindowHandles.Count > 1)
+            //{
+                driver.SwitchTo().Window(popupWindowHandle);
 
-            driver.SwitchTo().Window(driver.WindowHandles[0]);
+                IWebElement element = driver.FindElement(By.TagName("print-preview-app"));
+                element.SendKeys(Keys.Tab);
+                element.SendKeys(Keys.Enter);
+
+                driver.SwitchTo().Window(currentHandle);
+            //}
+            //else
+            //{
+            //    driver.SwitchTo().Window(driver.WindowHandles[1]);
+            //    Actions action = new Actions(driver);
+            //    action.SendKeys(Keys.Escape);
+            //}
+
+                
         }
 
         // ASSERT FUNCTIONS

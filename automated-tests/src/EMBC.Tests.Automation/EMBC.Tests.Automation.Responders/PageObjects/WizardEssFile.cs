@@ -161,8 +161,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             ButtonElement("Next");
 
-            webDriver.FindElement(householdFormAllMembersCheckbox).Click();
-            webDriver.FindElement(bypassEssFileReviewTab).Click();
+            FocusAndClick(householdFormAllMembersCheckbox);
+            ButtonElement("Next");
+
+            ButtonElement("Next");
+            ButtonElement("Next");
+            ButtonElement("Next");
 
             ButtonElement("Save ESS File");
         }
