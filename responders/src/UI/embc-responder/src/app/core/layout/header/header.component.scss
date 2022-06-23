@@ -1,5 +1,6 @@
 .heading-text1 {
   color: #ffffff;
+  white-space: break-spaces;
 }
 
 .heading-text2 {
@@ -86,21 +87,14 @@ header mat-toolbar {
 }
 
 @media (max-width: 1215px) {
-  .desktop-view {
-    display: none;
-  }
-  .mobile-view {
-    display: inline-block;
-  }
-
   .button-align {
-    float: left !important;
+    float: right !important;
     white-space: normal;
     padding: 0px;
   }
 
   .menu-responsive {
-    width: 50%;
+    display: inline-block;
   }
 }
 
