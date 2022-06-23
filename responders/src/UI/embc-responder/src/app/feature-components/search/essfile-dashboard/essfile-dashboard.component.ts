@@ -23,6 +23,7 @@ import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { lastValueFrom, tap } from 'rxjs';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -47,7 +48,6 @@ export class EssfileDashboardComponent implements OnInit {
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     private alertService: AlertService,
-    private stepNotesService: StepNotesService,
     public appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private evacueeSearchService: EvacueeSearchService,
@@ -190,7 +190,7 @@ export class EssfileDashboardComponent implements OnInit {
       .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
       .pipe(
         map((file: EvacuationFileModel) => {
-          this.loadNotes();
+          this.notesList = this.essfileDashboardService.loadNotes(file.notes);
           file?.householdMembers.sort(
             (a, b) =>
               Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
@@ -232,18 +232,6 @@ export class EssfileDashboardComponent implements OnInit {
       this.eligibilityLastName =
         this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.lastName;
     }
-  }
-
-  /**
-   * Loads and sorts the notes
-   */
-  private loadNotes(): void {
-    this.stepNotesService.getNotes().subscribe((notes) => {
-      const note = notes.sort(
-        (a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
-      );
-      this.notesList = note;
-    });
   }
 
   /**
