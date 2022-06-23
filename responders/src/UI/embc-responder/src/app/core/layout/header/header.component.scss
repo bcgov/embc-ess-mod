@@ -49,24 +49,6 @@
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
-  .divider {
-    width: 0px;
-  }
-}
-
-@media (max-width: 1215px) {
-  .button-align {
-    float: left !important;
-    white-space: normal;
-    padding: 0px;
-  }
-
-  .menu-responsive {
-    width: 50%;
-  }
-}
-
 .divider-col {
   width: 2% !important;
 }
@@ -91,4 +73,39 @@ header mat-toolbar {
 
 .button-align {
   float: right;
+}
+
+.user-column {
+  float: right;
+  right: 0px;
+  padding: 10px;
+}
+
+.mobile-view {
+  display: none;
+}
+
+@media (max-width: 1215px) {
+  .desktop-view {
+    display: none;
+  }
+  .mobile-view {
+    display: inline-block;
+  }
+
+  .button-align {
+    float: left !important;
+    white-space: normal;
+    padding: 0px;
+  }
+
+  .menu-responsive {
+    width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .divider {
+    width: 0px;
+  }
 }
