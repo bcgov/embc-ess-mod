@@ -42,5 +42,6 @@ namespace EMBC.ESS.Resources.Tasks
         public DateTime EndDate { get; set; }
         public string CommunityCode { get; set; }
         public string Description { get; set; }
+        public bool AutoApprovedEnabled { get; set; }
     }
 }

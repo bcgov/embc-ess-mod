@@ -41,6 +41,7 @@ namespace EMBC.ESS.Resources.Supports
                 CreateNewSupportsCommand c => await Handle(c, ct),
                 ChangeSupportStatusCommand c => await Handle(c, ct),
                 SubmitSupportForApprovalCommand c => await Handle(c, ct),
+                ApproveSupportCommand c => await Handle(c, ct),
                 SubmitSupportForReviewCommand c => await Handle(c, ct),
 
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
@@ -86,7 +87,7 @@ namespace EMBC.ESS.Resources.Supports
             // assign to EA queue
             var queueId = cmd.Flags.Any() ? SupportQueue.EAReview.QueueId : SupportQueue.EAApproval.QueueId;
             var queue = await ctx.queues.Where(q => q.queueid == queueId).SingleOrDefaultAsync(ct);
-            if (queue == null) throw new InvalidOperationException($"Error queue {SupportQueue.QRReview.QueueId} not found");
+            if (queue == null) throw new InvalidOperationException($"Error queue {queueId} not found");
             AssignSupportToQueue(ctx, support, queue);
 
             SetSupportStatus(ctx, support, SupportStatus.PendingApproval);
@@ -96,6 +97,45 @@ namespace EMBC.ESS.Resources.Supports
             ctx.DetachAll();
 
             return new SubmitSupportForApprovalCommandResult();
+        }
+
+        private async Task<SubmitSupportForApprovalCommandResult> Handle(ApproveSupportCommand cmd, CancellationToken ct)
+        {
+                var ctx = essContextFactory.Create();
+
+                var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
+                if (support == null) throw new InvalidOperationException($"Support {cmd.SupportId} not found");
+                if (support.statuscode != (int)SupportStatus.PendingApproval)
+                    throw new InvalidOperationException($"Support {cmd.SupportId} is in status {(SupportStatus)support.statuscode} and cannot be approved - expecting PendingApproval status");
+
+                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
+                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_evacueesupport_QueueItems), ct);
+                var bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
+                if (bpf == null) throw new InvalidOperationException($"Business process flow for Support {cmd.SupportId} not found");
+
+                var queueItem = support.era_evacueesupport_QueueItems.OrderByDescending(q => q.createdon).FirstOrDefault();
+                if (queueItem == null) throw new InvalidOperationException($"Support {cmd.SupportId} queue items not found");
+
+                await ctx.LoadPropertyAsync(queueItem, nameof(queueitem.queueid), ct);
+                if (queueItem.queueid == null) throw new InvalidOperationException($"Support {cmd.SupportId} queue not found");
+
+                support.era_etransferapproved = 174360001; //No
+                SetSupportStatus(ctx, support, SupportStatus.Approved);
+                var processStage = await ctx.processstages.Where(ps => ps.stagename == "Send Support For Payment").SingleOrDefaultAsync(ct);
+                if (processStage != null) ctx.SetLink(bpf, nameof(era_essevacueeetransfersupport.activestageid), processStage);
+                ctx.UpdateObject(support);
+                await ctx.SaveChangesAsync(ct);
+                ctx.DetachAll();
+
+                support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
+                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
+                bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
+                ctx.DeactivateObject(bpf, 2);
+
+                await ctx.SaveChangesAsync(ct);
+                ctx.DetachAll();
+
+                return new SubmitSupportForApprovalCommandResult();
         }
 
         private async Task<SubmitSupportForReviewCommandResult> Handle(SubmitSupportForReviewCommand cmd, CancellationToken ct)
@@ -252,6 +292,11 @@ namespace EMBC.ESS.Resources.Supports
             tasks.Add(ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_etransfertransaction_era_evacueesuppo), ct));
 
             await Task.WhenAll(tasks);
+
+            var task = await ctx.era_tasks.Where(t => t.era_taskid == support.era_EvacuationFileId._era_taskid_value).SingleOrDefaultAsync();
+            if (task == null) throw new InvalidOperationException($"Support {support.era_name} has no task");
+
+            support.era_EvacuationFileId.era_TaskId = task;
 
             foreach (var flag in support.era_era_evacueesupport_era_supportflag_EvacueeSupport)
             {

@@ -55,6 +55,11 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<SupportFlag> Flags { get; set; } = Array.Empty<SupportFlag>();
     }
 
+    public class ApproveSupportCommand : ManageSupportCommand
+    {
+        public string SupportId { get; set; }
+    }
+
     public class SubmitSupportForApprovalCommandResult : ManageSupportCommandResult
     { }
 
@@ -111,6 +116,7 @@ namespace EMBC.ESS.Resources.Supports
         public bool IsReferral => SupportDelivery is Referral;
         public bool IsEtransfer => SupportDelivery is ETransfer;
         public IEnumerable<SupportFlag> Flags { get; set; }
+        public string TaskId { get; set; }
     }
 
     public abstract class SupportDelivery
