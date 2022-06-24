@@ -58,3 +58,9 @@
     min-width: 400px !important;
   }
 }
+
+@media (max-width: 965px){
+  .col-md-4 {
+    width: 100%;
+  }
+}
