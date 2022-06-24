@@ -41,3 +41,9 @@ p {
   font-size: 1em;
   text-align: left;
 }
+
+@media (max-width: 920px) {
+  .col-md-6 {
+    width: 100%;
+  }
+}
