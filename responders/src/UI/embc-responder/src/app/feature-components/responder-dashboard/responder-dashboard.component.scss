@@ -83,3 +83,10 @@ a:hover {
 .img-fit-col {
     max-width: inherit;
 }
+
+@media (min-width:769px) and (max-width:1199px) {
+    .button-yellow {
+        white-space: normal;
+        height: auto !important;
+    }
+}
