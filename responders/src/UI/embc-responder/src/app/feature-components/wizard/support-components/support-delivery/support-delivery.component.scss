@@ -135,3 +135,9 @@
   // text-decoration: none;
   pointer-events: none;
 }
+
+@media (max-width: 965px){
+  .col-md-4 {
+    width: 100%;
+  }
+}
