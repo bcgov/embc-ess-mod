@@ -24,7 +24,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="col-md-1" *ngIf="showLockIcon">
+              <div class="col-md-1" *ngIf="evacueeDetailsService?.showLockIcon">
                 <img
                   class="locked-field"
                   src="/assets/images/field-lock.svg"
@@ -47,7 +47,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="col-md-1" *ngIf="showLockIcon">
+              <div class="col-md-1" *ngIf="evacueeDetailsService?.showLockIcon">
                 <img
                   class="locked-field"
                   src="/assets/images/field-lock.svg"
@@ -119,7 +119,7 @@
                   />
                 </mat-form-field>
               </div>
-              <div class="col-md-1" *ngIf="showLockIcon">
+              <div class="col-md-1" *ngIf="evacueeDetailsService?.showLockIcon">
                 <img
                   class="locked-field"
                   src="/assets/images/field-lock.svg"
@@ -129,7 +129,7 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="this.showUnlockLink">
+            <div class="row" *ngIf="evacueeDetailsService?.showUnlockLink">
               <div class="col-md-3">
                 <button class="btn unlock-link" (click)="editLockedFields()">
                   Edit locked fields

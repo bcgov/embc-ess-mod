@@ -48,16 +48,8 @@ describe('StepEvacueeProfileComponent', () => {
           WizardDataService,
           { provide: Router, useValue: routerMock },
           {
-            provide: SecurityQuestionsService,
-            useClass: MockSecurityQuestionsService
-          },
-          {
             provide: StepEvacueeProfileService,
             useClass: MockStepEvacueeProfileService
-          },
-          {
-            provide: AlertService,
-            useClass: MockAlertService
           },
           { provide: computeInterfaceToken, useValue: {} }
         ]
@@ -68,10 +60,8 @@ describe('StepEvacueeProfileComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StepEvacueeProfileComponent);
     component = fixture.componentInstance;
-    securityQuestionsService = TestBed.inject(SecurityQuestionsService);
     wizardService = TestBed.inject(WizardDataService);
     stepProfileService = TestBed.inject(StepEvacueeProfileService);
-    alertService = TestBed.inject(AlertService);
   });
 
   it('should create', () => {
@@ -84,9 +74,7 @@ describe('StepEvacueeProfileComponent', () => {
     const test = TestBed.inject(Router);
     const testMockComponent = new StepEvacueeProfileComponent(
       test,
-      stepProfileService,
-      securityQuestionsService,
-      alertService
+      stepProfileService
     );
     fixture.detectChanges();
     expect(testMockComponent.tabs).toBeDefined();
@@ -105,9 +93,7 @@ describe('StepEvacueeProfileComponent', () => {
     const test = TestBed.inject(Router);
     const testMockComponent = new StepEvacueeProfileComponent(
       test,
-      stepProfileService,
-      securityQuestionsService,
-      alertService
+      stepProfileService
     );
     fixture.detectChanges();
     expect(testMockComponent.tabs).toContain(expectedTab);
@@ -127,9 +113,7 @@ describe('StepEvacueeProfileComponent', () => {
     const test = TestBed.inject(Router);
     const testMockComponent = new StepEvacueeProfileComponent(
       test,
-      stepProfileService,
-      securityQuestionsService,
-      alertService
+      stepProfileService
     );
     fixture.detectChanges();
     expect(testMockComponent.tabs.indexOf(expectedTab)).toBe(-1);

@@ -15,6 +15,19 @@ export const phoneMask = [
   /\d/
 ];
 
+export const dateMask = [
+  /\d/,
+  /\d/,
+  '/',
+  /\d/,
+  /\d/,
+  '/',
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/
+];
+
 export const etransferLimt = 10000;
 
 export const mealRate = {

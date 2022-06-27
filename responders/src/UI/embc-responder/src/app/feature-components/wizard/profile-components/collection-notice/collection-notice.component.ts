@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 
+/**
+ * Displays the collection notice
+ */
 @Component({
   selector: 'app-collection-notice',
   templateUrl: './collection-notice.component.html',

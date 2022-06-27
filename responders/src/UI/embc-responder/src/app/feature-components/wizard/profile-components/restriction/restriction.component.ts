@@ -1,16 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { TabModel } from 'src/app/core/models/tab.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
-import { WizardService } from '../../wizard.service';
+import { RestrictionService } from './restriction.service';
 
 @Component({
   selector: 'app-restriction',
@@ -21,38 +14,19 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: FormGroup;
   tabUpdateSubscription: Subscription;
   editFlag: boolean;
-  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
-    private stepEvacueeProfileService: StepEvacueeProfileService,
-    private formBuilder: FormBuilder,
-    private wizardService: WizardService,
+    private restrictionService: RestrictionService,
     private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
-    this.createRestrictionForm();
+    this.restrictionForm = this.restrictionService.createForm();
     this.editFlag = this.appBaseService?.wizardProperties?.editFlag;
-
-    // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
-      });
-    this.tabMetaData =
-      this.stepEvacueeProfileService.getNavLinks('restriction');
-  }
-
-  createRestrictionForm(): void {
-    this.restrictionForm = this.formBuilder.group({
-      restrictedAccess: [
-        this.stepEvacueeProfileService.restrictedAccess !== null
-          ? this.stepEvacueeProfileService.restrictedAccess
-          : '',
-        [Validators.required]
-      ]
-    });
+    this.tabUpdateSubscription = this.restrictionService.updateTabStatus(
+      this.restrictionForm
+    );
   }
 
   /**
@@ -66,44 +40,21 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate([this.tabMetaData?.next]);
+    this.router.navigate([this.restrictionService?.tabMetaData?.next]);
   }
 
   /**
    * Navigates to the previous tab
    */
   back(): void {
-    this.router.navigate([this.tabMetaData?.previous]);
-  }
-
-  /**
-   * Checks the form validity and updates the tab status
-   */
-  updateTabStatus() {
-    if (this.restrictionForm.valid) {
-      this.stepEvacueeProfileService.setTabStatus('restriction', 'complete');
-    }
-    this.stepEvacueeProfileService.restrictedAccess =
-      this.restrictionForm.get('restrictedAccess').value;
+    this.router.navigate([this.restrictionService?.tabMetaData?.previous]);
   }
 
   /**
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    if (this.stepEvacueeProfileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        this.restrictionForm.controls,
-        'restriction'
-      );
-
-      this.wizardService.setEditStatus({
-        tabName: 'restriction',
-        tabUpdateStatus: isFormUpdated
-      });
-      this.stepEvacueeProfileService.updateEditedFormStatus();
-    }
-    this.stepEvacueeProfileService.nextTabUpdate.next();
+    this.restrictionService.cleanup(this.restrictionForm);
     this.tabUpdateSubscription.unsubscribe();
   }
 }
