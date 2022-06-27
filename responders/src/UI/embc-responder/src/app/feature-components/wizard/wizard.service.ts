@@ -17,6 +17,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
@@ -32,7 +34,9 @@ export class WizardService {
   constructor(
     private cacheService: CacheService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private appBaseService: AppBaseService,
+    private computeState: ComputeRulesService
   ) {}
 
   public get menuItems(): Array<WizardSidenavModel> {
@@ -81,6 +85,40 @@ export class WizardService {
           this.router.navigate([navigateTo]);
         }
       });
+  }
+
+  /**
+   * Allows navigation if the step is not locked else
+   * displays modal window
+   *
+   * @param lockedIndicator
+   * @param $event
+   */
+  manageStepNavigation(
+    lockedIndicator: boolean,
+    $event: MouseEvent,
+    targetRoute: string
+  ): void {
+    const curStep = this.getCurrentStep(this.router.url);
+    if (lockedIndicator) {
+      $event.stopPropagation();
+      $event.preventDefault();
+
+      const lockedMsg =
+        this.menuItems[curStep]?.incompleteMsg ||
+        globalConst.stepIncompleteMessage;
+
+      this.openLockedModal(lockedMsg);
+    } else if (
+      !lockedIndicator &&
+      (this.router.url === '/ess-wizard/add-supports/details' ||
+        this.router.url === '/ess-wizard/add-supports/delivery')
+    ) {
+      $event.stopPropagation();
+      $event.preventDefault();
+
+      this.openWarningModal(globalConst.supportInProgressMessage, targetRoute);
+    }
   }
 
   /**
@@ -414,5 +452,15 @@ export class WizardService {
     } else {
       return true;
     }
+  }
+
+  public clearCachedServices() {
+    this.cacheService.remove('wizardMenu');
+    this.cacheService.remove('wizardType');
+    this.appBaseService.wizardProperties = {
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
   }
 }

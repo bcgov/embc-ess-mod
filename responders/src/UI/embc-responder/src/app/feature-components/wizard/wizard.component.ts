@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { WizardService } from './wizard.service';
-import * as globalConst from '../../core/services/global-constants';
-import { WizardAdapterService } from './wizard-adapter.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { WizardAdapterService } from './wizard-adapter.service';
 
+/**
+ * Initializes the wizard layout by loading the appropriate wizard menu
+ * based on selected user functionality.
+ * Defines navigation rules within and outside the wizard
+ */
 @Component({
   selector: 'app-wizard',
   templateUrl: './wizard.component.html',
@@ -17,13 +18,10 @@ export class WizardComponent implements OnInit, OnDestroy {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
 
   constructor(
-    private router: Router,
     private wizardService: WizardService,
-    private cacheService: CacheService,
     private cd: ChangeDetectorRef,
-    private wizardAdapterService: WizardAdapterService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private wizardAdapterService: WizardAdapterService
   ) {
     this.sideNavMenu = this.appBaseService?.wizardProperties?.wizardMenu;
     this.wizardService.menuItems =
@@ -47,29 +45,11 @@ export class WizardComponent implements OnInit, OnDestroy {
     $event: MouseEvent,
     targetRoute: string
   ): void {
-    const curStep = this.wizardService.getCurrentStep(this.router.url);
-    if (lockedIndicator) {
-      $event.stopPropagation();
-      $event.preventDefault();
-
-      const lockedMsg =
-        this.wizardService.menuItems[curStep]?.incompleteMsg ||
-        globalConst.stepIncompleteMessage;
-
-      this.wizardService.openLockedModal(lockedMsg);
-    } else if (
-      !lockedIndicator &&
-      (this.router.url === '/ess-wizard/add-supports/details' ||
-        this.router.url === '/ess-wizard/add-supports/delivery')
-    ) {
-      $event.stopPropagation();
-      $event.preventDefault();
-
-      this.wizardService.openWarningModal(
-        globalConst.supportInProgressMessage,
-        targetRoute
-      );
-    }
+    this.wizardService.manageStepNavigation(
+      lockedIndicator,
+      $event,
+      targetRoute
+    );
   }
 
   /**
@@ -85,16 +65,6 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.wizardAdapterService.clearWizard();
-    this.clearCachedServices();
-  }
-
-  private clearCachedServices() {
-    this.cacheService.remove('wizardMenu');
-    this.cacheService.remove('wizardType');
-    this.appBaseService.wizardProperties = {
-      editFlag: false,
-      memberFlag: false
-    };
-    this.computeState.triggerEvent();
+    this.wizardService.clearCachedServices();
   }
 }
