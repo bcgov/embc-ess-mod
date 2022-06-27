@@ -1,29 +1,24 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
-import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile.service';
-import * as globalConst from '../../../core/services/global-constants';
 
+/**
+ * Initializes the profile tabs layout and defines navigation rules
+ */
 @Component({
   selector: 'app-step-evacuee-profile',
   templateUrl: './step-evacuee-profile.component.html',
   styleUrls: ['./step-evacuee-profile.component.scss']
 })
 export class StepEvacueeProfileComponent {
-  questionListSubscription: Subscription;
-
   stepId: string;
   stepName: string;
   tabs: Array<TabModel> = new Array<TabModel>();
 
   constructor(
     private router: Router,
-    private stepEvacueeProfileService: StepEvacueeProfileService,
-    private securityQuestionsService: SecurityQuestionsService,
-    private alertService: AlertService
+    private stepEvacueeProfileService: StepEvacueeProfileService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -37,26 +32,8 @@ export class StepEvacueeProfileComponent {
     }
 
     this.tabs = this.stepEvacueeProfileService.profileTabs;
-    this.loadTab();
-
-    // Load security question list as soon as wizard is initialized
-    this.securityQuestionsService.getSecurityQuestionList().subscribe({
-      next: (questions) => {
-        this.stepEvacueeProfileService.securityQuestionOptions = questions;
-      },
-      error: (error) => {
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.genericError);
-      }
-    });
-  }
-
-  loadTab() {
-    if (this.tabs !== null && this.tabs !== undefined) {
-      const firstTabUrl = this.tabs[0].route;
-
-      this.router.navigate(['/ess-wizard/evacuee-profile/' + firstTabUrl]);
-    }
+    this.stepEvacueeProfileService.loadTab(this.tabs);
+    this.stepEvacueeProfileService.loadSecurityQuestions();
   }
 
   /**

@@ -503,7 +503,7 @@ export class SupportDetailsComponent implements OnInit {
           this.customValidation
             .conditionalValidation(
               () => this.evacueeSessionService.isPaperBased,
-              Validators.minLength(8)
+              Validators.minLength(6)
             )
             .bind(this.customValidation),
           this.customValidation
@@ -581,7 +581,7 @@ export class SupportDetailsComponent implements OnInit {
         this.customValidation
           .conditionalValidation(
             () => this.evacueeSessionService.isPaperBased,
-            Validators.minLength(8)
+            Validators.minLength(6)
           )
           .bind(this.customValidation),
         this.customValidation
