@@ -20,3 +20,11 @@
 .error-message {
   margin-bottom: 10px;
 }
+
+@media (max-width: 920px)
+{
+  .col-md-4 {
+    width: 100%;
+  }
+
+}
