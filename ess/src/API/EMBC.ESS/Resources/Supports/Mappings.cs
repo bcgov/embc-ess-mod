@@ -59,6 +59,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForSourceMember(s => s.OriginatingNeedsAssessmentId, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.IssuedOn, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.Flags, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.TaskId, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
