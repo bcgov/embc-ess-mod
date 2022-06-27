@@ -26,7 +26,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.tipText = this.appBaseService?.wizardProperties?.evacueeDetailTipText;
-
+    this.evacueeDetailsService.init();
     this.evacueeDetailsForm = this.evacueeDetailsService.createForm();
     this.evacueeDetailsService.initDisabledFields(this.evacueeDetailsForm);
 

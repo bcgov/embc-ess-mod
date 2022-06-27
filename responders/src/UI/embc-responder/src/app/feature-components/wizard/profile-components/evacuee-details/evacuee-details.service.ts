@@ -17,8 +17,8 @@ export class EvacueeDetailsService {
   private editFlagVal: boolean;
   private verifiedProfileVal: boolean;
   private authorizedUserVal: boolean;
-  private showLockIconVal = true;
-  private showUnlockLinkVal = false;
+  private showLockIconVal: boolean;
+  private showUnlockLinkVal: boolean;
 
   public get showUnlockLink() {
     return this.showUnlockLinkVal;
@@ -69,7 +69,9 @@ export class EvacueeDetailsService {
     private customValidation: CustomValidationService,
     private appBaseService: AppBaseService,
     private dialog: MatDialog
-  ) {
+  ) {}
+
+  public init() {
     this.tabMetaData =
       this.stepEvacueeProfileService.getNavLinks('evacuee-details');
 
@@ -166,6 +168,7 @@ export class EvacueeDetailsService {
         form.get('lastName').disable();
         form.get('dateOfBirth').disable();
         this.showLockIcon = true;
+        this.showUnlockLink = false;
       } else {
         this.showLockIcon = false;
         this.showUnlockLink = false;
@@ -178,6 +181,7 @@ export class EvacueeDetailsService {
       form.get('lastName').disable();
       form.get('dateOfBirth').disable();
       this.showLockIcon = true;
+      this.showUnlockLink = false;
     }
   }
 
