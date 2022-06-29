@@ -149,6 +149,7 @@ namespace EMBC.ESS.Managers.Events
                 .IncludeAllDerived()
                 .ForMember(d => d.CreatedByTeamMemberId, opts => opts.MapFrom(s => s.CreatedBy.Id))
                 .ForMember(d => d.Flags, opts => opts.Ignore())
+                .ForMember(d => d.TaskId, opts => opts.Ignore())
                 .AfterMap((s, d) =>
                 {
                     if (d.IsPaperReferral)
