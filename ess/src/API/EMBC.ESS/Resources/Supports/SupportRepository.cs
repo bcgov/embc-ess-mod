@@ -121,9 +121,9 @@ namespace EMBC.ESS.Resources.Supports
 
                 support.era_etransferapproved = 174360001; //No
                 SetSupportStatus(ctx, support, SupportStatus.Approved);
+                ctx.UpdateObject(support);
                 var processStage = await ctx.processstages.Where(ps => ps.stagename == "Send Support For Payment").SingleOrDefaultAsync(ct);
                 if (processStage != null) ctx.SetLink(bpf, nameof(era_essevacueeetransfersupport.activestageid), processStage);
-                ctx.UpdateObject(support);
                 await ctx.SaveChangesAsync(ct);
                 ctx.DetachAll();
 
