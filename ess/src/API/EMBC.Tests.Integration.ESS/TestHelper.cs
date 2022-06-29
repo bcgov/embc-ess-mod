@@ -107,7 +107,7 @@ namespace EMBC.Tests.Integration.ESS
             };
             return new RegistrantProfile
             {
-                FirstName = $"{uniqueIdentifier}_first",
+                FirstName = $"autotest-dev-{uniqueIdentifier}_first",
                 LastName = $"{uniqueIdentifier}_last",
                 Email = $"{uniqueIdentifier}eratest@test.gov.bc.ca",
                 DateOfBirth = "12/13/2000",

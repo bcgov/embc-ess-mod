@@ -37,7 +37,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var firstFileSupports = new Support[]
             {
-                new ClothingSupport { }
+                new ClothingSupport { TotalAmount = 150 }
             };
 
             var now1 = DateTime.UtcNow;
@@ -68,7 +68,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             //first file should not have flags on the supports
             firstFileSupports = (await manager.Handle(new SearchSupportsQuery { FileId = firstFile.Id })).Items.Where(S => S.SupportDelivery is Interac).ToArray();
             firstFileSupports.ShouldNotBeEmpty();
-            firstFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingApproval && !s.Flags.Any());
+            firstFileSupports.ShouldAllBe(s => (s.Status == SupportStatus.PendingApproval || s.Status == SupportStatus.Approved) && !s.Flags.Any());
 
             var secondFileSupports = new Support[]
             {

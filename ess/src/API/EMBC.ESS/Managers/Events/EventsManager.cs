@@ -750,11 +750,33 @@ namespace EMBC.ESS.Managers.Events
 
                     await Parallel.ForEachAsync(response.Flags, ct, async (sf, ct) =>
                     {
-                        await supportRepository.Manage(new SubmitSupportForApprovalCommand
+                        try
                         {
-                            SupportId = sf.Key.Id,
-                            Flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(sf.Value)
-                        });
+                            var currentSupport = ((SearchSupportQueryResult)await supportRepository.Query(new Resources.Supports.SearchSupportsQuery
+                            {
+                                ById = sf.Key.Id
+                            })).Items.SingleOrDefault();
+                            var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = currentSupport.TaskId })).Items.SingleOrDefault();
+                            var flags = mapper.Map<IEnumerable<Resources.Supports.SupportFlag>>(sf.Value);
+
+                            await supportRepository.Manage(new SubmitSupportForApprovalCommand
+                            {
+                                SupportId = currentSupport.Id,
+                                Flags = flags
+                            });
+
+                            if (!flags.Any() && task.AutoApprovedEnabled)
+                            {
+                                await supportRepository.Manage(new ApproveSupportCommand
+                                {
+                                    SupportId = currentSupport.Id
+                                });
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            logger.LogError(e, "Failed to process pending support {0}", sf.Key.Id);
+                        }
                     });
                 }
             }
