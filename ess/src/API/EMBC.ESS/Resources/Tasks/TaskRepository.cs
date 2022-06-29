@@ -46,7 +46,25 @@ namespace EMBC.ESS.Resources.Tasks
 
             if (queryRequest.ByStatus.Any()) tasks = tasks.Where(t => queryRequest.ByStatus.Any(s => s == t.Status));
 
+            var autoApprovedEnabled = AutoApprovalEnabled();
+
+            foreach (var task in tasks)
+            {
+                task.AutoApprovedEnabled = autoApprovedEnabled;
+            }
+
             return new TaskQueryResult { Items = tasks.ToArray() };
+        }
+
+        private bool AutoApprovalEnabled()
+        {
+            var configValue = essContext.era_systemconfigs
+                    .Where(sc => sc.era_systemconfigid == Guid.Parse("3f626da4-73f2-ec11-b833-00505683fbf4")).SingleOrDefault();
+
+            return configValue != null
+                && configValue.era_group.Equals("Auto Approval", StringComparison.OrdinalIgnoreCase)
+                && configValue.era_key.Equals("Kill Switch On?", StringComparison.OrdinalIgnoreCase)
+                && configValue.era_value.Equals("Yes", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
