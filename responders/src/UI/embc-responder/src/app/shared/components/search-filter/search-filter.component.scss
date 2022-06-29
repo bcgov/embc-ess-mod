@@ -17,3 +17,18 @@ mat-form-field {
     padding-right: 5px;
     padding-left: 5px;
 }
+
+@media (max-width: 1199px) {
+    .col-md-4 {
+        width: 50%;
+    } 
+}
+
+@media (max-width: 991px) {
+    .col-md-4, .col-md-3 {
+        width: 100%;
+    }
+    .col-md-7 {
+        width: 100%;
+    }
+}
