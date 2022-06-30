@@ -25,11 +25,11 @@ mat-form-field {
 }
 
 @media (max-width: 1199px) {
-    .col-md-4 {
+    .col-md-4, .col-md-2 {
         width: 50%;
     }
     .col-md-2 {
-        width: 30%;
+        width: 40%;
     }
 }
 
