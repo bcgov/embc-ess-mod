@@ -77,7 +77,7 @@ export class SecurityQuestionsService {
 
   createParentForm(questionForm: FormGroup): FormGroup {
     return this.formBuilder.group({
-      questionForm: questionForm,
+      questionForm,
       bypassQuestions: this.stepEvacueeProfileService.bypassSecurityQuestions
     });
   }
