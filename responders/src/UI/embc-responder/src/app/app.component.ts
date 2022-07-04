@@ -38,7 +38,6 @@ export class AppComponent implements OnInit {
     private locationService: LocationsService,
     private loadTeamListService: LoadTeamListService,
     private loadEvacueeListService: LoadEvacueeListService,
-    private supplierService: SupplierService,
     private timeOutService: TimeoutService
   ) {
     this.router.events.subscribe((e) => {
