@@ -1,12 +1,105 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
+import { map, startWith, Subscription } from 'rxjs';
+import { TabModel } from 'src/app/core/models/tab.model';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { Country } from 'src/app/core/services/locations.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
+import { WizardService } from '../../wizard.service';
 
 @Injectable({ providedIn: 'root' })
 export class AddressService {
-  constructor() {}
+  primaryAddressForm: FormGroup;
+  private tabMetaDataVal: TabModel;
+
+  public get tabMetaData(): TabModel {
+    return this.tabMetaDataVal;
+  }
+  public set tabMetaData(value: TabModel) {
+    this.tabMetaDataVal = value;
+  }
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private customValidation: CustomValidationService,
+    private stepEvacueeProfileService: StepEvacueeProfileService,
+    private wizardService: WizardService
+  ) {
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('address');
+  }
+
+  public createForm(): FormGroup {
+    this.primaryAddressForm = this.formBuilder.group({
+      isBcAddress: [
+        this.stepEvacueeProfileService.isBcAddress !== null
+          ? this.stepEvacueeProfileService.isBcAddress
+          : '',
+        [Validators.required]
+      ],
+      isNewMailingAddress: [
+        this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress !==
+        null
+          ? this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress
+          : '',
+        [Validators.required]
+      ],
+      isBcMailingAddress: [
+        this.stepEvacueeProfileService.isBcMailingAddress !== null
+          ? this.stepEvacueeProfileService.isBcMailingAddress
+          : '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.primaryAddressForm.get('isNewMailingAddress').value ===
+                'No',
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      address: this.createPrimaryAddressForm(),
+      mailingAddress: this.createMailingAddressForm()
+    });
+
+    return this.primaryAddressForm;
+  }
+
+  public updateTabStatus(form: FormGroup): Subscription {
+    return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
+      if (form.valid) {
+        this.stepEvacueeProfileService.setTabStatus('address', 'complete');
+      } else if (this.stepEvacueeProfileService.checkForPartialUpdates(form)) {
+        this.stepEvacueeProfileService.setTabStatus('address', 'incomplete');
+      } else {
+        this.stepEvacueeProfileService.setTabStatus('address', 'not-started');
+      }
+      this.saveFormUpdates();
+    });
+  }
+
+  public cleanup(form: FormGroup) {
+    if (this.stepEvacueeProfileService.checkForEdit()) {
+      const isPrimaryFormUpdated = this.wizardService.hasChanged(
+        form.controls,
+        'primaryAddress'
+      );
+
+      const isMailingFormUpdated = this.wizardService.hasChanged(
+        form.controls,
+        'mailingAddress'
+      );
+
+      this.wizardService.setEditStatus({
+        tabName: 'address',
+        tabUpdateStatus: isPrimaryFormUpdated || isMailingFormUpdated
+      });
+      this.stepEvacueeProfileService.updateEditedFormStatus();
+    }
+    this.stepEvacueeProfileService.nextTabUpdate.next();
+  }
 
   public clearPrimaryAddressFields(primaryAddressForm: FormGroup): FormGroup {
     primaryAddressForm.get('address.addressLine1').reset();
@@ -87,5 +180,188 @@ export class AddressService {
 
   public isBCAddress(province: null | string): string {
     return province !== null && province === 'BC' ? 'Yes' : 'No';
+  }
+
+  public filterPrimaryCountry(form: FormGroup, countries: Country[]) {
+    return form.get('address.country').valueChanges.pipe(
+      startWith(''),
+      map((value) =>
+        value ? this.filter(value, countries) : countries.slice()
+      )
+    );
+  }
+
+  public filterMailingCountry(form: FormGroup, countries: Country[]) {
+    return form.get('mailingAddress.country').valueChanges.pipe(
+      startWith(''),
+      map((value) =>
+        value ? this.filter(value, countries) : countries.slice()
+      )
+    );
+  }
+
+  /**
+   * Persists the form values to the service
+   */
+  private saveFormUpdates(): void {
+    this.stepEvacueeProfileService.primaryAddressDetails =
+      this.primaryAddressForm.get('address').value;
+    this.stepEvacueeProfileService.mailingAddressDetails =
+      this.primaryAddressForm.get('mailingAddress').value;
+    this.stepEvacueeProfileService.isBcAddress =
+      this.primaryAddressForm.get('isBcAddress').value;
+    this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress =
+      this.primaryAddressForm.get('isNewMailingAddress').value;
+    this.stepEvacueeProfileService.isBcMailingAddress =
+      this.primaryAddressForm.get('isBcMailingAddress').value;
+  }
+
+  /**
+   * Filters the coutry list for autocomplete field
+   *
+   * @param value : User typed value
+   */
+  private filter(value: string, countries: Country[]): Country[] {
+    if (value !== null && value !== undefined && typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+      return countries.filter((option) =>
+        option.name.toLowerCase().includes(filterValue)
+      );
+    }
+  }
+
+  /**
+   * Creates the primary address form
+   *
+   * @returns form group
+   */
+  private createPrimaryAddressForm(): FormGroup {
+    return this.formBuilder.group({
+      addressLine1: [
+        this.stepEvacueeProfileService?.primaryAddressDetails?.addressLine1 !==
+        undefined
+          ? this.stepEvacueeProfileService.primaryAddressDetails.addressLine1
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      addressLine2: [
+        this.stepEvacueeProfileService?.primaryAddressDetails?.addressLine2 !==
+        undefined
+          ? this.stepEvacueeProfileService.primaryAddressDetails.addressLine2
+          : ''
+      ],
+      community: [
+        this.stepEvacueeProfileService?.primaryAddressDetails?.community !==
+        undefined
+          ? this.stepEvacueeProfileService.primaryAddressDetails.community
+          : '',
+        [Validators.required]
+      ],
+      stateProvince: [
+        this.stepEvacueeProfileService?.primaryAddressDetails?.stateProvince !==
+        undefined
+          ? this.stepEvacueeProfileService.primaryAddressDetails.stateProvince
+          : '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.primaryAddressForm.get('address.country').value !== null &&
+                (this.compareObjects(
+                  this.primaryAddressForm.get('address.country').value,
+                  globalConst.defaultCountry
+                ) ||
+                  this.compareObjects(
+                    this.primaryAddressForm.get('address.country').value,
+                    globalConst.usDefaultObject
+                  )),
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      country: [
+        this.stepEvacueeProfileService?.primaryAddressDetails?.country !==
+        undefined
+          ? this.stepEvacueeProfileService.primaryAddressDetails.country
+          : '',
+        [Validators.required]
+      ],
+      postalCode: [
+        this.stepEvacueeProfileService?.primaryAddressDetails?.postalCode !==
+        undefined
+          ? this.stepEvacueeProfileService.primaryAddressDetails.postalCode
+          : '',
+        [this.customValidation.postalValidation().bind(this.customValidation)]
+      ]
+    });
+  }
+
+  /**
+   * Creates the mailing address form
+   *
+   * @returns form group
+   */
+  private createMailingAddressForm(): FormGroup {
+    return this.formBuilder.group({
+      addressLine1: [
+        this.stepEvacueeProfileService?.mailingAddressDetails?.addressLine1 !==
+        undefined
+          ? this.stepEvacueeProfileService.mailingAddressDetails.addressLine1
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      addressLine2: [
+        this.stepEvacueeProfileService?.mailingAddressDetails?.addressLine2 !==
+        undefined
+          ? this.stepEvacueeProfileService.mailingAddressDetails.addressLine2
+          : ''
+      ],
+      community: [
+        this.stepEvacueeProfileService?.mailingAddressDetails?.community !==
+        undefined
+          ? this.stepEvacueeProfileService.mailingAddressDetails.community
+          : '',
+        [Validators.required]
+      ],
+      stateProvince: [
+        this.stepEvacueeProfileService?.mailingAddressDetails?.stateProvince !==
+        undefined
+          ? this.stepEvacueeProfileService.mailingAddressDetails.stateProvince
+          : '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.primaryAddressForm.get('mailingAddress.country').value !==
+                  null &&
+                (this.compareObjects(
+                  this.primaryAddressForm.get('mailingAddress.country').value,
+                  globalConst.defaultCountry
+                ) ||
+                  this.compareObjects(
+                    this.primaryAddressForm.get('mailingAddress.country').value,
+                    globalConst.usDefaultObject
+                  )),
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      country: [
+        this.stepEvacueeProfileService?.mailingAddressDetails?.country !==
+        undefined
+          ? this.stepEvacueeProfileService.mailingAddressDetails.country
+          : '',
+        [Validators.required]
+      ],
+      postalCode: [
+        this.stepEvacueeProfileService?.mailingAddressDetails?.postalCode !==
+        undefined
+          ? this.stepEvacueeProfileService.mailingAddressDetails.postalCode
+          : '',
+        [this.customValidation.postalValidation().bind(this.customValidation)]
+      ]
+    });
   }
 }

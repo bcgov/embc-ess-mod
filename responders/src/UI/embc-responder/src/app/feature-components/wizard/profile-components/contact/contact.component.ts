@@ -1,12 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
   FormControl,
   FormGroup,
   FormGroupDirective,
-  NgForm,
-  Validators
+  NgForm
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange } from '@angular/material/radio';
@@ -14,11 +12,10 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { TabModel } from 'src/app/core/models/tab.model';
-import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
-import { WizardService } from '../../wizard.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { ContactService } from './contact.service';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -80,14 +77,12 @@ export class ContactComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private stepEvacueeProfileService: StepEvacueeProfileService,
-    private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService,
-    private wizardService: WizardService,
+    private contactService: ContactService,
     private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
-    this.createContactForm();
+    this.contactInfoForm = this.contactService.createForm();
 
     this.contactInfoForm
       .get('phone')
@@ -126,76 +121,11 @@ export class ContactComponent implements OnInit, OnDestroy {
         this.contactInfoForm.get('phone').updateValueAndValidity();
       });
 
-    // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
-      });
-    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('contact');
-  }
-
-  createContactForm(): void {
-    this.contactInfoForm = this.formBuilder.group(
-      {
-        email: [
-          this.stepEvacueeProfileService?.contactDetails?.email !== undefined
-            ? this.stepEvacueeProfileService?.contactDetails?.email
-            : '',
-          [
-            Validators.email,
-            this.customValidation.conditionalValidation(
-              () =>
-                (this.contactInfoForm.get('phone').value === '' ||
-                  this.contactInfoForm.get('phone').value === undefined ||
-                  this.contactInfoForm.get('phone').value === null) &&
-                this.contactInfoForm.get('showContacts').value === true,
-              this.customValidation.whitespaceValidator()
-            )
-          ]
-        ],
-        phone: [
-          this.stepEvacueeProfileService?.contactDetails?.phone !== undefined
-            ? this.stepEvacueeProfileService?.contactDetails?.phone
-            : '',
-          [
-            this.customValidation
-              .maskedNumberLengthValidator()
-              .bind(this.customValidation),
-            this.customValidation.conditionalValidation(
-              () =>
-                (this.contactInfoForm.get('email').value === '' ||
-                  this.contactInfoForm.get('email').value === undefined ||
-                  this.contactInfoForm.get('email').value === null) &&
-                this.contactInfoForm.get('showContacts').value === true,
-              this.customValidation.whitespaceValidator()
-            )
-          ]
-        ],
-        confirmEmail: [
-          this.stepEvacueeProfileService?.confirmEmail !== undefined
-            ? this.stepEvacueeProfileService?.confirmEmail
-            : '',
-          [
-            Validators.email,
-            this.customValidation.conditionalValidation(
-              () =>
-                this.contactInfoForm.get('email').value !== '' &&
-                this.contactInfoForm.get('email').value !== undefined &&
-                this.contactInfoForm.get('email').value !== null &&
-                this.contactInfoForm.get('showContacts').value === true,
-              this.customValidation.whitespaceValidator()
-            )
-          ]
-        ],
-        showContacts: [
-          this.stepEvacueeProfileService?.showContact !== undefined
-            ? this.stepEvacueeProfileService?.showContact
-            : '',
-          [Validators.required]
-        ]
-      },
-      { validators: [this.customValidation.confirmEmailValidator()] }
+    this.tabUpdateSubscription = this.contactService.updateTabStatus(
+      this.contactInfoForm
     );
+
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('contact');
   }
 
   /**
@@ -210,14 +140,8 @@ export class ContactComponent implements OnInit, OnDestroy {
       this.contactInfoForm.get('phone').reset();
       this.contactInfoForm.get('email').reset();
       this.contactInfoForm.get('confirmEmail').reset();
-      this.updateOnVisibility();
+      this.contactService.updateOnVisibility(this.contactInfoForm);
     }
-  }
-
-  updateOnVisibility(): void {
-    this.contactInfoForm.get('phone').updateValueAndValidity();
-    this.contactInfoForm.get('email').updateValueAndValidity();
-    this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
   }
 
   /**
@@ -249,48 +173,7 @@ export class ContactComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    if (this.stepEvacueeProfileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        this.contactInfoForm.controls,
-        'contactDetails'
-      );
-
-      this.wizardService.setEditStatus({
-        tabName: 'contact',
-        tabUpdateStatus: isFormUpdated
-      });
-      this.stepEvacueeProfileService.updateEditedFormStatus();
-    }
-    this.stepEvacueeProfileService.nextTabUpdate.next();
+    this.contactService.cleanup(this.contactInfoForm);
     this.tabUpdateSubscription.unsubscribe();
-  }
-
-  /**
-   * Checks the form validity and updates the tab status
-   */
-  private updateTabStatus() {
-    if (this.contactInfoForm.valid) {
-      this.stepEvacueeProfileService.setTabStatus('contact', 'complete');
-    } else if (
-      this.stepEvacueeProfileService.checkForPartialUpdates(
-        this.contactInfoForm
-      )
-    ) {
-      this.stepEvacueeProfileService.setTabStatus('contact', 'incomplete');
-    } else {
-      this.stepEvacueeProfileService.setTabStatus('contact', 'not-started');
-    }
-    this.saveFormUpdates();
-  }
-
-  /**
-   * Persists the form values to the service
-   */
-  private saveFormUpdates(): void {
-    this.stepEvacueeProfileService.contactDetails = this.contactInfoForm.value;
-    this.stepEvacueeProfileService.showContact =
-      this.contactInfoForm.get('showContacts').value;
-    this.stepEvacueeProfileService.confirmEmail =
-      this.contactInfoForm.get('confirmEmail').value;
   }
 }
