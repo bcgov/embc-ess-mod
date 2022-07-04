@@ -9,3 +9,9 @@
 .button-width {
   width: 80%;
 }
+
+@media(max-width: 850px) {
+  .col-md-5 {
+    width: 60%;
+  }
+}

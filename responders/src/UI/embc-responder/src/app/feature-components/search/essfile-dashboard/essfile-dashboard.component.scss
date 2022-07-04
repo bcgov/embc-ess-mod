@@ -179,3 +179,43 @@ a:not(.btn):focus {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@media(max-width: 992px) {
+  mat-sidenav {
+    width: 20% !important;
+    .col-md-9 {
+      width: 100%;
+      text-align: center;
+    }
+    .col-md-3 {
+      padding-left: 17%;
+      padding-top: 10%;
+    }
+  }
+  
+  mat-sidenav-content {
+    width: 60% !important;
+  }
+}
+
+@media(max-width: 768px) {
+  mat-sidenav {
+    .col-md-3 {
+      padding-left: 5%;
+      
+    }
+
+    .col-md-9 {
+      white-space: normal;
+      line-height: 30px;
+    }
+  }
+
+  mat-sidenav-content {
+    width: 50% !important;
+  }
+
+  .file-endNav {
+    width: 30% !important;
+  }
+}

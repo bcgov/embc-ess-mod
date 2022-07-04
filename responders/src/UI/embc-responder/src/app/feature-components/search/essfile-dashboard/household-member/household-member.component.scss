@@ -150,3 +150,14 @@ mat-expansion-panel {
 .cannot-link {
   color: red;
 }
+
+@media(max-width: 992px) {
+  .card-heading {
+    line-height: 30px;
+    white-space: normal;
+  }
+  
+  td, th {
+    display: block;
+  }
+}
