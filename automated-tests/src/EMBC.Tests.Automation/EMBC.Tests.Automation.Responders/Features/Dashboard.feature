@@ -7,21 +7,21 @@ Scenario: Responder can login to the portal
 
 Scenario: Evacuee Online new Registration
 	Given I log in with BCeID user ess.developerA1
-	When I sign into a task 6789
+	When I sign into a task 1234
 	And  I search for an online evacuee Automation
 	And I complete an online registration
 	Then An online registration is completed with an active support
 
 Scenario: Evacuee Paper Based new Registration
 	Given I log in with BCeID user ess.developerA1
-	When I sign into a task 6789
+	When I sign into a task 1234
 	And I search for a paper based evacuee Automation
 	And I complete a paper based registration
 	Then A paper based registration is completed with an expired support
 
 Scenario: Evacuee Online Registration add Interac Support
 	Given I log in with BCeID user ess.developerA1
-	And I sign into a task 6789
+	And I sign into a task 1234
 	And I search for an online evacuee Thirtyfour
 	And I choose an ESS file from the search results
 	And I bypass ESS file wizard step

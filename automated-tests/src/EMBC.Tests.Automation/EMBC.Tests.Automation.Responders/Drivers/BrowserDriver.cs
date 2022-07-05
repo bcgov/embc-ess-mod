@@ -20,8 +20,8 @@ namespace EMBC.Tests.Automation.Responders.Drivers
         {
             currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
             configurationLazy = new Lazy<IConfiguration>(ReadConfiguration);
-            closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", true);
-            runAutomationHeadless = Configuration.GetValue("RunHeadless", true);
+            closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", false);
+            runAutomationHeadless = Configuration.GetValue("RunHeadless", false);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
             }
 
             var chromeDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), options);
-            chromeDriver.Url = Configuration.GetValue<string>("devUrl");
+            chromeDriver.Url = Configuration.GetValue<string>("testUrl");
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
 
