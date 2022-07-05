@@ -98,3 +98,10 @@
   border-color: rgba(236, 205, 0, 1);
   background-color: rgba(242, 242, 242, 1);
 }
+
+@media(max-width: 887px) {
+  .button-width {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

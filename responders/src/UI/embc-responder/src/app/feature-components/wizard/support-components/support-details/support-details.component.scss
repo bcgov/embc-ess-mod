@@ -59,3 +59,11 @@
 .paper-details {
   margin-top: 25px;
 }
+
+@media (max-width: 920px)
+{
+  .col-md-4 {
+    width: 100%;
+  }
+
+}

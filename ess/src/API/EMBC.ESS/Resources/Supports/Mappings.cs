@@ -21,6 +21,7 @@ namespace EMBC.ESS.Resources.Supports
                 .IncludeAllDerived()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_name))
+                .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.era_EvacuationFileId.era_TaskId.era_name))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
                 .ForMember(d => d.CreatedByTeamMemberId, opts => opts.MapFrom(s => s._era_issuedbyid_value))
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.era_paperreferralcompletedon.HasValue
@@ -58,6 +59,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForSourceMember(s => s.OriginatingNeedsAssessmentId, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.IssuedOn, opts => opts.DoNotValidate())
                 .ForSourceMember(s => s.Flags, opts => opts.DoNotValidate())
+                .ForSourceMember(s => s.TaskId, opts => opts.DoNotValidate())
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))

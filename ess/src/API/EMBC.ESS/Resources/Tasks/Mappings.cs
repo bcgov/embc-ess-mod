@@ -15,6 +15,7 @@ namespace EMBC.ESS.Resources.Tasks
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.era_JurisdictionID.era_jurisdictionid))
                 .ForMember(d => d.StartDate, opts => opts.MapFrom(s => s.era_taskstartdate.HasValue ? s.era_taskstartdate.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.EndDate, opts => opts.MapFrom(s => s.era_taskenddate.HasValue ? s.era_taskenddate.Value.UtcDateTime : (DateTime?)null))
+                .ForMember(d => d.AutoApprovedEnabled, opts => opts.MapFrom(s => false))
                 ;
         }
     }

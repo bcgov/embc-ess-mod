@@ -14,13 +14,15 @@ import {
 import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../wizard.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { WizardSteps } from 'src/app/core/models/wizard-type.model';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
@@ -69,10 +71,12 @@ export class StepEvacueeProfileService {
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
-    private evacueeSession: EvacueeSessionService,
     private locationService: LocationsService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private securityQuestionsService: SecurityQuestionsService,
+    private alertService: AlertService,
+    private router: Router
   ) {}
   // Wizard variables
   public get profileTabs(): Array<TabModel> {
@@ -355,6 +359,28 @@ export class StepEvacueeProfileService {
       profile.securityQuestions = this.securityQuestions;
 
     return profile;
+  }
+
+  public loadSecurityQuestions() {
+    this.securityQuestionsService.getSecurityQuestionList().subscribe({
+      next: (questions) => {
+        this.securityQuestionOptions = questions;
+      },
+      error: (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.genericError);
+      }
+    });
+  }
+
+  /**
+   * Loads the default tab
+   */
+  loadTab(tabs: Array<TabModel>) {
+    if (tabs !== null && tabs !== undefined) {
+      const firstTabUrl = tabs[0].route;
+      this.router.navigate(['/ess-wizard/evacuee-profile/' + firstTabUrl]);
+    }
   }
 
   /**

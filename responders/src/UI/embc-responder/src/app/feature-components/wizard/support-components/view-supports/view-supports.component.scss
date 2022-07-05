@@ -8,6 +8,9 @@
 
 .button-width {
   width: 100%;
+  white-space: normal;
+  line-height: 26px;
+  margin: 0.25em 0;
 }
 
 .p-margin {
@@ -17,4 +20,11 @@
 
 .process-button:disabled {
   background-color: rgba(187, 187, 187, 1);
+}
+
+@media (max-width: 940px)
+{
+  .col-md-2, .col-md-3, .col-md-12 {
+    width: 100%;
+  }
 }

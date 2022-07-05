@@ -15,6 +15,19 @@ export const phoneMask = [
   /\d/
 ];
 
+export const dateMask = [
+  /\d/,
+  /\d/,
+  '/',
+  /\d/,
+  /\d/,
+  '/',
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/
+];
+
 export const etransferLimt = 10000;
 
 export const mealRate = {
@@ -267,7 +280,7 @@ export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
 export const securityQuestionAnswerPattern = '^[a-zA-Z0-9 ]+$';
 export const securityPhrasePattern = securityQuestionAnswerPattern;
 export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
-export const supportNumberPattern = '^([0-9]{8})$';
+export const supportNumberPattern = '^([0-9]{6,10})$';
 
 export const gender = [
   { name: 'Male', value: 'Male' },
