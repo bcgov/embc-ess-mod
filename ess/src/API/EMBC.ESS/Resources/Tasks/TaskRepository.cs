@@ -4,9 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
-using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities.Caching;
-using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Tasks
 {
@@ -37,33 +35,32 @@ namespace EMBC.ESS.Resources.Tasks
             if (queryRequest.ById == null) throw new ArgumentNullException(nameof(queryRequest.ById), "Only task query by id is supported");
             var tasks = await cache.GetOrSet($"tasks:{queryRequest.ById}", async () =>
             {
-                return mapper.Map<IEnumerable<EssTask>>(await
-                    ((DataServiceQuery<era_task>)essContext.era_tasks
+                var tasks = mapper.Map<IEnumerable<EssTask>>(await
+                    essContext.era_tasks
                     .Expand(c => c.era_JurisdictionID)
-                    .Where(t => t.era_name == queryRequest.ById))
+                    .Where(t => t.era_name == queryRequest.ById)
                     .GetAllPagesAsync());
+                var autoApproveEnabled = await AutoApprovalEnabled();
+                foreach (var task in tasks)
+                {
+                    task.AutoApprovedEnabled = autoApproveEnabled;
+                }
+                return tasks;
             }, TimeSpan.FromMinutes(1));
 
             if (queryRequest.ByStatus.Any()) tasks = tasks.Where(t => queryRequest.ByStatus.Any(s => s == t.Status));
 
-            var autoApprovedEnabled = AutoApprovalEnabled();
-
-            foreach (var task in tasks)
-            {
-                task.AutoApprovedEnabled = autoApprovedEnabled;
-            }
-
             return new TaskQueryResult { Items = tasks.ToArray() };
         }
 
-        private bool AutoApprovalEnabled()
+        private async Task<bool> AutoApprovalEnabled()
         {
-            var configValue = essContext.era_systemconfigs
-                    .Where(sc => sc.era_systemconfigid == Guid.Parse("3f626da4-73f2-ec11-b833-00505683fbf4")).SingleOrDefault();
+            var configValue = await essContext.era_systemconfigs
+                    .Where(sc => sc.era_group == "Auto Approval" && sc.era_systemconfigid == Guid.Parse("3f626da4-73f2-ec11-b833-00505683fbf4"))
+                    .SingleOrDefaultAsync();
 
             return configValue != null
-                && configValue.era_group.Equals("Auto Approval", StringComparison.OrdinalIgnoreCase)
-                && configValue.era_key.Equals("Kill Switch On?", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrEmpty(configValue.era_value)
                 && configValue.era_value.Equals("Yes", StringComparison.OrdinalIgnoreCase);
         }
     }
