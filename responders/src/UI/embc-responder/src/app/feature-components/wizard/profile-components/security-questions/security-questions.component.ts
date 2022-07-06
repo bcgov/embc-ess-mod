@@ -51,10 +51,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
       this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
-        this.securityQuesService.updateTabStatus(
-          this.parentForm,
-          this.questionForm
-        );
+        this.securityQuesService.updateTabStatus(this.questionForm);
       });
 
     this.questionForm
