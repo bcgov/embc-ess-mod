@@ -136,7 +136,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             var js = (IJavaScriptExecutor)webDriver;
 
-            webDriver.FindElement(supportDeliveryInteracCard).Click();
+            FocusAndClick(supportDeliveryInteracCard);
             Wait();
 
             var selectNotificationElement = webDriver.FindElement(supportDeliveryNotificationSelect);
