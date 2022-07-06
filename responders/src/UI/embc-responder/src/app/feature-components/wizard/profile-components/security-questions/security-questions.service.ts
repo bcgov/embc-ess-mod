@@ -83,60 +83,6 @@ export class SecurityQuestionsService {
     });
   }
 
-  // public updateTabStatus(
-  //   parentForm: FormGroup,
-  //   questionForm: FormGroup
-  // ): Subscription {
-  //   return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
-  //     parentForm.updateValueAndValidity();
-
-  //     let anyValueSet = false;
-
-  //     // Reset Security Questions before writing to shared object
-  //     this.stepEvacueeProfileService.securityQuestions = [];
-
-  //     // Create SecurityQuestion objects and save to array, and check if any value set
-  //     for (let i = 1; i <= 3; i++) {
-  //       const question = questionForm.get(`question${i}`).value?.trim() ?? '';
-
-  //       const answer = questionForm.get(`answer${i}`).value?.trim() ?? '';
-
-  //       if (question.length > 0 || answer.length > 0) {
-  //         anyValueSet = true;
-  //       }
-
-  //       this.stepEvacueeProfileService.securityQuestions.push({
-  //         id: i,
-  //         answerChanged: true,
-  //         question,
-  //         answer
-  //       });
-  //     }
-
-  //     // Based on state of form, set tab status
-  //     if (
-  //       parentForm.valid ||
-  //       (!this.stepEvacueeProfileService.editQuestions &&
-  //         this.stepEvacueeProfileService.savedQuestions?.length > 0)
-  //     ) {
-  //       this.stepEvacueeProfileService.setTabStatus(
-  //         'security-questions',
-  //         'complete'
-  //       );
-  //     } else if (anyValueSet) {
-  //       this.stepEvacueeProfileService.setTabStatus(
-  //         'security-questions',
-  //         'incomplete'
-  //       );
-  //     } else {
-  //       this.stepEvacueeProfileService.setTabStatus(
-  //         'security-questions',
-  //         'not-started'
-  //       );
-  //     }
-  //   });
-  // }
-
   /**
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
