@@ -5,6 +5,7 @@ import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacu
 import * as globalConst from '../../../../core/services/global-constants';
 import { Subscription } from 'rxjs';
 import { WizardService } from '../../wizard.service';
+import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Injectable({ providedIn: 'root' })
 export class SecurityQuestionsService {
@@ -82,58 +83,31 @@ export class SecurityQuestionsService {
     });
   }
 
-  public updateTabStatus(
-    parentForm: FormGroup,
-    questionForm: FormGroup
-  ): Subscription {
-    return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
-      parentForm.updateValueAndValidity();
-
-      let anyValueSet = false;
-
-      // Reset Security Questions before writing to shared object
-      this.stepEvacueeProfileService.securityQuestions = [];
-
-      // Create SecurityQuestion objects and save to array, and check if any value set
-      for (let i = 1; i <= 3; i++) {
-        const question = questionForm.get(`question${i}`).value?.trim() ?? '';
-
-        const answer = questionForm.get(`answer${i}`).value?.trim() ?? '';
-
-        if (question.length > 0 || answer.length > 0) {
-          anyValueSet = true;
-        }
-
-        this.stepEvacueeProfileService.securityQuestions.push({
-          id: i,
-          answerChanged: true,
-          question,
-          answer
-        });
-      }
-
-      // Based on state of form, set tab status
-      if (
-        parentForm.valid ||
-        (!this.stepEvacueeProfileService.editQuestions &&
-          this.stepEvacueeProfileService.savedQuestions?.length > 0)
-      ) {
-        this.stepEvacueeProfileService.setTabStatus(
-          'security-questions',
-          'complete'
-        );
-      } else if (anyValueSet) {
-        this.stepEvacueeProfileService.setTabStatus(
-          'security-questions',
-          'incomplete'
-        );
-      } else {
-        this.stepEvacueeProfileService.setTabStatus(
-          'security-questions',
-          'not-started'
-        );
-      }
-    });
+  /**
+   * Updates the Tab Status from Incomplete, Complete or in Progress
+   */
+  public updateTabStatus(form: FormGroup) {
+    if (
+      form.valid ||
+      (!this.stepEvacueeProfileService.editQuestions &&
+        this.stepEvacueeProfileService.savedQuestions?.length > 0)
+    ) {
+      this.stepEvacueeProfileService.setTabStatus(
+        'security-questions',
+        'complete'
+      );
+    } else if (this.stepEvacueeProfileService.checkForPartialUpdates(form)) {
+      this.stepEvacueeProfileService.setTabStatus(
+        'security-questions',
+        'incomplete'
+      );
+    } else {
+      this.stepEvacueeProfileService.setTabStatus(
+        'security-questions',
+        'not-started'
+      );
+    }
+    this.saveFormData(form);
   }
 
   /**
@@ -210,5 +184,26 @@ export class SecurityQuestionsService {
       });
     }
     this.stepEvacueeProfileService.nextTabUpdate.next();
+  }
+
+  /**
+   * Saves information inserted inthe form into the service
+   */
+  private saveFormData(form: FormGroup) {
+    const tempSecurityQuestions: SecurityQuestion[] = [];
+
+    for (let i = 1; i <= 3; i++) {
+      const question = form.get(`question${i}`).value?.trim() ?? '';
+      const answer = form.get(`answer${i}`).value?.trim() ?? '';
+
+      tempSecurityQuestions.push({
+        id: i,
+        answerChanged: true,
+        question,
+        answer
+      });
+    }
+
+    this.stepEvacueeProfileService.securityQuestions = tempSecurityQuestions;
   }
 }
