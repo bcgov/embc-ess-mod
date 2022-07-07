@@ -93,3 +93,9 @@ mat-card {
         max-width: 100%;
     }
 }
+
+@media (max-width: 1199px) and (min-width:1051px) {
+    mat-expansion-panel-header {
+        height: 170px !important;
+    }
+}
