@@ -184,12 +184,6 @@
   width: 40%;
 }
 
-@media (max-width: 864px) {
-  .divider {
-    display: none;
-  }
-}
-
 .email-success {
   color: #3c9d0f;
 }
@@ -244,4 +238,41 @@
   border-style: solid;
   border-color: rgba(20, 89, 151, 1);
   border-radius: 10px;
+}
+
+@media(max-width: 1200px)
+{
+  .invite-button {
+    width: 100%;
+  }
+}
+
+@media(max-width: 992px)
+{
+
+  .services-card-img-container {
+    position: static;
+  }
+  .services-card-border {
+    display: none;
+  }
+
+  .bc-services-card-img {
+    position: inherit;
+    border-radius: 10%;
+  }  
+}
+
+
+@media (max-width: 864px) {
+  .divider {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .services-card-img-container {
+    display: none;
+  }
+
 }
