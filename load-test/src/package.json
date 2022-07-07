@@ -20,7 +20,7 @@
     "webpack": "5.35.1",
     "webpack-cli": "4.6.0",
     "webpack-glob-entries": "^1.0.1",
-    "ng-openapi-gen": "^0.15.0"
+    "ng-openapi-gen": "^0.21.2"
   },
   "scripts": {
     "start": "webpack",

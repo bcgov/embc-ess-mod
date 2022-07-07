@@ -66,6 +66,15 @@ namespace EMBC.Tests.Integration.ESS
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task GetSupplier_ExistingCorrectPostalCode_Found()
         {
+            var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
+            mockedCas.AddSupplier(new GetSupplierResponse
+            {
+                Suppliernumber = "2005363",
+                Suppliername = Formatters.ToCasSupplierName("autotest-dev-first", "autotest-dev-last"),
+                Businessnumber = "123",
+                SupplierAddress = new[] { new Supplieraddress { AddressLine1 = "123 test st", PostalCode = "V8Z 7X9".ToCasPostalCode(), Suppliersitecode = "001" } }
+            });
+
             var name = Formatters.ToCasSupplierName("autotest-dev-first", "autotest-dev-last");
             var postalCode = "V8Z 7X9".ToCasPostalCode();
             var response = await client.GetSupplierAsync(new GetSupplierRequest { PostalCode = postalCode, SupplierName = name }, CancellationToken.None);
@@ -78,6 +87,15 @@ namespace EMBC.Tests.Integration.ESS
         [Fact(Skip = RequiresVpnConnectivity)]
         public async Task GetSupplier_ExistingIncorrectPostalCode_NotFound()
         {
+            var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
+            mockedCas.AddSupplier(new GetSupplierResponse
+            {
+                Suppliernumber = "2005363",
+                Suppliername = Formatters.ToCasSupplierName("autotest-dev-first", "autotest-dev-last"),
+                Businessnumber = "123",
+                SupplierAddress = new[] { new Supplieraddress { AddressLine1 = "123 test st", PostalCode = "V8Z 7X9".ToCasPostalCode(), Suppliersitecode = "001" } }
+            });
+
             var name = Formatters.ToCasSupplierName("autotest-dev-first", "autotest-dev-last");
             var postalCode = "V8Z 7X8".ToCasPostalCode();
             var response = await client.GetSupplierAsync(new GetSupplierRequest { PostalCode = postalCode, SupplierName = name }, CancellationToken.None);
