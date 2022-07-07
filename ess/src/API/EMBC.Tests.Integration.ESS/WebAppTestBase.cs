@@ -24,6 +24,9 @@ namespace EMBC.Tests.Integration.ESS
                 opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true);
                 // disable background tasks during tests
                 opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
+            }).ConfigureServices(services => { 
+                services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy),typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
+                services.AddSingleton<EMBC.ESS.Utilities.Cas.IWebProxy, MockCasProxy>();
             });
         }
     }

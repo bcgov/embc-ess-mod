@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
+using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -15,10 +16,12 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
     public class ETransferTests : DynamicsWebAppTestBase
     {
         private readonly EventsManager manager;
+        private readonly EMBC.ESS.Resources.Supports.ISupportRepository supportRepository;
 
         public ETransferTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             manager = Services.GetRequiredService<EventsManager>();
+            supportRepository = Services.GetRequiredService<EMBC.ESS.Resources.Supports.ISupportRepository>();
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
@@ -149,6 +152,78 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 .Where(s => s.Status == SupportStatus.Approved);
 
             updatedSupports.Select(s => s.Id).ShouldNotBeOneOf(sut);
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task FullProcess_NewSupport_PaymentIssued()
+        {
+            var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
+
+            var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
+            registrant.Id = await TestHelper.SaveRegistrant(manager, registrant);
+            var file = TestHelper.CreateNewTestEvacuationFile(TestData.TestPrefix, registrant);
+            file.Id = await TestHelper.SaveEvacuationFile(manager, file);
+            file = await TestHelper.GetEvacuationFileById(manager, file.Id) ?? null!;
+
+            var fileSupports = new Support[]
+            {
+                new ClothingSupport { TotalAmount = 150 }
+            };
+
+            var now = DateTime.UtcNow;
+            foreach (var support in fileSupports)
+            {
+                support.FileId = file.Id;
+                support.From = now;
+                support.To = now.AddMinutes(1);
+                support.SupportDelivery = new Interac { ReceivingRegistrantId = registrant.Id, NotificationEmail = registrant.Email };
+                support.IncludedHouseholdMembers = file.HouseholdMembers.Select(m => m.Id).ToArray();
+            }
+
+            await manager.Handle(new ProcessSupportsCommand
+            {
+                FileId = file.Id,
+                RequestingUserId = TestData.Tier4TeamMemberId,
+                Supports = fileSupports
+            });
+
+            await manager.Handle(new ProcessPendingSupportsCommand());
+
+            var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = file.Id })).Items
+                .Where(s => s.Status == SupportStatus.Approved && ((Interac)s.SupportDelivery).RelatedPaymentId == null)
+                .ToArray();
+
+            approvedSupports.ShouldNotBeEmpty();
+
+            var supportsToProcess = approvedSupports.TakeRandom(1).ToArray();
+
+            var supportIdsToApprove = supportsToProcess.Select(s => s.Id).ToArray();
+            await QueueApprovedSupports(supportIdsToApprove);
+
+            await manager.Handle(new ProcessApprovedSupportsCommand());
+            await manager.Handle(new ProcessPendingPaymentsCommand());
+
+            var updatedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = file.Id })).Items
+                .Where(s => s.Status == SupportStatus.Approved);
+
+            updatedSupports.Select(s => s.Id).ShouldNotBeOneOf(supportIdsToApprove);
+
+            foreach (var support in updatedSupports)
+            {
+                mockedCas.GetInvoiceByInvoiceNumber(((Interac)support.SupportDelivery).RelatedPaymentId).ShouldNotBeNull();
+            }
+
+            await manager.Handle(new ReconcilePaymentsCommand());
+
+            await manager.Handle(new ProcessPendingPaymentsCommand());
+
+            var issuedSupport = ((EMBC.ESS.Resources.Supports.SearchSupportQueryResult)await supportRepository.Query(new EMBC.ESS.Resources.Supports.SearchSupportsQuery
+            {
+                ById = supportsToProcess.First().Id,
+                ByStatus = EMBC.ESS.Resources.Supports.SupportStatus.Issued,
+            })).Items;
+
+            issuedSupport.ShouldHaveSingleItem();
         }
 
         private async Task QueueApprovedSupports(IEnumerable<string> supportIds)

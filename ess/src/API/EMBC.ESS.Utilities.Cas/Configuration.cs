@@ -4,6 +4,7 @@ using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
@@ -46,7 +47,7 @@ namespace EMBC.ESS.Utilities.Cas
                 })
  ;
 
-            services.AddTransient<IWebProxy, WebProxy>();
+            services.TryAddTransient<IWebProxy, WebProxy>();
         }
 
         private static void OnBreak(DelegateResult<HttpResponseMessage> r, TimeSpan time, Context ctx)

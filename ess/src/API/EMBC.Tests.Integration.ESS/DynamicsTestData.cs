@@ -49,6 +49,7 @@ namespace EMBC.Tests.Integration.ESS
         public string ContactFirstName => testContact.firstname;
         public string ContactLastName => testContact.lastname;
         public string ContactDateOfBirth => $"{testContact.birthdate.GetValueOrDefault().Month:D2}/{testContact.birthdate.GetValueOrDefault().Day:D2}/{testContact.birthdate.GetValueOrDefault().Year:D4}";
+        public string ContactPostalCode => testContact.address1_postalcode;
         public string EvacuationFileId => testEvacuationfile.era_name;
         public string PaperEvacuationFileId => testPaperEvacuationFile.era_name;
         public string PaperEvacuationFilePaperId => testPaperEvacuationFile.era_paperbasedessfile;
