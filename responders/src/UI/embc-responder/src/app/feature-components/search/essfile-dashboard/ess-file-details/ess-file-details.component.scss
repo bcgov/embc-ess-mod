@@ -81,3 +81,9 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+
+@media(max-width: 1200px) {
+  .col-md-4, .col-md-8 {
+    width: 100%;
+  }
+}

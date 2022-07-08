@@ -121,9 +121,9 @@
       </div>
 
       <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
           <div class="row">
-            <div class="col-8">
+            <div class="col-md-8">
               <mat-table class="table-outline" [dataSource]="memberListDisplay">
                 <ng-container matColumnDef="firstName">
                   <mat-header-cell class="header-cell" *matHeaderCellDef
@@ -165,8 +165,8 @@
           </div>
 
           <div class="row">
-            <div class="col-4">Household Dietary Requirements</div>
-            <div class="col-8 bold">
+            <div class="col-md-4">Household Dietary Requirements</div>
+            <div class="col-md-8 bold">
               {{
                 essFile?.needsAssessment?.haveSpecialDiet
                   ? 'Yes - ' + essFile?.needsAssessment?.specialDietDetails
@@ -176,15 +176,15 @@
           </div>
 
           <div class="row">
-            <div class="col-4">Household Medication Requirements</div>
-            <div class="col-8 bold">
+            <div class="col-md-4">Household Medication Requirements</div>
+            <div class="col-md-8 bold">
               {{ essFile?.needsAssessment?.takeMedication ? 'Yes' : 'No' }}
             </div>
           </div>
 
           <div class="row" *ngIf="essFile?.needsAssessment?.takeMedication">
-            <div class="col-4">Has Sufficient Medication</div>
-            <div class="col-8 bold">
+            <div class="col-md-4">Has Sufficient Medication</div>
+            <div class="col-md-8 bold">
               {{ essFile?.needsAssessment?.haveMedicalSupplies ? 'Yes' : 'No' }}
             </div>
           </div>
@@ -201,14 +201,14 @@
       <div class="row">
         <div class="col-12">
           <div class="row">
-            <div class="col-4">Pets?</div>
-            <div class="col-8 bold">
+            <div class="col-md-4">Pets?</div>
+            <div class="col-md-8 bold">
               {{ essFile?.needsAssessment?.pets?.length !== 0 ? 'Yes' : 'No' }}
             </div>
           </div>
 
           <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
-            <div class="col-8">
+            <div class="col-md-8">
               <mat-table
                 class="table-outline"
                 [dataSource]="essFile?.needsAssessment?.pets"
@@ -244,15 +244,15 @@
           </div>
 
           <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
-            <div class="col-4">Sufficient pet food?</div>
-            <div class="col-8 bold">
+            <div class="col-md-4">Sufficient pet food?</div>
+            <div class="col-md-8 bold">
               {{ essFile?.needsAssessment?.havePetsFood ? 'Yes' : 'No' }}
             </div>
           </div>
 
           <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
-            <div class="col-4">Pet Care Plan</div>
-            <div class="col-8 bold">
+            <div class="col-md-4">Pet Care Plan</div>
+            <div class="col-md-8 bold">
               {{ essFile?.needsAssessment?.petCarePlans }}
             </div>
           </div>
