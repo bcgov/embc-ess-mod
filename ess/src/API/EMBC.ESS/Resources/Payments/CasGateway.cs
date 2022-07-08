@@ -75,8 +75,9 @@ namespace EMBC.ESS.Resources.Payments
                 InteracMobileNumber = payment.era_phonenumber?.ToCasTelephoneNumber(),
                 RemittanceMessage1 = payment.era_securityquestion?.TrimTo(40),
                 RemittanceMessage2 = payment.era_securityanswer?.TrimTo(64),
-                NameLine1 = payment.era_firstname,
-                NameLine2 = payment.era_lastname,
+                // these fields should NOT be sent to CAS as it is expected to be empty
+                //NameLine1 = payment.era_firstname,
+                //NameLine2 = payment.era_lastname,
                 InvoiceLineDetails = new[]
                 {
                     new InvoiceLineDetail
