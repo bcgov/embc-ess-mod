@@ -180,6 +180,16 @@ a:not(.btn):focus {
   text-overflow: ellipsis;
 }
 
+@media(max-width: 1200px) {
+  mat-sidenav-content {
+    width: 40% !important;
+  }
+
+  .file-endNav {
+    width: 30% !important;
+  }
+}
+
 @media(max-width: 992px) {
   mat-sidenav {
     width: 20% !important;
@@ -191,10 +201,6 @@ a:not(.btn):focus {
       padding-left: 17%;
       padding-top: 10%;
     }
-  }
-  
-  mat-sidenav-content {
-    width: 60% !important;
   }
 }
 
@@ -213,9 +219,5 @@ a:not(.btn):focus {
 
   mat-sidenav-content {
     width: 50% !important;
-  }
-
-  .file-endNav {
-    width: 30% !important;
   }
 }
