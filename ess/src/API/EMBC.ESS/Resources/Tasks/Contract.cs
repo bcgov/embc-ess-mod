@@ -43,5 +43,6 @@ namespace EMBC.ESS.Resources.Tasks
         public string CommunityCode { get; set; }
         public string Description { get; set; }
         public bool AutoApprovedEnabled { get; set; }
+        public bool RemoteExtensionsEnabled { get; set; }
     }
 }

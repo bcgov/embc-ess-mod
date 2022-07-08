@@ -37,6 +37,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string CommunityCode { get; set; }
         public string Description { get; set; }
         public IncidentTaskStatus Status { get; set; }
+        public bool RemoteExtensionsEnabled { get; set; }
     }
 
     public enum IncidentTaskStatus
