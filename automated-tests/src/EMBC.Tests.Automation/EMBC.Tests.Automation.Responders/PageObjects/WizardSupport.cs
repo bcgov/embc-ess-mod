@@ -1,14 +1,5 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
 using Protractor;
-using SeleniumExtras.WaitHelpers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EMBC.Tests.Automation.Responders.PageObjects
 {
@@ -16,6 +7,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
     {
         //ELEMENTS:
         private By viewSupportsMainTable = By.CssSelector("table[role='table']");
+
         private By selectSupportFormTypeSelect = By.CssSelector("mat-select[formcontrolname='type']");
 
         private By selectWinterConditionRadioGroup = By.CssSelector("mat-radio-group[formcontrolname='extremeWinterConditions']");
@@ -34,7 +26,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         private By supportDeliveryReferralCard = By.Id("referralCard");
         private By supportDeliveryInteracCard = By.Id("interacCard");
-        
+
         private By supportDeliveryResposibleSelect = By.CssSelector("mat-select[formcontrolname='issuedTo']");
         private By supportDeliveryResponsibleNameInput = By.CssSelector("input[formcontrolname='name']");
         private By supportDeliverySupplierInput = By.CssSelector("input[formcontrolname='supplier']");
@@ -63,7 +55,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             {
                 ButtonElement("+ Add Supports");
             }
-            
         }
 
         public void WizardSelectSupportForm(string supportType)
@@ -141,7 +132,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             var selectNotificationElement = webDriver.FindElement(supportDeliveryNotificationSelect);
             js.ExecuteScript("arguments[0].scrollIntoView();", selectNotificationElement);
-            
+
             Wait();
             selectNotificationElement.Click();
 
@@ -166,7 +157,6 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
             ButtonElement("Process Draft Support/s");
-            
         }
 
         public void WizardOnlineProcessSupportsForm()
@@ -180,58 +170,38 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             ButtonElement("Process Support/s");
             ButtonElement("Proceed");
-
-            
         }
 
         public void CancelPrintOut()
         {
-
-            //Thread.Sleep(10000);
-
-            string currentHandle = webDriver.CurrentWindowHandle;
-            ReadOnlyCollection<string> originalHandles = webDriver.WindowHandles;
-
-
-            WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(60));
-            string popupWindowHandle = wait.Until<string>((d) =>
+            var currentWindowHandle = webDriver.WindowHandles.Last();
+            string? popupWindowHandle = null;
+            var numberOfTries = 6;
+            var waitTimeBetweenTries = (int)TimeSpan.FromSeconds(10).TotalMilliseconds;
+            while (numberOfTries > 0)
             {
-                string foundHandle = null;
-
-                // Subtract out the list of known handles. In the case of a single
-                // popup, the newHandles list will only have one value.
-                List<string> newHandles = webDriver.WindowHandles.Except(originalHandles).ToList();
-                if (newHandles.Count > 0)
+                Wait(waitTimeBetweenTries);
+                if (webDriver.WindowHandles.Last() != currentWindowHandle)
                 {
-                    foundHandle = newHandles[0];
+                    popupWindowHandle = webDriver.WindowHandles.Last();
+                    break;
                 }
+                numberOfTries--;
+            }
+            if (popupWindowHandle != null)
+            {
+                var driver = webDriver is NgWebDriver ngDriver
+                   ? ngDriver.WrappedDriver
+                   : webDriver;
 
-                return foundHandle;
-            });
-            //w.Until(ExpectedConditions.ElementExists(webDriver.WindowHandles.Count > 1);
-
-            var driver = webDriver is NgWebDriver ngDriver
-               ? ngDriver.WrappedDriver
-               : webDriver;
-
-            //if (driver.WindowHandles.Count > 1)
-            //{
                 driver.SwitchTo().Window(popupWindowHandle);
 
-                IWebElement element = driver.FindElement(By.TagName("print-preview-app"));
+                var element = driver.FindElement(By.TagName("print-preview-app"));
                 element.SendKeys(Keys.Tab);
                 element.SendKeys(Keys.Enter);
 
-                driver.SwitchTo().Window(currentHandle);
-            //}
-            //else
-            //{
-            //    driver.SwitchTo().Window(driver.WindowHandles[1]);
-            //    Actions action = new Actions(driver);
-            //    action.SendKeys(Keys.Escape);
-            //}
-
-                
+                driver.SwitchTo().Window(currentWindowHandle);
+            }
         }
 
         // ASSERT FUNCTIONS
