@@ -254,23 +254,27 @@ mat-row:nth-child(even) {
 }
 
 .button-justify {
-  justify-content: end;
+  justify-content: start;
   padding-bottom: 20px;
 }
 
-@media (max-width: 1360px) {
-  .button-justify {
-    justify-content: start;
-  }
-}
 
 @media (max-width: 920px) {
 
   .cancel-button {
     width: 100%;
+    margin-bottom: 10px;
   }
   
   .save-button {
     width: 100% !important;
+  }
+
+  tr {
+    display: grid;
+  }
+
+  td {
+    padding-left: 10px;
   }
 }
