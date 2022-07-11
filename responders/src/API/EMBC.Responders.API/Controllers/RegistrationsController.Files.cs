@@ -30,7 +30,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EvacuationFile>> GetFile(string fileId, string? needsAssessmentId = null)
         {
-            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId, false);
+            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
 
             if (file == null) return NotFound(fileId);
 
@@ -54,9 +54,12 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EvacuationFile>> GetRemoteExtensionFile(string fileId, string? needsAssessmentId = null)
         {
-            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId, true);
+            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
 
             if (file == null) return NotFound(fileId);
+
+            var task = (await messagingClient.Send(new TasksSearchQuery { TaskId = file.Task.TaskNumber })).Items.SingleOrDefault();
+            if (task == null || !task.RemoteExtensionsEnabled) return NotFound(fileId);
 
             foreach (var note in file.Notes)
             {

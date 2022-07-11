@@ -249,7 +249,6 @@ namespace EMBC.ESS.Managers.Events
         public async Task<EvacuationFilesQueryResponse> Handle(Shared.Contracts.Events.EvacuationFilesQuery query)
         {
             var ct = new CancellationTokenSource().Token;
-            if (query.IsRemoteExtension && string.IsNullOrEmpty(query.FileId)) throw new ArgumentNullException("FileId is required when searching remote extensions");
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId))
             {
                 var registrant = (await evacueesRepository.Query(new EvacueeQuery { UserId = query.PrimaryRegistrantUserId })).Items.SingleOrDefault();
@@ -265,15 +264,6 @@ namespace EMBC.ESS.Managers.Events
                 NeedsAssessmentId = query.NeedsAssessmentId,
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Evacuations.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items;
-
-            if (query.IsRemoteExtension)
-            {
-                foreach (var file in foundFiles)
-                {
-                    var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.TaskId })).Items.SingleOrDefault();
-                    if (!task.RemoteExtensionsEnabled) foundFiles = foundFiles.Where(s => s.Id != file.Id).ToList();
-                }
-            }
 
             var files = mapper.Map<IEnumerable<Shared.Contracts.Events.EvacuationFile>>(foundFiles).ToArray();
 

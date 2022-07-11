@@ -13,7 +13,7 @@ namespace EMBC.Responders.API.Services
     {
         Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, string manualFileId, MemberRole userRole);
 
-        Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId, bool isRemoteExtension);
+        Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId);
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByManualFileId(string manualFileId);
 
@@ -108,9 +108,9 @@ namespace EMBC.Responders.API.Services
             };
         }
 
-        public async Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId, bool isRemoteExtension = false)
+        public async Task<EvacuationFile> GetEvacuationFile(string fileId, string needsAssessmentId)
         {
-            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = needsAssessmentId, IsRemoteExtension = isRemoteExtension })).Items.SingleOrDefault();
+            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = needsAssessmentId })).Items.SingleOrDefault();
 
             var mappedFile = mapper.Map<EvacuationFile>(file);
 
