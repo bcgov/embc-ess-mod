@@ -16,6 +16,7 @@ namespace EMBC.ESS.Resources.Tasks
                 .ForMember(d => d.StartDate, opts => opts.MapFrom(s => s.era_taskstartdate.HasValue ? s.era_taskstartdate.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.EndDate, opts => opts.MapFrom(s => s.era_taskenddate.HasValue ? s.era_taskenddate.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.AutoApprovedEnabled, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.RemoteExtensionsEnabled, opts => opts.MapFrom(s => s.era_remoteextensiontoggle))
                 ;
         }
     }
