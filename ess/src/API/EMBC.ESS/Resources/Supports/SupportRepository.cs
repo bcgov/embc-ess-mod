@@ -101,41 +101,43 @@ namespace EMBC.ESS.Resources.Supports
 
         private async Task<SubmitSupportForApprovalCommandResult> Handle(ApproveSupportCommand cmd, CancellationToken ct)
         {
-                var ctx = essContextFactory.Create();
+            var ctx = essContextFactory.Create();
 
-                var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
-                if (support == null) throw new InvalidOperationException($"Support {cmd.SupportId} not found");
-                if (support.statuscode != (int)SupportStatus.PendingApproval)
-                    throw new InvalidOperationException($"Support {cmd.SupportId} is in status {(SupportStatus)support.statuscode} and cannot be approved - expecting PendingApproval status");
+            var support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
+            if (support == null) throw new InvalidOperationException($"Support {cmd.SupportId} not found");
+            if (support.statuscode != (int)SupportStatus.PendingApproval)
+                throw new InvalidOperationException($"Support {cmd.SupportId} is in status {(SupportStatus)support.statuscode} and cannot be approved - expecting PendingApproval status");
 
-                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
-                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_evacueesupport_QueueItems), ct);
-                var bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
-                if (bpf == null) throw new InvalidOperationException($"Business process flow for Support {cmd.SupportId} not found");
+            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
+            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_evacueesupport_QueueItems), ct);
+            var bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
+            if (bpf == null) throw new InvalidOperationException($"Business process flow for Support {cmd.SupportId} not found");
 
-                var queueItem = support.era_evacueesupport_QueueItems.OrderByDescending(q => q.createdon).FirstOrDefault();
-                if (queueItem == null) throw new InvalidOperationException($"Support {cmd.SupportId} queue items not found");
+            // approve the support
+            support.era_etransferapproved = 174360001; //No
+            SetSupportStatus(ctx, support, SupportStatus.Approved);
+            ctx.UpdateObject(support);
 
-                await ctx.LoadPropertyAsync(queueItem, nameof(queueitem.queueid), ct);
-                if (queueItem.queueid == null) throw new InvalidOperationException($"Support {cmd.SupportId} queue not found");
+            // push BPF to correct stage
+            const string processStageName = "Send Support For Payment";
+            var processStage = await ctx.processstages.Where(ps => ps.stagename == processStageName).SingleOrDefaultAsync(ct);
+            if (processStage == null) throw new InvalidOperationException($"Business process flow for Support {cmd.SupportId} not found");
+            ctx.SetLink(bpf, nameof(era_essevacueeetransfersupport.activestageid), processStage);
 
-                support.era_etransferapproved = 174360001; //No
-                SetSupportStatus(ctx, support, SupportStatus.Approved);
-                ctx.UpdateObject(support);
-                var processStage = await ctx.processstages.Where(ps => ps.stagename == "Send Support For Payment").SingleOrDefaultAsync(ct);
-                if (processStage != null) ctx.SetLink(bpf, nameof(era_essevacueeetransfersupport.activestageid), processStage);
-                await ctx.SaveChangesAsync(ct);
-                ctx.DetachAll();
+            await ctx.SaveChangesAsync(ct);
 
-                support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
-                await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
-                bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
-                ctx.DeactivateObject(bpf, 2);
+            // deactivate BPF, must happen in a separate tx
+            ctx.DetachAll();
+            support = await ctx.era_evacueesupports.Where(s => s.era_name == cmd.SupportId).SingleOrDefaultAsync();
+            await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.bpf_era_evacueesupport_era_essevacueeetransfersupport), ct);
+            bpf = support.bpf_era_evacueesupport_era_essevacueeetransfersupport.OrderByDescending(bpf => bpf.completedon).FirstOrDefault();
+            if (bpf == null) throw new InvalidOperationException($"Business process flow for Support {cmd.SupportId} not found");
+            ctx.DeactivateObject(bpf, 2);
 
-                await ctx.SaveChangesAsync(ct);
-                ctx.DetachAll();
+            await ctx.SaveChangesAsync(ct);
+            ctx.DetachAll();
 
-                return new SubmitSupportForApprovalCommandResult();
+            return new SubmitSupportForApprovalCommandResult();
         }
 
         private async Task<SubmitSupportForReviewCommandResult> Handle(SubmitSupportForReviewCommand cmd, CancellationToken ct)
@@ -261,9 +263,10 @@ namespace EMBC.ESS.Resources.Supports
 
                 ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
                 await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId), ct);
-                IEnumerable<era_evacueesupport> supports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId;
+                var supports = file.era_era_evacuationfile_era_evacueesupport_ESSFileId.AsQueryable();
                 if (!string.IsNullOrEmpty(query.ById)) supports = supports.Where(s => s.era_name == query.ById);
                 if (!string.IsNullOrEmpty(query.ByManualReferralId)) supports = supports.Where(s => s.era_manualsupport == query.ByManualReferralId);
+                if (query.ByStatus.HasValue) supports = supports.Where(s => s.statuscode == (int)query.ByStatus.Value);
                 supports = supports.OrderBy(s => s.createdon);
 
                 return supports;
