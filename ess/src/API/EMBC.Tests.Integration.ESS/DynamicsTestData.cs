@@ -112,7 +112,7 @@ namespace EMBC.Tests.Integration.ESS
             }
 
             this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, activeTaskId, DateTime.UtcNow);
-            
+
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, inactiveTaskId, DateTime.UtcNow.AddDays(-7));
 
             this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").SingleOrDefault()
