@@ -73,3 +73,9 @@
   margin-top: 10px;
   margin-bottom: 30px;
 }
+
+@media (max-width: 1024px) {
+  .col-md-4 {
+    width: 100%;
+  }
+}
