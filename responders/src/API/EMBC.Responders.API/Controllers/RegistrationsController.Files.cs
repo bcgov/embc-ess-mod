@@ -30,7 +30,31 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EvacuationFile>> GetFile(string fileId, string? needsAssessmentId = null)
         {
-            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
+            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId, false);
+
+            if (file == null) return NotFound(fileId);
+
+            foreach (var note in file.Notes)
+            {
+                note.IsEditable = UserCanEditNote(note);
+            }
+
+            return Ok(file);
+        }
+
+        /// <summary>
+        /// Gets a File for remote extension
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <param name="needsAssessmentId">optional historical needs aseesment id</param>
+        /// <returns>file</returns>
+        [HttpGet("files/{fileId}/remote-extension")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<EvacuationFile>> GetRemoteExtensionFile(string fileId, string? needsAssessmentId = null)
+        {
+            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId, true);
 
             if (file == null) return NotFound(fileId);
 

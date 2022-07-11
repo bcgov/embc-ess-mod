@@ -17,12 +17,15 @@ namespace EMBC.Tests.Integration.ESS
         private readonly era_essteamuser otherTeamMember;
         private readonly string activeTaskId;
         private readonly string inactiveTaskId;
+        private readonly string remoteExtensionTaskId;
         private readonly era_jurisdiction[] jurisdictions;
         private readonly contact testContact;
         private readonly era_task activeTask;
         private readonly era_task inactiveTask;
+        private readonly era_task remoteExtensionTask;
         private readonly era_evacuationfile testEvacuationfile;
         private readonly era_evacuationfile testPaperEvacuationFile;
+        private readonly era_evacuationfile testRemoteExtensionEvacuationFile;
         private readonly era_supplier supplierA;
         private readonly era_supplier supplierB;
         private readonly era_supplier supplierC;
@@ -44,6 +47,7 @@ namespace EMBC.Tests.Integration.ESS
         public string ActiveTaskId => activeTaskId;
         public string ActiveTaskCommunity => activeTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string InactiveTaskId => inactiveTaskId;
+        public string RemoteExtensionTaskId => remoteExtensionTaskId;
         public string ContactId => testContact.contactid.GetValueOrDefault().ToString();
         public string ContactUserId => testContact.era_bcservicescardid;
         public string ContactFirstName => testContact.firstname;
@@ -51,6 +55,7 @@ namespace EMBC.Tests.Integration.ESS
         public string ContactDateOfBirth => $"{testContact.birthdate.GetValueOrDefault().Month:D2}/{testContact.birthdate.GetValueOrDefault().Day:D2}/{testContact.birthdate.GetValueOrDefault().Year:D4}";
         public string ContactPostalCode => testContact.address1_postalcode;
         public string EvacuationFileId => testEvacuationfile.era_name;
+        public string RemoteExtensionEvacuationFileId => testRemoteExtensionEvacuationFile.era_name;
         public string PaperEvacuationFileId => testPaperEvacuationFile.era_name;
         public string PaperEvacuationFilePaperId => testPaperEvacuationFile.era_paperbasedessfile;
         public string EvacuationFileCurrentNeedsAssessmentId => testEvacuationfile._era_currentneedsassessmentid_value.GetValueOrDefault().ToString();
@@ -85,6 +90,7 @@ namespace EMBC.Tests.Integration.ESS
 #endif
             this.activeTaskId = testPrefix + "-active-task";
             this.inactiveTaskId = testPrefix + "-inactive-task";
+            this.remoteExtensionTaskId = testPrefix + "-remote-extension-task";
 
             var existingTeam = essContext.era_essteams.Where(t => t.era_name == testPrefix + "-team").SingleOrDefault();
             if (existingTeam != null)
@@ -112,7 +118,8 @@ namespace EMBC.Tests.Integration.ESS
             }
 
             this.activeTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, activeTaskId, DateTime.UtcNow);
-
+            this.remoteExtensionTask = essContext.era_tasks.Where(t => t.era_name == remoteExtensionTaskId).SingleOrDefault() ?? CreateTask(essContext, remoteExtensionTaskId, DateTime.UtcNow);
+            this.remoteExtensionTask.era_remoteextensiontoggle = true;
             this.inactiveTask = essContext.era_tasks.Where(t => t.era_name == activeTaskId).SingleOrDefault() ?? CreateTask(essContext, inactiveTaskId, DateTime.UtcNow.AddDays(-7));
 
             this.tier4TeamMember = essContext.era_essteamusers.Where(tu => tu.era_firstname == this.testPrefix + "-first" && tu.era_lastname == this.testPrefix + "-last").SingleOrDefault()
@@ -158,6 +165,22 @@ namespace EMBC.Tests.Integration.ESS
                 essContext.LoadProperty(paperEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
             }
 
+            var remoteExtensionEvacuationfile = essContext.era_evacuationfiles
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
+                .Expand(f => f.era_Registrant)
+                .Where(f => f.era_name == testPrefix + "-remote-extension").SingleOrDefault();
+
+            if (remoteExtensionEvacuationfile == null)
+            {
+                remoteExtensionEvacuationfile = CreateEvacuationFile(essContext, this.testContact, testPrefix + "-remote-extension");
+                essContext.SetLink(remoteExtensionEvacuationfile, nameof(era_evacuationfile.era_TaskId), this.remoteExtensionTask);
+                CreateEvacueeSupports(essContext, remoteExtensionEvacuationfile, this.testContact, this.tier4TeamMember, testPrefix);
+            }
+            else
+            {
+                essContext.LoadProperty(remoteExtensionEvacuationfile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            }
+
             essContext.SaveChanges();
 
             essContext.DeactivateObject(this.inactiveSupplier, 2);
@@ -179,6 +202,14 @@ namespace EMBC.Tests.Integration.ESS
 
             essContext.LoadProperty(this.testPaperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
             essContext.LoadProperty(this.testPaperEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+
+            this.testRemoteExtensionEvacuationFile = essContext.era_evacuationfiles
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
+                .Expand(f => f.era_Registrant)
+                .Where(f => f.era_evacuationfileid == remoteExtensionEvacuationfile.era_evacuationfileid).Single();
+
+            essContext.LoadProperty(this.testRemoteExtensionEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+            essContext.LoadProperty(this.testRemoteExtensionEvacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
 
             essContext.DetachAll();
             this.essContextFactory = essContextFactory;

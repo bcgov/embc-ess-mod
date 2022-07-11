@@ -145,6 +145,22 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task Search_EvacuationFileRemoteExtension_NoResult()
+        {
+            var searchResults = await manager.Handle(new EvacuationFilesQuery { FileId = TestData.EvacuationFileId, IsRemoteExtension = true });
+
+            searchResults.Items.ShouldBeEmpty();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task Search_EvacuationFileRemoteExtension_ReturnsFile()
+        {
+            var searchResults = await manager.Handle(new EvacuationFilesQuery { FileId = TestData.RemoteExtensionEvacuationFileId, IsRemoteExtension = true });
+
+            searchResults.Items.ShouldHaveSingleItem();
+        }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
         public async Task CanSearchEvacuationFilesByPaperId()
         {
             var files = (await manager.Handle(new EvacuationFilesQuery { ManualFileId = TestData.PaperEvacuationFilePaperId })).Items;

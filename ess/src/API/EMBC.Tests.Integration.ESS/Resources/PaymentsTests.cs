@@ -228,7 +228,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task SendPaymentToCas_InteracPayment_InvoiceNamePopulated()
+        public async Task SendPaymentToCas_InteracPayment_InvoiceNameShouldNotBePopulated()
         {
             var manager = Services.GetRequiredService<EventsManager>();
             var registrantId = TestData.ContactId;
@@ -266,8 +266,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var createdPayment = response.Payments.ShouldHaveSingleItem();
 
             var invoice = mockedCas.GetInvoiceByInvoiceNumber(createdPayment.PaymentId).ShouldNotBeNull();
-            invoice.NameLine1.ShouldNotBeNull();
-            invoice.NameLine2.ShouldNotBeNull();
+            invoice.NameLine1.ShouldBeNull();
+            invoice.NameLine2.ShouldBeNull();
         }
     }
 }

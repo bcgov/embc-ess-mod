@@ -11,6 +11,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string PrimaryRegistrantUserId { get; set; }
         public string LinkedRegistrantId { get; set; }
         public string NeedsAssessmentId { get; set; }
+        public bool IsRemoteExtension { get; set; } = false;
         public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
     }
 
