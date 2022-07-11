@@ -49,7 +49,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
             }
 
             var chromeDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), options);
-            chromeDriver.Url = Configuration.GetValue<string>("testUrl");
+            chromeDriver.Url = Configuration.GetValue<string>("baseUrl");
 
             var ngWebDriver = new NgWebDriver(chromeDriver);
 
