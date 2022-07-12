@@ -148,7 +148,6 @@ namespace EMBC.Responders.API.Services
             if (mappedFile != null && mappedFile.Task != null)
             {
                 var task = (await messagingClient.Send(new ESS.Shared.Contracts.Events.TasksSearchQuery { TaskId = mappedFile.Task.TaskNumber })).Items.SingleOrDefault();
-                if (task != null) mappedFile.Task.Features = new[] { new EvacuationFileTaskFeature { Name = "remote-extensions", Enabled = task.RemoteExtensionsEnabled } };
                 mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile, task);
             }
 
