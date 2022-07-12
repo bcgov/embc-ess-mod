@@ -57,7 +57,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 new TaskWorkflow { Name = "digital-processing",  Enabled = incidentTask.Status == IncidentTaskStatus.Active },
                 new TaskWorkflow { Name = "paper-data-entry",  Enabled = true },
-                new TaskWorkflow { Name = "remote-extensions",  Enabled = false },
+                new TaskWorkflow { Name = "remote-extensions",  Enabled = incidentTask.RemoteExtensionsEnabled },
             };
             return workflows;
         }
@@ -97,7 +97,6 @@ namespace EMBC.Responders.API.Controllers
         public string CommunityCode { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
-        public bool RemoteExtensionsEnabled { get; set; }
         public IEnumerable<TaskWorkflow> Workflows { get; set; } = Array.Empty<TaskWorkflow>();
     }
 
