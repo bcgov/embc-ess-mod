@@ -47,11 +47,12 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="registrantId">fileId</param>
         /// <param name="manualFileId">manualFileId</param>
+        /// <param name="id">id</param>
         /// <returns>file</returns>
         [HttpGet("files")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string? registrantId, [FromQuery] string? manualFileId)
+        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string? registrantId, [FromQuery] string? manualFileId, [FromQuery] string? id)
         {
             if (!string.IsNullOrEmpty(registrantId) && string.IsNullOrEmpty(manualFileId))
             {
@@ -64,12 +65,17 @@ namespace EMBC.Responders.API.Controllers
                 var files = await evacuationSearchService.GetEvacuationFilesByManualFileId(manualFileId);
                 return Ok(files);
             }
+            else if (!string.IsNullOrEmpty(id))
+            {
+                var files = await evacuationSearchService.GetEvacuationFilesByFileId(id);
+                return Ok(files);
+            }
 
             return BadRequest(new ProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Invalid request",
-                Detail = $"{nameof(registrantId)} or {nameof(manualFileId)} are mandatory, but not both"
+                Detail = $"Query using one of {nameof(registrantId)}, {nameof(manualFileId)} or {nameof(id)}"
             });
         }
 

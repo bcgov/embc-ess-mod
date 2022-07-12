@@ -17,6 +17,8 @@ namespace EMBC.Responders.API.Services
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByManualFileId(string manualFileId);
 
+        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id);
+
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string registrantId, MemberRole userRole);
 
         Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
@@ -114,8 +116,11 @@ namespace EMBC.Responders.API.Services
 
             var mappedFile = mapper.Map<EvacuationFile>(file);
 
-            if (mappedFile.Task == null) mappedFile.Task = new EvacuationFileTask();
-            mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile);
+            if (mappedFile != null)
+            {
+                if (mappedFile.Task == null) mappedFile.Task = new EvacuationFileTask();
+                mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile);
+            }
             return mappedFile;
         }
 
@@ -126,6 +131,33 @@ namespace EMBC.Responders.API.Services
                 .OrderByDescending(f => f.Id)
                 .FirstOrDefault();
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(new[] { file });
+        }
+
+        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id)
+        {
+            var query = new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery();
+            if (id.StartsWith("T"))
+            {
+                query.ManualFileId = id;
+            }
+            else
+            {
+                query.FileId = id;
+            }
+
+            var file = (await messagingClient.Send(query))
+            .Items
+            .OrderByDescending(f => f.Id)
+            .FirstOrDefault();
+            var mappedFile = mapper.Map<EvacuationFile>(file);
+
+            if (mappedFile != null && mappedFile.Task != null)
+            {
+                var task = (await messagingClient.Send(new ESS.Shared.Contracts.Events.TasksSearchQuery { TaskId = mappedFile.Task.TaskNumber })).Items.SingleOrDefault();
+                mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile, task);
+            }
+
+            return new[] { mapper.Map<EvacuationFileSummary>(mappedFile) };
         }
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string? registrantId, MemberRole userRole)
@@ -166,7 +198,7 @@ namespace EMBC.Responders.API.Services
             return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles);
         }
 
-        private IEnumerable<EvacuationFileTaskFeature> GetEvacuationFileFeatures(EvacuationFile file)
+        private IEnumerable<EvacuationFileTaskFeature> GetEvacuationFileFeatures(EvacuationFile file, ESS.Shared.Contracts.Events.IncidentTask task = null)
         {
             // temporary toggle feature for e-transfer
             var etransferEnabled = configuration.GetValue("features:eTransferEnabled", true);
@@ -176,6 +208,7 @@ namespace EMBC.Responders.API.Services
                 new EvacuationFileTaskFeature { Name = "digital-support-referrals", Enabled = file.Task?.To >= DateTime.UtcNow },
                 new EvacuationFileTaskFeature { Name = "digital-support-etransfer", Enabled = etransferEnabled && (file.Task == null || !file.Task.To.HasValue || file.Task?.To >= DateTime.UtcNow) },
                 new EvacuationFileTaskFeature { Name = "paper-support-referrals", Enabled = file.ManualFileId != null },
+                new EvacuationFileTaskFeature { Name = "remote-extensions", Enabled = task != null ? task.RemoteExtensionsEnabled : false },
             };
         }
     }
@@ -219,6 +252,11 @@ namespace EMBC.Responders.API.Services
                         From = s.RelatedTask.StartDate,
                         To = s.RelatedTask.EndDate
                     }))
+            ;
+
+            CreateMap<EvacuationFile, EvacuationFileSummary>()
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.IssuedOn, opts => opts.Ignore())
             ;
         }
     }
