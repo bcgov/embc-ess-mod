@@ -135,11 +135,23 @@ namespace EMBC.Responders.API.Services
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id)
         {
-            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = id }))
+            EvacuationFileSummary mappedFile;
+            if (id.StartsWith("T"))
+            {
+                var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { ManualFileId = id }))
                 .Items
                 .OrderByDescending(f => f.Id)
                 .FirstOrDefault();
-            var mappedFile = mapper.Map<EvacuationFileSummary>(file);
+                mappedFile = mapper.Map<EvacuationFileSummary>(file);
+            }
+            else
+            {
+                var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = id }))
+                .Items
+                .OrderByDescending(f => f.Id)
+                .FirstOrDefault();
+                mappedFile = mapper.Map<EvacuationFileSummary>(file);
+            }
             if (mappedFile != null)
             {
                 if (mappedFile.Task == null) mappedFile.Task = new EvacuationFileTask();
