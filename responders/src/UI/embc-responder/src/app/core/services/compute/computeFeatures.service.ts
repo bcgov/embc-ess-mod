@@ -6,7 +6,7 @@ import {
   EtransferRequirementStatus,
   EtransferContent
 } from '../../models/appBase.model';
-import { Compute } from './compute';
+import { Compute } from '../../interfaces/compute';
 import { AppBaseService } from '../helper/appBase.service';
 
 @Injectable()

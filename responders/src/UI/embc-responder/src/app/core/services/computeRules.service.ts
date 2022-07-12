@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { computeInterfaceToken } from 'src/app/app.module';
-import { Compute } from './compute/compute';
+import { Compute } from '../interfaces/compute';
 
 @Injectable({
   providedIn: 'root'
