@@ -136,8 +136,14 @@ namespace EMBC.Responders.API.Services
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id)
         {
             var query = new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery();
-            if (id.StartsWith("T")) query.ManualFileId = id;
-            else query.FileId = id;
+            if (id.StartsWith("T"))
+            {
+                query.ManualFileId = id;
+            }
+            else
+            {
+                query.FileId = id;
+            }
 
             var file = (await messagingClient.Send(query))
             .Items
@@ -248,7 +254,10 @@ namespace EMBC.Responders.API.Services
                     }))
             ;
 
-            CreateMap<EvacuationFile, EvacuationFileSummary>();
+            CreateMap<EvacuationFile, EvacuationFileSummary>()
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.IssuedOn, opts => opts.Ignore())
+            ;
         }
     }
 }
