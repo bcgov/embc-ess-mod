@@ -135,30 +135,24 @@ namespace EMBC.Responders.API.Services
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id)
         {
-            EvacuationFileSummary mappedFile;
-            if (id.StartsWith("T"))
+            var query = new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery();
+            if (id.StartsWith("T")) query.ManualFileId = id;
+            else query.FileId = id;
+
+            var file = (await messagingClient.Send(query))
+            .Items
+            .OrderByDescending(f => f.Id)
+            .FirstOrDefault();
+            var mappedFile = mapper.Map<EvacuationFile>(file);
+
+            if (mappedFile != null && mappedFile.Task != null)
             {
-                var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { ManualFileId = id }))
-                .Items
-                .OrderByDescending(f => f.Id)
-                .FirstOrDefault();
-                mappedFile = mapper.Map<EvacuationFileSummary>(file);
-            }
-            else
-            {
-                var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = id }))
-                .Items
-                .OrderByDescending(f => f.Id)
-                .FirstOrDefault();
-                mappedFile = mapper.Map<EvacuationFileSummary>(file);
-            }
-            if (mappedFile != null)
-            {
-                if (mappedFile.Task == null) mappedFile.Task = new EvacuationFileTask();
                 var task = (await messagingClient.Send(new ESS.Shared.Contracts.Events.TasksSearchQuery { TaskId = mappedFile.Task.TaskNumber })).Items.SingleOrDefault();
                 if (task != null) mappedFile.Task.Features = new[] { new EvacuationFileTaskFeature { Name = "remote-extensions", Enabled = task.RemoteExtensionsEnabled } };
+                mappedFile.Task.Features = GetEvacuationFileFeatures(mappedFile, task);
             }
-            return new[] { mappedFile };
+
+            return new[] { mapper.Map<EvacuationFileSummary>(mappedFile) };
         }
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string? registrantId, MemberRole userRole)
@@ -199,7 +193,7 @@ namespace EMBC.Responders.API.Services
             return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles);
         }
 
-        private IEnumerable<EvacuationFileTaskFeature> GetEvacuationFileFeatures(EvacuationFile file)
+        private IEnumerable<EvacuationFileTaskFeature> GetEvacuationFileFeatures(EvacuationFile file, ESS.Shared.Contracts.Events.IncidentTask task = null)
         {
             // temporary toggle feature for e-transfer
             var etransferEnabled = configuration.GetValue("features:eTransferEnabled", true);
@@ -209,6 +203,7 @@ namespace EMBC.Responders.API.Services
                 new EvacuationFileTaskFeature { Name = "digital-support-referrals", Enabled = file.Task?.To >= DateTime.UtcNow },
                 new EvacuationFileTaskFeature { Name = "digital-support-etransfer", Enabled = etransferEnabled && (file.Task == null || !file.Task.To.HasValue || file.Task?.To >= DateTime.UtcNow) },
                 new EvacuationFileTaskFeature { Name = "paper-support-referrals", Enabled = file.ManualFileId != null },
+                new EvacuationFileTaskFeature { Name = "remote-extensions", Enabled = task != null ? task.RemoteExtensionsEnabled : false },
             };
         }
     }
@@ -253,6 +248,8 @@ namespace EMBC.Responders.API.Services
                         To = s.RelatedTask.EndDate
                     }))
             ;
+
+            CreateMap<EvacuationFile, EvacuationFileSummary>();
         }
     }
 }
