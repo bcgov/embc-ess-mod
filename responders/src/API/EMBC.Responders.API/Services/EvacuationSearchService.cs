@@ -17,6 +17,8 @@ namespace EMBC.Responders.API.Services
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByManualFileId(string manualFileId);
 
+        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id);
+
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string registrantId, MemberRole userRole);
 
         Task<IEnumerable<RegistrantProfileSearchResult>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
@@ -129,6 +131,22 @@ namespace EMBC.Responders.API.Services
                 .OrderByDescending(f => f.Id)
                 .FirstOrDefault();
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(new[] { file });
+        }
+
+        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id)
+        {
+            var file = (await messagingClient.Send(new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery { FileId = id }))
+                .Items
+                .OrderByDescending(f => f.Id)
+                .FirstOrDefault();
+            var mappedFile = mapper.Map<EvacuationFileSummary>(file);
+            if (mappedFile != null)
+            {
+                if (mappedFile.Task == null) mappedFile.Task = new EvacuationFileTask();
+                var task = (await messagingClient.Send(new ESS.Shared.Contracts.Events.TasksSearchQuery { TaskId = mappedFile.Task.TaskNumber })).Items.SingleOrDefault();
+                mappedFile.Task.Features = new[] { new EvacuationFileTaskFeature { Name = "remote-extensions", Enabled = task.RemoteExtensionsEnabled } };
+            }
+            return new[] { mappedFile };
         }
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByRegistrantId(string? registrantId, MemberRole userRole)

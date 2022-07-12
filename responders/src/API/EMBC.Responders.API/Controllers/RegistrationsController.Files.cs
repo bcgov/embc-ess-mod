@@ -43,42 +43,16 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Gets a File for remote extension
-        /// </summary>
-        /// <param name="fileId">fileId</param>
-        /// <param name="needsAssessmentId">optional historical needs aseesment id</param>
-        /// <returns>file</returns>
-        [HttpGet("files/{fileId}/remote-extension")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EvacuationFile>> GetRemoteExtensionFile(string fileId, string? needsAssessmentId = null)
-        {
-            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
-
-            if (file == null) return NotFound(fileId);
-
-            var task = (await messagingClient.Send(new TasksSearchQuery { TaskId = file.Task.TaskNumber })).Items.SingleOrDefault();
-            if (task == null || !task.RemoteExtensionsEnabled) return NotFound(fileId);
-
-            foreach (var note in file.Notes)
-            {
-                note.IsEditable = UserCanEditNote(note);
-            }
-
-            return Ok(file);
-        }
-
-        /// <summary>
         /// Search files
         /// </summary>
         /// <param name="registrantId">fileId</param>
         /// <param name="manualFileId">manualFileId</param>
+        /// <param name="id">id</param>
         /// <returns>file</returns>
         [HttpGet("files")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string? registrantId, [FromQuery] string? manualFileId)
+        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string? registrantId, [FromQuery] string? manualFileId, [FromQuery] string? id)
         {
             if (!string.IsNullOrEmpty(registrantId) && string.IsNullOrEmpty(manualFileId))
             {
@@ -91,12 +65,17 @@ namespace EMBC.Responders.API.Controllers
                 var files = await evacuationSearchService.GetEvacuationFilesByManualFileId(manualFileId);
                 return Ok(files);
             }
+            else if (!string.IsNullOrEmpty(id))
+            {
+                var files = await evacuationSearchService.GetEvacuationFilesByFileId(id);
+                return Ok(files);
+            }
 
             return BadRequest(new ProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Invalid request",
-                Detail = $"{nameof(registrantId)} or {nameof(manualFileId)} are mandatory, but not both"
+                Detail = $"Query using one of {nameof(registrantId)}, {nameof(manualFileId)} or {nameof(id)}"
             });
         }
 
