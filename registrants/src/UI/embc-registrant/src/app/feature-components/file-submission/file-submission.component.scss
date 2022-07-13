@@ -13,13 +13,7 @@
     font-size: 21px;
 }
 
-@media screen and (max-width: 768px) {
-    .ref-number {
-        color: #169bd5;
-        font-weight: 400;
-        font-size: 40px;
-    }
-}
+
 
 .bottom-panel {
     width: 100%;
@@ -29,12 +23,6 @@
 .open-panel-heading {
     font-size: 25px;
     font-weight: 400;
-}
-
-@media screen and (max-width: 768px) {
-    .mat-expansion-panel-header.mat-expanded {
-        height: auto;
-    }
 }
 
 .services-info {
@@ -64,4 +52,16 @@
     position: fixed;
     z-index: 1;
     width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .ref-number {
+        color: #169bd5;
+        font-weight: 400;
+        font-size: 40px;
+    }
+
+    .mat-expansion-panel-header.mat-expanded {
+        height: auto;
+    }
 }

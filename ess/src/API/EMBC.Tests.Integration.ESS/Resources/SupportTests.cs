@@ -341,5 +341,43 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
             support.Status.ShouldBe(SupportStatus.UnderReview);
         }
+
+        [Fact(Skip = RequiresVpnConnectivity)]
+        public async Task ApproveSupport_PendingSupport_Approved()
+        {
+            var householdMembers = TestData.HouseholdMemberIds;
+            var now = DateTime.UtcNow;
+            var fileId = TestData.EvacuationFileId;
+
+            var support = new ClothingSupport
+            {
+                SupportDelivery = new Interac
+                {
+                    NotificationEmail = "test@email",
+                    NotificationMobile = "12345",
+                    ReceivingRegistrantId = TestData.ContactId,
+                    RecipientFirstName = "test",
+                    RecipientLastName = "test"
+                },
+                CreatedByTeamMemberId = TestData.Tier4TeamMemberId,
+                IncludedHouseholdMembers = householdMembers,
+                From = now,
+                To = now.AddDays(3),
+                IssuedOn = now
+            };
+
+            var supportId = ((CreateNewSupportsCommandResult)await supportRepository.Manage(new CreateNewSupportsCommand
+            {
+                FileId = fileId,
+                Supports = new[] { support }
+            })).Supports.ShouldHaveSingleItem().Id;
+
+            await supportRepository.Manage(new SubmitSupportForApprovalCommand { SupportId = supportId, Flags = Array.Empty<SupportFlag>() });
+
+            await supportRepository.Manage(new ApproveSupportCommand { SupportId = supportId });
+
+            var approvedSupport = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ById = supportId })).Items.ShouldHaveSingleItem();
+            approvedSupport.Status.ShouldBe(SupportStatus.Approved);
+        }
     }
 }
