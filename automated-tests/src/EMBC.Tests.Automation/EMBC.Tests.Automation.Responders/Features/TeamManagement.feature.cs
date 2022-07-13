@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace EMBC.Tests.Automation.Registrants.Features
+namespace EMBC.Tests.Automation.Responders.Features
 {
     using TechTalk.SpecFlow;
     using System;
@@ -19,7 +19,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class AuthenticatedRegistrantFeature : object, Xunit.IClassFixture<AuthenticatedRegistrantFeature.FixtureData>, System.IDisposable
+    public partial class TeamManagementFeature : object, Xunit.IClassFixture<TeamManagementFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -28,10 +28,10 @@ namespace EMBC.Tests.Automation.Registrants.Features
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "AuthenticatedRegistrant.feature"
+#line 1 "TeamManagement.feature"
 #line hidden
         
-        public AuthenticatedRegistrantFeature(AuthenticatedRegistrantFeature.FixtureData fixtureData, EMBC_Tests_Automation_Registrants_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public TeamManagementFeature(TeamManagementFeature.FixtureData fixtureData, EMBC_Tests_Automation_Responders_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -40,7 +40,7 @@ namespace EMBC.Tests.Automation.Registrants.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Authenticated Registrant", null, ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "TeamManagement", null, ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -80,43 +80,17 @@ namespace EMBC.Tests.Automation.Registrants.Features
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="BCSC user logs in to dashboard")]
-        [Xunit.TraitAttribute("FeatureTitle", "Authenticated Registrant")]
-        [Xunit.TraitAttribute("Description", "BCSC user logs in to dashboard")]
-        public void BCSCUserLogsInToDashboard()
+        [Xunit.SkippableFactAttribute(DisplayName="Team Member Management")]
+        [Xunit.TraitAttribute("FeatureTitle", "TeamManagement")]
+        [Xunit.TraitAttribute("Description", "Team Member Management")]
+        [Xunit.TraitAttribute("Category", "responders")]
+        public void TeamMemberManagement()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "responders"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("BCSC user logs in to dashboard", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 3
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Team Member Management", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 4
- testRunner.Given("I log in with BCSC credentials EVAC00034", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 5
- testRunner.Then("I am on path /verified-registration/dashboard/current", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Create new ESS File")]
-        [Xunit.TraitAttribute("FeatureTitle", "Authenticated Registrant")]
-        [Xunit.TraitAttribute("Description", "Create new ESS File")]
-        public void CreateNewESSFile()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create new ESS File", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 7
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -126,17 +100,14 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 8
- testRunner.Given("I log in with BCSC credentials EVAC00034", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 5
+ testRunner.Given("I create a new team member", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 9
- testRunner.When("I create a new EssFile", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 6
+ testRunner.When("I delete a team member", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 10
- testRunner.And("I complete the maximum fields on the ESS file evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 11
- testRunner.Then("the ESS File submission complete dialog appears", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 7
+ testRunner.Then("The team member does not exist", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -149,12 +120,12 @@ this.ScenarioInitialize(scenarioInfo);
             
             public FixtureData()
             {
-                AuthenticatedRegistrantFeature.FeatureSetup();
+                TeamManagementFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                AuthenticatedRegistrantFeature.FeatureTearDown();
+                TeamManagementFeature.FeatureTearDown();
             }
         }
     }
