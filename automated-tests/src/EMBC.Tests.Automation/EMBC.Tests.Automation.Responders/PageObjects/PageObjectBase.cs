@@ -23,6 +23,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             var buttons = webDriver.FindElements(By.TagName("button"));
             var selectedBtn = buttons.Should().ContainSingle(b => b.Text.Contains(btnContent)).Subject;
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectedBtn);
             js.ExecuteScript("arguments[0].click()", selectedBtn);
         }
 
@@ -37,6 +38,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
             Wait();
             yesradiobutton.Click();
+            //js.ExecuteScript("arguments[0].click()", yesradiobutton);
         }
 
         protected void NoRadioButton()

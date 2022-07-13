@@ -21,7 +21,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
             currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
             configurationLazy = new Lazy<IConfiguration>(ReadConfiguration);
             closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", false);
-            runAutomationHeadless = Configuration.GetValue("RunHeadless", false);
+            runAutomationHeadless = Configuration.GetValue("RunHeadless", true);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace EMBC.Tests.Automation.Responders.Drivers
 
             if (runAutomationHeadless)
             {
-                options.AddArguments("start-maximized", "headless");
+                options.AddArguments("window-size=1920,1080", "headless");
             }
             else
             {
