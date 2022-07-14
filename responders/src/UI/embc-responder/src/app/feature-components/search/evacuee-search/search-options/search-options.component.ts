@@ -4,6 +4,11 @@ import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { UserService } from 'src/app/core/services/user.service';
+import {
+  ActionPermission,
+  ClaimType
+} from 'src/app/core/services/authorization.service';
 
 @Component({
   selector: 'app-search-options',
@@ -22,7 +27,8 @@ export class SearchOptionsComponent implements OnInit {
   constructor(
     private appBaseService: AppBaseService,
     private evacueeSessionService: EvacueeSessionService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +49,13 @@ export class SearchOptionsComponent implements OnInit {
   }
 
   isEnabled(name: string): boolean {
+    if (name === 'remote-extensions') {
+      return (
+        !this.workflows?.find((flow) => flow.name === name)?.enabled ||
+        !this.hasPermission('canSignIntoRemoteExtensions')
+      );
+    }
+
     return !this.workflows?.find((flow) => flow.name === name)?.enabled;
   }
 
@@ -62,5 +75,18 @@ export class SearchOptionsComponent implements OnInit {
       this.showDataEntryComponent.emit(false);
       this.showIDPhotoComponent.emit(true);
     }
+  }
+
+  /**
+   * Checks if the user can permission to perform given action
+   *
+   * @param action user action
+   * @returns true/false
+   */
+  public hasPermission(action: string): boolean {
+    return this.userService.hasClaim(
+      ClaimType.action,
+      ActionPermission[action]
+    );
   }
 }
