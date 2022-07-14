@@ -110,14 +110,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Evacuee Online new Registration")]
+        [Xunit.SkippableFactAttribute(DisplayName="Evacuee Online new Registration with Referrals")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal Registration")]
-        [Xunit.TraitAttribute("Description", "Evacuee Online new Registration")]
-        public void EvacueeOnlineNewRegistration()
+        [Xunit.TraitAttribute("Description", "Evacuee Online new Registration with Referrals")]
+        public void EvacueeOnlineNewRegistrationWithReferrals()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee Online new Registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee Online new Registration with Referrals", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 8
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -138,14 +138,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Evacuee Paper Based new Registration")]
+        [Xunit.SkippableFactAttribute(DisplayName="Evacuee Paper Based new Registration with Referrals")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal Registration")]
-        [Xunit.TraitAttribute("Description", "Evacuee Paper Based new Registration")]
-        public void EvacueePaperBasedNewRegistration()
+        [Xunit.TraitAttribute("Description", "Evacuee Paper Based new Registration with Referrals")]
+        public void EvacueePaperBasedNewRegistrationWithReferrals()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee Paper Based new Registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee Paper Based new Registration with Referrals", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -166,14 +166,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Evacuee Online Registration add Interac Support")]
+        [Xunit.SkippableFactAttribute(DisplayName="Evacuee Online new Registration with Interac Support")]
         [Xunit.TraitAttribute("FeatureTitle", "Responders Portal Registration")]
-        [Xunit.TraitAttribute("Description", "Evacuee Online Registration add Interac Support")]
-        public void EvacueeOnlineRegistrationAddInteracSupport()
+        [Xunit.TraitAttribute("Description", "Evacuee Online new Registration with Interac Support")]
+        public void EvacueeOnlineNewRegistrationWithInteracSupport()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee Online Registration add Interac Support", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Evacuee Online new Registration with Interac Support", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 16
 this.ScenarioInitialize(scenarioInfo);
 #line hidden

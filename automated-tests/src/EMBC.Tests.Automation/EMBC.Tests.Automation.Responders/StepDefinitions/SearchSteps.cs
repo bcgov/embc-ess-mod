@@ -12,12 +12,14 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
     {
         private readonly SearchEvacuee searchEvacuee;
         private readonly ESSFileDashboard essFileDashboard;
+        private readonly EvacueeDashboard evacueeDashboard;
         private readonly IEnumerable<Evacuee> evacuees;
 
         public SearchSteps(BrowserDriver driver)
         {
             searchEvacuee = new SearchEvacuee(driver.Current);
             essFileDashboard = new ESSFileDashboard(driver.Current);
+            evacueeDashboard = new EvacueeDashboard(driver.Current);
             evacuees = driver.Configuration.GetSection("evacuees").Get<IEnumerable<Evacuee>>();
         }
 
@@ -63,6 +65,17 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //Click on Edit ESS File Button
             essFileDashboard.ESSFileDashEditButton();
+        }
+
+        [StepDefinition(@"I create a new ESS File from selected evacuee")]
+        public void CreateNewEssFileForEvacuee()
+        {
+            //Select an evacuee Profile
+            evacueeDashboard.SelectProfileFromSearch(1);
+
+            //Click on Create a new ESS File
+            evacueeDashboard.CreateNewEssFileFromProfileDashboard();
+            
         }
 
         public class Evacuee

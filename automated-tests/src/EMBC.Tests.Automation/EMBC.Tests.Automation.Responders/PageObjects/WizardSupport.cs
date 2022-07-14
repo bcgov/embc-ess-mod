@@ -14,7 +14,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         private By supportDetailsFormNbrDaysSelect = By.CssSelector("mat-select[formcontrolname='noOfDays']");
         private By supportDetailsFormAllMembersCheckbox = By.Id("allMembers");
-        private By supportDetailsFormtotalAmountInput = By.CssSelector("input[formcontrolname='userTotalAmount']");
+        private By supportDetailsIncidetalsTextArea = By.CssSelector("textarea[formcontrolname='approvedItems']");
+        private By supportDetailsFormFromAddressInput = By.CssSelector("input[formcontrolname='fromAddress']");
+        private By supportDetailsFormToAddressInput = By.CssSelector("input[formcontrolname='toAddress']");
+        private By supportDetailsFormOtherTransportModeInput = By.CssSelector("input[formcontrolname='transportMode']");
+        private By supportDetailsFormOtherTransportTotalAmountInput = By.CssSelector("input[formcontrolname='totalAmount']");
+        private By supportDetailsFormTotalAmountInput = By.CssSelector("input[formcontrolname='userTotalAmount']");
 
         private By supportDetailsFormPaperSupportNbrInput = By.CssSelector("input[formcontrolname='paperSupportNumber']");
         private By supportDetailsFormPaperCompletedOnInput = By.CssSelector("input[formcontrolname='paperCompletedOn']");
@@ -38,6 +43,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         private By supportDeliveryEmailConfirmInput = By.CssSelector("input[formcontrolname='notificationConfirmEmail']");
         private By supportDeliveryMobileInput = By.CssSelector("input[formcontrolname='notificationMobile']");
         private By supportDeliveryMobileConfirmInput = By.CssSelector("input[formcontrolname='notificationConfirmMobile']");
+
+        private By supportDeliveryBilletingHostFullNameInput = By.CssSelector("input[formcontrolname='hostName']");
+        private By supportDeliveryBilletingHostAddressInput = By.CssSelector("input[formcontrolname = 'hostAddress']");
+        private By supportDeliveryBilletingHostCityInput = By.CssSelector("input[formcontrolname='hostCity']");
+        private By supportDeliveryBilletingHostTelephoneInput = By.CssSelector("input[formcontrolname='hostPhone']");
+        private By supportDeliveryBilletingHostEmailInput = By.CssSelector("input[formcontrolname='emailAddress']");
 
         private By processSupportFormCertificateCheckBox = By.Id("processDraftCert");
         private By viewSupportFormSupportStatus = By.XPath("//table[@role='table']/tbody/tr/td[7]");
@@ -68,41 +79,89 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         public void SupportClothingDetailsForm(string totalAmount)
         {
             Wait();
-
+            
+            //Support Details
             FocusAndClick(supportDetailsFormAllMembersCheckbox);
             var winterClothingElement = webDriver.FindElement(selectWinterConditionRadioGroup);
             ChooseRandomOption(winterClothingElement, "extremeWinterConditions");
-            webDriver.FindElement(supportDetailsFormtotalAmountInput).SendKeys(totalAmount);
+            webDriver.FindElement(supportDetailsFormTotalAmountInput).SendKeys(totalAmount);
             ButtonElement("Next - Support Delivery");
         }
 
-        public void SupportFoodDetailsForm(string nbrOfDays, string mealValue)
+        public void SupportIncidentalsDetailsForm(string listItems, string totalAmount)
+        {
+            Wait();
+
+            //Support Details
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
+
+            webDriver.FindElement(supportDetailsIncidetalsTextArea).SendKeys(listItems);
+            webDriver.FindElement(supportDetailsFormTotalAmountInput).SendKeys(totalAmount);
+
+            ButtonElement("Next - Support Delivery");
+        }
+
+        public void SupportHotelDetailsForm(string nbrRooms)
+        {
+            Wait();
+
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
+            webDriver.FindElement(supportDetailsFormNbrOfRoomsSelect).SendKeys(nbrRooms);
+            ButtonElement("Next - Support Delivery");
+        }
+
+        public void SupportBilletingDetailsForm()
+        {
+            Wait();
+
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
+            ButtonElement("Next - Support Delivery");
+        }
+
+        public void SupportGroupLodgingDetailsForm()
+        {
+            Wait();
+
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
+            ButtonElement("Next - Support Delivery");
+        }
+
+        public void SupportGroceriesDetailsForm(string nbrOfDays, string mealValue)
         {
             Wait();
 
             webDriver.FindElement(supportDetailsFormNbrDaysSelect).SendKeys(nbrOfDays);
             FocusAndClick(supportDetailsFormAllMembersCheckbox);
-            webDriver.FindElement(supportDetailsFormtotalAmountInput).SendKeys(mealValue);
+            webDriver.FindElement(supportDetailsFormTotalAmountInput).SendKeys(mealValue);
             ButtonElement("Next - Support Delivery");
         }
 
-        public void SupportPaperBasedHotelDetailsForm(string interviewer, string interviewerInitials, string completedDate, string validToDate, string validTime, string nbrRooms)
+        public void SupportRestaurantDetailsForm()
         {
-            var supportNbr = Randomizer("D8");
-
             Wait();
 
-            webDriver.FindElement(supportDetailsFormPaperSupportNbrInput).SendKeys(supportNbr);
-            webDriver.FindElement(personFormFirstNameInput).SendKeys(interviewer);
-            webDriver.FindElement(wizardInterviewerInitialsInput).SendKeys(interviewerInitials);
-            webDriver.FindElement(supportDetailsFormPaperCompletedOnInput).SendKeys(completedDate);
-            webDriver.FindElement(supportDetailsFormValidFromDateInput).SendKeys(completedDate);
-            webDriver.FindElement(supportDetailsFormValidFromTimeInput).SendKeys(validTime);
-            webDriver.FindElement(supportDetailsFormValidToDateInput).SendKeys(validToDate);
-            webDriver.FindElement(supportDetailsFormValidToTimeInput).SendKeys(validTime);
-
             FocusAndClick(supportDetailsFormAllMembersCheckbox);
-            webDriver.FindElement(supportDetailsFormNbrOfRoomsSelect).SendKeys(nbrRooms);
+            ButtonElement("Next - Support Delivery");
+        }
+
+        public void SupportTaxiDetailsForm(string from, string to)
+        {
+            Wait();
+            
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
+            webDriver.FindElement(supportDetailsFormFromAddressInput).SendKeys(from);
+            webDriver.FindElement(supportDetailsFormToAddressInput).SendKeys(to);
+            ButtonElement("Next - Support Delivery");
+        }
+
+        public void SupportTransportOtherDetailsForm(string transportMode, string totalAmount)
+        {
+            Wait();
+
+            //Support Details
+            FocusAndClick(supportDetailsFormAllMembersCheckbox);
+            webDriver.FindElement(supportDetailsFormOtherTransportModeInput).SendKeys(transportMode);
+            webDriver.FindElement(supportDetailsFormOtherTransportTotalAmountInput).SendKeys(totalAmount);
             ButtonElement("Next - Support Delivery");
         }
 
@@ -121,6 +180,62 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             FocusAndClick(supportDeliverySupplierSelect);
 
             ButtonElement("Next - Save Support");
+        }
+
+        public void SupportReferralBilletingDeliveryForm(string responsibleName, string hostName, string hostAddress, string hostCity, string hostPhone, string hostEmail)
+        {
+            var responsible = "Someone else";
+
+            webDriver.FindElement(supportDeliveryReferralCard).Click();
+            Wait();
+
+            webDriver.FindElement(supportDeliveryResposibleSelect).SendKeys(responsible);
+            Wait();
+
+            webDriver.FindElement(supportDeliveryResponsibleNameInput).SendKeys(responsibleName);
+
+            webDriver.FindElement(supportDeliveryBilletingHostFullNameInput).SendKeys(hostName);
+            webDriver.FindElement(supportDeliveryBilletingHostAddressInput).SendKeys(hostAddress);
+            webDriver.FindElement(supportDeliveryBilletingHostCityInput).SendKeys(hostCity);
+            webDriver.FindElement(supportDeliveryBilletingHostTelephoneInput).SendKeys(hostPhone);
+            webDriver.FindElement(supportDeliveryBilletingHostEmailInput).SendKeys(hostEmail);
+
+            ButtonElement("Next - Save Support");
+        }
+
+        public void SupportReferralGroupDeliveryForm(string responsibleName, string hostName, string hostAddress, string hostCity, string hostPhone)
+        {
+            var responsible = "Someone else";
+
+            webDriver.FindElement(supportDeliveryReferralCard).Click();
+            Wait();
+
+            webDriver.FindElement(supportDeliveryResposibleSelect).SendKeys(responsible);
+            Wait();
+
+            webDriver.FindElement(supportDeliveryResponsibleNameInput).SendKeys(responsibleName);
+
+            webDriver.FindElement(supportDeliveryBilletingHostFullNameInput).SendKeys(hostName);
+            webDriver.FindElement(supportDeliveryBilletingHostAddressInput).SendKeys(hostAddress);
+            webDriver.FindElement(supportDeliveryBilletingHostCityInput).SendKeys(hostCity);
+            webDriver.FindElement(By.Id(hostCity)).Click();
+            webDriver.FindElement(supportDeliveryBilletingHostTelephoneInput).SendKeys(hostPhone);
+
+            ButtonElement("Next - Save Support");
+        }
+
+        public void WizardSupportDetailsPaperBased(string interviewer, string interviewerInitials, string completedDate, string validToDate, string validTime)
+        {
+            var supportNbr = Randomizer("D8");
+
+            webDriver.FindElement(supportDetailsFormPaperSupportNbrInput).SendKeys(supportNbr);
+            webDriver.FindElement(personFormFirstNameInput).SendKeys(interviewer);
+            webDriver.FindElement(wizardInterviewerInitialsInput).SendKeys(interviewerInitials);
+            webDriver.FindElement(supportDetailsFormPaperCompletedOnInput).SendKeys(completedDate);
+            webDriver.FindElement(supportDetailsFormValidFromDateInput).SendKeys(completedDate);
+            webDriver.FindElement(supportDetailsFormValidFromTimeInput).SendKeys(validTime);
+            webDriver.FindElement(supportDetailsFormValidToDateInput).SendKeys(validToDate);
+            webDriver.FindElement(supportDetailsFormValidToTimeInput).SendKeys(validTime);
         }
 
         public void SupportInteracDeliveryForm(string email, string phone)
@@ -161,6 +276,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public void WizardOnlineProcessSupportsForm()
         {
+            ScrollToBottom();
             FocusAndClick(processSupportFormCertificateCheckBox);
             ButtonElement("Process Support/s");
             ButtonElement("Proceed");
@@ -210,5 +326,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             Wait();
             return webDriver.FindElement(viewSupportFormSupportStatus).Text;
         }
+
+        
     }
 }

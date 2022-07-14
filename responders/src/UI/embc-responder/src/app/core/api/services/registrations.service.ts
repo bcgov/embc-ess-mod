@@ -669,12 +669,18 @@ export class RegistrationsService extends BaseService {
      * manualFileId
      */
     manualFileId?: string;
+
+    /**
+     * id
+     */
+    id?: string;
   }): Observable<StrictHttpResponse<Array<EvacuationFileSummary>>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilesPath, 'get');
     if (params) {
       rb.query('registrantId', params.registrantId, {});
       rb.query('manualFileId', params.manualFileId, {});
+      rb.query('id', params.id, {});
     }
 
     return this.http.request(rb.build({
@@ -709,6 +715,11 @@ export class RegistrationsService extends BaseService {
      * manualFileId
      */
     manualFileId?: string;
+
+    /**
+     * id
+     */
+    id?: string;
   }): Observable<Array<EvacuationFileSummary>> {
 
     return this.registrationsGetFiles$Response(params).pipe(

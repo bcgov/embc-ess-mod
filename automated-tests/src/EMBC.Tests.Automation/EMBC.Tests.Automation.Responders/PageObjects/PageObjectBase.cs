@@ -65,6 +65,14 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             selectedElement.Click();
         }
 
+        protected void ScrollToBottom()
+        {
+            Wait();
+
+            var js = (IJavaScriptExecutor)webDriver;
+            js.ExecuteScript("window.scrollBy(0,document.body.scrollHeight)", "");
+        }
+
         protected void ChooseRandomOption(IWebElement parentElement, string parentElementName)
         {
             Random random = new Random();
