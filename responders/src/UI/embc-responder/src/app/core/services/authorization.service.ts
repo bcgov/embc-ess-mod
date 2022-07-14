@@ -24,7 +24,8 @@ export enum ActionPermission {
   canViewCompletedESSFiles,
 
   canHideUnhideNotes,
-  canSeeHiddenNotes
+  canSeeHiddenNotes,
+  canSignIntoRemoteExtensions
 }
 
 export enum ModulePermission {
@@ -116,6 +117,10 @@ export class AuthorizationService {
       {
         claimType: ClaimType.action,
         claimValue: ActionPermission.canSeeHiddenNotes
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canSignIntoRemoteExtensions
       }
     ];
     permissionSet.tier4 = [
