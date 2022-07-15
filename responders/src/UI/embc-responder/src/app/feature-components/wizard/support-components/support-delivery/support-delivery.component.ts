@@ -17,6 +17,7 @@ import { ETransferStatus } from '../../../../core/models/appBase.model';
 import { SupportMethod } from '../../../../core/api/models/support-method';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { SupportSubCategory } from '../../../../core/api/models';
+import { CacheService } from '../../../../core/services/cache.service';
 
 @Component({
   selector: 'app-support-delivery',
@@ -38,7 +39,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     public appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private dialog: MatDialog,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private cacheService: CacheService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -264,6 +266,20 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     if (!this.supportDeliveryForm.valid || !this.selectedSupportMethod) {
       this.supportDeliveryForm.markAllAsTouched();
     } else {
+      if (this.supportDeliveryForm.get('notificationEmail').value) {
+        this.cacheService.set(
+          'previousEmail',
+          this.supportDeliveryForm.get('notificationEmail').value
+        );
+      }
+
+      if (this.supportDeliveryForm.get('notificationMobile').value) {
+        this.cacheService.set(
+          'previousMobile',
+          this.supportDeliveryForm.get('notificationMobile').value
+        );
+      }
+
       this.stepSupportsService.supportDelivery =
         this.supportDeliveryForm.getRawValue();
       this.stepSupportsService.saveAsDraft(this.selectedSupportMethod);
