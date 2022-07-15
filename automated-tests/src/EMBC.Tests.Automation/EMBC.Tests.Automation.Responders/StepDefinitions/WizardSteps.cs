@@ -47,22 +47,36 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
         private readonly string essFileDetailsCompletedTime = "1500";
         private readonly string essFileDetailsLocation = "autotest-Victoria EMBC Main Centre";
         private readonly string essFileDetailsReasons = "autotest-House loss";
+        private readonly string supportValidDate = "05/30/2022";
 
-        private readonly string essFileHouseholdMemberName = "Anne";
-        private readonly string essFileHouseholdMemberLastName = "Doe";
+        private readonly string essFileHouseholdMemberName = "autotest-Anne";
+        private readonly string essFileHouseholdMemberLastName = "autotest-Doe";
         private readonly string essFileHouseholdMemberBirthday = "09/12/2001";
         private readonly string essFileHouseholdMemberDietDetails = "autotest-Lactose intolerant";
         private readonly string essFileAnimalsType = "Dogs";
         private readonly string essFileAnimalsQuantity = "2";
         private readonly string essFileSecPhrase = "Sesame";
 
-        private readonly string supportValidDate = "05/30/2022";
         private readonly string supportGroceriesQuantity = "3";
         private readonly string supportGroceriesCost = "50.50";
 
         private readonly string supportHotelNbrRooms = "2";
-        private readonly string supportDeliveryResponsibleName = "Adrien Doe";
+        private readonly string supportDeliveryResponsibleName = "autotest-Adrien Doe";
         private readonly string supportClothingCost = "135.99";
+
+        private readonly string supportIncidentalApprovedList = "autotest- Tooth brush, Advil, hand towels";
+        private readonly string incidentalsAmount = "15.50";
+
+        private readonly string hostName = "autotest-Test";
+        private readonly string hostAddress = "autotest-1012 Test St.";
+        private readonly string hostCity = "Clearwater";
+
+        private readonly string taxiFromAddress = "autotest-1099 Howe St.";
+        private readonly string taxiToAddress = "autotest-321 Robson St.";
+
+        private readonly string otherTransportMode = "Train";
+        private readonly string otherTransportAmount = "29.99";
+
         private readonly string supportDeliveryEmail = "test@test.ca";
         private readonly string supportDeliveryPhone = "7886889090";
 
@@ -152,17 +166,45 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             wizardEssFile.WizardNextStepButton();
 
             //WIZARD STEP 3:
-            //add support
+            //ADD SUPPORT 1
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
             wizardSupport.WizardAddSupport();
 
-            //select food-groceries support
+            //select Lodging - Hotel/Motel support
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
-            wizardSupport.WizardSelectSupportForm("Food - Groceries");
-
-            //add food-groceries support details
+            wizardSupport.WizardSelectSupportForm("Lodging - Hotel/Motel");
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
-            wizardSupport.SupportFoodDetailsForm(supportGroceriesQuantity, supportGroceriesCost);
+            wizardSupport.SupportHotelDetailsForm(supportHotelNbrRooms);
+
+            //add support delivery
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportReferralDeliveryForm(supportDeliveryResponsibleName);
+            wizardSupport.SuccessSupportPopUp();
+
+            //ADD SUPPORT 2
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
+
+            //select Lodging - Billeting
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Lodging - Billeting");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.SupportBilletingDetailsForm();
+
+            //add billeting delivery
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportReferralBilletingDeliveryForm(supportDeliveryResponsibleName, hostName, hostAddress, hostCity, supportDeliveryPhone, supportDeliveryEmail);
+            wizardSupport.SuccessSupportPopUp();
+
+            //ADD SUPPORT 3
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
+
+            //select Transportation - Taxi
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Transportation - Taxi");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.SupportTaxiDetailsForm(taxiFromAddress, taxiToAddress);
 
             //add support delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
@@ -228,7 +270,6 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //fill household members
             wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/household-members");
             wizardEssFile.WizardHouseholdMembersMaxForm(essFileHouseholdMemberName, essFileHouseholdMemberLastName, evacueeGender, essFileHouseholdMemberBirthday, essFileHouseholdMemberDietDetails);
-            
 
             //fill animals
             wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/animals");
@@ -244,17 +285,48 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             wizardEssFile.WizardNextStepButton();
 
             //WIZARD STEP 3:
-            //add support
+            //ADD SUPPORT 1
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
             wizardSupport.WizardAddSupport();
 
-            //select support
+            //select Lodging - Group support
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
-            wizardSupport.WizardSelectSupportForm("Lodging - Hotel/Motel");
-
-            //add support details
+            wizardSupport.WizardSelectSupportForm("Lodging - Group Lodging");
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
-            wizardSupport.SupportPaperBasedHotelDetailsForm(essFileDetailsInterviewer, essFileDetailsInitial, essFileDetailsCompletedDate, supportValidDate, essFileDetailsCompletedTime, supportHotelNbrRooms);
+            wizardSupport.WizardSupportDetailsPaperBased(essFileDetailsInterviewer, essFileDetailsInitial, essFileDetailsCompletedDate, supportValidDate, essFileDetailsCompletedTime);
+            wizardSupport.SupportGroupLodgingDetailsForm();
+     
+            //add support delivery
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportReferralGroupDeliveryForm(supportDeliveryResponsibleName, hostName, hostAddress, hostCity, supportDeliveryPhone);
+            wizardSupport.SuccessSupportPopUp();
+
+            //ADD SUPPORT 2
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
+
+            //select Food - Restaurant Meals support
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Food - Restaurant Meals");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.WizardSupportDetailsPaperBased(essFileDetailsInterviewer, essFileDetailsInitial, essFileDetailsCompletedDate, supportValidDate, essFileDetailsCompletedTime);
+            wizardSupport.SupportRestaurantDetailsForm();
+
+            //add support delivery
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportReferralDeliveryForm(supportDeliveryResponsibleName);
+            wizardSupport.SuccessSupportPopUp();
+
+            //ADD SUPPORT 3
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
+
+            //select Food - Restaurant Meals support
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Transportation - Other");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.WizardSupportDetailsPaperBased(essFileDetailsInterviewer, essFileDetailsInitial, essFileDetailsCompletedDate, supportValidDate, essFileDetailsCompletedTime);
+            wizardSupport.SupportTransportOtherDetailsForm(otherTransportMode, otherTransportAmount);
 
             //add support delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
@@ -283,25 +355,75 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //Search for Online Evacuee
             searchSteps.OnlineEvacueeSearch(interacEvacueeSearch);
 
-            //Choose specific evacuee from search results
-            searchSteps.EditSelectedEssFile();
+            //Choose specific evacuee
+            searchSteps.CreateNewEssFileForEvacuee();
 
-            //Passing ESS File Step
-            wizardEssFile.WizardEditESSFilePassStep();
+            //WIZARD STEP 1:
+            //fill evacuation details
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/evacuation-details");
+            wizardEssFile.WizardOnlineEvacDetailsFormReqFields(essFileDetailsLocation, essFileDetailsReasons);
+
+            //fill household members
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/household-members");
+            wizardEssFile.WizardHouseholdMembersMinForm();
+
+            //fill animals
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/animals");
+            wizardEssFile.AnimalsMinForm();
+
+            //fill needs assessments
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/needs");
+            wizardEssFile.WizardNeedsAssessmentsForm();
+
+            //fill secret phrase
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/security-phrase");
+            wizardEssFile.WizardSecurityPhraseForm(essFileSecPhrase);
+
+            //review ESS File and submit
+            wizardEssFile.CurrentLocation.Should().Be("/ess-wizard/ess-file/review");
+            wizardEssFile.WizardReviewEssFile();
             wizardEssFile.WizardNextStepButton();
 
-            //WIZARD STEP 3:
-            //add support
+            //WIZARD STEP 2:
+            //ADD SUPPORT 1
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
             wizardSupport.WizardAddSupport();
 
-            //select support
+            //select Clothing support
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
             wizardSupport.WizardSelectSupportForm("Clothing");
-
-            //add support details
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
             wizardSupport.SupportClothingDetailsForm(supportClothingCost);
+
+            //add support delivery
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportInteracDeliveryForm(supportDeliveryEmail, supportDeliveryPhone);
+            wizardSupport.SuccessSupportPopUp();
+
+            //ADD SUPPORT 2
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
+
+            //select Incidentals
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Incidentals");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.SupportIncidentalsDetailsForm(supportIncidentalApprovedList, incidentalsAmount);
+
+            //add delivery
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
+            wizardSupport.SupportInteracDeliveryForm(supportDeliveryEmail, supportDeliveryPhone);
+            wizardSupport.SuccessSupportPopUp();
+
+            //ADD SUPPORT 3
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/view");
+            wizardSupport.WizardAddSupport();
+
+            //select Transportation - Taxi
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/select-support");
+            wizardSupport.WizardSelectSupportForm("Food - Groceries");
+            wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/details");
+            wizardSupport.SupportGroceriesDetailsForm(supportGroceriesQuantity, supportGroceriesCost);
 
             //add support delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
