@@ -11,12 +11,14 @@ import * as globalConst from './globalConstants';
 export interface Country {
   code?: string;
   name?: string;
+  isActive?: boolean;
 }
 
 export interface StateProvince {
   code?: string;
   countryCode?: string;
   name?: string;
+  isActive?: boolean;
 }
 
 export interface Community {
@@ -26,6 +28,7 @@ export interface Community {
   name?: string;
   stateProvinceCode?: string;
   type?: CommunityType;
+  isActive?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -51,6 +54,10 @@ export class LocationService {
       : this.getCommunities();
   }
 
+  public getActiveCommunityList(): Community[] {
+    return this.getCommunityList().filter((c) => c.isActive);
+  }
+
   public getStateProvinceList(): StateProvince[] {
     return this.stateProvinceList
       ? this.stateProvinceList
@@ -59,12 +66,20 @@ export class LocationService {
       : this.getStateProvinces();
   }
 
+  public getActiveStateProvinceList(): Community[] {
+    return this.getStateProvinceList().filter((sp) => sp.isActive);
+  }
+
   public getCountriesList(): Country[] {
     return this.countriesList
       ? this.countriesList
       : JSON.parse(this.cacheService.get('countriesList'))
       ? JSON.parse(this.cacheService.get('countriesList'))
       : this.getCountries();
+  }
+
+  public getActiveCountriesList(): Community[] {
+    return this.getCountriesList().filter((c) => c.isActive);
   }
 
   public getRegionalDistricts(): string[] {
@@ -113,7 +128,11 @@ export class LocationService {
       forkJoin([community, province, country]).pipe(
         map((results) => {
           this.setCountriesList(
-            [...results[2]].map((c) => ({ code: c.value, name: c.description }))
+            [...results[2]].map((c) => ({
+              code: c.value,
+              name: c.description,
+              isActive: c.isActive
+            }))
           );
 
           this.setCommunityList(
@@ -123,7 +142,8 @@ export class LocationService {
               districtName: c.districtName,
               stateProvinceCode: c.parentCode.value,
               countryCode: c.parentCode.parentCode.value,
-              type: c.communityType
+              type: c.communityType,
+              isActive: c.isActive
             }))
           );
           this.setRegionalDistricts(
@@ -134,7 +154,8 @@ export class LocationService {
             [...results[1]].map((sp) => ({
               code: sp.value,
               name: sp.description,
-              countryCode: sp.parentCode.value
+              countryCode: sp.parentCode.value,
+              isActive: sp.isActive
             }))
           );
         })
@@ -236,7 +257,8 @@ export class LocationService {
             districtName: c.districtName,
             stateProvinceCode: c.parentCode.value,
             countryCode: c.parentCode.parentCode.value,
-            type: c.communityType
+            type: c.communityType,
+            isActive: c.isActive
           }))
         );
         this.setRegionalDistricts(communities.map((comm) => comm.districtName));
@@ -256,7 +278,8 @@ export class LocationService {
           [...stateProvinces].map((sp) => ({
             code: sp.value,
             name: sp.description,
-            countryCode: sp.parentCode.value
+            countryCode: sp.parentCode.value,
+            isActive: sp.isActive
           }))
         );
       },
@@ -272,7 +295,11 @@ export class LocationService {
     this.configService.configurationGetCountries().subscribe({
       next: (countries: Code[]) => {
         this.setCountriesList(
-          [...countries].map((c) => ({ code: c.value, name: c.description }))
+          [...countries].map((c) => ({
+            code: c.value,
+            name: c.description,
+            isActive: c.isActive
+          }))
         );
       },
       error: (error) => {

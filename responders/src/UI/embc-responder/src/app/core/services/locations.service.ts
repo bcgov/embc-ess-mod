@@ -53,6 +53,10 @@ export class LocationsService {
       : this.getCommunities();
   }
 
+  public getActiveCommunityList(): Community[] {
+    return this.getCommunityList().filter((c) => c.isActive);
+  }
+
   public getStateProvinceList(): StateProvince[] {
     return this.stateProvinceList
       ? this.stateProvinceList
@@ -61,12 +65,20 @@ export class LocationsService {
       : this.getStateProvinces();
   }
 
+  public getActiveStateProvinceList(): Community[] {
+    return this.getStateProvinceList().filter((sp) => sp.isActive);
+  }
+
   public getCountriesList(): Country[] {
     return this.countriesList
       ? this.countriesList
       : JSON.parse(this.cacheService.get('countriesList'))
       ? JSON.parse(this.cacheService.get('countriesList'))
       : this.getCountries();
+  }
+
+  public getActiveCountriesList(): Community[] {
+    return this.getCountriesList().filter((c) => c.isActive);
   }
 
   public getRegionalDistricts(): string[] {

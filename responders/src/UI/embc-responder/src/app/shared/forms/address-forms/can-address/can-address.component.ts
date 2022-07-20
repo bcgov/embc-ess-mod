@@ -22,10 +22,8 @@ export class CanAddressComponent implements OnInit {
 
   ngOnInit(): void {
     this.provinces = this.locationService
-      .getStateProvinceList()
-      .filter(
-        (sp) => sp.countryCode === this.country.countryCode && sp.isActive
-      );
+      .getActiveStateProvinceList()
+      .filter((sp) => sp.countryCode === this.country.countryCode);
 
     this.filteredOptions = this.addressForm
       .get('stateProvince')
