@@ -30,13 +30,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Features\Dashboard.feature.cs">
-	    <DependentUpon>Dashboard.feature</DependentUpon>
+	  <Compile Update="Features\Registration.feature.cs">
+	    <DependentUpon>Registration.feature</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <SpecFlowFeatureFiles Update="Features\Dashboard.feature">
+	  <SpecFlowFeatureFiles Update="Features\Registration.feature">
 	    <Visible>$(UsingMicrosoftNETSdk)</Visible>
 	    <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
 	  </SpecFlowFeatureFiles>

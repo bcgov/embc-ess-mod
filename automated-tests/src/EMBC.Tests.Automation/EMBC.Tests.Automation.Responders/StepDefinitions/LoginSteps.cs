@@ -3,12 +3,12 @@
 namespace EMBC.Tests.Automation.Responders.StepDefinitions
 {
     [Binding]
-    public class Steps
+    public class LoginSteps
     {
         private readonly IEnumerable<User> users;
         private readonly Bceid bceid;
 
-        public Steps(BrowserDriver browserDriver)
+        public LoginSteps(BrowserDriver browserDriver)
         {
             users = browserDriver.Configuration.GetSection("users").Get<IEnumerable<User>>();
             bceid = new Bceid(browserDriver.Current);
