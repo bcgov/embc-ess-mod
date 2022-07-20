@@ -23,7 +23,9 @@ export class UsaAddressComponent implements OnInit {
   ngOnInit(): void {
     this.states = this.locationService
       .getStateProvinceList()
-      .filter((sp) => sp.countryCode === this.country.countryCode && sp.isActive);
+      .filter(
+        (sp) => sp.countryCode === this.country.countryCode && sp.isActive
+      );
 
     this.filteredOptions = this.addressForm
       .get('stateProvince')

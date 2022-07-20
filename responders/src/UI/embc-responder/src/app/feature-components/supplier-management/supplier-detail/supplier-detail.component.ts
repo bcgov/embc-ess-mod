@@ -94,7 +94,9 @@ export class SupplierDetailComponent implements OnInit {
     );
 
     // Gets the community List for mutual Aid Search by Community field
-    this.city = this.locationService.getCommunityList().filter(c => c.isActive);
+    this.city = this.locationService
+      .getCommunityList()
+      .filter((c) => c.isActive);
 
     // Filters options as the user inserts characters on the Community field
     this.communityFilteredOptions = this.searchMutualAidForm

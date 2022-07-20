@@ -37,7 +37,9 @@ export class GroupLodgingDeliveryComponent
   ) {}
 
   ngOnInit(): void {
-    this.city = this.locationService.getCommunityList().filter(c => c.isActive);
+    this.city = this.locationService
+      .getCommunityList()
+      .filter((c) => c.isActive);
 
     this.filteredOptions = this.detailsForm.get('hostCity').valueChanges.pipe(
       startWith(''),

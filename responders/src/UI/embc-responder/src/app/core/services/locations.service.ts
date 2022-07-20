@@ -159,7 +159,11 @@ export class LocationsService {
     const list$ = forkJoin([community, province, country]).pipe(
       map((results) => {
         this.setCountriesList(
-          [...results[2]].map((c) => ({ code: c.value, name: c.description, isActive: c.isActive }))
+          [...results[2]].map((c) => ({
+            code: c.value,
+            name: c.description,
+            isActive: c.isActive
+          }))
         );
 
         this.setCommunityList(
@@ -272,7 +276,11 @@ export class LocationsService {
     this.configService.configurationGetCountries().subscribe({
       next: (countries: Code[]) => {
         this.setCountriesList(
-          [...countries].map((c) => ({ code: c.value, name: c.description, isActive: c.isActive }))
+          [...countries].map((c) => ({
+            code: c.value,
+            name: c.description,
+            isActive: c.isActive
+          }))
         );
       },
       error: (error) => {
