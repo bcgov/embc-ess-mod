@@ -223,9 +223,9 @@ export class EssfileDashboardComponent implements OnInit {
         ?.selectedEvacueeInContext !== undefined
     ) {
       this.eligibilityFirstName =
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
-      this.eligibilityLastName =
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName;
+      this.eligibilityLastName =
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
     } else {
       this.eligibilityFirstName =
         this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.firstName;
