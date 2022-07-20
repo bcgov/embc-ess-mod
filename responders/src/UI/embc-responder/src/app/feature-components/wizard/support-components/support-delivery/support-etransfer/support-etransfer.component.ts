@@ -166,10 +166,12 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   }
 
   showConfirmEmail() {
-    return (
-      this.supportDeliveryForm?.get('notificationEmail').value &&
-      !this.setEmailCheckbox.checked
-    );
+    if (this.showEmailCheckBox)
+      return (
+        this.supportDeliveryForm?.get('notificationEmail').value &&
+        !this.setEmailCheckbox.checked
+      );
+    else return this.supportDeliveryForm?.get('notificationEmail').value;
   }
 
   notificationEmailChange() {
