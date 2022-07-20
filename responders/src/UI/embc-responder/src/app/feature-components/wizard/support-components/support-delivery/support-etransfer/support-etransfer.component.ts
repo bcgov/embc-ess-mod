@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
@@ -8,6 +8,9 @@ import {
   CustomErrorMailMatcher,
   CustomErrorMobileMatcher
 } from '../../../profile-components/contact/contact.component';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { AppBaseService } from '../../../../../core/services/helper/appBase.service';
+import { CacheService } from '../../../../../core/services/cache.service';
 
 @Component({
   selector: 'app-support-etransfer',
@@ -17,6 +20,8 @@ import {
 export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() supportDeliveryForm: FormGroup;
   @Input() editFlag: boolean;
+  @ViewChild('setEmailCheckbox') setEmailCheckbox: MatCheckbox;
+  @ViewChild('setMobileCheckbox') setMobileCheckbox: MatCheckbox;
   readonly phoneMask = [
     /\d/,
     /\d/,
@@ -45,10 +50,32 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   mobileMatcher = new CustomErrorMobileMatcher();
 
   preferenceSubscription: Subscription;
+  showEmailCheckBox = false;
+  showMobileCheckBox = false;
+  emailOnFile: string;
+  previousEmail: string;
+  mobileOnFile: string;
+  previousMobile: string;
 
-  constructor(public stepSupportsService: StepSupportsService) {}
+  constructor(
+    public stepSupportsService: StepSupportsService,
+    private appBaseService: AppBaseService,
+    private cacheService: CacheService
+  ) {}
 
   ngOnInit(): void {
+    this.emailOnFile =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.email;
+    this.previousEmail = this.cacheService.get('previousEmail');
+    if (this.emailOnFile || this.previousEmail) this.showEmailCheckBox = true;
+
+    this.mobileOnFile =
+      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.phone;
+    this.previousMobile = this.cacheService.get('previousMobile');
+
+    if (this.mobileOnFile || this.previousMobile)
+      this.showMobileCheckBox = true;
+
     this.preferenceSubscription = this.supportDeliveryForm
       ?.get('notificationPreference')
       .valueChanges.subscribe((pref) => {
@@ -119,5 +146,71 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
       notificationPreference === 'Mobile' ||
       notificationPreference === 'Email & Mobile'
     );
+  }
+
+  setEmail(event: MatCheckboxChange) {
+    const email = this.previousEmail || this.emailOnFile;
+    if (event.checked) {
+      this.supportDeliveryForm?.get('notificationEmail').patchValue(email);
+      this.supportDeliveryForm
+        ?.get('notificationConfirmEmail')
+        .patchValue(email);
+    } else {
+      this.supportDeliveryForm?.get('notificationEmail').patchValue('');
+      this.supportDeliveryForm?.get('notificationConfirmEmail').patchValue('');
+    }
+    this.supportDeliveryForm?.get('notificationEmail').updateValueAndValidity();
+    this.supportDeliveryForm
+      ?.get('notificationConfirmEmail')
+      .updateValueAndValidity();
+  }
+
+  showConfirmEmail() {
+    return (
+      this.supportDeliveryForm?.get('notificationEmail').value &&
+      !this.setEmailCheckbox.checked
+    );
+  }
+
+  notificationEmailChange() {
+    if (this.showEmailCheckBox && this.setEmailCheckbox.checked) {
+      this.setEmailCheckbox.checked = false;
+      this.supportDeliveryForm?.get('notificationConfirmEmail').patchValue('');
+    }
+  }
+
+  setMobile(event: MatCheckboxChange) {
+    const mobile = this.previousMobile || this.mobileOnFile;
+    if (event.checked) {
+      this.supportDeliveryForm?.get('notificationMobile').patchValue(mobile);
+      this.supportDeliveryForm
+        ?.get('notificationConfirmMobile')
+        .patchValue(mobile);
+    } else {
+      this.supportDeliveryForm?.get('notificationMobile').patchValue('');
+      this.supportDeliveryForm?.get('notificationConfirmMobile').patchValue('');
+    }
+    this.supportDeliveryForm
+      ?.get('notificationMobile')
+      .updateValueAndValidity();
+    this.supportDeliveryForm
+      ?.get('notificationConfirmMobile')
+      .updateValueAndValidity();
+  }
+
+  showConfirmMobile() {
+    if (this.showMobileCheckBox)
+      return (
+        this.supportDeliveryForm?.get('notificationMobile').value &&
+        !this.setMobileCheckbox.checked
+      );
+    else return this.supportDeliveryForm?.get('notificationMobile').value;
+  }
+
+  notificationMobileChange() {
+    if (this.showMobileCheckBox && this.setMobileCheckbox.checked) {
+      this.setMobileCheckbox.checked = false;
+      this.supportDeliveryForm?.get('notificationConfirmMobile').patchValue('');
+    }
   }
 }

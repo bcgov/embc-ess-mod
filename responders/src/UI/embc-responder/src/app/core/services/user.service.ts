@@ -140,6 +140,9 @@ export class UserService {
     this.cacheService.remove('billetingReferral');
     this.cacheService.remove('groupReferral');
     this.cacheService.remove('supportType');
+
+    this.cacheService.remove('previousEmail');
+    this.cacheService.remove('previousMobile');
     this.clearLocalStorage();
   }
 
