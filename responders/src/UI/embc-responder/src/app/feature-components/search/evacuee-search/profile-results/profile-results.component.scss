@@ -23,6 +23,15 @@
   padding-right: 0px;
 }
 
+.image-col {
+  display: block;
+  margin-right: 10px;
+}
+
+.horizontal-line {
+  display: none;
+}
+
 .result-heading:hover {
   text-decoration: underline;
 }
@@ -78,3 +87,14 @@
 .file-expired {
   color: #696969;
 }
+
+@media(max-width: 767px) {
+  .vertical-line {
+    display: none;
+  }
+
+  .horizontal-line {
+    display: block;
+  }
+}
+
