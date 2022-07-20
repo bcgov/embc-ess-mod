@@ -21,6 +21,7 @@ namespace EMBC.ESS.Resources.Metadata
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class StateProvince
@@ -28,6 +29,7 @@ namespace EMBC.ESS.Resources.Metadata
         public string Code { get; set; }
         public string Name { get; set; }
         public string CountryCode { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class Community
@@ -39,6 +41,7 @@ namespace EMBC.ESS.Resources.Metadata
         public string CountryCode { get; set; }
         public string DistrictCode { get; set; }
         public string DistrictName { get; set; }
+        public bool IsActive { get; set; }
     }
 
 #pragma warning disable CA1008 // Enums should have zero value
