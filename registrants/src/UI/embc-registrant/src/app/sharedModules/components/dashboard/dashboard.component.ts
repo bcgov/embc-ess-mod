@@ -70,7 +70,8 @@ export class DashboardComponent implements OnInit {
             essFileData: registrationResult,
             initDialog: false
           },
-          width: '800px'
+          width: '700px',
+          height: '750px'
         })
         .afterClosed()
         .subscribe(() => {
