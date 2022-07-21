@@ -53,3 +53,16 @@ input.amount-right-align {
   color: red;
   font-style: italic;
 }
+
+@media(max-width: 1024px) {
+
+  ::ng-deep .mat-form-field-subscript-wrapper {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .add-details {
+    width: 70%;
+  }
+  
+}
