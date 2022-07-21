@@ -16,6 +16,7 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class StateProvincesQuery : Query<StateProvincesQueryResponse>
@@ -33,6 +34,7 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
         public string Code { get; set; }
         public string Name { get; set; }
         public string CountryCode { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class CommunitiesQuery : Query<CommunitiesQueryResponse>
@@ -56,6 +58,7 @@ namespace EMBC.ESS.Shared.Contracts.Metadata
         public CommunityType Type { get; set; }
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public enum CommunityType
