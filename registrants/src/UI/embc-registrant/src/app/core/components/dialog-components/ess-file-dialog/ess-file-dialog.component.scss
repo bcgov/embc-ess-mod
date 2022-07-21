@@ -1,3 +1,9 @@
+ng-container::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+}
+
 h1 {
     font-weight: 700;
     line-height: 21px;
