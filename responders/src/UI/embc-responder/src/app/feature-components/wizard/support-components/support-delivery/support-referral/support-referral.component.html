@@ -93,10 +93,10 @@
               [value]="option"
             >
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 supplier-name">
                   <b>{{ option?.name }}</b>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 supplier-address">
                   {{ option?.address?.addressLine1 }}
                   <span *ngIf="option?.address?.addressLine2">
                     , {{ option?.address?.addressLine2 }}
