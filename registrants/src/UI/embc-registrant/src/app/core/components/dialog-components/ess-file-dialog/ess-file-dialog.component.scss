@@ -6,13 +6,7 @@ ng-container::-webkit-scrollbar {
 
 h1 {
     font-weight: 700;
-    line-height: 21px;
     font-size: 33px;
-}
-
-.text-row {
-    width: 615px;
-    height: 82px;
 }
 
 .text-margin {
@@ -29,10 +23,11 @@ h1 {
     color: #169bd5;
 }
 
-.button-width {
-    width: 90%;
-}
-
 .button-row {
     margin-top: 1.5em;
+}
+
+.button-width {
+    width: 100%;
+    margin-bottom: 10px;
 }
