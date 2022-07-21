@@ -1,4 +1,5 @@
-﻿using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+﻿using EMBC.ESS.Utilities.Dynamics;
+using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Metadata
 {
@@ -20,6 +21,7 @@ namespace EMBC.ESS.Resources.Metadata
                 .ForMember(j => j.Type, opts => opts.MapFrom(o => o.era_type.HasValue ? (CommunityType)o.era_type : CommunityType.Undefined))
                 .ForMember(j => j.DistrictCode, opts => opts.MapFrom(o => o.era_RegionalDistrict.era_regionaldistrictid.ToString()))
                 .ForMember(j => j.DistrictName, opts => opts.MapFrom(o => o.era_RegionalDistrict.era_districtname))
+                .ForMember(j => j.IsActive, opts => opts.MapFrom(o => o.statecode == (int)EntityState.Active))
                 .ReverseMap()
                 ;
 
@@ -29,12 +31,14 @@ namespace EMBC.ESS.Resources.Metadata
                 .ForMember(j => j.CountryCode, opts => opts.MapFrom(o => o.era_RelatedCountry == null
                     ? null
                     : o.era_RelatedCountry.era_countrycode))
+                .ForMember(j => j.IsActive, opts => opts.MapFrom(o => o.statecode == (int)EntityState.Active))
                 .ReverseMap()
                 ;
 
             CreateMap<era_country, Country>()
                 .ForMember(j => j.Code, opts => opts.MapFrom(o => o.era_countrycode))
                 .ForMember(j => j.Name, opts => opts.MapFrom(o => o.era_name))
+                .ForMember(j => j.IsActive, opts => opts.MapFrom(o => o.statecode == (int)EntityState.Active))
                 .ReverseMap()
                 ;
 

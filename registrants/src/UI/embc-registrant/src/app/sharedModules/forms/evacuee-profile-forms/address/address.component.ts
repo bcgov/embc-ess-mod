@@ -57,7 +57,7 @@ export default class AddressComponent
   }
 
   ngOnInit(): void {
-    this.countries = this.locationService.getCountriesList();
+    this.countries = this.locationService.getActiveCountriesList();
 
     this.primaryAddressForm$ = this.formCreationService
       .getAddressForm()

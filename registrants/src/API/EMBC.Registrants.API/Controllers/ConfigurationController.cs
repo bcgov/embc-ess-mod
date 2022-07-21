@@ -200,6 +200,7 @@ namespace EMBC.Responders.API.Controllers
         public string Value { get; set; }
         public string Description { get; set; }
         public Code ParentCode { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class CommunityCode : Code
