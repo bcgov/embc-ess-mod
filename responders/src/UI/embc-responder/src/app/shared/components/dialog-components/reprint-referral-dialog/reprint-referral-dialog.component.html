@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="row row-padding">
+<div class="row">
   <div class="col-md-12 bold">Please select a reason for the reprint:</div>
 </div>
 
@@ -38,6 +38,20 @@
       </mat-form-field>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>Please select if you would like to include an evacuee summary.</p>
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <mat-checkbox (change)="evacueeSummChangeEvent($event)"
+        >Include evacuee summary
+      </mat-checkbox>
+    </div>
+  </div>
 </form>
 
 <div class="row row-padding">
@@ -47,7 +61,7 @@
     </button>
   </div>
   <div class="col-md-6">
-    <button class="button-p button-width" mat-button (click)="void()">
+    <button class="button-p button-width" mat-button (click)="reprintSupport()">
       Reprint Support
     </button>
   </div>

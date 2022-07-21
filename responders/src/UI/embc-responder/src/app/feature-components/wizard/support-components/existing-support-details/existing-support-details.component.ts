@@ -234,14 +234,19 @@ export class ExistingSupportDetailsComponent implements OnInit {
       })
       .afterClosed()
       .subscribe({
-        next: (reason) => {
-          if (reason !== undefined && reason !== 'close') {
+        next: (output) => {
+          if (
+            output !== undefined &&
+            output.reason !== undefined &&
+            output.reason !== 'close'
+          ) {
             this.isLoading = !this.isLoading;
             this.existingSupportService
               .reprintSupport(
                 this.needsAssessmentForSupport.id,
                 this.selectedSupport.id,
-                reason
+                output.reason,
+                output.includeSummary
               )
               .subscribe({
                 next: async (response) => {
