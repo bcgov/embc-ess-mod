@@ -628,7 +628,7 @@ namespace EMBC.ESS.Managers.Events
                 {
                     FileId = cmd.FileId,
                     SupportIds = new[] { cmd.SupportId },
-                    IncludeSummary = false,
+                    IncludeSummary = cmd.IncludeSummary,
                     RequestingUserId = requestingUser.Id,
                     Type = ReferralPrintType.Reprint,
                     Comments = cmd.ReprintReason,
