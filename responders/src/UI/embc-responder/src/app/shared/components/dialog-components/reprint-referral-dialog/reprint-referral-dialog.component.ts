@@ -5,8 +5,14 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SupportReprintReason } from 'src/app/core/api/models';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
+
+interface ReprintOutput {
+  reason?: string;
+  includeSummary?: boolean;
+}
 
 @Component({
   selector: 'app-reprint-referral-dialog',
@@ -15,9 +21,10 @@ import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.
 })
 export class ReprintReferralDialogComponent implements OnInit {
   @Input() profileData: string;
-  @Output() outputEvent = new EventEmitter<string>();
+  @Output() outputEvent = new EventEmitter<ReprintOutput>();
   reprintForm: FormGroup;
   reasons = SupportReprintReason;
+  includeSummary = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,19 +49,21 @@ export class ReprintReferralDialogComponent implements OnInit {
   }
 
   close(): void {
-    this.outputEvent.emit('close');
+    this.outputEvent.emit({ reason: 'close' });
   }
 
   /**
-   * Verifies if the evacuee has shown identification or
-   * not and updates the value via api
+   * Reprints the support
    */
-  void(): void {
+  reprintSupport(): void {
     if (!this.reprintForm.valid) {
       this.reprintForm.get('reason').markAsTouched();
     } else {
       if (this.reprintForm.get('reason').value) {
-        this.outputEvent.emit(this.reprintForm.get('reason').value);
+        this.outputEvent.emit({
+          reason: this.reprintForm.get('reason').value,
+          includeSummary: this.includeSummary
+        });
       }
     }
   }
@@ -69,5 +78,9 @@ export class ReprintReferralDialogComponent implements OnInit {
     return this.loadEvacueeListService
       .getReprintReasons()
       .find((reason) => reason.value === reasonOption).description;
+  }
+
+  evacueeSummChangeEvent(event: MatCheckboxChange): void {
+    this.includeSummary = event.checked;
   }
 }

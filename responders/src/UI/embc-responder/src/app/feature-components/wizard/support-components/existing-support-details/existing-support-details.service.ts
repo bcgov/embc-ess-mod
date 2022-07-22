@@ -99,13 +99,15 @@ export class ExistingSupportDetailsService {
   reprintSupport(
     fileId: string,
     supportId: string,
-    reprintReason: SupportReprintReason
+    reprintReason: SupportReprintReason,
+    includeSummary: boolean
   ): Observable<Blob> {
     return this.registrationService
       .registrationsReprintSupport({
         fileId,
         supportId,
-        reprintReason
+        reprintReason,
+        includeSummary
       })
       .pipe(
         mergeMap((result: ReferralPrintRequestResponse) => {

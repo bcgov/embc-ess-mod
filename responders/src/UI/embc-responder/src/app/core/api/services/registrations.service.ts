@@ -1721,6 +1721,11 @@ export class RegistrationsService extends BaseService {
      * reprint reason
      */
     reprintReason?: SupportReprintReason;
+
+    /**
+     * inlcude summary
+     */
+    includeSummary?: boolean;
   }): Observable<StrictHttpResponse<ReferralPrintRequestResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsReprintSupportPath, 'post');
@@ -1728,6 +1733,7 @@ export class RegistrationsService extends BaseService {
       rb.path('fileId', params.fileId, {});
       rb.path('supportId', params.supportId, {});
       rb.query('reprintReason', params.reprintReason, {});
+      rb.query('includeSummary', params.includeSummary, {});
     }
 
     return this.http.request(rb.build({
@@ -1767,6 +1773,11 @@ export class RegistrationsService extends BaseService {
      * reprint reason
      */
     reprintReason?: SupportReprintReason;
+
+    /**
+     * inlcude summary
+     */
+    includeSummary?: boolean;
   }): Observable<ReferralPrintRequestResponse> {
 
     return this.registrationsReprintSupport$Response(params).pipe(
