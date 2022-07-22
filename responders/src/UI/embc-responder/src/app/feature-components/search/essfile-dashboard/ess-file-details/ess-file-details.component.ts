@@ -36,12 +36,7 @@ export class EssFileDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.memberListDisplay =
-      this.essFile?.needsAssessment?.householdMembers.sort(
-        (a, b) =>
-          Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
-          new Date(a.dateOfBirth).valueOf() - new Date(b.dateOfBirth).valueOf()
-      );
+    this.memberListDisplay = this.essFile?.needsAssessment?.householdMembers;
   }
 
   /**

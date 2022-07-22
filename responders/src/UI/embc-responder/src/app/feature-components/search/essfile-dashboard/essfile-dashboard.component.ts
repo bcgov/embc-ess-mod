@@ -191,12 +191,6 @@ export class EssfileDashboardComponent implements OnInit {
       .pipe(
         map((file: EvacuationFileModel) => {
           this.notesList = this.essfileDashboardService.loadNotes(file.notes);
-          file?.householdMembers.sort(
-            (a, b) =>
-              Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
-              new Date(a.dateOfBirth).valueOf() -
-                new Date(b.dateOfBirth).valueOf()
-          );
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
           return file;

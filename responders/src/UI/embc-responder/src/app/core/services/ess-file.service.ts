@@ -43,6 +43,18 @@ export class EssFileService {
               file?.task?.communityCode
             )
           };
+          fileModel.householdMembers.sort(
+            (a, b) =>
+              Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
+              new Date(a.dateOfBirth).valueOf() -
+                new Date(b.dateOfBirth).valueOf()
+          );
+          fileModel.needsAssessment.householdMembers.sort(
+            (a, b) =>
+              Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
+              new Date(a.dateOfBirth).valueOf() -
+                new Date(b.dateOfBirth).valueOf()
+          );
           this.appBaseService.appModel.selectedEssFile = fileModel;
           this.appBaseService.etransferProperties = {
             interacAllowed: fileModel?.task?.features.find(
