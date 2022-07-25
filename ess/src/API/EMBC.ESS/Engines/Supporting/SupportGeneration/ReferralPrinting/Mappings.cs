@@ -22,7 +22,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("dd-MMM-yyyy")))
                 .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
                 .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
-                .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.Now.ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.Now.ToPST().ToString("dd-MMM-yyyy")))
                 .ForMember(d => d.Comments, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierNotes))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
                 .ForMember(d => d.IncidentTaskNumber, opts => opts.Ignore())
