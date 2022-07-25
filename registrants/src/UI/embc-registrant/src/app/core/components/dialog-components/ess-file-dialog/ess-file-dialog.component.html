@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div class="row text-row">
+  <div class="row">
     <div class="col-md-12">
       <p class="p-margin">
         We have you as currently evacuated from
@@ -20,17 +20,13 @@
   </div>
 
   <div class="row button-row justify-content-between">
-    <div class="col">
+    <div class="col-md-5">
       <button class="button-s button-width" mat-button (click)="cancel()">
         No, Cancel
       </button>
     </div>
-    <div class="col">
-      <button
-        class="button-p button-width confirm-button"
-        mat-button
-        (click)="confirm()"
-      >
+    <div class="col-md-5">
+      <button class="button-p button-width" mat-button (click)="confirm()">
         Yes, Continue
       </button>
     </div>

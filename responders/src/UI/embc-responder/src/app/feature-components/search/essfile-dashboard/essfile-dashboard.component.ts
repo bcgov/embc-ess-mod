@@ -191,12 +191,6 @@ export class EssfileDashboardComponent implements OnInit {
       .pipe(
         map((file: EvacuationFileModel) => {
           this.notesList = this.essfileDashboardService.loadNotes(file.notes);
-          file?.householdMembers.sort(
-            (a, b) =>
-              Number(b.isPrimaryRegistrant) - Number(a.isPrimaryRegistrant) ||
-              new Date(a.dateOfBirth).valueOf() -
-                new Date(b.dateOfBirth).valueOf()
-          );
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
           return file;
@@ -223,9 +217,9 @@ export class EssfileDashboardComponent implements OnInit {
         ?.selectedEvacueeInContext !== undefined
     ) {
       this.eligibilityFirstName =
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
-      this.eligibilityLastName =
         this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName;
+      this.eligibilityLastName =
+        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
     } else {
       this.eligibilityFirstName =
         this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.firstName;

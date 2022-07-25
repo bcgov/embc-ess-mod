@@ -22,7 +22,7 @@ export class CanAddressComponent implements OnInit {
 
   ngOnInit(): void {
     this.provinces = this.locationService
-      .getStateProvinceList()
+      .getActiveStateProvinceList()
       .filter((sp) => sp.countryCode === this.country.countryCode);
 
     this.filteredOptions = this.addressForm

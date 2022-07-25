@@ -22,7 +22,7 @@ export class UsaAddressComponent implements OnInit {
 
   ngOnInit(): void {
     this.states = this.locationService
-      .getStateProvinceList()
+      .getActiveStateProvinceList()
       .filter((sp) => sp.countryCode === this.country.countryCode);
 
     this.filteredOptions = this.addressForm

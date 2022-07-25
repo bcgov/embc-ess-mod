@@ -1,12 +1,12 @@
-h1 {
-    font-weight: 700;
-    line-height: 21px;
-    font-size: 33px;
+ng-container::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
 }
 
-.text-row {
-    width: 615px;
-    height: 82px;
+h1 {
+    font-weight: 700;
+    font-size: 33px;
 }
 
 .text-margin {
@@ -23,10 +23,11 @@ h1 {
     color: #169bd5;
 }
 
-.button-width {
-    width: 90%;
-}
-
 .button-row {
     margin-top: 1.5em;
+}
+
+.button-width {
+    width: 100%;
+    margin-bottom: 10px;
 }

@@ -71,6 +71,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string RequestingUserId { get; set; }
         public string SupportId { get; set; }
         public string ReprintReason { get; set; }
+        public bool IncludeSummary { get; set; }
     }
 
     /// <summary>

@@ -18,8 +18,31 @@
 
 .add-details {
   width: 40%;
+  margin-bottom: 20px;
 }
 
 mat-form-field {
   width: 100%;
 }
+
+@media(max-width: 1160px) {
+
+  .add-details {
+    width: 50%;
+  }
+  
+}
+
+@media(max-width: 1024px) {
+
+  ::ng-deep .mat-form-field-subscript-wrapper {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .add-details {
+    width: 70%;
+  }
+  
+}
+

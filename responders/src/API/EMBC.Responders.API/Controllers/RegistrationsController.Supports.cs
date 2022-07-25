@@ -153,19 +153,21 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="fileId">evacuation file number</param>
         /// <param name="supportId">support if</param>
         /// <param name="reprintReason">reprint reason</param>
+        /// <param name="includeSummary">inlcude summary</param>
         /// <returns>new print request id</returns>
         [HttpPost("files/{fileId}/supports/{supportId}/reprint")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ReferralPrintRequestResponse>> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason)
+        public async Task<ActionResult<ReferralPrintRequestResponse>> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason, bool includeSummary)
         {
             var result = await messagingClient.Send(new ReprintSupportCommand
             {
                 FileId = fileId,
                 SupportId = supportId,
                 ReprintReason = EnumDescriptionHelper.GetEnumDescription(reprintReason),
-                RequestingUserId = currentUserId
+                RequestingUserId = currentUserId,
+                IncludeSummary = includeSummary
             });
 
             return Ok(new ReferralPrintRequestResponse { PrintRequestId = result });
