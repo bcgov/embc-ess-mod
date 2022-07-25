@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SelectedPathType } from '../models/appBase.model';
 import { EvacueeSearchContextModel } from '../models/evacuee-search-context.model';
-import { DigitalOptionService } from '../services/compute/digitalOption.service';
+//import { DigitalOptionService } from '../services/compute/digitalOption.service';
 import { RemoteExtOptionService } from '../services/compute/remoteExtOption.service';
 import { AppBaseService } from '../services/helper/appBase.service';
 import { SearchDataService } from '../services/helper/search-data.service';
@@ -36,11 +36,11 @@ export class OptionInjectionService {
       this.appBaseService?.appModel?.selectedUserPathway ===
       SelectedPathType.digital
     ) {
-      return new DigitalOptionService(
-        this.router,
-        this.searchDataService,
-        this.builder
-      );
+      // return new DigitalOptionService(
+      //   this.router,
+      //   this.searchDataService,
+      //   this.builder
+      // );
     } else if (
       this.appBaseService?.appModel?.selectedUserPathway ===
       SelectedPathType.paperBased
