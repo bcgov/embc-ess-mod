@@ -143,9 +143,9 @@ export class EvacueeProfileService {
     const evacFileSummaryModelArray: Array<EvacuationFileSummaryModel> = [];
     return this.registrationsService
       .registrationsGetFiles({
-        registrantId: registrantId,
-        manualFileId: manualFileId,
-        id: id
+        registrantId,
+        manualFileId,
+        id
       })
       .pipe(
         map(
