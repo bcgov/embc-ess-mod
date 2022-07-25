@@ -86,6 +86,8 @@ export class SearchDataService {
         return this.idVerifyForm;
       case SearchFormRegistery.nameSearchForm:
         return this.nameSearchForm;
+      case SearchFormRegistery.paperSearchForm:
+        return this.paperNameSearchForm;
       default:
         return;
     }
@@ -131,7 +133,8 @@ export class SearchDataService {
 export enum SearchFormRegistery {
   remoteSearchForm = 'remoteSearchForm',
   idVerifySearchForm = 'idVerifySearchForm',
-  nameSearchForm = 'nameSearchForm'
+  nameSearchForm = 'nameSearchForm',
+  paperSearchForm = 'paperSearchForm'
 }
 
 export enum SearchPages {
