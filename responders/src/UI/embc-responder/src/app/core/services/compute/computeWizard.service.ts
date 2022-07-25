@@ -5,7 +5,7 @@ import {
   WizardType
 } from '../../models/wizard-type.model';
 import { AppBaseService } from '../helper/appBase.service';
-import { Compute } from './compute';
+import { Compute } from '../../interfaces/compute';
 import * as globalConst from '../global-constants';
 import { WizardDataService } from 'src/app/feature-components/wizard/wizard-data.service';
 
@@ -172,16 +172,4 @@ export class ComputeWizardService implements Compute {
       };
     }
   }
-
-  // calculateProfileTabs() {
-  //   if (
-  //     this.appBaseService?.appModel?.selectedUserPathway ===
-  //     SelectedPathType.digital
-  //   ) {
-  //   } else if (
-  //     this.appBaseService?.appModel?.selectedUserPathway ===
-  //     SelectedPathType.paperBased
-  //   ) {
-  //   }
-  // }
 }

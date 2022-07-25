@@ -5,7 +5,7 @@ import {
   SelectedPathType
 } from '../../models/appBase.model';
 import { AppBaseService } from '../helper/appBase.service';
-import { Compute } from './compute';
+import { Compute } from '../../interfaces/compute';
 import * as globalConst from '../global-constants';
 
 @Injectable()

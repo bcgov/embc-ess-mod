@@ -1,0 +1,52 @@
+<div class="row heading-container container-frame">
+  <div class="col-md-12">
+    <span class="page-heading">Evacuee Search & Registration</span>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-md-8">
+    <mat-card>
+      <p class="heading">
+        Enter the evacuee's <b>ESS File Number</b> associated with the supports
+        that require extending.
+      </p>
+
+      <form [formGroup]="fileSearchForm">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <mat-label>ESS File Number</mat-label>
+            <input
+              maxlength="100"
+              formControlName="essFileNumber"
+              matInput
+              required
+            />
+            <mat-error
+              *ngIf="
+                fileSearchFormControl.essFileNumber.invalid &&
+                fileSearchFormControl.essFileNumber.hasError('whitespaceError')
+              "
+            >
+              ESS File Number is required</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-md-8">
+          <button
+            class="button-p submit"
+            type="button"
+            (click)="search()"
+            mat-button
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </mat-card>
+    <br />
+  </div>
+</div>

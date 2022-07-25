@@ -4,7 +4,9 @@ export interface EvacueeSearchContextModel {
 }
 
 export class EvacueeDetailsModel {
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  paperFileNumber?: string;
+  essFileNumber?: string;
 }
