@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SelectedPathType } from '../models/appBase.model';
+import { EvacueeSearchContextModel } from '../models/evacuee-search-context.model';
 import { DigitalOptionService } from '../services/compute/digitalOption.service';
 import { RemoteExtOptionService } from '../services/compute/remoteExtOption.service';
 import { AppBaseService } from '../services/helper/appBase.service';
@@ -12,7 +13,7 @@ export interface SearchOptionsService {
   optionType: SelectedPathType;
   loadDefaultComponent(): void;
   createForm(formType: string): FormGroup;
-  search(value: string | unknown, type?: string): void; //TODO: Change unknown to type
+  search(value: string | EvacueeSearchContextModel, type?: string): void;
 }
 
 @Injectable({
