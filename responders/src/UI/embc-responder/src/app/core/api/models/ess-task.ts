@@ -6,7 +6,6 @@ export interface EssTask {
   description?: string;
   endDate?: string;
   id?: string;
-  remoteExtensionsEnabled?: boolean;
   startDate?: string;
   status?: string;
   workflows?: Array<TaskWorkflow>;

@@ -55,8 +55,9 @@ export class AppComponent implements OnInit {
       this.outageService.setOutageInformation(configuration.outageInfo);
       this.timeOutService.timeOutInfo = configuration.timeoutInfo;
     } catch (error) {
+      this.isLoading = false;
       this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.systemError);
+      this.router.navigate(['/outage'], { state: { type: 'unplanned' } });
     }
 
     if (this.outageService.displayOutageInfoInit()) {
