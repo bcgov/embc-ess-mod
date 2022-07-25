@@ -7,7 +7,6 @@ import { CacheService } from 'src/app/core/services/cache.service';
 })
 export class EvacueeSearchService {
   private searchContext: EvacueeSearchContextModel;
-  private paperBasedEssFileVal: string;
 
   constructor(private cacheService: CacheService) {}
 
@@ -25,19 +24,10 @@ export class EvacueeSearchService {
     this.cacheService.set('evacueeSearchContext', this.searchContext);
   }
 
-  public get paperBasedEssFile(): string {
-    return this.paperBasedEssFileVal
-      ? this.paperBasedEssFileVal
-      : this.cacheService.get('paperBasedEssFile');
-  }
-
-  public set paperBasedEssFile(paperBasedEssFileVal: string) {
-    this.paperBasedEssFileVal = paperBasedEssFileVal;
-    this.cacheService.set('paperBasedEssFile', paperBasedEssFileVal);
-  }
-
   public clearEvacueeSearch(): void {
-    this.evacueeSearchContext = undefined;
-    this.paperBasedEssFile = undefined;
+    this.evacueeSearchContext = {
+      evacueeSearchParameters: null,
+      hasShownIdentification: null
+    };
   }
 }

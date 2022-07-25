@@ -179,7 +179,9 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   it('should get paperBased EssFile number from service', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSearchService.paperBasedEssFile = 'T2000';
+    evacueeSearchService.evacueeSearchContext = {
+      evacueeSearchParameters: { paperFileNumber: 'T2000' }
+    };
     evacueeSessionService.fileLinkStatus = 'S';
     fixture.detectChanges();
     component.ngOnInit();
@@ -261,7 +263,9 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   it('should open dialog paper based ESS File already exists', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSearchService.paperBasedEssFile = 'T3333';
+    evacueeSearchService.evacueeSearchContext = {
+      evacueeSearchParameters: { paperFileNumber: 'T3333' }
+    };
     evacueeProfileService.evacuationFileSummaryValue = [
       {
         id: '122552',

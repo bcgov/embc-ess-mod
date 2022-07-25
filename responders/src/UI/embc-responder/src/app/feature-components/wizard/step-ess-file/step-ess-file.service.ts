@@ -540,7 +540,8 @@ export class StepEssFileService {
       completedBy: this.completedBy,
       completedOn: this.completedOn,
       manualFileId: this.evacueeSession.isPaperBased
-        ? this.evacueeSearchService.paperBasedEssFile
+        ? this.evacueeSearchService?.evacueeSearchContext
+            ?.evacueeSearchParameters?.paperFileNumber
         : null,
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
@@ -631,7 +632,8 @@ export class StepEssFileService {
       completedBy: this.completedBy,
       completedOn: this.completedOn,
       manualFileId: this.evacueeSession.isPaperBased
-        ? this.evacueeSearchService.paperBasedEssFile
+        ? this.evacueeSearchService?.evacueeSearchContext
+            ?.evacueeSearchParameters?.paperFileNumber
         : null,
       evacuationFileDate: this.evacuationFileDate,
       primaryRegistrantId: this.primaryRegistrantId,

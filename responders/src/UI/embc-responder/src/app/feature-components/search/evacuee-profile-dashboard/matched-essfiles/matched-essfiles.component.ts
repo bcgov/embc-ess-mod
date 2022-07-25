@@ -44,7 +44,8 @@ export class MatchedEssfilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
-    this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
+    this.paperBasedEssFile =
+      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
     this.registrantId =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id;
     this.getProfileESSFiles(this.registrantId);
@@ -137,12 +138,14 @@ export class MatchedEssfilesComponent implements OnInit {
               this.essFiles = essFilesArray;
             } else if (
               loggedInRole === MemberRole.Tier1 &&
-              this.evacueeSearchService.paperBasedEssFile
+              this.evacueeSearchService?.evacueeSearchContext
+                ?.evacueeSearchParameters?.paperFileNumber
             ) {
               this.essFiles = essFilesArray.filter(
                 (files) =>
                   files.manualFileId ===
-                  this.evacueeSearchService.paperBasedEssFile
+                  this.evacueeSearchService?.evacueeSearchContext
+                    ?.evacueeSearchParameters?.paperFileNumber
               );
             }
           } else {

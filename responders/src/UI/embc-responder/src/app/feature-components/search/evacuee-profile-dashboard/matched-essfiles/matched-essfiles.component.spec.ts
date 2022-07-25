@@ -129,7 +129,9 @@ describe('MatchedEssfilesComponent', () => {
     };
     evacueeProfileService.evacuationFileSummaryValue = mockMatchedEssFiles;
     evacueeSessionService.isPaperBased = true;
-    evacueeSearchService.paperBasedEssFile = 'T2000';
+    evacueeSearchService.evacueeSearchContext = {
+      evacueeSearchParameters: { paperFileNumber: 'T2000' }
+    };
     fixture.detectChanges();
     component.ngOnInit();
     expect(component.paperBasedEssFile).toEqual('T2000');
@@ -137,7 +139,9 @@ describe('MatchedEssfilesComponent', () => {
 
   it('should get matches ess files from service', () => {
     evacueeSessionService.isPaperBased = true;
-    evacueeSearchService.paperBasedEssFile = 'T2000';
+    evacueeSearchService.evacueeSearchContext = {
+      evacueeSearchParameters: { paperFileNumber: 'T2000' }
+    };
     userService.currentProfileValue = {
       agreementSignDate: null,
       firstName: 'Test_First_Name',

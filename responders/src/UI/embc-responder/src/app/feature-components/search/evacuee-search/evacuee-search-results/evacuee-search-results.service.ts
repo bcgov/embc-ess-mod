@@ -38,8 +38,7 @@ export class EvacueeSearchResultsService {
    * @returns observable of search results
    */
   public searchForEvacuee(
-    evacueeSearchParameters: EvacueeDetailsModel,
-    paperBasedEssFile?: string
+    evacueeSearchParameters: EvacueeDetailsModel
   ): Observable<EvacueeSearchResults> {
     return this.registrationService
       .registrationsSearch({
@@ -47,7 +46,7 @@ export class EvacueeSearchResultsService {
         lastName: evacueeSearchParameters?.lastName,
         dateOfBirth: evacueeSearchParameters?.dateOfBirth,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        ManualFileId: paperBasedEssFile
+        ManualFileId: evacueeSearchParameters?.paperFileNumber
       })
       .pipe(
         map((searchResult: EvacueeSearchResults) => {

@@ -38,32 +38,6 @@ export class EvacueeSearchComponent implements OnInit {
     this.computeState.triggerEvent();
   }
 
-  /**
-   * Receives the emitted event from data-entry child and changes the component to show
-   */
-  changeDataEntryComponent(value: boolean): void {
-    this.showDataEntryComponent = value;
-  }
-
-  /**
-   * Receives the emitted event from evacuee-id-verify child and changes the component to show
-   */
-  changeVerifyIdComponent(value: boolean): void {
-    this.showPhotoIDComponent = value;
-  }
-
-  /**
-   * Receives the emitted event from evacuee-name-search child and changes the component to show
-   */
-  changeResultsComponent(value: boolean): void {
-    this.showResultsComponent = value;
-  }
-
-  allowNewSearch($event: boolean): void {
-    this.showDataEntryComponent = $event;
-    this.showResultsComponent = !$event;
-  }
-
   private checkTaskStatus(): void {
     const taskNumber = this.userService?.currentProfile?.taskNumber;
     this.taskSearchService.searchTask(taskNumber).subscribe({
