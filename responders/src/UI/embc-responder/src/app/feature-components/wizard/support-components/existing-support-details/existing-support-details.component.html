@@ -185,7 +185,8 @@
         <div
           *ngIf="
             selectedSupport?.status !== 'Draft' &&
-            selectedSupport?.method === 'Referral'
+            selectedSupport?.method === 'Referral' &&
+            !isExtendSupports
           "
           class="col-md-4 link-padding"
         >
@@ -194,6 +195,10 @@
               <a (click)="openAssessment()"
                 ><img
                   src="/assets/images/view-assessment.svg"
+                  width="7"
+                  height="21"
+                /><img
+                  src="/assets/images/view-assessment-spoon.svg"
                   width="7"
                   height="21"
                 /><span class="back-link needs-padding"
@@ -237,7 +242,8 @@
         <div
           *ngIf="
             selectedSupport?.status !== 'Draft' &&
-            selectedSupport?.method === 'ETransfer'
+            selectedSupport?.method === 'ETransfer' &&
+            !isExtendSupports
           "
           class="col-md-4 link-padding"
         >
@@ -246,6 +252,10 @@
               <a (click)="openAssessment()"
                 ><img
                   src="/assets/images/view-assessment.svg"
+                  width="7"
+                  height="21"
+                /><img
+                  src="/assets/images/view-assessment-spoon.svg"
                   width="7"
                   height="21"
                 /><span class="back-link needs-padding"
@@ -277,7 +287,7 @@
         </div>
 
         <div
-          *ngIf="selectedSupport?.status === 'Draft'"
+          *ngIf="selectedSupport?.status === 'Draft' && !isExtendSupports"
           class="col-md-4 link-padding"
         >
           <div class="row">
@@ -300,6 +310,38 @@
                   width="14"
                   height="15"
                 /><span class="back-link img-padding">Delete Support</span></a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isExtendSupports" class="col-md-4 link-padding">
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="extendSupport()"
+                ><img
+                  src="/assets/images/extend-support.svg"
+                  width="15"
+                  height="15"
+                /><span class="back-link needs-padding">Clone & Extend</span></a
+              >
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="openAssessment()"
+                ><img
+                  src="/assets/images/view-assessment.svg"
+                  width="7"
+                  height="21"
+                /><img
+                  src="/assets/images/view-assessment-spoon.svg"
+                  width="7"
+                  height="21"
+                /><span class="back-link needs-padding"
+                  >View Needs Assessment</span
+                ></a
               >
             </div>
           </div>

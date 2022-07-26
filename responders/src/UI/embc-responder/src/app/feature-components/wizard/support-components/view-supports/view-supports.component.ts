@@ -26,7 +26,7 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { SelectedPathType } from '../../../../core/models/appBase.model';
+import { WizardType } from '../../../../core/models/wizard-type.model';
 
 @Component({
   selector: 'app-view-supports',
@@ -242,8 +242,8 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
 
   isAddSupportsDisabled() {
     return (
-      this.appBaseService?.appModel?.selectedUserPathway ===
-      SelectedPathType.remoteExtensions
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.ExtendSupports
     );
   }
 }

@@ -278,6 +278,7 @@ export class WizardAdapterService {
         .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
         .subscribe({
           next: (evacuationFileModel) => {
+            this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
             this.stepSupportsService.setExistingSupportList(
               evacuationFileModel.supports
             );
