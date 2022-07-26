@@ -110,7 +110,14 @@
           </div>
         </div>
 
-        <div class="row" *ngIf="paperBased" id="essFilePaperBased">
+        <div
+          class="row"
+          *ngIf="
+            optionInjectionService?.instance?.optionType ===
+            selectedPathType.paperBased
+          "
+          id="essFilePaperBased"
+        >
           <div class="col-md-4">
             <mat-form-field appearance="outline">
               <mat-label>Paper ESS File#</mat-label>
