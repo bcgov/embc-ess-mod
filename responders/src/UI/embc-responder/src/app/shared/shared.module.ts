@@ -35,7 +35,6 @@ import { TimeOutDialogComponent } from './components/dialog-components/time-out-
 import { OutageDialogComponent } from './outage-components/outage-dialog/outage-dialog.component';
 import { OutageBannerComponent } from './outage-components/outage-banner/outage-banner.component';
 import { EssFileExistsComponent } from './components/dialog-components/ess-file-exists/ess-file-exists.component';
-import { ExtendSupportsDialogComponent } from './components/dialog-components/extend-support-dialog/extend-support-dialog.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +63,6 @@ import { ExtendSupportsDialogComponent } from './components/dialog-components/ex
     VoidReferralDialogComponent,
     ReprintReferralDialogComponent,
     ProcessSupportsDialogComponent,
-    ExtendSupportsDialogComponent,
     BcscInviteDialogComponent,
     TimeOutDialogComponent,
     OutageBannerComponent,

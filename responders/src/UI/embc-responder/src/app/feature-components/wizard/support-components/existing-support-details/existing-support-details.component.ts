@@ -33,7 +33,6 @@ import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.
 import { DownloadService } from '../../../../core/services/utility/download.service';
 import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe';
 import { AppBaseService } from '../../../../core/services/helper/appBase.service';
-import { ExtendSupportsDialogComponent } from '../../../../shared/components/dialog-components/extend-support-dialog/extend-support-dialog.component';
 import { WizardType } from '../../../../core/models/wizard-type.model';
 
 @Component({
@@ -285,8 +284,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: ExtendSupportsDialogComponent,
-          profileData: this.selectedSupport.id
+          component: InformationDialogComponent,
+          content: globalConst.extendSupportMessage
         },
         width: '720px'
       })
