@@ -32,6 +32,8 @@ import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { DownloadService } from '../../../../core/services/utility/download.service';
 import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe';
+import { AppBaseService } from '../../../../core/services/helper/appBase.service';
+import { WizardType } from '../../../../core/models/wizard-type.model';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -42,7 +44,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
   selectedSupport: Support;
   needsAssessmentForSupport: EvacuationFileModel;
   isLoading = false;
-  color = '#169BD5';
+  isExtendSupports: boolean;
 
   constructor(
     private router: Router,
@@ -54,12 +56,16 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private alertService: AlertService,
     public evacueeSessionService: EvacueeSessionService,
     private loadEvacueeListService: LoadEvacueeListService,
-    private downloadService: DownloadService
+    private downloadService: DownloadService,
+    private appBaseService: AppBaseService
   ) {}
 
   ngOnInit(): void {
     this.selectedSupport = this.stepSupportsService.selectedSupportDetail;
     this.needsAssessmentForSupport = this.stepEssFileService.selectedEssFile;
+    this.isExtendSupports =
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.ExtendSupports;
   }
 
   back() {
@@ -269,6 +275,25 @@ export class ExistingSupportDetailsComponent implements OnInit {
                   );
                 }
               });
+          }
+        }
+      });
+  }
+
+  extendSupport(): void {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.extendSupportMessage
+        },
+        width: '720px'
+      })
+      .afterClosed()
+      .subscribe({
+        next: (output) => {
+          if (output !== undefined && output !== 'cancel') {
+            //TODO - clone and extend
           }
         }
       });

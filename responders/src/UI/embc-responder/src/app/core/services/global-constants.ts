@@ -178,6 +178,13 @@ export const deleteDraftMessage: DialogContent = {
   cancelButton: 'No, Cancel'
 };
 
+export const extendSupportMessage: DialogContent = {
+  title: 'Clone & Extend Support',
+  text: '<p>Are you sure you want to clone this support? Once the support has been cloned, you will be able to edit and extend the support details.</p>',
+  confirmButton: 'Yes, Clone & Extend',
+  cancelButton: 'No, Cancel'
+};
+
 export const saveMessage: DialogContent = {
   text: '<p>Support successfully saved.</p>',
   cancelButton: 'Close'
