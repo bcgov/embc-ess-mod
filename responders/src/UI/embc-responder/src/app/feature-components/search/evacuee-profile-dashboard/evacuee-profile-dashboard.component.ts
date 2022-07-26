@@ -41,7 +41,8 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       this.evacueeProfileDashboardService.fetchProfileId();
 
     this.isPaperBased = this.evacueeSessionService?.isPaperBased;
-    this.paperBasedEssFile = this.evacueeSearchService.paperBasedEssFile;
+    this.paperBasedEssFile =
+      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
     this.evacueeProfileDashboardService.showFileLinkingPopups();
@@ -86,7 +87,8 @@ export class EvacueeProfileDashboardComponent implements OnInit {
             } else {
               this.isLoading = false;
               this.evacueeProfileDashboardService.openEssFileExistsDialog(
-                this.evacueeSearchService.paperBasedEssFile
+                this.evacueeSearchService?.evacueeSearchContext
+                  ?.evacueeSearchParameters?.paperFileNumber
               );
             }
           },

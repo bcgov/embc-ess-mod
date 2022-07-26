@@ -22,6 +22,8 @@ import { EssFileExistsComponent } from 'src/app/shared/components/dialog-compone
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -29,18 +31,18 @@ import { ComputeRulesService } from 'src/app/core/services/computeRules.service'
   styleUrls: ['./evacuee-search-results.component.scss']
 })
 export class EvacueeSearchResultsComponent implements OnInit {
-  @Output() showDataEntryComponent = new EventEmitter<boolean>();
+  // @Output() showDataEntryComponent = new EventEmitter<boolean>();
   registrantResults: Array<RegistrantProfileSearchResultModel>;
   fileResults: Array<EvacuationFileSearchResultModel>;
   evacueeSearchContext: EvacueeSearchContextModel;
   isPaperBased: boolean;
-  paperBasedEssFile: string;
   // isLoading = false;
   color = '#169BD5';
+  readonly selectedPathType = SelectedPathType;
 
   constructor(
     public evacueeSearchResultsService: EvacueeSearchResultsService,
-    private evacueeSearchService: EvacueeSearchService,
+    public evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
     private userService: UserService,
@@ -48,17 +50,22 @@ export class EvacueeSearchResultsComponent implements OnInit {
     private alertService: AlertService,
     private dialog: MatDialog,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    public optionInjectionService: OptionInjectionService
   ) {}
 
   ngOnInit(): void {
-    this.searchForEvacuee(
-      (this.evacueeSearchContext =
-        this.evacueeSearchService.evacueeSearchContext),
-      (this.paperBasedEssFile = this.evacueeSessionService.isPaperBased
-        ? this.evacueeSearchService.paperBasedEssFile
-        : null)
-    );
+    if (
+      this.optionInjectionService?.instance?.optionType ===
+      SelectedPathType.remoteExtensions
+    ) {
+    } else {
+      this.searchForEvacuee(
+        (this.evacueeSearchContext =
+          this.evacueeSearchService.evacueeSearchContext)
+      );
+    }
+
     this.isPaperBased = this.evacueeSessionService.isPaperBased;
   }
 
@@ -81,7 +88,9 @@ export class EvacueeSearchResultsComponent implements OnInit {
   searchAgain(): void {
     this.evacueeSearchService.clearEvacueeSearch();
     this.evacueeSessionService.clearEvacueeSession();
-    this.showDataEntryComponent.emit(true);
+    this.router.navigate(['/responder-access/search/evacuee'], {
+      replaceUrl: true
+    });
   }
 
   /**
@@ -90,16 +99,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
    *
    * @param evacueeSearchContext search parameters
    */
-  searchForEvacuee(
-    evacueeSearchContext: EvacueeSearchContextModel,
-    paperEssFile?: string
-  ): void {
+  searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.evacueeSearchResultsService.setloadingOverlay(true);
     this.evacueeSearchResultsService
-      .searchForEvacuee(
-        evacueeSearchContext?.evacueeSearchParameters,
-        paperEssFile
-      )
+      .searchForEvacuee(evacueeSearchContext?.evacueeSearchParameters)
       .subscribe({
         next: (results) => {
           this.evacueeSearchResultsService.setloadingOverlay(false);
@@ -125,14 +128,19 @@ export class EvacueeSearchResultsComponent implements OnInit {
   openWizard(): void {
     if (this.evacueeSessionService.isPaperBased) {
       this.evacueeProfileService
-        .getProfileFiles(undefined, this.paperBasedEssFile)
+        .getProfileFiles(
+          undefined,
+          this.evacueeSearchService?.evacueeSearchContext
+            ?.evacueeSearchParameters?.paperFileNumber
+        )
         .subscribe({
           next: (result) => {
             if (result.length === 0) {
               this.navigateToWizard();
             } else {
               this.openEssFileExistsDialog(
-                this.evacueeSearchService.paperBasedEssFile
+                this.evacueeSearchService?.evacueeSearchContext
+                  ?.evacueeSearchParameters?.paperFileNumber
               );
             }
           },

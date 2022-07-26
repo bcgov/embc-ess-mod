@@ -79,8 +79,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         this.stepEssFileService?.selectedEssFile?.manualFileId;
     } else {
       this.stepEssFileService.paperESSFile =
-        this.evacueeSearchService?.paperBasedEssFile !== 'undefined'
-          ? this.evacueeSearchService?.paperBasedEssFile
+        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
+          ?.paperFileNumber !== 'undefined'
+          ? this.evacueeSearchService?.evacueeSearchContext
+              ?.evacueeSearchParameters?.paperFileNumber
           : '';
     }
 

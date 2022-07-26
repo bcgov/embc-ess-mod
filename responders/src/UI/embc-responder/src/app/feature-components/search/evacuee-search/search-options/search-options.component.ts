@@ -9,6 +9,7 @@ import {
   ActionPermission,
   ClaimType
 } from 'src/app/core/services/authorization.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-options',
@@ -16,9 +17,6 @@ import {
   styleUrls: ['./search-options.component.scss']
 })
 export class SearchOptionsComponent implements OnInit {
-  @Output() showDataEntryComponent = new EventEmitter<boolean>();
-  @Output() showIDPhotoComponent = new EventEmitter<boolean>();
-
   selectedPathway: SelectedPathType;
   workflows: Array<TaskWorkflow> = new Array<TaskWorkflow>();
   readonly selectedPathType = SelectedPathType;
@@ -28,7 +26,8 @@ export class SearchOptionsComponent implements OnInit {
     private appBaseService: AppBaseService,
     private evacueeSessionService: EvacueeSessionService,
     private computeState: ComputeRulesService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -72,8 +71,9 @@ export class SearchOptionsComponent implements OnInit {
         this.evacueeSessionService.isPaperBased = false;
       }
       this.computeState.triggerEvent();
-      this.showDataEntryComponent.emit(false);
-      this.showIDPhotoComponent.emit(true);
+      this.router.navigate(['/responder-access/search/evacuee/wrapper'], {
+        skipLocationChange: true
+      });
     }
   }
 

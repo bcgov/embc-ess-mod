@@ -86,8 +86,8 @@ export class EssFilesResultsComponent
     const profile$ = await this.getSearchedUserProfile(selectedESSFile);
     if (this.evacueeSessionService.isPaperBased) {
       if (
-        this.evacueeSearchService.paperBasedEssFile !==
-        selectedESSFile.manualFileId
+        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
+          ?.paperFileNumber !== selectedESSFile.manualFileId
       ) {
         this.openUnableAccessESSFileDialog();
       } else {
