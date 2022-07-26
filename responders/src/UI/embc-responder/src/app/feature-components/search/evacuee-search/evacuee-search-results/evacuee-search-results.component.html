@@ -7,7 +7,29 @@
 
 <mat-card>
   <div class="row">
-    <div class="col-md-8">
+    <div
+      *ngIf="
+        optionInjectionService?.instance?.optionType ===
+        selectedPathType.remoteExtensions
+      "
+      class="col-md-8"
+    >
+      <div class="row">
+        <div class="col-md-12">
+          <img src="/assets/images/file.svg" height="36" width="36" />
+          <span class="result-heading"><b>ESS File Results (0)</b></span>
+        </div>
+      </div>
+      <br />
+      <app-zero-file-result></app-zero-file-result>
+    </div>
+    <div
+      *ngIf="
+        optionInjectionService?.instance?.optionType !==
+        selectedPathType.remoteExtensions
+      "
+      class="col-md-8"
+    >
       <app-alert></app-alert>
       <ng-container *ngIf="!isPaperBased; else paperBasedResults">
         <p class="result-text">
@@ -51,7 +73,13 @@
                 | date: 'dd-MMM-yyyy'
             }}"</b
           >
-          and a paper ESS File # <b>{{ paperBasedEssFile }}.</b>
+          and a paper ESS File #
+          <b
+            >{{
+              evacueeSearchService?.evacueeSearchContext
+                ?.evacueeSearchParameters?.paperFileNumber
+            }}.</b
+          >
         </p>
         <p>
           For data entry of paper ESS Files, you will only be able to access the
@@ -92,7 +120,13 @@
       </div>
     </div>
     <div class="col-md-4">
-      <mat-card class="registration">
+      <mat-card
+        *ngIf="
+          optionInjectionService?.instance?.optionType !==
+          selectedPathType.remoteExtensions
+        "
+        class="registration"
+      >
         <p class="card-heading">Start a <b>New</b> Evacuee Registration</p>
         <p>
           <b>Start a New Evacuee Registration</b> if the evacuee is currently
