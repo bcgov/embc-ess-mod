@@ -87,6 +87,11 @@ export class WizardActivateGuard implements CanActivate {
         return this.wizardAdapterService.stepCompleteESSFileFromESSFileRecord();
       }
       return false;
+    } else if (wizardType === WizardType.ExtendSupports) {
+      if (this.isExtendSupportsAllowed()) {
+        return this.wizardAdapterService.stepExtendSupportsFromESSFileRecord();
+      }
+      return false;
     } else {
       this.router.navigate(['/responder-access']);
     }
@@ -127,5 +132,12 @@ export class WizardActivateGuard implements CanActivate {
       this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
       this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
     ); // add file status for complete
+  }
+
+  private isExtendSupportsAllowed(): boolean {
+    return (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    );
   }
 }

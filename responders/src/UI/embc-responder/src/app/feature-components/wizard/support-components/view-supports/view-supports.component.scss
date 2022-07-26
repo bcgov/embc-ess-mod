@@ -22,6 +22,10 @@
   background-color: rgba(187, 187, 187, 1);
 }
 
+.add-button:disabled {
+  background-color: rgba(187, 187, 187, 1);
+}
+
 @media (max-width: 940px)
 {
   .col-md-2, .col-md-3, .col-md-12 {

@@ -10,7 +10,8 @@ export enum WizardType {
   NewEssFile = 'new-ess-file',
   MemberRegistration = 'member-registration',
   ReviewFile = 'review-file',
-  CompleteFile = 'complete-file'
+  CompleteFile = 'complete-file',
+  ExtendSupports = 'extend-supports'
 }
 
 export interface WizardProperties {
