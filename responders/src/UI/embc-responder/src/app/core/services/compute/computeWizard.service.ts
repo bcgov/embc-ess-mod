@@ -42,7 +42,9 @@ export class ComputeWizardService implements Compute {
       this.appBaseService?.wizardProperties?.wizardType ===
         WizardType.ReviewFile ||
       this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.CompleteFile
+        WizardType.CompleteFile ||
+      this.appBaseService?.wizardProperties?.wizardType ===
+        WizardType.ExtendSupports
     ) {
       this.appBaseService.wizardProperties = {
         exitLink: WizardExitMap.FileDashoard
@@ -169,6 +171,13 @@ export class ComputeWizardService implements Compute {
     ) {
       this.appBaseService.wizardProperties = {
         wizardMenu: this.wizardDataService.createMembersProfileMenu()
+      };
+    } else if (
+      this.appBaseService?.wizardProperties?.wizardType ===
+      WizardType.ExtendSupports
+    ) {
+      this.appBaseService.wizardProperties = {
+        wizardMenu: this.wizardDataService.createExtendSupportsMenu()
       };
     }
   }

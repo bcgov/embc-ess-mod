@@ -34,7 +34,12 @@
 
   <div *ngIf="supportList?.length === 0" class="row row-padding">
     <div class="col-md-6">
-      <button class="button-p add-support" mat-button (click)="addSupports()">
+      <button
+        class="button-p add-support add-button"
+        mat-button
+        (click)="addSupports()"
+        [disabled]="isAddSupportsDisabled()"
+      >
         + Add Supports
       </button>
     </div>
@@ -44,9 +49,10 @@
     <div class="row row-padding">
       <div class="col-md-2">
         <button
-          class="button-p button-width"
+          class="button-p button-width add-button"
           mat-button
           (click)="addSupports()"
+          [disabled]="isAddSupportsDisabled()"
         >
           Add Supports
         </button>

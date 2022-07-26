@@ -77,6 +77,10 @@ export class WizardAdapterService {
         this.stepEssFileService.clearService();
         this.referralCreation.clearDraftSupport();
         return;
+
+      case WizardType.ExtendSupports:
+        this.referralCreation.clearDraftSupport();
+        return;
     }
   }
 
@@ -254,6 +258,26 @@ export class WizardAdapterService {
               this.wizardDataService.createNewESSFileSteps();
             this.stepEssFileService.setCompleteEssFileTabStatus();
             this.stepEssFileService.selectedHouseholdMembers = [];
+            this.stepSupportsService.setExistingSupportList(
+              evacuationFileModel.supports
+            );
+            obs.next(true);
+          },
+          error: (error) => {
+            obs.next(false);
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.getEssFileError);
+          }
+        });
+    });
+  }
+
+  public stepExtendSupportsFromESSFileRecord(): Observable<boolean> {
+    return new Observable<boolean>((obs) => {
+      this.essFileService
+        .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
+        .subscribe({
+          next: (evacuationFileModel) => {
             this.stepSupportsService.setExistingSupportList(
               evacuationFileModel.supports
             );

@@ -461,6 +461,34 @@ export class WizardDataService {
     }
   ];
 
+  private extendSupportsMenu: Array<WizardSidenavModel> = [
+    {
+      step: 'STEP 1',
+      title: 'Add Supports',
+      route: '/ess-wizard/add-supports',
+      isLocked: false,
+      incompleteMsg: globalConst.supportIncompleteMessage,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-supports.svg',
+        altSrc: '/assets/images/wizard/supports.svg',
+        height: '33',
+        width: '33'
+      }
+    },
+    {
+      step: 'CASE NOTES',
+      title: 'Add Case Notes',
+      route: '/ess-wizard/add-notes',
+      isLocked: false,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-notes.svg',
+        altSrc: '/assets/images/wizard/notes.svg',
+        height: '42',
+        width: '42'
+      }
+    }
+  ];
+
   constructor(private evacueeSessionService: EvacueeSessionService) {}
   /**
    * Creates new registration menu
@@ -550,6 +578,21 @@ export class WizardDataService {
       reviewFileMenu.push({ ...menuItems, ...menu });
     }
     return reviewFileMenu;
+  }
+
+  /**
+   * Creates extend supports menu
+   *
+   * @returns side menu array
+   */
+  public createExtendSupportsMenu(): Array<WizardSidenavModel> {
+    const extendSupportsMenu: Array<WizardSidenavModel> =
+      new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.extendSupportsMenu) {
+      extendSupportsMenu.push({ ...menuItems, ...menu });
+    }
+    return extendSupportsMenu;
   }
 
   /**
