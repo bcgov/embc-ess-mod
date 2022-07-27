@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SearchOptionsService } from '../../interfaces/searchOptions.service';
 import { SelectedPathType } from '../../models/appBase.model';
-import { EvacuationFileSummaryModel } from '../../models/evacuation-file-summary.model';
+import { DashboardBanner } from '../../models/dialog-content.model';
 import { EvacueeSearchContextModel } from '../../models/evacuee-search-context.model';
-import { SearchDataService } from '../helper/search-data.service';
+import { DataService } from '../helper/data.service';
 
 @Injectable()
 export class RemoteExtOptionService implements SearchOptionsService {
@@ -14,12 +14,16 @@ export class RemoteExtOptionService implements SearchOptionsService {
 
   constructor(
     private router: Router,
-    private searchDataService: SearchDataService,
+    private dataService: DataService,
     private builder: FormBuilder
   ) {}
 
+  getDashboardBanner(fileStatus: string): DashboardBanner {
+    return this.dataService.getDashboardText(fileStatus);
+  }
+
   createForm(formType: string): FormGroup {
-    return this.builder.group(this.searchDataService.fetchForm(formType));
+    return this.builder.group(this.dataService.fetchForm(formType));
   }
 
   loadDefaultComponent(): void {
@@ -28,30 +32,34 @@ export class RemoteExtOptionService implements SearchOptionsService {
     });
   }
 
-  search(value: string | EvacueeSearchContextModel, id: string): void {
-    this.searchDataService.saveSearchParams(value);
-    let fileResult: EvacuationFileSummaryModel[] = [];
-    this.searchDataService.searchForEssFiles(id).subscribe({
-      next: (result) => {
-        fileResult = result;
-      },
-      complete: () => {
-        if (fileResult.length !== 0) {
-          this.searchDataService.setSelectedFile(fileResult[0].id);
-          this.router.navigate(['responder-access/search/essfile-dashboard']);
-        } else {
-          this.searchDataService.setSelectedFile(
-            (value as EvacueeSearchContextModel).evacueeSearchParameters
-              ?.essFileNumber
-          );
-          this.router.navigate(
-            ['/responder-access/search/evacuee/search-results'],
-            {
-              skipLocationChange: true
-            }
-          );
+  search(
+    value: string | EvacueeSearchContextModel,
+    id: string
+  ): Promise<boolean> {
+    this.dataService.saveSearchParams(value);
+
+    return this.dataService
+      .searchForEssFiles(id)
+      .then((fileResult) => this.navigate(fileResult, value));
+  }
+
+  private navigate(fileResult, value) {
+    if (fileResult.length !== 0) {
+      this.dataService.setSelectedFile(fileResult[0].id);
+      return this.router.navigate([
+        'responder-access/search/essfile-dashboard'
+      ]);
+    } else {
+      this.dataService.setSelectedFile(
+        (value as EvacueeSearchContextModel).evacueeSearchParameters
+          ?.essFileNumber
+      );
+      return this.router.navigate(
+        ['/responder-access/search/evacuee/search-results'],
+        {
+          skipLocationChange: true
         }
-      }
-    });
+      );
+    }
   }
 }
