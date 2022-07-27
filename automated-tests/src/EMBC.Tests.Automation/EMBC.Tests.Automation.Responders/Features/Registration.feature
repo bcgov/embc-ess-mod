@@ -16,3 +16,7 @@ Scenario: Evacuee Paper Based new Registration with Referrals
 Scenario: Evacuee Online new Registration with Interac Support
 	Given I create an Interac support from an existing user
 	Then A registration is completed with a pending approval interac support
+
+Scenario: Remote Extension Search
+    Given I search for a remote extensions ess file
+    Then An ESS file is successfully found

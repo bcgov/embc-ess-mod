@@ -16,7 +16,10 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         private By personFormDateOfBirthInput = By.CssSelector("input[formcontrolname='dateOfBirth']");
         private By digitalRegCard = By.XPath("//mat-card/div/div/p/span[contains(text(),'evacuee registration & extensions')]");
         private By paperBasedRegCard = By.XPath("//mat-card/div/div/p/span[contains(text(),'data entry')]");
+        private By remoteExtensionsRegCard = By.XPath("//mat-card/div/div/p/span[contains(text(),'remote extensions')]");
         private By searchPaperBasedEssFile = By.CssSelector("input[formcontrolname='paperBasedEssFile']");
+        private By searchremoteExtensionsEssFile = By.CssSelector("input[formcontrolname='essFileNumber']");
+
 
         public SearchEvacuee(IWebDriver webDriver) : base(webDriver)
         { }
@@ -32,6 +35,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         public void SelectPaperBasedRegistrationType()
         {
             FocusAndClick(paperBasedRegCard);
+            this.ButtonElement("Next");
+        }
+
+        public void SelectRemoteExtensionsRegistrationType()
+        {
+            FocusAndClick(remoteExtensionsRegCard);
             this.ButtonElement("Next");
         }
 
@@ -65,6 +74,16 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(searchPaperBasedEssFile).SendKeys(essfile);
 
             this.ButtonElement("Search");
+        }
+
+        public void FillRemoteExtensionESSFile(string essFileNumber)
+        {
+            Wait();
+
+            webDriver.FindElement(searchremoteExtensionsEssFile).SendKeys(essFileNumber);
+
+            this.ButtonElement("Search");
+
         }
 
     }

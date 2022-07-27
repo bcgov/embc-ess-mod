@@ -86,7 +86,11 @@
         </mat-form-field>
       </div>
       <div class="col-md-8 checkbox-container" *ngIf="showEmailCheckBox">
-        <mat-checkbox (change)="setEmail($event)" #setEmailCheckbox>
+        <mat-checkbox
+          (change)="setEmail($event)"
+          #setEmailCheckbox
+          id="setEmailCheckbox"
+        >
           <span *ngIf="emailOnFile && !previousEmail"
             >Use email address on file</span
           >
@@ -182,7 +186,11 @@
         </mat-form-field>
       </div>
       <div class="col-md-8 checkbox-container" *ngIf="showMobileCheckBox">
-        <mat-checkbox (change)="setMobile($event)" #setMobileCheckbox>
+        <mat-checkbox
+          (change)="setMobile($event)"
+          #setMobileCheckbox
+          id="setMobileCheckbox"
+        >
           <span *ngIf="mobileOnFile && !previousMobile"
             >Use mobile number on file</span
           >
