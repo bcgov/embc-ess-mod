@@ -5,19 +5,10 @@ import { RegistrantProfileModel } from './registrant-profile.model';
 export interface AppBaseModel {
   selectedEssTask?: EssTaskModel;
   selectedUserPathway?: SelectedPathType;
-  evacueeSearchType?: DigitalFlow | PaperFlow;
   selectedProfile?: SelectedProfile;
   selectedEssFile?: EvacuationFileModel;
   supportProperties?: SupportProperties;
 }
-
-export interface EvacueeSearch {
-  idQuestion?: string;
-}
-
-export type DigitalFlow = EvacueeSearch;
-
-export type PaperFlow = EvacueeSearch;
 
 export interface SelectedProfile {
   selectedEvacueeInContext?: RegistrantProfileModel;

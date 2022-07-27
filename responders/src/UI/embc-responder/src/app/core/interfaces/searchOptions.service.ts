@@ -2,19 +2,24 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SelectedPathType } from '../models/appBase.model';
+import { DashboardBanner } from '../models/dialog-content.model';
 import { EvacueeSearchContextModel } from '../models/evacuee-search-context.model';
 import { DigitalOptionService } from '../services/compute/digitalOption.service';
 import { PaperOptionService } from '../services/compute/paperOption.service';
 import { RemoteExtOptionService } from '../services/compute/remoteExtOption.service';
 import { AppBaseService } from '../services/helper/appBase.service';
-import { SearchDataService } from '../services/helper/search-data.service';
+import { DataService } from '../services/helper/data.service';
 
 export interface SearchOptionsService {
   idSearchQuestion: string;
   optionType: SelectedPathType;
   loadDefaultComponent(): void;
   createForm(formType: string): FormGroup;
-  search(value: string | EvacueeSearchContextModel, type?: string): void;
+  search(
+    value: string | EvacueeSearchContextModel,
+    type?: string
+  ): Promise<boolean> | void;
+  getDashboardBanner(fileStatus: string): DashboardBanner;
 }
 
 @Injectable({
@@ -24,7 +29,7 @@ export class OptionInjectionService {
   constructor(
     private appBaseService: AppBaseService,
     private router: Router,
-    private searchDataService: SearchDataService,
+    private dataService: DataService,
     private builder: FormBuilder
   ) {}
 
@@ -39,7 +44,7 @@ export class OptionInjectionService {
     ) {
       return new DigitalOptionService(
         this.router,
-        this.searchDataService,
+        this.dataService,
         this.builder
       );
     } else if (
@@ -48,7 +53,7 @@ export class OptionInjectionService {
     ) {
       return new PaperOptionService(
         this.router,
-        this.searchDataService,
+        this.dataService,
         this.builder
       );
     } else if (
@@ -57,7 +62,7 @@ export class OptionInjectionService {
     ) {
       return new RemoteExtOptionService(
         this.router,
-        this.searchDataService,
+        this.dataService,
         this.builder
       );
     }

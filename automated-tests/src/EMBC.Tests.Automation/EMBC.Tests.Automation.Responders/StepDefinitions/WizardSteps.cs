@@ -397,7 +397,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //add support delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
-            wizardSupport.SupportInteracDeliveryForm(supportDeliveryEmail, supportDeliveryPhone);
+            wizardSupport.SupportInteracDeliveryEmailAndMobileForm(supportDeliveryEmail, supportDeliveryPhone);
             wizardSupport.SuccessSupportPopUp();
 
             //ADD SUPPORT 2
@@ -412,7 +412,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //add delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
-            wizardSupport.SupportInteracDeliveryForm(supportDeliveryEmail, supportDeliveryPhone);
+            wizardSupport.SupportInteracDeliveryEmailForm();
             wizardSupport.SuccessSupportPopUp();
 
             //ADD SUPPORT 3
@@ -427,7 +427,7 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
 
             //add support delivery
             wizardSupport.CurrentLocation.Should().Be("/ess-wizard/add-supports/delivery");
-            wizardSupport.SupportInteracDeliveryForm(supportDeliveryEmail, supportDeliveryPhone);
+            wizardSupport.SupportInteracDeliveryMobileForm();
             wizardSupport.SuccessSupportPopUp();
 
             //process support

@@ -10,18 +10,29 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
     [Binding]
     public sealed class SearchSteps
     {
+        private readonly LoginSteps loginSteps;
+        private readonly TaskSteps taskSteps;
+
         private readonly SearchEvacuee searchEvacuee;
         private readonly ESSFileDashboard essFileDashboard;
         private readonly EvacueeDashboard evacueeDashboard;
         private readonly IEnumerable<Evacuee> evacuees;
+        private readonly string remoteExtensionsEssFileNbr;
+
+        private readonly string userName = "ess.developerA1";
+        private readonly string signInTask = "1234";
 
         public SearchSteps(BrowserDriver driver)
         {
+            loginSteps = new LoginSteps(driver);
+            taskSteps = new TaskSteps(driver);
+
             searchEvacuee = new SearchEvacuee(driver.Current);
             essFileDashboard = new ESSFileDashboard(driver.Current);
             evacueeDashboard = new EvacueeDashboard(driver.Current);
             evacuees = driver.Configuration.GetSection("evacuees").Get<IEnumerable<Evacuee>>();
-        }
+            remoteExtensionsEssFileNbr = driver.Configuration.GetValue<string>("remoteExtentionEssFile");
+    }
 
         [StepDefinition(@"I search for an online evacuee (.*)")]
         public void OnlineEvacueeSearch(string evacueeLastName)
@@ -57,6 +68,23 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             searchEvacuee.FillPaperBasedSearchEvacueeForm(evacuee.Name, evacuee.LastName, evacuee.Dob);
         }
 
+        [StepDefinition(@"I search for a remote extensions ess file")]
+        public void RemoteExtensionsEssFileSearch()
+        {
+            //Login into Responders Portal
+            loginSteps.Bcsc(userName);
+
+            //Sign into Task
+            taskSteps.SignInTask(signInTask);
+
+            //select a registration type
+            searchEvacuee.CurrentLocation.Should().Be("/responder-access/search/evacuee");
+            searchEvacuee.SelectRemoteExtensionsRegistrationType();
+
+            //fill the ess file number to search
+            searchEvacuee.FillRemoteExtensionESSFile(remoteExtensionsEssFileNbr);
+        }
+
         [StepDefinition(@"I choose an ESS file from the search results")]
         public void EditSelectedEssFile()
         {
@@ -76,6 +104,12 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             //Click on Create a new ESS File
             evacueeDashboard.CreateNewEssFileFromProfileDashboard();
             
+        }
+
+        [StepDefinition(@"An ESS file is successfully found")]
+        public void ESSFilefound()
+        {
+            evacueeDashboard.CurrentLocation.Should().Be("/responder-access/search/essfile-dashboard/overview");
         }
 
         public class Evacuee
