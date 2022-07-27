@@ -39,10 +39,14 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         private By supportDeliveryNotificationSelect = By.CssSelector("mat-select[formcontrolname='notificationPreference']");
         private By supportDeliveryEmailMobileNotOption = By.XPath("//mat-option/span[contains(text(), 'Email & Mobile')]/ancestor::mat-option");
+        private By supportDeliveryEmailNotOption = By.XPath("//mat-option[2]/span[contains(text(), 'Email')]/ancestor::mat-option");
+        private By supportDeliveryMobileNotOption = By.XPath("//mat-option[3]/span[contains(text(), 'Mobile')]/ancestor::mat-option");
         private By supportDeliveryEmailInput = By.CssSelector("input[formcontrolname='notificationEmail']");
         private By supportDeliveryEmailConfirmInput = By.CssSelector("input[formcontrolname='notificationConfirmEmail']");
+        private By supportDeliveryEmailUsePreviousEmailCheckbox = By.Id("setEmailCheckbox");
         private By supportDeliveryMobileInput = By.CssSelector("input[formcontrolname='notificationMobile']");
         private By supportDeliveryMobileConfirmInput = By.CssSelector("input[formcontrolname='notificationConfirmMobile']");
+        private By supportDeliveryMobileUsePreviousCheckbox = By.Id("setMobileCheckbox");
 
         private By supportDeliveryBilletingHostFullNameInput = By.CssSelector("input[formcontrolname='hostName']");
         private By supportDeliveryBilletingHostAddressInput = By.CssSelector("input[formcontrolname = 'hostAddress']");
@@ -238,7 +242,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(supportDetailsFormValidToTimeInput).SendKeys(validTime);
         }
 
-        public void SupportInteracDeliveryForm(string email, string phone)
+        public void SupportInteracDeliveryEmailAndMobileForm(string email, string phone)
         {
             var js = (IJavaScriptExecutor)webDriver;
 
@@ -258,6 +262,48 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
             webDriver.FindElement(supportDeliveryEmailConfirmInput).SendKeys(email);
             webDriver.FindElement(supportDeliveryMobileInput).SendKeys(phone);
             webDriver.FindElement(supportDeliveryMobileConfirmInput).SendKeys(phone);
+
+            ButtonElement("Next - Save Support");
+        }
+
+        public void SupportInteracDeliveryEmailForm()
+        {
+            var js = (IJavaScriptExecutor)webDriver;
+
+            FocusAndClick(supportDeliveryInteracCard);
+            Wait();
+
+            var selectNotificationElement = webDriver.FindElement(supportDeliveryNotificationSelect);
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectNotificationElement);
+
+            Wait();
+            selectNotificationElement.Click();
+
+            webDriver.FindElement(supportDeliveryEmailNotOption).Click();
+            Wait();
+
+            FocusAndClick(supportDeliveryEmailUsePreviousEmailCheckbox);
+
+            ButtonElement("Next - Save Support");
+        }
+
+        public void SupportInteracDeliveryMobileForm()
+        {
+            var js = (IJavaScriptExecutor)webDriver;
+
+            FocusAndClick(supportDeliveryInteracCard);
+            Wait();
+
+            var selectNotificationElement = webDriver.FindElement(supportDeliveryNotificationSelect);
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectNotificationElement);
+
+            Wait();
+            selectNotificationElement.Click();
+
+            webDriver.FindElement(supportDeliveryMobileNotOption).Click();
+            Wait();
+
+            FocusAndClick(supportDeliveryMobileUsePreviousCheckbox);
 
             ButtonElement("Next - Save Support");
         }
