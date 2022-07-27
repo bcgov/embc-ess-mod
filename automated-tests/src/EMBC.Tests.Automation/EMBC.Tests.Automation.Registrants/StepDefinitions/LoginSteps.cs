@@ -25,6 +25,8 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
         [StepDefinition(@"I log in with BCSC credentials (.*)")]
         public void Bcsc(string userName)
         {
+            registrationMethod.Wait();
+
             registrationMethod.LoginWithBcsc();
             registrationMethod.Wait();
 
