@@ -12,18 +12,21 @@ import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EssfileDashboardService } from './essfile-dashboard.service';
 import * as globalConst from '../../../core/services/global-constants';
-import { Note } from 'src/app/core/api/models';
-import { StepNotesService } from '../../wizard/step-notes/step-notes.service';
+import { EvacuationFileStatus, Note } from 'src/app/core/api/models';
 import { map } from 'rxjs/operators';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import {
+  DashboardBanner,
+  DialogContent
+} from 'src/app/core/models/dialog-content.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { lastValueFrom, tap } from 'rxjs';
-import { UserService } from 'src/app/core/services/user.service';
+import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -40,6 +43,7 @@ export class EssfileDashboardComponent implements OnInit {
   hasPostal = false;
   eligibilityFirstName: string;
   eligibilityLastName: string;
+  displayBanner: DashboardBanner;
 
   constructor(
     private essFileService: EssFileService,
@@ -51,7 +55,8 @@ export class EssfileDashboardComponent implements OnInit {
     public appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private evacueeSearchService: EvacueeSearchService,
-    private evacueeProfileService: EvacueeProfileService
+    private evacueeProfileService: EvacueeProfileService,
+    private optionInjectionService: OptionInjectionService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -141,20 +146,6 @@ export class EssfileDashboardComponent implements OnInit {
   }
 
   /**
-   * Loads the default file overview page
-   *
-   * @param essFile retrieved evacuation file
-   */
-  loadDefaultOverviewSection(essFile: EvacuationFileModel) {
-    this.router.navigate(
-      ['/responder-access/search/essfile-dashboard/overview'],
-      {
-        state: { file: essFile }
-      }
-    );
-  }
-
-  /**
    * Navigates the wizard for complete ess file
    */
   completeEssFile(): void {
@@ -181,6 +172,61 @@ export class EssfileDashboardComponent implements OnInit {
       });
   }
 
+  extendSupports(): void {
+    this.isLoading = !this.isLoading;
+
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.ExtendSupports,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
+
+    this.router
+      .navigate(['/ess-wizard'], {
+        queryParams: { type: WizardType.ExtendSupports },
+        queryParamsHandling: 'merge'
+      })
+      .then(() => {
+        this.isLoading = !this.isLoading;
+      })
+      .catch(() => {
+        this.isLoading = !this.isLoading;
+      });
+  }
+
+  openWizard() {
+    if (
+      this.essFile.status === EvacuationFileStatus.Pending ||
+      this.essFile.status === EvacuationFileStatus.Expired
+    ) {
+      this.completeEssFile();
+    } else if (
+      this.essFile.status === EvacuationFileStatus.Active &&
+      this.optionInjectionService.instance.optionType ===
+        SelectedPathType.remoteExtensions
+    ) {
+      this.extendSupports();
+    } else {
+      this.reviewEssFile();
+    }
+  }
+
+  /**
+   * Loads the default file overview page
+   *
+   * @param essFile retrieved evacuation file
+   */
+  loadDefaultOverviewSection(essFile: EvacuationFileModel) {
+    this.router.navigate(
+      ['/responder-access/search/essfile-dashboard/overview'],
+      {
+        state: { file: essFile }
+      }
+    );
+  }
+
   /**
    * Loads the ESS file for a give file number
    */
@@ -199,6 +245,10 @@ export class EssfileDashboardComponent implements OnInit {
       .subscribe({
         next: (essFile: EvacuationFileModel) => {
           this.loadDefaultOverviewSection(essFile);
+          this.displayBanner =
+            this.optionInjectionService.instance.getDashboardBanner(
+              essFile?.status
+            );
           this.isLoading = !this.isLoading;
         },
         error: (error) => {

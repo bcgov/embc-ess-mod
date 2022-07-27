@@ -5,6 +5,7 @@ import { RemoteSearchRoutingModule } from './remote-search-routing.module';
 import { RemoteSearchComponent } from './remote-search.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [RemoteSearchComponent],
@@ -12,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     RemoteSearchRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class RemoteSearchModule {}

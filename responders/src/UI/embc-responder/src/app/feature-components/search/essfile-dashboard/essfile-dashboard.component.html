@@ -255,28 +255,6 @@
       </ng-template>
     </div>
 
-    <!-- <div
-      *ngIf="
-        !appBaseService?.etransferProperties?.isRegistrantEtransferEligible
-      "
-    >
-      <div *ngIf="isMinor; else bcscCheck" class="row">
-        <div class="col-md-12 bold">
-          {{ eligibilityLastName | uppercase }},
-          {{ eligibilityFirstName | titlecase }}
-          is a minor and is not eligible for e-Transfer
-        </div>
-      </div>
-
-      <ng-template #bcscCheck>
-        <div class="col-md-12 bold">
-          {{ eligibilityLastName | uppercase }},
-          {{ eligibilityFirstName | titlecase }}
-          must have a profile linked to BC Services Card to be eligible
-        </div>
-      </ng-template>
-    </div> -->
-
     <div
       *ngIf="appBaseService?.etransferProperties?.isRegistrantEtransferEligible"
       class="row"
@@ -289,93 +267,19 @@
     </div>
   </div>
 
-  <div *ngIf="essFile?.status === 'Active'" class="row banner">
+  <div class="row banner">
     <div class="col-md-9 center-content">
       <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-      <span class="banner-heading">Active:</span>
-      <span>Review, extend or add new supports to the current ESS File.</span>
+      <span class="banner-heading">{{displayBanner?.heading}}</span>
+      <span>{{displayBanner?.content}}</span>
     </div>
     <div class="col-md-3">
       <button
         class="button-p ess-file-button"
-        (click)="reviewEssFile()"
+        (click)="openWizard()"
         mat-button
       >
-        Edit ESS File
-      </button>
-    </div>
-  </div>
-
-  <div *ngIf="essFile?.status === 'Pending'" class="row banner">
-    <div class="col-md-9 center-content">
-      <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-      <span class="banner-heading">Pending:</span>
-      <span>Complete ESS File and add supports if required.</span>
-    </div>
-    <div class="col-md-3">
-      <button
-        class="button-p ess-file-button"
-        (click)="completeEssFile()"
-        mat-button
-      >
-        Edit ESS File
-      </button>
-    </div>
-  </div>
-
-  <div *ngIf="essFile?.status === 'Expired'" class="row banner">
-    <div class="col-md-9 center-content">
-      <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-      <span class="banner-heading">Expired:</span>
-      <span
-        >Reactivate and complete ESS File and add supports if required.</span
-      >
-    </div>
-    <div class="col-md-3">
-      <button
-        class="button-p ess-file-button"
-        (click)="completeEssFile()"
-        mat-button
-      >
-        Edit ESS File
-      </button>
-    </div>
-  </div>
-
-  <div
-    *ngIf="
-      essFile?.status === 'Completed' && !evacueeSessionService?.isPaperBased
-    "
-    class="row banner"
-  >
-    <div class="col-md-12 center-content">
-      <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-      <span class="banner-heading">Complete:</span>
-      <span
-        >Task number end date has expired and ESS File is closed. To extend or
-        to add new supports, task number must be extended.</span
-      >
-    </div>
-  </div>
-
-  <div
-    *ngIf="
-      essFile?.status === 'Completed' && evacueeSessionService?.isPaperBased
-    "
-    class="row banner"
-  >
-    <div class="col-md-9 center-content">
-      <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-      <span class="banner-heading">Complete:</span>
-      <span>Task number end date has expired and ESS File is closed.</span>
-    </div>
-    <div class="col-md-3">
-      <button
-        class="button-p ess-file-button"
-        (click)="reviewEssFile()"
-        mat-button
-      >
-        Edit ESS File
+        {{displayBanner?.buttonText}}
       </button>
     </div>
   </div>

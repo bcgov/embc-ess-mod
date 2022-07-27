@@ -6,3 +6,9 @@ export interface DialogContent {
   cancelButton?: null | string;
   exitLink?: null | string;
 }
+
+export interface DashboardBanner {
+  heading: string
+  content: string;
+  buttonText?: string;
+}

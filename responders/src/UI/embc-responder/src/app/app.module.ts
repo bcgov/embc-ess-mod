@@ -12,7 +12,6 @@ import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { Compute } from './core/interfaces/compute';
-import { ComputeAppBaseService } from './core/services/compute/computeAppBase.service';
 import { ComputeFeaturesService } from './core/services/compute/computeFeatures.service';
 import { ComputeWizardService } from './core/services/compute/computeWizard.service';
 
@@ -39,11 +38,6 @@ export const computeInterfaceToken = new InjectionToken<Compute>('Compute');
   ],
   providers: [
     DatePipe,
-    {
-      provide: computeInterfaceToken,
-      useClass: ComputeAppBaseService,
-      multi: true
-    },
     {
       provide: computeInterfaceToken,
       useClass: ComputeFeaturesService,

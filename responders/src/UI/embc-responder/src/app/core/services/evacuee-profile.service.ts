@@ -251,31 +251,4 @@ export class EvacueeProfileService {
       body: { email }
     });
   }
-
-  private setProfileDetails(id: string) {
-    let profileModel =
-      this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext;
-    const profileReloadFlag =
-      this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext === null;
-
-    if (profileModel === null) {
-      profileModel = {
-        id,
-        primaryAddress: null,
-        mailingAddress: null,
-        personalDetails: null,
-        contactDetails: null,
-        restriction: null
-      };
-    }
-    this.appBaseService.appModel = {
-      selectedProfile: {
-        selectedEvacueeInContext: profileModel,
-        householdMemberRegistrantId: id,
-        profileReloadFlag
-      }
-    };
-    this.computeState.triggerEvent();
-  }
 }
