@@ -27,7 +27,7 @@ export class DashboardService {
   }
 
   getActiveStatusText(): DashboardBanner {
-    let optionType = this.appBaseService?.appModel?.selectedUserPathway;
+    const optionType = this.appBaseService?.appModel?.selectedUserPathway;
     if (optionType === SelectedPathType.remoteExtensions) {
       return globalConst.remoteActiveStatusText;
     }
@@ -39,7 +39,7 @@ export class DashboardService {
   }
 
   getCompletedStatusText(): DashboardBanner {
-    let optionType = this.appBaseService?.appModel?.selectedUserPathway;
+    const optionType = this.appBaseService?.appModel?.selectedUserPathway;
     if (optionType === SelectedPathType.paperBased) {
       return globalConst.paperCompletedStatusText;
     }

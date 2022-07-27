@@ -19,7 +19,7 @@ export class PaperOptionService implements SearchOptionsService {
     private dataService: DataService,
     private builder: FormBuilder
   ) {}
-  
+
   getDashboardBanner(fileStatus: string): DashboardBanner {
     return this.dataService.getDashboardText(fileStatus);
   }

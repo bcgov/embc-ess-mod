@@ -15,7 +15,10 @@ export interface SearchOptionsService {
   optionType: SelectedPathType;
   loadDefaultComponent(): void;
   createForm(formType: string): FormGroup;
-  search(value: string | EvacueeSearchContextModel, type?: string): Promise<boolean> | void;
+  search(
+    value: string | EvacueeSearchContextModel,
+    type?: string
+  ): Promise<boolean> | void;
   getDashboardBanner(fileStatus: string): DashboardBanner;
 }
 

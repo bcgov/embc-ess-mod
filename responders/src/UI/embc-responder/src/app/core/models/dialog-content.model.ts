@@ -8,7 +8,7 @@ export interface DialogContent {
 }
 
 export interface DashboardBanner {
-  heading: string
+  heading: string;
   content: string;
   buttonText?: string;
 }
