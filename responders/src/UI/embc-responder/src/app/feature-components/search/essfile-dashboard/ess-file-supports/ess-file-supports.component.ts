@@ -66,6 +66,14 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
           (a, b) =>
             new Date(b.issuedOn).valueOf() - new Date(a.issuedOn).valueOf()
         );
+
+        this.supportList.forEach((support) => {
+          support.includedHouseholdMembers.sort(
+            (a, b) =>
+              this.essFile?.householdMembers.findIndex((m) => m.id === a) -
+              this.essFile?.householdMembers.findIndex((m) => m.id === b)
+          );
+        });
       }
     }
   }
