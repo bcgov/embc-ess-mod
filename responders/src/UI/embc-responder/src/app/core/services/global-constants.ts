@@ -1,4 +1,4 @@
-import { DialogContent } from '../models/dialog-content.model';
+import { DashboardBanner, DialogContent } from '../models/dialog-content.model';
 
 export const phoneMask = [
   /\d/,
@@ -622,3 +622,38 @@ export const reviewMembersTipText =
   '<p class="bold no-margin">Confirm the following household members should be included in this ESS File.</p><p class="no-margin">Add any household members that are missing from the list.</p><p class="no-margin requiredField">Any household member not selected will not receive supports.</p>';
 export const completeMembersTipText =
   '<p class="bold no-margin">Confirm the following household members should be included in this ESS File.</p><p class="no-margin">Add any household members that are missing from the list.</p><p class="no-margin requiredField">Any household member not selected will not receive supports.</p>';
+export const pendingStatusText: DashboardBanner = {
+  heading: 'Pending:',
+  buttonText: 'Edit ESS File',
+  content: 'Complete ESS File and add supports if required.'
+};
+
+export const expiredStatusText: DashboardBanner = {
+  heading: 'Expired:',
+  content: 'Reactivate and complete ESS File and add supports if required.',
+  buttonText: 'Edit ESS File'
+};
+
+export const paperCompletedStatusText: DashboardBanner = {
+  heading: 'Complete:',
+  buttonText: 'Edit ESS File',
+  content: 'Task number end date has expired and ESS File is closed.'
+};
+
+export const completedStatusText: DashboardBanner = {
+  heading: 'Complete:',
+  content:
+    'Task number end date has expired and ESS File is closed. To extend or to add new supports, task number must be extended.'
+};
+
+export const activeStatusText: DashboardBanner = {
+  heading: 'Active:',
+  buttonText: 'Edit ESS File',
+  content: 'Review, extend or add new supports to the current ESS File.'
+};
+
+export const remoteActiveStatusText: DashboardBanner = {
+  heading: 'Active:',
+  buttonText: 'Extend Supports',
+  content: 'Extend Supports associated with the Current ESS File.'
+};

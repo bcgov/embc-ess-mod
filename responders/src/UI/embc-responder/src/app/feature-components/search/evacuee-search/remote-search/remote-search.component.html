@@ -43,6 +43,11 @@
             mat-button
           >
             Search
+            <app-loader
+              [strokeWidth]="3"
+              [diameter]="25"
+              [showLoader]="isLoading"
+            ></app-loader>
           </button>
         </div>
       </div>

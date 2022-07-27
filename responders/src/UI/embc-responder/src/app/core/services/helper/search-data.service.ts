@@ -6,16 +6,15 @@ import { EvacueeProfileService } from '../evacuee-profile.service';
 import { AppBaseService } from './appBase.service';
 import * as globalConst from '../global-constants';
 import { EvacuationFileSummaryModel } from '../../models/evacuation-file-summary.model';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, lastValueFrom, Observable, of, tap } from 'rxjs';
 import { Validators } from '@angular/forms';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
+import { DashboardService } from './dashboard.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SearchDataService {
-  essFileResult: BehaviorSubject<Array<EvacuationFileSummaryModel>>;
-
+export class SearchDataService extends DashboardService {
   remoteSearchForm = {
     essFileNumber: ['', [this.customValidation.whitespaceValidator()]]
   };
@@ -57,12 +56,14 @@ export class SearchDataService {
 
   constructor(
     private customValidation: CustomValidationService,
-    private appBaseService: AppBaseService,
+    appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private evacueeSearchService: EvacueeSearchService //TODO: Remove this service
-  ) {}
+  ) {
+    super(appBaseService);
+  }
 
   /**
    * 
@@ -95,23 +96,19 @@ export class SearchDataService {
 
   public searchForEssFiles(
     id: string
-  ): Observable<Array<EvacuationFileSummaryModel>> {
-    this.essFileResult = new BehaviorSubject<Array<EvacuationFileSummaryModel>>(
-      []
-    );
-    this.evacueeProfileService
+  ): Promise<Array<EvacuationFileSummaryModel>> {
+    const file$ = this.evacueeProfileService
       .getProfileFiles(undefined, undefined, id)
-      .subscribe({
-        next: (result) => {
-          this.essFileResult.next(result);
-          this.essFileResult.complete();
-        },
-        error: (errorResponse) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.findEssFileError);
-        }
-      });
-    return this.essFileResult;
+      .pipe(
+        tap({
+          next: (result) => {},
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.findEssFileError);
+          }
+        })
+      );
+    return lastValueFrom(file$);
   }
 
   public setSelectedFile(fileId: string) {
