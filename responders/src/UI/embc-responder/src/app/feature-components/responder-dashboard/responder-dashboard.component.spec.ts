@@ -71,11 +71,11 @@ describe('ResponderDashboardComponent', () => {
     ]);
   });
 
-  it('should navigate to evacuee search page', () => {
-    fixture.detectChanges();
-    component.evacueeSearch();
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/search/evacuee'
-    ]);
-  });
+  // it('should navigate to evacuee search page', () => {
+  //   fixture.detectChanges();
+  //   component.evacueeSearch();
+  //   expect(routerMock.navigate).toHaveBeenCalledWith([
+  //     '/responder-access/search/evacuee'
+  //   ]);
+  // });
 });
