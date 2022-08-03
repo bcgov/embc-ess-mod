@@ -24,7 +24,7 @@ export class PaperOptionService implements SearchOptionsService {
   loadEvcaueeProfile(): Promise<RegistrantProfileModel> {
     throw new Error('Method not implemented.');
   }
-  
+
   loadEssFile(): Promise<EvacuationFileModel> {
     throw new Error('Method not implemented.');
   }

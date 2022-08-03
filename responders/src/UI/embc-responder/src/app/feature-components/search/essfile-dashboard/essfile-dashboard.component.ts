@@ -70,7 +70,7 @@ export class EssfileDashboardComponent implements OnInit {
       const $p = await this.optionInjectionService.instance
         .loadEssFile()
         .then(async (file) => {
-          let $pp = await this.optionInjectionService.instance
+          const $pp = await this.optionInjectionService.instance
             .loadEvcaueeProfile(file.primaryRegistrantId)
             .then((profile) => {
               this.notesList = this.essfileDashboardService.loadNotes(
