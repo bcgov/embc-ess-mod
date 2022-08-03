@@ -296,9 +296,9 @@ export const gender = [
 ];
 
 export const supportDataLossDialog: DialogContent = {
-  text: '<p><b>Warning:</b> This will result in the current Support data being lost. Do you wish to continue?</p>',
-  confirmButton: 'Yes',
-  cancelButton: 'No'
+  text: '<p><b>Warning:</b> Any unsaved data will be lost. Do you wish to continue?</p>',
+  confirmButton: 'Yes, Continue',
+  cancelButton: 'No, Cancel'
 };
 
 export const wizardProfileMessage: DialogContent = {
