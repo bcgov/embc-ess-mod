@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SelectedPathType } from '../models/appBase.model';
 import { DashboardBanner } from '../models/dialog-content.model';
+import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { EvacueeSearchContextModel } from '../models/evacuee-search-context.model';
+import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { DigitalOptionService } from '../services/compute/digitalOption.service';
 import { PaperOptionService } from '../services/compute/paperOption.service';
 import { RemoteExtOptionService } from '../services/compute/remoteExtOption.service';
@@ -20,6 +22,8 @@ export interface SearchOptionsService {
     type?: string
   ): Promise<boolean> | void;
   getDashboardBanner(fileStatus: string): DashboardBanner;
+  loadEssFile(): Promise<EvacuationFileModel>;
+  loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel>;
 }
 
 @Injectable({

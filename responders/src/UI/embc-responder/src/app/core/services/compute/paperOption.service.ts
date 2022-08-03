@@ -8,6 +8,8 @@ import * as globalConst from '../global-constants';
 import { EvacueeSearchContextModel } from '../../models/evacuee-search-context.model';
 import { DashboardBanner } from '../../models/dialog-content.model';
 import { DataService } from '../helper/data.service';
+import { EvacuationFileModel } from '../../models/evacuation-file.model';
+import { RegistrantProfileModel } from '../../models/registrant-profile.model';
 
 @Injectable()
 export class PaperOptionService implements SearchOptionsService {
@@ -19,6 +21,13 @@ export class PaperOptionService implements SearchOptionsService {
     private dataService: DataService,
     private builder: FormBuilder
   ) {}
+  loadEvcaueeProfile(): Promise<RegistrantProfileModel> {
+    throw new Error('Method not implemented.');
+  }
+  
+  loadEssFile(): Promise<EvacuationFileModel> {
+    throw new Error('Method not implemented.');
+  }
 
   getDashboardBanner(fileStatus: string): DashboardBanner {
     return this.dataService.getDashboardText(fileStatus);

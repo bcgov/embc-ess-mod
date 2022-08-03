@@ -6,10 +6,11 @@ import { EvacueeProfileService } from '../evacuee-profile.service';
 import { AppBaseService } from './appBase.service';
 import * as globalConst from '../global-constants';
 import { EvacuationFileSummaryModel } from '../../models/evacuation-file-summary.model';
-import { BehaviorSubject, lastValueFrom, Observable, of, tap } from 'rxjs';
+import { lastValueFrom, tap } from 'rxjs';
 import { Validators } from '@angular/forms';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { DashboardService } from './dashboard.service';
+import { EssFileService } from '../ess-file.service';
 
 @Injectable({
   providedIn: 'root'
@@ -58,11 +59,12 @@ export class SearchDataService extends DashboardService {
     private customValidation: CustomValidationService,
     appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
-    private evacueeProfileService: EvacueeProfileService,
-    private alertService: AlertService,
+    evacueeProfileService: EvacueeProfileService,
+    alertService: AlertService,
+    essFileService: EssFileService,
     private evacueeSearchService: EvacueeSearchService //TODO: Remove this service
   ) {
-    super(appBaseService);
+    super(appBaseService, essFileService, alertService, evacueeProfileService);
   }
 
   /**
