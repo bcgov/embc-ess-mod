@@ -314,6 +314,7 @@ namespace EMBC.Responders.API.Controllers
         public bool? IsRestricted { get; set; }
         public bool? IsPaper { get; set; }
         public bool IsPerliminary => Task == null;
+        public bool HasSupports { get; set; }
     }
 
     public class EvacuationFileTask
