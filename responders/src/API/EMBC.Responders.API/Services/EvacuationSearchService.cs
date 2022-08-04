@@ -243,6 +243,7 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.CreatedOn)) //temporary until files contain issued on
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.HasSupports, opts => opts.MapFrom(s => s.Supports.Any()))
                 .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null
                     ? new EvacuationFileTask()
                     : new EvacuationFileTask
@@ -255,6 +256,7 @@ namespace EMBC.Responders.API.Services
             ;
 
             CreateMap<EvacuationFile, EvacuationFileSummary>()
+                .ForMember(d => d.HasSupports, opts => opts.MapFrom(s => s.Supports.Any()))
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 .ForMember(d => d.IssuedOn, opts => opts.Ignore())
             ;

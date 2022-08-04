@@ -273,7 +273,7 @@
       <span class="banner-heading">{{ displayBanner?.heading }}</span>
       <span>{{ displayBanner?.content }}</span>
     </div>
-    <div class="col-md-3">
+    <div *ngIf="displayBanner?.buttonText !== undefined" class="col-md-3">
       <button
         class="button-p ess-file-button"
         (click)="openWizard()"

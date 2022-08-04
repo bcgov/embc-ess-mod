@@ -4,12 +4,23 @@ import { SelectedPathType } from '../../models/appBase.model';
 import { DashboardBanner } from '../../models/dialog-content.model';
 import { AppBaseService } from './appBase.service';
 import * as globalConst from '../global-constants';
+import { lastValueFrom, tap } from 'rxjs';
+import { EssFileService } from '../ess-file.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { RegistrantProfileModel } from '../../models/registrant-profile.model';
+import { EvacueeProfileService } from '../evacuee-profile.service';
+import { EvacuationFileModel } from '../../models/evacuation-file.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  constructor(public appBaseService: AppBaseService) {}
+  constructor(
+    public appBaseService: AppBaseService,
+    public essFileService: EssFileService,
+    public alertService: AlertService,
+    public evacueeProfileService: EvacueeProfileService
+  ) {}
 
   getDashboardText(fileStatus: string): DashboardBanner {
     switch (fileStatus) {
@@ -48,5 +59,40 @@ export class DashboardService {
 
   getExpiredStatusText(): DashboardBanner {
     return globalConst.expiredStatusText;
+  }
+
+  async getEssFile(): Promise<EvacuationFileModel> {
+    const file$ = this.essFileService
+      .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
+      .pipe(
+        tap({
+          next: (result: EvacuationFileModel) => {},
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.fileDashboardError
+            );
+          }
+        })
+      );
+    return lastValueFrom(file$);
+  }
+
+  public getEvacueeProfile(
+    evacueeProfileId: string
+  ): Promise<RegistrantProfileModel> {
+    const profile$ = this.evacueeProfileService
+      .getProfileFromId(evacueeProfileId)
+      .pipe(
+        tap({
+          next: (profile: RegistrantProfileModel) => {},
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert('danger', globalConst.getProfileError);
+          }
+        })
+      );
+    return lastValueFrom(profile$);
   }
 }

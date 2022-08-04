@@ -4,7 +4,9 @@ import { Router } from '@angular/router';
 import { SearchOptionsService } from '../../interfaces/searchOptions.service';
 import { SelectedPathType } from '../../models/appBase.model';
 import { DashboardBanner } from '../../models/dialog-content.model';
+import { EvacuationFileModel } from '../../models/evacuation-file.model';
 import { EvacueeSearchContextModel } from '../../models/evacuee-search-context.model';
+import { RegistrantProfileModel } from '../../models/registrant-profile.model';
 import { DataService } from '../helper/data.service';
 
 @Injectable()
@@ -17,6 +19,10 @@ export class RemoteExtOptionService implements SearchOptionsService {
     private dataService: DataService,
     private builder: FormBuilder
   ) {}
+
+  loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
+    return this.dataService.getEvacueeProfile(registrantId);
+  }
 
   getDashboardBanner(fileStatus: string): DashboardBanner {
     return this.dataService.getDashboardText(fileStatus);
@@ -41,6 +47,10 @@ export class RemoteExtOptionService implements SearchOptionsService {
     return this.dataService
       .searchForEssFiles(id)
       .then((fileResult) => this.navigate(fileResult, value));
+  }
+
+  loadEssFile(): Promise<EvacuationFileModel> {
+    return this.dataService.getEssFile();
   }
 
   private navigate(fileResult, value) {

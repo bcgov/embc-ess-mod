@@ -60,7 +60,33 @@ export class EssfileDashboardComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.getEssFile();
+    if (
+      this.optionInjectionService.instance.optionType !==
+      SelectedPathType.remoteExtensions
+    ) {
+      this.getEssFile();
+    } else {
+      this.isLoading = !this.isLoading;
+      const $p = await this.optionInjectionService.instance
+        .loadEssFile()
+        .then(async (file) => {
+          const $pp = await this.optionInjectionService.instance
+            .loadEvcaueeProfile(file.primaryRegistrantId)
+            .then((profile) => {
+              this.notesList = this.essfileDashboardService.loadNotes(
+                file.notes
+              );
+              this.essFile = file;
+              this.loadDefaultOverviewSection(file);
+              this.displayBanner =
+                this.optionInjectionService.instance.getDashboardBanner(
+                  file?.status
+                );
+              this.isLoading = !this.isLoading;
+            });
+        });
+    }
+
     const profile$ = await this.updateMember();
 
     this.isMinor =
@@ -230,7 +256,7 @@ export class EssfileDashboardComponent implements OnInit {
   /**
    * Loads the ESS file for a give file number
    */
-  private getEssFile(): void {
+  private getEssFile() {
     this.isLoading = !this.isLoading;
     this.essFileService
       .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
@@ -249,6 +275,7 @@ export class EssfileDashboardComponent implements OnInit {
             this.optionInjectionService.instance.getDashboardBanner(
               essFile?.status
             );
+
           this.isLoading = !this.isLoading;
         },
         error: (error) => {
