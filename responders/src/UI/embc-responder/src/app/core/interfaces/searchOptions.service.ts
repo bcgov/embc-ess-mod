@@ -27,10 +27,10 @@ export interface SearchOptionsService {
 })
 export class OptionInjectionService {
   constructor(
-    private appBaseService: AppBaseService,
-    private router: Router,
-    private dataService: DataService,
-    private builder: FormBuilder
+    protected appBaseService: AppBaseService,
+    protected router: Router,
+    protected dataService: DataService,
+    protected builder: FormBuilder
   ) {}
 
   public get instance(): SearchOptionsService {

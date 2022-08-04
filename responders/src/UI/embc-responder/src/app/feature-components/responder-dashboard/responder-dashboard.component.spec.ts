@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  waitForAsync,
+  inject
+} from '@angular/core/testing';
 
 import { ResponderDashboardComponent } from './responder-dashboard.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -13,9 +18,9 @@ describe('ResponderDashboardComponent', () => {
   let component: ResponderDashboardComponent;
   let fixture: ComponentFixture<ResponderDashboardComponent>;
   let userService;
-  const routerMock = {
-    navigate: jasmine.createSpy('navigate')
-  };
+  // const routerMock = {
+  //   navigate: jasmine.createSpy('navigate')
+  // };
 
   beforeEach(
     waitForAsync(() => {
@@ -33,7 +38,7 @@ describe('ResponderDashboardComponent', () => {
         ],
         providers: [
           ResponderDashboardComponent,
-          { provide: Router, useValue: routerMock },
+          //{ provide: Router, useValue: routerMock },
           {
             provide: UserService,
             useClass: MockUserService
@@ -63,19 +68,29 @@ describe('ResponderDashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to task search page', () => {
-    fixture.detectChanges();
-    component.signinTask();
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      '/responder-access/search'
-    ]);
-  });
+  it('should navigate to task search page', inject(
+    [Router],
+    (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
 
-  // it('should navigate to evacuee search page', () => {
-  //   fixture.detectChanges();
-  //   component.evacueeSearch();
-  //   expect(routerMock.navigate).toHaveBeenCalledWith([
-  //     '/responder-access/search/evacuee'
-  //   ]);
-  // });
+      fixture.detectChanges();
+      component.signinTask();
+      expect(router.navigate).toHaveBeenCalledWith([
+        '/responder-access/search'
+      ]);
+    }
+  ));
+
+  it('should navigate to evacuee search page', inject(
+    [Router],
+    (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+
+      fixture.detectChanges();
+      component.evacueeSearch();
+      expect(router.navigate).toHaveBeenCalledWith([
+        '/responder-access/search/evacuee'
+      ]);
+    }
+  ));
 });
