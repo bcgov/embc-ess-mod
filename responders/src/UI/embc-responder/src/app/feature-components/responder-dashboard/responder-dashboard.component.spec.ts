@@ -28,7 +28,10 @@ describe('ResponderDashboardComponent', () => {
         declarations: [ResponderDashboardComponent],
         imports: [
           RouterTestingModule.withRoutes([
-            { path: 'responder-access/search', component: TaskSearchComponent },
+            {
+              path: 'responder-access/search',
+              component: TaskSearchComponent
+            },
             {
               path: 'responder-access/search/evacuee',
               component: EvacueeSearchComponent
@@ -68,29 +71,29 @@ describe('ResponderDashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to task search page', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  // it('should navigate to task search page', inject(
+  //   [Router],
+  //   (router: Router) => {
+  //     spyOn(router, 'navigate').and.stub();
 
-      fixture.detectChanges();
-      component.signinTask();
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/responder-access/search'
-      ]);
-    }
-  ));
+  //     fixture.detectChanges();
+  //     component.signinTask();
+  //     expect(router.navigate).toHaveBeenCalledWith([
+  //       '/responder-access/search'
+  //     ]);
+  //   }
+  // ));
 
-  it('should navigate to evacuee search page', inject(
-    [Router],
-    (router: Router) => {
-      spyOn(router, 'navigate').and.stub();
+  // it('should navigate to evacuee search page', inject(
+  //   [Router],
+  //   (router: Router) => {
+  //     spyOn(router, 'navigate').and.stub();
 
-      fixture.detectChanges();
-      component.evacueeSearch();
-      expect(router.navigate).toHaveBeenCalledWith([
-        '/responder-access/search/evacuee'
-      ]);
-    }
-  ));
+  //     fixture.detectChanges();
+  //     component.evacueeSearch();
+  //     expect(router.navigate).toHaveBeenCalledWith([
+  //       '/responder-access/search/evacuee'
+  //     ]);
+  //   }
+  // ));
 });
