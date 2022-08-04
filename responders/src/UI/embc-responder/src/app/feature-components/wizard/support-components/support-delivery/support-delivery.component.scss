@@ -117,7 +117,6 @@
 
 .etransfer-ineligible {
   background-color: rgba(227, 2, 2, 1);
-  height: 24px;
   position: absolute;
   width: 100%;
   left: 0;
@@ -126,6 +125,20 @@
     text-align: center;
     font-weight: bold;
     color: white;
+    margin: 0;
+  }
+}
+
+.referral-ineligible {
+  background-color: rgba(227, 2, 2, 1);
+  position: absolute;
+  width: 100%;
+  left: 0;
+  p {
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    margin: 0;
   }
 }
 

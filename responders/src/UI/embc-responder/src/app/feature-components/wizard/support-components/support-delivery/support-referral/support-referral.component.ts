@@ -18,6 +18,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 export class SupportReferralComponent implements OnInit {
   @Input() referralDeliveryForm: FormGroup;
   @Input() editFlag: boolean;
+  @Input() cloneFlag: boolean;
   supplierList: SupplierListItemModel[];
   filteredOptions: Observable<SupplierListItemModel[]>;
   showTextField = false;
@@ -54,6 +55,16 @@ export class SupportReferralComponent implements OnInit {
       );
 
     this.populateExistingIssuedTo();
+
+    if (this.cloneFlag) {
+      this.referralDeliveryForm.get('issuedTo').disable();
+    }
+
+    if (this.referralDeliveryForm.get('supplier').value) {
+      this.selectedSupplierItem =
+        this.referralDeliveryForm.get('supplier').value;
+      this.showSupplierFlag = true;
+    }
   }
 
   displaySupplier(item: SupplierListItemModel) {

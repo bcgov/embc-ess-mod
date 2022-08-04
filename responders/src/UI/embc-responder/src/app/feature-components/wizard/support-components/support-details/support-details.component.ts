@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -26,13 +26,15 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 import { DateConversionService } from 'src/app/core/services/utility/dateConversion.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { Subscription } from 'rxjs';
+import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
 
 @Component({
   selector: 'app-support-details',
   templateUrl: './support-details.component.html',
   styleUrls: ['./support-details.component.scss']
 })
-export class SupportDetailsComponent implements OnInit {
+export class SupportDetailsComponent implements OnInit, OnDestroy {
   currentTime: string;
   now = Date.now();
   toggle = false;
@@ -41,9 +43,13 @@ export class SupportDetailsComponent implements OnInit {
   noOfDaysList = [];
   selectedStartDate: string;
   editFlag = false;
+  cloneFlag = false;
   taskStartTime: string;
   showLoader = false;
   color = '#169BD5';
+  originalSupport: Support;
+  existingSupports: Support[];
+  supportListSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -57,13 +63,17 @@ export class SupportDetailsComponent implements OnInit {
     private alertService: AlertService,
     private referralCreationService: ReferralCreationService,
     private dateConversionService: DateConversionService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private loadEvacueeListService: LoadEvacueeListService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state;
         if (state?.action === 'edit') {
           this.editFlag = true;
+        } else if (state?.action === 'clone') {
+          this.cloneFlag = true;
+          this.originalSupport = this.stepSupportsService.selectedSupportDetail;
         }
       }
     }
@@ -122,6 +132,22 @@ export class SupportDetailsComponent implements OnInit {
     }
 
     this.calculateNoOfDays();
+
+    this.supportListSubscription = this.stepSupportsService
+      .getExistingSupportList()
+      .subscribe({
+        next: (supports) => {
+          this.existingSupports = supports;
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.supportListerror);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.supportListSubscription.unsubscribe();
   }
 
   checkDateRange(): boolean {
@@ -331,26 +357,84 @@ export class SupportDetailsComponent implements OnInit {
     }
   }
 
+  generateSupportType(element: Support): string {
+    if (element?.subCategory === 'None') {
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
+      return category?.description;
+    } else {
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
+      return subCategory?.description;
+    }
+  }
+
+  validateDelivery() {
+    let hasConflict = false;
+    if (!this.supportDetailsForm.valid) {
+      this.supportDetailsForm.markAllAsTouched();
+      return;
+    } else if (this.cloneFlag) {
+      const thisSupport = this.supportDetailsForm.getRawValue();
+
+      const from = this.dateConversionService.createDateTimeString(
+        thisSupport.fromDate,
+        thisSupport.fromTime
+      );
+      const to = this.dateConversionService.createDateTimeString(
+        thisSupport.toDate,
+        thisSupport.toTime
+      );
+
+      const overlappingSupports = this.existingSupports.filter(
+        (s) =>
+          this.generateSupportType(s) ===
+            this.stepSupportsService.supportTypeToAdd.description &&
+          moment(to).isSameOrAfter(moment(s.from)) &&
+          moment(from).isSameOrBefore(moment(s.to))
+      );
+      hasConflict = overlappingSupports.length > 0;
+    }
+
+    if (hasConflict) {
+      this.dialog
+        .open(DialogComponent, {
+          data: {
+            component: InformationDialogComponent,
+            content: globalConst.duplicateSupportMessage
+          },
+          width: '720px'
+        })
+        .afterClosed()
+        .subscribe((event) => {
+          if (event === 'confirm') {
+            this.addDelivery();
+          }
+        });
+    } else {
+      this.addDelivery();
+    }
+  }
+
   /**
    * Navigates to support delivery page
    */
   addDelivery() {
-    if (!this.supportDetailsForm.valid) {
-      this.supportDetailsForm.markAllAsTouched();
+    this.stepSupportsService.supportDetails =
+      this.supportDetailsForm.getRawValue();
+    this.computeState.triggerEvent();
+    if (this.evacueeSessionService.isPaperBased) {
+      this.mapPaperFields();
+    }
+    const action = this.editFlag ? 'edit' : this.cloneFlag ? 'clone' : '';
+    if (action) {
+      this.router.navigate(['/ess-wizard/add-supports/delivery'], {
+        state: { action }
+      });
     } else {
-      this.stepSupportsService.supportDetails =
-        this.supportDetailsForm.getRawValue();
-      this.computeState.triggerEvent();
-      if (this.evacueeSessionService.isPaperBased) {
-        this.mapPaperFields();
-      }
-      if (!this.editFlag) {
-        this.router.navigate(['/ess-wizard/add-supports/delivery']);
-      } else {
-        this.router.navigate(['/ess-wizard/add-supports/delivery'], {
-          state: { action: 'edit' }
-        });
-      }
+      this.router.navigate(['/ess-wizard/add-supports/delivery']);
     }
   }
 
