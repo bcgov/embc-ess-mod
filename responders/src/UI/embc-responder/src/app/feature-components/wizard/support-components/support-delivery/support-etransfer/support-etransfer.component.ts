@@ -11,6 +11,7 @@ import {
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AppBaseService } from '../../../../../core/services/helper/appBase.service';
 import { CacheService } from '../../../../../core/services/cache.service';
+import { WizardType } from '../../../../../core/models/wizard-type.model';
 
 @Component({
   selector: 'app-support-etransfer',
@@ -20,6 +21,7 @@ import { CacheService } from '../../../../../core/services/cache.service';
 export class SupportEtransferComponent implements OnInit, OnDestroy {
   @Input() supportDeliveryForm: FormGroup;
   @Input() editFlag: boolean;
+  @Input() cloneFlag: boolean;
   @ViewChild('setEmailCheckbox') setEmailCheckbox: MatCheckbox;
   @ViewChild('setMobileCheckbox') setMobileCheckbox: MatCheckbox;
   readonly phoneMask = [
@@ -64,16 +66,24 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    if (
+      this.editFlag &&
+      this.appBaseService.wizardProperties.wizardType ===
+        WizardType.ExtendSupports
+    ) {
+      this.cloneFlag = true;
+    }
     this.emailOnFile =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.email;
     this.previousEmail = this.cacheService.get('previousEmail');
-    if (this.emailOnFile || this.previousEmail) this.showEmailCheckBox = true;
+    if (!this.cloneFlag && (this.emailOnFile || this.previousEmail))
+      this.showEmailCheckBox = true;
 
     this.mobileOnFile =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.phone;
     this.previousMobile = this.cacheService.get('previousMobile');
 
-    if (this.mobileOnFile || this.previousMobile)
+    if (!this.cloneFlag && (this.mobileOnFile || this.previousMobile))
       this.showMobileCheckBox = true;
 
     this.preferenceSubscription = this.supportDeliveryForm
@@ -104,6 +114,12 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
           ?.get('notificationConfirmMobile')
           .updateValueAndValidity();
       });
+
+    if (this.cloneFlag) {
+      this.supportDeliveryForm.get('notificationPreference').disable();
+      this.supportDeliveryForm.get('notificationEmail').disable();
+      this.supportDeliveryForm.get('notificationMobile').disable();
+    }
   }
 
   ngOnDestroy(): void {
@@ -166,6 +182,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   }
 
   showConfirmEmail() {
+    if (this.cloneFlag) return false;
     if (this.showEmailCheckBox)
       return (
         this.supportDeliveryForm?.get('notificationEmail').value &&
@@ -201,6 +218,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
   }
 
   showConfirmMobile() {
+    if (this.cloneFlag) return false;
     if (this.showMobileCheckBox)
       return (
         this.supportDeliveryForm?.get('notificationMobile').value &&

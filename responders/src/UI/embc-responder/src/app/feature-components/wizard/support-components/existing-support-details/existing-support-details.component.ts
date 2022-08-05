@@ -34,6 +34,7 @@ import { DownloadService } from '../../../../core/services/utility/download.serv
 import { FlatDateFormatPipe } from '../../../../shared/pipes/flatDateFormat.pipe';
 import { AppBaseService } from '../../../../core/services/helper/appBase.service';
 import { WizardType } from '../../../../core/models/wizard-type.model';
+import { CloneSupportDetailsService } from './clone-support-details.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -52,6 +53,7 @@ export class ExistingSupportDetailsComponent implements OnInit {
     private stepEssFileService: StepEssFileService,
     public dialog: MatDialog,
     private existingSupportService: ExistingSupportDetailsService,
+    private cloneSupportService: CloneSupportDetailsService,
     private referralCreationService: ReferralCreationService,
     private alertService: AlertService,
     public evacueeSessionService: EvacueeSessionService,
@@ -293,7 +295,13 @@ export class ExistingSupportDetailsComponent implements OnInit {
       .subscribe({
         next: (output) => {
           if (output !== undefined && output !== 'cancel') {
-            //TODO - clone and extend
+            this.cloneSupportService.cloneSupport(
+              this.selectedSupport,
+              this.needsAssessmentForSupport
+            );
+            this.router.navigate(['/ess-wizard/add-supports/details'], {
+              state: { action: 'clone' }
+            });
           }
         }
       });

@@ -54,6 +54,7 @@
         id="referralCard"
         class="support-delivery-card"
         [class.selected]="selectedSupportMethod === supportMethod.Referral"
+        [class.disabled]="cloneFlag"
         (click)="setSupportMethod(supportMethod.Referral)"
       >
         <div
@@ -89,9 +90,27 @@
           </div>
         </div>
 
-        <p><b>Requirements:</b></p>
-        <img src="/assets/images/wizard/eligible.svg" height="10" width="10" />
-        None
+        <div
+          *ngIf="
+            cloneFlag && selectedSupportMethod === supportMethod.ETransfer;
+            else referralRequirementsBlock
+          "
+          class="referral-ineligible"
+        >
+          <p>
+            Changing Support Delivery Method Not Available for Remote Extensions
+          </p>
+        </div>
+
+        <ng-template #referralRequirementsBlock>
+          <p><b>Requirements:</b></p>
+          <img
+            src="/assets/images/wizard/eligible.svg"
+            height="10"
+            width="10"
+          />
+          None
+        </ng-template>
       </mat-card>
     </div>
     <div class="col-md-4">
@@ -100,7 +119,7 @@
         class="support-delivery-card"
         [class.disabled]="
           appBaseService?.etransferProperties?.etransferStatus !==
-          eTransferStatus.available
+            eTransferStatus.available || cloneFlag
         "
         [class.selected]="selectedSupportMethod === supportMethod.ETransfer"
         (click)="setSupportMethod(supportMethod.ETransfer)"
@@ -140,76 +159,90 @@
 
         <div
           *ngIf="
-            appBaseService?.etransferProperties?.etransferStatus !==
-            eTransferStatus.available
+            cloneFlag && selectedSupportMethod === supportMethod.Referral;
+            else etransferRequirementsBlock
           "
           class="etransfer-ineligible"
         >
-          <p
-            *ngIf="
-              appBaseService?.etransferProperties?.etransferStatus ===
-              eTransferStatus.inEligible
-            "
-          >
-            Evacuee Ineligible
-          </p>
-          <p
-            *ngIf="
-              appBaseService?.etransferProperties?.etransferStatus ===
-              eTransferStatus.unavailable
-            "
-          >
-            Not Available
-          </p>
-          <p
-            *ngIf="
-              appBaseService?.etransferProperties?.etransferStatus ===
-              eTransferStatus.notAllowed
-            "
-          >
-            Not Available for this Support Type
-          </p>
-          <p
-            *ngIf="
-              appBaseService?.etransferProperties?.etransferStatus ===
-              eTransferStatus.overLimitIneligible
-            "
-          >
-            Not Available - Amount exceeds $10,000
+          <p>
+            Changing Support Delivery Method Not Available for Remote Extensions
           </p>
         </div>
 
-        <div
-          class="requirements"
-          *ngIf="
-            appBaseService?.etransferProperties?.etransferStatus ===
-              eTransferStatus.available ||
-            appBaseService?.etransferProperties?.etransferStatus ===
-              eTransferStatus.inEligible
-          "
-        >
-          <p><b>Requirements:</b></p>
+        <ng-template #etransferRequirementsBlock>
           <div
-            *ngFor="
-              let req of appBaseService?.etransferProperties
-                ?.etransferRequirement
+            *ngIf="
+              appBaseService?.etransferProperties?.etransferStatus !==
+              eTransferStatus.available
+            "
+            class="etransfer-ineligible"
+          >
+            <p
+              *ngIf="
+                appBaseService?.etransferProperties?.etransferStatus ===
+                eTransferStatus.inEligible
+              "
+            >
+              Evacuee Ineligible
+            </p>
+            <p
+              *ngIf="
+                appBaseService?.etransferProperties?.etransferStatus ===
+                eTransferStatus.unavailable
+              "
+            >
+              Not Available
+            </p>
+            <p
+              *ngIf="
+                appBaseService?.etransferProperties?.etransferStatus ===
+                eTransferStatus.notAllowed
+              "
+            >
+              Not Available for this Support Type
+            </p>
+            <p
+              *ngIf="
+                appBaseService?.etransferProperties?.etransferStatus ===
+                eTransferStatus.overLimitIneligible
+              "
+            >
+              Not Available - Amount exceeds $10,000
+            </p>
+          </div>
+
+          <div
+            class="requirements"
+            *ngIf="
+              appBaseService?.etransferProperties?.etransferStatus ===
+                eTransferStatus.available ||
+              appBaseService?.etransferProperties?.etransferStatus ===
+                eTransferStatus.inEligible
             "
           >
-            <img
-              *ngIf="req.status"
-              src="/assets/images/wizard/eligible.svg"
-              height="10"
-              width="10"
-            />
-            <img
-              *ngIf="!req.status"
-              src="/assets/images/wizard/ineligible.svg"
-              height="10"
-              width="10"
-            />
-            {{ req.statement }}
+            <p><b>Requirements:</b></p>
+            <div
+              *ngFor="
+                let req of appBaseService?.etransferProperties
+                  ?.etransferRequirement
+              "
+            >
+              <img
+                *ngIf="req.status"
+                src="/assets/images/wizard/eligible.svg"
+                height="10"
+                width="10"
+              />
+              <img
+                *ngIf="!req.status"
+                src="/assets/images/wizard/ineligible.svg"
+                height="10"
+                width="10"
+              />
+              {{ req.statement }}
+            </div>
           </div>
-        </div>
+        </ng-template>
       </mat-card>
     </div>
   </div>
@@ -218,11 +251,13 @@
   <app-support-referral
     [referralDeliveryForm]="supportDeliveryForm"
     [editFlag]="editFlag"
+    [cloneFlag]="cloneFlag"
     *ngIf="selectedSupportMethod === supportMethod.Referral"
   ></app-support-referral>
   <app-support-etransfer
     [supportDeliveryForm]="supportDeliveryForm"
     [editFlag]="editFlag"
+    [cloneFlag]="cloneFlag"
     *ngIf="selectedSupportMethod === supportMethod.ETransfer"
   ></app-support-etransfer>
 
