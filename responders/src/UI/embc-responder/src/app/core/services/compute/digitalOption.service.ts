@@ -10,6 +10,8 @@ import { DashboardBanner } from '../../models/dialog-content.model';
 import { DataService } from '../helper/data.service';
 import { EvacuationFileModel } from '../../models/evacuation-file.model';
 import { RegistrantProfileModel } from '../../models/registrant-profile.model';
+import { EvacueeSearchResults } from '../../models/evacuee-search-results';
+import { WizardType } from '../../models/wizard-type.model';
 
 @Injectable()
 export class DigitalOptionService implements SearchOptionsService {
@@ -21,6 +23,7 @@ export class DigitalOptionService implements SearchOptionsService {
     private dataService: DataService,
     private builder: FormBuilder
   ) {}
+
   loadEvcaueeProfile(): Promise<RegistrantProfileModel> {
     throw new Error('Method not implemented.');
   }
@@ -43,7 +46,10 @@ export class DigitalOptionService implements SearchOptionsService {
     });
   }
 
-  search(value: string | EvacueeSearchContextModel, type?: string): void {
+  search(
+    value: string | EvacueeSearchContextModel,
+    type?: string
+  ): void | Promise<EvacueeSearchResults> {
     this.dataService.saveSearchParams(value);
     if (type === SearchPages.idVerifySearch) {
       this.router.navigate(['/responder-access/search/evacuee/name-search'], {
@@ -57,7 +63,29 @@ export class DigitalOptionService implements SearchOptionsService {
         }
       );
     } else if (type === SearchPages.searchResults) {
-      // TODO
+      return this.dataService.evacueeSearch(
+        (value as EvacueeSearchContextModel).evacueeSearchParameters
+      );
     }
+  }
+
+  openWizard(wizardType: string): Promise<boolean> {
+    let route: string = '';
+    switch (wizardType) {
+      case WizardType.NewRegistration:
+        route = this.dataService.openDigitalNewRegistrationWizard();
+      // case SearchFormRegistery.idVerifySearchForm:
+      //   return ;
+      // case SearchFormRegistery.nameSearchForm:
+      //   return ;
+      // case SearchFormRegistery.paperSearchForm:
+      //   return ;
+      default:
+    }
+
+    return this.router.navigate([route], {
+      queryParams: { type: wizardType },
+      queryParamsHandling: 'merge'
+    });
   }
 }

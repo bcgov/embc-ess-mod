@@ -5,6 +5,7 @@ import { SelectedPathType } from '../models/appBase.model';
 import { DashboardBanner } from '../models/dialog-content.model';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { EvacueeSearchContextModel } from '../models/evacuee-search-context.model';
+import { EvacueeSearchResults } from '../models/evacuee-search-results';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { DigitalOptionService } from '../services/compute/digitalOption.service';
 import { PaperOptionService } from '../services/compute/paperOption.service';
@@ -20,10 +21,11 @@ export interface SearchOptionsService {
   search(
     value: string | EvacueeSearchContextModel,
     type?: string
-  ): Promise<boolean> | void;
+  ): Promise<boolean | void | EvacueeSearchResults> | void;
   getDashboardBanner(fileStatus: string): DashboardBanner;
   loadEssFile(): Promise<EvacuationFileModel>;
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel>;
+  openWizard(wizardType: string): Promise<boolean>;
 }
 
 @Injectable({

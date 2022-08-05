@@ -11,6 +11,10 @@ import { Validators } from '@angular/forms';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { DashboardService } from './dashboard.service';
 import { EssFileService } from '../ess-file.service';
+import { EvacueeDetailsModel } from '../../models/evacuee-search-context.model';
+import { EvacueeSearchResults } from '../../models/evacuee-search-results';
+import { WizardType } from '../../models/wizard-type.model';
+import { SelectedPathType } from '../../models/appBase.model';
 
 @Injectable({
   providedIn: 'root'
@@ -67,16 +71,6 @@ export class SearchDataService extends DashboardService {
     super(appBaseService, essFileService, alertService, evacueeProfileService);
   }
 
-  /**
-   * 
-   * this.customValidation
-          .conditionalValidation(
-            () => this.paperBased === true,
-            this.customValidation.whitespaceValidator()
-          )
-          .bind(this.customValidation)
-   */
-
   public saveSearchParams(value: unknown) {
     this.evacueeSearchService.evacueeSearchContext = value;
   }
@@ -96,11 +90,48 @@ export class SearchDataService extends DashboardService {
     }
   }
 
+  openDigitalNewRegistrationWizard(): string {
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.NewRegistration,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
+
+    return '/ess-wizard';
+  }
+
+  async openPaperNewRegistration(): Promise<string> {
+    let paperFileNumber =
+      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
+        ?.paperFileNumber;
+    return await this.searchForEssFiles(
+      undefined,
+      paperFileNumber,
+      undefined
+    ).then((result) => {
+      if (result.length === 0) {
+        this.appBaseService.wizardProperties = {
+          wizardType: WizardType.NewRegistration,
+          lastCompletedStep: null,
+          editFlag: false,
+          memberFlag: false
+        };
+        this.computeState.triggerEvent();
+        return '/ess-wizard';
+      }
+      return null;
+    });
+  }
+
   public searchForEssFiles(
-    id: string
+    registrantId?: string,
+    manualFileId?: string,
+    id?: string
   ): Promise<Array<EvacuationFileSummaryModel>> {
     const file$ = this.evacueeProfileService
-      .getProfileFiles(undefined, undefined, id)
+      .getProfileFiles(registrantId, manualFileId, id)
       .pipe(
         tap({
           next: (result) => {},
@@ -111,6 +142,26 @@ export class SearchDataService extends DashboardService {
         })
       );
     return lastValueFrom(file$);
+  }
+
+  public evacueeSearch(
+    evacueeSearchContext: EvacueeDetailsModel
+  ): Promise<EvacueeSearchResults> {
+    const $results = this.evacueeProfileService
+      .searchForEvacuee(evacueeSearchContext)
+      .pipe(
+        tap({
+          next: (result) => {},
+          error: (error) => {
+            this.alertService.clearAlert();
+            this.alertService.setAlert(
+              'danger',
+              globalConst.evacueeSearchError
+            );
+          }
+        })
+      );
+    return lastValueFrom($results);
   }
 
   public setSelectedFile(fileId: string) {

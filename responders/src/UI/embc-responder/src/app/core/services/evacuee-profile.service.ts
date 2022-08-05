@@ -8,8 +8,11 @@ import {
   RegistrantProfile,
   RegistrationResult
 } from '../api/models';
+import { AddressModel } from '../models/address.model';
 import { EvacuationFileSearchResultModel } from '../models/evacuation-file-search-result.model';
 import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
+import { EvacueeDetailsModel } from '../models/evacuee-search-context.model';
+import { EvacueeSearchResults } from '../models/evacuee-search-results';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { ComputeRulesService } from './computeRules.service';
@@ -61,6 +64,80 @@ export class EvacueeProfileService {
           };
           this.computeState.triggerEvent();
           return profileModel;
+        })
+      );
+  }
+
+  /**
+   * Gets the search results from dymanics and maps the results into UI
+   * acceptable format
+   *
+   * @param evacueeSearchParameters profile/ess file search params
+   * @returns observable of search results
+   */
+  public searchForEvacuee(
+    evacueeSearchParameters: EvacueeDetailsModel
+  ): Observable<EvacueeSearchResults> {
+    return this.registrationsService
+      .registrationsSearch({
+        firstName: evacueeSearchParameters?.firstName,
+        lastName: evacueeSearchParameters?.lastName,
+        dateOfBirth: evacueeSearchParameters?.dateOfBirth,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        ManualFileId: evacueeSearchParameters?.paperFileNumber
+      })
+      .pipe(
+        map((searchResult: EvacueeSearchResults) => {
+          const registrants = searchResult.registrants;
+          const essFiles = searchResult.files;
+          for (const registrant of registrants) {
+            const addressModel: AddressModel = this.mapAddressFields(
+              registrant.primaryAddress.communityCode,
+              registrant.primaryAddress.countryCode
+            );
+            const files = registrant.evacuationFiles;
+
+            for (const file of files) {
+              const fileAddressModel: AddressModel = this.mapAddressFields(
+                file.evacuatedFrom.communityCode,
+                file.evacuatedFrom.countryCode
+              );
+
+              file.evacuatedFrom = {
+                ...fileAddressModel,
+                ...file.evacuatedFrom
+              };
+            }
+            registrant.primaryAddress = {
+              ...addressModel,
+              ...registrant.primaryAddress
+            };
+          }
+
+          for (const file of essFiles) {
+            const fileAddressModel: AddressModel = this.mapAddressFields(
+              file.evacuatedFrom.communityCode,
+              file.evacuatedFrom.countryCode
+            );
+
+            file.evacuatedFrom = {
+              ...fileAddressModel,
+              ...file.evacuatedFrom
+            };
+          }
+
+          searchResult?.files?.sort(
+            (a, b) =>
+              new Date(b.modifiedOn).valueOf() -
+              new Date(a.modifiedOn).valueOf()
+          );
+          searchResult?.registrants?.sort(
+            (a, b) =>
+              new Date(b.modifiedOn).valueOf() -
+              new Date(a.modifiedOn).valueOf()
+          );
+
+          return searchResult;
         })
       );
   }
@@ -250,5 +327,26 @@ export class EvacueeProfileService {
       registrantId,
       body: { email }
     });
+  }
+
+  /**
+   * Maps codes to generate names:
+   *
+   * @param communityCode communityCode from api
+   * @param countryCode countryCode from api
+   * @returns Address object
+   */
+  private mapAddressFields(
+    communityCode: string,
+    countryCode: string
+  ): AddressModel {
+    const communities = this.locationsService.getCommunityList();
+    const countries = this.locationsService.getCountriesList();
+    const community = communities.find((comm) => comm.code === communityCode);
+    const country = countries.find((coun) => coun.code === countryCode);
+    return {
+      community,
+      country
+    };
   }
 }

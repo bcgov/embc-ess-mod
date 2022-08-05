@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EvacuationFileStatus } from '../../api/models';
 import { SearchOptionsService } from '../../interfaces/searchOptions.service';
 import { SelectedPathType } from '../../models/appBase.model';
 import { DashboardBanner } from '../../models/dialog-content.model';
+import { EvacuationFileSummaryModel } from '../../models/evacuation-file-summary.model';
 import { EvacuationFileModel } from '../../models/evacuation-file.model';
 import { EvacueeSearchContextModel } from '../../models/evacuee-search-context.model';
 import { RegistrantProfileModel } from '../../models/registrant-profile.model';
@@ -19,6 +21,10 @@ export class RemoteExtOptionService implements SearchOptionsService {
     private dataService: DataService,
     private builder: FormBuilder
   ) {}
+
+  openWizard(wizardType: string): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
 
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
     return this.dataService.getEvacueeProfile(registrantId);
@@ -45,7 +51,7 @@ export class RemoteExtOptionService implements SearchOptionsService {
     this.dataService.saveSearchParams(value);
 
     return this.dataService
-      .searchForEssFiles(id)
+      .searchForEssFiles(undefined, undefined, id)
       .then((fileResult) => this.navigate(fileResult, value));
   }
 
@@ -53,8 +59,8 @@ export class RemoteExtOptionService implements SearchOptionsService {
     return this.dataService.getEssFile();
   }
 
-  private navigate(fileResult, value) {
-    if (fileResult.length !== 0) {
+  private navigate(fileResult: EvacuationFileSummaryModel[], value) {
+    if (this.allowDashboardNavigation(fileResult)) {
       this.dataService.setSelectedFile(fileResult[0].id);
       return this.router.navigate([
         'responder-access/search/essfile-dashboard'
@@ -71,5 +77,17 @@ export class RemoteExtOptionService implements SearchOptionsService {
         }
       );
     }
+  }
+
+  private allowDashboardNavigation(
+    fileSummary: EvacuationFileSummaryModel[]
+  ): boolean {
+    if (
+      fileSummary.length !== 0 &&
+      fileSummary[0].status === EvacuationFileStatus.Active
+    ) {
+      return true;
+    }
+    return false;
   }
 }
