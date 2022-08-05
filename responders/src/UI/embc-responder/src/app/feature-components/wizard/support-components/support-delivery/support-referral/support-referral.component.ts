@@ -57,12 +57,12 @@ export class SupportReferralComponent implements OnInit {
     this.populateExistingIssuedTo();
 
     if (this.cloneFlag) {
-      this.referralDeliveryForm.get('issuedTo')?.disable();
+      this.referralDeliveryForm?.get('issuedTo')?.disable();
     }
 
-    if (this.referralDeliveryForm.get('supplier')?.value) {
+    if (this.referralDeliveryForm?.get('supplier')?.value) {
       this.selectedSupplierItem =
-        this.referralDeliveryForm.get('supplier')?.value;
+        this.referralDeliveryForm?.get('supplier')?.value;
       this.showSupplierFlag = true;
     }
   }
