@@ -80,7 +80,14 @@ export class DigitalOptionService implements SearchOptionsService {
       case WizardType.EditRegistration:
         this.dataService.updateEditRegistrationWizard();
         break;
+      case WizardType.ReviewFile:
+        this.dataService.updateReviewEssFile();
+        break;
+      case WizardType.CompleteFile:
+        this.dataService.updateCompleteEssFile();
+        break;
       default:
+        break;
     }
 
     return this.router.navigate(['/ess-wizard'], {

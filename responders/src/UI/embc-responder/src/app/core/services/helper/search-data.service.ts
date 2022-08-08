@@ -125,8 +125,38 @@ export class SearchDataService extends DashboardService {
     this.computeState.triggerEvent();
   }
 
+  updateReviewEssFile(): void {
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.ReviewFile,
+      lastCompletedStep: null,
+      editFlag: true,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
+  }
+
+  updateCompleteEssFile(): void {
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.CompleteFile,
+      lastCompletedStep: null,
+      editFlag: true,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
+  }
+
+  updateExtendSupports(): void {
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.ExtendSupports,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
+  }
+
   async checkForPaperFile(wizardType: string): Promise<string> {
-    let paperFileNumber =
+    const paperFileNumber =
       this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
         ?.paperFileNumber;
     return await this.searchForEssFiles(

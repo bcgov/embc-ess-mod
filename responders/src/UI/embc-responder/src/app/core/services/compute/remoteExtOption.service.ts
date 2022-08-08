@@ -9,6 +9,7 @@ import { EvacuationFileSummaryModel } from '../../models/evacuation-file-summary
 import { EvacuationFileModel } from '../../models/evacuation-file.model';
 import { EvacueeSearchContextModel } from '../../models/evacuee-search-context.model';
 import { RegistrantProfileModel } from '../../models/registrant-profile.model';
+import { WizardType } from '../../models/wizard-type.model';
 import { DataService } from '../helper/data.service';
 
 @Injectable()
@@ -21,10 +22,6 @@ export class RemoteExtOptionService implements SearchOptionsService {
     private dataService: DataService,
     private builder: FormBuilder
   ) {}
-
-  openWizard(wizardType: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
-  }
 
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
     return this.dataService.getEvacueeProfile(registrantId);
@@ -57,6 +54,21 @@ export class RemoteExtOptionService implements SearchOptionsService {
 
   loadEssFile(): Promise<EvacuationFileModel> {
     return this.dataService.getEssFile();
+  }
+
+  openWizard(wizardType: string): Promise<boolean> {
+    switch (wizardType) {
+      case WizardType.ExtendSupports:
+        this.dataService.updateExtendSupports();
+        break;
+      default:
+        break;
+    }
+
+    return this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: wizardType },
+      queryParamsHandling: 'merge'
+    });
   }
 
   private navigate(fileResult: EvacuationFileSummaryModel[], value) {

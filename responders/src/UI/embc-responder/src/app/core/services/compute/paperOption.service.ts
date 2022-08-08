@@ -70,7 +70,7 @@ export class PaperOptionService implements SearchOptionsService {
   }
 
   async openWizard(wizardType: string): Promise<boolean> {
-    let route: string = '';
+    let route = '';
     switch (wizardType) {
       case WizardType.NewRegistration:
         await this.dataService
@@ -86,8 +86,16 @@ export class PaperOptionService implements SearchOptionsService {
         this.dataService.updateEditRegistrationWizard();
         route = '/ess-wizard';
         break;
-
+      case WizardType.ReviewFile:
+        this.dataService.updateReviewEssFile();
+        route = '/ess-wizard';
+        break;
+      case WizardType.CompleteFile:
+        this.dataService.updateCompleteEssFile();
+        route = '/ess-wizard';
+        break;
       default:
+        break;
     }
 
     return new Promise<boolean>((resolve, reject) => {
