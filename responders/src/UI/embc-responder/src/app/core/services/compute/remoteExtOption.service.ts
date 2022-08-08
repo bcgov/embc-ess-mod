@@ -84,7 +84,8 @@ export class RemoteExtOptionService implements SearchOptionsService {
   ): boolean {
     if (
       fileSummary.length !== 0 &&
-      fileSummary[0].status === EvacuationFileStatus.Active
+      fileSummary[0].status === EvacuationFileStatus.Active &&
+      fileSummary[0].hasSupports
     ) {
       return true;
     }

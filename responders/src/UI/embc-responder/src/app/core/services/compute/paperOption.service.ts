@@ -24,8 +24,8 @@ export class PaperOptionService implements SearchOptionsService {
     private builder: FormBuilder
   ) {}
 
-  loadEvcaueeProfile(): Promise<RegistrantProfileModel> {
-    throw new Error('Method not implemented.');
+  loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
+    return this.dataService.getEvacueeProfile(registrantId);
   }
 
   loadEssFile(): Promise<EvacuationFileModel> {
@@ -74,14 +74,19 @@ export class PaperOptionService implements SearchOptionsService {
     switch (wizardType) {
       case WizardType.NewRegistration:
         await this.dataService
-          .openPaperNewRegistration()
+          .checkForPaperFile(wizardType)
           .then((value) => (route = value));
-      // case SearchFormRegistery.idVerifySearchForm:
-      //   return ;
-      // case SearchFormRegistery.nameSearchForm:
-      //   return ;
-      // case SearchFormRegistery.paperSearchForm:
-      //   return ;
+        break;
+      case WizardType.NewEssFile:
+        await this.dataService
+          .checkForPaperFile(wizardType)
+          .then((value) => (route = value));
+        break;
+      case WizardType.EditRegistration:
+        this.dataService.updateEditRegistrationWizard();
+        route = '/ess-wizard';
+        break;
+
       default:
     }
 

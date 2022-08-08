@@ -24,8 +24,8 @@ export class DigitalOptionService implements SearchOptionsService {
     private builder: FormBuilder
   ) {}
 
-  loadEvcaueeProfile(): Promise<RegistrantProfileModel> {
-    throw new Error('Method not implemented.');
+  loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
+    return this.dataService.getEvacueeProfile(registrantId);
   }
 
   loadEssFile(): Promise<EvacuationFileModel> {
@@ -70,20 +70,20 @@ export class DigitalOptionService implements SearchOptionsService {
   }
 
   openWizard(wizardType: string): Promise<boolean> {
-    let route: string = '';
     switch (wizardType) {
       case WizardType.NewRegistration:
-        route = this.dataService.openDigitalNewRegistrationWizard();
-      // case SearchFormRegistery.idVerifySearchForm:
-      //   return ;
-      // case SearchFormRegistery.nameSearchForm:
-      //   return ;
-      // case SearchFormRegistery.paperSearchForm:
-      //   return ;
+        this.dataService.updateNewRegistrationWizard();
+        break;
+      case WizardType.NewEssFile:
+        this.dataService.updateNewEssFile();
+        break;
+      case WizardType.EditRegistration:
+        this.dataService.updateEditRegistrationWizard();
+        break;
       default:
     }
 
-    return this.router.navigate([route], {
+    return this.router.navigate(['/ess-wizard'], {
       queryParams: { type: wizardType },
       queryParamsHandling: 'merge'
     });

@@ -121,7 +121,8 @@
             *ngIf="
               !evacueeProfile?.authenticatedUser &&
               evacueeProfile?.securityQuestions?.length &&
-              !isPaperBased
+              optionInjectionService?.instance?.optionType !==
+                selectedPathType.paperBased
             "
           >
             <div class="col-md-12 service-card-container-mobile">
@@ -343,7 +344,10 @@
         <app-matched-essfiles></app-matched-essfiles>
         <br />
         <app-possible-matched-essfiles
-          *ngIf="!isPaperBased"
+          *ngIf="
+            optionInjectionService?.instance?.optionType !==
+            selectedPathType.paperBased
+          "
           [evacueeProfile]="evacueeProfile"
         ></app-possible-matched-essfiles>
       </div>

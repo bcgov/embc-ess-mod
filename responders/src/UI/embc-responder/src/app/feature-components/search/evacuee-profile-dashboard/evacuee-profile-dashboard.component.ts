@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
@@ -22,29 +20,22 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   isLoading = false;
   emailLoader = false;
   emailSuccessMessage: string;
-  isPaperBased: boolean;
-  paperBasedEssFile: string;
+  readonly selectedPathType = SelectedPathType;
 
   constructor(
-    private router: Router,
-    private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
     private evacueeSearchService: EvacueeSearchService,
     private alertService: AlertService,
     private evacueeProfileDashboardService: EvacueeProfileDashboardService,
-    private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    public optionInjectionService: OptionInjectionService
   ) {}
 
   ngOnInit(): void {
     this.evacueeProfileId =
       this.evacueeProfileDashboardService.fetchProfileId();
-
-    this.isPaperBased = this.evacueeSessionService?.isPaperBased;
-    this.paperBasedEssFile =
-      this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber;
     this.emailSuccessMessage = '';
     this.getEvacueeProfile(this.evacueeProfileId);
+
     this.evacueeProfileDashboardService.showFileLinkingPopups();
   }
 
@@ -77,52 +68,35 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    */
   createNewESSFile(): void {
     this.isLoading = true;
-    if (this.evacueeSessionService.isPaperBased) {
-      this.evacueeProfileService
-        .getProfileFiles(undefined, this.paperBasedEssFile)
-        .subscribe({
-          next: (result) => {
-            if (result.length === 0) {
-              this.navigateToWizard();
-            } else {
-              this.isLoading = false;
-              this.evacueeProfileDashboardService.openEssFileExistsDialog(
-                this.evacueeSearchService?.evacueeSearchContext
-                  ?.evacueeSearchParameters?.paperFileNumber
-              );
-            }
-          },
-          error: (errorResponse) => {
-            this.isLoading = false;
-            this.alertService.clearAlert();
-            this.alertService.setAlert('danger', globalConst.findEssFileError);
-          }
-        });
-    } else {
-      this.navigateToWizard();
-    }
+    this.optionInjectionService.instance
+      .openWizard(WizardType.NewEssFile)
+      .then((value) => {
+        if (!value) {
+          this.isLoading = false;
+          this.evacueeProfileDashboardService.openEssFileExistsDialog(
+            this.evacueeSearchService?.evacueeSearchContext
+              ?.evacueeSearchParameters?.paperFileNumber
+          );
+        }
+      })
+      .catch(() => {
+        this.isLoading = false;
+      });
   }
 
   /**
    * Navigates to the Wizard configured to update the current registrant Profile
    */
   editProfile(): void {
-    this.appBaseService.wizardProperties = {
-      wizardType: WizardType.EditRegistration,
-      lastCompletedStep: null,
-      editFlag:
-        !this.appBaseService?.appModel?.selectedProfile
-          ?.selectedEvacueeInContext?.authenticatedUser &&
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.verifiedUser,
-      memberFlag: false
-    };
-    this.computeState.triggerEvent();
-
-    this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: WizardType.EditRegistration },
-      queryParamsHandling: 'merge'
-    });
+    this.isLoading = true;
+    this.optionInjectionService.instance
+      .openWizard(WizardType.EditRegistration)
+      .then((value) => {
+        this.isLoading = false;
+      })
+      .catch(() => {
+        this.isLoading = false;
+      });
   }
 
   /**
@@ -190,49 +164,22 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * @param evacueeProfileId the evacuee Profile ID needed to get the profile details
    */
   private getEvacueeProfile(evacueeProfileId): void {
-    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe({
-      next: (profile: RegistrantProfileModel) => {
+    this.optionInjectionService.instance
+      .loadEvcaueeProfile(evacueeProfileId)
+      .then((profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
         if (
-          !this.isPaperBased &&
+          this.optionInjectionService.instance.optionType !==
+            SelectedPathType.paperBased &&
           !this.evacueeProfile?.securityQuestions?.length
         ) {
           this.evacueeProfileDashboardService.openIncompleteProfileDialog(
             globalConst.incompleteProfileMessage
           );
         }
-      },
-      error: (error) => {
+      })
+      .catch((error) => {
         this.isLoading = !this.isLoading;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.getProfileError);
-      }
-    });
-  }
-
-  /**
-   * navigates to the wizard component
-   */
-  private navigateToWizard(): void {
-    this.appBaseService.wizardProperties = {
-      wizardType: WizardType.NewEssFile,
-      lastCompletedStep: null,
-      editFlag: false,
-      memberFlag: false
-    };
-    this.appBaseService.appModel = { selectedEssFile: null };
-    this.computeState.triggerEvent();
-
-    this.router
-      .navigate(['/ess-wizard'], {
-        queryParams: { type: WizardType.NewEssFile },
-        queryParamsHandling: 'merge'
-      })
-      .then(() => {
-        this.isLoading = false;
-      })
-      .catch(() => {
-        this.isLoading = false;
       });
   }
 }
