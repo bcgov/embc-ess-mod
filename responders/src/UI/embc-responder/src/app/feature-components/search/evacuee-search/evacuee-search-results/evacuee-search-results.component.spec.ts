@@ -365,4 +365,8 @@ describe('EvacueeSearchResultsComponent', () => {
   //     ' ESS File # T3333 already exists in the ERA Tool. Please continue to that ESS File to proceed with paper-based entry. Speak to your supervisor if no results are displaying and you are still seeing this message, as the file might be restricted. Alternatively, go back and search again. Close '
   //   );
   // });
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });
