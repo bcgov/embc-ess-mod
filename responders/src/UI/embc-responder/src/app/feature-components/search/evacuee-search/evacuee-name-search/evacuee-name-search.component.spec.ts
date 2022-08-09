@@ -36,10 +36,10 @@ describe('EvacueeNameSearchComponent', () => {
         ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([
-          {
-            path: 'responder-access/search/evacuee',
-            component: EvacueeSearchComponent
-          }
+          // {
+          //   path: 'responder-access/search/evacuee',
+          //   component: EvacueeSearchComponent
+          // }
         ])
       ],
       providers: [

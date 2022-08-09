@@ -31,11 +31,11 @@ describe('ResponderDashboardComponent', () => {
             {
               path: 'responder-access/search',
               component: TaskSearchComponent
-            },
-            {
-              path: 'responder-access/search/evacuee',
-              component: EvacueeSearchComponent
             }
+            // {
+            //   path: 'responder-access/search/evacuee',
+            //   component: EvacueeSearchComponent
+            // }
           ]),
           HttpClientTestingModule
         ],
