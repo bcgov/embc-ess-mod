@@ -164,9 +164,9 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * @param evacueeProfileId the evacuee Profile ID needed to get the profile details
    */
   private getEvacueeProfile(evacueeProfileId): void {
-    this.optionInjectionService.instance
-      .loadEvcaueeProfile(evacueeProfileId)
-      .then((profile: RegistrantProfileModel) => {
+    this.optionInjectionService?.instance
+      ?.loadEvcaueeProfile(evacueeProfileId)
+      ?.then((profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
         if (
           this.optionInjectionService.instance.optionType !==

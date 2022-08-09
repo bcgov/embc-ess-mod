@@ -81,12 +81,12 @@ export class EvacueeSearchResultsComponent implements OnInit {
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.evacueeSearchResultsService.setloadingOverlay(true);
     (
-      this.optionInjectionService.instance.search(
+      this.optionInjectionService?.instance?.search(
         evacueeSearchContext,
         SearchPages.searchResults
       ) as Promise<EvacueeSearchResults>
     )
-      .then((results: EvacueeSearchResults) => {
+      ?.then((results: EvacueeSearchResults) => {
         this.evacueeSearchResultsService.setloadingOverlay(false);
         this.fileResults = results?.files;
         this.registrantResults = results?.registrants;
@@ -97,9 +97,9 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
-    this.optionInjectionService.instance
-      .openWizard(WizardType.NewRegistration)
-      .then((value) => {
+    this.optionInjectionService?.instance
+      ?.openWizard(WizardType.NewRegistration)
+      ?.then((value) => {
         if (!value) {
           this.evacueeSearchResultsService.openEssFileExistsDialog(
             this.evacueeSearchService?.evacueeSearchContext
