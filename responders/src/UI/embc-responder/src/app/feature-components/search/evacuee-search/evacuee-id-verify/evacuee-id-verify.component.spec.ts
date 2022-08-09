@@ -123,4 +123,8 @@ describe('EvacueeIdVerifyComponent', () => {
   //     ' Can you present any government-issued photo ID to verify your identity? '
   //   );
   // }));
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });

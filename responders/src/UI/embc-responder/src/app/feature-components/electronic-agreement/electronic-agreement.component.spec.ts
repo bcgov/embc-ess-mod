@@ -19,4 +19,8 @@ describe('ElectronicAgreementComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });

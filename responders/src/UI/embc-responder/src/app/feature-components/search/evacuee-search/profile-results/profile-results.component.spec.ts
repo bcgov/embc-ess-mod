@@ -283,4 +283,7 @@ describe('ProfileResultsComponent', () => {
       // }, 500);
     }
   ));
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });

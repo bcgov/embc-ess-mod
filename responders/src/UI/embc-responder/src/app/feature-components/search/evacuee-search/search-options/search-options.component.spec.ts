@@ -72,4 +72,8 @@ describe('SearchOptionsComponent', () => {
       );
     }
   ));
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });

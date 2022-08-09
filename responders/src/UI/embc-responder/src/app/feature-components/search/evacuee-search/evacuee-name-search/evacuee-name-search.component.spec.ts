@@ -190,4 +190,8 @@ describe('EvacueeNameSearchComponent', () => {
   //     ]);
   //   }
   // ));
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });

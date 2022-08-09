@@ -104,4 +104,8 @@ describe('SearchWrapperComponent', () => {
       );
     }
   ));
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });
