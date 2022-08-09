@@ -16,6 +16,7 @@ import {
   InsuranceOption,
   NeedsAssessmentType
 } from 'src/app/core/api/models';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('EssFileDetailsComponent', () => {
   let component: EssFileDetailsComponent;
@@ -173,7 +174,12 @@ describe('EssFileDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, CustomPipeModule, HttpClientTestingModule],
+      imports: [
+        RouterTestingModule,
+        CustomPipeModule,
+        HttpClientTestingModule,
+        MatDialogModule
+      ],
       declarations: [EssFileDetailsComponent],
       providers: [
         EssFileDetailsComponent,

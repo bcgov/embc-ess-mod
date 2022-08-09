@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { RegistrationsService } from 'src/app/core/api/services';
-import { AddressModel } from 'src/app/core/models/address.model';
-import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.model';
-import { EvacueeSearchResults } from 'src/app/core/models/evacuee-search-results';
-import { LocationsService } from 'src/app/core/services/locations.service';
+import { EssFileExistsComponent } from 'src/app/shared/components/dialog-components/ess-file-exists/ess-file-exists.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +14,7 @@ export class EvacueeSearchResultsService {
   public isLoadingOverlay$: Observable<boolean> =
     this.isLoadingOverlay.asObservable();
 
-  constructor(
-    private registrationService: RegistrationsService,
-    private locationsService: LocationsService
-  ) {}
+  constructor(private dialog: MatDialog) {}
 
   public setloadingOverlay(isLoading: boolean): void {
     return this.isLoadingOverlay.next(isLoading);
@@ -30,87 +24,14 @@ export class EvacueeSearchResultsService {
     return this.isLoadingOverlay$;
   }
 
-  /**
-   * Gets the search results from dymanics and maps the results into UI
-   * acceptable format
-   *
-   * @param evacueeSearchParameters profile/ess file search params
-   * @returns observable of search results
-   */
-  public searchForEvacuee(
-    evacueeSearchParameters: EvacueeDetailsModel
-  ): Observable<EvacueeSearchResults> {
-    return this.registrationService
-      .registrationsSearch({
-        firstName: evacueeSearchParameters?.firstName,
-        lastName: evacueeSearchParameters?.lastName,
-        dateOfBirth: evacueeSearchParameters?.dateOfBirth,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        ManualFileId: evacueeSearchParameters?.paperFileNumber
-      })
-      .pipe(
-        map((searchResult: EvacueeSearchResults) => {
-          const registrants = searchResult.registrants;
-          const essFiles = searchResult.files;
-          for (const registrant of registrants) {
-            const addressModel: AddressModel = this.mapAddressFields(
-              registrant.primaryAddress.communityCode,
-              registrant.primaryAddress.countryCode
-            );
-            const files = registrant.evacuationFiles;
-
-            for (const file of files) {
-              const fileAddressModel: AddressModel = this.mapAddressFields(
-                file.evacuatedFrom.communityCode,
-                file.evacuatedFrom.countryCode
-              );
-
-              file.evacuatedFrom = {
-                ...fileAddressModel,
-                ...file.evacuatedFrom
-              };
-            }
-            registrant.primaryAddress = {
-              ...addressModel,
-              ...registrant.primaryAddress
-            };
-          }
-
-          for (const file of essFiles) {
-            const fileAddressModel: AddressModel = this.mapAddressFields(
-              file.evacuatedFrom.communityCode,
-              file.evacuatedFrom.countryCode
-            );
-
-            file.evacuatedFrom = {
-              ...fileAddressModel,
-              ...file.evacuatedFrom
-            };
-          }
-
-          return searchResult;
-        })
-      );
-  }
-
-  /**
-   * Maps codes to generate names:
-   *
-   * @param communityCode communityCode from api
-   * @param countryCode countryCode from api
-   * @returns Address object
-   */
-  private mapAddressFields(
-    communityCode: string,
-    countryCode: string
-  ): AddressModel {
-    const communities = this.locationsService.getCommunityList();
-    const countries = this.locationsService.getCountriesList();
-    const community = communities.find((comm) => comm.code === communityCode);
-    const country = countries.find((coun) => coun.code === countryCode);
-    return {
-      community,
-      country
-    };
+  public openEssFileExistsDialog(essFile: string): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: EssFileExistsComponent,
+        content: { title: 'Paper ESS File Already Exists' },
+        essFile
+      },
+      width: '493px'
+    });
   }
 }
