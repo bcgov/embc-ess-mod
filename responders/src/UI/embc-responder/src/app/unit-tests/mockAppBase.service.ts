@@ -50,6 +50,27 @@ export class MockAppBaseService extends AppBaseService {
     ]
   };
 
+  public disableRemoteExtWorkflowTask: EssTaskModel = {
+    communityCode: '986adfaf-9f97-ea11-b813-005056830319',
+    communityName: 'Nanaimo',
+    description: 'DEV Task',
+    endDate: '2023-12-03T03:32:00Z',
+    id: '9012',
+    startDate: '2021-11-29T19:32:00Z',
+    status: 'Active',
+    workflows: [
+      { enabled: true, name: 'digital-processing' },
+      {
+        enabled: true,
+        name: 'paper-data-entry'
+      },
+      {
+        enabled: false,
+        name: 'remote-extensions'
+      }
+    ]
+  };
+
   public get appModel(): AppBaseModel {
     return this.appModelTestVal
       ? this.appModelTestVal
