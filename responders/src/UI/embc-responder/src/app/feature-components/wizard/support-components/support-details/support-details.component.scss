@@ -60,10 +60,32 @@
   margin-top: 25px;
 }
 
-@media (max-width: 1024px)
-{
+@media (max-width: 1024px) {
   .col-md-4 {
     width: 100%;
   }
+}
 
+.original-period-container {
+  width: 271px;
+  height: 217px;
+  box-sizing: border-box;
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgba(252, 186, 25, 1);
+  border-radius: 0px;
+  position: relative;
+  margin: 40px 0px 0px 20px;
+}
+
+.original-period-content {
+  align-self: center;
+  padding: 0px 2px 2px 20px;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }

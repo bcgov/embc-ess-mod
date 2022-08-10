@@ -1,27 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import {
-  ClothingSupport,
-  EvacuationFileHouseholdMember,
-  FoodGroceriesSupport,
-  FoodRestaurantSupport,
   IncidentalsSupport,
   Interac,
   LodgingBilletingSupport,
   LodgingGroupSupport,
   LodgingHotelSupport,
   Referral,
-  ReferralPrintRequestResponse,
   Support,
   SupportCategory,
   SupportMethod,
-  SupportReprintReason,
   SupportSubCategory,
-  SupportVoidReason,
   TransportationOtherSupport,
   TransportationTaxiSupport
 } from 'src/app/core/api/models';
-import { RegistrationsService } from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import {
@@ -36,7 +27,6 @@ import {
   SupplierDetailsModel,
   Taxi
 } from 'src/app/core/models/support-details.model';
-import { mergeMap } from 'rxjs/operators';
 import {
   Community,
   LocationsService
@@ -45,9 +35,11 @@ import { DateConversionService } from 'src/app/core/services/utility/dateConvers
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({ providedIn: 'root' })
-export class ExistingSupportDetailsService {
+export class CloneSupportDetailsService {
+  recipientFirstName: string;
+  recipientLastName: string;
+  receivingRegistrantId: string;
   constructor(
-    private registrationService: RegistrationsService,
     private locationService: LocationsService,
     public stepSupportsService: StepSupportsService,
     private dateConversionService: DateConversionService,
@@ -55,109 +47,23 @@ export class ExistingSupportDetailsService {
   ) {}
 
   /**
-   * Method that deletes Referrals from the Database
-   *
-   * @param fileId
-   * @param supportId
-   * @param voidReason
-   * @returns
-   */
-  voidSupport(
-    fileId: string,
-    supportId: string,
-    voidReason: SupportVoidReason
-  ): Observable<void> {
-    return this.registrationService.registrationsVoidSupport({
-      fileId,
-      supportId,
-      voidReason
-    });
-  }
-
-  /**
-   * Method that deletes e-Transfers from the Database
-   *
-   * @param fileId
-   * @param supportId
-   * @returns
-   */
-  cancelSupport(fileId: string, supportId: string): Observable<void> {
-    return this.registrationService.registrationsCancelSupport({
-      fileId,
-      supportId
-    });
-  }
-
-  /**
-   * Method that reprints pdf of the selected referral
-   *
-   * @param fileId
-   * @param supportId
-   * @param reprintReason
-   * @returns
-   */
-  reprintSupport(
-    fileId: string,
-    supportId: string,
-    reprintReason: SupportReprintReason,
-    includeSummary: boolean
-  ): Observable<Blob> {
-    return this.registrationService
-      .registrationsReprintSupport({
-        fileId,
-        supportId,
-        reprintReason,
-        includeSummary
-      })
-      .pipe(
-        mergeMap((result: ReferralPrintRequestResponse) => {
-          const printRequestId = result.printRequestId;
-          return this.registrationService.registrationsGetPrint({
-            fileId,
-            printRequestId
-          });
-        })
-      );
-  }
-
-  /**
-   * Finds the given householdmember based on the given ID
-   *
-   * @param memberId
-   * @param needsAssessmentForSupport
-   * @returns
-   */
-  mapMember(
-    memberId: string,
-    needsAssessmentForSupport: EvacuationFileModel
-  ): EvacuationFileHouseholdMember {
-    return needsAssessmentForSupport.householdMembers.find((value) => {
-      if (value?.id === memberId) {
-        return value;
-      }
-    });
-  }
-
-  /**
-   * Creates a temporary support as draft that the user can edit
+   * Clones selected support
    *
    * @param selectedSupport
    * @param needsAssessmentForSupport
    */
-  createEditableDraft(
+  cloneSupport(
     selectedSupport: Support,
     needsAssessmentForSupport: EvacuationFileModel
   ) {
-    const members: Array<EvacuationFileHouseholdMember> =
-      selectedSupport.includedHouseholdMembers.map((id) => {
-        return this.mapMember(id, needsAssessmentForSupport);
-      });
-
     const referralDelivery = selectedSupport.supportDelivery as Referral;
     const name = referralDelivery.issuedToPersonName?.split(',');
     const issuedToVal = name
       ? needsAssessmentForSupport.householdMembers.find((member) => {
-          if (member.lastName === name[0] && member.firstName === name[1]) {
+          if (
+            member.lastName === name[0].trim() &&
+            member.firstName === name[1].trim()
+          ) {
             return member;
           }
         })
@@ -182,43 +88,40 @@ export class ExistingSupportDetailsService {
         ? category
         : subCategory;
 
-    //fix bug where from/to time was being pushed forward during save. Save expects the date to have a time of 0,0,0,0
-    //and adds the time field to it
-    const fromDate = new Date(selectedSupport.from);
+    const fromDate = new Date();
     const fromTime = this.dateConversionService.convertDateTimeToTime(
       fromDate.toISOString()
     );
-    const toDate = new Date(selectedSupport.to);
+    fromDate.setHours(0, 0, 0, 0);
+    const toDate = new Date();
+    toDate.setDate(toDate.getDate() + 1);
     const toTime = this.dateConversionService.convertDateTimeToTime(
       toDate.toISOString()
     );
-    fromDate.setHours(0, 0, 0, 0);
     toDate.setHours(0, 0, 0, 0);
+
     this.stepSupportsService.supportDetails = {
-      externalReferenceId: (
-        selectedSupport.supportDelivery as Referral
-      ).manualReferralId?.substring(1),
-      issuedBy: selectedSupport.issuedBy,
-      issuedOn: selectedSupport.issuedOn,
+      issuedBy: '',
+      issuedOn: '',
       fromDate: fromDate.toISOString(),
       toDate: toDate.toISOString(),
       toTime,
       fromTime,
-      members,
-      noOfDays: this.dateConversionService.getNoOfDays(
-        selectedSupport.to,
-        selectedSupport.from
-      ),
-      referral: this.createReferral(selectedSupport)
+      members: [],
+      noOfDays: 1,
+      referral: this.cloneReferral(selectedSupport)
     };
 
     let interac: Interac;
     if (selectedSupport.method === SupportMethod.ETransfer) {
       interac = selectedSupport.supportDelivery as Interac;
+      this.recipientFirstName = interac.recipientFirstName;
+      this.recipientLastName = interac.recipientLastName;
+      this.receivingRegistrantId = interac.receivingRegistrantId;
     }
 
     this.stepSupportsService.supportDelivery = {
-      issuedTo: issuedToVal !== null ? issuedToVal : null,
+      issuedTo: issuedToVal,
       name:
         issuedToVal === undefined ? referralDelivery.issuedToPersonName : '',
       supplier: supplierValue,
@@ -265,7 +168,7 @@ export class ExistingSupportDetailsService {
    * @param selectedSupport
    * @returns
    */
-  createReferral(
+  cloneReferral(
     selectedSupport: Support
   ):
     | RestaurantMeal
@@ -279,22 +182,19 @@ export class ExistingSupportDetailsService {
     | Clothing {
     if (selectedSupport.subCategory === SupportSubCategory.Food_Restaurant) {
       return {
-        noOfBreakfast: (selectedSupport as FoodRestaurantSupport)
-          .numberOfBreakfastsPerPerson,
-        noOfLunches: (selectedSupport as FoodRestaurantSupport)
-          .numberOfLunchesPerPerson,
-        noOfDinners: (selectedSupport as FoodRestaurantSupport)
-          .numberOfDinnersPerPerson,
-        totalAmount: (selectedSupport as FoodRestaurantSupport).totalAmount
+        noOfBreakfast: 1,
+        noOfLunches: 1,
+        noOfDinners: 1,
+        totalAmount: null
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Food_Groceries
     ) {
       return {
-        noOfMeals: (selectedSupport as FoodGroceriesSupport).numberOfDays,
-        totalAmount: (selectedSupport as FoodGroceriesSupport).totalAmount,
-        userTotalAmount: (selectedSupport as FoodGroceriesSupport).totalAmount,
-        approverName: (selectedSupport as FoodGroceriesSupport).approverName
+        noOfMeals: 1,
+        totalAmount: null,
+        userTotalAmount: null,
+        approverName: null
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Transportation_Taxi
@@ -309,41 +209,40 @@ export class ExistingSupportDetailsService {
       return {
         transportMode: (selectedSupport as TransportationOtherSupport)
           .transportMode,
-        totalAmount: (selectedSupport as TransportationOtherSupport).totalAmount
+        totalAmount: null
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Billeting
     ) {
       return {
-        noOfNights: (selectedSupport as LodgingBilletingSupport).numberOfNights
+        noOfNights: 1
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Group
     ) {
       return {
-        noOfNights: (selectedSupport as LodgingGroupSupport).numberOfNights
+        noOfNights: 1
       };
     } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel
     ) {
       return {
-        noOfNights: (selectedSupport as LodgingHotelSupport).numberOfNights,
+        noOfNights: 1,
         noOfRooms: (selectedSupport as LodgingHotelSupport).numberOfRooms
       };
     } else if (selectedSupport.category === SupportCategory.Incidentals) {
       return {
         approvedItems: (selectedSupport as IncidentalsSupport).approvedItems,
-        totalAmount: (selectedSupport as IncidentalsSupport).totalAmount,
-        userTotalAmount: (selectedSupport as IncidentalsSupport).totalAmount,
-        approverName: (selectedSupport as FoodGroceriesSupport).approverName
+        totalAmount: null,
+        userTotalAmount: null,
+        approverName: null
       };
     } else if (selectedSupport.category === SupportCategory.Clothing) {
       return {
-        extremeWinterConditions: (selectedSupport as ClothingSupport)
-          .extremeWinterConditions,
-        totalAmount: (selectedSupport as ClothingSupport).totalAmount,
-        userTotalAmount: (selectedSupport as ClothingSupport).totalAmount,
-        approverName: (selectedSupport as FoodGroceriesSupport).approverName
+        extremeWinterConditions: null,
+        totalAmount: null,
+        userTotalAmount: null,
+        approverName: null
       };
     }
   }

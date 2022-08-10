@@ -163,4 +163,8 @@ describe('TaskSearchComponent', () => {
       );
     }
   ));
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });

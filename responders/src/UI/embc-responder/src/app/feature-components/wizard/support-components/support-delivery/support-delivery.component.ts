@@ -18,6 +18,8 @@ import { SupportMethod } from '../../../../core/api/models/support-method';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { SupportSubCategory } from '../../../../core/api/models';
 import { CacheService } from '../../../../core/services/cache.service';
+import { CloneSupportDetailsService } from '../existing-support-details/clone-support-details.service';
+import { WizardType } from '../../../../core/models/wizard-type.model';
 
 @Component({
   selector: 'app-support-delivery',
@@ -27,6 +29,7 @@ import { CacheService } from '../../../../core/services/cache.service';
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: FormGroup;
   editFlag = false;
+  cloneFlag = false;
   selectedSupportMethod: SupportMethod;
   supportMethod = SupportMethod;
   eTransferStatus = ETransferStatus;
@@ -40,13 +43,21 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     private computeState: ComputeRulesService,
     private dialog: MatDialog,
     private cd: ChangeDetectorRef,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private cloneSupportDetailsService: CloneSupportDetailsService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state;
         if (state?.action === 'edit') {
           this.editFlag = true;
+        }
+        if (
+          state?.action === 'clone' ||
+          this.appBaseService.wizardProperties.wizardType ===
+            WizardType.ExtendSupports
+        ) {
+          this.cloneFlag = true;
         }
       }
     }
@@ -129,16 +140,22 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         ],
         details: this.createSupplierDetailsForm(),
         recipientFirstName: [
-          this.appBaseService?.appModel?.selectedProfile
-            ?.selectedEvacueeInContext?.personalDetails?.firstName || ''
+          this.cloneFlag
+            ? this.cloneSupportDetailsService.recipientFirstName
+            : this.appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext?.personalDetails?.firstName || ''
         ],
         recipientLastName: [
-          this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
-            ''
+          this.cloneFlag
+            ? this.cloneSupportDetailsService.recipientLastName
+            : this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase() ||
+              ''
         ],
         receivingRegistrantId: [
-          this.appBaseService?.appModel?.selectedProfile
-            ?.selectedEvacueeInContext?.id || ''
+          this.cloneFlag
+            ? this.cloneSupportDetailsService.receivingRegistrantId
+            : this.appBaseService?.appModel?.selectedProfile
+                ?.selectedEvacueeInContext?.id || ''
         ],
         notificationPreference: [
           this.getExistingPreference(),
@@ -170,6 +187,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
             Validators.email,
             this.customValidation.conditionalValidation(
               () =>
+                !this.cloneFlag &&
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
                 (this.supportDeliveryForm.get('notificationPreference')
                   .value === 'Email' ||
@@ -204,6 +222,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
               .bind(this.customValidation),
             this.customValidation.conditionalValidation(
               () =>
+                !this.cloneFlag &&
                 this.selectedSupportMethod === SupportMethod.ETransfer &&
                 (this.supportDeliveryForm.get('notificationPreference')
                   .value === 'Mobile' ||

@@ -697,4 +697,7 @@ describe('AppComponent', () => {
       state: { type: 'planned' }
     });
   }));
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });

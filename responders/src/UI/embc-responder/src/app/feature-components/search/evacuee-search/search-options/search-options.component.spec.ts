@@ -125,4 +125,8 @@ describe('SearchOptionsComponent', () => {
     fixture.detectChanges();
     expect(componentResponse).toBe(true);
   });
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 });
