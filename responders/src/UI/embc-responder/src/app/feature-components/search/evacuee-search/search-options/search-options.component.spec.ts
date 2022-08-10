@@ -10,12 +10,14 @@ import { SearchOptionsComponent } from './search-options.component';
 import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
 import { Router } from '@angular/router';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
+import { MockUserService } from 'src/app/unit-tests/mockUser.service';
 
 describe('SearchOptionsComponent', () => {
   let component: SearchOptionsComponent;
   let fixture: ComponentFixture<SearchOptionsComponent>;
   let appBaseService;
   let evacueeSessionService;
+  let userService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -31,7 +33,10 @@ describe('SearchOptionsComponent', () => {
           provide: EvacueeSessionService,
           useClass: MockEvacueeSessionService
         },
-        UserService
+        {
+          provide: UserService,
+          useClass: MockUserService
+        }
       ]
     }).compileComponents();
   });
@@ -41,6 +46,7 @@ describe('SearchOptionsComponent', () => {
     component = fixture.componentInstance;
     appBaseService = TestBed.inject(AppBaseService);
     evacueeSessionService = TestBed.inject(EvacueeSessionService);
+    userService = TestBed.inject(UserService);
   });
 
   it('should create', () => {
@@ -72,4 +78,51 @@ describe('SearchOptionsComponent', () => {
       );
     }
   ));
+
+  it('should display a warning message to select search option', () => {
+    component.noSelectionFlag = true;
+    fixture.detectChanges();
+    component.next();
+
+    const warningMessage = document.getElementsByClassName(
+      'field-error'
+    )[0] as HTMLElement;
+    fixture.detectChanges();
+    expect(warningMessage.textContent).toEqual(' Please make a selection ');
+  });
+
+  it('should display Remote Extensions as disable if not available on backend', () => {
+    appBaseService.appModel = {
+      selectedEssTask: appBaseService.disableRemoteExtWorkflowTask
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
+    const componentResponse = component.isEnabled('remote-extensions');
+    fixture.detectChanges();
+    expect(componentResponse).toBe(true);
+  });
+
+  it('should display Remote Extensions as enable if responder has permissions', () => {
+    appBaseService.appModel = {
+      selectedEssTask: appBaseService.enabledAllWorkflowsTask
+    };
+    userService.currentProfileValue = userService.profileTier3;
+    fixture.detectChanges();
+    component.ngOnInit();
+    const componentResponse = component.isEnabled('remote-extensions');
+    fixture.detectChanges();
+    expect(componentResponse).toBe(false);
+  });
+
+  it('should display Remote Extensions as disable if responder does not have permissions', () => {
+    appBaseService.appModel = {
+      selectedEssTask: appBaseService.enabledAllWorkflowsTask
+    };
+    userService.currentProfileValue = userService.profileTier1;
+    fixture.detectChanges();
+    component.ngOnInit();
+    const componentResponse = component.isEnabled('remote-extensions');
+    fixture.detectChanges();
+    expect(componentResponse).toBe(true);
+  });
 });
