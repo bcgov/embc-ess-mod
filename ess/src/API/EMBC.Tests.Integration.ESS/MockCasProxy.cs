@@ -175,6 +175,8 @@ namespace EMBC.Tests.Integration.ESS
     public static class CasPaymentStatuses
     {
         public const string Negotiable = "NEGOTIABLE";
+        public const string Reconciled = "RECONCILED";
+        public const string Voided = "VOIDED";
     }
 
 

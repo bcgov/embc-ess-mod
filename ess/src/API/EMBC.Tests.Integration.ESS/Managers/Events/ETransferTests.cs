@@ -155,7 +155,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact(Skip = RequiresVpnConnectivity)]
-        public async Task FullProcess_NewSupport_PaymentIssued()
+        public async Task FullProcess_NewSupport_Paid()
         {
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
 
@@ -224,6 +224,23 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             })).Items;
 
             issuedSupport.ShouldHaveSingleItem();
+
+            foreach (var support in updatedSupports)
+            {
+                mockedCas.SetPaymentDate(((Interac)support.SupportDelivery).RelatedPaymentId, DateTime.UtcNow, CasPaymentStatuses.Reconciled);
+            }
+
+            await manager.Handle(new ReconcilePaymentsCommand());
+
+            await manager.Handle(new ProcessPendingPaymentsCommand());
+
+            var paidSupports = ((EMBC.ESS.Resources.Supports.SearchSupportQueryResult)await supportRepository.Query(new EMBC.ESS.Resources.Supports.SearchSupportsQuery
+            {
+                ById = supportsToProcess.First().Id,
+                ByStatus = EMBC.ESS.Resources.Supports.SupportStatus.Paid,
+            })).Items;
+
+            paidSupports.ShouldHaveSingleItem();
         }
 
         private async Task QueueApprovedSupports(IEnumerable<string> supportIds)
