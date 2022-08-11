@@ -222,6 +222,7 @@ namespace EMBC.ESS.Resources.Supports
                     break;
 
                 case SupportStatus.Cancelled when supportDeliveryType == SupportMethod.ETransfer:
+                case SupportStatus.Paid when supportDeliveryType == SupportMethod.ETransfer:
                     ctx.DeactivateObject(support, (int)status);
                     break;
 
