@@ -108,14 +108,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Create new ESS File")]
+        [Xunit.SkippableFactAttribute(DisplayName="Create new Verified Registration")]
         [Xunit.TraitAttribute("FeatureTitle", "Authenticated Registrant")]
-        [Xunit.TraitAttribute("Description", "Create new ESS File")]
-        public void CreateNewESSFile()
+        [Xunit.TraitAttribute("Description", "Create new Verified Registration")]
+        public void CreateNewVerifiedRegistration()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create new ESS File", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create new Verified Registration", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 7
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -130,7 +130,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("I log in with BCSC credentials EVAC00034", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 9
- testRunner.When("I create a new EssFile", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I create a new Registration", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 10
  testRunner.And("I complete the maximum fields on the ESS file evacuee forms", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
