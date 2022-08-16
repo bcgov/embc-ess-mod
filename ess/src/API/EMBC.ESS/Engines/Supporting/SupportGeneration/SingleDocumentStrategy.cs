@@ -33,7 +33,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
         {
             var referrals = mapper.Map<IEnumerable<PrintReferral>>(request.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral), opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
             var summaryItems = mapper.Map<IEnumerable<PrintSummary>>(request.Supports, opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
-            var printingUser = new PrintRequestingUser { Id = request.PrintingMember.Id, FirstName = request.PrintingMember.FirstName, LastName = request.PrintingMember.LastName };
+            var printingUser = new PrintRequestingUser { Id = request.PrintingMember.Id, FirstName = request.PrintingMember.FirstName, LastName = request.PrintingMember.LastName, TeamName = request.PrintingMember.TeamName };
 
             var communities = (await metadataRepository.GetCommunities()).ToDictionary(c => c.Code, c => c.Name);
 
@@ -41,6 +41,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
             {
                 referral.VolunteerFirstName = printingUser.FirstName;
                 referral.VolunteerLastName = printingUser.LastName;
+                referral.EssTeamName = printingUser.TeamName;
                 referral.DisplayWatermark = request.AddWatermark;
                 referral.HostCommunity = communities.GetValueOrDefault(referral.HostCommunity);
                 if (!string.IsNullOrEmpty(referral.Supplier?.Community)) referral.Supplier.City = communities.GetValueOrDefault(referral.Supplier.Community);

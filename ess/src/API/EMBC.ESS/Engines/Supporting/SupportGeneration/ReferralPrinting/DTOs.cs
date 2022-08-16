@@ -22,6 +22,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public string ApprovedItemsPrinted => ConvertCarriageReturnToHtml(ApprovedItems);
         public string VolunteerFirstName { get; set; }
         public string VolunteerLastName { get; set; }
+        public string EssTeamName { get; set; }
         public bool DisplayWatermark { get; set; }
         public PrintReferralType Type { get; set; }
         public string EssNumber { get; set; }
@@ -149,8 +150,8 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
     {
         public string Id { get; set; }
         public string FirstName { get; set; }
-
         public string LastName { get; set; }
+        public string TeamName { get; set; }
     }
 
     public enum PrintReferralType
