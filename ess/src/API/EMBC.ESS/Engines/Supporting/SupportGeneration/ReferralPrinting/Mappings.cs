@@ -33,6 +33,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.ApprovedItems, opts => opts.Ignore())
                 .ForMember(d => d.VolunteerFirstName, opts => opts.Ignore())
                 .ForMember(d => d.VolunteerLastName, opts => opts.Ignore())
+                .ForMember(d => d.EssTeamName, opts => opts.Ignore())
                 .ForMember(d => d.DisplayWatermark, opts => opts.Ignore())
                 .ForMember(d => d.NumBreakfasts, opts => opts.Ignore())
                 .ForMember(d => d.NumLunches, opts => opts.Ignore())
