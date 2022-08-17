@@ -22,7 +22,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
             currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
             configurationLazy = new Lazy<IConfiguration>(ReadConfiguration);
             closeBrowserOnDispose = Configuration.GetValue("CloseBrowserAfterEachTest", true);
-            runAutomationHeadless = Configuration.GetValue("RunHeadless", true);
+            runAutomationHeadless = Configuration.GetValue("RunHeadless", false);
         }
 
         /// <summary>

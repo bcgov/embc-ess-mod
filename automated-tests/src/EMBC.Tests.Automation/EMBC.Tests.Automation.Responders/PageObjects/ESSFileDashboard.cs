@@ -9,6 +9,8 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 {
     public class ESSFileDashboard: PageObjectBase
     {
+        private By searchRemoteExtensionsFound = By.XPath("//button/span[contains(text(), 'Extend Supports')]");
+
         public ESSFileDashboard(IWebDriver webDriver) : base(webDriver)
         { }
 
@@ -29,6 +31,12 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         public void ESSFileDashEditButton()
         {
             ButtonElement("Edit ESS File");
+        }
+
+        public void RemoteExtensionESSFileFound()
+        {
+            Wait();
+            Assert.True(webDriver.FindElement(searchRemoteExtensionsFound).Displayed);
         }
     }
 }

@@ -106,10 +106,18 @@ namespace EMBC.Tests.Automation.Responders.StepDefinitions
             
         }
 
-        [StepDefinition(@"An ESS file is successfully found")]
-        public void ESSFilefound()
+        [StepDefinition(@"Remote Extensions displays results")]
+        public void RemoteExtensionResults()
         {
-            evacueeDashboard.CurrentLocation.Should().Be("/responder-access/search/essfile-dashboard/overview");
+            if (evacueeDashboard.CurrentLocation.Equals("/responder-access/search/evacuee"))
+            {
+                searchEvacuee.RemoteExtensionESSFileNotFound();
+            }
+            else if (evacueeDashboard.CurrentLocation.Equals("/responder-access/search/essfile-dashboard/overview"))
+            {
+                essFileDashboard.RemoteExtensionESSFileFound();
+            }
+            
         }
 
         public class Evacuee
