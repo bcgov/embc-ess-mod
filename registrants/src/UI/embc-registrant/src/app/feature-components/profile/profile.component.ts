@@ -6,7 +6,7 @@ import {
   AfterViewChecked,
   ChangeDetectorRef
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
@@ -34,7 +34,7 @@ export class ProfileComponent
   profileFolderPath = 'evacuee-profile-forms';
   path: string;
   form$: Subscription;
-  form: FormGroup;
+  form: UntypedFormGroup;
   stepToDisplay: number;
   currentFlow: string;
   type = 'profile';
@@ -172,7 +172,7 @@ export class ProfileComponent
         this.profileDataService.contactDetails = this.form.value;
         break;
       case 'security-questions':
-        this.saveSecurityQuestions(this.form.get('questions') as FormGroup);
+        this.saveSecurityQuestions(this.form.get('questions') as UntypedFormGroup);
         break;
       default:
     }
@@ -235,7 +235,7 @@ export class ProfileComponent
       });
   }
 
-  private saveSecurityQuestions(questionForm: FormGroup) {
+  private saveSecurityQuestions(questionForm: UntypedFormGroup) {
     //let anyValueSet = false;
     const securityQuestions: Array<SecurityQuestion> = [];
 

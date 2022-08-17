@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import {
@@ -13,7 +13,7 @@ import {
   styleUrls: ['./can-address.component.scss']
 })
 export class CanAddressComponent implements OnInit {
-  @Input() addressForm: FormGroup;
+  @Input() addressForm: UntypedFormGroup;
   filteredOptions: Observable<StateProvince[]>;
   provinces: StateProvince[] = [];
   country = { countryCode: 'CAN' };

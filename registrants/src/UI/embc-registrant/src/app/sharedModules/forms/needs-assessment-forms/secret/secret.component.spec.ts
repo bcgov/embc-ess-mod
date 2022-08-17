@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import SecretComponent from './secret.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 
@@ -13,7 +13,7 @@ describe('SecretComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SecretComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormCreationService, FormBuilder]
+      providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));
 

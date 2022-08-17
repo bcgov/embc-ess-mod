@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { MatRadioModule } from '@angular/material/radio';
@@ -17,14 +17,14 @@ import * as globalConst from '../../../../core/services/globalConstants';
   styleUrls: ['./identify-needs.component.scss']
 })
 export default class IdentifyNeedsComponent implements OnInit {
-  identifyNeedsForm: FormGroup;
-  formBuilder: FormBuilder;
+  identifyNeedsForm: UntypedFormGroup;
+  formBuilder: UntypedFormBuilder;
   identifyNeedsForm$: Subscription;
   formCreationService: FormCreationService;
   radioOption = globalConst.needsOptions;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
   ) {
     this.formBuilder = formBuilder;

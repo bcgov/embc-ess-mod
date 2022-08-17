@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
@@ -20,9 +20,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./personal-details.component.scss']
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
-  personalDetailsForm: FormGroup;
+  personalDetailsForm: UntypedFormGroup;
   gender = globalConst.gender;
-  formBuilder: FormBuilder;
+  formBuilder: UntypedFormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
   readonly dateMask = [
@@ -42,7 +42,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   disableFields = false;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
   ) {
     this.formBuilder = formBuilder;

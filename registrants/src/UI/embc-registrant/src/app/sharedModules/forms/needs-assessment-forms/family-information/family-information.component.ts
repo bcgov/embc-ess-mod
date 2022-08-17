@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,9 +23,9 @@ import { InformationDialogComponent } from 'src/app/core/components/dialog-compo
   styleUrls: ['./family-information.component.scss']
 })
 export default class FamilyInformationComponent implements OnInit {
-  householdMemberForm: FormGroup;
+  householdMemberForm: UntypedFormGroup;
   radioOption = globalConst.radioButton1;
-  formBuilder: FormBuilder;
+  formBuilder: UntypedFormBuilder;
   householdMemberForm$: Subscription;
   formCreationService: FormCreationService;
   showFamilyForm = false;
@@ -44,7 +44,7 @@ export default class FamilyInformationComponent implements OnInit {
   editFlag = false;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService,
     public dialog: MatDialog
   ) {

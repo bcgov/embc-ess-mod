@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Injector } from '@angular/core';
 import { from } from 'rxjs';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class ComponentWrapperComponent implements OnInit {
 
   constructor(
     private injector: Injector,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private formCreationService: FormCreationService
   ) {}
 

@@ -6,7 +6,7 @@ import {
   waitForAsync
 } from '@angular/core/testing';
 import { VerifiedRegistrationComponent } from './verified-registration.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TimeoutService } from 'src/app/core/services/timeout.service';
@@ -34,7 +34,7 @@ describe('VerifiedRegistrationComponent', () => {
         OAuthModule.forRoot()
       ],
       providers: [
-        FormBuilder,
+        UntypedFormBuilder,
         VerifiedRegistrationComponent,
         {
           provide: TimeoutService,

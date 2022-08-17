@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { RestrictionService } from './restriction.service';
@@ -11,7 +11,7 @@ import { RestrictionService } from './restriction.service';
   styleUrls: ['./restriction.component.scss']
 })
 export class RestrictionComponent implements OnInit, OnDestroy {
-  restrictionForm: FormGroup;
+  restrictionForm: UntypedFormGroup;
   restrictionForm$: Subscription;
   currentFlow: string;
 

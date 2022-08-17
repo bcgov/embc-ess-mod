@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
@@ -11,7 +11,7 @@ import { RestrictionService } from '../../../feature-components/restriction/rest
   styleUrls: ['./confirm-restriction.component.scss']
 })
 export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
-  restrictionForm: FormGroup;
+  restrictionForm: UntypedFormGroup;
   restrictionForm$: Subscription;
 
   constructor(

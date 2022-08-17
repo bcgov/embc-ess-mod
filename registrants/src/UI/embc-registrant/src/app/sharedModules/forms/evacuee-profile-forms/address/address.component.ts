@@ -7,7 +7,7 @@ import {
   AfterViewChecked,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,17 +37,17 @@ import {
 export default class AddressComponent
   implements OnInit, AfterViewChecked, OnDestroy
 {
-  primaryAddressForm: FormGroup;
+  primaryAddressForm: UntypedFormGroup;
   primaryAddressForm$: Subscription;
   radioOption: string[] = ['Yes', 'No'];
-  formBuilder: FormBuilder;
+  formBuilder: UntypedFormBuilder;
   formCreationService: FormCreationService;
   filteredOptions: Observable<Country[]>;
   mailingFilteredOptions: Observable<Country[]>;
   countries: Country[] = [];
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService,
     private locationService: LocationService,
     private cd: ChangeDetectorRef

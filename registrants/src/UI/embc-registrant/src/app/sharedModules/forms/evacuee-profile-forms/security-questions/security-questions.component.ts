@@ -1,8 +1,8 @@
 import { Component, Inject, NgModule, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   ReactiveFormsModule
 } from '@angular/forms';
 
@@ -22,14 +22,14 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./security-questions.component.scss']
 })
 export default class SecurityQuestionsComponent implements OnInit {
-  formBuilder: FormBuilder;
+  formBuilder: UntypedFormBuilder;
   securityQuestionsForm$: Subscription;
-  securityQuestionsForm: FormGroup;
+  securityQuestionsForm: UntypedFormGroup;
   formCreationService: FormCreationService;
   securityQuestionOptions = [];
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService,
     private securityQuesService: SecurityQuestionsService
   ) {
@@ -59,7 +59,7 @@ export default class SecurityQuestionsComponent implements OnInit {
   }
 
   get questionsFormControl(): { [key: string]: AbstractControl } {
-    return (this.securityQuestionsForm.get('questions') as FormGroup).controls;
+    return (this.securityQuestionsForm.get('questions') as UntypedFormGroup).controls;
   }
 }
 
