@@ -19,4 +19,4 @@ Scenario: Evacuee Online new Registration with Interac Support
 
 Scenario: Remote Extension Search
     Given I search for a remote extensions ess file
-    Then An ESS file is successfully found
+    Then Remote Extensions displays results

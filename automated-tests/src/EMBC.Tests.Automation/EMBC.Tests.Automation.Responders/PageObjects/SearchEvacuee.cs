@@ -18,7 +18,8 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         private By paperBasedRegCard = By.XPath("//mat-card/div/div/p/span[contains(text(),'data entry')]");
         private By remoteExtensionsRegCard = By.XPath("//mat-card/div/div/p/span[contains(text(),'remote extensions')]");
         private By searchPaperBasedEssFile = By.CssSelector("input[formcontrolname='paperBasedEssFile']");
-        private By searchremoteExtensionsEssFile = By.CssSelector("input[formcontrolname='essFileNumber']");
+        private By searchRemoteExtensionsEssFile = By.CssSelector("input[formcontrolname='essFileNumber']");
+        private By searchRemoteExtensionNotFound = By.XPath("//b[contains(text(),'ESS File Results (0)')]");
 
 
         public SearchEvacuee(IWebDriver webDriver) : base(webDriver)
@@ -80,10 +81,16 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
         {
             Wait();
 
-            webDriver.FindElement(searchremoteExtensionsEssFile).SendKeys(essFileNumber);
+            webDriver.FindElement(searchRemoteExtensionsEssFile).SendKeys(essFileNumber);
 
             this.ButtonElement("Search");
 
+        }
+
+        public void RemoteExtensionESSFileNotFound()
+        {
+            Wait();
+            Assert.True(webDriver.FindElement(searchRemoteExtensionNotFound).Displayed);
         }
 
     }
