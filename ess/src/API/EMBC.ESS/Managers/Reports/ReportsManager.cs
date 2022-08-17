@@ -42,8 +42,8 @@ namespace EMBC.ESS.Managers.Reports
             var evacuees = mapper.Map<IEnumerable<Evacuee>>(results, opt => opt.Items["IncludePersonalInfo"] = query.IncludePersonalInfo.ToString());
 
             var communities = await metadataRepository.GetCommunities();
-            evacueeQuery.EvacuatedFrom = communities.Where(c => c.Code == evacueeQuery.EvacuatedFrom).SingleOrDefault()?.Name;
-            evacueeQuery.EvacuatedTo = communities.Where(c => c.Code == evacueeQuery.EvacuatedTo).SingleOrDefault()?.Name;
+            evacueeQuery.EvacuatedFrom = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedFrom)?.Name;
+            evacueeQuery.EvacuatedTo = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedTo)?.Name;
 
             var csv = evacuees.ToCSV(evacueeQuery);
 
@@ -72,8 +72,8 @@ namespace EMBC.ESS.Managers.Reports
             var supports = (await reportRepository.QuerySupport(supportQuery)).Items;
 
             var communities = await metadataRepository.GetCommunities();
-            supportQuery.EvacuatedFrom = communities.Where(c => c.Code == supportQuery.EvacuatedFrom).SingleOrDefault()?.Name;
-            supportQuery.EvacuatedTo = communities.Where(c => c.Code == supportQuery.EvacuatedTo).SingleOrDefault()?.Name;
+            supportQuery.EvacuatedFrom = communities.SingleOrDefault(c => c.Code == supportQuery.EvacuatedFrom)?.Name;
+            supportQuery.EvacuatedTo = communities.SingleOrDefault(c => c.Code == supportQuery.EvacuatedTo)?.Name;
 
             var csv = supports.ToCSV(supportQuery, "\"");
 
