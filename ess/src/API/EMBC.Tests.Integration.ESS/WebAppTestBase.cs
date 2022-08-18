@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS
             return host.CreateHost("EMBC").ConfigureHostConfiguration(opts =>
             {
                 // add secerts from host assembly
-                opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), false, true);
+                opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), true, true);
                 opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true);
                 // disable background tasks during tests
                 opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
