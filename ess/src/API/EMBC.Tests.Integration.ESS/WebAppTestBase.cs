@@ -19,8 +19,10 @@ namespace EMBC.Tests.Integration.ESS
             return host.CreateHost("EMBC").ConfigureHostConfiguration(opts =>
             {
                 // add secerts from host assembly
+#pragma warning disable S3885 // "Assembly.Load" should be used
                 opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), true, true);
-                opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true);
+#pragma warning restore S3885 // "Assembly.Load" should be used
+                opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true).AddJsonFile("secrets.json", true);
                 // disable background tasks during tests
                 opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
             }).ConfigureServices(services =>
@@ -38,7 +40,7 @@ namespace EMBC.Tests.Integration.ESS
 
         public IServiceProvider Services { get; }
 
-        public WebAppTestBase(ITestOutputHelper output, WebAppTestFixture fixture)
+        protected WebAppTestBase(ITestOutputHelper output, WebAppTestFixture fixture)
         {
             var factory = fixture.WithWebHostBuilder(builder =>
            {
