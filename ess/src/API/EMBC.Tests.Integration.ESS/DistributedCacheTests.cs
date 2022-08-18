@@ -1,9 +1,5 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -13,7 +9,7 @@ namespace EMBC.Tests.Integration.ESS
         {
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSetAndGetItems()
         {
             var cache = Services.GetRequiredService<IDistributedCache>();

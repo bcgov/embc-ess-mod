@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Globalization;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.Utilities.Extensions;
-using System.Web;
-using EMBC.ESS.Resources.Payments;
 
 namespace EMBC.Tests.Integration.ESS
 {
     internal class MockCasProxy : IWebProxy
     {
-
-        ConcurrentDictionary<string, GetSupplierResponse> Suppliers;
-        ConcurrentDictionary<string, InvoiceItem> InvoiceItems;
-        ConcurrentDictionary<string, Invoice> Invoices;
+        private ConcurrentDictionary<string, GetSupplierResponse> Suppliers;
+        private ConcurrentDictionary<string, InvoiceItem> InvoiceItems;
+        private ConcurrentDictionary<string, Invoice> Invoices;
 
         public MockCasProxy()
         {
@@ -178,6 +172,4 @@ namespace EMBC.Tests.Integration.ESS
         public const string Reconciled = "RECONCILED";
         public const string Voided = "VOIDED";
     }
-
-
 }

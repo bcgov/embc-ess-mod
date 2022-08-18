@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
@@ -24,7 +20,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             supportRepository = Services.GetRequiredService<EMBC.ESS.Resources.Supports.ISupportRepository>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessPendingSupportsCommand_PendingScanSupports_FlagsAdded()
         {
             var registrant = TestHelper.CreateRegistrantProfile(Guid.NewGuid().ToString().Substring(0, 4));
@@ -104,7 +100,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             secondFileSupports.ShouldAllBe(s => s.Status == SupportStatus.PendingApproval && s.Flags.SingleOrDefault(f => f is DuplicateSupportFlag) != null);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessApprovedSupportsCommand_ApprovedSupports_PaymentsAdded()
         {
             var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = TestData.EvacuationFileId })).Items
@@ -133,7 +129,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessPendingPaymentsCommand_ApprovedSupports_PaymentsAdded()
         {
             var approvedSupports = (await manager.Handle(new SearchSupportsQuery { FileId = TestData.EvacuationFileId })).Items
@@ -154,7 +150,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedSupports.Select(s => s.Id).ShouldNotBeOneOf(sut);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task FullProcess_NewSupport_Paid()
         {
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();

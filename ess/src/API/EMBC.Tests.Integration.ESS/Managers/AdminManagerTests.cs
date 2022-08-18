@@ -1,10 +1,6 @@
-﻿using System.Threading.Tasks;
-using EMBC.ESS.Managers.Admin;
+﻿using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Shared.Contracts.Metadata;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers
 {
@@ -13,7 +9,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         public AdminManagerTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         { }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetCountries()
         {
             var manager = Services.GetRequiredService<AdminManager>();
@@ -24,7 +20,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetStateProvinces()
         {
             var manager = Services.GetRequiredService<AdminManager>();
@@ -35,7 +31,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetCommunities()
         {
             var manager = Services.GetRequiredService<AdminManager>();
@@ -46,7 +42,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetSecurityQuestions()
         {
             var manager = Services.GetRequiredService<AdminManager>();

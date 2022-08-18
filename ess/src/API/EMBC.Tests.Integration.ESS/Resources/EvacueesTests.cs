@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Resources.Evacuees;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
@@ -23,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             invitationRepository = Services.GetRequiredService<IInvitationRepository>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Query_UserId_SingleMatch()
         {
             var queryResult = await evacueeRepository.Query(new EvacueeQuery
@@ -36,7 +32,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             queryResult.Items.ShouldHaveSingleItem().UserId.ShouldBe(TestEvacueeUserId);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Manage_UpdatedEvacuee_Updated()
         {
             var evacuee = (await evacueeRepository.Query(new EvacueeQuery
@@ -66,7 +62,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedEvacuee.PrimaryAddress.Community.ShouldBe(newCommunity);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Manage_CreateEvacuee_Created()
         {
             var baseEvacuee = (await evacueeRepository.Query(new EvacueeQuery
@@ -99,7 +95,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newEvacuee.PrimaryAddress.Community.ShouldBe(baseEvacuee.PrimaryAddress.Community);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Manage_UpdatedSecurityQuestions_Updated()
         {
             var evacuee = (await evacueeRepository.Query(new EvacueeQuery
@@ -131,7 +127,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Manage_NewEvacueeNoSecurityQuestion_Created()
         {
             var baseEvacuee = (await evacueeRepository.Query(new EvacueeQuery
@@ -152,7 +148,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedEvacuee.SecurityQuestions.Count().ShouldBe(0);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanCreateEmailInvite()
         {
             var evacuee = (await evacueeRepository.Query(new EvacueeQuery { UserId = TestEvacueeUserId })).Items.Single();

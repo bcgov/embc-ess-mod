@@ -1,11 +1,7 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Resources.Payments;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Engines.Supporting
 {
@@ -18,7 +14,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             engine = Services.GetRequiredService<ISupportingEngine>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GeneratePayments_SingleSupport_SinglePayment()
         {
             var supports = new[]
@@ -32,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             payment.LinkedSupportIds.ShouldHaveSingleItem().ShouldBe("1");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GeneratePayments_MultipleSupportsUnderLimit_SinglePayment()
         {
             var supports = new[]
@@ -47,7 +43,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             payment.LinkedSupportIds.ShouldBe(supports.Select(s => s.SupportId));
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GeneratePayments_MultipleSupportsAboveLimit_CorrectPayments()
         {
             var supports = new[]
@@ -65,7 +61,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             payments[1].LinkedSupportIds.ShouldBe(new[] { "3" });
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GeneratePayments_MultipleSupportsInMultipleFiles_CorrectPayments()
         {
             var supports = new[]
@@ -86,7 +82,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             payments[2].LinkedSupportIds.ShouldBe(new[] { "4" });
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GeneratePayments_SingleSupportOverLimit_SinglePayment()
         {
             var supports = new[]
