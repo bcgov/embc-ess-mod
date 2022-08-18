@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
@@ -28,7 +24,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             manager = Services.GetRequiredService<EventsManager>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanCreateNewRegistrantProfile()
         {
             var newRegistrant = CreateNewTestRegistrantProfile();
@@ -46,7 +42,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             actualRegistrant.MailingAddress.AddressLine1.ShouldStartWith(TestData.TestPrefix);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanUpdateProfile()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -102,7 +98,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedRegistrant.PrimaryAddress.PostalCode.ShouldBe(newPostalCode);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
             var newRegistrant = CreateNewTestRegistrantProfile();
@@ -123,7 +119,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedFile.NeedsAssessment.HouseholdMembers.Where(m => m.Id == member.Id).Single().LinkedRegistrantId.ShouldBe(registrant.Id);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanDeleteProfileAddressLinks()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -147,7 +143,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanUpdateRegistrantVerified()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -162,7 +158,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedRegistrant.VerifiedUser.ShouldBe(newStatus);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanVerifySecurityQuestions()
         {
             var expectedNumberOfCorrectAnswers = 3;
@@ -185,7 +181,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanPartlyVerifySecurityQuestions()
         {
             var expectedNumberOfCorrectAnswers = 2;
@@ -209,7 +205,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanInviteRegistrant()
         {
             var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
@@ -232,7 +228,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             inviteId.ShouldNotBeNullOrEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanProcessRegistrantInvite()
         {
             var newRegistrant = CreateNewTestRegistrantProfile();
@@ -259,7 +255,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             actualRegistrant.VerifiedUser.Value.ShouldBeTrue();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessRegistrantInvite_TwoSameRegistrant_FirstIsInvalid()
         {
             var dp = Services.GetRequiredService<IDataProtectionProvider>().CreateProtector(nameof(InviteRegistrantCommand)).ToTimeLimitedDataProtector();

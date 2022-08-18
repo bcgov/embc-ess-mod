@@ -1,15 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
@@ -26,7 +22,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             manager = Services.GetRequiredService<EventsManager>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessSupports_Supports_Created()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -102,7 +98,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanVoidReferral()
         {
             var fileId = TestData.EvacuationFileId;
@@ -119,7 +115,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedSupport.Status.ShouldBe(SupportStatus.Void);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanCancelETransfer()
         {
             var fileId = TestData.EvacuationFileId;
@@ -159,7 +155,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedSupport.Status.ShouldBe(SupportStatus.Cancelled);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanReprintSupport()
         {
             var printRequestId = await manager.Handle(new ReprintSupportCommand
@@ -173,7 +169,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             printRequestId.ShouldNotBeNullOrEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanQuerySupplierList()
         {
             var taskId = TestData.ActiveTaskId;
@@ -181,7 +177,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             list.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanQueryPrintRequest()
         {
             var dynamicsContext = Services.GetRequiredService<EssContext>();
@@ -199,7 +195,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", response.Content);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessSupportsCommand_DigitalAndPaperSupports_BusinessValidationException()
         {
             var fileId = TestData.PaperEvacuationFileId;
@@ -218,7 +214,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }));
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessPaperSupports_paperSupports_Created()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -286,7 +282,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessPaperSupportsCommand_DuplicateReferralIdAndType_BusinessValidationException()
         {
             var fileId = TestData.PaperEvacuationFileId;
@@ -305,7 +301,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }));
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ProcessPaperSupportsCommand_DigitalAndPaperSupports_BusinessValidationException()
         {
             var fileId = TestData.PaperEvacuationFileId;
@@ -324,7 +320,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }));
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task SearchSupports_ManualReferralId_CorrectListOfSupports()
         {
             var fileId = TestData.PaperEvacuationFilePaperId;
@@ -371,7 +367,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ScanSupports_FlagsRaised()
         {
             var registrantId = await TestHelper.SaveRegistrant(manager, TestHelper.CreateRegistrantProfile(TestData.TestPrefix));

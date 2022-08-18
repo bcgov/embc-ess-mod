@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Utilities.Cas;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
@@ -26,7 +22,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             return await TestHelper.SaveRegistrant(Services.GetRequiredService<EventsManager>(), registrant);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task SavePayment_InteracPayment_Saved()
         {
             var linkedSupportIds = TestData.ETransferIds.Take(2);
@@ -62,7 +58,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             readPayment.LinkedSupportIds.ShouldBe(payment.LinkedSupportIds);
         }
 
-        [Theory(Skip = RequiresVpnConnectivity)]
+        [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public async Task SendPaymentToCas_InteracPayment_Sent(bool newPayee)
@@ -112,7 +108,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GetCasPaymentStatus_ExistingPayment_StatusReturned()
         {
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
@@ -165,7 +161,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Theory(Skip = RequiresVpnConnectivity)]
+        [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public async Task SendPaymentToCas_InteracPayment_VerifySupplier(bool postalCodeMatches)
@@ -227,7 +223,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             else mockedCas.GetSuppliersCount().ShouldBe(2);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task SendPaymentToCas_InteracPayment_InvoiceNameShouldNotBePopulated()
         {
             var manager = Services.GetRequiredService<EventsManager>();

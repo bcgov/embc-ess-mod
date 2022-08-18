@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Engines.Supporting
 {
@@ -19,7 +15,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             engine = Services.GetRequiredService<ISupportingEngine>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CheckSupportComplianceRequest_OneDuplicate_FlagReturned()
         {
             var fileId = TestData.EvacuationFileId;
@@ -73,7 +69,7 @@ namespace EMBC.Tests.Integration.ESS.Engines.Supporting
             flags.Value.Where(f => f is DuplicateSupportFlag d && d.DuplicatedSupportId == duplicateSupportId).ShouldHaveSingleItem();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CheckSupportComplianceRequest_AmountExceeded_FlagReturned()
         {
             var fileId = TestData.EvacuationFileId;

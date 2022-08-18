@@ -1,9 +1,6 @@
 ﻿using System.Linq;
 using EMBC.ESS.Resources.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
@@ -22,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             taskRepository = Services.GetRequiredService<ITaskRepository>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async System.Threading.Tasks.Task CanGetActiveTask()
         {
             // Active Task
@@ -37,7 +34,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             esstask.Id.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async System.Threading.Tasks.Task CanGetExpiredTask()
         {
             // Expired Task
