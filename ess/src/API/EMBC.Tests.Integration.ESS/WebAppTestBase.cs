@@ -22,7 +22,7 @@ namespace EMBC.Tests.Integration.ESS
 #pragma warning disable S3885 // "Assembly.Load" should be used
                 opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), true, true);
 #pragma warning restore S3885 // "Assembly.Load" should be used
-                opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true).AddJsonFile("secrets.json", true);
+                opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true).AddJsonFile(Environment.GetEnvironmentVariable("secrets_file_path") ?? "secrets.json", true);
                 // disable background tasks during tests
                 opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
             }).ConfigureServices(services =>
