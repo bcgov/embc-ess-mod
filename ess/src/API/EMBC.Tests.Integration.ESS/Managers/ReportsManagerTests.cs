@@ -1,10 +1,6 @@
-﻿using System.Threading.Tasks;
-using EMBC.ESS.Managers.Reports;
+﻿using EMBC.ESS.Managers.Reports;
 using EMBC.ESS.Shared.Contracts.Reports;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers
 {
@@ -17,7 +13,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             reportsManager = Services.GetRequiredService<ReportsManager>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetEvacueeReport()
         {
             var res = await reportsManager.Handle(new EvacueeReportQuery
@@ -35,7 +31,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             res.ContentType.ShouldBe("text/csv");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetSupportReport()
         {
             var res = await reportsManager.Handle(new SupportReportQuery

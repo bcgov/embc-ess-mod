@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
@@ -24,7 +20,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             manager = Services.GetRequiredService<EventsManager>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSearchRegistrantsByUserId()
         {
             var userId = TestData.ContactUserId;
@@ -34,7 +30,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             profile.UserId.ShouldBe(userId);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSearchRegistrantsByNonExistentValues()
         {
             (await manager.Handle(new RegistrantsQuery
@@ -43,7 +39,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             })).Items.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSearchEvacuationFilesByRegistrantUserName()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -53,7 +49,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSearchEvacuationFilesByLinkedRegistrantId()
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
@@ -66,7 +62,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             files.ShouldAllBe(f => f.HouseholdMembers.Any(h => h.LinkedRegistrantId == registrant.Id));
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSearchEvacuationFilesByBCServicesCardId()
         {
             var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = TestData.ContactUserId })).Items;
@@ -74,7 +70,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             files.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSearchEvacueesByName()
         {
             var firstName = TestData.ContactFirstName;
@@ -98,7 +94,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Search_EvacuationFiles_IncludeRegistrantProfilesOnly()
         {
             var firstName = TestData.ContactFirstName;
@@ -111,7 +107,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             searchResults.Profiles.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Search_EvacuationFiles_IncludeEvacuationFilesOnly()
         {
             var firstName = $"{TestData.TestPrefix}-member-no-registrant-first";
@@ -124,7 +120,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             searchResults.Profiles.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Search_EvacuationFiles_IncludeBoth()
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = TestData.ContactFirstName, LastName = TestData.ContactLastName, DateOfBirth = TestData.ContactDateOfBirth, IncludeRestrictedAccess = true });
@@ -133,7 +129,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             searchResults.Profiles.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Search_EvacuationFilesWithPaperId_IncludeEvacuationFilesOnly()
         {
             var firstName = TestData.ContactFirstName;
@@ -144,21 +140,21 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             searchResults.EvacuationFiles.ShouldContain(e => e.ManualFileId == TestData.PaperEvacuationFilePaperId);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSearchEvacuationFilesByPaperId()
         {
             var files = (await manager.Handle(new EvacuationFilesQuery { ManualFileId = TestData.PaperEvacuationFilePaperId })).Items;
             files.ShouldNotBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Search_RegistrantsWith_Tier1User()
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = TestData.ContactFirstName, LastName = TestData.ContactLastName, DateOfBirth = TestData.ContactDateOfBirth, InStatuses = tier1FileStatuses });
             searchResults.EvacuationFiles.ShouldNotContain(e => e.Status == EvacuationFileStatus.Completed);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Search_RegistrantsWith_Tier2User()
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = TestData.ContactFirstName, LastName = TestData.ContactLastName, DateOfBirth = TestData.ContactDateOfBirth, InStatuses = tier2andAboveFileStatuses });

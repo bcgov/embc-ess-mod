@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using EMBC.ESS.Resources.Metadata;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
@@ -17,7 +13,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             metadataRepository = Services.GetRequiredService<IMetadataRepository>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetPlannedOutages()
         {
             var reply = await metadataRepository.GetPlannedOutages(new OutageQuery { PortalType = PortalType.Suppliers, DisplayDate = DateTime.UtcNow });

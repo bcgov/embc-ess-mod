@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Cas;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -18,7 +14,7 @@ namespace EMBC.Tests.Integration.ESS
             client = Services.GetRequiredService<IWebProxy>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CreateToken_Success()
         {
             var token = await client.CreateTokenAsync(CancellationToken.None);
@@ -26,7 +22,7 @@ namespace EMBC.Tests.Integration.ESS
             token.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CreateInvoice_NewInvoice_Success()
         {
             var uniqueId = Guid.NewGuid().ToString().Substring(0, 4);
@@ -63,7 +59,7 @@ namespace EMBC.Tests.Integration.ESS
             response.InvoiceNumber.ShouldNotBeNull().ShouldBe(invoice.InvoiceNumber);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GetSupplier_ExistingCorrectPostalCode_Found()
         {
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
@@ -84,7 +80,7 @@ namespace EMBC.Tests.Integration.ESS
             response.SupplierAddress.ShouldHaveSingleItem().Suppliersitecode.ShouldBe("001");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GetSupplier_ExistingIncorrectPostalCode_NotFound()
         {
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
@@ -105,14 +101,14 @@ namespace EMBC.Tests.Integration.ESS
             response.SupplierAddress.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GetSupplier_New_NotFound()
         {
             var response = await client.GetSupplierAsync(new GetSupplierRequest { PostalCode = "V1V1V1", SupplierName = "NOTEXIST, SUPPLIER" }, CancellationToken.None);
             response.ShouldBeNull();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CreateSupplier_New_Created()
         {
             var uniqueId = Guid.NewGuid().ToString().Substring(0, 4);

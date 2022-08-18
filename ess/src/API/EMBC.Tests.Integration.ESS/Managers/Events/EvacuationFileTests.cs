@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Shared.Contracts.Events;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Managers.Events
 {
@@ -29,7 +25,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             registrant = GetTestRegistrant().GetAwaiter().GetResult().ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSubmitAnonymousRegistration()
         {
             var textContextIdentifier = Guid.NewGuid().ToString().Substring(0, 4);
@@ -137,7 +133,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanSubmitNewEvacuation()
         {
             var file = CreateNewTestEvacuationFile(registrant);
@@ -166,7 +162,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public void Create_EvacuationFileNoPrimaryRegistrant_ThrowsError()
         {
             var file = CreateNewTestEvacuationFile(registrant);
@@ -181,7 +177,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe("File  must have a single primary registrant household member");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Update_EvacuationFileMultiplePrimaryRegistrants_ThrowsError()
         {
             var now = DateTime.UtcNow;
@@ -219,7 +215,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 .Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Update_EvacuationFileTask_ThrowsError()
         {
             var fileWithTask = await GetEvacuationFileById(TestData.EvacuationFileId);
@@ -233,7 +229,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 .Message.ShouldBe($"The ESS Task Number cannot be modified or updated once it's been initially assigned.");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
@@ -255,7 +251,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             updatedFile.EvacuationDate.ShouldBe(now);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanVerifySecurityPhrase()
         {
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
@@ -264,7 +260,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             response.IsCorrect.ShouldBeTrue();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanCreateFileNote()
         {
             var fileId = TestData.EvacuationFileId;
@@ -275,7 +271,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             actualNote.Content.ShouldEndWith(noteSuffix);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanUpdateFileNote()
         {
             var fileId = TestData.EvacuationFileId;
@@ -293,7 +289,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             actualUpdatedNote.Content.ShouldEndWith(updatedNoteSuffix);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Update_FileNoteNotCreatingMember_ThrowsError()
         {
             var fileId = TestData.EvacuationFileId;
@@ -308,14 +304,14 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             Should.Throw<Exception>(() => manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = actualNote })).Message.ShouldBe($"The note may be edited only by the user who created it withing a 24 hour period.");
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanQueryFileNoteByFileId()
         {
             var notes = (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes;
             notes.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanQueryFileNoteByFileIdAndNoteId()
         {
             var fileId = TestData.EvacuationFileId;
@@ -325,7 +321,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             (await GetEvacuationFileById(TestData.EvacuationFileId)).Notes.Where(n => n.Id == noteId).ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task SubmitNewPaperEvacuationFile_Success()
         {
             var file = CreateNewTestEvacuationFile(registrant);
@@ -342,7 +338,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             savedFile.ManualFileId.ShouldBe(file.ManualFileId);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Update_EvacuationFilePets_DoesNotCreateDuplicatePets()
         {
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
