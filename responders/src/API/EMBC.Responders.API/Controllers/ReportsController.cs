@@ -49,11 +49,18 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("support")]
         public async Task<IActionResult> GetSupportReport(string? taskNumber, string? fileId, string? evacuatedFrom, string? evacuatedTo, string? from, string? to)
         {
-            var dateFrom = string.IsNullOrEmpty(from) ? (DateTime?)null : DateTime.Parse(from);
-            var dateTo = string.IsNullOrEmpty(to) ? (DateTime?)null : DateTime.Parse(to);
-            var result = await messagingClient.Send(new SupportReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo, From = dateFrom, To = dateTo });
+            try
+            {
+                var dateFrom = string.IsNullOrEmpty(from) ? (DateTime?)null : DateTime.Parse(from);
+                var dateTo = string.IsNullOrEmpty(to) ? (DateTime?)null : DateTime.Parse(to);
+                var result = await messagingClient.Send(new SupportReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo, From = dateFrom, To = dateTo });
 
-            return new FileContentResult(result.Content, result.ContentType);
+                return new FileContentResult(result.Content, result.ContentType);
+            }
+            catch (ServerException e)
+            {
+                return errorParser.Parse(e);
+            }
         }
     }
 }
