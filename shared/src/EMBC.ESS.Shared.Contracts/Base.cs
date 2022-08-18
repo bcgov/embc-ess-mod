@@ -61,6 +61,18 @@ namespace EMBC.ESS.Shared.Contracts
     }
 
     [Serializable]
+    public class DeadlineExceededException : EssApplicationException
+    {
+        public DeadlineExceededException(string message) : base(message)
+        {
+        }
+
+        protected DeadlineExceededException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+
+    [Serializable]
     //TODO: remove these dependencies
     [KnownType(typeof(CommunitiesAlreadyAssignedException))]
     [KnownType(typeof(UsernameAlreadyExistsException))]

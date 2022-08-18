@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Reports;
+using EMBC.Responders.API.Helpers;
 using EMBC.Utilities.Messaging;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -17,10 +19,12 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient messagingClient;
 
         private string currentUserRole => User.FindFirstValue("user_role");
+        private ErrorParser errorParser;
 
         public ReportsController(IMessagingClient messagingClient)
         {
             this.messagingClient = messagingClient;
+            this.errorParser = new ErrorParser();
         }
 
         [HttpGet("evacuee")]
@@ -36,16 +40,9 @@ namespace EMBC.Responders.API.Controllers
 
                 return new FileContentResult(result.Content, result.ContentType);
             }
-            catch (RpcException e)
+            catch (ServerException e)
             {
-                if (e.Status.StatusCode == Grpc.Core.StatusCode.DeadlineExceeded)
-                {
-                    return StatusCode(408);
-                }
-                else
-                {
-                    return StatusCode(500);
-                }
+                return errorParser.Parse(e);
             }
         }
 

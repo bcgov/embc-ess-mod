@@ -38,9 +38,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             delay(delayMs),
             mergeMap((error) => {
               if (
-                error.status !== 404 &&
-                !requestUrl.includes('/api/Tasks/') &&
                 error.status !== 403 &&
+                error.status !== 404 &&
                 error.status !== 408
               ) {
                 return retries-- > 0
