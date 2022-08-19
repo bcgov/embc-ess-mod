@@ -40,7 +40,7 @@ namespace EMBC.Responders.API.Controllers
 
                 return new FileContentResult(result.Content, result.ContentType);
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
                 return errorParser.Parse(e);
             }
@@ -57,7 +57,7 @@ namespace EMBC.Responders.API.Controllers
 
                 return new FileContentResult(result.Content, result.ContentType);
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
                 return errorParser.Parse(e);
             }

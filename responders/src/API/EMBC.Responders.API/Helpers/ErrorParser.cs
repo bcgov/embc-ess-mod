@@ -10,7 +10,17 @@ namespace EMBC.Responders.API.Helpers
 {
     public class ErrorParser
     {
-        public ActionResult Parse(ServerException e)
+        public ActionResult Parse(Exception ex)
+        {
+            return ex switch
+            {
+                ServerException e => ParseServerException(e),
+                ClientException e => ParseClientException(e),
+                _ => throw ex
+            };
+        }
+
+        public ActionResult ParseServerException(ServerException e)
         {
             return e.Type switch
             {
@@ -19,6 +29,14 @@ namespace EMBC.Responders.API.Helpers
                 string t when t == typeof(UsernameAlreadyExistsException).AssemblyQualifiedName => new BadRequestObjectResult(new ProblemDetails { Type = t, Title = "User name already exists", Detail = e.Message }),
                 string t when t == typeof(BusinessLogicException).AssemblyQualifiedName => new BadRequestObjectResult(new ProblemDetails { Type = t, Title = "Business logic error", Detail = e.Message }),
                 string t when t == typeof(BusinessValidationException).AssemblyQualifiedName => new BadRequestObjectResult(new ProblemDetails { Type = t, Title = "Business validation error", Detail = e.Message }),
+                _ => new BadRequestObjectResult(new ProblemDetails { Type = e.Type, Title = "Unexpected error", Detail = e.Message })
+            };
+        }
+
+        public ActionResult ParseClientException(ClientException e)
+        {
+            return e.Type switch
+            {
                 string t when t == typeof(DeadlineExceededException).AssemblyQualifiedName => new StatusCodeResult((int)HttpStatusCode.RequestTimeout),
                 _ => new BadRequestObjectResult(new ProblemDetails { Type = e.Type, Title = "Unexpected error", Detail = e.Message })
             };
