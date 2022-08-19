@@ -37,7 +37,7 @@ namespace EMBC.Responders.API.Helpers
         {
             return e.Type switch
             {
-                string t when t == typeof(DeadlineExceededException).AssemblyQualifiedName => new StatusCodeResult((int)HttpStatusCode.RequestTimeout),
+                string t when t == typeof(ESS.Shared.Contracts.TimeoutException).AssemblyQualifiedName => new StatusCodeResult((int)HttpStatusCode.RequestTimeout),
                 _ => new BadRequestObjectResult(new ProblemDetails { Type = e.Type, Title = "Unexpected error", Detail = e.Message })
             };
         }

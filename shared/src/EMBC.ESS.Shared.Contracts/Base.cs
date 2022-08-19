@@ -61,13 +61,13 @@ namespace EMBC.ESS.Shared.Contracts
     }
 
     [Serializable]
-    public class DeadlineExceededException : EssApplicationException
+    public class TimeoutException : EssApplicationException
     {
-        public DeadlineExceededException(string message) : base(message)
+        public TimeoutException(string message) : base(message)
         {
         }
 
-        protected DeadlineExceededException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected TimeoutException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

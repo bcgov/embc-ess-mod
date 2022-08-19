@@ -34,7 +34,7 @@ namespace EMBC.Utilities.Messaging
             {
                 switch (e.Status.StatusCode)
                 {
-                    case StatusCode.DeadlineExceeded: throw new ClientException(typeof(DeadlineExceededException).AssemblyQualifiedName ?? string.Empty, e.Message);
+                    case StatusCode.DeadlineExceeded: throw new ClientException(typeof(ESS.Shared.Contracts.TimeoutException).AssemblyQualifiedName ?? string.Empty, e.Message);
                     default: throw;
                 }
             }
