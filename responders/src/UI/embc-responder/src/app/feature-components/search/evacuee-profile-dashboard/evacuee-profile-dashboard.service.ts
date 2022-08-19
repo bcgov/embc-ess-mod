@@ -20,7 +20,7 @@ export class EvacueeProfileDashboardService {
     private registrationService: RegistrationsService,
     private evacueeSessionService: EvacueeSessionService,
     private appBaseService: AppBaseService,
-    private dialog: MatDialog
+    protected dialog: MatDialog
   ) {}
 
   /**
