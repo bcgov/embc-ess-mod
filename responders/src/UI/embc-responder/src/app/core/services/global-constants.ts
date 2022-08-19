@@ -187,7 +187,7 @@ export const extendSupportMessage: DialogContent = {
 
 export const duplicateSupportMessage: DialogContent = {
   title: 'Possible Support Conflict',
-  text: '<p>There is already a support associated with this ESS File of the same support type with the same overlapping support period. Do you wish to continue?</p>',
+  text: '<p>There is already support associated with this ESS File of the same support type with the same or overlapping support period. Do you wish to continue?</p>',
   confirmButton: 'Yes, Continue',
   cancelButton: 'No, Cancel'
 };
