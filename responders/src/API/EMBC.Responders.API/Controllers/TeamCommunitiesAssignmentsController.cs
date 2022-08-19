@@ -71,7 +71,7 @@ namespace EMBC.Responders.API.Controllers
                 await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
                 return Ok();
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
                 return errorParser.Parse(e);
             }
