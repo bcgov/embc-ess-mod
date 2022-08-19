@@ -1,5 +1,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -17,8 +26,6 @@ import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.s
 import { MockEvacueeSearchResultsService } from 'src/app/unit-tests/mockEvacueeSearchResults.service';
 import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
 import { MockProfileSecurityQuestionsService } from 'src/app/unit-tests/mockProfileSecurityQuestions.service';
-import { EvacueeProfileDashboardComponent } from '../../evacuee-profile-dashboard/evacuee-profile-dashboard.component';
-import { ProfileSecurityQuestionsComponent } from '../../profile-security-questions/profile-security-questions.component';
 import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
 import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
@@ -114,16 +121,7 @@ describe('ProfileResultsComponent', () => {
         HttpClientTestingModule,
         MatDialogModule,
         BrowserAnimationsModule,
-        RouterTestingModule.withRoutes([
-          {
-            path: 'responder-access/search/evacuee-profile-dashboard',
-            component: EvacueeProfileDashboardComponent
-          },
-          {
-            path: 'responder-access/search/security-questions',
-            component: ProfileSecurityQuestionsComponent
-          }
-        ])
+        RouterTestingModule
       ],
       providers: [
         ProfileResultsComponent,
@@ -235,9 +233,8 @@ describe('ProfileResultsComponent', () => {
     }
   ));
 
-  it('should navigate to security questions', inject(
-    [Router],
-    (router: Router) => {
+  it('should navigate to security questions', fakeAsync(
+    inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
       evacueeSessionService.isPaperBased = false;
       evacueeSearchService.evacueeSearchContext = {
@@ -274,14 +271,18 @@ describe('ProfileResultsComponent', () => {
 
       fixture.detectChanges();
       component.openProfile(mockProfileSearchResult);
+
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
+
+      tick();
       fixture.detectChanges();
 
-      // setTimeout(() => {
-      //   expect(router.navigate).toHaveBeenCalledWith([
-      //     'responder-access/search/security-questions'
-      //   ]);
-      // }, 500);
-    }
+      expect(router.navigate).toHaveBeenCalledWith([
+        'responder-access/search/security-questions'
+      ]);
+    })
   ));
   afterAll(() => {
     TestBed.resetTestingModule();

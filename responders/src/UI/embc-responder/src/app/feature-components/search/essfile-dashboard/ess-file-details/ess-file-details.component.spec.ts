@@ -17,6 +17,10 @@ import {
   NeedsAssessmentType
 } from 'src/app/core/api/models';
 import { MatDialogModule } from '@angular/material/dialog';
+import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
+import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('EssFileDetailsComponent', () => {
   let component: EssFileDetailsComponent;
@@ -178,7 +182,8 @@ describe('EssFileDetailsComponent', () => {
         RouterTestingModule,
         CustomPipeModule,
         HttpClientTestingModule,
-        MatDialogModule
+        MatDialogModule,
+        ReactiveFormsModule
       ],
       declarations: [EssFileDetailsComponent],
       providers: [
@@ -190,7 +195,12 @@ describe('EssFileDetailsComponent', () => {
         {
           provide: Router,
           useValue: routerMock
-        }
+        },
+        {
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
+        },
+        { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();
   });
