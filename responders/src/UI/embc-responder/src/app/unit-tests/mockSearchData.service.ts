@@ -169,7 +169,7 @@ export class MockSearchDataService extends MockDashboardService {
   public evacueeSearch(
     evacueeSearchContext: EvacueeDetailsModel
   ): Promise<EvacueeSearchResults> {
-    let $result = new BehaviorSubject<EvacueeSearchResults>(
+    const $result = new BehaviorSubject<EvacueeSearchResults>(
       this.mockEvacueeSearchResult
     );
     return lastValueFrom($result);
