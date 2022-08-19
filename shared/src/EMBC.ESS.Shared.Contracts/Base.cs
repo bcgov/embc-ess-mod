@@ -61,6 +61,18 @@ namespace EMBC.ESS.Shared.Contracts
     }
 
     [Serializable]
+    public class TimeoutException : EssApplicationException
+    {
+        public TimeoutException(string message) : base(message)
+        {
+        }
+
+        protected TimeoutException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+
+    [Serializable]
     //TODO: remove these dependencies
     [KnownType(typeof(CommunitiesAlreadyAssignedException))]
     [KnownType(typeof(UsernameAlreadyExistsException))]
