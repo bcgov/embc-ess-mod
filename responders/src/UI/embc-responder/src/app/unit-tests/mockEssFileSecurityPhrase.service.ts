@@ -8,7 +8,9 @@ import { EssFileSecurityPhraseService } from '../feature-components/search/essfi
   providedIn: 'root'
 })
 export class MockEssFileSecurityPhraseService extends EssFileSecurityPhraseService {
-  public mockSecurityPhraseValue: GetSecurityPhraseResponse;
+  public mockSecurityPhraseValue: GetSecurityPhraseResponse = {
+    securityPhrase: 's****e'
+  };
 
   public getSecurityPhrase(
     fileId: string

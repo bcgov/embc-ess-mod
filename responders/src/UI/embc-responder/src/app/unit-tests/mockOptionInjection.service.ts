@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import {
   OptionInjectionService,
   SearchOptionsService
 } from '../core/interfaces/searchOptions.service';
 import { SelectedPathType } from '../core/models/appBase.model';
 import { AppBaseService } from '../core/services/helper/appBase.service';
-import { SearchDataService } from '../core/services/helper/search-data.service';
+import { MockDataService } from './mockData.service';
 import { MockDigitalOptionService } from './mockDigitalOption.service';
 import { MockPaperOptionService } from './mockPaperOption.service';
 import { MockRemoteExtService } from './mockRemoteExtOption.service';
 
 @Injectable({ providedIn: 'root' })
-export class MockOptionInjectionService extends OptionInjectionService {
+export class MockOptionInjectionService {
   constructor(
-    appBaseService: AppBaseService,
-    router: Router,
-    searchDataService: SearchDataService,
-    builder: FormBuilder
+    public appBaseService: AppBaseService,
+    public router: Router,
+    public dataService: MockDataService,
+    public builder: FormBuilder
   ) {
-    super(appBaseService, router, searchDataService, builder);
+    // super(appBaseService, router, dataService, builder);
   }
 
   public get instance(): SearchOptionsService {

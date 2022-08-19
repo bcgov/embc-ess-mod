@@ -13,4 +13,8 @@ export class MockTaskSearchService extends TaskSearchService {
   searchTask(taskNumber: string): Observable<EssTask> {
     return new BehaviorSubject<EssTask>(this.mockEssTask);
   }
+
+  taskSignIn(taskNumber?: string): Observable<void> {
+    return new BehaviorSubject<void>(null);
+  }
 }
