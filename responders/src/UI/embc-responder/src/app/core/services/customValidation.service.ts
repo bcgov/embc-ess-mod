@@ -1,6 +1,6 @@
 import {
   AbstractControl,
-  FormGroup,
+  UntypedFormGroup,
   ValidatorFn,
   Validators
 } from '@angular/forms';
@@ -140,7 +140,7 @@ export class CustomValidationService {
    * @param controlNames : Array of Control names in FormGroup that cannot contain duplicate values
    */
   uniqueValueValidator(controlNames: string[]): ValidatorFn {
-    return (formGroup: FormGroup): null => {
+    return (formGroup: UntypedFormGroup): null => {
       const values = [];
 
       // Fill array of values
@@ -344,7 +344,7 @@ export class CustomValidationService {
    * @returns validation error
    */
   atLeastOneValidator(): ValidatorFn {
-    return (control: FormGroup): { [key: string]: boolean } | null => {
+    return (control: UntypedFormGroup): { [key: string]: boolean } | null => {
       const controls = control.controls;
       if (controls) {
         const theOne = Object.keys(controls).findIndex(

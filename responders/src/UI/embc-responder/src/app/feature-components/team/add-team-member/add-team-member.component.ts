@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import {
@@ -21,7 +21,7 @@ import { AddTeamMemberService } from './add-team-member.service';
   styleUrls: ['./add-team-member.component.scss']
 })
 export class AddTeamMemberComponent implements OnInit {
-  addForm: FormGroup;
+  addForm: UntypedFormGroup;
   roles: MemberRoleDescription[];
   labels: MemberLabelDescription[];
   detailsText: string;
@@ -29,7 +29,7 @@ export class AddTeamMemberComponent implements OnInit {
   color = '#169BD5';
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private router: Router,
     private listService: LoadTeamListService,
     private customValidation: CustomValidationService,

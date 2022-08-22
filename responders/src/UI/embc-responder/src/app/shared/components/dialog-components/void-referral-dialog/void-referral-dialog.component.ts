@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { SupportVoidReason } from 'src/app/core/api/models/support-void-reason';
@@ -17,11 +17,11 @@ export class VoidReferralDialogComponent implements OnInit {
   @Input() profileData: string;
   @Input() voidType: string;
   @Output() outputEvent = new EventEmitter<string>();
-  voidForm: FormGroup;
+  voidForm: UntypedFormGroup;
   reasons = SupportVoidReason;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private loadEvacueeListService: LoadEvacueeListService
   ) {}
 

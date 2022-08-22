@@ -10,7 +10,7 @@ import {
   TestBed,
   tick
 } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -43,7 +43,7 @@ describe('EvacueeIdVerifyComponent', () => {
       ],
       providers: [
         EvacueeIdVerifyComponent,
-        FormBuilder,
+        UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
           provide: OptionInjectionService,

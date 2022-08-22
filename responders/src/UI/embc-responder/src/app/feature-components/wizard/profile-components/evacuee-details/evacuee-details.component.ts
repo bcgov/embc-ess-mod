@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as globalConst from '../../../../core/services/global-constants';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { EvacueeDetailsService } from './evacuee-details.service';
   styleUrls: ['./evacuee-details.component.scss']
 })
 export class EvacueeDetailsComponent implements OnInit, OnDestroy {
-  evacueeDetailsForm: FormGroup;
+  evacueeDetailsForm: UntypedFormGroup;
   gender = globalConst.gender;
   readonly dateMask = globalConst.dateMask;
   tabUpdateSubscription: Subscription;

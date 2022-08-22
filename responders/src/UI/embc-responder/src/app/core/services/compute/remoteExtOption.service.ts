@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EvacuationFileStatus } from '../../api/models';
 import { SearchOptionsService } from '../../interfaces/searchOptions.service';
@@ -20,7 +20,7 @@ export class RemoteExtOptionService implements SearchOptionsService {
   constructor(
     private router: Router,
     private dataService: DataService,
-    private builder: FormBuilder
+    private builder: UntypedFormBuilder
   ) {}
 
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
@@ -31,7 +31,7 @@ export class RemoteExtOptionService implements SearchOptionsService {
     return this.dataService.getDashboardText(fileStatus);
   }
 
-  createForm(formType: string): FormGroup {
+  createForm(formType: string): UntypedFormGroup {
     return this.builder.group(this.dataService.fetchForm(formType));
   }
 

@@ -4,7 +4,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { TabModel, TabStatusManager } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import {
   ContactDetails,
   RegistrantProfile,
@@ -494,16 +494,16 @@ export class StepEvacueeProfileService {
    * @param form form group
    * @returns true/false
    */
-  checkForPartialUpdates(form: FormGroup): boolean {
+  checkForPartialUpdates(form: UntypedFormGroup): boolean {
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
       const control = form.controls[field] as
-        | FormControl
-        | FormGroup
-        | FormArray;
-      if (control instanceof FormControl) {
+        | UntypedFormControl
+        | UntypedFormGroup
+        | UntypedFormArray;
+      if (control instanceof UntypedFormControl) {
         fields.push(control.value);
-      } else if (control instanceof FormGroup || control instanceof FormArray) {
+      } else if (control instanceof UntypedFormGroup || control instanceof UntypedFormArray) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
             fields.push(control.controls[key].value);

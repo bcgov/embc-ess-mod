@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   NgForm,
   Validators
@@ -13,7 +13,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 
 export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: FormControl | null,
+    control: UntypedFormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
     const isSubmitted = form && form.submitted;
@@ -35,14 +35,14 @@ export class BcscCustomErrorMailMatcher implements ErrorStateMatcher {
 export class BcscInviteDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();
   @Input() profileData: string;
-  emailFormGroup: FormGroup;
+  emailFormGroup: UntypedFormGroup;
   showConfirm = false;
   emailMatcher = new BcscCustomErrorMailMatcher();
   hideForm = true;
   showError = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService
   ) {}
 

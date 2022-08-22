@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -10,7 +10,7 @@ import { SecurityQuestion } from 'src/app/core/api/models';
 @Injectable({ providedIn: 'root' })
 export class SecurityQuestionsService {
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidationService: CustomValidationService,
     public stepEvacueeProfileService: StepEvacueeProfileService,
     private wizardService: WizardService
@@ -19,7 +19,7 @@ export class SecurityQuestionsService {
   /**
    * Set up main FormGroup with security Q&A inputs and validation
    */
-  public createForm(): FormGroup {
+  public createForm(): UntypedFormGroup {
     this.setQuestionArray(false);
 
     return this.formBuilder.group(
@@ -76,7 +76,7 @@ export class SecurityQuestionsService {
     );
   }
 
-  createParentForm(questionForm: FormGroup): FormGroup {
+  createParentForm(questionForm: UntypedFormGroup): UntypedFormGroup {
     return this.formBuilder.group({
       questionForm,
       bypassQuestions: this.stepEvacueeProfileService.bypassSecurityQuestions
@@ -86,7 +86,7 @@ export class SecurityQuestionsService {
   /**
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
-  public updateTabStatus(form: FormGroup) {
+  public updateTabStatus(form: UntypedFormGroup) {
     if (
       form.valid ||
       (!this.stepEvacueeProfileService.editQuestions &&
@@ -115,7 +115,7 @@ export class SecurityQuestionsService {
    *
    * @param checked True = Disable the form, False = Enable the form
    */
-  setFormDisabled(checked, form: FormGroup) {
+  setFormDisabled(checked, form: UntypedFormGroup) {
     this.stepEvacueeProfileService.bypassSecurityQuestions = checked;
 
     if (this.stepEvacueeProfileService.bypassSecurityQuestions) {
@@ -151,7 +151,7 @@ export class SecurityQuestionsService {
    *
    * @param edit True to set "Edit" mode, False to set "Readonly" mode and clear form
    */
-  toggleEditQuestions(edit, questionForm: FormGroup) {
+  toggleEditQuestions(edit, questionForm: UntypedFormGroup) {
     this.stepEvacueeProfileService.editQuestions = edit;
 
     if (!edit) {
@@ -165,7 +165,7 @@ export class SecurityQuestionsService {
     }
   }
 
-  cleanup(questionForm: FormGroup) {
+  cleanup(questionForm: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit() && questionForm.dirty) {
       const isFormUpdated = this.wizardService.hasChanged(
         questionForm.controls,
@@ -189,7 +189,7 @@ export class SecurityQuestionsService {
   /**
    * Saves information inserted inthe form into the service
    */
-  private saveFormData(form: FormGroup) {
+  private saveFormData(form: UntypedFormGroup) {
     const tempSecurityQuestions: SecurityQuestion[] = [];
 
     for (let i = 1; i <= 3; i++) {

@@ -7,7 +7,7 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -18,9 +18,9 @@ import * as globalConst from '../../../../../../core/services/global-constants';
 export class LodgingHotelMotelComponent
   implements OnInit, OnChanges, AfterViewInit
 {
-  @Input() supportDetailsForm: FormGroup;
+  @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfDays: number;
-  referralForm: FormGroup;
+  referralForm: UntypedFormGroup;
   days: number;
   noOfRooms = globalConst.noOfRooms;
 
@@ -32,7 +32,7 @@ export class LodgingHotelMotelComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get('referral') as FormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
 
     if (changes.noOfDays) {

@@ -8,7 +8,7 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSessionService } from '../../../../../../core/services/evacuee-session.service';
@@ -22,9 +22,9 @@ import * as globalConst from '../../../../../../core/services/global-constants';
 export class IncidentalsComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
-  @Input() supportDetailsForm: FormGroup;
+  @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfHouseholdMembers: number;
-  referralForm: FormGroup;
+  referralForm: UntypedFormGroup;
   totalAmount = 0;
   isPaperBased = false;
   userTotalAmountSubscription: Subscription;
@@ -50,7 +50,7 @@ export class IncidentalsComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get('referral') as FormGroup;
+      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();

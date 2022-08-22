@@ -5,7 +5,7 @@ import {
   waitForAsync
 } from '@angular/core/testing';
 import { TaskSearchComponent } from './task-search.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TaskDetailsComponent } from './task-details/task-details.component';
@@ -45,7 +45,7 @@ describe('TaskSearchComponent', () => {
             provide: AlertService,
             useClass: MockAlertService
           },
-          FormBuilder
+          UntypedFormBuilder
         ]
       }).compileComponents();
     })

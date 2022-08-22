@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
@@ -11,7 +11,7 @@ import { RestrictionService } from './restriction.service';
   styleUrls: ['./restriction.component.scss']
 })
 export class RestrictionComponent implements OnInit, OnDestroy {
-  restrictionForm: FormGroup;
+  restrictionForm: UntypedFormGroup;
   tabUpdateSubscription: Subscription;
   editFlag: boolean;
 

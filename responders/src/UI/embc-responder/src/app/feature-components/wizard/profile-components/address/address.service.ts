@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { map, startWith, Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
@@ -11,7 +11,7 @@ import { WizardService } from '../../wizard.service';
 
 @Injectable({ providedIn: 'root' })
 export class AddressService {
-  primaryAddressForm: FormGroup;
+  primaryAddressForm: UntypedFormGroup;
   private tabMetaDataVal: TabModel;
 
   public get tabMetaData(): TabModel {
@@ -22,7 +22,7 @@ export class AddressService {
   }
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private wizardService: WizardService
@@ -30,7 +30,7 @@ export class AddressService {
     this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('address');
   }
 
-  public createForm(): FormGroup {
+  public createForm(): UntypedFormGroup {
     this.primaryAddressForm = this.formBuilder.group({
       isBcAddress: [
         this.stepEvacueeProfileService.isBcAddress !== null
@@ -67,7 +67,7 @@ export class AddressService {
     return this.primaryAddressForm;
   }
 
-  public updateTabStatus(form: FormGroup): Subscription {
+  public updateTabStatus(form: UntypedFormGroup): Subscription {
     return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
       if (form.valid) {
         this.stepEvacueeProfileService.setTabStatus('address', 'complete');
@@ -80,7 +80,7 @@ export class AddressService {
     });
   }
 
-  public cleanup(form: FormGroup) {
+  public cleanup(form: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit()) {
       const isPrimaryFormUpdated = this.wizardService.hasChanged(
         form.controls,
@@ -101,7 +101,7 @@ export class AddressService {
     this.stepEvacueeProfileService.nextTabUpdate.next();
   }
 
-  public clearPrimaryAddressFields(primaryAddressForm: FormGroup): FormGroup {
+  public clearPrimaryAddressFields(primaryAddressForm: UntypedFormGroup): UntypedFormGroup {
     primaryAddressForm.get('address.addressLine1').reset();
     primaryAddressForm.get('address.addressLine2').reset();
     primaryAddressForm.get('address.community').reset();
@@ -111,7 +111,7 @@ export class AddressService {
     return primaryAddressForm;
   }
 
-  public clearMailingAddressFields(primaryAddressForm: FormGroup): FormGroup {
+  public clearMailingAddressFields(primaryAddressForm: UntypedFormGroup): UntypedFormGroup {
     primaryAddressForm.get('mailingAddress.addressLine1').reset();
     primaryAddressForm.get('mailingAddress.addressLine2').reset();
     primaryAddressForm.get('mailingAddress.community').reset();
@@ -122,9 +122,9 @@ export class AddressService {
   }
 
   public setDefaultPrimaryAddressValues(
-    primaryAddressForm: FormGroup,
+    primaryAddressForm: UntypedFormGroup,
     event: MatRadioChange
-  ): FormGroup {
+  ): UntypedFormGroup {
     primaryAddressForm.get('address').reset();
     if (event.value === 'Yes') {
       primaryAddressForm
@@ -139,9 +139,9 @@ export class AddressService {
   }
 
   public setDefaultMailingAddressValues(
-    primaryAddressForm: FormGroup,
+    primaryAddressForm: UntypedFormGroup,
     event: MatRadioChange
-  ): FormGroup {
+  ): UntypedFormGroup {
     primaryAddressForm.get('mailingAddress').reset();
     if (event.value === 'Yes') {
       primaryAddressForm
@@ -155,7 +155,7 @@ export class AddressService {
     return primaryAddressForm;
   }
 
-  public updateOnVisibility(primaryAddressForm: FormGroup): FormGroup {
+  public updateOnVisibility(primaryAddressForm: UntypedFormGroup): UntypedFormGroup {
     primaryAddressForm.get('address.addressLine1').updateValueAndValidity();
     primaryAddressForm.get('address.community').updateValueAndValidity();
     primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
@@ -182,7 +182,7 @@ export class AddressService {
     return province !== null && province === 'BC' ? 'Yes' : 'No';
   }
 
-  public filterPrimaryCountry(form: FormGroup, countries: Country[]) {
+  public filterPrimaryCountry(form: UntypedFormGroup, countries: Country[]) {
     return form.get('address.country').valueChanges.pipe(
       startWith(''),
       map((value) =>
@@ -191,7 +191,7 @@ export class AddressService {
     );
   }
 
-  public filterMailingCountry(form: FormGroup, countries: Country[]) {
+  public filterMailingCountry(form: UntypedFormGroup, countries: Country[]) {
     return form.get('mailingAddress.country').valueChanges.pipe(
       startWith(''),
       map((value) =>
@@ -235,7 +235,7 @@ export class AddressService {
    *
    * @returns form group
    */
-  private createPrimaryAddressForm(): FormGroup {
+  private createPrimaryAddressForm(): UntypedFormGroup {
     return this.formBuilder.group({
       addressLine1: [
         this.stepEvacueeProfileService?.primaryAddressDetails?.addressLine1 !==
@@ -302,7 +302,7 @@ export class AddressService {
    *
    * @returns form group
    */
-  private createMailingAddressForm(): FormGroup {
+  private createMailingAddressForm(): UntypedFormGroup {
     return this.formBuilder.group({
       addressLine1: [
         this.stepEvacueeProfileService?.mailingAddressDetails?.addressLine1 !==

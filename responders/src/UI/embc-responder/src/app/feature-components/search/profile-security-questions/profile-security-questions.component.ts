@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   SecurityQuestion,
@@ -21,8 +21,8 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./profile-security-questions.component.scss']
 })
 export class ProfileSecurityQuestionsComponent implements OnInit {
-  securityQuestionsForm: FormGroup;
-  thirdSecurityQuestionForm: FormGroup;
+  securityQuestionsForm: UntypedFormGroup;
+  thirdSecurityQuestionForm: UntypedFormGroup;
   securityQuestions: Array<SecurityQuestion> = [];
   securityAnswers: Array<SecurityQuestion>;
   securityQuestionResult: number;
@@ -38,7 +38,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
     private router: Router,
     private evacueeSessionService: EvacueeSessionService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private customValidation: CustomValidationService,

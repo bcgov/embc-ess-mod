@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SelectedPathType } from '../models/appBase.model';
 import { DashboardBanner } from '../models/dialog-content.model';
@@ -17,7 +17,7 @@ export interface SearchOptionsService {
   idSearchQuestion: string;
   optionType: SelectedPathType;
   loadDefaultComponent(): void;
-  createForm(formType: string): FormGroup;
+  createForm(formType: string): UntypedFormGroup;
   search(
     value: string | EvacueeSearchContextModel,
     type?: string
@@ -36,7 +36,7 @@ export class OptionInjectionService {
     protected appBaseService: AppBaseService,
     protected router: Router,
     protected dataService: DataService,
-    protected builder: FormBuilder
+    protected builder: UntypedFormBuilder
   ) {}
 
   public get instance(): SearchOptionsService {

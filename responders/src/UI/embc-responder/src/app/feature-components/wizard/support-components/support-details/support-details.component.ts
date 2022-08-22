@@ -2,10 +2,10 @@ import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -39,7 +39,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
   now = Date.now();
   toggle = false;
   isVisible = true;
-  supportDetailsForm: FormGroup;
+  supportDetailsForm: UntypedFormGroup;
   noOfDaysList = [];
   selectedStartDate: string;
   editFlag = false;
@@ -55,7 +55,7 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     private router: Router,
     public stepSupportsService: StepSupportsService,
     private datePipe: DatePipe,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private supportDetailsService: SupportDetailsService,
     private dialog: MatDialog,
@@ -205,9 +205,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   addExistingMembers() {
     if (this.stepSupportsService?.supportDetails?.members) {
-      const members = this.supportDetailsForm.get('members') as FormArray;
+      const members = this.supportDetailsForm.get('members') as UntypedFormArray;
       this.stepSupportsService?.supportDetails?.members.forEach((member) => {
-        members.push(new FormControl(member));
+        members.push(new UntypedFormControl(member));
       });
       this.nextDetails();
     }
@@ -242,10 +242,10 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * @param member selected household member
    */
   onChange($event: MatCheckboxChange, member: EvacuationFileHouseholdMember) {
-    const members = this.supportDetailsForm.get('members') as FormArray;
+    const members = this.supportDetailsForm.get('members') as UntypedFormArray;
 
     if ($event.checked) {
-      members.push(new FormControl(member));
+      members.push(new UntypedFormControl(member));
     } else {
       const i = members.controls.findIndex((x) => x.value === member);
       members.removeAt(i);
@@ -258,12 +258,12 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
    * @param $event checkbox event
    */
   selectAll($event: MatCheckboxChange) {
-    const members = this.supportDetailsForm.get('members') as FormArray;
+    const members = this.supportDetailsForm.get('members') as UntypedFormArray;
     if ($event.checked) {
       members.clear();
       this.evacueeSessionService?.evacFile?.needsAssessment?.householdMembers.forEach(
         (member) => {
-          members.push(new FormControl(member));
+          members.push(new UntypedFormControl(member));
         }
       );
     } else {

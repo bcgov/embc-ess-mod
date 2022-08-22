@@ -6,7 +6,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
@@ -20,13 +20,13 @@ export class OverrideDatetimeComponent implements OnInit {
   @Input() currentDate: string;
   @Input() currentTime: string;
   @Output() collapse = new EventEmitter<boolean>(false);
-  @Output() dateTime = new EventEmitter<FormGroup>(null);
-  dateTimeForm: FormGroup;
+  @Output() dateTime = new EventEmitter<UntypedFormGroup>(null);
+  dateTimeForm: UntypedFormGroup;
   noDate = false;
   noTime = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService
   ) {}
 

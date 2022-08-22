@@ -9,8 +9,8 @@ import { MemberRole, Team } from 'src/app/core/api/models';
 import * as globalConst from '../../../core/services/global-constants';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
@@ -32,7 +32,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
   styleUrls: ['./supplier-detail.component.scss']
 })
 export class SupplierDetailComponent implements OnInit {
-  searchMutualAidForm: FormGroup;
+  searchMutualAidForm: UntypedFormGroup;
   selectedSupplier: SupplierModel;
   detailsType: string;
   loggedInRole: string;
@@ -51,7 +51,7 @@ export class SupplierDetailComponent implements OnInit {
   noneResults = false;
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private router: Router,
     private dialog: MatDialog,
     private supplierListDataService: SupplierListDataService,

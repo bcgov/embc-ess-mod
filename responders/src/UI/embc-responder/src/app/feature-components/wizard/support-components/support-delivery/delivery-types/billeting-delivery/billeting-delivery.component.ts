@@ -5,7 +5,7 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
@@ -15,8 +15,8 @@ import * as globalConst from '../../../../../../core/services/global-constants';
   styleUrls: ['./billeting-delivery.component.scss']
 })
 export class BilletingDeliveryComponent implements OnInit, OnChanges {
-  @Input() supportDeliveryForm: FormGroup;
-  detailsForm: FormGroup;
+  @Input() supportDeliveryForm: UntypedFormGroup;
+  detailsForm: UntypedFormGroup;
 
   readonly phoneMask = globalConst.phoneMask;
 
@@ -40,7 +40,7 @@ export class BilletingDeliveryComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDeliveryForm) {
-      this.detailsForm = this.supportDeliveryForm.get('details') as FormGroup;
+      this.detailsForm = this.supportDeliveryForm.get('details') as UntypedFormGroup;
     }
   }
 

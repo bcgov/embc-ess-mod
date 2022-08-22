@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-custom-gst-field',
@@ -7,7 +7,7 @@ import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./custom-gst-field.component.scss']
 })
 export class CustomGstFieldComponent implements OnInit {
-  @Input() gstFormGroup: FormGroup;
+  @Input() gstFormGroup: UntypedFormGroup;
 
   constructor() {}
 

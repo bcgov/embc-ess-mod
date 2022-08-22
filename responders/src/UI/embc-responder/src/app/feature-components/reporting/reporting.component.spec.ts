@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -18,7 +18,7 @@ describe('ReportingComponent', () => {
         MatAutocompleteModule
       ],
       declarations: [ReportingComponent],
-      providers: [FormBuilder]
+      providers: [UntypedFormBuilder]
     }).compileComponents();
   });
 
