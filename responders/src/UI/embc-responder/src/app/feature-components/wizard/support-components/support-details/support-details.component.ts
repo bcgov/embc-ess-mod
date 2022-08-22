@@ -376,27 +376,33 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     if (!this.supportDetailsForm.valid) {
       this.supportDetailsForm.markAllAsTouched();
       return;
-    } else if (this.cloneFlag) {
-      const thisSupport = this.supportDetailsForm.getRawValue();
-
-      const from = this.dateConversionService.createDateTimeString(
-        thisSupport.fromDate,
-        thisSupport.fromTime
-      );
-      const to = this.dateConversionService.createDateTimeString(
-        thisSupport.toDate,
-        thisSupport.toTime
-      );
-
-      const overlappingSupports = this.existingSupports.filter(
-        (s) =>
-          this.generateSupportType(s) ===
-            this.stepSupportsService.supportTypeToAdd.description &&
-          moment(to).isSameOrAfter(moment(s.from)) &&
-          moment(from).isSameOrBefore(moment(s.to))
-      );
-      hasConflict = overlappingSupports.length > 0;
     }
+
+    let existingSupports = this.existingSupports;
+
+    if (this.editFlag) {
+      existingSupports = existingSupports.filter(
+        (s) => s !== this.stepSupportsService.selectedSupportDetail
+      );
+    }
+
+    const thisSupport = this.supportDetailsForm.getRawValue();
+    const from = this.dateConversionService.createDateTimeString(
+      thisSupport.fromDate,
+      thisSupport.fromTime
+    );
+    const to = this.dateConversionService.createDateTimeString(
+      thisSupport.toDate,
+      thisSupport.toTime
+    );
+    const overlappingSupports = existingSupports.filter(
+      (s) =>
+        this.generateSupportType(s) ===
+          this.stepSupportsService.supportTypeToAdd.description &&
+        moment(to).isSameOrAfter(moment(s.from)) &&
+        moment(from).isSameOrBefore(moment(s.to))
+    );
+    hasConflict = overlappingSupports.length > 0;
 
     if (hasConflict) {
       this.dialog
