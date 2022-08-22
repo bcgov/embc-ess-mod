@@ -6,7 +6,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -38,7 +37,6 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatIconModule,
     MatListModule,
     MatDividerModule,
-    FlexLayoutModule,
     MatMenuModule,
     MatTableModule,
     MatTabsModule,
@@ -68,7 +66,6 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatListModule,
     MatDividerModule,
     MatMenuModule,
-    FlexLayoutModule,
     MatTableModule,
     MatTabsModule,
     MatPaginatorModule,

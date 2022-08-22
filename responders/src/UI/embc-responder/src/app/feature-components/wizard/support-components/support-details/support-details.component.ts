@@ -19,7 +19,6 @@ import { SupportDetailsService } from './support-details.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker/public-api';
 import { Support, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -28,6 +27,7 @@ import { DateConversionService } from 'src/app/core/services/utility/dateConvers
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
 import { Subscription } from 'rxjs';
 import { LoadEvacueeListService } from '../../../../core/services/load-evacuee-list.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-support-details',
@@ -205,7 +205,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   addExistingMembers() {
     if (this.stepSupportsService?.supportDetails?.members) {
-      const members = this.supportDetailsForm.get('members') as UntypedFormArray;
+      const members = this.supportDetailsForm.get(
+        'members'
+      ) as UntypedFormArray;
       this.stepSupportsService?.supportDetails?.members.forEach((member) => {
         members.push(new UntypedFormControl(member));
       });
