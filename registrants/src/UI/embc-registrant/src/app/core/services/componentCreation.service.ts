@@ -61,7 +61,7 @@ export class ComponentCreationService {
     },
     {
       component: 'family-information',
-      nextButtonLabel: 'Next - Animals',
+      nextButtonLabel: 'Next - Pets',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
@@ -75,7 +75,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Animals'
+      stepName: 'Pets'
     },
     {
       component: 'identify-needs',

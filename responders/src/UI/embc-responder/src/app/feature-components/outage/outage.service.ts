@@ -227,7 +227,7 @@ export class OutageService {
   }
 
   public async signOut(): Promise<void> {
-    await this.authenticationService.logout();
+    await this.authenticationService.logout('https://ess.gov.bc.ca/');
     this.cacheService.clear();
     localStorage.clear();
   }
