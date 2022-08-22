@@ -181,7 +181,7 @@ export class WizardDataService {
       previous: '/ess-wizard/ess-file/evacuation-details'
     },
     {
-      label: 'Animals',
+      label: 'Pets',
       route: 'animals',
       name: 'animals',
       status: 'not-started',
@@ -230,7 +230,7 @@ export class WizardDataService {
       previous: '/ess-wizard/ess-file/evacuation-details'
     },
     {
-      label: 'Animals',
+      label: 'Pets',
       route: 'animals',
       name: 'animals',
       status: 'not-started',
