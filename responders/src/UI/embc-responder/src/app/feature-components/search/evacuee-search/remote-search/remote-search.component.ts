@@ -43,8 +43,8 @@ export class RemoteSearchComponent implements OnInit {
         ) as Promise<boolean>
       )
         .then(() => {
-          this.isLoading = !this.isLoading;
-          this.isSubmitted = !this.isSubmitted;
+          //this.isLoading = !this.isLoading;
+          //this.isSubmitted = !this.isSubmitted;
         })
         .catch(() => {
           this.isLoading = !this.isLoading;
