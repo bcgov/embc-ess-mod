@@ -103,7 +103,8 @@ export class EssfileDashboardComponent implements OnInit {
 
   openWizard() {
     const wizardType = this.essfileDashboardService.getWizardType(
-      this.optionInjectionService.instance.optionType
+      this.optionInjectionService.instance.optionType,
+      this.essFile
     );
     this.isLoading = !this.isLoading;
 

@@ -145,14 +145,17 @@ export class EssfileDashboardService {
     }
   }
 
-  public getWizardType(optionType: string): string {
+  public getWizardType(
+    optionType: string,
+    essFile: EvacuationFileModel
+  ): string {
     if (
-      this.essFile.status === EvacuationFileStatus.Pending ||
-      this.essFile.status === EvacuationFileStatus.Expired
+      essFile.status === EvacuationFileStatus.Pending ||
+      essFile.status === EvacuationFileStatus.Expired
     ) {
       return WizardType.CompleteFile;
     } else if (
-      this.essFile.status === EvacuationFileStatus.Active &&
+      essFile.status === EvacuationFileStatus.Active &&
       optionType === SelectedPathType.remoteExtensions
     ) {
       return WizardType.ExtendSupports;

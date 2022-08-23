@@ -12,6 +12,7 @@ import { SearchFormRegistery } from 'src/app/core/services/helper/search-data.se
 export class RemoteSearchComponent implements OnInit {
   fileSearchForm: FormGroup;
   isLoading = false;
+  isSubmitted = false;
 
   constructor(private optionInjectionService: OptionInjectionService) {}
 
@@ -27,6 +28,7 @@ export class RemoteSearchComponent implements OnInit {
 
   search() {
     this.isLoading = !this.isLoading;
+    this.isSubmitted = !this.isSubmitted;
     if (this.fileSearchForm.valid) {
       const searchParams: EvacueeDetailsModel = {
         essFileNumber: this.fileSearchForm.get('essFileNumber').value
@@ -42,9 +44,11 @@ export class RemoteSearchComponent implements OnInit {
       )
         .then(() => {
           this.isLoading = !this.isLoading;
+          this.isSubmitted = !this.isSubmitted;
         })
         .catch(() => {
           this.isLoading = !this.isLoading;
+          this.isSubmitted = !this.isSubmitted;
         });
     } else {
       this.fileSearchForm.get('essFileNumber').markAsTouched();
