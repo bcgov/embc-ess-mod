@@ -27,9 +27,9 @@ export class RemoteSearchComponent implements OnInit {
   }
 
   search() {
-    this.isLoading = !this.isLoading;
-    this.isSubmitted = !this.isSubmitted;
     if (this.fileSearchForm.valid) {
+      this.isLoading = !this.isLoading;
+      this.isSubmitted = !this.isSubmitted;
       const searchParams: EvacueeDetailsModel = {
         essFileNumber: this.fileSearchForm.get('essFileNumber').value
       };
@@ -43,8 +43,8 @@ export class RemoteSearchComponent implements OnInit {
         ) as Promise<boolean>
       )
         .then(() => {
-          //this.isLoading = !this.isLoading;
-          //this.isSubmitted = !this.isSubmitted;
+          this.isLoading = !this.isLoading;
+          this.isSubmitted = !this.isSubmitted;
         })
         .catch(() => {
           this.isLoading = !this.isLoading;
