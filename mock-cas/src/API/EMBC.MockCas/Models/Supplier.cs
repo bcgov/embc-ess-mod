@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace EMBC.MockCas.Models
 {
@@ -10,6 +11,7 @@ namespace EMBC.MockCas.Models
 
     public class GetSupplierResponse
     {
+        [Key]
         public int Id { get; set; }
         public string Suppliernumber { get; set; } = null!;
         public string Suppliername { get; set; } = null!;
@@ -23,12 +25,13 @@ namespace EMBC.MockCas.Models
         public DateTime? Lastupdated { get; set; }
 
         [JsonPropertyName("supplieraddress")]
-        public Supplieraddress[] SupplierAddress { get; set; } = Array.Empty<Supplieraddress>();
+        public ICollection<Supplieraddress> SupplierAddress { get; set; } = new List<Supplieraddress>();
     }
 
     public class Supplieraddress
     {
         public int Id { get; set; }
+        public GetSupplierResponse? Supplier { get; set; }
         public string Suppliersitecode { get; set; } = null!;
         public string? AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }
@@ -56,7 +59,7 @@ namespace EMBC.MockCas.Models
         public string? Sin { get; set; }
 
         public string? BusinessNumber { get; set; }
-        public Supplieraddress[] SupplierAddress { get; set; } = Array.Empty<Supplieraddress>();
+        public List<Supplieraddress> SupplierAddress { get; set; } = new List<Supplieraddress>();
     }
 
     public class CreateSupplierResponse

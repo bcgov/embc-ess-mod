@@ -109,6 +109,7 @@ namespace EMBC.MockCas.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: true),
                     InvoiceLineNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     InvoiceLineType = table.Column<string>(type: "TEXT", nullable: false),
                     LineCode = table.Column<string>(type: "TEXT", nullable: false),
@@ -119,8 +120,7 @@ namespace EMBC.MockCas.Migrations
                     DistributionSupplier = table.Column<string>(type: "TEXT", nullable: true),
                     Info1 = table.Column<string>(type: "TEXT", nullable: true),
                     Info2 = table.Column<string>(type: "TEXT", nullable: true),
-                    Info3 = table.Column<string>(type: "TEXT", nullable: true),
-                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Info3 = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -133,11 +133,12 @@ namespace EMBC.MockCas.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Supplieraddress",
+                name: "SupplierAddress",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    SupplierId = table.Column<int>(type: "INTEGER", nullable: true),
                     Suppliersitecode = table.Column<string>(type: "TEXT", nullable: false),
                     AddressLine1 = table.Column<string>(type: "TEXT", nullable: true),
                     AddressLine2 = table.Column<string>(type: "TEXT", nullable: true),
@@ -154,15 +155,14 @@ namespace EMBC.MockCas.Migrations
                     ProviderId = table.Column<string>(type: "TEXT", nullable: true),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
                     SiteProtected = table.Column<string>(type: "TEXT", nullable: true),
-                    LastUpdated = table.Column<string>(type: "TEXT", nullable: true),
-                    GetSupplierResponseId = table.Column<int>(type: "INTEGER", nullable: true)
+                    LastUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Supplieraddress", x => x.Id);
+                    table.PrimaryKey("PK_SupplierAddress", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Supplieraddress_Suppliers_GetSupplierResponseId",
-                        column: x => x.GetSupplierResponseId,
+                        name: "FK_SupplierAddress_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
                         principalTable: "Suppliers",
                         principalColumn: "Id");
                 });
@@ -173,9 +173,9 @@ namespace EMBC.MockCas.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Supplieraddress_GetSupplierResponseId",
-                table: "Supplieraddress",
-                column: "GetSupplierResponseId");
+                name: "IX_SupplierAddress_SupplierId",
+                table: "SupplierAddress",
+                column: "SupplierId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -187,7 +187,7 @@ namespace EMBC.MockCas.Migrations
                 name: "InvoiceLineDetail");
 
             migrationBuilder.DropTable(
-                name: "Supplieraddress");
+                name: "SupplierAddress");
 
             migrationBuilder.DropTable(
                 name: "Invoices");

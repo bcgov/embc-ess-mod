@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMBC.MockCas.Migrations
 {
     [DbContext(typeof(MockCasDb))]
-    [Migration("20220822181928_InitialCreate")]
+    [Migration("20220824200033_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace EMBC.MockCas.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.GetSupplierResponse", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.GetSupplierResponse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace EMBC.MockCas.Migrations
                     b.ToTable("Suppliers");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.Invoice", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.Invoice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -189,7 +189,7 @@ namespace EMBC.MockCas.Migrations
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.InvoiceItem", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.InvoiceItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,7 +245,7 @@ namespace EMBC.MockCas.Migrations
                     b.ToTable("InvoiceItems");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.InvoiceLineDetail", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.InvoiceLineDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,7 +297,7 @@ namespace EMBC.MockCas.Migrations
                     b.ToTable("InvoiceLineDetail");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.Supplieraddress", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.Supplieraddress", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -333,9 +333,6 @@ namespace EMBC.MockCas.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("GetSupplierResponseId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("LastUpdated")
                         .HasColumnType("TEXT");
 
@@ -354,37 +351,44 @@ namespace EMBC.MockCas.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("SupplierId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Suppliersitecode")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GetSupplierResponseId");
+                    b.HasIndex("SupplierId");
 
-                    b.ToTable("Supplieraddress");
+                    b.ToTable("SupplierAddress");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.InvoiceLineDetail", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.InvoiceLineDetail", b =>
                 {
-                    b.HasOne("EMBC.MockCas.Controllers.Invoice", null)
+                    b.HasOne("EMBC.MockCas.Models.Invoice", "Invoice")
                         .WithMany("InvoiceLineDetails")
                         .HasForeignKey("InvoiceId");
+
+                    b.Navigation("Invoice");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.Supplieraddress", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.Supplieraddress", b =>
                 {
-                    b.HasOne("EMBC.MockCas.Controllers.GetSupplierResponse", null)
+                    b.HasOne("EMBC.MockCas.Models.GetSupplierResponse", "Supplier")
                         .WithMany("SupplierAddress")
-                        .HasForeignKey("GetSupplierResponseId");
+                        .HasForeignKey("SupplierId");
+
+                    b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.GetSupplierResponse", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.GetSupplierResponse", b =>
                 {
                     b.Navigation("SupplierAddress");
                 });
 
-            modelBuilder.Entity("EMBC.MockCas.Controllers.Invoice", b =>
+            modelBuilder.Entity("EMBC.MockCas.Models.Invoice", b =>
                 {
                     b.Navigation("InvoiceLineDetails");
                 });

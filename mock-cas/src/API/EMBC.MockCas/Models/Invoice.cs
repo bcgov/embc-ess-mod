@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace EMBC.MockCas.Models
 {
     public class Invoice
     {
+        [Key]
         public int Id { get; set; }
         public string InvoiceType { get; set; } = "Standard";
         public string SupplierNumber { get; set; } = null!;
@@ -39,12 +41,13 @@ namespace EMBC.MockCas.Models
         public string? InteracEmail { get; set; }
         public string? InteracMobileCountryCode { get; set; }
         public string? InteracMobileNumber { get; set; }
-        public List<InvoiceLineDetail> InvoiceLineDetails { get; set; } = new List<InvoiceLineDetail>();
+        public ICollection<InvoiceLineDetail> InvoiceLineDetails { get; set; } = new List<InvoiceLineDetail>();
     }
 
     public class InvoiceLineDetail
     {
         public int Id { get; set; }
+        public Invoice? Invoice { get; set; }
         public int InvoiceLineNumber { get; set; }
         public string InvoiceLineType { get; set; } = "Item";
         public string LineCode { get; set; } = "DR";
@@ -87,7 +90,7 @@ namespace EMBC.MockCas.Models
     public class GetInvoiceResponse
     {
         [JsonPropertyName("items")]
-        public InvoiceItem[] Items { get; set; } = Array.Empty<InvoiceItem>();
+        public List<InvoiceItem> Items { get; set; } = new List<InvoiceItem>();
 
         public PageReference? First { get; set; }
         public PageReference? Next { get; set; }

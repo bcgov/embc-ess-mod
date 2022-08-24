@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "670GXAePJevTvtJTNZtAKlIvPqstnTy3yNlwbUiwtxk3FZld3VnANRgVpmNij3crdpeqjLmpeRRcT5BJZylfuQ==",
+  "dgSpecHash": "zwkqmqav+VgFNUhUjm8GUq16kCIoJCBhRXhqHOxL2Z16WJd/mAptSz8EpYZZmRKLO0Wgf5an307b1m3/awjppA==",
   "success": true,
   "projectFilePath": "C:\\Users\\jweinkam\\Documents\\embc-ess-mod\\mock-cas\\src\\API\\EMBC.MockCas\\EMBC.MockCas.csproj",
   "expectedPackageFiles": [

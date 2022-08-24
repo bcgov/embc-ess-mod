@@ -47,7 +47,7 @@ C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug
 C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug\net6.0\scopedcss\bundle\EMBC.MockCas.styles.css
 C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug\net6.0\EMBC.MockCas.csproj.CopyComplete
 C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug\net6.0\EMBC.MockCas.dll
-C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug\net6.0\refint\EMBC.MockCas.dll
 C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug\net6.0\EMBC.MockCas.pdb
 C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug\net6.0\EMBC.MockCas.genruntimeconfig.cache
 C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\obj\Debug\net6.0\ref\EMBC.MockCas.dll
+C:\Users\jweinkam\Documents\embc-ess-mod\mock-cas\src\API\EMBC.MockCas\bin\Debug\net6.0\ref\EMBC.MockCas.dll
