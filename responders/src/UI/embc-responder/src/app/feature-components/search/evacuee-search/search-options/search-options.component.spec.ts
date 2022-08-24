@@ -91,7 +91,7 @@ describe('SearchOptionsComponent', () => {
     expect(warningMessage.textContent).toEqual(' Please make a selection ');
   });
 
-  it('should display Remote Extensions as disable if not available on backend', () => {
+  it('should display Remote Extensions as disable if not enabled', () => {
     appBaseService.appModel = {
       selectedEssTask: appBaseService.disableRemoteExtWorkflowTask
     };
@@ -102,7 +102,7 @@ describe('SearchOptionsComponent', () => {
     expect(componentResponse).toBe(true);
   });
 
-  it('should display Remote Extensions as enable if responder has permissions', () => {
+  it('should display Remote Extensions as enabled if responder is a Tier3 user', () => {
     appBaseService.appModel = {
       selectedEssTask: appBaseService.enabledAllWorkflowsTask
     };
@@ -114,7 +114,7 @@ describe('SearchOptionsComponent', () => {
     expect(componentResponse).toBe(false);
   });
 
-  it('should display Remote Extensions as disable if responder does not have permissions', () => {
+  it('should display Remote Extensions as disabled if responder is a Tier1 user', () => {
     appBaseService.appModel = {
       selectedEssTask: appBaseService.enabledAllWorkflowsTask
     };

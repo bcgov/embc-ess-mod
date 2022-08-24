@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit {
 
   public signOut(): void {
     this.userService.clearAppStorage();
-    this.authService.logout();
+    this.authService.logout('https://ess.gov.bc.ca/');
   }
 
   public showUserProfile(): boolean {

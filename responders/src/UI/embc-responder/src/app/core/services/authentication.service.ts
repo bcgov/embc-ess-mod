@@ -21,6 +21,7 @@ export class AuthenticationService {
   }
 
   public logout(targetUrl?: string): void {
+    this.oauthService.logoutUrl = targetUrl;
     this.oauthService.logOut();
   }
 
