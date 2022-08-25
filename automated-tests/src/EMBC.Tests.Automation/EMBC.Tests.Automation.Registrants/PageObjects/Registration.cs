@@ -191,7 +191,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             RadioButtonElement(householdMembersHasSpecialDietNoRadioBttn);
             RadioButtonElement(householdMembersHasMedicationNoRadioBttn);
 
-            ButtonElement("Next - Animals");
+            ButtonElement("Next - Pets");
         }
 
         public void CreateESSFileMaxHouseholdMembers(string firstName, string lastName, string initials, string gender, string dateOfBirth, string dietDetails)
@@ -212,7 +212,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             webDriver.FindElement(householdMembersDietDetailsInput).SendKeys(dietDetails);
             RadioButtonElement(householdMembersHasMedicationYesRadioBttn);
 
-            ButtonElement("Next - Animals");
+            ButtonElement("Next - Pets");
         }
 
         public void CreateESSFileMinAnimals()
