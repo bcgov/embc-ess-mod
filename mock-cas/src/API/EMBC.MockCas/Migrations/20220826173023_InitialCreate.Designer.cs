@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMBC.MockCas.Migrations
 {
     [DbContext(typeof(MockCasDb))]
-    [Migration("20220824200033_InitialCreate")]
+    [Migration("20220826173023_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -294,7 +294,7 @@ namespace EMBC.MockCas.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceLineDetail");
+                    b.ToTable("InvoiceLineDetails");
                 });
 
             modelBuilder.Entity("EMBC.MockCas.Models.Supplieraddress", b =>

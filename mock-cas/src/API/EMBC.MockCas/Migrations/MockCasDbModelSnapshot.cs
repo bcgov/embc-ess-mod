@@ -292,7 +292,7 @@ namespace EMBC.MockCas.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceLineDetail");
+                    b.ToTable("InvoiceLineDetails");
                 });
 
             modelBuilder.Entity("EMBC.MockCas.Models.Supplieraddress", b =>

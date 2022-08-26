@@ -1,4 +1,5 @@
-﻿using EMBC.MockCas.Models;
+﻿using System.Web;
+using EMBC.MockCas.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,12 +18,6 @@ namespace EMBC.MockCas.Controllers
             this.db = db;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Invoice>>> Get()
-        {
-            return await db.Invoices.ToListAsync();
-        }
-
         [HttpPost("cfs/apinvoice")]
         public async Task<ActionResult<InvoiceResponse>> CreateInvoice(Invoice invoice)
         {
@@ -35,6 +30,13 @@ namespace EMBC.MockCas.Controllers
                 InvoiceNumber = invoice.InvoiceNumber,
                 CASReturnedMessages = "SUCCEEDED"
             };
+
+            foreach (var details in invoice.InvoiceLineDetails)
+            {
+                details.Invoice = invoice;
+                db.InvoiceLineDetails.Add(details);
+            }
+
             await db.SaveChangesAsync();
             return response;
 
@@ -47,7 +49,7 @@ namespace EMBC.MockCas.Controllers
 
             if (supplier != null)
             {
-                supplier.SupplierAddress = supplier.SupplierAddress.Where(a => a.PostalCode != null && a.PostalCode == postalCode).ToList();
+                supplier.SupplierAddress = await db.SupplierAddress.Where(a => a.Supplier.Id == supplier.Id && a.PostalCode == postalCode).ToListAsync();
                 return supplier;
             }
             return NotFound();
@@ -75,7 +77,6 @@ namespace EMBC.MockCas.Controllers
                 SupplierSiteCode = "site code",
                 CASReturnedMessages = "SUCCEEDED"
             };
-            //await db.SaveChangesAsync();
 
             foreach(var address in supplier.SupplierAddress)
             {
@@ -104,11 +105,11 @@ namespace EMBC.MockCas.Controllers
             if (!string.IsNullOrWhiteSpace(getRequest.paymentstatusdatefrom)) query = query.Where(i => i.Paymentstatusdate >= DateTime.Parse(getRequest.paymentstatusdatefrom));
             if (!string.IsNullOrWhiteSpace(getRequest.paymentstatusdateto)) query = query.Where(i => i.Paymentstatusdate <= DateTime.Parse(getRequest.paymentstatusdateto));
 
-            if (int.Parse(getRequest.page) > 0)
+            int pageVal = -1;
+            if (int.TryParse(getRequest.page, out pageVal))
             {
-                var page = int.Parse(getRequest.page);
-                query = query.Skip(pageLength * page);
-                nextPage = page + 1;
+                query = query.Skip(pageLength * pageVal);
+                nextPage = pageVal + 1;
             }
 
             var response = new GetInvoiceResponse()
@@ -119,7 +120,8 @@ namespace EMBC.MockCas.Controllers
             if (response.Items.Count() > pageLength)
             {
                 response.Items = response.Items.Take(pageLength).ToList();
-                response.Next = new PageReference { Ref = $"https://mockurl.ca/blah?page={nextPage}" };
+                var queryString = GetQueryString(getRequest);
+                response.Next = new PageReference { Ref = $"mockcas/cfs/apinvoice/paymentsearch/{payGroup}?{queryString}&page={nextPage}" };
             }
 
             return await Task.FromResult(response);
@@ -142,6 +144,15 @@ namespace EMBC.MockCas.Controllers
             };
 
             return invoiceItem;
+        }
+
+        private string GetQueryString(object obj)
+        {
+            var properties = from p in obj.GetType().GetProperties()
+                             where p.GetValue(obj, null) != null
+                             select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(obj, null).ToString());
+
+            return String.Join("&", properties.ToArray());
         }
     }
 

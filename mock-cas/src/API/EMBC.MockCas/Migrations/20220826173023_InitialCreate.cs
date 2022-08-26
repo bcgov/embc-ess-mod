@@ -104,7 +104,7 @@ namespace EMBC.MockCas.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvoiceLineDetail",
+                name: "InvoiceLineDetails",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -124,9 +124,9 @@ namespace EMBC.MockCas.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvoiceLineDetail", x => x.Id);
+                    table.PrimaryKey("PK_InvoiceLineDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_InvoiceLineDetail_Invoices_InvoiceId",
+                        name: "FK_InvoiceLineDetails_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalTable: "Invoices",
                         principalColumn: "Id");
@@ -168,8 +168,8 @@ namespace EMBC.MockCas.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceLineDetail_InvoiceId",
-                table: "InvoiceLineDetail",
+                name: "IX_InvoiceLineDetails_InvoiceId",
+                table: "InvoiceLineDetails",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
@@ -184,7 +184,7 @@ namespace EMBC.MockCas.Migrations
                 name: "InvoiceItems");
 
             migrationBuilder.DropTable(
-                name: "InvoiceLineDetail");
+                name: "InvoiceLineDetails");
 
             migrationBuilder.DropTable(
                 name: "SupplierAddress");
