@@ -48,7 +48,7 @@ namespace EMBC.ESS.Managers.Events.Notifications
         {
             return new EmailTemplate
             {
-                Subject = "Connect your Evacuee Registration & Assistance (ERA) User Profile with BC Services Card",
+                Subject = "Log in to your Evacuee Registration & Assistance (ERA) User Profile using the BC Services Card app",
                 Content = await LoadTemplate("InviteTemplate")
             };
         }

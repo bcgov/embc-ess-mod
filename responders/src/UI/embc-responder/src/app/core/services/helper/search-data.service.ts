@@ -66,7 +66,7 @@ export class SearchDataService extends DashboardService {
     evacueeProfileService: EvacueeProfileService,
     alertService: AlertService,
     essFileService: EssFileService,
-    private evacueeSearchService: EvacueeSearchService //TODO: Remove this service
+    protected evacueeSearchService: EvacueeSearchService //TODO: Remove this service
   ) {
     super(appBaseService, essFileService, alertService, evacueeProfileService);
   }

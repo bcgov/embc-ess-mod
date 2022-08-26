@@ -5,6 +5,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
+import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('HouseholdMemberComponent', () => {
   let component: HouseholdMemberComponent;
@@ -12,9 +15,20 @@ describe('HouseholdMemberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule],
+      imports: [
+        MatDialogModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+        ReactiveFormsModule
+      ],
       declarations: [HouseholdMemberComponent],
-      providers: [{ provide: computeInterfaceToken, useValue: {} }]
+      providers: [
+        { provide: computeInterfaceToken, useValue: {} },
+        {
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
+        }
+      ]
     }).compileComponents();
   });
 

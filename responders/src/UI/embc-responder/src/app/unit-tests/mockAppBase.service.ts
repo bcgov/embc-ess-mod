@@ -72,9 +72,7 @@ export class MockAppBaseService extends AppBaseService {
   };
 
   public get appModel(): AppBaseModel {
-    return this.appModelTestVal
-      ? this.appModelTestVal
-      : JSON.parse(this.cacheService.get('appCache'));
+    return this.appModelTestVal;
   }
 
   public set appModel(value: Partial<AppBaseModel>) {

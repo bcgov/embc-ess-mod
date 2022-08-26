@@ -1,4 +1,13 @@
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EssFilesResultsComponent } from './ess-files-results.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -22,6 +31,8 @@ import { Router } from '@angular/router';
 import { EssfileDashboardComponent } from '../../essfile-dashboard/essfile-dashboard.component';
 import { EssfileSecurityPhraseComponent } from '../../essfile-security-phrase/essfile-security-phrase.component';
 import { computeInterfaceToken } from 'src/app/app.module';
+import { EssFilesResultsService } from './ess-files-results.service';
+import { MockEssFilesResultsService } from 'src/app/unit-tests/mockEssFileResults.service';
 
 describe('EssFilesResultsComponent', () => {
   let component: EssFilesResultsComponent;
@@ -29,6 +40,7 @@ describe('EssFilesResultsComponent', () => {
   let evacueeSearchService;
   let evacueeSessionService;
   let essFileSecurityPhraseService;
+  let essResultsService;
 
   const mockPaperEssFileResult: EvacuationFileSearchResultModel = {
     id: '149927',
@@ -77,6 +89,7 @@ describe('EssFilesResultsComponent', () => {
     manualFileId: null,
     isPaperBasedFile: false,
     isRestricted: false,
+    isFileCompleted: true,
     taskId: 'test',
     taskStartDate: '2021-03-23T17:26:00Z',
     taskEndDate: '2022-04-14T15:00:00Z',
@@ -122,16 +135,7 @@ describe('EssFilesResultsComponent', () => {
         RouterTestingModule,
         MatDialogModule,
         BrowserAnimationsModule,
-        RouterTestingModule.withRoutes([
-          {
-            path: 'responder-access/search/essfile-dashboard',
-            component: EssfileDashboardComponent
-          },
-          {
-            path: 'responder-access/search/security-phrase',
-            component: EssfileSecurityPhraseComponent
-          }
-        ])
+        RouterTestingModule
       ],
       providers: [
         EssFilesResultsComponent,
@@ -147,7 +151,11 @@ describe('EssFilesResultsComponent', () => {
           provide: EssFileSecurityPhraseService,
           useClass: MockEssFileSecurityPhraseService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        {
+          provide: EssFilesResultsService,
+          useClass: MockEssFilesResultsService
+        }
       ]
     }).compileComponents();
   });
@@ -158,6 +166,7 @@ describe('EssFilesResultsComponent', () => {
     evacueeSearchService = TestBed.inject(EvacueeSearchService);
     evacueeSessionService = TestBed.inject(EvacueeSessionService);
     essFileSecurityPhraseService = TestBed.inject(EssFileSecurityPhraseService);
+    essResultsService = TestBed.inject(EssFilesResultsService);
   });
 
   it('should create', () => {
@@ -165,65 +174,65 @@ describe('EssFilesResultsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should open unable access ESS file dialog', () => {
-  //   evacueeSessionService.isPaperBased = true;
-  //   evacueeSearchService.paperBasedEssFile = 'T123456';
-  //   fixture.detectChanges();
-  //   component.openESSFile(mockPaperEssFileResult);
-  //   fixture.detectChanges();
+  it('should not be able to open any ess file if paper based file exists', fakeAsync(() => {
+    evacueeSessionService.isPaperBased = true;
+    evacueeSearchService.evacueeSearchContext = {
+      hasShownIdentification: true,
+      evacueeSearchParameters: {
+        firstName: 'Evac',
+        lastName: 'Five',
+        dateOfBirth: '12/12/2000',
+        paperFileNumber: 'T123456'
+      }
+    };
+    fixture.detectChanges();
+    component.openESSFile(mockPaperEssFileResult);
 
-  //   const dialogContent = document.getElementsByTagName(
-  //     'app-information-dialog'
-  //   )[0] as HTMLElement;
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
 
-  //   expect(dialogContent.textContent).toEqual(
-  //     'Responders doing data entry for a paper ESS File can only access ESS Files that match the paper ESS File number used during the search process.If you entered the incorrect paper ESS File Number, go back and start a new search with the correct details. Close '
-  //   );
-  // });
+    tick();
+    fixture.detectChanges();
+    const dialogContent = document.getElementsByTagName(
+      'app-information-dialog'
+    )[0] as HTMLElement;
 
-  // it('should navigate to ess file dashboard when paper based', inject(
-  //   [Router],
-  //   (router: Router) => {
-  //     spyOn(router, 'navigate').and.stub();
-  //     evacueeSessionService.isPaperBased = true;
-  //     evacueeSearchService.paperBasedEssFile = 'T2000';
+    expect(dialogContent).toBeTruthy();
+  }));
 
-  //     fixture.detectChanges();
-  //     component.openESSFile(mockPaperEssFileResult);
-  //     fixture.detectChanges();
+  it('should navigate to ess file dashboard when selected file is paper based', fakeAsync(
+    inject([Router], (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      evacueeSessionService.isPaperBased = true;
+      evacueeSearchService.evacueeSearchContext = {
+        hasShownIdentification: true,
+        evacueeSearchParameters: {
+          firstName: 'Evac',
+          lastName: 'Five',
+          dateOfBirth: '12/12/2000',
+          paperFileNumber: 'T2000'
+        }
+      };
 
-  //     expect(router.navigate).toHaveBeenCalledWith([
-  //       'responder-access/search/essfile-dashboard'
-  //     ]);
-  //   }
-  // ));
+      fixture.detectChanges();
+      component.openESSFile(mockPaperEssFileResult);
 
-  // it('should open unable access file dialog', () => {
-  //   evacueeSessionService.isPaperBased = false;
-  //   evacueeSearchService.evacueeSearchContext = {
-  //     hasShownIdentification: false,
-  //     evacueeSearchParameters: {
-  //       firstName: 'Anne',
-  //       lastName: 'Lee',
-  //       dateOfBirth: '09/09/1999'
-  //     }
-  //   };
-  //   fixture.detectChanges();
-  //   component.openESSFile(mockPaperEssFileResult);
-  //   fixture.detectChanges();
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
 
-  //   const dialogContent = document.getElementsByTagName(
-  //     'app-information-dialog'
-  //   )[0] as HTMLElement;
+      tick();
+      fixture.detectChanges();
 
-  //   expect(dialogContent.textContent).toEqual(
-  //     'Please complete the evacuee profile. Close'
-  //   );
-  // });
+      expect(router.navigate).toHaveBeenCalledWith([
+        'responder-access/search/essfile-dashboard'
+      ]);
+    })
+  ));
 
-  it('should navigate to security phrase', inject(
-    [Router],
-    (router: Router) => {
+  it('should navigate to security phrase if user has not shown identification and is on digital flow', fakeAsync(
+    inject([Router], (router: Router) => {
       spyOn(router, 'navigate').and.stub();
       evacueeSessionService.isPaperBased = false;
       evacueeSearchService.evacueeSearchContext = {
@@ -234,43 +243,49 @@ describe('EssFilesResultsComponent', () => {
           dateOfBirth: '09/09/1999'
         }
       };
-      essFileSecurityPhraseService.securityQuestionsValue = {
-        securityPhrase: 's****e'
+
+      fixture.detectChanges();
+      component.openESSFile(mockDigitalEssFileResult);
+
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
+
+      tick();
+      fixture.detectChanges();
+
+      expect(router.navigate).toHaveBeenCalledWith([
+        'responder-access/search/security-phrase'
+      ]);
+    })
+  ));
+
+  it('should navigate to ess file dashboard if user has shown identification and  is on digital flow', fakeAsync(
+    inject([Router], (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      evacueeSessionService.isPaperBased = false;
+      evacueeSearchService.evacueeSearchContext = {
+        hasShownIdentification: true,
+        evacueeSearchParameters: {
+          firstName: 'Anne',
+          lastName: 'Lee',
+          dateOfBirth: '09/09/1999'
+        }
       };
 
       fixture.detectChanges();
       component.openESSFile(mockDigitalEssFileResult);
+
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
+
+      tick();
       fixture.detectChanges();
 
-      setTimeout(() => {
-        expect(router.navigate).toHaveBeenCalledWith([
-          'responder-access/search/security-phrase'
-        ]);
-      }, 500);
-    }
+      expect(router.navigate).toHaveBeenCalledWith([
+        'responder-access/search/essfile-dashboard'
+      ]);
+    })
   ));
-
-  // it('should navigate to ess file dashboard when digital based', inject(
-  //   [Router],
-  //   (router: Router) => {
-  //     spyOn(router, 'navigate').and.stub();
-  //     evacueeSessionService.isPaperBased = false;
-  //     evacueeSearchService.evacueeSearchContext = {
-  //       hasShownIdentification: true,
-  //       evacueeSearchParameters: {
-  //         firstName: 'Anne',
-  //         lastName: 'Lee',
-  //         dateOfBirth: '09/09/1999'
-  //       }
-  //     };
-
-  //     fixture.detectChanges();
-  //     component.openESSFile(mockDigitalEssFileResult);
-  //     fixture.detectChanges();
-
-  //     expect(router.navigate).toHaveBeenCalledWith([
-  //       'responder-access/search/essfile-dashboard'
-  //     ]);
-  //   }
-  // ));
 });

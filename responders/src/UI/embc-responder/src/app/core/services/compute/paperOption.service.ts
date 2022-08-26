@@ -19,9 +19,9 @@ export class PaperOptionService implements SearchOptionsService {
   idSearchQuestion: string = globalConst.paperIdQuestion;
 
   constructor(
-    private router: Router,
-    private dataService: DataService,
-    private builder: FormBuilder
+    protected router: Router,
+    protected dataService: DataService,
+    protected builder: FormBuilder
   ) {}
 
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
@@ -97,7 +97,6 @@ export class PaperOptionService implements SearchOptionsService {
       default:
         break;
     }
-
     return new Promise<boolean>((resolve, reject) => {
       if (route !== null) {
         return this.router.navigate([route], {
