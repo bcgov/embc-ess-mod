@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EMBC.MockCas.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class InvoicesController : ControllerBase
     {
         private readonly MockCasDb db;

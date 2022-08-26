@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EMBC.MockCas.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class MockCasController : ControllerBase
     {
         private readonly ILogger<MockCasController> _logger;
