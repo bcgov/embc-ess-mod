@@ -1,5 +1,46 @@
-<div class="row" *ngFor="let invoice of invoices">
-    <div class="col">
-        {{invoice.invoiceNumber}}
+<div class="container">
+    <div class="row pt-5">
+        <div class="col">
+            <p style="margin-left: 10px;">Existing Invoices</p>
+        </div>
+    </div>
+
+    <div class="mat-elevation-z8 table-responsive mt-3">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="invNum">
+                <th mat-header-cell *matHeaderCellDef> Invoice # </th>
+                <td mat-cell *matCellDef="let element"> {{element.invoiceNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Amount </th>
+                <td mat-cell *matCellDef="let element"> {{element.invoiceAmount | currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.invoiceDate | date}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.nameLine1}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="supplierNumber">
+                <th mat-header-cell *matHeaderCellDef> Supplier # </th>
+                <td mat-cell *matCellDef="let element"> {{element.supplierNumber}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let element"> <button class="button-s" mat-button (click)="deleteInvoice(element.invoiceNumber)">Delete</button> </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
     </div>
 </div>

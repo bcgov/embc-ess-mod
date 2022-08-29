@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMBC.MockCas.Migrations
 {
     [DbContext(typeof(MockCasDb))]
-    [Migration("20220826173023_InitialCreate")]
+    [Migration("20220829211806_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,16 +87,18 @@ namespace EMBC.MockCas.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DateGoodsReceived")
+                    b.Property<string>("DateGoodsReceived")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateInvoiceReceived")
+                    b.Property<string>("DateInvoiceReceived")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EftAdviceFlag")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("GlDate")
+                    b.Property<string>("GlDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("InteracEmail")
@@ -115,7 +117,8 @@ namespace EMBC.MockCas.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("InvoiceDate")
+                    b.Property<string>("InvoiceDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("InvoiceNumber")
@@ -127,7 +130,6 @@ namespace EMBC.MockCas.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NameLine1")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NameLine2")
@@ -195,10 +197,11 @@ namespace EMBC.MockCas.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Cleareddate")
+                    b.Property<string>("Cleareddate")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Invoicecreationdate")
+                    b.Property<string>("Invoicecreationdate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Invoicenumber")
@@ -211,7 +214,7 @@ namespace EMBC.MockCas.Migrations
                     b.Property<decimal?>("Paymentamount")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("Paymentdate")
+                    b.Property<string>("Paymentdate")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("Paymentnumber")
@@ -220,7 +223,7 @@ namespace EMBC.MockCas.Migrations
                     b.Property<string>("Paymentstatus")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("Paymentstatusdate")
+                    b.Property<string>("Paymentstatusdate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Sitecode")
@@ -231,13 +234,13 @@ namespace EMBC.MockCas.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Systemdate")
+                    b.Property<string>("Systemdate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Voidreason")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("voiddate")
+                    b.Property<string>("voiddate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

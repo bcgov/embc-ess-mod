@@ -68,7 +68,7 @@ namespace EMBC.MockCas.Controllers
 
     public class SetPaymentRequest
     {
-        public DateTime PaymentDate { get; set; }
-        public string PaymentStatus { get; set; }
+        public string PaymentDate { get; set; } = null!;
+        public string PaymentStatus { get; set; } = null!;
     }
 }

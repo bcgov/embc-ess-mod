@@ -10,15 +10,15 @@ namespace EMBC.MockCas.Models
         public string InvoiceType { get; set; } = "Standard";
         public string SupplierNumber { get; set; } = null!;
         public string SupplierSiteNumber { get; set; } = null!;
-        public DateTime InvoiceDate { get; set; }
+        public string InvoiceDate { get; set; } = null!;
         public string InvoiceNumber { get; set; } = null!;
         public decimal InvoiceAmount { get; set; }
         public string PayGroup { get; set; } = null!;
-        public DateTime DateInvoiceReceived { get; set; }
-        public DateTime? DateGoodsReceived { get; set; }
+        public string DateInvoiceReceived { get; set; } = null!;
+        public string? DateGoodsReceived { get; set; }
         public string RemittanceCode { get; set; } = "01";
         public string SpecialHandling { get; set; } = "N";
-        public string NameLine1 { get; set; } = null!;
+        public string? NameLine1 { get; set; } = null!;
         public string? NameLine2 { get; set; }
         public string? AddressLine1 { get; set; }
         public string? AddressLine2 { get; set; }
@@ -35,7 +35,7 @@ namespace EMBC.MockCas.Models
         public string RemittanceMessage1 { get; set; } = null!;
         public string RemittanceMessage2 { get; set; } = null!;
         public string? RemittanceMessage3 { get; set; }
-        public DateTime GlDate { get; set; }
+        public string GlDate { get; set; } = null!;
         public string InvoiceBatchName { get; set; } = null!;
         public string CurrencyCode { get; set; } = "CAD";
         public string? InteracEmail { get; set; }
@@ -108,16 +108,16 @@ namespace EMBC.MockCas.Models
         public string Invoicenumber { get; set; } = null!;
         public string Suppliernumber { get; set; } = null!;
         public string Sitecode { get; set; } = null!;
-        public DateTime Invoicecreationdate { get; set; }
+        public string Invoicecreationdate { get; set; } = null!;
         public int? Paymentnumber { get; set; }
         public string? Paygroup { get; set; }
-        public DateTime? Paymentdate { get; set; }
+        public string? Paymentdate { get; set; }
         public decimal? Paymentamount { get; set; }
         public string? Paymentstatus { get; set; }
-        public DateTime? Paymentstatusdate { get; set; }
-        public DateTime? Cleareddate { get; set; }
-        public DateTime? voiddate { get; set; }
+        public string? Paymentstatusdate { get; set; }
+        public string? Cleareddate { get; set; }
+        public string? voiddate { get; set; }
         public string? Voidreason { get; set; }
-        public DateTime Systemdate { get; set; }
+        public string? Systemdate { get; set; }
     }
 }

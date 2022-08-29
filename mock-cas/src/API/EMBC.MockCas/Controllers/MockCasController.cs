@@ -23,7 +23,7 @@ namespace EMBC.MockCas.Controllers
         {
             await db.Invoices.AddAsync(invoice);
             var item = CreateItemFromInvoice(invoice);
-            item.Invoicecreationdate = DateTime.UtcNow;
+            item.Invoicecreationdate = DateTime.UtcNow.ToShortDateString();
             await db.InvoiceItems.AddAsync(item);
             var response = new InvoiceResponse
             {
@@ -100,10 +100,10 @@ namespace EMBC.MockCas.Controllers
             if (!string.IsNullOrWhiteSpace(getRequest.sitecode)) query = query.Where(i => i.Sitecode == getRequest.sitecode);
             if (!string.IsNullOrWhiteSpace(getRequest.paymentstatus)) query = query.Where(i => i.Paymentstatus == getRequest.paymentstatus);
             if (!string.IsNullOrWhiteSpace(getRequest.paymentnumber)) query = query.Where(i => i.Paymentnumber == int.Parse(getRequest.paymentnumber));
-            if (!string.IsNullOrWhiteSpace(getRequest.invoicecreationdatefrom)) query = query.Where(i => i.Invoicecreationdate >= DateTime.Parse(getRequest.invoicecreationdatefrom));
-            if (!string.IsNullOrWhiteSpace(getRequest.invoicecreationdateto)) query = query.Where(i => i.Invoicecreationdate <= DateTime.Parse(getRequest.invoicecreationdateto));
-            if (!string.IsNullOrWhiteSpace(getRequest.paymentstatusdatefrom)) query = query.Where(i => i.Paymentstatusdate >= DateTime.Parse(getRequest.paymentstatusdatefrom));
-            if (!string.IsNullOrWhiteSpace(getRequest.paymentstatusdateto)) query = query.Where(i => i.Paymentstatusdate <= DateTime.Parse(getRequest.paymentstatusdateto));
+            if (!string.IsNullOrWhiteSpace(getRequest.invoicecreationdatefrom)) query = query.Where(i => DateTime.Parse(i.Invoicecreationdate) >= DateTime.Parse(getRequest.invoicecreationdatefrom));
+            if (!string.IsNullOrWhiteSpace(getRequest.invoicecreationdateto)) query = query.Where(i => DateTime.Parse(i.Invoicecreationdate) <= DateTime.Parse(getRequest.invoicecreationdateto));
+            if (!string.IsNullOrWhiteSpace(getRequest.paymentstatusdatefrom)) query = query.Where(i => DateTime.Parse(i.Paymentstatusdate) >= DateTime.Parse(getRequest.paymentstatusdatefrom));
+            if (!string.IsNullOrWhiteSpace(getRequest.paymentstatusdateto)) query = query.Where(i => DateTime.Parse(i.Paymentstatusdate) <= DateTime.Parse(getRequest.paymentstatusdateto));
 
             int pageVal = -1;
             if (int.TryParse(getRequest.page, out pageVal))
@@ -140,7 +140,7 @@ namespace EMBC.MockCas.Controllers
                 Paymentdate = invoice.DateInvoiceReceived,
                 Paymentamount = invoice.InvoiceAmount,
                 Paymentstatus = "NEGOTIABLE",
-                Paymentstatusdate = DateTime.UtcNow,
+                Paymentstatusdate = DateTime.UtcNow.ToShortDateString(),
             };
 
             return invoiceItem;
