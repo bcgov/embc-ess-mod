@@ -23,7 +23,7 @@ namespace EMBC.MockCas.Controllers
         {
             await db.Invoices.AddAsync(invoice);
             var item = CreateItemFromInvoice(invoice);
-            item.Invoicecreationdate = DateTime.UtcNow.ToShortDateString();
+            item.Invoicecreationdate = DateTime.UtcNow.ToString("dd-MMM-yyyy").Replace(".", "");
             await db.InvoiceItems.AddAsync(item);
             var response = new InvoiceResponse
             {
@@ -58,7 +58,10 @@ namespace EMBC.MockCas.Controllers
         [HttpPost("cfs/supplier")]
         public async Task<ActionResult<CreateSupplierResponse>> CreateSupplier(CreateSupplierRequest supplier)
         {
-            supplier.SupplierAddress.First().Suppliersitecode = "001";
+            if (supplier.SupplierAddress.Any())
+            {
+                supplier.SupplierAddress.First().Suppliersitecode = "001";
+            }
             GetSupplierResponse toAdd = new GetSupplierResponse
             {
                 Suppliernumber = new Random().Next(1, 1000000).ToString(),
@@ -78,7 +81,7 @@ namespace EMBC.MockCas.Controllers
                 CASReturnedMessages = "SUCCEEDED"
             };
 
-            foreach(var address in supplier.SupplierAddress)
+            foreach (var address in supplier.SupplierAddress)
             {
                 address.Supplier = toAdd;
                 db.SupplierAddress.Add(address);
@@ -140,7 +143,7 @@ namespace EMBC.MockCas.Controllers
                 Paymentdate = invoice.DateInvoiceReceived,
                 Paymentamount = invoice.InvoiceAmount,
                 Paymentstatus = "NEGOTIABLE",
-                Paymentstatusdate = DateTime.UtcNow.ToShortDateString(),
+                Paymentstatusdate = DateTime.UtcNow.ToString("dd-MMM-yyyy").Replace(".", ""),
             };
 
             return invoiceItem;

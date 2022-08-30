@@ -1,9 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Invoice } from '../core/api/models';
-import { InvoicesService } from '../core/api/services';
+import { GetInvoiceResponse, Invoice } from '../core/api/models';
+import { InvoicesService, MockCasService } from '../core/api/services';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { EditInvoiceDialog } from '../dialogs/edit-invoice/edit-invoice.dialog';
 
 @Component({
   selector: 'app-invoices',
@@ -15,7 +17,9 @@ export class InvoicesComponent implements OnInit {
   displayedColumns: string[] = ['invNum', 'name', 'amount', 'date', 'supplierNumber', 'actions'];
   dataSource: MatTableDataSource<Invoice> = new MatTableDataSource();
 
-  constructor(private invoicesService: InvoicesService) { }
+  constructor(private invoicesService: InvoicesService,
+    private mockCasService: MockCasService,
+    public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loadInvoices();
@@ -26,6 +30,31 @@ export class InvoicesComponent implements OnInit {
       next: (res: Invoice[]) => {
         this.invoices = res;
         this.dataSource = new MatTableDataSource(this.invoices);
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    });
+  }
+
+  edit(invoiceNumber: string) {
+    this.mockCasService.mockCasGetInvoice({ payGroup: 'EMB Inc', invoicenumber: invoiceNumber }).subscribe({
+      next: (res: GetInvoiceResponse) => {
+        let invoice = { paymentDate: '', paymentStatus: '' };
+        if (res.items?.length == 1) {
+          invoice.paymentDate = res.items[0].paymentdate || '';
+          invoice.paymentStatus = res.items[0].paymentstatus || '';
+        }
+        let dialogRef = this.dialog.open(EditInvoiceDialog, {
+          autoFocus: false,
+          width: '40vw',
+          data: { invoiceNumber: invoiceNumber, ...invoice }
+        });
+
+        dialogRef.afterClosed()
+          .subscribe((result) => {
+            this.loadInvoices();
+          });
       },
       error: (err: any) => {
         console.log(err);

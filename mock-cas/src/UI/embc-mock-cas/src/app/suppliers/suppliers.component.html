@@ -3,6 +3,10 @@
         <div class="col">
             <p style="margin-left: 10px;">Existing Suppliers</p>
         </div>
+        <div class="col">
+            <button mat-raised-button color="primary" (click)="addSupplier()">Add Supplier</button>
+            <!-- <button class="btn btn-primary" (click)="addSupplier()">Add Supplier</button> -->
+        </div>
     </div>
 
     <div class="mat-elevation-z8 table-responsive mt-3">
@@ -17,6 +21,12 @@
                 <td mat-cell *matCellDef="let element"> {{element.suppliername}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <button mat-raised-button class="me-2" color="accent" (click)="deleteSupplier(element.suppliername)">Delete</button>
+                </td>
+            </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

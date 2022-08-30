@@ -1,0 +1,83 @@
+<div mat-dialog-content>
+    <div class="row">
+        <div class="col">
+            <h1>Add New Supplier</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 content-container">
+            <form [formGroup]="supplierForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Supplier Name</mat-label>
+                            <input formControlName="supplierName" maxlength="100" matInput placeholder="Supplier Name" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Sub Category</mat-label>
+                            <input formControlName="subCategory" maxlength="100" matInput placeholder="Sub Category" />
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Sin</mat-label>
+                            <input formControlName="sin" maxlength="100" matInput placeholder="Sin" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div formArrayName="supplierAddress">
+                    <div *ngFor="let address of supplierAddress.controls; let i = index">
+                        <div [formGroup]="address" class="address-form">
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Address Line 1</mat-label>
+                                        <input formControlName="addressLine1" maxlength="100" matInput placeholder="Line 1" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>City</mat-label>
+                                        <input formControlName="city" maxlength="100" matInput placeholder="City" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Postal Code</mat-label>
+                                        <input formControlName="postalCode" maxlength="100" matInput placeholder="Postal Code" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Province</mat-label>
+                                        <input formControlName="province" maxlength="100" matInput placeholder="Province" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Country</mat-label>
+                                        <input formControlName="country" maxlength="100" matInput placeholder="country" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <button mat-fab color="primary" (click)="deleteAddress(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button mat-raised-button color="primary" (click)="addAddress()">Add Address</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button class="btn btn-primary mt-2 btn-save" [class.is-disabled]="saving" (click)="save()">Save</button>
+    <button class="btn btn-secondary mt-2" (click)="close()">Close</button>
+</div>

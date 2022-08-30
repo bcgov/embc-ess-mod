@@ -34,7 +34,10 @@
 
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
-                <td mat-cell *matCellDef="let element"> <button class="button-s" mat-button (click)="deleteInvoice(element.invoiceNumber)">Delete</button> </td>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button class="me-2" color="primary" (click)="edit(element.invoiceNumber)">Edit</button>
+                    <button mat-raised-button class="me-2" color="accent" (click)="deleteInvoice(element.invoiceNumber)">Delete</button>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
