@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMBC.MockCas.Migrations
 {
     [DbContext(typeof(MockCasDb))]
-    [Migration("20220829211806_InitialCreate")]
+    [Migration("20220830194141_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -197,7 +197,13 @@ namespace EMBC.MockCas.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("ClearedDateVal")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Cleareddate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("InvoiceCreationDateVal")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Invoicecreationdate")
@@ -209,6 +215,9 @@ namespace EMBC.MockCas.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Paygroup")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PaymentStatusDateVal")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal?>("Paymentamount")
@@ -235,6 +244,9 @@ namespace EMBC.MockCas.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Systemdate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("VoidDateVal")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Voidreason")

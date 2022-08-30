@@ -109,14 +109,18 @@ namespace EMBC.MockCas.Models
         public string Suppliernumber { get; set; } = null!;
         public string Sitecode { get; set; } = null!;
         public string Invoicecreationdate { get; set; } = null!;
+        public DateTime? InvoiceCreationDateVal { get; set; }
         public int? Paymentnumber { get; set; }
         public string? Paygroup { get; set; }
         public string? Paymentdate { get; set; }
         public decimal? Paymentamount { get; set; }
         public string? Paymentstatus { get; set; }
         public string? Paymentstatusdate { get; set; }
+        public DateTime? PaymentStatusDateVal { get; set; }
         public string? Cleareddate { get; set; }
+        public DateTime? ClearedDateVal { get; set; }
         public string? voiddate { get; set; }
+        public DateTime? VoidDateVal { get; set; }
         public string? Voidreason { get; set; }
         public string? Systemdate { get; set; }
     }

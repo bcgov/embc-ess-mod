@@ -195,7 +195,13 @@ namespace EMBC.MockCas.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("ClearedDateVal")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Cleareddate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("InvoiceCreationDateVal")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Invoicecreationdate")
@@ -207,6 +213,9 @@ namespace EMBC.MockCas.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Paygroup")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PaymentStatusDateVal")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal?>("Paymentamount")
@@ -233,6 +242,9 @@ namespace EMBC.MockCas.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Systemdate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("VoidDateVal")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Voidreason")
