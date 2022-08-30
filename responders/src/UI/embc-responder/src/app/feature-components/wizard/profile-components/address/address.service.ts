@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { map, startWith, Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
@@ -101,7 +105,9 @@ export class AddressService {
     this.stepEvacueeProfileService.nextTabUpdate.next();
   }
 
-  public clearPrimaryAddressFields(primaryAddressForm: UntypedFormGroup): UntypedFormGroup {
+  public clearPrimaryAddressFields(
+    primaryAddressForm: UntypedFormGroup
+  ): UntypedFormGroup {
     primaryAddressForm.get('address.addressLine1').reset();
     primaryAddressForm.get('address.addressLine2').reset();
     primaryAddressForm.get('address.community').reset();
@@ -111,7 +117,9 @@ export class AddressService {
     return primaryAddressForm;
   }
 
-  public clearMailingAddressFields(primaryAddressForm: UntypedFormGroup): UntypedFormGroup {
+  public clearMailingAddressFields(
+    primaryAddressForm: UntypedFormGroup
+  ): UntypedFormGroup {
     primaryAddressForm.get('mailingAddress.addressLine1').reset();
     primaryAddressForm.get('mailingAddress.addressLine2').reset();
     primaryAddressForm.get('mailingAddress.community').reset();
@@ -155,7 +163,9 @@ export class AddressService {
     return primaryAddressForm;
   }
 
-  public updateOnVisibility(primaryAddressForm: UntypedFormGroup): UntypedFormGroup {
+  public updateOnVisibility(
+    primaryAddressForm: UntypedFormGroup
+  ): UntypedFormGroup {
     primaryAddressForm.get('address.addressLine1').updateValueAndValidity();
     primaryAddressForm.get('address.community').updateValueAndValidity();
     primaryAddressForm.get('address.stateProvince').updateValueAndValidity();

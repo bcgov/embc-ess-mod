@@ -4,7 +4,11 @@ import * as globalConst from '../../../core/services/global-constants';
 import { TabModel, TabStatusManager } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup
+} from '@angular/forms';
 import {
   ContactDetails,
   RegistrantProfile,
@@ -26,6 +30,10 @@ import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
+  // Evacuee Details tab
+  // First, Last, and DoB are pre-set in wizardStepService
+  personalDetailsVal: PersonDetails;
+
   // Wizard variables
   private profileTabsVal: Array<TabModel>;
 
@@ -33,10 +41,6 @@ export class StepEvacueeProfileService {
 
   // Restriction tab
   private restrictedAccessVal: boolean;
-
-  // Evacuee Details tab
-  // First, Last, and DoB are pre-set in wizardStepService
-  private personalDetailsVal: PersonDetails;
 
   // Address tab
   private primaryAddressDetailsVal: AddressModel;
@@ -249,8 +253,8 @@ export class StepEvacueeProfileService {
   }
 
   public setTabStatus(name: string, status: string): void {
-    this.profileTabs.map((tab) => {
-      if (tab.name === name) {
+    this.profileTabs?.map((tab) => {
+      if (tab?.name === name) {
         tab.status = status;
       }
       return tab;
@@ -311,7 +315,7 @@ export class StepEvacueeProfileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.profileTabs.some(
+    return this.profileTabs?.some(
       (tab) =>
         (tab.status === 'not-started' || tab.status === 'incomplete') &&
         tab.name !== 'review'
@@ -503,7 +507,10 @@ export class StepEvacueeProfileService {
         | UntypedFormArray;
       if (control instanceof UntypedFormControl) {
         fields.push(control.value);
-      } else if (control instanceof UntypedFormGroup || control instanceof UntypedFormArray) {
+      } else if (
+        control instanceof UntypedFormGroup ||
+        control instanceof UntypedFormArray
+      ) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
             fields.push(control.controls[key].value);
@@ -543,7 +550,7 @@ export class StepEvacueeProfileService {
   }
 
   getNavLinks(name: string): TabModel {
-    return this.profileTabs.find((tab) => tab.name === name);
+    return this.profileTabs?.find((tab) => tab.name === name);
   }
 
   private checkForSameMailingAddress(

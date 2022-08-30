@@ -21,35 +21,33 @@ describe('TaskSearchComponent', () => {
   let taskSearchService;
   let alertService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [TaskSearchComponent],
-        imports: [
-          RouterTestingModule.withRoutes([
-            {
-              path: 'responder-access/search/task-details',
-              component: TaskDetailsComponent
-            }
-          ]),
-          HttpClientTestingModule,
-          ReactiveFormsModule
-        ],
-        providers: [
-          TaskSearchComponent,
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [TaskSearchComponent],
+      imports: [
+        RouterTestingModule.withRoutes([
           {
-            provide: TaskSearchService,
-            useClass: MockTaskSearchService
-          },
-          {
-            provide: AlertService,
-            useClass: MockAlertService
-          },
-          UntypedFormBuilder
-        ]
-      }).compileComponents();
-    })
-  );
+            path: 'responder-access/search/task-details',
+            component: TaskDetailsComponent
+          }
+        ]),
+        HttpClientTestingModule,
+        ReactiveFormsModule
+      ],
+      providers: [
+        TaskSearchComponent,
+        {
+          provide: TaskSearchService,
+          useClass: MockTaskSearchService
+        },
+        {
+          provide: AlertService,
+          useClass: MockAlertService
+        },
+        UntypedFormBuilder
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TaskSearchComponent);

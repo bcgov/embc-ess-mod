@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
@@ -63,12 +67,12 @@ export class EvacueeDetailsService {
   }
 
   constructor(
-    private stepEvacueeProfileService: StepEvacueeProfileService,
-    private formBuilder: UntypedFormBuilder,
-    private wizardService: WizardService,
-    private customValidation: CustomValidationService,
-    private appBaseService: AppBaseService,
-    private dialog: MatDialog
+    protected stepEvacueeProfileService: StepEvacueeProfileService,
+    protected formBuilder: UntypedFormBuilder,
+    protected wizardService: WizardService,
+    protected customValidation: CustomValidationService,
+    protected appBaseService: AppBaseService,
+    protected dialog: MatDialog
   ) {}
 
   public init() {

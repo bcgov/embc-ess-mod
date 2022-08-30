@@ -50,7 +50,9 @@ export class IncidentalsComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get('referral') as UntypedFormGroup;
+      this.referralForm = this.supportDetailsForm.get(
+        'referral'
+      ) as UntypedFormGroup;
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();

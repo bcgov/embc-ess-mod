@@ -62,7 +62,9 @@ export class NewSupplierComponent implements OnInit {
    * Returns the control of the primary contact form
    */
   get contactFormControl(): { [key: string]: AbstractControl } {
-    const contactFormGroup = this.newForm.get('primaryContact') as UntypedFormGroup;
+    const contactFormGroup = this.newForm.get(
+      'primaryContact'
+    ) as UntypedFormGroup;
     return contactFormGroup.controls;
   }
 

@@ -40,7 +40,9 @@ export class BilletingDeliveryComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDeliveryForm) {
-      this.detailsForm = this.supportDeliveryForm.get('details') as UntypedFormGroup;
+      this.detailsForm = this.supportDeliveryForm.get(
+        'details'
+      ) as UntypedFormGroup;
     }
   }
 

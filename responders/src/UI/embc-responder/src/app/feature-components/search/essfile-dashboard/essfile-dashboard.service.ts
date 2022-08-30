@@ -30,6 +30,7 @@ import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../core/services/global-constants';
+import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +50,8 @@ export class EssfileDashboardService {
     private dialog: MatDialog,
     public evacueeSessionService: EvacueeSessionService,
     private computeState: ComputeRulesService,
-    private optionInjectionService: OptionInjectionService
+    private optionInjectionService: OptionInjectionService,
+    private evacueeSearchService: EvacueeSearchService
   ) {}
 
   get essFile(): EvacuationFileModel {
@@ -150,12 +152,12 @@ export class EssfileDashboardService {
     essFile: EvacuationFileModel
   ): string {
     if (
-      essFile.status === EvacuationFileStatus.Pending ||
-      essFile.status === EvacuationFileStatus.Expired
+      essFile?.status === EvacuationFileStatus.Pending ||
+      essFile?.status === EvacuationFileStatus.Expired
     ) {
       return WizardType.CompleteFile;
     } else if (
-      essFile.status === EvacuationFileStatus.Active &&
+      essFile?.status === EvacuationFileStatus.Active &&
       optionType === SelectedPathType.remoteExtensions
     ) {
       return WizardType.ExtendSupports;
@@ -185,7 +187,7 @@ export class EssfileDashboardService {
     this.dialog.open(DialogComponent, {
       data: {
         component: FileStatusDefinitionComponent,
-        content: this.essFile.status
+        content: this.essFile?.status
       },
       width: '580px'
     });
@@ -278,6 +280,36 @@ export class EssfileDashboardService {
         }
       };
       this.computeState.triggerEvent();
+    }
+  }
+
+  public eligibilityFirstName(): string {
+    if (
+      this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext !== null &&
+      this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext !== undefined
+    ) {
+      return this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext?.personalDetails?.firstName;
+    } else {
+      return this.evacueeSearchService?.evacueeSearchContext
+        ?.evacueeSearchParameters?.firstName;
+    }
+  }
+
+  public eligibilityLastName(): string {
+    if (
+      this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext !== null &&
+      this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext !== undefined
+    ) {
+      return this.appBaseService?.appModel?.selectedProfile
+        ?.selectedEvacueeInContext?.personalDetails?.lastName;
+    } else {
+      return this.evacueeSearchService?.evacueeSearchContext
+        ?.evacueeSearchParameters?.lastName;
     }
   }
 }

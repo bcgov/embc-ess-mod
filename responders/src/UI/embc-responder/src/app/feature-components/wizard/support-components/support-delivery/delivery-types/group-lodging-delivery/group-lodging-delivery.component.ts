@@ -51,7 +51,9 @@ export class GroupLodgingDeliveryComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDeliveryForm) {
-      this.detailsForm = this.supportDeliveryForm.get('details') as UntypedFormGroup;
+      this.detailsForm = this.supportDeliveryForm.get(
+        'details'
+      ) as UntypedFormGroup;
     }
   }
 

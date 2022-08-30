@@ -13,7 +13,11 @@ import {
   Pet,
   ReferralServices
 } from 'src/app/core/api/models';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup
+} from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
@@ -911,7 +915,10 @@ export class StepEssFileService {
         } else {
           fields.push(control.value);
         }
-      } else if (control instanceof UntypedFormGroup || control instanceof UntypedFormArray) {
+      } else if (
+        control instanceof UntypedFormGroup ||
+        control instanceof UntypedFormArray
+      ) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
             fields.push(control.controls[key].value);

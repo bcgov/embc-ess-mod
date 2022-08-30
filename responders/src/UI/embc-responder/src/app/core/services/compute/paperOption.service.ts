@@ -29,7 +29,7 @@ export class PaperOptionService implements SearchOptionsService {
   }
 
   loadEssFile(): Promise<EvacuationFileModel> {
-    throw new Error('Method not implemented.');
+    return this.dataService.getEssFile();
   }
 
   getDashboardBanner(fileStatus: string): DashboardBanner {
