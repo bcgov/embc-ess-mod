@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import {
@@ -15,7 +15,7 @@ import {
 export class EvacueeIdVerifyComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
 
-  idVerifyForm: FormGroup;
+  idVerifyForm: UntypedFormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
 
   tipsPanel1State = false;

@@ -8,8 +8,8 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { WizardService } from '../../wizard.service';
@@ -22,7 +22,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./security-phrase.component.scss']
 })
 export class SecurityPhraseComponent implements OnInit, OnDestroy {
-  securityForm: FormGroup = null;
+  securityForm: UntypedFormGroup = null;
   tabUpdateSubscription: Subscription;
   wizardType: string;
   essFileNumber: string;
@@ -32,7 +32,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   constructor(
     public stepEssFileService: StepEssFileService,
     private customValidationService: CustomValidationService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private wizardService: WizardService,
     private appBaseService: AppBaseService

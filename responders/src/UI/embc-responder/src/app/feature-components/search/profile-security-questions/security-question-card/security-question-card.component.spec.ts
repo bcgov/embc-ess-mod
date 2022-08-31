@@ -1,12 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 
 import { SecurityQuestionCardComponent } from './security-question-card.component';
 
 describe('SecurityQuestionCardComponent', () => {
   let component: SecurityQuestionCardComponent;
   let fixture: ComponentFixture<SecurityQuestionCardComponent>;
-  let formBuilder: FormBuilder;
+  let formBuilder: UntypedFormBuilder;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,7 +22,7 @@ describe('SecurityQuestionCardComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SecurityQuestionCardComponent);
     component = fixture.componentInstance;
-    formBuilder = TestBed.inject(FormBuilder);
+    formBuilder = TestBed.inject(UntypedFormBuilder);
 
     component.parentForm = formBuilder.group({
       answer1: [''],

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-pet-form',
@@ -7,7 +7,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
   styleUrls: ['./pet-form.component.scss']
 })
 export class PetFormComponent implements OnInit {
-  @Input() petForm: FormGroup;
+  @Input() petForm: UntypedFormGroup;
   howMany: Array<string> = new Array<string>();
 
   constructor() {}

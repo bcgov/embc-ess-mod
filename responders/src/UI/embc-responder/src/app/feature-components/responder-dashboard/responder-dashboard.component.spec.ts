@@ -22,34 +22,32 @@ describe('ResponderDashboardComponent', () => {
   //   navigate: jasmine.createSpy('navigate')
   // };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [ResponderDashboardComponent],
-        imports: [
-          RouterTestingModule.withRoutes([
-            // {
-            //   path: 'responder-access/search',
-            //   component: TaskSearchComponent
-            // }
-            // {
-            //   path: 'responder-access/search/evacuee',
-            //   component: EvacueeSearchComponent
-            // }
-          ]),
-          HttpClientTestingModule
-        ],
-        providers: [
-          ResponderDashboardComponent,
-          //{ provide: Router, useValue: routerMock },
-          {
-            provide: UserService,
-            useClass: MockUserService
-          }
-        ]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ResponderDashboardComponent],
+      imports: [
+        RouterTestingModule.withRoutes([
+          // {
+          //   path: 'responder-access/search',
+          //   component: TaskSearchComponent
+          // }
+          // {
+          //   path: 'responder-access/search/evacuee',
+          //   component: EvacueeSearchComponent
+          // }
+        ]),
+        HttpClientTestingModule
+      ],
+      providers: [
+        ResponderDashboardComponent,
+        //{ provide: Router, useValue: routerMock },
+        {
+          provide: UserService,
+          useClass: MockUserService
+        }
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ResponderDashboardComponent);

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,12 +20,12 @@ import { SupplierManagementService } from '../supplier-management.service';
   styleUrls: ['./add-supplier.component.scss']
 })
 export class AddSupplierComponent implements OnInit {
-  addForm: FormGroup;
+  addForm: UntypedFormGroup;
   showLoader = false;
   color = '#FFFFFF';
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private router: Router,
     private addSupplierService: AddSupplierService,
@@ -66,8 +66,8 @@ export class AddSupplierComponent implements OnInit {
     ]);
   }
 
-  get gstNumber(): FormGroup {
-    return this.addForm.get('gstNumber') as FormGroup;
+  get gstNumber(): UntypedFormGroup {
+    return this.addForm.get('gstNumber') as UntypedFormGroup;
   }
 
   /**

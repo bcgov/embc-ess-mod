@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
@@ -18,10 +18,10 @@ export class VerifyEvacueeDialogComponent implements OnInit {
   @Input() content: DialogContent;
   @Input() profileData?: RegistrantProfileModel;
   @Output() outputEvent = new EventEmitter<string>();
-  verificationForm: FormGroup;
+  verificationForm: UntypedFormGroup;
   noIdFlag = true;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: UntypedFormBuilder) {}
 
   ngOnInit(): void {
     this.createVerificationForm();

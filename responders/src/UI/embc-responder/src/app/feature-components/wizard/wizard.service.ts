@@ -187,8 +187,8 @@ export class WizardService {
   }
 
   public setStepStatus(name: string, status: boolean): void {
-    this.menuItems.map((menu) => {
-      if (menu.route === name) {
+    this.menuItems?.map((menu) => {
+      if (menu?.route === name) {
         menu.isLocked = status;
       }
       return menu;

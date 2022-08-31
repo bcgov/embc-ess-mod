@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -22,12 +22,12 @@ interface ReprintOutput {
 export class ReprintReferralDialogComponent implements OnInit {
   @Input() profileData: string;
   @Output() outputEvent = new EventEmitter<ReprintOutput>();
-  reprintForm: FormGroup;
+  reprintForm: UntypedFormGroup;
   reasons = SupportReprintReason;
   includeSummary = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private loadEvacueeListService: LoadEvacueeListService
   ) {}
 

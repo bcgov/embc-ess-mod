@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  FormBuilder,
+  UntypedFormBuilder,
   Validators,
   AbstractControl,
-  FormGroup
+  UntypedFormGroup
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
@@ -17,7 +17,7 @@ import * as globalConst from '../../../core/services/global-constants';
   styleUrls: ['./edit-supplier.component.scss']
 })
 export class EditSupplierComponent implements OnInit {
-  editForm: FormGroup;
+  editForm: UntypedFormGroup;
   readonly phoneMask = [
     /\d/,
     /\d/,
@@ -34,7 +34,7 @@ export class EditSupplierComponent implements OnInit {
   ];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private router: Router,
     private editSupplierService: EditSupplierService
@@ -60,29 +60,29 @@ export class EditSupplierComponent implements OnInit {
   /**
    * Returns the gstNumber form
    */
-  get gstNumber(): FormGroup {
-    return this.editForm.get('gstNumber') as FormGroup;
+  get gstNumber(): UntypedFormGroup {
+    return this.editForm.get('gstNumber') as UntypedFormGroup;
   }
 
   /**
    * Returns the control of the address form
    */
-  public get addressFormGroup(): FormGroup {
-    return this.editForm.get('address') as FormGroup;
+  public get addressFormGroup(): UntypedFormGroup {
+    return this.editForm.get('address') as UntypedFormGroup;
   }
 
   /**
    * Returns the control of the address form
    */
-  public get supplierContactFormGroup(): FormGroup {
-    return this.editForm.get('contact') as FormGroup;
+  public get supplierContactFormGroup(): UntypedFormGroup {
+    return this.editForm.get('contact') as UntypedFormGroup;
   }
 
   /**
    * Returns the control of the primary contact form
    */
   get contactFormControl(): { [key: string]: AbstractControl } {
-    const contactFormGroup = this.editForm.get('contact') as FormGroup;
+    const contactFormGroup = this.editForm.get('contact') as UntypedFormGroup;
     return contactFormGroup.controls;
   }
 
@@ -157,7 +157,7 @@ export class EditSupplierComponent implements OnInit {
    *
    * @returns form group
    */
-  private createSupplierAddressEditForm(): FormGroup {
+  private createSupplierAddressEditForm(): UntypedFormGroup {
     return this.formBuilder.group({
       addressLine1: [
         this.editSupplierService.editedSupplier?.address?.addressLine1 ?? '',
@@ -187,7 +187,7 @@ export class EditSupplierComponent implements OnInit {
     });
   }
 
-  private createContactEditForm(): FormGroup {
+  private createContactEditForm(): UntypedFormGroup {
     return this.formBuilder.group({
       lastName: [
         this.editSupplierService.editedSupplier?.contact?.lastName ?? '',

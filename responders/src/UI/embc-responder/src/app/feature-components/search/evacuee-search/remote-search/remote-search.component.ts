@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.model';
 import { SearchFormRegistery } from 'src/app/core/services/helper/search-data.service';
@@ -10,7 +10,7 @@ import { SearchFormRegistery } from 'src/app/core/services/helper/search-data.se
   styleUrls: ['./remote-search.component.scss']
 })
 export class RemoteSearchComponent implements OnInit {
-  fileSearchForm: FormGroup;
+  fileSearchForm: UntypedFormGroup;
   isLoading = false;
   isSubmitted = false;
 

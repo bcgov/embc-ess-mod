@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ import { SupplierStatus } from 'src/app/core/api/models';
   styleUrls: ['./new-supplier.component.scss']
 })
 export class NewSupplierComponent implements OnInit {
-  newForm: FormGroup;
+  newForm: UntypedFormGroup;
   readonly phoneMask = [
     /\d/,
     /\d/,
@@ -34,7 +34,7 @@ export class NewSupplierComponent implements OnInit {
   ];
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private router: Router,
     private addSupplierService: AddSupplierService
@@ -47,22 +47,24 @@ export class NewSupplierComponent implements OnInit {
   /**
    * Returns the form group of the address form
    */
-  public get supplierAddressFormGroup(): FormGroup {
-    return this.newForm.get('address') as FormGroup;
+  public get supplierAddressFormGroup(): UntypedFormGroup {
+    return this.newForm.get('address') as UntypedFormGroup;
   }
 
   /**
    * Returns the form group of the primary contact form
    */
-  public get supplierContactFormGroup(): FormGroup {
-    return this.newForm.get('primaryContact') as FormGroup;
+  public get supplierContactFormGroup(): UntypedFormGroup {
+    return this.newForm.get('primaryContact') as UntypedFormGroup;
   }
 
   /**
    * Returns the control of the primary contact form
    */
   get contactFormControl(): { [key: string]: AbstractControl } {
-    const contactFormGroup = this.newForm.get('primaryContact') as FormGroup;
+    const contactFormGroup = this.newForm.get(
+      'primaryContact'
+    ) as UntypedFormGroup;
     return contactFormGroup.controls;
   }
 

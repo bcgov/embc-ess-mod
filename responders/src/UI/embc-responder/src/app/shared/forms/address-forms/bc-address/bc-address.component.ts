@@ -5,7 +5,7 @@ import {
   ChangeDetectorRef,
   AfterViewChecked
 } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -20,7 +20,7 @@ import {
   styleUrls: ['./bc-address.component.scss']
 })
 export class BcAddressComponent implements OnInit, AfterViewChecked {
-  @Input() addressForm: FormGroup;
+  @Input() addressForm: UntypedFormGroup;
   filteredOptions: Observable<Community[]>;
   city: Community[] = [];
   province = [globalConst.defaultProvince];
