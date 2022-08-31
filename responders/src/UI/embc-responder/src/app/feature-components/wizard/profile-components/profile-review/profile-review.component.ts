@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -30,7 +30,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./profile-review.component.scss']
 })
 export class ProfileReviewComponent implements OnInit, OnDestroy {
-  verifiedProfileGroup: FormGroup = null;
+  verifiedProfileGroup: UntypedFormGroup = null;
   tabUpdateSubscription: Subscription;
 
   saveLoader = false;
@@ -41,7 +41,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   primaryCommunity: string;
   mailingCommunity: string;
   tabMetaData: TabModel;
-  inviteEmailGroup: FormGroup = null;
+  inviteEmailGroup: UntypedFormGroup = null;
   emailMatcher = new CustomErrorMailMatcher();
   wizardType = WizardType;
 
@@ -52,7 +52,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private evacueeProfileService: EvacueeProfileService,
     private customValidationService: CustomValidationService,
     private alertService: AlertService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public stepEvacueeProfileService: StepEvacueeProfileService,
     public evacueeSessionService: EvacueeSessionService,
     public appBaseService: AppBaseService

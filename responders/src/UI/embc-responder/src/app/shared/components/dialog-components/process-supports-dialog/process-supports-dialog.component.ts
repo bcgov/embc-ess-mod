@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { ReviewSupportService } from 'src/app/feature-components/wizard/support-components/review-support/review-support.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -11,12 +11,12 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ProcessSupportsDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();
-  addEvacForm: FormGroup;
+  addEvacForm: UntypedFormGroup;
   includesEtranfer = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private reviewSupportService: ReviewSupportService
   ) {}
 

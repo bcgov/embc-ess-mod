@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   MemberLabelDescription,
@@ -22,7 +26,7 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./edit-team-member.component.scss']
 })
 export class EditTeamMemberComponent implements OnInit {
-  editForm: FormGroup;
+  editForm: UntypedFormGroup;
   teamMember: TeamMember;
   roles: MemberRoleDescription[];
   labels: MemberLabelDescription[];
@@ -31,7 +35,7 @@ export class EditTeamMemberComponent implements OnInit {
   detailsText: string;
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private router: Router,
     private teamDataService: TeamListDataService,
     private listService: LoadTeamListService,

@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
   styleUrls: ['./needs.component.scss']
 })
 export class NeedsComponent implements OnInit, OnDestroy {
-  needsForm: FormGroup;
+  needsForm: UntypedFormGroup;
   radioOption = globalConst.needsOptions;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
@@ -27,7 +27,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private stepEssFileService: StepEssFileService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService,
     private evacueeSessionService: EvacueeSessionService
   ) {}

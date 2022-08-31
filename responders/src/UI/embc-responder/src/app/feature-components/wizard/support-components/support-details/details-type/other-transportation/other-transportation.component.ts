@@ -7,7 +7,7 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
@@ -18,8 +18,8 @@ import * as globalConst from '../../../../../../core/services/global-constants';
 export class OtherTransportationComponent
   implements OnInit, OnChanges, AfterViewInit
 {
-  @Input() supportDetailsForm: FormGroup;
-  referralForm: FormGroup;
+  @Input() supportDetailsForm: UntypedFormGroup;
+  referralForm: UntypedFormGroup;
 
   constructor(private cd: ChangeDetectorRef) {}
 
@@ -29,7 +29,9 @@ export class OtherTransportationComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get('referral') as FormGroup;
+      this.referralForm = this.supportDetailsForm.get(
+        'referral'
+      ) as UntypedFormGroup;
     }
   }
 

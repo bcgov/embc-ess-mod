@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddNotesComponent } from './add-notes.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -16,7 +16,7 @@ describe('AddNotesComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule
       ],
-      providers: [FormBuilder],
+      providers: [UntypedFormBuilder],
       declarations: [AddNotesComponent]
     }).compileComponents();
   });

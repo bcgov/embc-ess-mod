@@ -2,8 +2,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
@@ -27,7 +27,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./evacuation-details.component.scss']
 })
 export class EvacuationDetailsComponent implements OnInit, OnDestroy {
-  evacDetailsForm: FormGroup;
+  evacDetailsForm: UntypedFormGroup;
   insuranceOption = globalConst.insuranceOptions;
   radioOption = globalConst.radioButtonOptions;
   referredServicesOption = globalConst.referredServiceOptions;
@@ -50,7 +50,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     public stepEssFileService: StepEssFileService,
     public evacueeSessionService: EvacueeSessionService,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private wizardService: WizardService,
     public evacueeSearchService: EvacueeSearchService,
@@ -210,8 +210,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   /**
    * Returns the control of the evacuated address form
    */
-  public get evacAddressFormGroup(): FormGroup {
-    return this.evacDetailsForm.get('evacAddress') as FormGroup;
+  public get evacAddressFormGroup(): UntypedFormGroup {
+    return this.evacDetailsForm.get('evacAddress') as UntypedFormGroup;
   }
 
   /**
@@ -386,7 +386,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    *
    * @returns form group
    */
-  private createEvacAddressForm(): FormGroup {
+  private createEvacAddressForm(): UntypedFormGroup {
     return this.formBuilder.group({
       addressLine1: [
         this.stepEssFileService?.evacAddress?.addressLine1 !== undefined

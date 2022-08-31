@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import {
@@ -33,7 +33,7 @@ export class EvacueeNameSearchComponent implements OnInit {
     /\d/,
     /\d/
   ];
-  nameSearchForm: FormGroup;
+  nameSearchForm: UntypedFormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
   readonly selectedPathType = SelectedPathType;
 

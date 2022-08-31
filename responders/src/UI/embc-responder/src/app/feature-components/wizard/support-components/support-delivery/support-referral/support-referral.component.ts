@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -16,7 +16,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
   styleUrls: ['./support-referral.component.scss']
 })
 export class SupportReferralComponent implements OnInit {
-  @Input() referralDeliveryForm: FormGroup;
+  @Input() referralDeliveryForm: UntypedFormGroup;
   @Input() editFlag: boolean;
   @Input() cloneFlag: boolean;
   supplierList: SupplierListItemModel[];

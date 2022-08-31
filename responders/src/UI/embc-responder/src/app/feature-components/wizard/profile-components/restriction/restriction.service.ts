@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
@@ -11,14 +15,14 @@ export class RestrictionService {
 
   constructor(
     private stepEvacueeProfileService: StepEvacueeProfileService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService
   ) {
     this.tabMetaData =
       this.stepEvacueeProfileService.getNavLinks('restriction');
   }
 
-  public createForm(): FormGroup {
+  public createForm(): UntypedFormGroup {
     return this.formBuilder.group({
       restrictedAccess: [
         this.stepEvacueeProfileService.restrictedAccess !== null
@@ -32,7 +36,7 @@ export class RestrictionService {
   /**
    * Checks the form validity and updates the tab status
    */
-  public updateTabStatus(restrictionForm: FormGroup): Subscription {
+  public updateTabStatus(restrictionForm: UntypedFormGroup): Subscription {
     return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
       if (restrictionForm.valid) {
         this.stepEvacueeProfileService.setTabStatus('restriction', 'complete');
@@ -42,7 +46,7 @@ export class RestrictionService {
     });
   }
 
-  public cleanup(restrictionForm: FormGroup) {
+  public cleanup(restrictionForm: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit()) {
       const isFormUpdated = this.wizardService.hasChanged(
         restrictionForm.controls,

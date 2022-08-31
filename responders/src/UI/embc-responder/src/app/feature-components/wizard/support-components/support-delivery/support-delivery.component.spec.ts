@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SupportDeliveryComponent } from './support-delivery.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
@@ -23,7 +23,7 @@ describe('SupportDeliveryComponent', () => {
       ],
       declarations: [SupportDeliveryComponent],
       providers: [
-        FormBuilder,
+        UntypedFormBuilder,
         DatePipe,
         { provide: computeInterfaceToken, useValue: {} }
       ]

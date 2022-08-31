@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ import * as globalConst from '../../../core/services/global-constants';
   styleUrls: ['./edit-user-profile.component.scss']
 })
 export class EditUserProfileComponent implements OnInit {
-  editForm: FormGroup;
+  editForm: UntypedFormGroup;
   readonly phoneMask = [
     /\d/,
     /\d/,
@@ -40,7 +40,7 @@ export class EditUserProfileComponent implements OnInit {
   isSubmitted = true;
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private router: Router,
     private customValidation: CustomValidationService,
     private userService: UserService,
