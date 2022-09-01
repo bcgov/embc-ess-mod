@@ -1,6 +1,6 @@
 ﻿
 using System.Text.Json.Serialization;
-using EMBC.MockCas.Models;
+using MockCas.Models;
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
@@ -53,9 +53,6 @@ builder.Services.AddCors(opts =>
                           policy.WithOrigins("http://localhost:1200").AllowAnyHeader().AllowAnyMethod();
                       });
 });
-
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

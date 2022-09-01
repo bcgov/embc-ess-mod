@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { GetInvoiceResponse, Invoice } from '../core/api/models';
+import { GetInvoiceResponse, Invoice, InvoiceItem } from '../core/api/models';
 import { InvoicesService, MockCasService } from '../core/api/services';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,9 +13,9 @@ import { EditInvoiceDialog } from '../dialogs/edit-invoice/edit-invoice.dialog';
   styleUrls: ['./invoices.component.scss']
 })
 export class InvoicesComponent implements OnInit {
-  invoices: Invoice[];
-  displayedColumns: string[] = ['invNum', 'name', 'amount', 'date', 'supplierNumber', 'actions'];
-  dataSource: MatTableDataSource<Invoice> = new MatTableDataSource();
+  invoices: InvoiceItem[];
+  displayedColumns: string[] = ['invNum', 'status', 'amount', 'date', 'supplierNumber', 'actions'];
+  dataSource: MatTableDataSource<InvoiceItem> = new MatTableDataSource();
 
   constructor(private invoicesService: InvoicesService,
     private mockCasService: MockCasService,
@@ -26,8 +26,8 @@ export class InvoicesComponent implements OnInit {
   }
 
   loadInvoices() {
-    this.invoicesService.invoicesGet().subscribe({
-      next: (res: Invoice[]) => {
+    this.invoicesService.invoicesGetInvoiceItems().subscribe({
+      next: (res: InvoiceItem[]) => {
         this.invoices = res;
         this.dataSource = new MatTableDataSource(this.invoices);
       },

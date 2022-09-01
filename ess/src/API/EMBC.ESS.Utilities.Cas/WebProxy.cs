@@ -23,6 +23,8 @@ namespace EMBC.ESS.Utilities.Cas
 
         private HttpClient httpClient => httpClientFactory.CreateClient("cas");
 
+        private bool skipToken = false;
+
         public WebProxy(IHttpClientFactory httpClientFactory, IOptions<CasConfiguration> config, ICache cache)
         {
             this.httpClientFactory = httpClientFactory;
@@ -34,10 +36,16 @@ namespace EMBC.ESS.Utilities.Cas
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
             this.jsonSerializerOptions.Converters.Add(new CasDateJsonConverter());
+
+            if (httpClient.BaseAddress.ToString().Contains("localhost"))
+            {
+                this.skipToken = true;
+            }
         }
 
         public async Task<string> CreateTokenAsync(CancellationToken ct)
         {
+            if (this.skipToken) return await Task.FromResult("123");
             var request = new ClientCredentialsTokenRequest
             {
                 Address = "oauth/token",

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace EMBC.MockCas.Models
+namespace MockCas.Models
 {
     public class MockCasDb : DbContext
     {

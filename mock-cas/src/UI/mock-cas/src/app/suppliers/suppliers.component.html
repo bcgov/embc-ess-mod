@@ -21,6 +21,11 @@
                 <td mat-cell *matCellDef="let element"> {{element.suppliername}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef> Sub Category </th>
+                <td mat-cell *matCellDef="let element"> {{element.subcategory}} </td>
+            </ng-container>
+
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let element"> 
@@ -33,5 +38,11 @@
         </table>
 
         <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <span><button mat-raised-button class="me-2" color="primary" (click)="loadSuppliers()">Refresh</button></span>
+        </div>
     </div>
 </div>

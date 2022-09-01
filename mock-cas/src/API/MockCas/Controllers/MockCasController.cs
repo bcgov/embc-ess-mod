@@ -1,9 +1,9 @@
 ﻿using System.Web;
-using EMBC.MockCas.Models;
+using MockCas.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace EMBC.MockCas.Controllers
+namespace MockCas.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -140,7 +140,7 @@ namespace EMBC.MockCas.Controllers
             {
                 response.Items = response.Items.Take(pageLength).ToList();
                 var queryString = GetQueryString(getRequest);
-                response.Next = new PageReference { Ref = $"mockcas/cfs/apinvoice/paymentsearch/{payGroup}?{queryString}&page={nextPage}" };
+                response.Next = new PageReference { Ref = $"http://localhost:1020/mockcas/cfs/apinvoice/paymentsearch/{payGroup}?{queryString}&page={nextPage}" };
             }
 
             return await Task.FromResult(response);

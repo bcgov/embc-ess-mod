@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row pt-5">
         <div class="col">
-            <p style="margin-left: 10px;">Existing Invoices</p>
+            <span><p style="margin-left: 10px;">Existing Invoices</p></span>
         </div>
     </div>
 
@@ -9,34 +9,34 @@
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <ng-container matColumnDef="invNum">
                 <th mat-header-cell *matHeaderCellDef> Invoice # </th>
-                <td mat-cell *matCellDef="let element"> {{element.invoiceNumber}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.invoicenumber}} </td>
             </ng-container>
 
             <ng-container matColumnDef="amount">
                 <th mat-header-cell *matHeaderCellDef> Amount </th>
-                <td mat-cell *matCellDef="let element"> {{element.invoiceAmount | currency}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.paymentamount | currency}} </td>
             </ng-container>
 
             <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef> Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.invoiceDate | date}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.invoicecreationdate | date}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.nameLine1}} </td>
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Status </th>
+                <td mat-cell *matCellDef="let element"> {{element.paymentstatus}} </td>
             </ng-container>
 
             <ng-container matColumnDef="supplierNumber">
                 <th mat-header-cell *matHeaderCellDef> Supplier # </th>
-                <td mat-cell *matCellDef="let element"> {{element.supplierNumber}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.suppliernumber}} </td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-raised-button class="me-2" color="primary" (click)="edit(element.invoiceNumber)">Edit</button>
-                    <button mat-raised-button class="me-2" color="accent" (click)="deleteInvoice(element.invoiceNumber)">Delete</button>
+                    <button mat-raised-button class="me-2" color="primary" (click)="edit(element.invoicenumber)">Edit</button>
+                    <button mat-raised-button class="me-2" color="accent" (click)="deleteInvoice(element.invoicenumber)">Delete</button>
                 </td>
             </ng-container>
 
@@ -45,5 +45,11 @@
         </table>
 
         <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col">
+            <span><button mat-raised-button class="me-2" color="primary" (click)="loadInvoices()">Refresh</button></span>
+        </div>
     </div>
 </div>

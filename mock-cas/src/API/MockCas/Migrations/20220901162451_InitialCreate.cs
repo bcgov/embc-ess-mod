@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EMBC.MockCas.Migrations
+namespace MockCas.Migrations
 {
     public partial class InitialCreate : Migration
     {

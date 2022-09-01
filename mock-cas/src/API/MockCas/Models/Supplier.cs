@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace EMBC.MockCas.Models
+namespace MockCas.Models
 {
     public class GetSupplierRequest
     {

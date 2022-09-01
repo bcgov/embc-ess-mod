@@ -12,7 +12,7 @@ import { AddSupplierDialog } from '../dialogs/add-supplier/add-supplier.dialog';
 })
 export class SuppliersComponent implements OnInit {
   suppliers: GetSupplierResponse[];
-  displayedColumns: string[] = ['supplierNumber', 'name', 'actions'];
+  displayedColumns: string[] = ['supplierNumber', 'name', 'category', 'actions'];
   dataSource: MatTableDataSource<GetSupplierResponse> = new MatTableDataSource();
   constructor(private suppliersService: SupplierService,
     public dialog: MatDialog) { }

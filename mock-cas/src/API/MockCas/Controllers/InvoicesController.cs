@@ -1,8 +1,8 @@
-﻿using EMBC.MockCas.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MockCas.Models;
 
-namespace EMBC.MockCas.Controllers
+namespace MockCas.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
