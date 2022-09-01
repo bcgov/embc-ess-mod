@@ -107,3 +107,25 @@ services:
     image: landing-page:dev
     ports:
       - 7200:2015
+      
+  mock-cas-api:
+    build:
+      context: ./mock-cas/src/API
+    image: embcess-mock-cas:dev
+    ports:
+      - 1020:8080
+    env_file:
+      - .env
+    volumes:
+      - ~/.aspnet/https:/ssl/
+
+  mock-cas-ui:
+    build:
+      context: ./mock-cas/src/UI
+    image: embcess-mock-cas-ui:dev
+    ports:
+      - 1200:2015
+    environment:
+      - "API_URL=mock-cas-api:8080"
+    depends_on:
+      - mock-cas-api

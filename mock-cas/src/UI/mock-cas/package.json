@@ -1,5 +1,5 @@
 {
-  "name": "embc-mock-cas",
+  "name": "mock-cas",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

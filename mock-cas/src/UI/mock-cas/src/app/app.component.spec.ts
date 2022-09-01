@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'embc-mock-cas'`, () => {
+  it(`should have as title 'mock-cas'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('embc-mock-cas');
+    expect(app.title).toEqual('mock-cas');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('embc-mock-cas app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('mock-cas app is running!');
   });
 });

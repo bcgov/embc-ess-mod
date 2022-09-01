@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/embc-mock-cas'),
+      dir: require('path').join(__dirname, './coverage/mock-cas'),
       subdir: '.',
       reporters: [
         { type: 'html' },

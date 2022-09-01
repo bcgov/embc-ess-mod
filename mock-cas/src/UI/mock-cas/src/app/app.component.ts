@@ -7,5 +7,5 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class AppComponent {
   @Output() public sidenavToggle = new EventEmitter();
-  title = 'embc-mock-cas';
+  title = 'mock-cas';
 }

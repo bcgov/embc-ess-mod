@@ -1,5 +1,6 @@
 ﻿
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using MockCas.Models;
 using NSwag;
 using NSwag.AspNetCore;
@@ -70,5 +71,16 @@ app.UseCors("test");
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<MockCasDb>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
 
 app.Run();
