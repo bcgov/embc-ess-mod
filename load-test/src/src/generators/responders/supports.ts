@@ -52,7 +52,7 @@ function generateLodgingBiletingSupport(file: EvacuationFile, suppliers: Array<S
     support.numberOfNights = getRandomInt(1, 7);
     support.hostAddress = faker.address.streetAddress();
     support.hostCity = faker.address.city();
-    support.hostEmail = faker.internet.email();
+    support.hostEmail = "autotest." + faker.internet.email();
     support.hostName = faker.name.firstName() + ' ' + faker.name.lastName();
     support.hostPhone = faker.phone.phoneNumber("###-###-####");
     return support;
@@ -123,7 +123,7 @@ function generateSupport(file: EvacuationFile, suppliers: Array<Supplier>, categ
             receivingRegistrantId: file.primaryRegistrantId,
             recipientFirstName: file.primaryRegistrantFirstName,
             recipientLastName: file.primaryRegistrantLastName,
-            notificationEmail: faker.internet.email(),
+            notificationEmail: "autotest." + faker.internet.email(),
             notificationMobile: faker.phone.phoneNumber("###-###-####"),
         } as Interac;
 
