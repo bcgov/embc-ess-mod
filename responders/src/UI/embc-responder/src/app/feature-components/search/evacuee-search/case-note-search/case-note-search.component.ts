@@ -5,11 +5,11 @@ import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.
 import { SearchFormRegistery } from 'src/app/core/services/helper/search-data.service';
 
 @Component({
-  selector: 'app-remote-search',
-  templateUrl: './remote-search.component.html',
-  styleUrls: ['./remote-search.component.scss']
+  selector: 'app-case-note-search',
+  templateUrl: './case-note-search.component.html',
+  styleUrls: ['./case-note-search.component.scss']
 })
-export class RemoteSearchComponent implements OnInit {
+export class CaseNoteSearchComponent implements OnInit {
   fileSearchForm: FormGroup<{ essFileNumber: FormControl<string> }>;
   isLoading = false;
   isSubmitted = false;
@@ -18,7 +18,7 @@ export class RemoteSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.fileSearchForm = this.optionInjectionService.instance.createForm(
-      SearchFormRegistery.remoteSearchForm
+      SearchFormRegistery.caseNoteSearchForm
     );
   }
 
