@@ -10,7 +10,7 @@
       <p class="heading">Please make a selection:</p>
 
       <div class="row pb-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <mat-card
             [ngClass]="{
               'selected-card': selectedPathway === selectedPathType.digital,
@@ -57,7 +57,7 @@
           </mat-card>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <mat-card
             [ngClass]="{
               'selected-card': selectedPathway === selectedPathType.paperBased,
@@ -98,7 +98,7 @@
           </mat-card>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <mat-card
             [ngClass]="{
               'selected-card':
@@ -136,6 +136,53 @@
                   I am doing
                   <span class="highlight">remote extensions</span> (evacuee/s
                   not present)
+                </p>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+
+        <div class="col-md-3">
+          <mat-card
+            [ngClass]="{
+              'selected-card': selectedPathway === selectedPathType.caseNotes,
+              disabled: isEnabled('remote-extensions')
+            }"
+            class="option-card"
+            (click)="setSelection('caseNotes')"
+          >
+            <div
+              class="selected-icon-container"
+              *ngIf="selectedPathway === selectedPathType.caseNotes"
+            >
+              <img
+                src="/assets/images/wizard/white-background.svg"
+                height="23"
+                width="23"
+                class="selected-icon"
+              />
+              <img
+                src="/assets/images/wizard/method-selected.svg"
+                height="23"
+                width="23"
+                class="selected-icon"
+              />
+            </div>
+
+            <div class="row">
+              <img
+                src="/assets/images/add-case-notes.svg"
+                height="92"
+                width="92"
+              />
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <p class="text-subheading">
+                  I am
+                  <span class="highlight">adding case notes</span> to an ESS
+                  File
                 </p>
               </div>
             </div>

@@ -7,6 +7,7 @@ import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { EvacueeSearchContextModel } from '../models/evacuee-search-context.model';
 import { EvacueeSearchResults } from '../models/evacuee-search-results';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
+import { CaseNotesOptionService } from '../services/compute/caseNotesOption.service';
 import { DigitalOptionService } from '../services/compute/digitalOption.service';
 import { PaperOptionService } from '../services/compute/paperOption.service';
 import { RemoteExtOptionService } from '../services/compute/remoteExtOption.service';
@@ -67,6 +68,15 @@ export class OptionInjectionService {
       SelectedPathType.remoteExtensions
     ) {
       return new RemoteExtOptionService(
+        this.router,
+        this.dataService,
+        this.builder
+      );
+    } else if (
+      this.appBaseService?.appModel?.selectedUserPathway ===
+      SelectedPathType.caseNotes
+    ) {
+      return new CaseNotesOptionService(
         this.router,
         this.dataService,
         this.builder

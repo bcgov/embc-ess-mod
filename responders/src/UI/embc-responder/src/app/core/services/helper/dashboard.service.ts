@@ -41,6 +41,8 @@ export class DashboardService {
     const optionType = this.appBaseService?.appModel?.selectedUserPathway;
     if (optionType === SelectedPathType.remoteExtensions) {
       return globalConst.remoteActiveStatusText;
+    } else if (optionType === SelectedPathType.caseNotes) {
+      return globalConst.caseNotesActiveText;
     }
     return globalConst.activeStatusText;
   }
@@ -53,6 +55,8 @@ export class DashboardService {
     const optionType = this.appBaseService?.appModel?.selectedUserPathway;
     if (optionType === SelectedPathType.paperBased) {
       return globalConst.paperCompletedStatusText;
+    } else if (optionType === SelectedPathType.caseNotes) {
+      return globalConst.caseNotesCompleteText;
     }
     return globalConst.completedStatusText;
   }
