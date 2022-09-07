@@ -13,6 +13,7 @@ import { PaperOptionService } from '../services/compute/paperOption.service';
 import { RemoteExtOptionService } from '../services/compute/remoteExtOption.service';
 import { AppBaseService } from '../services/helper/appBase.service';
 import { DataService } from '../services/helper/data.service';
+import { UserService } from '../services/user.service';
 
 export interface SearchOptionsService {
   idSearchQuestion: string;
@@ -37,7 +38,8 @@ export class OptionInjectionService {
     protected appBaseService: AppBaseService,
     protected router: Router,
     protected dataService: DataService,
-    protected builder: UntypedFormBuilder
+    protected builder: UntypedFormBuilder,
+    protected userService: UserService
   ) {}
 
   public get instance(): SearchOptionsService {
@@ -79,7 +81,8 @@ export class OptionInjectionService {
       return new CaseNotesOptionService(
         this.router,
         this.dataService,
-        this.builder
+        this.builder,
+        this.userService
       );
     }
   }
