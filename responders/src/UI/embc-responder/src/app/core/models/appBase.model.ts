@@ -31,7 +31,8 @@ export interface SupportProperties {
 export enum SelectedPathType {
   paperBased = 'paperBased',
   digital = 'digital',
-  remoteExtensions = 'remoteExtensions'
+  remoteExtensions = 'remoteExtensions',
+  caseNotes = 'caseNotes'
 }
 
 export enum ETransferStatus {
