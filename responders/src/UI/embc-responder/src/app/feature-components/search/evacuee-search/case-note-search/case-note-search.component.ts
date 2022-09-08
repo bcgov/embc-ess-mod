@@ -17,7 +17,7 @@ export class CaseNoteSearchComponent implements OnInit {
   constructor(private optionInjectionService: OptionInjectionService) {}
 
   ngOnInit(): void {
-    this.fileSearchForm = this.optionInjectionService.instance.createForm(
+    this.fileSearchForm = this.optionInjectionService?.instance?.createForm(
       SearchFormRegistery.caseNoteSearchForm
     );
   }

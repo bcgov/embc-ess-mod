@@ -10,8 +10,8 @@
       />
       <mat-error
         *ngIf="
-          fileSearchFormControl.essFileNumber.invalid &&
-          fileSearchFormControl.essFileNumber.hasError('whitespaceError')
+          fileSearchFormControl?.essFileNumber?.invalid &&
+          fileSearchFormControl?.essFileNumber?.hasError('whitespaceError')
         "
       >
         ESS File Number is required</mat-error

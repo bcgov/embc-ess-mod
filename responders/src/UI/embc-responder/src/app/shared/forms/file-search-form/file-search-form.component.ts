@@ -12,7 +12,7 @@ export class FileSearchFormComponent implements OnInit {
   constructor() {}
 
   get fileSearchFormControl(): { [key: string]: AbstractControl } {
-    return this.fileSearchForm.controls;
+    return this.fileSearchForm?.controls;
   }
 
   ngOnInit(): void {}
