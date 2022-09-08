@@ -94,12 +94,14 @@ export class CaseNotesOptionService implements SearchOptionsService {
     fileSummary: EvacuationFileSummaryModel[]
   ): boolean {
     if (
+      fileSummary.length !== 0 &&
       this.userService.currentProfile.role === MemberRole.Tier1 &&
       fileSummary[0].status === EvacuationFileStatus.Active &&
       !fileSummary[0].isRestricted
     ) {
       return true;
     } else if (
+      fileSummary.length !== 0 &&
       this.userService.currentProfile.role !== MemberRole.Tier1 &&
       (fileSummary[0].status === EvacuationFileStatus.Active ||
         fileSummary[0].status === EvacuationFileStatus.Completed)
