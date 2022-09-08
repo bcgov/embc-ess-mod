@@ -8,9 +8,8 @@ describe('CaseNoteSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CaseNoteSearchComponent ]
-    })
-    .compileComponents();
+      declarations: [CaseNoteSearchComponent]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CaseNoteSearchComponent);
     component = fixture.componentInstance;
