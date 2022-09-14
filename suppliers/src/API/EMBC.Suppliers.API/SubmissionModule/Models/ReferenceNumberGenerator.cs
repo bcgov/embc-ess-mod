@@ -10,7 +10,9 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
 
     public class ReferenceNumberGenerator : IReferenceNumberGenerator
     {
+#pragma warning disable SYSLIB0023 // Type or member is obsolete
         private static readonly RandomNumberGenerator crypto = new RNGCryptoServiceProvider();
+#pragma warning restore SYSLIB0023 // Type or member is obsolete
 
         private DateTime? now;
         private string presetReferenceNumber;

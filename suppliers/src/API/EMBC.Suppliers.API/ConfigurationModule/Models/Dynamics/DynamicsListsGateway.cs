@@ -14,9 +14,11 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
 
@@ -26,9 +28,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
     {
         private readonly CRMWebAPI api;
 
-        public DynamicsListsGateway(CRMWebAPI api)
+        public DynamicsListsGateway(IServiceProvider serviceProvider)
         {
-            this.api = api;
+            this.api = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<CRMWebAPI>();
         }
 
         public async Task<IEnumerable<SupportEntity>> GetSupportsAsync()

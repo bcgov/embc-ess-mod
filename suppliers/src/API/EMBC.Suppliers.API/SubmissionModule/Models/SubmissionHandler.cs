@@ -2,20 +2,17 @@
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
-using Jasper;
 
 namespace EMBC.Suppliers.API.SubmissionModule.Models
 {
     public class SubmissionHandler : ISubmissionHandler
     {
         private readonly ISubmissionRepository submissionRepository;
-        private readonly IMessagePublisher publisher;
         private readonly ISubmissionDynamicsCustomActionHandler submissionDynamicsCustomActionHandler;
 
-        public SubmissionHandler(ISubmissionRepository submissionRepository, IMessagePublisher publisher, ISubmissionDynamicsCustomActionHandler submissionDynamicsCustomActionHandler)
+        public SubmissionHandler(ISubmissionRepository submissionRepository, ISubmissionDynamicsCustomActionHandler submissionDynamicsCustomActionHandler)
         {
             this.submissionRepository = submissionRepository;
-            this.publisher = publisher;
             this.submissionDynamicsCustomActionHandler = submissionDynamicsCustomActionHandler;
         }
 

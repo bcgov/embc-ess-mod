@@ -16,54 +16,73 @@
 
 using System;
 using System.IO.Abstractions;
+using System.Threading;
 using System.Threading.Tasks;
-using Jasper;
+using Cronos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
-    public class CacheHandler
+    public interface ICacheHandler
     {
-        private readonly IMessageContext messageContext;
+        Task Handle(RefreshCacheCommand cmd, CancellationToken stoppingToken);
+    }
+
+    public class CacheHandler : ICacheHandler
+    {
         private readonly ILogger<CacheHandler> logger;
         private readonly IListsRepository listsRepository;
         private readonly IListsGateway listsGateway;
         private readonly IFileSystem fileSystem;
         private readonly FileBasedCachedListsOptions options;
         private static readonly Random random = new Random();
+        private readonly CronExpression schedule;
 
-        public CacheHandler(IMessageContext messageContext,
-            ILogger<CacheHandler> logger,
+        public CacheHandler(ILogger<CacheHandler> logger,
             IListsRepository listsRepository,
             IListsGateway listsGateway,
             IFileSystem fileSystem,
             IOptions<FileBasedCachedListsOptions> options)
         {
-            this.messageContext = messageContext;
             this.logger = logger;
             this.listsRepository = listsRepository;
             this.listsGateway = listsGateway;
             this.fileSystem = fileSystem;
             this.options = options.Value;
+            schedule = CronExpression.Parse("* 16 * * * *", CronFormat.IncludeSeconds);
         }
 
-        public async Task Handle(RefreshCacheCommand _)
+        public async Task Handle(RefreshCacheCommand _, CancellationToken stoppingToken)
         {
             try
             {
-                if (!fileSystem.Directory.Exists(options.CachePath)) fileSystem.Directory.CreateDirectory(options.CachePath);
-                await listsRepository.SetCountriesAsync(await listsGateway.GetCountriesAsync());
-                await listsRepository.SetStateProvincesAsync(await listsGateway.GetStateProvincesAsync());
-                await listsRepository.SetJurisdictionsAsync(await listsGateway.GetJurisdictionsAsync());
-                await listsRepository.SetSupportsAsync(await listsGateway.GetSupportsAsync());
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    logger.LogInformation("Start metadata cache refresh");
+                    if (!fileSystem.Directory.Exists(options.CachePath)) fileSystem.Directory.CreateDirectory(options.CachePath);
+                    await listsRepository.SetCountriesAsync(await listsGateway.GetCountriesAsync());
+                    await listsRepository.SetStateProvincesAsync(await listsGateway.GetStateProvincesAsync());
+                    await listsRepository.SetJurisdictionsAsync(await listsGateway.GetJurisdictionsAsync());
+                    await listsRepository.SetSupportsAsync(await listsGateway.GetSupportsAsync());
+                    logger.LogInformation("End metadata cache refresh");
+                    var nextExecutionDelay = CalculateNextExecutionDelay(DateTime.UtcNow);
+                    logger.LogDebug("next run in {0}s", nextExecutionDelay.TotalSeconds);
+                    await Task.Delay(nextExecutionDelay, stoppingToken);
+                }
             }
             catch (Exception e)
             {
                 logger.LogError(e, "Failed to refresh cached lists from Dynamics");
             }
+        }
 
-            await messageContext.Schedule(new RefreshCacheCommand(), DateTime.Now.AddMinutes(options.UpdateFrequency).AddSeconds(random.Next(-5, 5)));
+        private TimeSpan CalculateNextExecutionDelay(DateTime utcNow)
+        {
+            var nextDate = schedule.GetNextOccurrence(utcNow);
+            if (nextDate == null) throw new InvalidOperationException("Cannot calculate the next execution date, stopping the background task");
+
+            return nextDate.Value.Subtract(utcNow);
         }
     }
 
