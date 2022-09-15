@@ -17,7 +17,7 @@ export class RemoteSearchComponent implements OnInit {
   constructor(private optionInjectionService: OptionInjectionService) {}
 
   ngOnInit(): void {
-    this.fileSearchForm = this.optionInjectionService.instance.createForm(
+    this.fileSearchForm = this.optionInjectionService?.instance?.createForm(
       SearchFormRegistery.remoteSearchForm
     );
   }
