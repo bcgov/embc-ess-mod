@@ -225,15 +225,9 @@ namespace EMBC.ESS.Managers.Events
                 Tokens = new Dictionary<string, string>(tokens)
             })).Content;
 
-            var appName = Environment.GetEnvironmentVariable("APP_NAME") ?? env?.ApplicationName ?? string.Empty;
-            var subjectPrefix = appName == "dev-ess-backend" ? "DEV - " :
-                appName == "test-ess-backend" ? "TEST - " :
-                appName == "training-ess-backend" ? "TRAINING - " :
-                string.Empty;
-
             await notificationSender.Send(new EmailNotification
             {
-                Subject = subjectPrefix + template.Subject,
+                Subject = template.Subject,
                 Content = emailContent,
                 To = new[] { new EmailAddress { Name = name, Address = email } }
             });

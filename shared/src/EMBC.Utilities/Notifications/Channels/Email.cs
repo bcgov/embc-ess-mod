@@ -51,7 +51,7 @@ namespace EMBC.Utilities.Notifications.Channels
                 message.From.Add(new MailboxAddress(settings.DefaultSender.Name, settings.DefaultSender.Address));
             }
 
-            message.Subject = emailNotification.Subject;
+            message.Subject = settings.SubjectPrefix + emailNotification.Subject;
             message.Body = new TextPart(TextFormat.Html)
             {
                 Text = emailNotification.Content
@@ -78,6 +78,7 @@ namespace EMBC.Utilities.Notifications.Channels
         public string? SmtpPassword { get; set; }
         public bool SmtpEnableSSL { get; set; }
         public EmailAddress DefaultSender { get; set; } = new EmailAddress { Name = "ERA Notifications", Address = "era-no-reply@gov.bc.ca" };
+        public string SubjectPrefix { get; set; } = null!;
 
         public bool HasCredentials => !string.IsNullOrEmpty(SmtpUsername) && !string.IsNullOrEmpty(SmtpPassword);
     }
