@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
@@ -7,7 +9,11 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./zero-file-result.component.scss']
 })
 export class ZeroFileResultComponent implements OnInit {
-  constructor(public appBaseService: AppBaseService) {}
+  readonly selectedPathType = SelectedPathType;
+  constructor(
+    public appBaseService: AppBaseService,
+    public optionInjectionService: OptionInjectionService
+  ) {}
 
   ngOnInit(): void {}
 }

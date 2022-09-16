@@ -4,7 +4,11 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -27,7 +31,7 @@ import { WizardType } from '../../../../core/models/wizard-type.model';
   styleUrls: ['./support-delivery.component.scss']
 })
 export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
-  supportDeliveryForm: FormGroup;
+  supportDeliveryForm: UntypedFormGroup;
   editFlag = false;
   cloneFlag = false;
   selectedSupportMethod: SupportMethod;
@@ -37,7 +41,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   constructor(
     public stepSupportsService: StepSupportsService,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     public appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
@@ -360,7 +364,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private billetingSupplierForm(): FormGroup {
+  private billetingSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
       hostName: [
         this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
@@ -412,7 +416,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  private groupLodgingSupplierForm(): FormGroup {
+  private groupLodgingSupplierForm(): UntypedFormGroup {
     return this.formBuilder.group({
       hostName: [
         this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',

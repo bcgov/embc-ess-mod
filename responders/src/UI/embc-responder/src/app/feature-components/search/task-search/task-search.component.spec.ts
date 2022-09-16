@@ -5,7 +5,7 @@ import {
   waitForAsync
 } from '@angular/core/testing';
 import { TaskSearchComponent } from './task-search.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TaskDetailsComponent } from './task-details/task-details.component';
@@ -21,35 +21,33 @@ describe('TaskSearchComponent', () => {
   let taskSearchService;
   let alertService;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [TaskSearchComponent],
-        imports: [
-          RouterTestingModule.withRoutes([
-            {
-              path: 'responder-access/search/task-details',
-              component: TaskDetailsComponent
-            }
-          ]),
-          HttpClientTestingModule,
-          ReactiveFormsModule
-        ],
-        providers: [
-          TaskSearchComponent,
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [TaskSearchComponent],
+      imports: [
+        RouterTestingModule.withRoutes([
           {
-            provide: TaskSearchService,
-            useClass: MockTaskSearchService
-          },
-          {
-            provide: AlertService,
-            useClass: MockAlertService
-          },
-          FormBuilder
-        ]
-      }).compileComponents();
-    })
-  );
+            path: 'responder-access/search/task-details',
+            component: TaskDetailsComponent
+          }
+        ]),
+        HttpClientTestingModule,
+        ReactiveFormsModule
+      ],
+      providers: [
+        TaskSearchComponent,
+        {
+          provide: TaskSearchService,
+          useClass: MockTaskSearchService
+        },
+        {
+          provide: AlertService,
+          useClass: MockAlertService
+        },
+        UntypedFormBuilder
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TaskSearchComponent);

@@ -4,7 +4,7 @@ import { SupportReferralComponent } from './support-referral.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
@@ -25,7 +25,7 @@ describe('SupportReferralComponent', () => {
       ],
       declarations: [SupportReferralComponent],
       providers: [
-        FormBuilder,
+        UntypedFormBuilder,
         DatePipe,
         { provide: computeInterfaceToken, useValue: {} }
       ]

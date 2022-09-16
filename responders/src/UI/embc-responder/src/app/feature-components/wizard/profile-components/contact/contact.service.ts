@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
@@ -7,16 +11,16 @@ import { WizardService } from '../../wizard.service';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
-  contactInfoForm: FormGroup;
+  contactInfoForm: UntypedFormGroup;
 
   constructor(
     private stepEvacueeProfileService: StepEvacueeProfileService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private wizardService: WizardService
   ) {}
 
-  public createForm(): FormGroup {
+  public createForm(): UntypedFormGroup {
     this.contactInfoForm = this.formBuilder.group(
       {
         email: [
@@ -82,7 +86,7 @@ export class ContactService {
     return this.contactInfoForm;
   }
 
-  public updateTabStatus(form: FormGroup): Subscription {
+  public updateTabStatus(form: UntypedFormGroup): Subscription {
     return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
       if (form.valid) {
         this.stepEvacueeProfileService.setTabStatus('contact', 'complete');
@@ -95,7 +99,7 @@ export class ContactService {
     });
   }
 
-  public cleanup(form: FormGroup) {
+  public cleanup(form: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit()) {
       const isFormUpdated = this.wizardService.hasChanged(
         form.controls,
@@ -111,7 +115,7 @@ export class ContactService {
     this.stepEvacueeProfileService.nextTabUpdate.next();
   }
 
-  updateOnVisibility(form: FormGroup): void {
+  updateOnVisibility(form: UntypedFormGroup): void {
     form.get('phone').updateValueAndValidity();
     form.get('email').updateValueAndValidity();
     form.get('confirmEmail').updateValueAndValidity();
@@ -120,7 +124,7 @@ export class ContactService {
   /**
    * Persists the form values to the service
    */
-  private saveFormUpdates(form: FormGroup): void {
+  private saveFormUpdates(form: UntypedFormGroup): void {
     this.stepEvacueeProfileService.contactDetails = form.value;
     this.stepEvacueeProfileService.showContact = form.get('showContacts').value;
     this.stepEvacueeProfileService.confirmEmail =

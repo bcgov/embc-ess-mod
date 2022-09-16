@@ -4,6 +4,7 @@ import { CollectionNoticeComponent } from './collection-notice.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { computeInterfaceToken } from 'src/app/app.module';
 
 describe('CollectionNoticeComponent', () => {
   let component: CollectionNoticeComponent;
@@ -12,7 +13,8 @@ describe('CollectionNoticeComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule],
-      declarations: [CollectionNoticeComponent]
+      declarations: [CollectionNoticeComponent],
+      providers: [{ provide: computeInterfaceToken, useValue: {} }]
     }).compileComponents();
   });
 
@@ -22,7 +24,7 @@ describe('CollectionNoticeComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

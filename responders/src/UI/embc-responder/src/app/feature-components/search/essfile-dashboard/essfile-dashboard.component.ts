@@ -33,22 +33,20 @@ export class EssfileDashboardComponent implements OnInit {
   displayBanner: DashboardBanner;
 
   constructor(
-    private essFileService: EssFileService,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     private alertService: AlertService,
     public appBaseService: AppBaseService,
-    private evacueeSearchService: EvacueeSearchService,
     private optionInjectionService: OptionInjectionService
   ) {}
 
   async ngOnInit(): Promise<void> {
     if (
-      this.optionInjectionService.instance.optionType !==
-      SelectedPathType.remoteExtensions
+      this.optionInjectionService.instance.optionType ===
+        SelectedPathType.remoteExtensions ||
+      this.optionInjectionService.instance.optionType ===
+        SelectedPathType.caseNotes
     ) {
-      this.getEssFile();
-    } else {
       this.isLoading = !this.isLoading;
       const $p = await this.optionInjectionService.instance
         .loadEssFile()
@@ -68,6 +66,8 @@ export class EssfileDashboardComponent implements OnInit {
               this.isLoading = !this.isLoading;
             });
         });
+    } else {
+      this.getEssFile();
     }
 
     const profile$ = await this.essfileDashboardService.updateMember();
@@ -107,10 +107,9 @@ export class EssfileDashboardComponent implements OnInit {
       this.essFile
     );
     this.isLoading = !this.isLoading;
-
-    this.optionInjectionService.instance
-      .openWizard(wizardType)
-      .then((value) => {
+    this.optionInjectionService?.instance
+      ?.openWizard(wizardType)
+      ?.then((value) => {
         this.isLoading = !this.isLoading;
       })
       .catch(() => {
@@ -135,52 +134,32 @@ export class EssfileDashboardComponent implements OnInit {
   /**
    * Loads the ESS file for a give file number
    */
-  private getEssFile() {
+  private async getEssFile() {
     this.isLoading = !this.isLoading;
-    this.essFileService
-      .getFileFromId(this.appBaseService?.appModel?.selectedEssFile?.id)
-      .pipe(
-        map((file: EvacuationFileModel) => {
-          this.notesList = this.essfileDashboardService.loadNotes(file.notes);
-          this.essFile = file;
-          this.essfileDashboardService.essFile = file;
-          return file;
-        })
-      )
-      .subscribe({
-        next: (essFile: EvacuationFileModel) => {
-          this.loadDefaultOverviewSection(essFile);
-          this.displayBanner =
-            this.optionInjectionService.instance.getDashboardBanner(
-              essFile?.status
-            );
 
-          this.isLoading = !this.isLoading;
-        },
-        error: (error) => {
-          this.isLoading = !this.isLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.fileDashboardError);
-        }
+    await this.optionInjectionService.instance
+      .loadEssFile()
+      .then(async (file) => {
+        this.notesList = this.essfileDashboardService.loadNotes(file.notes);
+        this.essFile = file;
+        this.essfileDashboardService.essFile = file;
+        this.loadDefaultOverviewSection(file);
+        this.displayBanner =
+          this.optionInjectionService.instance.getDashboardBanner(file?.status);
+        this.isLoading = !this.isLoading;
+      })
+      .catch((error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.fileDashboardError);
       });
   }
 
   private eligiblityDisplayName() {
-    if (
-      this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext !== null &&
-      this.appBaseService?.appModel?.selectedProfile
-        ?.selectedEvacueeInContext !== undefined
-    ) {
-      this.eligibilityFirstName =
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.firstName;
-      this.eligibilityLastName =
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName;
-    } else {
-      this.eligibilityFirstName =
-        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.firstName;
-      this.eligibilityLastName =
-        this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.lastName;
-    }
+    this.eligibilityFirstName =
+      this.essfileDashboardService.eligibilityFirstName();
+
+    this.eligibilityLastName =
+      this.essfileDashboardService.eligibilityLastName();
   }
 }

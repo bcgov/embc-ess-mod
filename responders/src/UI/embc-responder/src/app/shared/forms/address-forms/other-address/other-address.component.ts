@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-other-address',
@@ -7,7 +7,7 @@ import { FormGroup, AbstractControl } from '@angular/forms';
   styleUrls: ['./other-address.component.scss']
 })
 export class OtherAddressComponent implements OnInit {
-  @Input() addressForm: FormGroup;
+  @Input() addressForm: UntypedFormGroup;
 
   constructor() {}
 

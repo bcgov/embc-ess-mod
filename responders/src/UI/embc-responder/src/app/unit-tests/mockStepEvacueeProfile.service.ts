@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { PersonDetails } from '../core/api/models';
 import { TabModel } from '../core/models/tab.model';
 import { StepEvacueeProfileService } from '../feature-components/wizard/step-evacuee-profile/step-evacuee-profile.service';
 
@@ -8,11 +9,20 @@ import { StepEvacueeProfileService } from '../feature-components/wizard/step-eva
 export class MockStepEvacueeProfileService extends StepEvacueeProfileService {
   public profileTabsValue: Array<TabModel>;
 
+  personalDetailsVal: PersonDetails;
+
   public get profileTabs(): Array<TabModel> {
     return this.profileTabsValue;
   }
   public set profileTabs(profileTabsValue: Array<TabModel>) {
     this.profileTabsValue = profileTabsValue;
+  }
+
+  public get personalDetails(): PersonDetails {
+    return this.personalDetailsVal;
+  }
+  public set personalDetails(personalDetailsVal: PersonDetails) {
+    this.personalDetailsVal = personalDetailsVal;
   }
 
   public evacueeProfileTabs: Array<TabModel> = [

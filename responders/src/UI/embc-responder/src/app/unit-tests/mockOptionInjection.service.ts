@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import {
@@ -19,7 +19,7 @@ export class MockOptionInjectionService {
     public appBaseService: AppBaseService,
     public router: Router,
     public dataService: MockDataService,
-    public builder: FormBuilder
+    public builder: UntypedFormBuilder
   ) {
     // super(appBaseService, router, dataService, builder);
   }

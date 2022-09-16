@@ -77,83 +77,81 @@ describe('AppComponent', () => {
     events: of(new NavigationStart(1, 'regular'))
   };
   //const mockOutageSubscription: Subscription = of(true).subscribe();
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule.withRoutes([
-            { path: 'outage', component: OutageComponent },
-            {
-              path: 'electronic-agreement',
-              component: ElectronicAgreementComponent
-            },
-            {
-              path: 'responder-access',
-              component: ResponderAccessComponent
-            }
-          ]),
-          HttpClientTestingModule,
-          OAuthModule.forRoot(),
-          NgIdleKeepaliveModule.forRoot(),
-          MatDialogModule
-        ],
-        declarations: [
-          AppComponent,
-          EnvironmentBannerStubComponent,
-          OutageBannerStubComponent
-        ],
-        schemas: [NO_ERRORS_SCHEMA],
-        providers: [
-          AppComponent,
-          { provide: Router, useValue: routerMock },
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([
+          { path: 'outage', component: OutageComponent },
           {
-            provide: TimeoutService,
-            useClass: MockTimeoutService
+            path: 'electronic-agreement',
+            component: ElectronicAgreementComponent
           },
           {
-            provide: EnvironmentBannerService,
-            useClass: MockEnvironmentBannerService
-          },
-          {
-            provide: OutageService,
-            useClass: MockOutageService
-          },
-          {
-            provide: ConfigService,
-            useClass: MockConfigService
-          },
-          {
-            provide: AuthenticationService,
-            useClass: MockAuthService
-          },
-          {
-            provide: AlertService,
-            useClass: MockAlertService
-          },
-          {
-            provide: UserService,
-            useClass: MockUserService
-          },
-          {
-            provide: LocationsService,
-            useClass: MockLocationService
-          },
-          {
-            provide: LoadTeamListService,
-            useClass: MockTeamListService
-          },
-          {
-            provide: LoadEvacueeListService,
-            useClass: MockEvacueeListService
-          },
-          {
-            provide: SupplierService,
-            useClass: MockSupplierService
+            path: 'responder-access',
+            component: ResponderAccessComponent
           }
-        ]
-      }).compileComponents();
-    })
-  );
+        ]),
+        HttpClientTestingModule,
+        OAuthModule.forRoot(),
+        NgIdleKeepaliveModule.forRoot(),
+        MatDialogModule
+      ],
+      declarations: [
+        AppComponent,
+        EnvironmentBannerStubComponent,
+        OutageBannerStubComponent
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        AppComponent,
+        { provide: Router, useValue: routerMock },
+        {
+          provide: TimeoutService,
+          useClass: MockTimeoutService
+        },
+        {
+          provide: EnvironmentBannerService,
+          useClass: MockEnvironmentBannerService
+        },
+        {
+          provide: OutageService,
+          useClass: MockOutageService
+        },
+        {
+          provide: ConfigService,
+          useClass: MockConfigService
+        },
+        {
+          provide: AuthenticationService,
+          useClass: MockAuthService
+        },
+        {
+          provide: AlertService,
+          useClass: MockAlertService
+        },
+        {
+          provide: UserService,
+          useClass: MockUserService
+        },
+        {
+          provide: LocationsService,
+          useClass: MockLocationService
+        },
+        {
+          provide: LoadTeamListService,
+          useClass: MockTeamListService
+        },
+        {
+          provide: LoadEvacueeListService,
+          useClass: MockEvacueeListService
+        },
+        {
+          provide: SupplierService,
+          useClass: MockSupplierService
+        }
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);

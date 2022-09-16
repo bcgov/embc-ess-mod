@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormControl,
-  FormGroup,
+  UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   NgForm
 } from '@angular/forms';
@@ -19,7 +19,7 @@ import { ContactService } from './contact.service';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: FormControl | null,
+    control: UntypedFormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
     const isSubmitted = form && form.submitted;
@@ -35,7 +35,7 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
 
 export class CustomErrorMobileMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: FormControl | null,
+    control: UntypedFormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
     const isSubmitted = form && form.submitted;
@@ -55,7 +55,7 @@ export class CustomErrorMobileMatcher implements ErrorStateMatcher {
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit, OnDestroy {
-  contactInfoForm: FormGroup;
+  contactInfoForm: UntypedFormGroup;
   readonly phoneMask = [
     /\d/,
     /\d/,

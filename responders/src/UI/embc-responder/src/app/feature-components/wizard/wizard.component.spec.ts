@@ -29,39 +29,37 @@ describe('WizardComponent-Test for New Registration', () => {
     snapshot: { queryParams: { type: 'new-registration' } }
   };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [WizardComponent],
-        imports: [
-          MatDialogModule,
-          RouterTestingModule.withRoutes([
-            {
-              path: 'ess-wizard/evacuee-profile',
-              component: StepEvacueeProfileComponent
-            },
-            {
-              path: 'ess-wizard/ess-file',
-              component: StepEssFileComponent
-            }
-          ]),
-          HttpClientTestingModule,
-          BrowserAnimationsModule
-        ],
-        providers: [
-          WizardComponent,
-          WizardDataService,
-          DatePipe,
-          { provide: ActivatedRoute, useValue: activatedRouteMock },
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [WizardComponent],
+      imports: [
+        MatDialogModule,
+        RouterTestingModule.withRoutes([
           {
-            provide: WizardService,
-            useClass: MockWizardService
+            path: 'ess-wizard/evacuee-profile',
+            component: StepEvacueeProfileComponent
           },
-          { provide: computeInterfaceToken, useValue: {} }
-        ]
-      }).compileComponents();
-    })
-  );
+          {
+            path: 'ess-wizard/ess-file',
+            component: StepEssFileComponent
+          }
+        ]),
+        HttpClientTestingModule,
+        BrowserAnimationsModule
+      ],
+      providers: [
+        WizardComponent,
+        WizardDataService,
+        DatePipe,
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
+        {
+          provide: WizardService,
+          useClass: MockWizardService
+        },
+        { provide: computeInterfaceToken, useValue: {} }
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WizardComponent);

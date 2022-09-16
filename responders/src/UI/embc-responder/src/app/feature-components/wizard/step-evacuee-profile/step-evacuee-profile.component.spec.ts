@@ -35,27 +35,25 @@ describe('StepEvacueeProfileComponent', () => {
     })
   };
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          RouterTestingModule.withRoutes([]),
-          MatDialogModule,
-          HttpClientTestingModule
-        ],
-        declarations: [StepEvacueeProfileComponent],
-        providers: [
-          WizardDataService,
-          { provide: Router, useValue: routerMock },
-          {
-            provide: StepEvacueeProfileService,
-            useClass: MockStepEvacueeProfileService
-          },
-          { provide: computeInterfaceToken, useValue: {} }
-        ]
-      }).compileComponents();
-    })
-  );
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        MatDialogModule,
+        HttpClientTestingModule
+      ],
+      declarations: [StepEvacueeProfileComponent],
+      providers: [
+        WizardDataService,
+        { provide: Router, useValue: routerMock },
+        {
+          provide: StepEvacueeProfileService,
+          useClass: MockStepEvacueeProfileService
+        },
+        { provide: computeInterfaceToken, useValue: {} }
+      ]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StepEvacueeProfileComponent);

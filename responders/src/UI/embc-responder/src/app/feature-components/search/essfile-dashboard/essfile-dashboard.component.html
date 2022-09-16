@@ -272,7 +272,7 @@
     <div class="col-md-9 center-content">
       <img src="/assets/images/exclaimation.svg" height="32" width="32" />
       <span class="banner-heading">{{ displayBanner?.heading }}</span>
-      <span>{{ displayBanner?.content }}</span>
+      <span id="file-banner">{{ displayBanner?.content }}</span>
     </div>
     <div *ngIf="displayBanner?.buttonText !== undefined" class="col-md-3">
       <button

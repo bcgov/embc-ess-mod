@@ -13,7 +13,11 @@ import {
   Pet,
   ReferralServices
 } from 'src/app/core/api/models';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup
+} from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
@@ -898,20 +902,23 @@ export class StepEssFileService {
    * @param form form group
    * @returns true/false
    */
-  checkForPartialUpdates(form: FormGroup): boolean {
+  checkForPartialUpdates(form: UntypedFormGroup): boolean {
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
       const control = form.controls[field] as
-        | FormControl
-        | FormGroup
-        | FormArray;
-      if (control instanceof FormControl) {
+        | UntypedFormControl
+        | UntypedFormGroup
+        | UntypedFormArray;
+      if (control instanceof UntypedFormControl) {
         if (control.value instanceof Object && control.value != null) {
           fields.push(control.value.length);
         } else {
           fields.push(control.value);
         }
-      } else if (control instanceof FormGroup || control instanceof FormArray) {
+      } else if (
+        control instanceof UntypedFormGroup ||
+        control instanceof UntypedFormArray
+      ) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
             fields.push(control.controls[key].value);
@@ -929,14 +936,14 @@ export class StepEssFileService {
    * @param form form group
    * @returns true/false
    */
-  checkForEvacDetailsPartialUpdates(form: FormGroup): boolean {
+  checkForEvacDetailsPartialUpdates(form: UntypedFormGroup): boolean {
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
       const control = form.controls[field] as
-        | FormControl
-        | FormGroup
-        | FormArray;
-      if (control instanceof FormControl) {
+        | UntypedFormControl
+        | UntypedFormGroup
+        | UntypedFormArray;
+      if (control instanceof UntypedFormControl) {
         if (control.value instanceof Object && control.value != null) {
           fields.push(control.value.length);
         } else {
@@ -944,7 +951,7 @@ export class StepEssFileService {
             fields.push(control.value);
           }
         }
-      } else if (control instanceof FormGroup) {
+      } else if (control instanceof UntypedFormGroup) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
             fields.push(control.controls[key].value);

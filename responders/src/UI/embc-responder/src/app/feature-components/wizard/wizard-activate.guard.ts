@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
 import { WizardAdapterService } from './wizard-adapter.service';
@@ -20,7 +19,6 @@ export class WizardActivateGuard implements CanActivate {
   constructor(
     private cacheService: CacheService,
     private evacueeSearchService: EvacueeSearchService,
-    private evacueeSessionService: EvacueeSessionService,
     private wizardAdapterService: WizardAdapterService,
     private router: Router,
     private appBaseService: AppBaseService,
@@ -92,6 +90,11 @@ export class WizardActivateGuard implements CanActivate {
         return this.wizardAdapterService.stepExtendSupportsFromESSFileRecord();
       }
       return false;
+    } else if (wizardType === WizardType.CaseNotes) {
+      if (this.isCaseNotesAllowed()) {
+        return true;
+      }
+      return false;
     } else {
       this.router.navigate(['/responder-access']);
     }
@@ -113,7 +116,6 @@ export class WizardActivateGuard implements CanActivate {
   }
 
   private isProfileCreationAllowed(): boolean {
-    //need to add more assumptions: houselhold members
     return (
       this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
       this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
@@ -135,6 +137,13 @@ export class WizardActivateGuard implements CanActivate {
   }
 
   private isExtendSupportsAllowed(): boolean {
+    return (
+      this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
+      this.appBaseService?.appModel?.selectedEssFile?.id !== undefined
+    );
+  }
+
+  private isCaseNotesAllowed(): boolean {
     return (
       this.appBaseService?.appModel?.selectedEssFile?.id !== null &&
       this.appBaseService?.appModel?.selectedEssFile?.id !== undefined

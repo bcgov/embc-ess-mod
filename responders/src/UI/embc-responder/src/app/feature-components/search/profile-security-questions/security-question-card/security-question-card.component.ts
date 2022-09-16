@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Component({
@@ -9,7 +9,7 @@ import { SecurityQuestion } from 'src/app/core/api/models';
 })
 export class SecurityQuestionCardComponent implements OnInit {
   @Input() question: SecurityQuestion;
-  @Input() parentForm: FormGroup;
+  @Input() parentForm: UntypedFormGroup;
   @Input() index: number;
   controlName: string;
 

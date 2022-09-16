@@ -19,7 +19,6 @@ import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.s
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { MockEvacueeProfileService } from 'src/app/unit-tests/mockEvacueeProfile.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';

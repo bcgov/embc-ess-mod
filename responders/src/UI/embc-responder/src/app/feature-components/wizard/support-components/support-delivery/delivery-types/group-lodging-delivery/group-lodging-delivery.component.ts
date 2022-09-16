@@ -7,7 +7,7 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import {
@@ -24,9 +24,9 @@ import * as globalConst from '../../../../../../core/services/global-constants';
 export class GroupLodgingDeliveryComponent
   implements OnInit, OnChanges, AfterViewChecked
 {
-  @Input() supportDeliveryForm: FormGroup;
+  @Input() supportDeliveryForm: UntypedFormGroup;
   filteredOptions: Observable<Community[]>;
-  detailsForm: FormGroup;
+  detailsForm: UntypedFormGroup;
   city: Community[] = [];
 
   readonly phoneMask = globalConst.phoneMask;
@@ -51,7 +51,9 @@ export class GroupLodgingDeliveryComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDeliveryForm) {
-      this.detailsForm = this.supportDeliveryForm.get('details') as FormGroup;
+      this.detailsForm = this.supportDeliveryForm.get(
+        'details'
+      ) as UntypedFormGroup;
     }
   }
 

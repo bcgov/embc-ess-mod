@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { GetSecurityPhraseResponse } from 'src/app/core/api/models';
 
 @Component({
@@ -9,7 +9,7 @@ import { GetSecurityPhraseResponse } from 'src/app/core/api/models';
 })
 export class SecurityPhraseCardComponent implements OnInit {
   @Input() phrase: GetSecurityPhraseResponse;
-  @Input() parentForm: FormGroup;
+  @Input() parentForm: UntypedFormGroup;
 
   constructor() {}
 

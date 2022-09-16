@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -28,7 +28,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./household-members.component.scss']
 })
 export class HouseholdMembersComponent implements OnInit, OnDestroy {
-  householdForm: FormGroup;
+  householdForm: UntypedFormGroup;
   memberSource = new BehaviorSubject([]);
   selection = new SelectionModel<HouseholdMemberModel>(true, []);
   members: HouseholdMemberModel[] = [];
@@ -49,7 +49,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   constructor(
     public stepEssFileService: StepEssFileService,
     private dialog: MatDialog,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private router: Router,
     private householdService: HouseholdMembersService,
@@ -114,8 +114,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   /**
    * Returns the control of the household member form
    */
-  public get houseHoldMemberFormGroup(): FormGroup {
-    return this.householdForm.get('houseHoldMember') as FormGroup;
+  public get houseHoldMemberFormGroup(): UntypedFormGroup {
+    return this.householdForm.get('houseHoldMember') as UntypedFormGroup;
   }
 
   /**
@@ -370,7 +370,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    *
    * @returns a PersonalDetails form
    */
-  private createHouseholdMemberForm(): FormGroup {
+  private createHouseholdMemberForm(): UntypedFormGroup {
     return this.formBuilder.group({
       firstName: [
         this.stepEssFileService?.tempHouseholdMember?.firstName ?? '',

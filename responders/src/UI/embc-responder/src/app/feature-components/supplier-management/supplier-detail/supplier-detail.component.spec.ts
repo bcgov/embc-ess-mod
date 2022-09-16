@@ -8,7 +8,7 @@ import {
   TestBed,
   tick
 } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NavigationStart, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -68,7 +68,7 @@ describe('SupplierDetailComponent', () => {
       declarations: [SupplierDetailComponent],
       providers: [
         SupplierDetailComponent,
-        FormBuilder,
+        UntypedFormBuilder,
         {
           provide: UserService,
           useClass: MockUserService
@@ -128,7 +128,7 @@ describe('SupplierDetailComponent', () => {
 
   it('should get valid supplier type from router', () => {
     const routingTest = TestBed.inject(Router);
-    const formBuilder = TestBed.inject(FormBuilder);
+    const formBuilder = TestBed.inject(UntypedFormBuilder);
     const matDialog = TestBed.inject(MatDialog);
     const testMockComponent = new SupplierDetailComponent(
       formBuilder,
@@ -148,7 +148,7 @@ describe('SupplierDetailComponent', () => {
 
   it('should get valid supplier from router', () => {
     const routingTest = TestBed.inject(Router);
-    const formBuilder = TestBed.inject(FormBuilder);
+    const formBuilder = TestBed.inject(UntypedFormBuilder);
     const matDialog = TestBed.inject(MatDialog);
     const testMockComponent = new SupplierDetailComponent(
       formBuilder,
