@@ -51,7 +51,7 @@ namespace EMBC.Utilities.Notifications.Channels
                 message.From.Add(new MailboxAddress(settings.DefaultSender.Name, settings.DefaultSender.Address));
             }
 
-            message.Subject = settings.SubjectPrefix + emailNotification.Subject;
+            message.Subject = $"{settings.SubjectPrefix}{emailNotification.Subject}";
             message.Body = new TextPart(TextFormat.Html)
             {
                 Text = emailNotification.Content
