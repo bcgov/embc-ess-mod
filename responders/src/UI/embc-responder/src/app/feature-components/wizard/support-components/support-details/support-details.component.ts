@@ -82,19 +82,25 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
 
   validDateFilter = (d: Date | null): boolean => {
     const date = d || new Date();
-    return this.evacueeSessionService.isPaperBased
-      ? moment(date).isBetween(
-          moment(this.evacueeSessionService?.evacFile?.task?.from),
-          moment(this.evacueeSessionService?.evacFile?.task?.to),
-          'D',
-          '[]'
-        )
-      : moment(date).isBetween(
-          moment(new Date()),
-          moment(this.evacueeSessionService?.evacFile?.task?.to),
-          'D',
-          '[]'
-        );
+    return moment(date).isBetween(
+      moment(this.evacueeSessionService?.evacFile?.task?.from),
+      moment(this.evacueeSessionService?.evacFile?.task?.to),
+      'D',
+      '[]'
+    );
+    // return this.evacueeSessionService.isPaperBased
+    //   ? moment(date).isBetween(
+    //       moment(this.evacueeSessionService?.evacFile?.task?.from),
+    //       moment(this.evacueeSessionService?.evacFile?.task?.to),
+    //       'D',
+    //       '[]'
+    //     )
+    //   : moment(date).isBetween(
+    //       moment(new Date()),
+    //       moment(this.evacueeSessionService?.evacFile?.task?.to),
+    //       'D',
+    //       '[]'
+    //     );
   };
 
   paperCompletedDateFilter = (d: Date | null): boolean => {
