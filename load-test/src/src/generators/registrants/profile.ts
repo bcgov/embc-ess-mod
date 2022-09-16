@@ -7,7 +7,7 @@ import { generateSecurityQuestions } from './security-question';
 export function generateProfile(communities: Array<CommunityCode>, questions: string[]): Profile {
     return {
         contactDetails: {
-            email: faker.internet.email(),
+            email: "autotest." + faker.internet.email(),
             phone: faker.phone.phoneNumber("###-###-####"),
         },
         isMailingAddressSameAsPrimaryAddress: false,
