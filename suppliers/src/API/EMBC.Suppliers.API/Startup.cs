@@ -160,6 +160,9 @@ namespace EMBC.Suppliers.API
             services.AddTransient<IJurisdictionsListProvider, ListsProvider>();
             services.AddTransient<ISupportsListProvider, ListsProvider>();
             services.AddTransient<IListsGateway, DynamicsListsGateway>();
+            services.AddTransient<IQueriesHandler, QueriesHandler>();
+            services.AddTransient<ISubmissionHandler, SubmissionHandler>();
+            services.AddTransient<ICacheHandler, CacheHandler>();
             services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Cache"));
             services.AddTransient<IListsRepository, FileBasedCachedListsRepository>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));

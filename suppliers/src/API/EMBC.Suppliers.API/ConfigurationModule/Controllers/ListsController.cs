@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
-using Jasper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,35 +31,35 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 #endif
     public class ListsController : ControllerBase
     {
-        private readonly ICommandBus commandBus;
+        private readonly IQueriesHandler handler;
 
-        public ListsController(ICommandBus commandBus)
+        public ListsController(IQueriesHandler handler)
         {
-            this.commandBus = commandBus;
+            this.handler = handler;
         }
 
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            return Ok(await commandBus.Invoke<IEnumerable<Country>>(new CountriesQueryCommand()));
+            return Ok(await handler.Handle(new CountriesQueryCommand()));
         }
 
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryCode = "CAN")
         {
-            return Ok(await commandBus.Invoke<IEnumerable<StateProvince>>(new StateProvincesQueryCommand(countryCode)));
+            return Ok(await handler.Handle(new StateProvincesQueryCommand(countryCode)));
         }
 
         [HttpGet("jurisdictions")]
         public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] JurisdictionType[] types = null, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
-            return Ok(await commandBus.Invoke<IEnumerable<Jurisdiction>>(new JurisdictionsQueryCommand(types, countryCode, stateProvinceCode)));
+            return Ok(await handler.Handle(new JurisdictionsQueryCommand(types, countryCode, stateProvinceCode)));
         }
 
         [HttpGet("supports")]
         public async Task<ActionResult<IEnumerable<Support>>> GetSupports()
         {
-            return Ok(await commandBus.Invoke<IEnumerable<Support>>(new SupportsQueryCommand()));
+            return Ok(await handler.Handle(new SupportsQueryCommand()));
         }
     }
 }

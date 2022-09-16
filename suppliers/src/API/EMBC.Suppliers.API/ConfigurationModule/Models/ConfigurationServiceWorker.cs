@@ -16,23 +16,22 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Jasper;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
     public class ConfigurationServiceWorker : BackgroundService
     {
-        private readonly ICommandBus commandBus;
+        private readonly ICacheHandler handler;
 
-        public ConfigurationServiceWorker(ICommandBus commandBus)
+        public ConfigurationServiceWorker(ICacheHandler handler)
         {
-            this.commandBus = commandBus;
+            this.handler = handler;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await commandBus.Invoke(new RefreshCacheCommand());
+            await handler.Handle(new RefreshCacheCommand(), stoppingToken);
         }
     }
 }

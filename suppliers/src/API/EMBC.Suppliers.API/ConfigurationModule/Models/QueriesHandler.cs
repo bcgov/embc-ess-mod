@@ -19,11 +19,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
-using ImTools;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models
 {
-    public class QueriesHandler
+    public interface IQueriesHandler
+    {
+        Task<IEnumerable<Country>> Handle(CountriesQueryCommand cmd);
+        Task<IEnumerable<StateProvince>> Handle(StateProvincesQueryCommand cmd);
+        Task<IEnumerable<Jurisdiction>> Handle(JurisdictionsQueryCommand cmd);
+        Task<IEnumerable<Support>> Handle(SupportsQueryCommand cmd);
+    }
+
+    public class QueriesHandler : IQueriesHandler
     {
         private readonly ICountriesListProvider countriesListProvider;
         private readonly IStateProvincesListProvider stateProvincesListProvider;

@@ -58,6 +58,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             return cachedContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+#pragma warning disable SA1117 // Parameters should be on same line or separate lines
         public async Task<IEnumerable<CountryEntity>> GetCountriesAsync()
         {
             return (await GetOrAddAsync("./countries.csv"))
@@ -125,6 +126,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
                 }, quoteCharacter: '"')
                 .Select(c => new SupportEntity { era_name = c.era_name, era_supportid = c.era_supportid });
         }
+#pragma warning restore SA1117 // Parameters should be on same line or separate lines
 
         public async Task SetCountriesAsync(IEnumerable<CountryEntity> countries)
         {
