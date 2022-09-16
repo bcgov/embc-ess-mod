@@ -69,8 +69,8 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   createNewESSFile(): void {
     this.isLoading = true;
     this.optionInjectionService.instance
-      .openWizard(WizardType.NewEssFile)
-      .then((value) => {
+      ?.openWizard(WizardType.NewEssFile)
+      ?.then((value) => {
         if (!value) {
           this.isLoading = false;
           this.evacueeProfileDashboardService.openEssFileExistsDialog(
@@ -90,8 +90,8 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   editProfile(): void {
     this.isLoading = true;
     this.optionInjectionService.instance
-      .openWizard(WizardType.EditRegistration)
-      .then((value) => {
+      ?.openWizard(WizardType.EditRegistration)
+      ?.then((value) => {
         this.isLoading = false;
       })
       .catch(() => {

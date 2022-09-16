@@ -11,7 +11,8 @@ export enum WizardType {
   MemberRegistration = 'member-registration',
   ReviewFile = 'review-file',
   CompleteFile = 'complete-file',
-  ExtendSupports = 'extend-supports'
+  ExtendSupports = 'extend-supports',
+  CaseNotes = 'case-notes'
 }
 
 export interface WizardProperties {

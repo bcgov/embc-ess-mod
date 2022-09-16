@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Resources.Supports;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
@@ -18,7 +14,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supportRepository = Services.GetRequiredService<ISupportRepository>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanCreateSupports()
         {
             var now = DateTime.UtcNow;
@@ -120,7 +116,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanCreatePaperReferrals()
         {
             var now = DateTime.UtcNow;
@@ -207,7 +203,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ChangeStatus_Void_Success()
         {
             var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items
@@ -223,7 +219,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             voidedSupport.Status.ShouldBe(SupportStatus.Void);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ChangeStatus_eTransferToCancel_Success()
         {
             var support = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items
@@ -239,7 +235,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             voidedSupport.Status.ShouldBe(SupportStatus.Cancelled);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ChangeStatus_eTransferToApproved_Success()
         {
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId })).Items;
@@ -255,7 +251,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             voidedSupport.Status.ShouldBe(SupportStatus.Approved);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task QuerySupports_ByStatus_ReturnCorrectSupports()
         {
             var sampleSupports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery { ByEvacuationFileId = TestData.EvacuationFileId, })).Items;
@@ -268,7 +264,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supports.ShouldAllBe(s => s.Status == status);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task QuerySupports_WithLimit_ReturnCorrectSupports()
         {
             var supports = ((SearchSupportQueryResult)await supportRepository.Query(new SearchSupportsQuery
@@ -280,7 +276,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supports.Count().ShouldBeLessThanOrEqualTo(2);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task SubmitSupportForApproval_SupportWithFlags_AssignedToApprovalQueue()
         {
             var householdMembers = TestData.HouseholdMemberIds;
@@ -330,7 +326,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             pendingApprovalSupport.Flags.ShouldHaveSingleItem().ShouldBeAssignableTo<AmountOverridenSupportFlag>().ShouldNotBeNull().Approver.ShouldBe(flags[0].Approver);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task FailSupport_AssignedToErrorQueue()
         {
             //var supportId = TestData.ETransferIds.TakeRandom(1).Single();
@@ -342,7 +338,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             support.Status.ShouldBe(SupportStatus.UnderReview);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task ApproveSupport_PendingSupport_Approved()
         {
             var householdMembers = TestData.HouseholdMemberIds;

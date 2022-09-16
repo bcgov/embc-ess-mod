@@ -10,7 +10,9 @@
     <div
       *ngIf="
         optionInjectionService?.instance?.optionType ===
-        selectedPathType.remoteExtensions
+          selectedPathType.remoteExtensions ||
+        optionInjectionService?.instance?.optionType ===
+          selectedPathType.caseNotes
       "
       class="col-md-8"
     >
@@ -26,7 +28,9 @@
     <div
       *ngIf="
         optionInjectionService?.instance?.optionType !==
-        selectedPathType.remoteExtensions
+          selectedPathType.remoteExtensions &&
+        optionInjectionService?.instance?.optionType !==
+          selectedPathType.caseNotes
       "
       class="col-md-8"
     >
@@ -106,6 +110,7 @@
       </div>
       <br />
       <div
+        id="new-registration-box"
         class="row"
         *ngIf="registrantResults?.length === 0 && fileResults?.length === 0"
       >
@@ -129,7 +134,9 @@
       <mat-card
         *ngIf="
           optionInjectionService?.instance?.optionType !==
-          selectedPathType.remoteExtensions
+            selectedPathType.remoteExtensions &&
+          optionInjectionService?.instance?.optionType !==
+            selectedPathType.caseNotes
         "
         class="registration"
       >

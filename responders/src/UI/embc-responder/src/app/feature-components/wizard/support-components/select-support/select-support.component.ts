@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,13 +18,13 @@ import { StepSupportsService } from '../../step-supports/step-supports.service';
 })
 export class SelectSupportComponent implements OnInit {
   supportList: Code[] = [];
-  supportTypeForm: FormGroup;
+  supportTypeForm: UntypedFormGroup;
 
   constructor(
     public stepSupportsService: StepSupportsService,
     private loadEvacueeListService: LoadEvacueeListService,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public evacueeSessionService: EvacueeSessionService
   ) {}
 

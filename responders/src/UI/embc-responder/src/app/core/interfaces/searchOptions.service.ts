@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SelectedPathType } from '../models/appBase.model';
 import { DashboardBanner } from '../models/dialog-content.model';
@@ -7,17 +7,19 @@ import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { EvacueeSearchContextModel } from '../models/evacuee-search-context.model';
 import { EvacueeSearchResults } from '../models/evacuee-search-results';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
+import { CaseNotesOptionService } from '../services/compute/caseNotesOption.service';
 import { DigitalOptionService } from '../services/compute/digitalOption.service';
 import { PaperOptionService } from '../services/compute/paperOption.service';
 import { RemoteExtOptionService } from '../services/compute/remoteExtOption.service';
 import { AppBaseService } from '../services/helper/appBase.service';
 import { DataService } from '../services/helper/data.service';
+import { UserService } from '../services/user.service';
 
 export interface SearchOptionsService {
   idSearchQuestion: string;
   optionType: SelectedPathType;
   loadDefaultComponent(): void;
-  createForm(formType: string): FormGroup;
+  createForm(formType: string): UntypedFormGroup;
   search(
     value: string | EvacueeSearchContextModel,
     type?: string
@@ -36,7 +38,8 @@ export class OptionInjectionService {
     protected appBaseService: AppBaseService,
     protected router: Router,
     protected dataService: DataService,
-    protected builder: FormBuilder
+    protected builder: UntypedFormBuilder,
+    protected userService: UserService
   ) {}
 
   public get instance(): SearchOptionsService {
@@ -70,6 +73,16 @@ export class OptionInjectionService {
         this.router,
         this.dataService,
         this.builder
+      );
+    } else if (
+      this.appBaseService?.appModel?.selectedUserPathway ===
+      SelectedPathType.caseNotes
+    ) {
+      return new CaseNotesOptionService(
+        this.router,
+        this.dataService,
+        this.builder,
+        this.userService
       );
     }
   }

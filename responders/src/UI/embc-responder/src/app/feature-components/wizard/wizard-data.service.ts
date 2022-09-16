@@ -181,7 +181,7 @@ export class WizardDataService {
       previous: '/ess-wizard/ess-file/evacuation-details'
     },
     {
-      label: 'Animals',
+      label: 'Pets',
       route: 'animals',
       name: 'animals',
       status: 'not-started',
@@ -230,7 +230,7 @@ export class WizardDataService {
       previous: '/ess-wizard/ess-file/evacuation-details'
     },
     {
-      label: 'Animals',
+      label: 'Pets',
       route: 'animals',
       name: 'animals',
       status: 'not-started',
@@ -489,6 +489,21 @@ export class WizardDataService {
     }
   ];
 
+  private caseNotesMenu: Array<WizardSidenavModel> = [
+    {
+      step: 'CASE NOTES',
+      title: 'Add Case Notes',
+      route: '/ess-wizard/add-notes',
+      isLocked: false,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-notes.svg',
+        altSrc: '/assets/images/wizard/notes.svg',
+        height: '42',
+        width: '42'
+      }
+    }
+  ];
+
   constructor(private evacueeSessionService: EvacueeSessionService) {}
   /**
    * Creates new registration menu
@@ -593,6 +608,21 @@ export class WizardDataService {
       extendSupportsMenu.push({ ...menuItems, ...menu });
     }
     return extendSupportsMenu;
+  }
+
+  /**
+   * Creates case notes menu
+   *
+   * @returns side menu array
+   */
+  public createCaseNotesMenu(): Array<WizardSidenavModel> {
+    const caseNotesMenu: Array<WizardSidenavModel> =
+      new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.caseNotesMenu) {
+      caseNotesMenu.push({ ...menuItems, ...menu });
+    }
+    return caseNotesMenu;
   }
 
   /**

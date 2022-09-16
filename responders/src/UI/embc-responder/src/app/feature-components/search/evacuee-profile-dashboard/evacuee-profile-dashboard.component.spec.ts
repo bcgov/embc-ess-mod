@@ -1,4 +1,13 @@
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  discardPeriodicTasks,
+  fakeAsync,
+  flush,
+  flushMicrotasks,
+  inject,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 
 import { EvacueeProfileDashboardComponent } from './evacuee-profile-dashboard.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -7,120 +16,29 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { MockEvacueeProfileService } from 'src/app/unit-tests/mockEvacueeProfile.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
-import { CommunityType } from 'src/app/core/api/models';
-import { WizardComponent } from '../../wizard/wizard.component';
-import { Router } from '@angular/router';
-import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
+import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
+import { EvacueeProfileDashboardService } from './evacuee-profile-dashboard.service';
+import { Router } from '@angular/router';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { MockEvacueeProfileDashboardService } from 'src/app/unit-tests/mockEvacueeProfileDashboard.service';
 
 describe('EvacueeProfileDashboardComponent', () => {
   let component: EvacueeProfileDashboardComponent;
   let fixture: ComponentFixture<EvacueeProfileDashboardComponent>;
   let evacueeSearchService;
-  let evacueeSessionService;
   let evacueeProfileService;
-
-  const mockProfile: RegistrantProfileModel = {
-    id: 'a7b76c4b-256b-4385-b35e-7b496e70f172',
-    createdOn: '2022-02-08T21:50:38Z',
-    modifiedOn: '2022-02-08T22:50:09Z',
-    restriction: false,
-    personalDetails: {
-      firstName: 'julia',
-      lastName: 'roberts',
-      initials: null,
-      preferredName: null,
-      gender: 'Female',
-      dateOfBirth: '12/12/2000'
-    },
-    contactDetails: {
-      email: null,
-      phone: '999-999-9999'
-    },
-    primaryAddress: {
-      community: {
-        code: '9069dfaf-9f97-ea11-b813-005056830319',
-        name: 'Chetwynd',
-        districtName: 'Peace River',
-        stateProvinceCode: 'BC',
-        countryCode: 'CAN',
-        type: CommunityType.DistrictMunicipality
-      },
-      country: {
-        code: 'CAN',
-        name: 'Canada'
-      },
-      stateProvince: {
-        code: 'BC',
-        name: 'British Columbia',
-        countryCode: 'CAN'
-      },
-      addressLine1: '890 Dolphin St',
-      addressLine2: null,
-      city: null,
-      communityCode: '9069dfaf-9f97-ea11-b813-005056830319',
-      stateProvinceCode: 'BC',
-      countryCode: 'CAN',
-      postalCode: null
-    },
-    mailingAddress: {
-      community: {
-        code: '9069dfaf-9f97-ea11-b813-005056830319',
-        name: 'Chetwynd',
-        districtName: 'Peace River',
-        stateProvinceCode: 'BC',
-        countryCode: 'CAN',
-        type: CommunityType.DistrictMunicipality
-      },
-      country: {
-        code: 'CAN',
-        name: 'Canada'
-      },
-      stateProvince: {
-        code: 'BC',
-        name: 'British Columbia',
-        countryCode: 'CAN'
-      },
-      addressLine1: '890 Dolphin St',
-      addressLine2: null,
-      city: null,
-      communityCode: '9069dfaf-9f97-ea11-b813-005056830319',
-      stateProvinceCode: 'BC',
-      countryCode: 'CAN',
-      postalCode: null
-    },
-    isMailingAddressSameAsPrimaryAddress: true,
-    securityQuestions: [
-      {
-        id: 1,
-        question: 'What was the name of your first pet?',
-        answer: 't*****t',
-        answerChanged: false
-      },
-      {
-        id: 2,
-        question:
-          'What was your first car’s make and model? (e.g. Ford Taurus)',
-        answer: 't*****t',
-        answerChanged: false
-      },
-      {
-        id: 3,
-        question: 'Where was your first job?',
-        answer: 't*****t',
-        answerChanged: false
-      }
-    ],
-    authenticatedUser: false,
-    verifiedUser: true
-  };
+  let appBaseService;
+  let injectionService;
+  let profileDashboardService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -130,29 +48,32 @@ describe('EvacueeProfileDashboardComponent', () => {
         CustomPipeModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([
-          {
-            path: 'ess-wizard',
-            component: WizardComponent
-          }
-        ])
+        RouterTestingModule
       ],
       declarations: [EvacueeProfileDashboardComponent],
       providers: [
         EvacueeProfileDashboardComponent,
         {
-          provide: EvacueeSearchService,
-          useClass: MockEvacueeSearchService
+          provide: EvacueeProfileDashboardService,
+          useClass: MockEvacueeProfileDashboardService
         },
         {
-          provide: EvacueeSessionService,
-          useClass: MockEvacueeSessionService
+          provide: EvacueeSearchService,
+          useClass: MockEvacueeSearchService
         },
         {
           provide: EvacueeProfileService,
           useClass: MockEvacueeProfileService
         },
-        { provide: computeInterfaceToken, useValue: {} }
+        { provide: computeInterfaceToken, useValue: {} },
+        {
+          provide: AppBaseService,
+          useClass: MockAppBaseService
+        },
+        {
+          provide: OptionInjectionService,
+          useClass: MockOptionInjectionService
+        }
       ]
     }).compileComponents();
   });
@@ -161,66 +82,211 @@ describe('EvacueeProfileDashboardComponent', () => {
     fixture = TestBed.createComponent(EvacueeProfileDashboardComponent);
     component = fixture.componentInstance;
     evacueeSearchService = TestBed.inject(EvacueeSearchService);
-    evacueeSessionService = TestBed.inject(EvacueeSessionService);
     evacueeProfileService = TestBed.inject(EvacueeProfileService);
+    appBaseService = TestBed.inject(AppBaseService);
+    injectionService = TestBed.inject(OptionInjectionService);
+    profileDashboardService = TestBed.inject(EvacueeProfileDashboardService);
   });
 
   it('should create', () => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
-  // it('should navigate to New ESS File Wizard', inject(
-  //   [Router],
-  //   (router: Router) => {
-  //     spyOn(router, 'navigate').and.resolveTo(true);
-  //     evacueeSessionService.isPaperBased = false;
-  //     evacueeProfileService.evacuationFileSummaryValue = [];
+  it('should navigate to New ESS File Wizard for digital flow', fakeAsync(
+    inject([Router], (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      appBaseService.appModel = {
+        selectedUserPathway: SelectedPathType.digital
+      };
 
-  //     fixture.detectChanges();
-  //     component.ngOnInit();
-  //     component.createNewESSFile();
-  //     expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard'], {
-  //       queryParams: { type: WizardType.NewEssFile },
-  //       queryParamsHandling: 'merge'
-  //     });
-  //   }
-  // ));
+      fixture.detectChanges();
+      component.ngOnInit();
+      component.createNewESSFile();
 
-  // it('should navigate to Edit Profile Wizard', inject(
-  //   [Router],
-  //   (router: Router) => {
-  //     spyOn(router, 'navigate').and.stub();
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
 
-  //     fixture.detectChanges();
-  //     component.ngOnInit();
-  //     component.editProfile();
-  //     expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard'], {
-  //       queryParams: { type: WizardType.EditRegistration },
-  //       queryParamsHandling: 'merge'
-  //     });
-  //   }
-  // ));
+      tick();
+      fixture.detectChanges();
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard'], {
+        queryParams: { type: WizardType.NewEssFile },
+        queryParamsHandling: 'merge'
+      });
+    })
+  ));
 
-  it('should open dialog ess file successfully linked', () => {
-    evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.fileLinkStatus = 'S';
+  it('should NOT allow new ess file if paper file already exists', fakeAsync(
+    inject([Router], (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      appBaseService.appModel = {
+        selectedUserPathway: SelectedPathType.paperBased
+      };
+
+      evacueeSearchService.evacueeSearchContext = {
+        hasShownIdentification: true,
+        evacueeSearchParameters: {
+          firstName: 'Evac',
+          lastName: 'Five',
+          dateOfBirth: '12/12/2000',
+          paperFileNumber: 'T100'
+        }
+      };
+
+      fixture.detectChanges();
+      component.ngOnInit();
+      component.createNewESSFile();
+
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
+
+      tick();
+      fixture.detectChanges();
+      const dialogContent = document.getElementsByTagName(
+        'app-ess-file-exists'
+      )[0] as HTMLElement;
+      expect(dialogContent).toBeTruthy();
+    })
+  ));
+
+  it('should allow new ess file if paper file does not exist', fakeAsync(
+    inject([Router], (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      appBaseService.appModel = {
+        selectedUserPathway: SelectedPathType.paperBased
+      };
+
+      evacueeSearchService.evacueeSearchContext = {
+        hasShownIdentification: true,
+        evacueeSearchParameters: {
+          firstName: 'Evac',
+          lastName: 'Five',
+          dateOfBirth: '12/12/2000',
+          paperFileNumber: 'T123456'
+        }
+      };
+
+      fixture.detectChanges();
+      component.ngOnInit();
+      component.createNewESSFile();
+
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
+
+      tick();
+      fixture.detectChanges();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard'], {
+        queryParams: { type: WizardType.NewEssFile },
+        queryParamsHandling: 'merge'
+      });
+    })
+  ));
+
+  it('should navigate to Edit Profile Wizard', fakeAsync(
+    inject([Router], (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      appBaseService.appModel = {
+        selectedUserPathway: SelectedPathType.digital
+      };
+
+      fixture.detectChanges();
+      component.ngOnInit();
+      component.editProfile();
+
+      flush();
+      flushMicrotasks();
+      discardPeriodicTasks();
+
+      tick();
+      fixture.detectChanges();
+      expect(router.navigate).toHaveBeenCalledWith(['/ess-wizard'], {
+        queryParams: { type: WizardType.EditRegistration },
+        queryParamsHandling: 'merge'
+      });
+    })
+  ));
+
+  it('should open dialog complete profile for paper profile on digital flow', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+
+    appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: { id: 'bcd' } }
+    };
     fixture.detectChanges();
     component.ngOnInit();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+    fixture.detectChanges();
 
     const dialogContent = document.getElementsByTagName(
       'app-information-dialog'
     )[0] as HTMLElement;
     expect(dialogContent.textContent).toEqual(
-      'ESS File Successfully Linked Close '
+      'Please complete the evacuee profile. Close '
     );
-  });
+  }));
 
-  it('should open dialog ess file error linked', () => {
-    evacueeSessionService.isPaperBased = true;
-    evacueeSessionService.fileLinkStatus = 'E';
+  it('should open dialog ess file successfully linked', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+
+    appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: { id: 'bcd' } }
+    };
+
+    profileDashboardService.fileLinkStatus = 'S';
     fixture.detectChanges();
     component.ngOnInit();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+    fixture.detectChanges();
+
+    const dialogContent = document.getElementsByTagName(
+      'app-information-dialog'
+    )[0] as HTMLElement;
+
+    expect(dialogContent.textContent).toEqual(
+      'ESS File Successfully Linked Close '
+    );
+  }));
+
+  it('should open dialog ess file error linked', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+
+    appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: { id: 'bcd' } }
+    };
+
+    profileDashboardService.fileLinkStatus = 'E';
+    fixture.detectChanges();
+    component.ngOnInit();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+    fixture.detectChanges();
 
     const dialogContent = document.getElementsByTagName(
       'app-information-dialog'
@@ -228,71 +294,161 @@ describe('EvacueeProfileDashboardComponent', () => {
     expect(dialogContent.textContent).toEqual(
       'Error while linking the ESS File. Please try again later Close '
     );
-  });
+  }));
 
-  // it('should open dialog complete profile', () => {
-  //   evacueeSessionService.isPaperBased = false;
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
+  it('should open dialog to verify evacuee', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
 
-  //   const dialogContent = document.getElementsByTagName(
-  //     'app-information-dialog'
-  //   )[0] as HTMLElement;
-  //   expect(dialogContent.textContent).toEqual(
-  //     'Please complete the evacuee profile. Close '
-  //   );
-  // });
+    appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: { id: 'bcd' } }
+    };
 
-  // it('should open dialog paper based ESS File already exists', () => {
-  //   evacueeSessionService.isPaperBased = true;
-  //   evacueeSearchService.evacueeSearchContext = {
-  //     evacueeSearchParameters: { paperFileNumber: 'T3333' }
-  //   };
-  //   evacueeProfileService.evacuationFileSummaryValue = [
-  //     {
-  //       id: '122552',
-  //       manualFileId: 'T3333',
-  //       status: 'Completed',
-  //       task: {
-  //         taskNumber: '0001',
-  //         communityCode: '7e69dfaf-9f97-ea11-b813-005056830319',
-  //         from: '2021-03-17T21:32:00Z',
-  //         to: '2021-07-06T18:19:00Z'
-  //       },
-  //       createdOn: '2022-02-01T18:05:37Z',
-  //       issuedOn: '2022-02-01T18:05:37Z',
-  //       evacuationFileDate: '2022-02-01T18:05:35Z',
-  //       evacuatedFromAddress: {
-  //         community: {
-  //           code: '6e69dfaf-9f97-ea11-b813-005056830319',
-  //           name: '100 Mile House',
-  //           districtName: 'Cariboo',
-  //           stateProvinceCode: 'BC',
-  //           countryCode: 'CAN',
-  //           type: 'DistrictMunicipality'
-  //         },
-  //         addressLine1: '123 Richmond St',
-  //         addressLine2: null,
-  //         city: null,
-  //         communityCode: '6e69dfaf-9f97-ea11-b813-005056830319',
-  //         stateProvinceCode: null,
-  //         countryCode: null,
-  //         postalCode: null
-  //       },
-  //       isRestricted: false,
-  //       isPaper: true,
-  //       isPerliminary: false
-  //     }
-  //   ];
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   component.createNewESSFile();
-  //   fixture.detectChanges();
-  //   const dialogContent = document.getElementsByTagName(
-  //     'app-ess-file-exists'
-  //   )[0] as HTMLElement;
-  //   expect(dialogContent.textContent).toEqual(
-  //     ' ESS File # T3333 already exists in the ERA Tool. Please continue to that ESS File to proceed with paper-based entry. Speak to your supervisor if no results are displaying and you are still seeing this message, as the file might be restricted. Alternatively, go back and search again. Close '
-  //   );
-  // });
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.verifyEvacuee();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+    fixture.detectChanges();
+
+    const dialogContent = document.getElementsByTagName(
+      'app-verify-evacuee-dialog'
+    )[0] as HTMLElement;
+    expect(dialogContent.textContent).toBeTruthy();
+  }));
+
+  it('should verify evacuee', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+
+    appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: { id: 'bcd' } }
+    };
+
+    evacueeProfileService.registrantProfileValue = {};
+
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.verifyEvacuee();
+    profileDashboardService.closeVerifyDialog();
+    fixture.detectChanges();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+
+    fixture.detectChanges();
+
+    const dialogContent = document.getElementsByTagName(
+      'app-information-dialog'
+    )[0] as HTMLElement;
+    expect(dialogContent.textContent).toBeTruthy();
+  }));
+
+  it('should not verify evacuee if the dialog closes incomplete', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+
+    appBaseService.appModel = {
+      selectedProfile: { selectedEvacueeInContext: { id: 'bcd' } }
+    };
+
+    evacueeProfileService.registrantProfileValue = {};
+
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.verifyEvacuee();
+    profileDashboardService.closeUnVerifiedDialog();
+    fixture.detectChanges();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+
+    fixture.detectChanges();
+
+    const dialogContent = document.getElementsByTagName(
+      'app-information-dialog'
+    )[0] as HTMLElement;
+    expect(dialogContent.textContent).not.toBe(
+      'Evacuee profile has been successfully verified.'
+    );
+  }));
+
+  it('should open bc services card invite dialog', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+
+    appBaseService.appModel = {
+      selectedProfile: {
+        selectedEvacueeInContext: {
+          id: 'bcd',
+          contactDetails: { email: 'unit@test.com' }
+        }
+      }
+    };
+
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.sendEmail();
+    fixture.detectChanges();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+
+    fixture.detectChanges();
+
+    const dialogContent = document.getElementsByTagName(
+      'app-bcsc-invite-dialog'
+    )[0] as HTMLElement;
+    expect(dialogContent.textContent).toBeTruthy();
+  }));
+
+  it('should send bc services card invitation', fakeAsync(() => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+
+    appBaseService.appModel = {
+      selectedProfile: {
+        selectedEvacueeInContext: {
+          id: 'bcd',
+          contactDetails: { email: 'unit@test.com' }
+        }
+      }
+    };
+
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.sendEmail();
+    profileDashboardService.closeEmailInviteDialog();
+    fixture.detectChanges();
+
+    flush();
+    flushMicrotasks();
+    discardPeriodicTasks();
+
+    tick();
+
+    fixture.detectChanges();
+
+    expect(component.emailSuccessMessage).toBe(
+      'Email sent successfully to unit@test.com'
+    );
+  }));
 });

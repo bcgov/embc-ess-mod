@@ -31,7 +31,8 @@ export interface SupportProperties {
 export enum SelectedPathType {
   paperBased = 'paperBased',
   digital = 'digital',
-  remoteExtensions = 'remoteExtensions'
+  remoteExtensions = 'remoteExtensions',
+  caseNotes = 'caseNotes'
 }
 
 export enum ETransferStatus {
@@ -43,7 +44,7 @@ export enum ETransferStatus {
 }
 
 export enum EtransferContent {
-  bcServicesCard = 'Profile linked to BC Services Card',
+  bcServicesCard = 'Log in to your profile using the BC Services Card app',
   isNotMinor = 'Over 19 years of age',
   hasPostalCode = 'B.C. postal code',
   acceptTransfer = 'Ability to accept e-Transfer',

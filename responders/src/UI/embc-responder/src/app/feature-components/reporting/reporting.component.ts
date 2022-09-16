@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ReportsService } from 'src/app/core/api/services';
@@ -19,7 +19,7 @@ import { CustomValidationService } from '../../core/services/customValidation.se
   styleUrls: ['./reporting.component.scss']
 })
 export class ReportingComponent implements OnInit {
-  reportForm: FormGroup;
+  reportForm: UntypedFormGroup;
   showErrorMessage = false;
   color = '#FFFFFF';
   isLoading = false;
@@ -29,7 +29,7 @@ export class ReportingComponent implements OnInit {
   filteredOptionsEvacTo: Observable<Community[]>;
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private reportService: ReportsService,
     private alertService: AlertService,
     private locationService: LocationsService,

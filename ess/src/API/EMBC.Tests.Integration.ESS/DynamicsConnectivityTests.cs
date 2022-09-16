@@ -1,8 +1,5 @@
-﻿using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Dynamics;
+﻿using EMBC.ESS.Utilities.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -12,14 +9,14 @@ namespace EMBC.Tests.Integration.ESS
         {
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task GetSecurityToken()
         {
             var tokenProvider = Services.GetRequiredService<ISecurityTokenProvider>();
             output.WriteLine("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanConnectToDynamics()
         {
             var context = Services.GetRequiredService<EssContext>();

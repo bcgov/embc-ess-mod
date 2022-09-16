@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { AddressService } from './address.service';
   styleUrls: ['./address.component.scss']
 })
 export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
-  primaryAddressForm: FormGroup;
+  primaryAddressForm: UntypedFormGroup;
   radioOption: string[] = ['Yes', 'No'];
   filteredOptions: Observable<Country[]>;
   mailingFilteredOptions: Observable<Country[]>;
@@ -120,15 +120,15 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   /**
    * Returns the control of the primary address form
    */
-  public get primaryAddressFormGroup(): FormGroup {
-    return this.primaryAddressForm.get('address') as FormGroup;
+  public get primaryAddressFormGroup(): UntypedFormGroup {
+    return this.primaryAddressForm.get('address') as UntypedFormGroup;
   }
 
   /**
    * Returns the control of the mailing address form
    */
-  public get mailingAddressFormGroup(): FormGroup {
-    return this.primaryAddressForm.get('mailingAddress') as FormGroup;
+  public get mailingAddressFormGroup(): UntypedFormGroup {
+    return this.primaryAddressForm.get('mailingAddress') as UntypedFormGroup;
   }
 
   /**

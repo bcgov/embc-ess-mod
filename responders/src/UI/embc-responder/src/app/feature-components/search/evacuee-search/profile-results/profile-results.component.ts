@@ -8,7 +8,6 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -17,16 +16,12 @@ import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
-import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { ProfileSecurityQuestionsService } from '../../profile-security-questions/profile-security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { EvacueeSearchResultsService } from '../evacuee-search-results/evacuee-search-results.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
-import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { ProfileResultsService } from './profile-results.service';
 
 @Component({
   selector: 'app-profile-results',
@@ -47,12 +42,10 @@ export class ProfileResultsComponent
     private router: Router,
     private cd: ChangeDetectorRef,
     private evacueeSessionService: EvacueeSessionService,
-    private dialog: MatDialog,
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
     private alertService: AlertService,
-    private evacueeSearchResultsService: EvacueeSearchResultsService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private profileResultsService: ProfileResultsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,23 +71,11 @@ export class ProfileResultsComponent
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     if (
       this.evacueeSessionService.isPaperBased &&
-      this.evacueeSearchService.evacueeSearchContext.hasShownIdentification ===
-        false
+      !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
     ) {
-      this.openUnableAccessDialog();
+      this.profileResultsService.openUnableAccessDialog();
     } else {
-      const profileIdObject: RegistrantProfileModel = {
-        id: selectedRegistrant.id,
-        primaryAddress: null,
-        mailingAddress: null,
-        personalDetails: null,
-        contactDetails: null,
-        restriction: null
-      };
-      this.appBaseService.appModel = {
-        selectedProfile: { selectedEvacueeInContext: profileIdObject }
-      };
-      this.computeState.triggerEvent();
+      this.profileResultsService.updateProfile(selectedRegistrant);
       if (
         this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {
@@ -102,7 +83,7 @@ export class ProfileResultsComponent
           'responder-access/search/evacuee-profile-dashboard'
         ]);
       } else {
-        this.evacueeSearchResultsService.setloadingOverlay(true);
+        this.profileResultsService.setloadingOverlay(true);
         this.profileSecurityQuestionsService
           .getSecurityQuestions(
             this.appBaseService?.appModel?.selectedProfile
@@ -110,9 +91,9 @@ export class ProfileResultsComponent
           )
           .subscribe({
             next: (results) => {
-              this.evacueeSearchResultsService.setloadingOverlay(false);
+              this.profileResultsService.setloadingOverlay(false);
               if (results.questions.length === 0) {
-                this.openUnableAccessDialog();
+                this.profileResultsService.openUnableAccessDialog();
               } else {
                 this.profileSecurityQuestionsService.shuffleSecurityQuestions(
                   results?.questions
@@ -127,7 +108,7 @@ export class ProfileResultsComponent
               }
             },
             error: (error) => {
-              this.evacueeSearchResultsService.setloadingOverlay(false);
+              this.profileResultsService.setloadingOverlay(false);
               this.alertService.clearAlert();
               this.alertService.setAlert(
                 'danger',
@@ -147,15 +128,5 @@ export class ProfileResultsComponent
    */
   communityName(address: AddressModel): string {
     return (address.community as Community).name;
-  }
-
-  public openUnableAccessDialog(): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content: globalConst.unableAccessFileMessage
-      },
-      width: '493px'
-    });
   }
 }

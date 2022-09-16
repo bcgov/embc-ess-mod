@@ -20,7 +20,7 @@ import { SelectedPathType } from '../../models/appBase.model';
   providedIn: 'root'
 })
 export class SearchDataService extends DashboardService {
-  remoteSearchForm = {
+  fileSearchForm = {
     essFileNumber: ['', [this.customValidation.whitespaceValidator()]]
   };
 
@@ -66,7 +66,7 @@ export class SearchDataService extends DashboardService {
     evacueeProfileService: EvacueeProfileService,
     alertService: AlertService,
     essFileService: EssFileService,
-    private evacueeSearchService: EvacueeSearchService //TODO: Remove this service
+    protected evacueeSearchService: EvacueeSearchService //TODO: Remove this service
   ) {
     super(appBaseService, essFileService, alertService, evacueeProfileService);
   }
@@ -78,13 +78,15 @@ export class SearchDataService extends DashboardService {
   public fetchForm(type: string) {
     switch (type) {
       case SearchFormRegistery.remoteSearchForm:
-        return this.remoteSearchForm;
+        return this.fileSearchForm;
       case SearchFormRegistery.idVerifySearchForm:
         return this.idVerifyForm;
       case SearchFormRegistery.nameSearchForm:
         return this.nameSearchForm;
       case SearchFormRegistery.paperSearchForm:
         return this.paperNameSearchForm;
+      case SearchFormRegistery.caseNoteSearchForm:
+        return this.fileSearchForm;
       default:
         return;
     }
@@ -148,6 +150,16 @@ export class SearchDataService extends DashboardService {
   updateExtendSupports(): void {
     this.appBaseService.wizardProperties = {
       wizardType: WizardType.ExtendSupports,
+      lastCompletedStep: null,
+      editFlag: false,
+      memberFlag: false
+    };
+    this.computeState.triggerEvent();
+  }
+
+  updateCaseNotes(): void {
+    this.appBaseService.wizardProperties = {
+      wizardType: WizardType.CaseNotes,
       lastCompletedStep: null,
       editFlag: false,
       memberFlag: false
@@ -238,7 +250,8 @@ export enum SearchFormRegistery {
   remoteSearchForm = 'remoteSearchForm',
   idVerifySearchForm = 'idVerifySearchForm',
   nameSearchForm = 'nameSearchForm',
-  paperSearchForm = 'paperSearchForm'
+  paperSearchForm = 'paperSearchForm',
+  caseNoteSearchForm = 'caseNoteSearchForm'
 }
 
 export enum SearchPages {

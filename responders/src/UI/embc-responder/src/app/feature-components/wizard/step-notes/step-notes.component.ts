@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TabModel } from 'src/app/core/models/tab.model';
-import { WizardDataService } from '../wizard-data.service';
-import { StepNotesService } from './step-notes.service';
 
 @Component({
   selector: 'app-step-notes',
@@ -12,11 +9,7 @@ import { StepNotesService } from './step-notes.service';
 export class StepNotesComponent implements OnInit {
   stepName: string;
 
-  constructor(
-    private router: Router,
-    private stepNotesService: StepNotesService,
-    private wizardDataService: WizardDataService
-  ) {
+  constructor(private router: Router) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as {

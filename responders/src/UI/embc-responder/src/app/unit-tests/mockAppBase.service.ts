@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TaskWorkflow } from '../core/api/models';
+import { EvacuationFileStatus, TaskWorkflow } from '../core/api/models';
 import { AppBaseModel } from '../core/models/appBase.model';
 import { EssTaskModel } from '../core/models/ess-task.model';
 import { AppBaseService } from '../core/services/helper/appBase.service';
@@ -7,6 +7,7 @@ import { AppBaseService } from '../core/services/helper/appBase.service';
 @Injectable({ providedIn: 'root' })
 export class MockAppBaseService extends AppBaseService {
   public appModelTestVal: AppBaseModel;
+  fileStatus: EvacuationFileStatus;
 
   public enabledAllWorkflowsTask: EssTaskModel = {
     communityCode: '986adfaf-9f97-ea11-b813-005056830319',
@@ -72,9 +73,7 @@ export class MockAppBaseService extends AppBaseService {
   };
 
   public get appModel(): AppBaseModel {
-    return this.appModelTestVal
-      ? this.appModelTestVal
-      : JSON.parse(this.cacheService.get('appCache'));
+    return this.appModelTestVal;
   }
 
   public set appModel(value: Partial<AppBaseModel>) {

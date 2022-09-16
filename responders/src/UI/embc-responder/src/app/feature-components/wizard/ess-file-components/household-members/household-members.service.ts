@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 
 @Injectable({ providedIn: 'root' })
@@ -7,7 +7,7 @@ export class HouseholdMembersService {
   /**
    * Updates the validations for personalDetailsForm
    */
-  public updateOnVisibility(householdForm: FormGroup): FormGroup {
+  public updateOnVisibility(householdForm: UntypedFormGroup): UntypedFormGroup {
     householdForm.get('houseHoldMember.firstName').updateValueAndValidity();
     householdForm.get('houseHoldMember.lastName').updateValueAndValidity();
     householdForm.get('houseHoldMember.gender').updateValueAndValidity();
@@ -19,7 +19,7 @@ export class HouseholdMembersService {
   /**
    * Displays the PersonDetails form to add new household members to the form
    */
-  addMembers(householdForm: FormGroup): FormGroup {
+  addMembers(householdForm: UntypedFormGroup): UntypedFormGroup {
     householdForm.get('houseHoldMember').reset();
     householdForm.get('addMemberFormIndicator').setValue(true);
     householdForm.get('addMemberIndicator').setValue(true);
@@ -27,7 +27,7 @@ export class HouseholdMembersService {
     return householdForm;
   }
 
-  saveHouseholdMember(householdForm: FormGroup): FormGroup {
+  saveHouseholdMember(householdForm: UntypedFormGroup): UntypedFormGroup {
     householdForm.get('houseHoldMember').reset();
     householdForm.get('addMemberFormIndicator').setValue(false);
     householdForm.get('addMemberIndicator').setValue(false);
@@ -41,7 +41,7 @@ export class HouseholdMembersService {
    * @param element
    * @param index
    */
-  editRow(householdForm: FormGroup, element): FormGroup {
+  editRow(householdForm: UntypedFormGroup, element): UntypedFormGroup {
     householdForm.get('houseHoldMember').patchValue(element);
     householdForm.get('addMemberFormIndicator').setValue(true);
     return householdForm;
@@ -50,7 +50,7 @@ export class HouseholdMembersService {
   /**
    * Resets the househol Member form and goes back to the main Form
    */
-  cancel(householdForm: FormGroup): FormGroup {
+  cancel(householdForm: UntypedFormGroup): UntypedFormGroup {
     householdForm.get('addMemberFormIndicator').setValue(false);
     householdForm.get('addMemberIndicator').setValue(false);
     householdForm.get('houseHoldMember').reset();

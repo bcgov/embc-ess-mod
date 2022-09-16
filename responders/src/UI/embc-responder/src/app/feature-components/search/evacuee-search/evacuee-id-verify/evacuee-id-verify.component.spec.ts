@@ -6,18 +6,21 @@ import {
   fakeAsync,
   flush,
   flushMicrotasks,
+  inject,
   TestBed,
   tick
 } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { computeInterfaceToken } from 'src/app/app.module';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { SelectedPathType } from 'src/app/core/models/appBase.model';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { MaterialModule } from 'src/app/material.module';
+import { MockAppBaseService } from 'src/app/unit-tests/mockAppBase.service';
 import { MockEvacueeSearchService } from 'src/app/unit-tests/mockEvacueeSearch.service';
-import { MockEvacueeSessionService } from 'src/app/unit-tests/mockEvacueeSession.service';
 import { MockOptionInjectionService } from 'src/app/unit-tests/mockOptionInjection.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
 import { EvacueeIdVerifyComponent } from './evacuee-id-verify.component';
@@ -25,9 +28,8 @@ import { EvacueeIdVerifyComponent } from './evacuee-id-verify.component';
 describe('EvacueeIdVerifyComponent', () => {
   let component: EvacueeIdVerifyComponent;
   let fixture: ComponentFixture<EvacueeIdVerifyComponent>;
-  let evacueeSessionService;
-  let evacueeSearchService;
   let injectionService;
+  let appBaseService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -41,13 +43,15 @@ describe('EvacueeIdVerifyComponent', () => {
       ],
       providers: [
         EvacueeIdVerifyComponent,
-        FormBuilder,
-        { provide: EvacueeSessionService, useClass: MockEvacueeSessionService },
-        { provide: EvacueeSearchService, useClass: MockEvacueeSearchService },
+        UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} },
         {
           provide: OptionInjectionService,
           useClass: MockOptionInjectionService
+        },
+        {
+          provide: AppBaseService,
+          useClass: MockAppBaseService
         }
       ]
     }).compileComponents();
@@ -56,73 +60,85 @@ describe('EvacueeIdVerifyComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EvacueeIdVerifyComponent);
     component = fixture.componentInstance;
-    evacueeSessionService = TestBed.inject(EvacueeSessionService);
-    evacueeSearchService = TestBed.inject(EvacueeSearchService);
     injectionService = TestBed.inject(OptionInjectionService);
+    appBaseService = TestBed.inject(AppBaseService);
   });
 
-  // it('should create', () => {
-  //   fixture.detectChanges();
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+    fixture.detectChanges();
+    expect(component).toBeTruthy();
+  });
 
-  // it('should get present ID true from form', () => {
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   component.idVerifyForm.get('photoId').setValue(true);
-  //   component.next();
+  it('should display id question for Paper-based selection', () => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.paperBased
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
 
-  //   expect(
-  //     evacueeSearchService.evacueeSearchContext.hasShownIdentification
-  //   ).toEqual(true);
-  // });
+    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+    const labelElem = nativeElem.querySelector('#photoId-label');
 
-  // it('should get present ID false from form', () => {
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   component.idVerifyForm.get('photoId').setValue(false);
-  //   component.next();
+    expect(labelElem.textContent).toEqual(
+      'Did the evacuee present any government-issued photo ID when the paper ESS File was completed?'
+    );
+  });
 
-  //   expect(
-  //     evacueeSearchService.evacueeSearchContext.hasShownIdentification
-  //   ).toEqual(false);
-  // });
+  it('shoulddisplay id question for Digital selection', () => {
+    appBaseService.appModel = {
+      selectedUserPathway: SelectedPathType.digital
+    };
+    fixture.detectChanges();
+    component.ngOnInit();
 
-  // it('should get label for Paper-based ID', fakeAsync(() => {
-  //   evacueeSessionService.isPaperBased = true;
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
+    const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
+    const labelElem = nativeElem.querySelector('#photoId-label');
 
-  //   flush();
-  //   flushMicrotasks();
-  //   discardPeriodicTasks();
-  //   tick();
-  //   fixture.detectChanges();
-  //   const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
-  //   const labelElem = nativeElem.querySelector('#photoId-label');
+    expect(labelElem.textContent).toEqual(
+      'Can you present any government-issued photo ID to verify your identity?'
+    );
+  });
 
-  //   expect(labelElem.textContent).toEqual(
-  //     ' Did the evacuee present any government-issued photo ID when the paper ESS File was completed? '
-  //   );
-  // }));
+  it('should set id value and navigate to name search for digital', inject(
+    [Router],
+    (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      appBaseService.appModel = {
+        selectedUserPathway: SelectedPathType.digital
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      component.idVerifyForm.get('photoId').setValue(true);
+      component.next();
 
-  // it('should get label for Digital-based ID', fakeAsync(() => {
-  //   evacueeSessionService.isPaperBased = false;
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
+      expect(router.navigate).toHaveBeenCalledWith(
+        ['/responder-access/search/evacuee/name-search'],
+        Object({ skipLocationChange: true })
+      );
+    }
+  ));
 
-  //   flush();
-  //   flushMicrotasks();
-  //   discardPeriodicTasks();
-  //   tick();
-  //   fixture.detectChanges();
-  //   const nativeElem: HTMLElement = fixture.debugElement.nativeElement;
-  //   const labelElem = nativeElem.querySelector('#photoId-label');
+  it('should set id value and navigate to name search for paper flow', inject(
+    [Router],
+    (router: Router) => {
+      spyOn(router, 'navigate').and.stub();
+      appBaseService.appModel = {
+        selectedUserPathway: SelectedPathType.paperBased
+      };
+      fixture.detectChanges();
+      component.ngOnInit();
+      component.idVerifyForm.get('photoId').setValue(false);
+      component.next();
 
-  //   expect(labelElem.textContent).toEqual(
-  //     ' Can you present any government-issued photo ID to verify your identity? '
-  //   );
-  // }));
+      expect(router.navigate).toHaveBeenCalledWith(
+        ['/responder-access/search/evacuee/name-search'],
+        Object({ skipLocationChange: true })
+      );
+    }
+  ));
 
   afterAll(() => {
     TestBed.resetTestingModule();

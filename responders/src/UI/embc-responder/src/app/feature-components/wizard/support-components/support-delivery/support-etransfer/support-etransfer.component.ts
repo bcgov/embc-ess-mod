@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { StepSupportsService } from '../../../step-supports/step-supports.service';
@@ -19,7 +19,7 @@ import { WizardType } from '../../../../../core/models/wizard-type.model';
   styleUrls: ['./support-etransfer.component.scss']
 })
 export class SupportEtransferComponent implements OnInit, OnDestroy {
-  @Input() supportDeliveryForm: FormGroup;
+  @Input() supportDeliveryForm: UntypedFormGroup;
   @Input() editFlag: boolean;
   @Input() cloneFlag: boolean;
   @ViewChild('setEmailCheckbox') setEmailCheckbox: MatCheckbox;

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
@@ -16,8 +16,8 @@ import { SecurityQuestionsService } from './security-questions.service';
   styleUrls: ['./security-questions.component.scss']
 })
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
-  parentForm: FormGroup = null;
-  questionForm: FormGroup = null;
+  parentForm: UntypedFormGroup = null;
+  questionForm: UntypedFormGroup = null;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
 
@@ -32,7 +32,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     this.parentForm = this.securityQuesService.createParentForm(
       this.questionForm
     );
-    this.questionForm = this.parentForm.get('questionForm') as FormGroup;
+    this.questionForm = this.parentForm.get('questionForm') as UntypedFormGroup;
 
     this.securityQuesService.setFormDisabled(
       this.stepEvacueeProfileService.bypassSecurityQuestions,

@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepNotesService } from '../../step-notes/step-notes.service';
 import * as globalConst from 'src/app/core/services/global-constants';
@@ -12,12 +16,12 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 })
 export class AddNotesComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<boolean>(false);
-  notesForm: FormGroup;
+  notesForm: UntypedFormGroup;
   showLoader = false;
   isSubmitted = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private stepNotesService: StepNotesService,
     private alertService: AlertService,
     private customValidation: CustomValidationService

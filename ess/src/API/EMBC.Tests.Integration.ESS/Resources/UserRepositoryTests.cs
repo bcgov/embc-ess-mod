@@ -1,9 +1,5 @@
-﻿using System.Threading.Tasks;
-using EMBC.ESS.Resources.Teams;
+﻿using EMBC.ESS.Resources.Teams;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
@@ -16,7 +12,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             userRepository = Services.GetRequiredService<IUserRepository>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity + ", requires configured http context with user information")]
+        [Fact(Skip = "Requires configured http context with user information")]
         public async Task CanGetBusinessBceidInformationByUserId()
         {
             var userIdToSearch = "ess.developerA1";
@@ -30,7 +26,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             user.OrgId.ShouldNotBeNull();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity + ", requires configured http context with user information")]
+        [Fact(Skip = "Requires configured http context with user information")]
         public async Task CanGetBasicBceidInformationByUserId()
         {
             var userIdToSearch = "embc-rp";

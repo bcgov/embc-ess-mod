@@ -187,7 +187,7 @@ export const extendSupportMessage: DialogContent = {
 
 export const duplicateSupportMessage: DialogContent = {
   title: 'Possible Support Conflict',
-  text: '<p>There is already a support associated with this ESS File of the same support type with the same overlapping support period. Do you wish to continue?</p>',
+  text: '<p>There is already a support associated with this ESS File of the same support type with the same or overlapping support period. Do you wish to continue?</p>',
   confirmButton: 'Yes, Continue',
   cancelButton: 'No, Cancel'
 };
@@ -663,4 +663,17 @@ export const remoteActiveStatusText: DashboardBanner = {
   heading: 'Active:',
   buttonText: 'Extend Supports',
   content: 'Extend Supports associated with the Current ESS File.'
+};
+
+export const caseNotesActiveText: DashboardBanner = {
+  heading: 'Active:',
+  buttonText: 'Add Notes',
+  content: 'Add or Edit Case Notes associated with the Current ESS File.'
+};
+
+export const caseNotesCompleteText: DashboardBanner = {
+  heading: 'Complete:',
+  buttonText: 'Add Notes',
+  content:
+    'Task number end date has expired. Add or Edit Case Notes associated with the Current ESS File.'
 };

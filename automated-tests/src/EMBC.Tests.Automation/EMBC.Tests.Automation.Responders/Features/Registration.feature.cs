@@ -216,7 +216,7 @@ this.ScenarioInitialize(scenarioInfo);
     testRunner.Given("I search for a remote extensions ess file", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 22
-    testRunner.Then("An ESS file is successfully found", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+    testRunner.Then("Remote Extensions displays results", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

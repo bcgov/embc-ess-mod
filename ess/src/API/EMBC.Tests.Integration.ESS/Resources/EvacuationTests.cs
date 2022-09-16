@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
 using Microsoft.Extensions.DependencyInjection;
-using Shouldly;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace EMBC.Tests.Integration.ESS.Resources
 {
@@ -28,7 +24,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationRepository = Services.GetRequiredService<IEvacuationRepository>();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetEvacuationFilesByFileId()
         {
             var fileId = TestEssFileNumber;
@@ -43,7 +39,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.Id.ShouldBe(fileId);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetEvacuationFilesByFileIdAndRelatedNeedsAssessmentId()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -59,7 +55,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.NeedsAssessment.Id.ShouldBe(TestNeedsAssessmentId);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task Query_FileByNeedsAssessmentId_ReturnsHouseholdMembersForThatAssessment()
         {
             var fileToUpdate = (await evacuationRepository.Query(new EvacuationFilesQuery
@@ -88,7 +84,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             twiceUpdatedFile.NeedsAssessment.HouseholdMembers.ShouldHaveSingleItem();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetNoEvacuationFilesByRelatedNeedsAssessmentIdOnly()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -99,7 +95,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             queryResult.Items.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetNoEvacuationFilessByFileIdAndRegistrant()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -111,7 +107,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             queryResult.Items.ShouldBeEmpty();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetEvacuationFilesByPrimaryRegistrantUserid()
         {
             var primaryContactId = TestContactId;
@@ -125,7 +121,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContactId);
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanGetEvacuationFilessByLinkedRegistrantId()
         {
             var caseQuery = new EvacuationFilesQuery
@@ -137,7 +133,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == TestContactId));
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanCreateEvacuationFile()
         {
             var primaryContact = await GetContactByUserId(TestContactUserId);
@@ -151,7 +147,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             (await evacuationRepository.Query(caseQuery)).Items.ShouldHaveSingleItem();
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanUpdateEvacuationFile()
         {
             var fileToUpdate = (await evacuationRepository.Query(new EvacuationFilesQuery
@@ -187,7 +183,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(fileToUpdate.NeedsAssessment.HouseholdMembers.Count());
         }
 
-        [Fact(Skip = RequiresVpnConnectivity)]
+        [Fact]
         public async Task CanMapEvacuationFile()
         {
             var now = DateTime.UtcNow;

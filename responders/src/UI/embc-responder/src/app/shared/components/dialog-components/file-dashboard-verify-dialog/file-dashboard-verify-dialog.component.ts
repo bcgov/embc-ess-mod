@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
@@ -20,12 +20,12 @@ export class FileDashboardVerifyDialogComponent implements OnInit {
   @Input() content: DialogContent;
   @Input() profileData: EvacuationFileHouseholdMember;
   @Output() outputEvent = new EventEmitter<string>();
-  verificationForm: FormGroup;
+  verificationForm: UntypedFormGroup;
   hasSecurityQues = false;
   noIdFlag = true;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     public evacueeSessionService: EvacueeSessionService,
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService
   ) {}

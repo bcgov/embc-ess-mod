@@ -195,7 +195,7 @@ namespace EMBC.Tests.Integration.ESS
             };
             essContext.AddToera_essteams(team);
 
-            var assignedCommunities = essContext.era_essteamareas.Select(a => a._era_jurisdictionid_value).OrderBy(id => id).ToList();
+            var assignedCommunities = essContext.era_essteamareas.ToArray().Select(a => a._era_jurisdictionid_value).OrderBy(id => id).ToList();
             if (this.testTeam != null)
             {
                 assignedCommunities.Add(this.testTeam.era_ESSTeam_ESSTeamArea_ESSTeamID.FirstOrDefault()?._era_jurisdictionid_value);

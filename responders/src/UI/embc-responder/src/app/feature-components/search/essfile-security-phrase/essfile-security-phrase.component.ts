@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   GetSecurityPhraseResponse,
@@ -22,7 +26,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./essfile-security-phrase.component.scss']
 })
 export class EssfileSecurityPhraseComponent implements OnInit {
-  securityPhraseForm: FormGroup;
+  securityPhraseForm: UntypedFormGroup;
   securityPhrase: GetSecurityPhraseResponse;
   attemptsRemaning = 3;
   showLoader = false;
@@ -35,7 +39,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private essFileSecurityPhraseService: EssFileSecurityPhraseService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private alertService: AlertService,
     private location: Location,
     private customValidation: CustomValidationService,

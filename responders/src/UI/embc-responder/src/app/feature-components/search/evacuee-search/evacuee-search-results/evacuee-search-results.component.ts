@@ -41,7 +41,9 @@ export class EvacueeSearchResultsComponent implements OnInit {
   ngOnInit(): void {
     if (
       this.optionInjectionService?.instance?.optionType !==
-      SelectedPathType.remoteExtensions
+        SelectedPathType.remoteExtensions &&
+      this.optionInjectionService?.instance?.optionType !==
+        SelectedPathType.caseNotes
     ) {
       this.searchForEvacuee(
         (this.evacueeSearchContext =

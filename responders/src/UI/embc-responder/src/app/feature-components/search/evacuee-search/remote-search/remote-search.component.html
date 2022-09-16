@@ -8,31 +8,13 @@
   <div class="col-md-8">
     <mat-card>
       <p class="heading">
-        Enter the evacuee's <b>ESS File Number</b> associated with the supports
-        that require extending.
+        Enter the <b>ESS File Number</b> associated with the supports that
+        require extending.
       </p>
 
-      <form [formGroup]="fileSearchForm">
-        <div class="col-md-4">
-          <mat-form-field appearance="outline">
-            <mat-label>ESS File Number</mat-label>
-            <input
-              maxlength="100"
-              formControlName="essFileNumber"
-              matInput
-              required
-            />
-            <mat-error
-              *ngIf="
-                fileSearchFormControl.essFileNumber.invalid &&
-                fileSearchFormControl.essFileNumber.hasError('whitespaceError')
-              "
-            >
-              ESS File Number is required</mat-error
-            >
-          </mat-form-field>
-        </div>
-      </form>
+      <app-file-search-form
+        [fileSearchForm]="fileSearchForm"
+      ></app-file-search-form>
 
       <div class="row">
         <div class="col-md-8">
@@ -40,6 +22,7 @@
             class="button-p submit"
             type="button"
             (click)="search()"
+            [disabled]="isSubmitted"
             mat-button
           >
             Search

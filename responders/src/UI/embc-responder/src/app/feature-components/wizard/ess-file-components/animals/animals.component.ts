@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -24,7 +24,7 @@ import { TabModel } from 'src/app/core/models/tab.model';
   styleUrls: ['./animals.component.scss']
 })
 export class AnimalsComponent implements OnInit, OnDestroy {
-  animalsForm: FormGroup;
+  animalsForm: UntypedFormGroup;
   radioOption = globalConst.radioButtonOptions;
   showPetsForm = false;
   displayedColumns: string[] = ['type', 'quantity', 'buttons'];
@@ -41,7 +41,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private stepEssFileService: StepEssFileService,
     private customValidation: CustomValidationService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService
   ) {}
 
@@ -160,8 +160,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   /**
    * Returns the control of the form
    */
-  public get petFormGroup(): FormGroup {
-    return this.animalsForm.get('pet') as FormGroup;
+  public get petFormGroup(): UntypedFormGroup {
+    return this.animalsForm.get('pet') as UntypedFormGroup;
   }
 
   deleteRow(index: number): void {
@@ -280,7 +280,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    *
    * @returns a pet form
    */
-  private createPetForm(): FormGroup {
+  private createPetForm(): UntypedFormGroup {
     return this.formBuilder.group({
       type: [
         '',

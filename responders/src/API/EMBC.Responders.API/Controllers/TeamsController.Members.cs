@@ -67,7 +67,7 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
                 return errorParser.Parse(e);
             }
@@ -96,7 +96,7 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = updatedMemberId });
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
                 return errorParser.Parse(e);
             }
@@ -122,7 +122,7 @@ namespace EMBC.Responders.API.Controllers
                 });
                 return Ok(new TeamMemberResult { Id = memberId });
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
                 return errorParser.Parse(e);
             }

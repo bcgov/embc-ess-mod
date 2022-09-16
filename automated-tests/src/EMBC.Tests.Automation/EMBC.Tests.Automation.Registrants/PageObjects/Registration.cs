@@ -69,7 +69,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             ButtonElement("Next");
         }
 
-        public void UnverifiedRestriction()
+        public void NewAccountRestriction()
         {
             YesRadioButton();
             ButtonElement("Next - Create Account");
@@ -79,6 +79,14 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
         {
             YesRadioButton();
             ButtonElement("Continue");
+        }
+
+        public void VerifiedAccountPersonalDetails(string gender)
+        {
+            Wait();
+
+            webDriver.FindElement(personFormGenderSelect).SendKeys(gender);
+            ButtonElement("Next - Primary & Mailing Address");
         }
 
         public void MinimumPersonalDetails(string firstName, string lastName, string gender, string dateOfBirth)
@@ -93,6 +101,18 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
             ButtonElement("Next - Primary & Mailing Address");
             
+        }
+
+        public void VerifiedAccountAddress(string city, string postalCode)
+        {
+            Wait();
+            webDriver.FindElement(addressFormCityInput).SendKeys(city);
+            webDriver.FindElement(By.Id(city)).Click();
+            webDriver.FindElement(addressFormZipCodeInput).SendKeys(postalCode);
+            RadioButtonElement(addressFormIsMailingSameYesRadioBttn);
+
+            ButtonElement("Next - Contact Information");
+
         }
 
         public void MinimumAddress(string addressLine1, string city)
@@ -135,6 +155,8 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
            
         }
 
+
+
         public void CreateESSFileMinLocation()
         {
             Wait();
@@ -169,7 +191,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             RadioButtonElement(householdMembersHasSpecialDietNoRadioBttn);
             RadioButtonElement(householdMembersHasMedicationNoRadioBttn);
 
-            ButtonElement("Next - Animals");
+            ButtonElement("Next - Pets");
         }
 
         public void CreateESSFileMaxHouseholdMembers(string firstName, string lastName, string initials, string gender, string dateOfBirth, string dietDetails)
@@ -190,7 +212,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             webDriver.FindElement(householdMembersDietDetailsInput).SendKeys(dietDetails);
             RadioButtonElement(householdMembersHasMedicationYesRadioBttn);
 
-            ButtonElement("Next - Animals");
+            ButtonElement("Next - Pets");
         }
 
         public void CreateESSFileMinAnimals()
@@ -244,7 +266,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             ButtonElement("Next - Review Submission");
         }
 
-        public void SubmitEssFile()
+        public void SaveAndSubmit()
         {
             ButtonElement("Save & Submit");
         }

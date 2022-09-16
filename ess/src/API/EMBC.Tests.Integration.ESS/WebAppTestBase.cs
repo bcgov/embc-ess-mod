@@ -7,8 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-using Xunit;
-using Xunit.Abstractions;
+using Xunit.Categories;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -24,20 +23,17 @@ namespace EMBC.Tests.Integration.ESS
                 opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true);
                 // disable background tasks during tests
                 opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
-            }).ConfigureServices(services => { 
-                services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy),typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
+            }).ConfigureServices(services =>
+            {
+                services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy), typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
                 services.AddSingleton<EMBC.ESS.Utilities.Cas.IWebProxy, MockCasProxy>();
             });
         }
     }
 
+    [IntegrationTest]
     public abstract class WebAppTestBase : IClassFixture<WebAppTestFixture>
     {
-#if RELEASE
-        protected const string RequiresVpnConnectivity = "Integration test that requires a VPN connection";
-#else
-        protected const string RequiresVpnConnectivity = null;
-#endif
         protected readonly ITestOutputHelper output;
 
         public IServiceProvider Services { get; }

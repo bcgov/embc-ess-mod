@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SearchOptionsService } from '../../interfaces/searchOptions.service';
 import { SelectedPathType } from '../../models/appBase.model';
@@ -19,9 +19,9 @@ export class PaperOptionService implements SearchOptionsService {
   idSearchQuestion: string = globalConst.paperIdQuestion;
 
   constructor(
-    private router: Router,
-    private dataService: DataService,
-    private builder: FormBuilder
+    protected router: Router,
+    protected dataService: DataService,
+    protected builder: UntypedFormBuilder
   ) {}
 
   loadEvcaueeProfile(registrantId: string): Promise<RegistrantProfileModel> {
@@ -29,14 +29,14 @@ export class PaperOptionService implements SearchOptionsService {
   }
 
   loadEssFile(): Promise<EvacuationFileModel> {
-    throw new Error('Method not implemented.');
+    return this.dataService.getEssFile();
   }
 
   getDashboardBanner(fileStatus: string): DashboardBanner {
     return this.dataService.getDashboardText(fileStatus);
   }
 
-  createForm(formType: string): FormGroup {
+  createForm(formType: string): UntypedFormGroup {
     return this.builder.group(this.dataService.fetchForm(formType));
   }
 
@@ -97,7 +97,6 @@ export class PaperOptionService implements SearchOptionsService {
       default:
         break;
     }
-
     return new Promise<boolean>((resolve, reject) => {
       if (route !== null) {
         return this.router.navigate([route], {

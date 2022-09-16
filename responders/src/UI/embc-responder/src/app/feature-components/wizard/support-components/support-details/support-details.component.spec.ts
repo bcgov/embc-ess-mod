@@ -5,7 +5,7 @@ import { SupportDetailsComponent } from './support-details.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { computeInterfaceToken } from 'src/app/app.module';
 
@@ -19,7 +19,7 @@ describe('SupportDetailsComponent', () => {
       declarations: [SupportDetailsComponent],
       providers: [
         DatePipe,
-        FormBuilder,
+        UntypedFormBuilder,
         { provide: computeInterfaceToken, useValue: {} }
       ]
     }).compileComponents();

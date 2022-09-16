@@ -7,7 +7,7 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-lodging-billeting',
@@ -17,9 +17,9 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 export class LodgingBilletingComponent
   implements OnInit, OnChanges, AfterViewInit
 {
-  @Input() supportDetailsForm: FormGroup;
+  @Input() supportDetailsForm: UntypedFormGroup;
   @Input() noOfDays: number;
-  referralForm: FormGroup;
+  referralForm: UntypedFormGroup;
   days: number;
 
   constructor(private cd: ChangeDetectorRef) {}
@@ -30,7 +30,9 @@ export class LodgingBilletingComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.supportDetailsForm) {
-      this.referralForm = this.supportDetailsForm.get('referral') as FormGroup;
+      this.referralForm = this.supportDetailsForm.get(
+        'referral'
+      ) as UntypedFormGroup;
     }
 
     if (changes.noOfDays) {

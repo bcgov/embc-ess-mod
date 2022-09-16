@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import {
   Support,
   SupportCategory,
@@ -26,14 +30,14 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class SupportDetailsService {
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     public stepSupportsService: StepSupportsService,
     private registrationService: RegistrationsService,
     private evacueeSessionService: EvacueeSessionService
   ) {}
 
-  generateDynamicForm(supportType: string): FormGroup {
+  generateDynamicForm(supportType: string): UntypedFormGroup {
     if (supportType === SupportSubCategory.Food_Restaurant) {
       return this.mealForm();
     } else if (supportType === SupportSubCategory.Food_Groceries) {
@@ -55,7 +59,7 @@ export class SupportDetailsService {
     }
   }
 
-  mealForm(): FormGroup {
+  mealForm(): UntypedFormGroup {
     return this.formBuilder.group(
       {
         noOfBreakfast: [
@@ -84,7 +88,7 @@ export class SupportDetailsService {
     );
   }
 
-  groceriesForm(): FormGroup {
+  groceriesForm(): UntypedFormGroup {
     const groceriesForm = this.formBuilder.group({
       noOfMeals: [
         (this.stepSupportsService?.supportDetails?.referral as Groceries)
@@ -126,7 +130,7 @@ export class SupportDetailsService {
     return groceriesForm;
   }
 
-  taxiForm(): FormGroup {
+  taxiForm(): UntypedFormGroup {
     return this.formBuilder.group({
       fromAddress: [
         (this.stepSupportsService?.supportDetails?.referral as Taxi)
@@ -141,7 +145,7 @@ export class SupportDetailsService {
     });
   }
 
-  otherTransportForm(): FormGroup {
+  otherTransportForm(): UntypedFormGroup {
     return this.formBuilder.group({
       transportMode: [
         (this.stepSupportsService?.supportDetails?.referral as OtherTransport)
@@ -160,7 +164,7 @@ export class SupportDetailsService {
     });
   }
 
-  hotelMotelForm(): FormGroup {
+  hotelMotelForm(): UntypedFormGroup {
     return this.formBuilder.group({
       noOfNights: [
         (this.stepSupportsService?.supportDetails?.referral as HotelMotel)
@@ -175,7 +179,7 @@ export class SupportDetailsService {
     });
   }
 
-  billetingForm(): FormGroup {
+  billetingForm(): UntypedFormGroup {
     return this.formBuilder.group({
       noOfNights: [
         (this.stepSupportsService?.supportDetails?.referral as Billeting)
@@ -185,7 +189,7 @@ export class SupportDetailsService {
     });
   }
 
-  groupLodgingForm(): FormGroup {
+  groupLodgingForm(): UntypedFormGroup {
     return this.formBuilder.group({
       noOfNights: [
         (this.stepSupportsService?.supportDetails?.referral as GroupLodging)
@@ -195,7 +199,7 @@ export class SupportDetailsService {
     });
   }
 
-  incidentalsForm(): FormGroup {
+  incidentalsForm(): UntypedFormGroup {
     const incidentalsForm = this.formBuilder.group({
       approvedItems: [
         (this.stepSupportsService?.supportDetails?.referral as Incidentals)
@@ -239,7 +243,7 @@ export class SupportDetailsService {
     return incidentalsForm;
   }
 
-  clothingForm(): FormGroup {
+  clothingForm(): UntypedFormGroup {
     const clothingForm = this.formBuilder.group({
       extremeWinterConditions: [
         (this.stepSupportsService?.supportDetails?.referral as Clothing)

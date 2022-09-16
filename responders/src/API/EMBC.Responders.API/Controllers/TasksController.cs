@@ -58,6 +58,7 @@ namespace EMBC.Responders.API.Controllers
                 new TaskWorkflow { Name = "digital-processing",  Enabled = incidentTask.Status == IncidentTaskStatus.Active },
                 new TaskWorkflow { Name = "paper-data-entry",  Enabled = true },
                 new TaskWorkflow { Name = "remote-extensions",  Enabled = incidentTask.RemoteExtensionsEnabled && incidentTask.Status == IncidentTaskStatus.Active },
+                new TaskWorkflow { Name = "case-notes",  Enabled = incidentTask.Status == IncidentTaskStatus.Active || incidentTask.Status == IncidentTaskStatus.Expired },
             };
             return workflows;
         }
@@ -72,7 +73,7 @@ namespace EMBC.Responders.API.Controllers
                 var suppliers = (await messagingClient.Send(new SuppliersListQuery { TaskId = taskId })).Items;
                 return Ok(mapper.Map<IEnumerable<SuppliersListItem>>(suppliers));
             }
-            catch (ServerException e)
+            catch (Exception e)
             {
                 return errorParser.Parse(e);
             }

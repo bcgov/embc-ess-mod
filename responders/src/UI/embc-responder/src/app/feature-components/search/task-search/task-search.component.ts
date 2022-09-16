@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -13,12 +17,12 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
   styleUrls: ['./task-search.component.scss']
 })
 export class TaskSearchComponent implements OnInit {
-  taskSearchForm: FormGroup;
+  taskSearchForm: UntypedFormGroup;
   showLoader = false;
   isSubmitted = false;
 
   constructor(
-    private builder: FormBuilder,
+    private builder: UntypedFormBuilder,
     private customValidation: CustomValidationService,
     private router: Router,
     private taskSearchService: TaskSearchService,

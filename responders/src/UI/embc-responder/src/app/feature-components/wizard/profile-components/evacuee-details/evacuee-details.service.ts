@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
@@ -63,12 +67,12 @@ export class EvacueeDetailsService {
   }
 
   constructor(
-    private stepEvacueeProfileService: StepEvacueeProfileService,
-    private formBuilder: FormBuilder,
-    private wizardService: WizardService,
-    private customValidation: CustomValidationService,
-    private appBaseService: AppBaseService,
-    private dialog: MatDialog
+    protected stepEvacueeProfileService: StepEvacueeProfileService,
+    protected formBuilder: UntypedFormBuilder,
+    protected wizardService: WizardService,
+    protected customValidation: CustomValidationService,
+    protected appBaseService: AppBaseService,
+    protected dialog: MatDialog
   ) {}
 
   public init() {
@@ -80,7 +84,7 @@ export class EvacueeDetailsService {
     this.authorizedUser = this.stepEvacueeProfileService.authorizedUser;
   }
 
-  public createForm(): FormGroup {
+  public createForm(): UntypedFormGroup {
     return this.formBuilder.group({
       firstName: [
         this.stepEvacueeProfileService.personalDetails?.firstName,
@@ -116,7 +120,7 @@ export class EvacueeDetailsService {
   /**
    * Checks the form validity and updates the tab status
    */
-  public updateTabStatus(form: FormGroup): Subscription {
+  public updateTabStatus(form: UntypedFormGroup): Subscription {
     return this.stepEvacueeProfileService.nextTabUpdate.subscribe(() => {
       if (form.valid) {
         this.stepEvacueeProfileService.setTabStatus(
@@ -133,7 +137,7 @@ export class EvacueeDetailsService {
     });
   }
 
-  public cleanup(form: FormGroup) {
+  public cleanup(form: UntypedFormGroup) {
     if (this.stepEvacueeProfileService.checkForEdit()) {
       const isFormUpdated = this.wizardService.hasChanged(
         form.controls,
@@ -152,7 +156,7 @@ export class EvacueeDetailsService {
   /**
    * Function that determines whether firstName, lastName and DoB fields should be disabled or not
    */
-  public initDisabledFields(form: FormGroup): void {
+  public initDisabledFields(form: UntypedFormGroup): void {
     if (this.editFlag) {
       if (this.stepEvacueeProfileService.unlockedFields) {
         this.showLockIcon = false;
@@ -188,7 +192,7 @@ export class EvacueeDetailsService {
   /**
    * Enables the locked fields
    */
-  editLockedFields(form: FormGroup): void {
+  editLockedFields(form: UntypedFormGroup): void {
     this.dialog
       .open(DialogComponent, {
         data: {
