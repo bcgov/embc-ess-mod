@@ -20,7 +20,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Xrm.Tools.WebAPI;
@@ -34,9 +33,9 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         private readonly ICache cache;
         private readonly IListsGateway listsGateway;
 
-        public SubmissionDynamicsCustomActionHandler(IServiceProvider serviceProvider, ILogger<SubmissionDynamicsCustomActionHandler> logger, ICache cache, IListsGateway listsGateway)
+        public SubmissionDynamicsCustomActionHandler(CRMWebAPI api, ILogger<SubmissionDynamicsCustomActionHandler> logger, ICache cache, IListsGateway listsGateway)
         {
-            this.api = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<CRMWebAPI>();
+            this.api = api;
             this.logger = logger;
             this.cache = cache;
             this.listsGateway = listsGateway;

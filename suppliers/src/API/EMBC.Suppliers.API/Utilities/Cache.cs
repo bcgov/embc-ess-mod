@@ -21,43 +21,29 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
     internal class Cache : ICache
     {
         private readonly IDistributedCache cache;
-        private readonly CacheSyncManager cacheSyncManager;
         private readonly string keyPrefix;
         private readonly ILogger<Cache> logger;
 
         private string keyGen(string key) => $"{keyPrefix}:{key}";
 
-        public Cache(IDistributedCache cache, CacheSyncManager cacheSyncManager, IHostEnvironment env, ILogger<Cache> logger)
+        public Cache(IDistributedCache cache, IHostEnvironment env, ILogger<Cache> logger)
         {
             this.cache = cache;
-            this.cacheSyncManager = cacheSyncManager;
             this.logger = logger;
             this.keyPrefix = Environment.GetEnvironmentVariable("APP_NAME") ?? env?.ApplicationName ?? string.Empty;
         }
 
         public async Task<T?> GetOrSet<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
-            var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken))
+            var value = await Get<T?>(key);
+            if (value == null || value.Equals(default(T)))
             {
-                logger.LogDebug("{0} retrying to obtain lock", key);
+                // cache miss
+                logger.LogDebug("{0} cache miss", key);
+                value = await getter();
+                await Set(key, value, expiration, cancellationToken);
             }
-            try
-            {
-                var value = await Get<T?>(key);
-                if (value == null || value.Equals(default(T)))
-                {
-                    // cache miss
-                    logger.LogDebug("{0} cache miss", key);
-                    value = await getter();
-                    await Set(key, value, expiration, cancellationToken);
-                }
-                return value;
-            }
-            finally
-            {
-                locker.Release();
-            }
+            return value;
         }
 
         public async Task Set<T>(string key, T value, TimeSpan expiration, CancellationToken cancellationToken = default)
@@ -77,19 +63,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 
         public async Task Refresh<T>(string key, Func<Task<T>> getter, TimeSpan expiration, CancellationToken cancellationToken = default)
         {
-            var locker = cacheSyncManager.GetOrAdd(key, new SemaphoreSlim(1, 1));
-            while (!await locker.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken))
-            {
-                logger.LogDebug("{0} retrying to obtain lock", key);
-            }
-            try
-            {
-                await Set(key, await getter(), expiration, cancellationToken);
-            }
-            finally
-            {
-                locker.Release();
-            }
+            await Set(key, await getter(), expiration, cancellationToken);
         }
 
         private static T? Deserialize<T>(byte[] data) => data == null || data.Length == 0 ? default(T?) : JsonSerializer.Deserialize<T?>(data);
