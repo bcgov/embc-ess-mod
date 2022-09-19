@@ -153,10 +153,12 @@ namespace EMBC.Suppliers.API
             services.AddDistributedMemoryCache();
 
             services.AddTransient<ICache, Cache>();
-            services.AddTransient<ConfigHealthProvider>();
             services.AddTransient<ICacheHandler, CacheHandler>();
             services.AddTransient<IListsGateway, DynamicsListsGateway>();
+            services.AddTransient<IListsProvider, ListsProvider>();
+            services.AddTransient<IListsRepository, ListsRepository>();
             services.AddTransient<ISubmissionHandler, SubmissionHandler>();
+            services.AddTransient<ConfigHealthProvider>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();
             services.AddTransient<IReferenceNumberGenerator, ReferenceNumberGenerator>();

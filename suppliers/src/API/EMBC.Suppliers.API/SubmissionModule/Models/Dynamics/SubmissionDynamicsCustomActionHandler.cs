@@ -30,15 +30,13 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
     {
         private readonly CRMWebAPI api;
         private readonly ILogger<SubmissionDynamicsCustomActionHandler> logger;
-        private readonly ICache cache;
-        private readonly IListsGateway listsGateway;
+        private readonly IListsRepository listsRepository;
 
-        public SubmissionDynamicsCustomActionHandler(CRMWebAPI api, ILogger<SubmissionDynamicsCustomActionHandler> logger, ICache cache, IListsGateway listsGateway)
+        public SubmissionDynamicsCustomActionHandler(CRMWebAPI api, ILogger<SubmissionDynamicsCustomActionHandler> logger, IListsRepository listsRepository)
         {
             this.api = api;
             this.logger = logger;
-            this.cache = cache;
-            this.listsGateway = listsGateway;
+            this.listsRepository = listsRepository;
         }
 
         public async Task Handle(SubmissionSavedEvent evt)
@@ -86,22 +84,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
         private async Task<Submission> ResolveEntitiesReferences(Submission submission)
         {
-            var countries = (await cache.GetOrSet(
-                "countries",
-                async () => (await listsGateway.GetCountriesAsync()),
-                TimeSpan.FromMinutes(15))).ToArray();
-            var stateProvinces = (await cache.GetOrSet(
-                 "stateprovinces",
-                 async () => (await listsGateway.GetStateProvincesAsync()),
-                 TimeSpan.FromMinutes(15))).ToArray();
-            var jurisdictions = (await cache.GetOrSet(
-                 "jurisdictions",
-                 async () => (await listsGateway.GetJurisdictionsAsync()),
-                 TimeSpan.FromMinutes(15))).ToArray();
-            var supports = (await cache.GetOrSet(
-                "supports",
-                async () => (await listsGateway.GetSupportsAsync()),
-                TimeSpan.FromMinutes(15))).ToArray();
+            var countries = (await listsRepository.GetCountriesAsync()).ToArray();
+            var stateProvinces = (await listsRepository.GetStateProvincesAsync()).ToArray();
+            var jurisdictions = (await listsRepository.GetJurisdictionsAsync()).ToArray();
+            var supports = (await listsRepository.GetSupportsAsync()).ToArray();
 
             foreach (var supplierInformation in submission.Suppliers)
             {
