@@ -73,20 +73,5 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
                 };
             }
         }
-
-        /// <summary>
-        /// GET to return a submission by reference number
-        /// </summary>
-        /// <param name="referenceNumber">The reference number to search</param>
-        /// <returns>Submission object</returns>
-        [HttpGet]
-        public async Task<ActionResult<Submission>> Get(string referenceNumber)
-        {
-            if (env.IsProduction()) return NotFound(new { referenceNumber });
-
-            var submission = await handler.Handle(new GetSupplierSubmissionCommand(referenceNumber));
-            if (submission == null) return NotFound(new { referenceNumber });
-            return new JsonResult(submission);
-        }
     }
 }

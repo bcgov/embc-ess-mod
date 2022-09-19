@@ -7,34 +7,25 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
 {
     public class SubmissionHandler : ISubmissionHandler
     {
-        private readonly ISubmissionRepository submissionRepository;
         private readonly ISubmissionDynamicsCustomActionHandler submissionDynamicsCustomActionHandler;
+        private readonly IReferenceNumberGenerator referenceNumberGenerator;
 
-        public SubmissionHandler(ISubmissionRepository submissionRepository, ISubmissionDynamicsCustomActionHandler submissionDynamicsCustomActionHandler)
+        public SubmissionHandler(ISubmissionDynamicsCustomActionHandler submissionDynamicsCustomActionHandler, IReferenceNumberGenerator referenceNumberGenerator)
         {
-            this.submissionRepository = submissionRepository;
             this.submissionDynamicsCustomActionHandler = submissionDynamicsCustomActionHandler;
+            this.referenceNumberGenerator = referenceNumberGenerator;
         }
 
         public async Task<string> Handle(PersistSupplierSubmissionCommand cmd)
         {
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
-            var referenceNumber = await submissionRepository.SaveAsync(cmd.Submission);
+            var referenceNumber = referenceNumberGenerator.CreateNew();
 
             // Temporary submit to Dynamics before the end of the API call
             // await publisher.Publish(new SubmissionSavedEvent(referenceNumber, cmd.Submission));
             await submissionDynamicsCustomActionHandler.Handle(new SubmissionSavedEvent(referenceNumber, cmd.Submission));
 
             return referenceNumber;
-        }
-
-        public async Task<Submission> Handle(GetSupplierSubmissionCommand cmd)
-        {
-            if (cmd is null) throw new ArgumentNullException(nameof(cmd));
-
-            var submission = await submissionRepository.GetAsync(cmd.ReferenceNumber);
-
-            return submission;
         }
     }
 }

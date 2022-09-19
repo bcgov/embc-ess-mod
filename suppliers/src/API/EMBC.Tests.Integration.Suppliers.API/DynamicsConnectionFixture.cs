@@ -30,7 +30,8 @@ namespace EMBC.Tests.Suppliers.API
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
         private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
         private CRMWebAPI api => webApplicationFactory.Services.GetRequiredService<CRMWebAPI>();
-        private IListsRepository listsRepository => webApplicationFactory.Services.GetRequiredService<IListsRepository>();
+        private ICache cache => webApplicationFactory.Services.GetRequiredService<ICache>();
+        private IListsGateway listsGateway => webApplicationFactory.Services.GetRequiredService<IListsGateway>();
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
@@ -41,14 +42,17 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanQuery()
         {
-            var result = await api.GetList("era_supports");
-            Assert.True(result.List.Count > 0);
+            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+
+            var items = await gw.GetSupportsAsync();
+
+            Assert.NotEmpty(items);
         }
 
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthInvoices()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(webApplicationFactory.Services, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
+            var handler = new SubmissionDynamicsCustomActionHandler(webApplicationFactory.Services, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cache, listsGateway);
 
             var referenceNumber = $"reftestinv_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
@@ -127,7 +131,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthReceipts()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(webApplicationFactory.Services, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
+            var handler = new SubmissionDynamicsCustomActionHandler(webApplicationFactory.Services, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cache, listsGateway);
 
             var referenceNumber = $"reftestrec_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission

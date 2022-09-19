@@ -14,9 +14,12 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
+using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,35 +34,93 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 #endif
     public class ListsController : ControllerBase
     {
-        private readonly IQueriesHandler handler;
+        private readonly ICache cache;
+        private readonly IListsGateway listsGateway;
 
-        public ListsController(IQueriesHandler handler)
+        public ListsController(ICache cache, IListsGateway listsGateway)
         {
-            this.handler = handler;
+            this.cache = cache;
+            this.listsGateway = listsGateway;
         }
 
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            return Ok(await handler.Handle(new CountriesQueryCommand()));
+            var res = (await cache.GetOrSet(
+                "countries",
+                async () => (await listsGateway.GetCountriesAsync()),
+                TimeSpan.FromMinutes(15)))
+                .Select(c => new Country { Code = c.era_countrycode, Name = c.era_name })
+                .OrderBy(c => c.Name);
+            return Ok(res);
         }
 
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryCode = "CAN")
         {
-            return Ok(await handler.Handle(new StateProvincesQueryCommand(countryCode)));
+            var country = (await cache.GetOrSet(
+                "countries",
+                async () => (await listsGateway.GetCountriesAsync()),
+                TimeSpan.FromMinutes(15))).SingleOrDefault(c => c.era_countrycode == countryCode);
+
+            if (country == null) return NotFound();
+
+            var res = (await cache.GetOrSet(
+                 "stateprovinces",
+                 async () => (await listsGateway.GetStateProvincesAsync()),
+                 TimeSpan.FromMinutes(15)))
+                 .Where(sp => sp._era_relatedcountry_value == country.era_countryid)
+                .Select(sp => new StateProvince { Code = sp.era_code, Name = sp.era_name, CountryCode = countryCode })
+                .OrderBy(sp => sp.Name);
+
+            return Ok(res);
         }
 
         [HttpGet("jurisdictions")]
         public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] JurisdictionType[] types = null, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
-            return Ok(await handler.Handle(new JurisdictionsQueryCommand(types, countryCode, stateProvinceCode)));
+            var country = (await cache.GetOrSet(
+                "countries",
+                async () => (await listsGateway.GetCountriesAsync()),
+                TimeSpan.FromMinutes(15))).SingleOrDefault(c => c.era_countrycode == countryCode);
+
+            if (country == null) return NotFound();
+
+            var stateProvince = (await cache.GetOrSet(
+                 "stateprovinces",
+                 async () => (await listsGateway.GetStateProvincesAsync()),
+                 TimeSpan.FromMinutes(15))).SingleOrDefault(sp => sp._era_relatedcountry_value == country.era_countryid && sp.era_code == stateProvinceCode);
+
+            if (stateProvince == null) return NotFound();
+
+            var res = (await cache.GetOrSet(
+                 "jurisdictions",
+                 async () => (await listsGateway.GetJurisdictionsAsync()),
+                 TimeSpan.FromMinutes(15)))
+                 .Where(j => j._era_relatedprovincestate_value == stateProvince.era_provinceterritoriesid &&
+                    (types == null || !types.Any() || types.Any(t => ((int)t).ToString().Equals(j.era_type))))
+                .Select(j => new Jurisdiction
+                {
+                    Code = j.era_jurisdictionid,
+                    Name = j.era_jurisdictionname,
+                    Type = string.IsNullOrWhiteSpace(j.era_type) ? JurisdictionType.Undefined : Enum.Parse<JurisdictionType>(j.era_type, true),
+                    StateProvinceCode = stateProvinceCode,
+                    CountryCode = countryCode
+                }).OrderBy(j => j.Name);
+
+            return Ok(res);
         }
 
         [HttpGet("supports")]
         public async Task<ActionResult<IEnumerable<Support>>> GetSupports()
         {
-            return Ok(await handler.Handle(new SupportsQueryCommand()));
+            var res = (await cache.GetOrSet(
+                "supports",
+                async () => (await listsGateway.GetSupportsAsync()),
+                TimeSpan.FromMinutes(15)))
+                .Select(s => new Support { Code = s.era_name, Name = s.era_name })
+                .OrderBy(s => s.Name);
+            return Ok(res);
         }
     }
 }

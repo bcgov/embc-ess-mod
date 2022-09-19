@@ -69,8 +69,6 @@ namespace EMBC.Suppliers.API
                 services.AddDistributedMemoryCache();
                 var dpBuilder = services.AddDataProtection()
                     .SetApplicationName(applicationName);
-
-                if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
             services.AddAuthentication(options =>
             {
@@ -154,20 +152,13 @@ namespace EMBC.Suppliers.API
             });
             services.AddDistributedMemoryCache();
 
-            services.AddSingleton<IFileSystem, FileSystem>();
-            services.AddTransient<ICountriesListProvider, ListsProvider>();
-            services.AddTransient<IStateProvincesListProvider, ListsProvider>();
-            services.AddTransient<IJurisdictionsListProvider, ListsProvider>();
-            services.AddTransient<ISupportsListProvider, ListsProvider>();
-            services.AddTransient<IListsGateway, DynamicsListsGateway>();
-            services.AddTransient<IQueriesHandler, QueriesHandler>();
-            services.AddTransient<ISubmissionHandler, SubmissionHandler>();
+            services.AddTransient<ICache, Cache>();
             services.AddTransient<ICacheHandler, CacheHandler>();
-            services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Cache"));
-            services.AddTransient<IListsRepository, FileBasedCachedListsRepository>();
+            services.AddTransient<CacheSyncManager>();
+            services.AddTransient<IListsGateway, DynamicsListsGateway>();
+            services.AddTransient<ISubmissionHandler, SubmissionHandler>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();
-            services.AddTransient<ISubmissionRepository, SubmissionRepository>();
             services.AddTransient<IReferenceNumberGenerator, ReferenceNumberGenerator>();
             services.AddTransient<ISubmissionDynamicsCustomActionHandler, SubmissionDynamicsCustomActionHandler>();
             services.AddScoped(sp =>
