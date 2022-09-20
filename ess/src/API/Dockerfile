@@ -37,7 +37,7 @@ RUN dotnet restore .
 COPY . .
 
 # run unit tests
-RUN dotnet test -c Release --filter  
+RUN dotnet test -c Release --filter "Category!=IntegrationTest"
 
 FROM build AS publish
 # build
