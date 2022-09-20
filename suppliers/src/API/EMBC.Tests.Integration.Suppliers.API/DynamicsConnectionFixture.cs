@@ -8,7 +8,6 @@ using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using EMBC.Tests.Integration.Suppliers.API;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xrm.Tools.WebAPI;
@@ -28,14 +27,14 @@ namespace EMBC.Tests.Suppliers.API
 
         private readonly ILoggerFactory loggerFactory;
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
-        private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
-        private CRMWebAPI api => webApplicationFactory.Services.GetRequiredService<CRMWebAPI>();
+        private CRMWebAPI api;
         private IListsRepository listsRepository => webApplicationFactory.Services.GetRequiredService<IListsRepository>();
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
             this.loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
             this.webApplicationFactory = webApplicationFactory;
+            this.api = webApplicationFactory.Services.CreateScope().ServiceProvider.GetRequiredService<CRMWebAPI>();
         }
 
         [Fact(Skip = skip)]
@@ -51,7 +50,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthInvoices()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(webApplicationFactory.Services, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
 
             var referenceNumber = $"reftestinv_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
@@ -130,7 +129,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthReceipts()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(webApplicationFactory.Services, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
 
             var referenceNumber = $"reftestrec_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission

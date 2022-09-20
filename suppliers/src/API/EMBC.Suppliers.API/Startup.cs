@@ -69,6 +69,8 @@ namespace EMBC.Suppliers.API
                 services.AddDistributedMemoryCache();
                 var dpBuilder = services.AddDataProtection()
                     .SetApplicationName(applicationName);
+
+                if (!string.IsNullOrEmpty(dataProtectionPath)) dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(dataProtectionPath));
             }
             services.AddAuthentication(options =>
             {
