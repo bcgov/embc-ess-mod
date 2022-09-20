@@ -30,8 +30,7 @@ namespace EMBC.Tests.Suppliers.API
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
         private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
         private CRMWebAPI api => webApplicationFactory.Services.GetRequiredService<CRMWebAPI>();
-        private ICache cache => webApplicationFactory.Services.GetRequiredService<ICache>();
-        private IListsGateway listsGateway => webApplicationFactory.Services.GetRequiredService<IListsGateway>();
+        private IListsRepository listsRepository => webApplicationFactory.Services.GetRequiredService<IListsRepository>();
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
@@ -52,7 +51,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthInvoices()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cache, listsGateway);
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
 
             var referenceNumber = $"reftestinv_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
@@ -131,7 +130,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthReceipts()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cache, listsGateway);
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), listsRepository);
 
             var referenceNumber = $"reftestrec_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
