@@ -78,6 +78,7 @@ namespace EMBC.Responders.API.Controllers
                 Captcha = new CaptchaConfiguration
                 {
                     Url = configuration.GetValue<string>("captcha:url"),
+                    Key = configuration.GetValue<string>("captcha:key"),
                     AutomationValue = environment.IsProduction() ? null : configuration.GetValue<string>("captcha:automation")?.Substring(0, 6).ToSha256() //captcha is limited to 6 characters
                 }
             };
@@ -225,6 +226,7 @@ namespace EMBC.Responders.API.Controllers
     public class CaptchaConfiguration
     {
         public string Url { get; set; }
+        public string Key { get; set; }
         public string AutomationValue { get; set; }
     }
 
