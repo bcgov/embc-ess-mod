@@ -24,16 +24,20 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
     public class ConfigurationServiceWorker : BackgroundService
     {
-        private readonly ICacheHandler handler;
+        private readonly IServiceProvider serviceProvider;
 
         public ConfigurationServiceWorker(IServiceProvider serviceProvider)
         {
-            this.handler = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ICacheHandler>();
+            this.serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await handler.Handle(new RefreshCacheCommand(), stoppingToken);
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var handler = scope.ServiceProvider.GetRequiredService<ICacheHandler>();
+                await handler.Handle(new RefreshCacheCommand(), stoppingToken);
+            }
         }
     }
 }

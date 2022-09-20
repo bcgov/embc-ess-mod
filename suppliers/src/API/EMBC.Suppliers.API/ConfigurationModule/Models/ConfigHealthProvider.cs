@@ -20,7 +20,6 @@ using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 using EMBC.Suppliers.API.Utilities;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
@@ -34,7 +33,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         private readonly CRMWebAPI api;
         private readonly ILogger<ConfigHealthProvider> logger;
 
-        public ConfigHealthProvider(IConfiguration configuration, ILogger<ConfigHealthProvider> logger, CRMWebAPI api)
+        public ConfigHealthProvider(IConfiguration configuration, CRMWebAPI api, ILogger<ConfigHealthProvider> logger)
         {
             conf = configuration;
             this.api = api;

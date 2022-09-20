@@ -14,11 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
 
