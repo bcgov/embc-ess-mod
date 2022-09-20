@@ -10,8 +10,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
 
     public class ReferenceNumberGenerator : IReferenceNumberGenerator
     {
-        private static readonly RandomNumberGenerator crypto = new RNGCryptoServiceProvider();
-
+        private static readonly Random crypto = new Random();
         private DateTime? now;
         private string presetReferenceNumber;
 
@@ -19,7 +18,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
         {
             if (presetReferenceNumber != null) return presetReferenceNumber;
             var bytes = new byte[3];
-            crypto.GetBytes(bytes);
+            crypto.NextBytes(bytes);
             var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now ?? DateTime.Now.ToUniversalTime(), GetPSTTimeZone());
             return $"SUP-{today:yyyyMMdd}-{BitConverter.ToString(bytes).Replace("-", string.Empty, StringComparison.OrdinalIgnoreCase)}";
         }

@@ -30,13 +30,13 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
     {
         private readonly CRMWebAPI api;
         private readonly ILogger<SubmissionDynamicsCustomActionHandler> logger;
-        private readonly IListsRepository cachedListsProvider;
+        private readonly IListsRepository listsRepository;
 
-        public SubmissionDynamicsCustomActionHandler(CRMWebAPI api, ILogger<SubmissionDynamicsCustomActionHandler> logger, IListsRepository cachedListsProvider)
+        public SubmissionDynamicsCustomActionHandler(CRMWebAPI api, ILogger<SubmissionDynamicsCustomActionHandler> logger, IListsRepository listsRepository)
         {
             this.api = api;
             this.logger = logger;
-            this.cachedListsProvider = cachedListsProvider;
+            this.listsRepository = listsRepository;
         }
 
         public async Task Handle(SubmissionSavedEvent evt)
@@ -84,10 +84,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
         private async Task<Submission> ResolveEntitiesReferences(Submission submission)
         {
-            var countries = (await cachedListsProvider.GetCountriesAsync()).ToArray();
-            var stateProvinces = (await cachedListsProvider.GetStateProvincesAsync()).ToArray();
-            var jurisdictions = (await cachedListsProvider.GetJurisdictionsAsync()).ToArray();
-            var supports = (await cachedListsProvider.GetSupportsAsync()).ToArray();
+            var countries = (await listsRepository.GetCountriesAsync()).ToArray();
+            var stateProvinces = (await listsRepository.GetStateProvincesAsync()).ToArray();
+            var jurisdictions = (await listsRepository.GetJurisdictionsAsync()).ToArray();
+            var supports = (await listsRepository.GetSupportsAsync()).ToArray();
 
             foreach (var supplierInformation in submission.Suppliers)
             {

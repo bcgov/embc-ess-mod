@@ -14,25 +14,30 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Jasper;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
     public class ConfigurationServiceWorker : BackgroundService
     {
-        private readonly ICommandBus commandBus;
+        private readonly IServiceProvider serviceProvider;
 
-        public ConfigurationServiceWorker(ICommandBus commandBus)
+        public ConfigurationServiceWorker(IServiceProvider serviceProvider)
         {
-            this.commandBus = commandBus;
+            this.serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await commandBus.Invoke(new RefreshCacheCommand());
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var handler = scope.ServiceProvider.GetRequiredService<ICacheHandler>();
+                await handler.Handle(new RefreshCacheCommand(), stoppingToken);
+            }
         }
     }
 }
