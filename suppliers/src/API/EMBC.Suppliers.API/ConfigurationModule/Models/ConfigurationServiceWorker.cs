@@ -14,8 +14,10 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
@@ -24,9 +26,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
     {
         private readonly ICacheHandler handler;
 
-        public ConfigurationServiceWorker(ICacheHandler handler)
+        public ConfigurationServiceWorker(IServiceProvider serviceProvider)
         {
-            this.handler = handler;
+            this.handler = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ICacheHandler>();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

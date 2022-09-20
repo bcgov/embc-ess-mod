@@ -34,10 +34,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         private readonly CRMWebAPI api;
         private readonly ILogger<ConfigHealthProvider> logger;
 
-        public ConfigHealthProvider(IConfiguration configuration, ILogger<ConfigHealthProvider> logger, IServiceProvider serviceProvider)
+        public ConfigHealthProvider(IConfiguration configuration, ILogger<ConfigHealthProvider> logger, CRMWebAPI api)
         {
             conf = configuration;
-            api = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<CRMWebAPI>();
+            this.api = api;
             this.logger = logger;
         }
 

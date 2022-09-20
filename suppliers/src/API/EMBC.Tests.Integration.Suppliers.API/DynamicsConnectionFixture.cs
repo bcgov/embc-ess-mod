@@ -26,21 +26,20 @@ namespace EMBC.Tests.Suppliers.API
 #endif
 
         private readonly ILoggerFactory loggerFactory;
-        private readonly WebApplicationFactory<Startup> webApplicationFactory;
         private CRMWebAPI api;
-        private IListsRepository listsRepository => webApplicationFactory.Services.GetRequiredService<IListsRepository>();
+        private IListsRepository listsRepository;
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
             this.loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
-            this.webApplicationFactory = webApplicationFactory;
             this.api = webApplicationFactory.Services.CreateScope().ServiceProvider.GetRequiredService<CRMWebAPI>();
+            this.listsRepository = webApplicationFactory.Services.CreateScope().ServiceProvider.GetRequiredService<IListsRepository>();
         }
 
         [Fact(Skip = skip)]
         public async Task CanQuery()
         {
-            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetSupportsAsync();
 
@@ -212,7 +211,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfCountries()
         {
-            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetCountriesAsync();
 
@@ -222,7 +221,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfJurisdictions()
         {
-            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+            var gw = new DynamicsListsGateway(api);
             var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
             var bc = (await gw.GetStateProvincesAsync(canada.era_countryid)).Single(c => c.era_code == "BC");
 
@@ -234,7 +233,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfStateProvinces()
         {
-            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+            var gw = new DynamicsListsGateway(api);
             var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
 
             var items = await gw.GetStateProvincesAsync(canada.era_countryid);
@@ -245,7 +244,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfDistricts()
         {
-            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetDistrictsAsync();
 
@@ -255,7 +254,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfRegions()
         {
-            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetRegionsAsync();
 
@@ -265,7 +264,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfSupports()
         {
-            var gw = new DynamicsListsGateway(webApplicationFactory.Services);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetSupportsAsync();
 

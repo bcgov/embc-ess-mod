@@ -28,9 +28,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
     {
         private readonly CRMWebAPI api;
 
-        public DynamicsListsGateway(IServiceProvider serviceProvider)
+        public DynamicsListsGateway(CRMWebAPI api)
         {
-            this.api = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<CRMWebAPI>();
+            this.api = api;
         }
 
         public async Task<IEnumerable<SupportEntity>> GetSupportsAsync()
