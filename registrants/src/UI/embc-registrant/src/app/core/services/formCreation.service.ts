@@ -29,11 +29,13 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class FormCreationService {
-  restrictionForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new RestrictionForm(new Restriction()))
-  );
+  restrictionForm: BehaviorSubject<UntypedFormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(new RestrictionForm(new Restriction()))
+    );
 
-  restrictionForm$: Observable<UntypedFormGroup> = this.restrictionForm.asObservable();
+  restrictionForm$: Observable<UntypedFormGroup> =
+    this.restrictionForm.asObservable();
 
   personalDetailsForm: BehaviorSubject<UntypedFormGroup | undefined> =
     new BehaviorSubject(
@@ -55,11 +57,12 @@ export class FormCreationService {
   contactDetailsForm$: Observable<UntypedFormGroup> =
     this.contactDetailsForm.asObservable();
 
-  addressForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(
-      new AddressForm(new Address(), this.formBuilder, this.customValidator)
-    )
-  );
+  addressForm: BehaviorSubject<UntypedFormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(
+        new AddressForm(new Address(), this.formBuilder, this.customValidator)
+      )
+    );
 
   addressForm$: Observable<UntypedFormGroup> = this.addressForm.asObservable();
 
@@ -77,13 +80,19 @@ export class FormCreationService {
   securityQuestionsForm$: Observable<UntypedFormGroup> =
     this.securityQuestionsForm.asObservable();
 
-  evacuatedForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(
-      new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)
-    )
-  );
+  evacuatedForm: BehaviorSubject<UntypedFormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(
+        new EvacuatedForm(
+          new Evacuated(),
+          this.formBuilder,
+          this.customValidator
+        )
+      )
+    );
 
-  evacuatedForm$: Observable<UntypedFormGroup> = this.evacuatedForm.asObservable();
+  evacuatedForm$: Observable<UntypedFormGroup> =
+    this.evacuatedForm.asObservable();
 
   householdMembersForm: BehaviorSubject<UntypedFormGroup | undefined> =
     new BehaviorSubject(
@@ -115,9 +124,8 @@ export class FormCreationService {
   identifyNeedsForm$: Observable<UntypedFormGroup> =
     this.identifyNeedsForm.asObservable();
 
-  secretForm: BehaviorSubject<UntypedFormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new SecretForm(new Secret()))
-  );
+  secretForm: BehaviorSubject<UntypedFormGroup | undefined> =
+    new BehaviorSubject(this.formBuilder.group(new SecretForm(new Secret())));
 
   secretForm$: Observable<UntypedFormGroup> = this.secretForm.asObservable();
 

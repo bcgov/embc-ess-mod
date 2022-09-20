@@ -100,7 +100,11 @@ export class EditService {
    * @param component current component name
    * @param form  form to update
    */
-  cancelFormData(component: string, form: UntypedFormGroup, path: string): void {
+  cancelFormData(
+    component: string,
+    form: UntypedFormGroup,
+    path: string
+  ): void {
     switch (component) {
       case 'restriction':
         if (this.restrictionService.restrictedAccess !== undefined) {

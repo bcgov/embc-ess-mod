@@ -172,7 +172,9 @@ export class ProfileComponent
         this.profileDataService.contactDetails = this.form.value;
         break;
       case 'security-questions':
-        this.saveSecurityQuestions(this.form.get('questions') as UntypedFormGroup);
+        this.saveSecurityQuestions(
+          this.form.get('questions') as UntypedFormGroup
+        );
         break;
       default:
     }

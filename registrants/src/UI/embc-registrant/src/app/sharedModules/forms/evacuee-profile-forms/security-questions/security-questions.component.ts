@@ -59,7 +59,8 @@ export default class SecurityQuestionsComponent implements OnInit {
   }
 
   get questionsFormControl(): { [key: string]: AbstractControl } {
-    return (this.securityQuestionsForm.get('questions') as UntypedFormGroup).controls;
+    return (this.securityQuestionsForm.get('questions') as UntypedFormGroup)
+      .controls;
   }
 }
 
