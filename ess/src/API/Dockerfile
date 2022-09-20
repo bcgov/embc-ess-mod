@@ -6,11 +6,8 @@ ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 ENV DOTNET_gcServer=1
 ARG VERSION
 ENV VERSION=$VERSION
-ARG TEST_FILTER
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-
-ENV TEST_FILTER=$TEST_FILTER
 
 # install diagnostics tools
 RUN dotnet tool install --tool-path /tools dotnet-trace
