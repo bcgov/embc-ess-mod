@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
-using Jasper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,12 +17,11 @@ namespace EMBC.Suppliers.API
         public static void Main(string[] args)
         {
             SelfLog.Enable(Console.Error);
-            CreateHostBuilder(args).RunJasper(args);
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseJasper<ApiJasperOptions>()
                 .UseSerilog((hostingContext, loggerConfiguration) =>
                  {
                      loggerConfiguration
@@ -69,13 +67,5 @@ namespace EMBC.Suppliers.API
                 {
                     services.AddHostedService<ConfigurationServiceWorker>();
                 });
-    }
-
-    public class ApiJasperOptions : JasperOptions
-    {
-        public ApiJasperOptions()
-        {
-            Endpoints.DefaultLocalQueue.NotDurable();
-        }
     }
 }
