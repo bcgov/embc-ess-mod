@@ -42,7 +42,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
         public async Task<IEnumerable<SupportEntity>> GetSupportsAsync()
         {
             return await cache.GetOrSet(
-                "stateprovinces",
+                "supports",
                 async () => (await listsGateway.GetSupportsAsync()),
                 TimeSpan.FromMinutes(15));
         }
