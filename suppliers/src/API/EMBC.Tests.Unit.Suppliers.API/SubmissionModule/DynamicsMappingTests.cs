@@ -58,13 +58,11 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                 ReferralNumber = "ref1",
                 Date = "2010-04-20",
                 TotalAmount = 10m,
-                TotalGST = 5m
             };
             var lineItem = new LineItem
             {
                 Amount = 10m,
                 Description = "desc",
-                GST = 5m,
                 ReceiptNumber = receipt.ReceiptNumber,
                 ReferralNumber = receipt.ReferralNumber,
                 SupportProvided = "support"
@@ -86,13 +84,11 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                 ReferralNumber = "ref1",
                 InvoiceNumber = "inv1",
                 TotalAmount = 10m,
-                TotalGST = 5m
             };
             var lineItem = new LineItem
             {
                 Amount = 10m,
                 Description = "desc",
-                GST = 5m,
                 ReceiptNumber = null,
                 ReferralNumber = receipt.ReferralNumber,
                 SupportProvided = "support"
@@ -175,14 +171,12 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                     InvoiceNumber = null,
                     ReferralNumber = "ref1",
                     TotalAmount = 1m,
-                    TotalGST = 1m
                 },
                 new Referral
                 {
                     InvoiceNumber = null,
                     ReferralNumber = "ref2",
                     TotalAmount = 2m,
-                    TotalGST = 2m
                 }
             };
 
@@ -252,7 +246,6 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                         Date = "2020-01-01",
                         InvoiceNumber = "inv1",
                         TotalAmount = 0,
-                        TotalGST = 0
                     }
                 },
                 LineItems = Array.Empty<LineItem>(),
@@ -263,7 +256,6 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                         InvoiceNumber = "inv1",
                         ReferralNumber = "ref1",
                         TotalAmount = 0,
-                        TotalGST = 0
                     }
                 },
                 Suppliers = new[]
