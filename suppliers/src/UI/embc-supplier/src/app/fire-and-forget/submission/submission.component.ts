@@ -232,7 +232,6 @@ export class SubmissionComponent implements OnInit {
             referralList: ['', Validators.required],
             referrals: this.builder.array([
             ], Validators.required),
-            invoiceTotalGst: [''],
             invoiceTotalAmount: ['']
         });
     }
@@ -243,7 +242,6 @@ export class SubmissionComponent implements OnInit {
                 .bind(this.customValidator)]],
             referrals: this.builder.array([
             ]),
-            receiptTotalGst: [''],
             receiptTotalAmount: [''],
             referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([], [Validators.required])
@@ -408,7 +406,6 @@ export class SubmissionComponent implements OnInit {
             referralList: [invoice.referralList, Validators.required],
             referrals: this.builder.array([
             ], Validators.required),
-            invoiceTotalGst: [invoice.invoiceTotalGst],
             invoiceTotalAmount: [invoice.invoiceTotalAmount]
         });
     }
@@ -418,7 +415,6 @@ export class SubmissionComponent implements OnInit {
             referralNumber: [receipt.referralNumber, Validators.required],
             referrals: this.builder.array([
             ]),
-            receiptTotalGst: [receipt.receiptTotalGst],
             receiptTotalAmount: [receipt.receiptTotalAmount],
             referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([], [Validators.required])

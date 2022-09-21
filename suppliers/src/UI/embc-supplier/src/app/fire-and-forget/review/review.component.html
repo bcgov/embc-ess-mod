@@ -71,8 +71,7 @@
                                         <tr>
                                             <th scope="col">Support Provided</th>
                                             <th scope="col">Description</th>
-                                            <th scope="col">GST</th>
-                                            <th scope="col">Amount(excl. GST)</th>
+                                            <th scope="col">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -82,31 +81,23 @@
                                             </td>
                                             <td>{{row.description}}</td>
                                             <td>
-                                                {{row.gst | currency}}
-                                            </td>
-                                            <td>
                                                 {{row.amount | currency}}
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-md-3 offset-md-9">
-                                <div>
-                                    <b>Total GST</b> {{referral.totalGst | currency}}
-                                </div>
-                            </div>
                             <br>
                             <div class="col-md-4 offset-md-8">
                                 <div>
-                                    <b>Total Amount (excl. GST)</b> {{referral.totalAmount | currency}}
+                                    <b>Total Amount</b> {{referral.totalAmount | currency}}
                                 </div>
                             </div>
                         </div>
                         <br>
                         <div class="row total">
                             <div class="col-md-4 offset-md-8">
-                                <b>Invoice Total (excl. GST)</b> {{invoice.invoiceTotalAmount | currency}}
+                                <b>Invoice Total</b> {{invoice.invoiceTotalAmount | currency}}
                             </div>
                         </div>
                     </div>
@@ -163,8 +154,7 @@
                                         <tr>
                                             <th scope="col">Support Provided</th>
                                             <th scope="col">Description</th>
-                                            <th scope="col">GST</th>
-                                            <th scope="col">Amount(excl. GST)</th>
+                                            <th scope="col">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -174,23 +164,15 @@
                                             </td>
                                             <td>{{row.description}}</td>
                                             <td>
-                                                {{row.gst | currency}}
-                                            </td>
-                                            <td>
                                                 {{row.amount | currency}}
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-md-3 offset-md-9">
-                                <div>
-                                    <b>Total GST</b> {{referral.totalGst | currency}}
-                                </div>
-                            </div>
                             <div class="col-md-4 offset-md-8">
                                 <div>
-                                    <b>Total Amount (excl. GST)</b> {{referral.totalAmount | currency}}
+                                    <b>Total Amount</b> {{referral.totalAmount | currency}}
                                 </div>
                             </div>
                             <br>
@@ -199,7 +181,7 @@
 
                         <div class="row total">
                             <div class="col-md-4 offset-md-8">
-                                <b>Referral Total (excl. GST)</b> {{receipt.receiptTotalAmount | currency}}
+                                <b>Referral Total</b> {{receipt.receiptTotalAmount | currency}}
                             </div>
                         </div>
 

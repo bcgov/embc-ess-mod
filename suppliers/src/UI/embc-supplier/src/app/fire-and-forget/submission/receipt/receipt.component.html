@@ -66,14 +66,6 @@
         </div>
       </div>
 
-      <div *ngIf="referrals.controls.length>0" class="row">
-        <div class="col-12 form-inline" style="justify-content: flex-end;">
-          Total GST &nbsp;&nbsp;
-          <span class="input-symbol-dollar total-dollar-line"><input type="number" [formControlName]="'receiptTotalGst'"
-              class="form-control form-control-lg" readonly></span>
-        </div>
-      </div>
-      <br>
       <div *ngIf="referrals.controls.length> 0" class="row">
         <div class="col-12 form-inline" style="justify-content: flex-end;">
           Total Amount &nbsp;&nbsp;
