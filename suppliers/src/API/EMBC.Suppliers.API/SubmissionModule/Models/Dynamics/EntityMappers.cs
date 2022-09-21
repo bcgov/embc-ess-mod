@@ -144,7 +144,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             {
                 era_SupportsProvided = l.SupportProvided.MapToDynamicsReferencedEntity("era_supports"),
                 era_description = l.Description,
-                era_gst = 0,
                 era_amount = l.Amount,
                 era_receipt = receipt.ReceiptNumber,
                 era_receiptdate = receipt.Date,
@@ -159,7 +158,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             {
                 era_SupportsProvided = l.SupportProvided.MapToDynamicsReferencedEntity("era_supports"),
                 era_description = l.Description,
-                era_gst = 0,
                 era_amount = l.Amount,
                 era_receipt = string.Empty,
                 era_receiptdate = null,
