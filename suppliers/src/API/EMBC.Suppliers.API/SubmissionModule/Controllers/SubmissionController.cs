@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
-using Jasper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -19,13 +18,13 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
     [AllowAnonymous]
     public class SubmissionController : ControllerBase
     {
-        private readonly ICommandBus commandBus;
+        private readonly ISubmissionHandler handler;
         private readonly IHostEnvironment env;
         private readonly ConfigHealthProvider healthcheck;
 
-        public SubmissionController(ICommandBus commandBus, IHostEnvironment env, ConfigHealthProvider healthcheck)
+        public SubmissionController(ISubmissionHandler handler, IHostEnvironment env, ConfigHealthProvider healthcheck)
         {
-            this.commandBus = commandBus;
+            this.handler = handler;
             this.env = env;
             this.healthcheck = healthcheck;
         }
@@ -51,7 +50,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
                 }
 
                 // Submit supplier form
-                var referenceNumber = await commandBus.Invoke<string>(new PersistSupplierSubmissionCommand(submission));
+                var referenceNumber = await handler.Handle(new PersistSupplierSubmissionCommand(submission));
 
                 return new JsonResult(new { submissionId = referenceNumber, referenceNumber });
             }
@@ -73,21 +72,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
                     Value = pd
                 };
             }
-        }
-
-        /// <summary>
-        /// GET to return a submission by reference number
-        /// </summary>
-        /// <param name="referenceNumber">The reference number to search</param>
-        /// <returns>Submission object</returns>
-        [HttpGet]
-        public async Task<ActionResult<Submission>> Get(string referenceNumber)
-        {
-            if (env.IsProduction()) return NotFound(new { referenceNumber });
-
-            var submission = await commandBus.Invoke<Submission>(new GetSupplierSubmissionCommand(referenceNumber));
-            if (submission == null) return NotFound(new { referenceNumber });
-            return new JsonResult(submission);
         }
     }
 }

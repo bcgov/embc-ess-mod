@@ -8,7 +8,6 @@ using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using EMBC.Tests.Integration.Suppliers.API;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xrm.Tools.WebAPI;
@@ -27,22 +26,24 @@ namespace EMBC.Tests.Suppliers.API
 #endif
 
         private readonly ILoggerFactory loggerFactory;
-        private readonly WebApplicationFactory<Startup> webApplicationFactory;
-        private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
-        private CRMWebAPI api => webApplicationFactory.Services.GetRequiredService<CRMWebAPI>();
-        private IListsRepository listsRepository => webApplicationFactory.Services.GetRequiredService<IListsRepository>();
+        private CRMWebAPI api;
+        private IListsRepository listsRepository;
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
             this.loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
-            this.webApplicationFactory = webApplicationFactory;
+            this.api = webApplicationFactory.Services.CreateScope().ServiceProvider.GetRequiredService<CRMWebAPI>();
+            this.listsRepository = webApplicationFactory.Services.CreateScope().ServiceProvider.GetRequiredService<IListsRepository>();
         }
 
         [Fact(Skip = skip)]
         public async Task CanQuery()
         {
-            var result = await api.GetList("era_supports");
-            Assert.True(result.List.Count > 0);
+            var gw = new DynamicsListsGateway(api);
+
+            var items = await gw.GetSupportsAsync();
+
+            Assert.NotEmpty(items);
         }
 
         [Fact(Skip = skip)]
@@ -87,7 +88,6 @@ namespace EMBC.Tests.Suppliers.API
                         InvoiceNumber = "inv1",
                         Date = "2020-03-12",
                         TotalAmount = 100.00m,
-                        TotalGST = 12.00m
                     }
                 },
                 Receipts = Array.Empty<Receipt>(),
@@ -96,7 +96,6 @@ namespace EMBC.Tests.Suppliers.API
                     {
                         SupportProvided = "Clothing",
                         ReferralNumber = "ref123",
-                        GST = 5,
                         Amount = 10,
                         Description = "desc"
                     }
@@ -107,7 +106,6 @@ namespace EMBC.Tests.Suppliers.API
                     {
                         InvoiceNumber="inv1",
                         ReferralNumber = "ref123",
-                        TotalGST = 10.0m,
                         TotalAmount = 40m
                     }
                 },
@@ -169,7 +167,6 @@ namespace EMBC.Tests.Suppliers.API
                         ReceiptNumber = "rec1",
                         ReferralNumber = "ref123",
                         TotalAmount = 50.35m,
-                        TotalGST = 12.34m
                     }
                 },
                 LineItems = new[]
@@ -179,7 +176,6 @@ namespace EMBC.Tests.Suppliers.API
                         SupportProvided = "Lodging - Hotel/Motel",
                         ReferralNumber = "ref123",
                         ReceiptNumber = "rec1",
-                        GST = 5,
                         Amount = 10,
                         Description = "desc"
                     }
@@ -190,7 +186,6 @@ namespace EMBC.Tests.Suppliers.API
                     {
                         InvoiceNumber=null,
                         ReferralNumber = "ref123",
-                        TotalGST = 10.0m,
                         TotalAmount = 40m
                     }
                 },

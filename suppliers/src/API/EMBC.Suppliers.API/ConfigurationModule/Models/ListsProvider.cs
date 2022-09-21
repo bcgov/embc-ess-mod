@@ -23,11 +23,14 @@ using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models
 {
-    public class ListsProvider :
-        ICountriesListProvider,
-        IStateProvincesListProvider,
-        IJurisdictionsListProvider,
-        ISupportsListProvider
+    public interface IListsProvider
+    {
+        Task<IEnumerable<Country>> GetCountriesAsync();
+        Task<IEnumerable<StateProvince>> GetStateProvincesAsync(string countryCode);
+        Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(JurisdictionType[] types, string stateProvinceCode, string countryCode);
+        Task<IEnumerable<Support>> GetSupportsAsync();
+    }
+    public class ListsProvider : IListsProvider
     {
         private readonly IListsRepository listsRepository;
 

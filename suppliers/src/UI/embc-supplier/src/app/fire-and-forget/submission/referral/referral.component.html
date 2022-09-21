@@ -67,8 +67,7 @@
               <th scope="col"></th>
               <th scope="col" class="requiredField">Support Provided</th>
               <th scope="col">Description</th>
-              <th scope="col" class="requiredField">GST</th>
-              <th scope="col" class="requiredField">Amount(excl. GST)</th>
+              <th scope="col" class="requiredField">Amount</th>
               <th scope="col"></th>
             </tr>
           </thead>
@@ -84,18 +83,7 @@
               <td><input type="text" formControlName="description" class="form-control"></td>
               <td>
                 <span class="input-symbol-dollar items-dollar-line">
-                  <input type="text" formControlName="gst" class="form-control" appDecimalCurrency required>
-                  <div *ngIf="rowControl[j]?.errors?.amountGreater" style="color: red;">
-                    GST must be less than Amount
-                  </div>
-                </span>
-              </td>
-              <td>
-                <span class="input-symbol-dollar items-dollar-line">
                   <input type="text" formControlName="amount" class="form-control" appDecimalCurrency required>
-                  <div *ngIf="rowControl[j]?.errors?.amountGreater" style="color: red;">
-                    Amount must be greater than GST
-                  </div>
                 </span>
               </td>
               <td *ngIf="referralRows.controls.length > 1"><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
@@ -109,15 +97,6 @@
         </table>
       </div>
 
-      <div class="col-12 form-inline" style="justify-content: flex-end;">
-        <div>
-          Total GST &nbsp;&nbsp;
-          <span class="input-symbol-dollar dollar-line"><input type="number" formControlName="totalGst"
-              class="form-control" readonly></span>
-        </div>
-      </div>
-      <br>
-      <br>
       <div class="col-12 form-inline" style="justify-content: flex-end;">
         <div style="margin-bottom: 6px;">
           Total Amount &nbsp;&nbsp;

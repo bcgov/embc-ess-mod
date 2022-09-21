@@ -9,14 +9,7 @@ import { StepEvacueeProfileService } from '../feature-components/wizard/step-eva
 export class MockStepEvacueeProfileService extends StepEvacueeProfileService {
   public profileTabsValue: Array<TabModel>;
 
-  personalDetailsVal: PersonDetails = {
-    firstName: 'Unit',
-    lastName: 'Test',
-    preferredName: 'T',
-    gender: 'F',
-    initials: 'U.T',
-    dateOfBirth: '01/01/2000'
-  };
+  personalDetailsVal: PersonDetails;
 
   public get profileTabs(): Array<TabModel> {
     return this.profileTabsValue;

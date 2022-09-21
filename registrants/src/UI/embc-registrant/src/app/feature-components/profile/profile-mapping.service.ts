@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { Profile, ProfileDataConflict } from '../../core/api/models';
 import { ProfileDataService } from './profile-data.service';
@@ -106,7 +106,7 @@ export class ProfileMappingService {
   }
 
   private setPersonalDetails(profile: Profile): void {
-    let formGroup: FormGroup;
+    let formGroup: UntypedFormGroup;
     this.formCreationService
       .getPersonalDetailsForm()
       .pipe(first())
@@ -120,7 +120,7 @@ export class ProfileMappingService {
   }
 
   private setAddressDetails(profile: Profile): void {
-    let formGroup: FormGroup;
+    let formGroup: UntypedFormGroup;
     this.formCreationService
       .getAddressForm()
       .pipe(first())
@@ -151,7 +151,7 @@ export class ProfileMappingService {
   }
 
   private setContactDetails(profile: Profile): void {
-    let formGroup: FormGroup;
+    let formGroup: UntypedFormGroup;
 
     this.formCreationService
       .getContactDetailsForm()
@@ -179,7 +179,7 @@ export class ProfileMappingService {
   }
 
   private setSecurityQuestions(profile: Profile): void {
-    let formGroup: FormGroup;
+    let formGroup: UntypedFormGroup;
 
     this.formCreationService
       .getSecurityQuestionsForm()

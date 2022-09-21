@@ -1,10 +1,10 @@
 import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
   AbstractControl,
-  FormControl,
+  UntypedFormControl,
   NgForm,
   FormGroupDirective
 } from '@angular/forms';
@@ -29,7 +29,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(
-    control: FormControl | null,
+    control: UntypedFormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
     const isSubmitted = form && form.submitted;
@@ -49,8 +49,8 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
   styleUrls: ['./contact-info.component.scss']
 })
 export default class ContactInfoComponent implements OnInit, OnDestroy {
-  contactInfoForm: FormGroup;
-  formBuilder: FormBuilder;
+  contactInfoForm: UntypedFormGroup;
+  formBuilder: UntypedFormBuilder;
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
   readonly phoneMask = [
@@ -70,7 +70,7 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   emailMatcher = new CustomErrorMailMatcher();
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService,
     public customValidator: CustomValidationService
   ) {

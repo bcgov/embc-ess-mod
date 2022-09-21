@@ -38,7 +38,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         public string era_invoiceref { get; set; }
         public string era_referencenumber { get; set; }
         public bool era_remitpaymenttootherbusiness { get; set; }
-        public decimal era_totalgst { get; set; }
         public decimal era_totalinvoiceamount { get; set; }
         public int era_invoicetype { get; set; }
         public string era_supplierinvoicenumber { get; set; }
@@ -80,7 +79,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
 #pragma warning disable CA1707 // Identifiers should not contain underscores
         public string era_referralnumber { get; set; }
-        public decimal era_totalgst { get; set; }
         public decimal era_totalamount { get; set; }
         public string era_invoicereference { get; set; }
         public string era_submissionreference { get; set; }
@@ -94,7 +92,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
 #pragma warning disable CA1707 // Identifiers should not contain underscores
         public string era_description { get; set; }
-        public decimal era_gst { get; set; }
         public decimal era_amount { get; set; }
         public string era_receipt { get; set; }
         public string era_receiptdate { get; set; }

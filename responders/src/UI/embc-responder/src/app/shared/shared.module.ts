@@ -35,6 +35,7 @@ import { TimeOutDialogComponent } from './components/dialog-components/time-out-
 import { OutageDialogComponent } from './outage-components/outage-dialog/outage-dialog.component';
 import { OutageBannerComponent } from './outage-components/outage-banner/outage-banner.component';
 import { EssFileExistsComponent } from './components/dialog-components/ess-file-exists/ess-file-exists.component';
+import { FileSearchFormComponent } from './forms/file-search-form/file-search-form.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { EssFileExistsComponent } from './components/dialog-components/ess-file-
     TimeOutDialogComponent,
     OutageBannerComponent,
     OutageDialogComponent,
-    EssFileExistsComponent
+    EssFileExistsComponent,
+    FileSearchFormComponent
   ],
   imports: [
     CommonModule,
@@ -106,7 +108,8 @@ import { EssFileExistsComponent } from './components/dialog-components/ess-file-
     BcscInviteDialogComponent,
     TimeOutDialogComponent,
     OutageBannerComponent,
-    OutageDialogComponent
+    OutageDialogComponent,
+    FileSearchFormComponent
   ]
 })
 export class SharedModule {}

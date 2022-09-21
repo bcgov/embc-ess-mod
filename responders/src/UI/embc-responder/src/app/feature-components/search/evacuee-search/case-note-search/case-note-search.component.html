@@ -1,0 +1,40 @@
+<div class="row heading-container container-frame">
+  <div class="col-md-12">
+    <span class="page-heading">Evacuee Search & Registration</span>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-md-8">
+    <mat-card>
+      <p class="heading">
+        Enter the <b>ESS File Number</b> associated with the file you need to
+        add case notes to.
+      </p>
+
+      <app-file-search-form
+        [fileSearchForm]="fileSearchForm"
+      ></app-file-search-form>
+
+      <div class="row">
+        <div class="col-md-8">
+          <button
+            class="button-p submit"
+            type="button"
+            (click)="search()"
+            [disabled]="isSubmitted"
+            mat-button
+          >
+            Search
+            <app-loader
+              [strokeWidth]="3"
+              [diameter]="25"
+              [showLoader]="isLoading"
+            ></app-loader>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+    <br />
+  </div>
+</div>

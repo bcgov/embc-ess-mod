@@ -17,7 +17,9 @@ export class RestrictionService {
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService
-  ) {
+  ) {}
+
+  init() {
     this.tabMetaData =
       this.stepEvacueeProfileService.getNavLinks('restriction');
   }

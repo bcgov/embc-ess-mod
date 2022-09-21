@@ -1,7 +1,7 @@
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { HouseholdMember } from '../api/models';
@@ -16,13 +16,13 @@ export class Evacuated {
 }
 
 export class EvacuatedForm {
-  evacuatedFromPrimary = new FormControl();
-  evacuatedFromAddress: FormGroup;
-  insurance = new FormControl();
+  evacuatedFromPrimary = new UntypedFormControl();
+  evacuatedFromAddress: UntypedFormGroup;
+  insurance = new UntypedFormControl();
 
   constructor(
     evacuated: Evacuated,
-    builder: FormBuilder,
+    builder: UntypedFormBuilder,
     customValidator: CustomValidationService
   ) {
     this.evacuatedFromAddress = builder.group({
@@ -52,17 +52,17 @@ export class HouseholdMembers {
 }
 
 export class HouseholdMembersForm {
-  haveMedication = new FormControl();
-  haveSpecialDiet = new FormControl();
-  specialDietDetails = new FormControl();
-  householdMember: FormGroup;
-  householdMembers = new FormControl([]);
-  addHouseholdMemberIndicator = new FormControl(false);
+  haveMedication = new UntypedFormControl();
+  haveSpecialDiet = new UntypedFormControl();
+  specialDietDetails = new UntypedFormControl();
+  householdMember: UntypedFormGroup;
+  householdMembers = new UntypedFormControl([]);
+  addHouseholdMemberIndicator = new UntypedFormControl(false);
 
   constructor(
     householdMembers: HouseholdMembers,
     customValidator: CustomValidationService,
-    builder: FormBuilder
+    builder: UntypedFormBuilder
   ) {
     this.householdMember = builder.group({
       firstName: [
@@ -140,16 +140,16 @@ export class Pet {
 }
 
 export class PetForm {
-  pets = new FormControl([]);
-  pet: FormGroup;
-  addPetIndicator = new FormControl(false);
-  hasPetsFood = new FormControl();
-  addPetFoodIndicator = new FormControl(false);
+  pets = new UntypedFormControl([]);
+  pet: UntypedFormGroup;
+  addPetIndicator = new UntypedFormControl(false);
+  hasPetsFood = new UntypedFormControl();
+  addPetFoodIndicator = new UntypedFormControl(false);
 
   constructor(
     pet: Pet,
     customValidator: CustomValidationService,
-    builder: FormBuilder
+    builder: UntypedFormBuilder
   ) {
     this.pet = builder.group({
       quantity: [
@@ -198,11 +198,11 @@ export class IdentifyNeeds {
 }
 
 export class IdentifyNeedsForm {
-  canEvacueeProvideClothing = new FormControl();
-  canEvacueeProvideFood = new FormControl();
-  canEvacueeProvideIncidentals = new FormControl();
-  canEvacueeProvideLodging = new FormControl();
-  canEvacueeProvideTransportation = new FormControl();
+  canEvacueeProvideClothing = new UntypedFormControl();
+  canEvacueeProvideFood = new UntypedFormControl();
+  canEvacueeProvideIncidentals = new UntypedFormControl();
+  canEvacueeProvideLodging = new UntypedFormControl();
+  canEvacueeProvideTransportation = new UntypedFormControl();
 
   constructor(identifyNeeds: IdentifyNeeds) {
     this.canEvacueeProvideClothing.setValue(
@@ -237,7 +237,7 @@ export class Secret {
 }
 
 export class SecretForm {
-  secretPhrase = new FormControl();
+  secretPhrase = new UntypedFormControl();
 
   constructor(secret: Secret) {
     this.secretPhrase.setValue(secret.secretPhrase);

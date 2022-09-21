@@ -92,7 +92,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 era_invoiceref = i.InvoiceNumber ?? referenceNumber, // Dynamics expected a unique 'era_invoiceref'
                 era_referencenumber = referenceNumber,
                 era_remitpaymenttootherbusiness = supplierRemittanceInformation != null,
-                era_totalgst = i.TotalGST,
                 era_totalinvoiceamount = i.TotalAmount,
                 era_invoicetype = 174360100, // fire and forget
                 era_supplierinvoicenumber = i.InvoiceNumber,
@@ -131,7 +130,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             return referrals.Select((r, n) => new ReferralEntity
             {
                 era_referralnumber = r.ReferralNumber,
-                era_totalgst = r.TotalGST,
                 era_totalamount = r.TotalAmount,
                 era_invoicereference = r.InvoiceNumber ?? referenceNumber, // Dynamics expected a unique 'era_invoiceref' from the fake invoice
                 era_submissionreference = referenceNumber
@@ -144,7 +142,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             {
                 era_SupportsProvided = l.SupportProvided.MapToDynamicsReferencedEntity("era_supports"),
                 era_description = l.Description,
-                era_gst = l.GST,
                 era_amount = l.Amount,
                 era_receipt = receipt.ReceiptNumber,
                 era_receiptdate = receipt.Date,
@@ -159,7 +156,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             {
                 era_SupportsProvided = l.SupportProvided.MapToDynamicsReferencedEntity("era_supports"),
                 era_description = l.Description,
-                era_gst = l.GST,
                 era_amount = l.Amount,
                 era_receipt = string.Empty,
                 era_receiptdate = null,

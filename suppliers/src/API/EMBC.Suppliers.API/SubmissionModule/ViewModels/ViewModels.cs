@@ -50,14 +50,12 @@ namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
     {
         public string InvoiceNumber { get; set; }
         public string Date { get; set; }
-        public decimal TotalGST { get; set; }
         public decimal TotalAmount { get; set; }
     }
 
     public class Referral
     {
         public string ReferralNumber { get; set; }
-        public decimal TotalGST { get; set; }
         public decimal TotalAmount { get; set; }
         public string InvoiceNumber { get; set; }
     }
@@ -66,7 +64,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
     {
         public string ReceiptNumber { get; set; }
         public string Date { get; set; }
-        public decimal TotalGST { get; set; }
         public decimal TotalAmount { get; set; }
         public string ReferralNumber { get; set; }
     }
@@ -75,7 +72,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
     {
         public string SupportProvided { get; set; }
         public string Description { get; set; }
-        public decimal GST { get; set; }
         public decimal Amount { get; set; }
         public string ReceiptNumber { get; set; }
         public string ReferralNumber { get; set; }

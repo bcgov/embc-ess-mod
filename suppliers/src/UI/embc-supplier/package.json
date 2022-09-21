@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve --port 3200 --proxy-config proxy.conf.json",
+    "local": "ng serve --port 3200 --proxy-config proxy.conf.local.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

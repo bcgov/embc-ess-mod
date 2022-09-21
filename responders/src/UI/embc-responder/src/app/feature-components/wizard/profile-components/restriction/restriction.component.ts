@@ -22,6 +22,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.restrictionService.init();
     this.restrictionForm = this.restrictionService.createForm();
     this.editFlag = this.appBaseService?.wizardProperties?.editFlag;
     this.tabUpdateSubscription = this.restrictionService.updateTabStatus(

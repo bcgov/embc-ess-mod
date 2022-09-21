@@ -664,3 +664,16 @@ export const remoteActiveStatusText: DashboardBanner = {
   buttonText: 'Extend Supports',
   content: 'Extend Supports associated with the Current ESS File.'
 };
+
+export const caseNotesActiveText: DashboardBanner = {
+  heading: 'Active:',
+  buttonText: 'Add Notes',
+  content: 'Add or Edit Case Notes associated with the Current ESS File.'
+};
+
+export const caseNotesCompleteText: DashboardBanner = {
+  heading: 'Complete:',
+  buttonText: 'Add Notes',
+  content:
+    'Task number end date has expired. Add or Edit Case Notes associated with the Current ESS File.'
+};

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import PersonalDetailsComponent from './personal-details.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 
 describe('PersonalDetailsComponent', () => {
@@ -12,7 +12,7 @@ describe('PersonalDetailsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [PersonalDetailsComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormCreationService, FormBuilder]
+      providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));
 

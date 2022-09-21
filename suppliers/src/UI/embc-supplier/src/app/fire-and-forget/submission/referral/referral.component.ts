@@ -105,20 +105,13 @@ export class ReferralComponent implements OnInit {
         return this.builder.group({
             supportProvided: ['', Validators.required],
             description: [''],
-            gst: ['', Validators.required],
             amount: ['', Validators.required]
-        },
-        {
-            validators: [this.customValidator.amountGreaterValidator()]
         });
-        // { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) }
     }
 
     onChanges() {
         this.referralForm.get('referralRows').valueChanges.subscribe(formrow => {
-            const gstSum = formrow.reduce((prev, next) => prev + +next.gst, 0).toFixed(2);
             const amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0).toFixed(2);
-            this.referralForm.get('totalGst').setValue(gstSum);
             this.referralForm.get('totalAmount').setValue(amtSum);
         });
     }
@@ -174,13 +167,8 @@ export class ReferralComponent implements OnInit {
         return this.builder.group({
             supportProvided: [row.supportProvided, Validators.required],
             description: [row.description],
-            gst: [row.gst, Validators.required],
             amount: [row.amount, Validators.required]
-        },
-        {
-            validators: [this.customValidator.amountGreaterValidator()]
         });
-        // { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) }
     }
 
     checkAttachmentLength(control: []) {

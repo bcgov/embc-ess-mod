@@ -9,7 +9,7 @@ export function generateRegistrant(registrantDetails: PersonDetails,communities:
         restriction: faker.datatype.boolean(),
         personalDetails: registrantDetails,
         contactDetails: {
-            email: faker.internet.email(),
+            email: "autotest." + faker.internet.email(),
             phone: faker.phone.phoneNumber("###-###-####"),
         },
         primaryAddress: generateAddress(communities),
