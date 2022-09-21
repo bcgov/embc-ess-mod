@@ -111,8 +111,7 @@ export class InvoiceComponent implements OnInit {
 
     onChanges() {
         this.invoiceForm.get('referrals').valueChanges.subscribe(template => {
-            const totalGst = template.reduce((prev, next) => prev + +next.totalGst, 0).toFixed(2);
-            this.invoiceForm.get('invoiceTotalGst').setValue(totalGst);
+            this.invoiceForm.get('invoiceTotalGst').setValue(0);
             const totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0).toFixed(2);
             this.invoiceForm.get('invoiceTotalAmount').setValue(totalAmount);
         });
@@ -139,7 +138,7 @@ export class InvoiceComponent implements OnInit {
                 .bind(this.customValidator)]],
             referralRows: this.builder.array([
             ], Validators.required),
-            totalGst: [''],
+            totalGst: [0],
             totalAmount: [''],
             referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([])
@@ -196,7 +195,7 @@ export class InvoiceComponent implements OnInit {
             referralNumber: [referral.referralNumber, Validators.required],
             referralRows: this.builder.array([
             ], Validators.required),
-            totalGst: [referral.totalGst],
+            totalGst: [0],
             totalAmount: [referral.totalAmount],
             referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([])

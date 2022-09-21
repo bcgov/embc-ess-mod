@@ -100,15 +100,14 @@ export class ReceiptComponent implements OnInit{
              receiptNumber: [''],
              referralRows: this.builder.array([
             ], Validators.required),
-            totalGst: [''],
+            totalGst: [0],
             totalAmount: ['']
          });
     }
 
     onChanges() {
         this.receiptForm.get('referrals').valueChanges.subscribe(template => {
-            const totalGst = template.reduce((prev, next) => prev + +next.totalGst, 0).toFixed(2);
-            this.receiptForm.get('receiptTotalGst').setValue(totalGst);
+            this.receiptForm.get('receiptTotalGst').setValue(0);
             const totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0).toFixed(2);
             this.receiptForm.get('receiptTotalAmount').setValue(totalAmount);
         });
@@ -207,7 +206,7 @@ export class ReceiptComponent implements OnInit{
              receiptNumber: [referral.receiptNumber],
              referralRows: this.builder.array([
             ], Validators.required),
-            totalGst: [referral.totalGst],
+            totalGst: [0],
             totalAmount: [referral.totalAmount]
          });
     }

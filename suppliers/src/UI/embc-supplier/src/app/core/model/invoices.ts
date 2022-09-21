@@ -7,7 +7,7 @@ export class Invoices {
         constructor(invoiceNumber: string, date: string, totalGST: number, totalAmount: number) {
                 this.invoiceNumber = invoiceNumber;
                 this.date = date;
-                this.totalGST = totalGST;
+                this.totalGST = 0;
                 this.totalAmount = totalAmount;
         }
 }
