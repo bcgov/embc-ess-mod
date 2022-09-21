@@ -7,10 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CustomPipeModule } from '../../core/pipe/customPipe.module';
 import { CoreModule } from '../../core/core.module';
-import {
-  RecaptchaFormsModule,
-  RecaptchaModule
-} from 'ng-recaptcha';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 import { CaptchaV2Component } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
