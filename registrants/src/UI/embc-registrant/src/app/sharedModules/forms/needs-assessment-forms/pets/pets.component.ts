@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatRadioModule } from '@angular/material/radio';
@@ -20,9 +20,9 @@ import * as globalConst from '../../../../core/services/globalConstants';
   styleUrls: ['./pets.component.scss']
 })
 export default class PetsComponent implements OnInit {
-  petsForm: FormGroup;
+  petsForm: UntypedFormGroup;
   radioOption = globalConst.radioButton1;
-  formBuilder: FormBuilder;
+  formBuilder: UntypedFormBuilder;
   petsForm$: Subscription;
   formCreationService: FormCreationService;
   showPetsForm = false;
@@ -34,7 +34,7 @@ export default class PetsComponent implements OnInit {
   showTable = true;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
   ) {
     this.formBuilder = formBuilder;

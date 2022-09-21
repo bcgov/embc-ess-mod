@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import {
   InsuranceOption,
   NeedsAssessment,
@@ -155,7 +155,7 @@ export class NeedsAssessmentService {
     this.householdMembers = householdMembersArray;
   }
 
-  public setNeedsDetails(formGroup: FormGroup): void {
+  public setNeedsDetails(formGroup: UntypedFormGroup): void {
     this.canEvacueeProvideClothing = formGroup.get(
       'canEvacueeProvideClothing'
     ).value;

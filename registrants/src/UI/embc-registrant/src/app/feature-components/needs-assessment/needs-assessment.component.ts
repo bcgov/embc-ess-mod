@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
@@ -35,7 +35,7 @@ export class NeedsAssessmentComponent
   needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
   form$: Subscription;
-  form: FormGroup;
+  form: UntypedFormGroup;
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
   captchaPassed = false;
   stepToDisplay: number;

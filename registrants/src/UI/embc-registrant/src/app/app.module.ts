@@ -39,7 +39,7 @@ import { OutageDialogComponent } from './sharedModules/outage-components/outage-
       useFactory: (s: PlatformLocation) => {
         let result = s.getBaseHrefFromDOM();
         if (result[result.length - 1] === '/') {
-          result = result.substr(0, result.length - 1);
+          result = result.substring(0, result.length - 1);
         }
         return result;
       },

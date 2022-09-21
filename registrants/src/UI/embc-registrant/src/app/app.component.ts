@@ -7,7 +7,6 @@ import { LoginService } from './core/services/login.service';
 import { ConfigService } from './core/services/config.service';
 import { EnvironmentInformation } from './core/model/environment-information.model';
 import { OutageService } from './feature-components/outage/outage.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',

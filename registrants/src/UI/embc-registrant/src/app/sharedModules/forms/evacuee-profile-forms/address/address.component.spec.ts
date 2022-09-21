@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import AddressComponent from './address.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 
 describe('AddressComponent', () => {
@@ -12,7 +12,7 @@ describe('AddressComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AddressComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormCreationService, FormBuilder]
+      providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));
 

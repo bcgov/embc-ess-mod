@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
@@ -24,7 +24,7 @@ export class EditService {
    *
    * @param component current component name
    */
-  saveFormData(component: string, form: FormGroup, path: string): void {
+  saveFormData(component: string, form: UntypedFormGroup, path: string): void {
     switch (component) {
       case 'restriction':
         this.restrictionService.restrictedAccess =
@@ -59,7 +59,7 @@ export class EditService {
         this.profileDataService.contactDetails = form.value;
         break;
       case 'security-questions':
-        this.saveSecurityQuestions(form.get('questions') as FormGroup);
+        this.saveSecurityQuestions(form.get('questions') as UntypedFormGroup);
         break;
       case 'evac-address':
         this.evacuationFileDataService.evacuatedAddress = form.get(
@@ -100,7 +100,11 @@ export class EditService {
    * @param component current component name
    * @param form  form to update
    */
-  cancelFormData(component: string, form: FormGroup, path: string): void {
+  cancelFormData(
+    component: string,
+    form: UntypedFormGroup,
+    path: string
+  ): void {
     switch (component) {
       case 'restriction':
         if (this.restrictionService.restrictedAccess !== undefined) {
@@ -295,7 +299,7 @@ export class EditService {
     }
   }
 
-  private saveSecurityQuestions(questionForm: FormGroup) {
+  private saveSecurityQuestions(questionForm: UntypedFormGroup) {
     let anyValueSet = false;
     const questionSet = [];
     // Create SecurityQuestion objects and save to array, and check if any value set

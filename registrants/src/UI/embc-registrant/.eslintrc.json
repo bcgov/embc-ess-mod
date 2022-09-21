@@ -27,6 +27,7 @@
       "rules": {
         "no-shadow": "off",
         "deprecation/deprecation": "error",
+        "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-shadow": [
           "error"
         ],
