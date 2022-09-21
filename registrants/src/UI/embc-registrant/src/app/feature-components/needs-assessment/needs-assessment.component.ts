@@ -20,6 +20,10 @@ import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { map, mergeMap } from 'rxjs/operators';
+import {
+  CaptchaResponse,
+  CaptchaResponseType
+} from 'src/app/core/components/captcha-v2/captcha-v2.component';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -266,7 +270,11 @@ export class NeedsAssessmentComponent
     });
   }
 
-  allowSubmit($event: boolean): void {
-    this.captchaPassed = $event;
+  allowSubmit($event: CaptchaResponse): void {
+    if ($event.type === CaptchaResponseType.success) {
+      this.captchaPassed = true;
+    } else {
+      this.captchaPassed = false;
+    }
   }
 }
