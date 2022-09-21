@@ -88,7 +88,6 @@ namespace EMBC.Tests.Suppliers.API
                         InvoiceNumber = "inv1",
                         Date = "2020-03-12",
                         TotalAmount = 100.00m,
-                        TotalGST = 12.00m
                     }
                 },
                 Receipts = Array.Empty<Receipt>(),
@@ -97,7 +96,6 @@ namespace EMBC.Tests.Suppliers.API
                     {
                         SupportProvided = "Clothing",
                         ReferralNumber = "ref123",
-                        GST = 5,
                         Amount = 10,
                         Description = "desc"
                     }
@@ -108,7 +106,6 @@ namespace EMBC.Tests.Suppliers.API
                     {
                         InvoiceNumber="inv1",
                         ReferralNumber = "ref123",
-                        TotalGST = 10.0m,
                         TotalAmount = 40m
                     }
                 },
@@ -170,7 +167,6 @@ namespace EMBC.Tests.Suppliers.API
                         ReceiptNumber = "rec1",
                         ReferralNumber = "ref123",
                         TotalAmount = 50.35m,
-                        TotalGST = 12.34m
                     }
                 },
                 LineItems = new[]
@@ -180,7 +176,6 @@ namespace EMBC.Tests.Suppliers.API
                         SupportProvided = "Lodging - Hotel/Motel",
                         ReferralNumber = "ref123",
                         ReceiptNumber = "rec1",
-                        GST = 5,
                         Amount = 10,
                         Description = "desc"
                     }
@@ -191,7 +186,6 @@ namespace EMBC.Tests.Suppliers.API
                     {
                         InvoiceNumber=null,
                         ReferralNumber = "ref123",
-                        TotalGST = 10.0m,
                         TotalAmount = 40m
                     }
                 },

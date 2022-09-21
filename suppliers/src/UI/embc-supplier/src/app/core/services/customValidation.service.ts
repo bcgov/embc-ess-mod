@@ -54,24 +54,6 @@ export class CustomValidationService {
     }
 
     /**
-     * Validation for amount to be always greater than GST
-     */
-    amountGreaterValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if (control.value) {
-                const gst = control.get('gst').value;
-                const amount = control.get('amount').value;
-                if (gst !== '' && amount !== '') {
-                    if (+gst >= +amount) {
-                        return { amountGreater: true };
-                    }
-                }
-            }
-            return null;
-        };
-    }
-
-    /**
      * Validition for the fields that are conditional
      * @param predicate : condition to check
      * @param validator : validtor to test again
