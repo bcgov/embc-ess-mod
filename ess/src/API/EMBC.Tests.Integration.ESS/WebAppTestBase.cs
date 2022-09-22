@@ -19,8 +19,10 @@ namespace EMBC.Tests.Integration.ESS
             return host.CreateHost("EMBC").ConfigureHostConfiguration(opts =>
             {
                 // add secerts from host assembly
-                opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), false, true);
-                opts.AddJsonFile("appsettings.json", false).AddJsonFile("appsettings.Development.json", true);
+#pragma warning disable S3885 // "Assembly.Load" should be used
+                opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), true, false);
+#pragma warning restore S3885 // "Assembly.Load" should be used
+                opts.AddJsonFile("appsettings.json", false, false).AddJsonFile("appsettings.Development.json", true, false).AddJsonFile(Environment.GetEnvironmentVariable("secrets_file_path") ?? "secrets.json", true, false);
                 // disable background tasks during tests
                 opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
             }).ConfigureServices(services =>
@@ -38,7 +40,7 @@ namespace EMBC.Tests.Integration.ESS
 
         public IServiceProvider Services { get; }
 
-        public WebAppTestBase(ITestOutputHelper output, WebAppTestFixture fixture)
+        protected WebAppTestBase(ITestOutputHelper output, WebAppTestFixture fixture)
         {
             var factory = fixture.WithWebHostBuilder(builder =>
            {
@@ -46,7 +48,7 @@ namespace EMBC.Tests.Integration.ESS
                builder.UseSerilog((ctx, cfg) =>
                {
                    cfg
-                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
+                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Information)
                     .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
                     .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
                });
