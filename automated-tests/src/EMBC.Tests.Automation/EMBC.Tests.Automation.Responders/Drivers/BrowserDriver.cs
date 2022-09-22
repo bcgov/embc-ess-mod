@@ -59,10 +59,15 @@ namespace EMBC.Tests.Automation.Responders.Drivers
             return ngWebDriver;
         }
 
-        private IConfiguration ReadConfiguration() =>
-            new ConfigurationBuilder()
-                .AddUserSecrets<BrowserDriver>()
-                .Build();
+        private IConfiguration ReadConfiguration()
+        {
+            var configBuilder = new ConfigurationBuilder().AddUserSecrets<BrowserDriver>(true, false);
+
+            var secretsFile = Environment.GetEnvironmentVariable("secrets_file_path");
+            if (!string.IsNullOrEmpty(secretsFile)) configBuilder.AddJsonFile(secretsFile, true, false);
+
+            return configBuilder.Build();
+        }
 
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed

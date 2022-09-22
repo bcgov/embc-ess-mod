@@ -9,7 +9,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
     /// Manages a browser instance using Selenium
     /// </summary>
     //public class BrowserDriver : IDisposable
-    public class BrowserDriver
+    public class BrowserDriver : IDisposable
     {
         private readonly Lazy<IWebDriver> currentWebDriverLazy;
         private readonly Lazy<IConfiguration> configurationLazy;
@@ -59,10 +59,15 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
             return ngWebDriver;
         }
 
-        private IConfiguration ReadConfiguration() =>
-            new ConfigurationBuilder()
-                .AddUserSecrets<BrowserDriver>()
-                .Build();
+        private IConfiguration ReadConfiguration()
+        {
+            var configBuilder = new ConfigurationBuilder().AddUserSecrets<BrowserDriver>(true, false);
+
+            var secretsFile = Environment.GetEnvironmentVariable("secrets_file_path");
+            if (!string.IsNullOrEmpty(secretsFile)) configBuilder.AddJsonFile(secretsFile, true, false);
+
+            return configBuilder.Build();
+        }
 
         /// <summary>
         /// Disposes the Selenium web driver (closing the browser) after the Scenario completed
