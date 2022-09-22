@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+    <RunConfiguration>
+        <ResultsDirectory>.\TestResults</ResultsDirectory>
+    </RunConfiguration>
+
+    <DataCollectionRunSettings>
+        <DataCollectors>
+
+            <!-- Configuration for blame data collector -->
+            <DataCollector friendlyName="blame" enabled="True">
+            </DataCollector>
+        </DataCollectors>
+    </DataCollectionRunSettings>
+
+    <!-- Parameters used by tests at run time -->
+    <TestRunParameters>
+    </TestRunParameters>
+
+    <!-- Configuration for loggers -->
+    <LoggerRunSettings>
+        <Loggers>
+            <Logger friendlyName="console" enabled="True">
+                <Configuration>
+                    <Verbosity>quiet</Verbosity>
+                </Configuration>
+            </Logger>
+            <Logger friendlyName="trx" enabled="True">
+                <Configuration>
+                    <LogFileName>integration-tests.trx</LogFileName>
+                </Configuration>
+            </Logger>
+            <Logger friendlyName="html" enabled="True">
+                <Configuration>
+                    <LogFileName>integration-tests.html</LogFileName>
+                </Configuration>
+            </Logger>
+            <Logger friendlyName="blame" enabled="True" />
+        </Loggers>
+    </LoggerRunSettings>
+</RunSettings>
