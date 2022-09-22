@@ -2,6 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { FormCreationService } from '../../core/services/formCreation.service';
+import {
+  CaptchaResponse,
+  CaptchaResponseType
+} from 'src/app/core/components/captcha-v2/captcha-v2.component';
+import { ConfigService } from 'src/app/core/services/config.service';
 
 @Component({
   selector: 'app-review',
@@ -9,7 +14,7 @@ import { FormCreationService } from '../../core/services/formCreation.service';
   styleUrls: ['./review.component.scss']
 })
 export class ReviewComponent implements OnInit {
-  @Output() captchaPassed = new EventEmitter<boolean>(false);
+  @Output() captchaPassed = new EventEmitter<CaptchaResponse>();
   @Input() type: string;
   @Input() showHeading: boolean;
   @Input() currentFlow: string;
@@ -17,10 +22,9 @@ export class ReviewComponent implements OnInit {
   @Input() allowEdit: boolean;
   componentToLoad: Observable<any>;
   cs: any;
+  siteKey: string;
 
   hideCard = false;
-  captchaVerified = false;
-  captchaFilled = false;
   navigationExtras: NavigationExtras;
 
   constructor(
@@ -31,7 +35,9 @@ export class ReviewComponent implements OnInit {
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };
     if (this.currentFlow === 'verified-registration') {
-      this.captchaPassed.emit(true);
+      this.captchaPassed.emit({
+        type: CaptchaResponseType.success
+      });
     }
   }
 
@@ -49,14 +55,7 @@ export class ReviewComponent implements OnInit {
     this.hideCard = false;
   }
 
-  public onValidToken(token: any): void {
-    this.captchaVerified = true;
-    this.captchaFilled = true;
-    this.captchaPassed.emit(true);
-  }
-
-  public onServerError(error: any): void {
-    this.captchaVerified = true;
-    this.captchaFilled = true;
+  onTokenResponse($event: CaptchaResponse) {
+    this.captchaPassed.emit($event);
   }
 }

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import IdentifyNeedsComponent from './identify-needs.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('IdentifyNeedsComponent', () => {
   let component: IdentifyNeedsComponent;
@@ -11,7 +11,7 @@ describe('IdentifyNeedsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [IdentifyNeedsComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormBuilder]
+      providers: [UntypedFormBuilder]
     }).compileComponents();
   }));
 

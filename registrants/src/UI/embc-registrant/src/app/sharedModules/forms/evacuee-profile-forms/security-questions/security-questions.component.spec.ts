@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import SecurityQuestionsComponent from './security-questions.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 
 describe('SecurityQuestionsComponent', () => {
@@ -13,7 +13,7 @@ describe('SecurityQuestionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, ReactiveFormsModule],
       declarations: [SecurityQuestionsComponent],
-      providers: [FormBuilder, FormCreationService]
+      providers: [UntypedFormBuilder, FormCreationService]
     }).compileComponents();
   });
 

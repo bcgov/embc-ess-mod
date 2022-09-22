@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
@@ -20,6 +20,10 @@ import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { map, mergeMap } from 'rxjs/operators';
+import {
+  CaptchaResponse,
+  CaptchaResponseType
+} from 'src/app/core/components/captcha-v2/captcha-v2.component';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -35,7 +39,7 @@ export class NeedsAssessmentComponent
   needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
   form$: Subscription;
-  form: FormGroup;
+  form: UntypedFormGroup;
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
   captchaPassed = false;
   stepToDisplay: number;
@@ -266,7 +270,11 @@ export class NeedsAssessmentComponent
     });
   }
 
-  allowSubmit($event: boolean): void {
-    this.captchaPassed = $event;
+  allowSubmit($event: CaptchaResponse): void {
+    if ($event.type === CaptchaResponseType.success) {
+      this.captchaPassed = true;
+    } else {
+      this.captchaPassed = false;
+    }
   }
 }

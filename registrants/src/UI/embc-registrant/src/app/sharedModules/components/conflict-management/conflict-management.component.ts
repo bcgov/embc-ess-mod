@@ -11,7 +11,7 @@ import { ProfileDataService } from '../../../feature-components/profile/profile-
 import { ProfileService } from '../../../feature-components/profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ConflictManagementService } from './conflict-management.service';
 import { LocationService } from 'src/app/core/services/location.service';
 import * as globalConst from '../../../core/services/globalConstants';
@@ -29,7 +29,7 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   conflicts: Array<ProfileDataConflict> = [];
   showLoader = false;
   isSubmitted = false;
-  form: FormGroup;
+  form: UntypedFormGroup;
   nameConflict: ProfileDataConflict;
   dobConflict: ProfileDataConflict;
   addressConflict: ProfileDataConflict;

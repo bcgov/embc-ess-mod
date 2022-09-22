@@ -1,0 +1,15 @@
+<div [formGroup]="captchaForm">
+  <div class="row">
+    <div class="col-md-12">
+      <re-captcha
+        id="recaptcha"
+        (resolved)="resolved($event)"
+        (error)="errored($event)"
+        name="recaptcha"
+        formControlName="token"
+        siteKey="{{ captchaKey }}"
+        required
+      ></re-captcha>
+    </div>
+  </div>
+</div>

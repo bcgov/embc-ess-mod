@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import PetsComponent from './pets.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 
 describe('PetsComponent', () => {
@@ -12,7 +12,7 @@ describe('PetsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [PetsComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormCreationService, FormBuilder]
+      providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));
 

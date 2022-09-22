@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import FamilyInformationComponent from './family-information.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('FamilyInformationComponent', () => {
   let component: FamilyInformationComponent;
@@ -11,7 +11,7 @@ describe('FamilyInformationComponent', () => {
     TestBed.configureTestingModule({
       declarations: [FamilyInformationComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormBuilder]
+      providers: [UntypedFormBuilder]
     }).compileComponents();
   }));
 
