@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CoreModule } from '../../core/core.module';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [NeedsAssessmentComponent],
@@ -29,7 +30,9 @@ import { CoreModule } from '../../core/core.module';
     MatSelectModule,
     MatAutocompleteModule,
     MatDialogModule,
-    CoreModule
+    CoreModule,
+    RecaptchaFormsModule,
+    RecaptchaModule
   ]
 })
 export class NeedsAssessmentModule {}
