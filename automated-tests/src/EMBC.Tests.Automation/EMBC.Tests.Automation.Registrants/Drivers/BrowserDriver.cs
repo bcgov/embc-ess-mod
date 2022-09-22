@@ -63,7 +63,7 @@ namespace EMBC.Tests.Automation.Registrants.Drivers
         {
             var configBuilder = new ConfigurationBuilder().AddUserSecrets<BrowserDriver>(true, false);
 
-            var secretsFile = Environment.GetEnvironmentVariable("secrets_file_path");
+            var secretsFile = Environment.GetEnvironmentVariable("registrants_secrets_file_path");
             if (!string.IsNullOrEmpty(secretsFile)) configBuilder.AddJsonFile(secretsFile, true, false);
 
             return configBuilder.Build();
