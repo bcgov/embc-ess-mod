@@ -1,5 +1,5 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: job-scheduling build config template
 
@@ -69,7 +69,7 @@ objects:
       source:
         type: Git
         git:
-          uri: "https://github.com/JonTaylorBCGov/job-scheduling"
+          uri: "https://github.com/bcgov/job-scheduling"
           ref: master
       triggers:
         - type: ConfigChange
