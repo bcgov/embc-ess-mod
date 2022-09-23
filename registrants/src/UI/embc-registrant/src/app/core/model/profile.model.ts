@@ -1,8 +1,8 @@
 import {
-  FormControl,
+  UntypedFormControl,
   Validators,
-  FormBuilder,
-  FormGroup
+  UntypedFormBuilder,
+  UntypedFormGroup
 } from '@angular/forms';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
@@ -14,7 +14,7 @@ export class Restriction {
 }
 
 export class RestrictionForm {
-  restrictedAccess = new FormControl();
+  restrictedAccess = new UntypedFormControl();
 
   constructor(restriction: Restriction) {
     this.restrictedAccess.setValue(restriction.restrictedAccess);
@@ -45,12 +45,12 @@ export class PersonDetails {
 }
 
 export class PersonDetailsForm {
-  firstName = new FormControl();
-  lastName = new FormControl();
-  preferredName = new FormControl();
-  initials = new FormControl();
-  gender = new FormControl();
-  dateOfBirth = new FormControl();
+  firstName = new UntypedFormControl();
+  lastName = new UntypedFormControl();
+  preferredName = new UntypedFormControl();
+  initials = new UntypedFormControl();
+  gender = new UntypedFormControl();
+  dateOfBirth = new UntypedFormControl();
 
   constructor(
     personDetail: PersonDetails,
@@ -92,12 +92,12 @@ export class ContactDetails {
 }
 
 export class ContactDetailsForm {
-  email = new FormControl();
-  phone = new FormControl();
-  confirmEmail = new FormControl();
-  showContacts = new FormControl();
-  hideEmailRequired = new FormControl(false);
-  hidePhoneRequired = new FormControl(false);
+  email = new UntypedFormControl();
+  phone = new UntypedFormControl();
+  confirmEmail = new UntypedFormControl();
+  showContacts = new UntypedFormControl();
+  hideEmailRequired = new UntypedFormControl(false);
+  hidePhoneRequired = new UntypedFormControl(false);
 
   constructor(
     contactDetails: ContactDetails,
@@ -167,11 +167,11 @@ export class SecurityQuestions {
 }
 
 export class SecurityQuestionsForm {
-  questions: FormGroup;
+  questions: UntypedFormGroup;
 
   constructor(
     securityQuestions: SecurityQuestions,
-    builder: FormBuilder,
+    builder: UntypedFormBuilder,
     customValidator: CustomValidationService
   ) {
     this.questions = builder.group(
@@ -228,15 +228,15 @@ export class Address {
 }
 
 export class AddressForm {
-  address: FormGroup;
-  isBcAddress = new FormControl();
-  isNewMailingAddress = new FormControl();
-  isBcMailingAddress = new FormControl();
-  mailingAddress: FormGroup;
+  address: UntypedFormGroup;
+  isBcAddress = new UntypedFormControl();
+  isNewMailingAddress = new UntypedFormControl();
+  isBcMailingAddress = new UntypedFormControl();
+  mailingAddress: UntypedFormGroup;
 
   constructor(
     address: Address,
-    builder: FormBuilder,
+    builder: UntypedFormBuilder,
     customValidator: CustomValidationService
   ) {
     this.address = builder.group({

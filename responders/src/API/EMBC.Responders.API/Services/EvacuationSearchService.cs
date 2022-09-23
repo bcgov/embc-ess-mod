@@ -208,7 +208,8 @@ namespace EMBC.Responders.API.Services
                 new EvacuationFileTaskFeature { Name = "digital-support-referrals", Enabled = file.Task?.To >= DateTime.UtcNow },
                 new EvacuationFileTaskFeature { Name = "digital-support-etransfer", Enabled = etransferEnabled && (file.Task == null || !file.Task.To.HasValue || file.Task?.To >= DateTime.UtcNow) },
                 new EvacuationFileTaskFeature { Name = "paper-support-referrals", Enabled = file.ManualFileId != null },
-                new EvacuationFileTaskFeature { Name = "remote-extensions", Enabled = task != null ? task.RemoteExtensionsEnabled : false },
+                new EvacuationFileTaskFeature { Name = "remote-extensions", Enabled = task != null && task.RemoteExtensionsEnabled },
+                new EvacuationFileTaskFeature { Name = "case-notes", Enabled = task != null && (task.Status == ESS.Shared.Contracts.Events.IncidentTaskStatus.Active || task.Status == ESS.Shared.Contracts.Events.IncidentTaskStatus.Expired) },
             };
         }
     }

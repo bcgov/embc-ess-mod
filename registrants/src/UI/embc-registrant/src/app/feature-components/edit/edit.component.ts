@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -25,7 +25,7 @@ export class EditComponent implements OnInit, OnDestroy {
   };
   profileNavigationExtras: NavigationExtras = { state: { stepIndex: 4 } };
   form$: Subscription;
-  form: FormGroup;
+  form: UntypedFormGroup;
   editHeading: string;
   currentFlow: string;
   parentPageName: string;

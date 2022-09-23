@@ -42,11 +42,11 @@ export class EssfileDashboardComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (
-      this.optionInjectionService.instance.optionType !==
-      SelectedPathType.remoteExtensions
+      this.optionInjectionService.instance.optionType ===
+        SelectedPathType.remoteExtensions ||
+      this.optionInjectionService.instance.optionType ===
+        SelectedPathType.caseNotes
     ) {
-      this.getEssFile();
-    } else {
       this.isLoading = !this.isLoading;
       const $p = await this.optionInjectionService.instance
         .loadEssFile()
@@ -66,6 +66,8 @@ export class EssfileDashboardComponent implements OnInit {
               this.isLoading = !this.isLoading;
             });
         });
+    } else {
+      this.getEssFile();
     }
 
     const profile$ = await this.essfileDashboardService.updateMember();

@@ -11,7 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
 import { CoreModule } from '../../core/core.module';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 
@@ -31,7 +31,7 @@ describe('CollectionNoticeComponent', () => {
         BrowserAnimationsModule,
         CoreModule
       ],
-      providers: [FormBuilder]
+      providers: [UntypedFormBuilder]
     }).compileComponents();
   }));
 

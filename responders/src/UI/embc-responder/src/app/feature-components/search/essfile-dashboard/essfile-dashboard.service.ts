@@ -161,6 +161,8 @@ export class EssfileDashboardService {
       optionType === SelectedPathType.remoteExtensions
     ) {
       return WizardType.ExtendSupports;
+    } else if (optionType === SelectedPathType.caseNotes) {
+      return WizardType.CaseNotes;
     } else {
       return WizardType.ReviewFile;
     }

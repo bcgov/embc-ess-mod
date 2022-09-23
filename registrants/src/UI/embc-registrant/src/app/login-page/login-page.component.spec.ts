@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LoginPageComponent } from './login-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LoginService } from '../core/services/login.service';
 import { OAuthModule } from 'angular-oauth2-oidc';
@@ -22,7 +22,7 @@ describe('LoginPageComponent', () => {
         OAuthModule.forRoot()
       ],
       providers: [
-        FormBuilder,
+        UntypedFormBuilder,
         { provides: LoginService, useValue: loginService }
       ]
     }).compileComponents();

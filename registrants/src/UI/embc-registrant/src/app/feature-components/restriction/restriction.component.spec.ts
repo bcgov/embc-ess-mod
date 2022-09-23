@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RestrictionComponent } from './restriction.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('RestrictionComponent', () => {
   let component: RestrictionComponent;
@@ -11,7 +11,7 @@ describe('RestrictionComponent', () => {
     TestBed.configureTestingModule({
       declarations: [RestrictionComponent],
       imports: [RouterTestingModule, ReactiveFormsModule],
-      providers: [FormBuilder]
+      providers: [UntypedFormBuilder]
     }).compileComponents();
   }));
 

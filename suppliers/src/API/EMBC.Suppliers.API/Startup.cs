@@ -154,17 +154,15 @@ namespace EMBC.Suppliers.API
             });
             services.AddDistributedMemoryCache();
 
-            services.AddSingleton<IFileSystem, FileSystem>();
-            services.AddTransient<ICountriesListProvider, ListsProvider>();
-            services.AddTransient<IStateProvincesListProvider, ListsProvider>();
-            services.AddTransient<IJurisdictionsListProvider, ListsProvider>();
-            services.AddTransient<ISupportsListProvider, ListsProvider>();
+            services.AddTransient<ICache, Cache>();
+            services.AddTransient<ICacheHandler, CacheHandler>();
             services.AddTransient<IListsGateway, DynamicsListsGateway>();
-            services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Cache"));
-            services.AddTransient<IListsRepository, FileBasedCachedListsRepository>();
+            services.AddTransient<IListsProvider, ListsProvider>();
+            services.AddTransient<IListsRepository, ListsRepository>();
+            services.AddTransient<ISubmissionHandler, SubmissionHandler>();
+            services.AddTransient<ConfigHealthProvider>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();
-            services.AddTransient<ISubmissionRepository, SubmissionRepository>();
             services.AddTransient<IReferenceNumberGenerator, ReferenceNumberGenerator>();
             services.AddTransient<ISubmissionDynamicsCustomActionHandler, SubmissionDynamicsCustomActionHandler>();
             services.AddScoped(sp =>

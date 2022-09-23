@@ -1,8 +1,8 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -24,9 +24,9 @@ import { AddressFormsModule } from '../../address-forms/address-forms.module';
   styleUrls: ['./evac-address.component.scss']
 })
 export default class EvacAddressComponent implements OnInit {
-  primaryAddressForm: FormGroup;
-  evacuatedForm: FormGroup;
-  formBuilder: FormBuilder;
+  primaryAddressForm: UntypedFormGroup;
+  evacuatedForm: UntypedFormGroup;
+  formBuilder: UntypedFormBuilder;
   primaryAddressForm$: Subscription;
   evacuatedForm$: Subscription;
   formCreationService: FormCreationService;
@@ -35,7 +35,7 @@ export default class EvacAddressComponent implements OnInit {
   // registrationAddress: Partial<Registration>;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
   ) {
     this.formBuilder = formBuilder;

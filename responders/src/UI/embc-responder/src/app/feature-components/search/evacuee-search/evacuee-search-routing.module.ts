@@ -19,6 +19,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'caseNotes-search',
+    loadChildren: () =>
+      import('../evacuee-search/case-note-search/case-note-search.module').then(
+        (m) => m.CaseNoteSearchModule
+      )
+  },
+  {
     path: 'id-search',
     loadChildren: () =>
       import(

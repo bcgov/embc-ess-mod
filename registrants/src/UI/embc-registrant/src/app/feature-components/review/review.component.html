@@ -19,12 +19,9 @@
     </div>
     <div class="row" style="margin-top: 20px">
       <div class="col">
-        <captcha
-          language="en"
-          eagerFetchAudio="true"
-          (validToken)="onValidToken($event)"
-          (serverError)="onServerError($event)"
-        ></captcha>
+        <app-captcha-v2
+          (captchaResponse)="onTokenResponse($event)"
+        ></app-captcha-v2>
       </div>
     </div>
   </div>

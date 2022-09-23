@@ -6,8 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
   ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   AbstractControl
 } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
@@ -19,13 +19,13 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./secret.component.scss']
 })
 export default class SecretComponent implements OnInit, OnDestroy {
-  formBuilder: FormBuilder;
+  formBuilder: UntypedFormBuilder;
   secretForm$: Subscription;
-  secretForm: FormGroup;
+  secretForm: UntypedFormGroup;
   formCreationService: FormCreationService;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
   ) {
     this.formBuilder = formBuilder;

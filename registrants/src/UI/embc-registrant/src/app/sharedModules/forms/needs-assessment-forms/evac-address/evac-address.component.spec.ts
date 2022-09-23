@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import EvacAddressComponent from './evac-address.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 
 describe('EvacAddressComponent', () => {
@@ -12,7 +12,7 @@ describe('EvacAddressComponent', () => {
     TestBed.configureTestingModule({
       declarations: [EvacAddressComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormCreationService, FormBuilder]
+      providers: [FormCreationService, UntypedFormBuilder]
     }).compileComponents();
   }));
 
