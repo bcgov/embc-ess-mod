@@ -13,7 +13,7 @@ namespace EMBC.Tests.Automation.Responders.PageObjects
 
         public virtual string CurrentLocation => new Uri(webDriver.Url).AbsolutePath;
 
-        public virtual void Wait(int milliseconds = 500) => Thread.Sleep(milliseconds);
+        public virtual void Wait(int milliseconds = 700) => Thread.Sleep(milliseconds);
 
         protected void ButtonElement(string btnContent)
         {

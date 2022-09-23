@@ -16,12 +16,6 @@ The purpose of these tests is to confirm access to the Registrant Portal and suc
 #	And the submitted information is correct for minimum fields completed
 #	Then I confirm the ESS File Number is displayed
 
-Scenario: Registrant Portal - CAPTCHA field check
-	Given I start self registration
-	When I complete the minimum fields on the evacuee forms
-	Then the CAPTCHA field is confirmed to be working
-
-
 Scenario: Registrant Portal - submit minimal form
 	Given I start self registration
 	When I complete the minimum fields on the evacuee forms
