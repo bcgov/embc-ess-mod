@@ -6,7 +6,6 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
     public sealed class RegistrantPortalSteps
     {
         private readonly Registration registration;
-        private readonly string captchaAnswer;
         private readonly EvacueeDashboard evacueeDashboard;
 
         private readonly string firstName1Input = "Jane";
@@ -43,7 +42,6 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
         public RegistrantPortalSteps(BrowserDriver driver)
         {
             registration = new Registration(driver.Current);
-            // captchaAnswer = driver.Configuration.GetValue<string>("captchaAnswer");
             evacueeDashboard = new EvacueeDashboard(driver.Current);
         }
 
