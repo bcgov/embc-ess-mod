@@ -13,7 +13,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         public virtual string CurrentLocation => new Uri(webDriver.Url).AbsolutePath;
 
-        public virtual void Wait(int milliseconds = 500) => Thread.Sleep(milliseconds);
+        public virtual void Wait(int milliseconds = 700) => Thread.Sleep(milliseconds);
 
         protected void ButtonElement(string btnContent)
         {
@@ -23,6 +23,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
             var buttons = webDriver.FindElements(By.TagName("button"));
             var selectedBtn = buttons.Should().ContainSingle(b => b.Text.Contains(btnContent)).Subject;
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectedBtn);
             js.ExecuteScript("arguments[0].click()", selectedBtn);
         }
 
@@ -76,6 +77,19 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             js.ExecuteScript("arguments[0].scrollIntoView();", selectedRadioBttn);
             Wait();
             selectedRadioBttn.Click();
+        }
+
+        protected void FocusAndClick(By element)
+        {
+            Wait();
+
+            var js = (IJavaScriptExecutor)webDriver;
+            var selectedElement = webDriver.FindElement(element);
+
+            js.ExecuteScript("arguments[0].scrollIntoView();", selectedElement);
+
+            Wait();
+            selectedElement.Click();
         }
     }
 }

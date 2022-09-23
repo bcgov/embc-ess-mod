@@ -43,7 +43,7 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
         public RegistrantPortalSteps(BrowserDriver driver)
         {
             registration = new Registration(driver.Current);
-            captchaAnswer = driver.Configuration.GetValue<string>("captchaAnswer");
+            // captchaAnswer = driver.Configuration.GetValue<string>("captchaAnswer");
             evacueeDashboard = new EvacueeDashboard(driver.Current);
         }
 
@@ -141,7 +141,7 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
             //ESS file Household Members
             registration.CreateESSFileMaxHouseholdMembers(firstName2Input, lastNameInput, initialsInput, gender1Input, DOB2Input, dietDetailsInput);
 
-            //no pets entered
+            //Pets entered
             registration.CreateESSFileMaxAnimals(petsTypeInput, petsQuantityInput);
 
             //ESS file Needs
@@ -157,13 +157,7 @@ namespace EMBC.Tests.Automation.Registrants.StepDefinitions
         [When("I submit the anonymous registration form")]
         public void SubmitForm()
         {
-            registration.SubmitForm(this.captchaAnswer);
-        }
-
-        [Then("the CAPTCHA field is confirmed to be working")]
-        public void CAPTCHAFieldWorking()
-        {
-            registration.CAPTCHAFails("Invalid");
+            registration.SubmitForm();
         }
 
         [Then("the ESS File submission complete dialog appears")]
