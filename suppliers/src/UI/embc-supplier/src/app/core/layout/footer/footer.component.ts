@@ -21,7 +21,6 @@ export class FooterComponent implements OnInit {
     openVersionsModal(): void {
         this.httpClient.get('version').subscribe((response) => {
             let content = response as { name: string; version: string }[];
-            content.push({name: "EMBC.Suppliers.UI", version: this.appVersion});
             const dialog = this.dialog.open(InformationDialog, {
                 data: {
                     title: "Version Information",
