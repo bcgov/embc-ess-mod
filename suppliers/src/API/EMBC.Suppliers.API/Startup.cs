@@ -11,6 +11,7 @@ using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.DynamicsModule;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
+using EMBC.Suppliers.API.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -227,9 +228,14 @@ namespace EMBC.Suppliers.API
                 endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
                 endpoints.Map("/version", async ctx =>
                 {
+                    var name = Assembly.GetEntryAssembly()?.GetName().Name;
+                    var version = Environment.GetEnvironmentVariable("VERSION");
                     ctx.Response.ContentType = "application/json";
                     ctx.Response.StatusCode = (int)HttpStatusCode.OK;
-                    await ctx.Response.WriteAsync(JsonSerializer.Serialize(new { version = Environment.GetEnvironmentVariable("VERSION") ?? "Unknown" }));
+                    await ctx.Response.WriteAsync(JsonSerializer.Serialize(new[]
+                    {
+                        new VersionInformation { name = name ?? null!, version = version == null ? null : Version.Parse(version) }
+                    }));
                 });
             });
         }

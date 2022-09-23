@@ -14,38 +14,41 @@ import { ToastsComponent } from './components/toasts/toasts.component';
 import { DecimalCurrencyDirective } from './directives/DecimalCurrency.directive';
 import { WarningModalComponent } from './components/warningModal/warningModal.component';
 import { BannerComponent } from './components/banner/banner.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    MatDialogModule,
     NgbModule
   ],
   declarations: [
-    DragDropDirective,
-    BannerComponent,
-    FileUploadComponent,
-    PhoneMaskDirective,
-    GSTCodeDirective,
-    ModalComponent,
-    CaptchaComponent,
-    LoaderComponent,
     AlertComponent,
-    ToastsComponent,
+    BannerComponent,
+    CaptchaComponent,
     DecimalCurrencyDirective,
-    WarningModalComponent
+    DragDropDirective,
+    FileUploadComponent,
+    GSTCodeDirective,
+    LoaderComponent,
+    ModalComponent,
+    PhoneMaskDirective,
+    ToastsComponent,
+    WarningModalComponent,
   ],
   exports: [
-    DragDropDirective,
-    BannerComponent,
-    FileUploadComponent,
-    PhoneMaskDirective,
-    GSTCodeDirective,
-    CaptchaComponent,
-    LoaderComponent,
     AlertComponent,
+    BannerComponent,
+    CaptchaComponent,
+    DecimalCurrencyDirective,
+    DragDropDirective,
+    FileUploadComponent,
+    GSTCodeDirective,
+    LoaderComponent,
+    MatDialogModule,
+    PhoneMaskDirective,
     ToastsComponent,
-    DecimalCurrencyDirective
   ]
 })
 export class CoreModule { }
