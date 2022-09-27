@@ -145,6 +145,13 @@ namespace EMBC.Registrants.API
 
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
             services.AddTransient<IProfileInviteService, ProfileInviteService>();
+
+            services.AddHttpClient("captcha");
+            services.Configure<CaptchaVerificationServiceOptions>(options =>
+            {
+                configuration.GetSection("captcha").Bind(options);
+            });
+            services.AddTransient<ICaptchaVerificationService, CaptchaVerificationService>();
         }
 
         public void ConfigurePipeline(PipelineServices services)
