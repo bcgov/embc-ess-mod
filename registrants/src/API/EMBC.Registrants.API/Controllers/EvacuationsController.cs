@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
@@ -26,27 +28,42 @@ namespace EMBC.Registrants.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IEvacuationSearchService evacuationSearchService;
+        private readonly ICaptchaVerificationService captchaVerificationService;
+
         private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-        public EvacuationsController(IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
+        public EvacuationsController(IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService, ICaptchaVerificationService captchaVerificationService)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.evacuationSearchService = evacuationSearchService;
+            this.captchaVerificationService = captchaVerificationService;
         }
 
         /// <summary>
         /// Anonymously Create a Registrant Profile and Evacuation File
         /// </summary>
         /// <param name="registration">Anonymous registration form</param>
+        /// <param name="ct">cancellation token</param>
         /// <returns>ESS number</returns>
         [HttpPost("create-registration-anonymous")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
-        public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration)
+        public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration, CancellationToken ct)
         {
             if (registration == null) return BadRequest();
+
+            var isValid = await captchaVerificationService.VerifyAsync(registration.Captcha, ct);
+
+            if (!isValid)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Title = "Invalid captcha",
+                });
+            }
 
             var profile = mapper.Map<RegistrantProfile>(registration.RegistrationDetails);
             //anonymous profiles are unverified and not authenticated

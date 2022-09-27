@@ -12,7 +12,6 @@ using EMBC.Utilities.Caching;
 using EMBC.Utilities.Extensions;
 using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -77,9 +76,7 @@ namespace EMBC.Responders.API.Controllers
                 },
                 Captcha = new CaptchaConfiguration
                 {
-                    Url = configuration.GetValue<string>("captcha:url"),
-                    Key = configuration.GetValue<string>("captcha:key"),
-                    AutomationValue = environment.IsProduction() ? null : configuration.GetValue<string>("captcha:automation")?.Substring(0, 6).ToSha256() //captcha is limited to 6 characters
+                    Key = configuration.GetValue<string>("captcha:key")
                 }
             };
 
@@ -100,7 +97,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (!string.IsNullOrEmpty(forEnumType))
             {
-                var type = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.Name.Equals(forEnumType, StringComparison.OrdinalIgnoreCase) && t.IsEnum).FirstOrDefault();
+                var type = Assembly.GetExecutingAssembly().ExportedTypes.FirstOrDefault(t => t.Name.Equals(forEnumType, StringComparison.OrdinalIgnoreCase) && t.IsEnum);
                 if (type == null) return NotFound(new ProblemDetails { Detail = $"enum '{forEnumType}' not found" });
                 var values = EnumDescriptionHelper.GetEnumDescriptions(type);
                 return Ok(values.Select(e => new Code { Type = type.Name, Value = e.Value, Description = e.Description }).ToArray());
@@ -225,9 +222,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class CaptchaConfiguration
     {
-        public string Url { get; set; }
         public string Key { get; set; }
-        public string AutomationValue { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
