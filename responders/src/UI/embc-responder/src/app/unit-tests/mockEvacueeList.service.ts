@@ -54,7 +54,7 @@ export class MockEvacueeListService extends LoadEvacueeListService {
     {
       type: 'SupportSubCategory',
       value: 'Lodging_Hotel',
-      description: 'Lodging - Hotel/Motel',
+      description: 'Lodging - Hotel/Motel/Campground',
       parentCode: null
     },
     {
