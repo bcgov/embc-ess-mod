@@ -12,6 +12,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../core/services/global-constants';
 import * as moment from 'moment';
 import { CustomValidationService } from '../../core/services/customValidation.service';
+import { padFileIdForSearch } from '../../core/services/helper/search.formatter';
 
 @Component({
   selector: 'app-reporting',
@@ -267,7 +268,7 @@ export class ReportingComponent implements OnInit {
 
     const results: ReportParams = {
       taskNumber: this.reportForm.get('taskNumber').value,
-      fileId: this.reportForm.get('fileId').value,
+      fileId: padFileIdForSearch(this.reportForm.get('fileId').value),
       evacuatedFrom: this.reportForm.get('evacuatedFromCommCode').value,
       evacuatedTo: this.reportForm.get('evacuatedToCommCode').value,
       from,
