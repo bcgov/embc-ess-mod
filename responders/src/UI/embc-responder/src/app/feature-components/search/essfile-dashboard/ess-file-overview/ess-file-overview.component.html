@@ -119,47 +119,45 @@
         </div>
         <div class="col-md-9 table-parent">
           <table class="table-details">
-            <tr>
+            <tr
+              *ngIf="
+                !essFile?.needsAssessment?.canProvideFood ||
+                essFile?.needsAssessment?.canProvideFood === null
+              "
+            >
               <th>Food</th>
-              <td class="bold">
-                {{ mapNeedsValues(essFile?.needsAssessment?.canProvideFood) }}
-              </td>
             </tr>
-            <tr>
+            <tr
+              *ngIf="
+                !essFile?.needsAssessment?.canProvideLodging ||
+                essFile?.needsAssessment?.canProvideLodging === null
+              "
+            >
               <th>Lodging</th>
-              <td class="bold">
-                {{
-                  mapNeedsValues(essFile?.needsAssessment?.canProvideLodging)
-                }}
-              </td>
             </tr>
-            <tr>
+            <tr
+              *ngIf="
+                !essFile?.needsAssessment?.canProvideIncidentals ||
+                essFile?.needsAssessment?.canProvideIncidentals === null
+              "
+            >
               <th>Incidentals</th>
-              <td class="bold">
-                {{
-                  mapNeedsValues(
-                    essFile?.needsAssessment?.canProvideIncidentals
-                  )
-                }}
-              </td>
             </tr>
-            <tr>
+            <tr
+              *ngIf="
+                !essFile?.needsAssessment?.canProvideClothing ||
+                essFile?.needsAssessment?.canProvideClothing === null
+              "
+            >
               <th>Clothing</th>
-              <td class="bold">
-                {{
-                  mapNeedsValues(essFile?.needsAssessment?.canProvideClothing)
-                }}
-              </td>
             </tr>
-            <tr>
+            <tr
+              *ngIf="
+                !essFile?.needsAssessment?.canProvideTransportation ||
+                essFile?.needsAssessment?.canProvideTransportation === null
+              "
+            >
               <th>Transportation</th>
-              <td class="bold">
-                {{
-                  mapNeedsValues(
-                    essFile?.needsAssessment?.canProvideTransportation
-                  )
-                }}
-              </td>
             </tr>
           </table>
         </div>
