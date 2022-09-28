@@ -9,7 +9,7 @@ The repository doesn't accept direct changes and does not support in-repo branch
 This repository is using symlinks to share code libraries between projects. In order to enable GIT to expand and follow symlinks, clone using using the following command:
 
 ```cmd
-git clone -c core.symlinks=true https://github.com/bcgov/embc-ess-mod.git
+git clone -c core.symlinks=true https://github.com/<user>/embc-ess-mod.git
 ```
 
 Git will expand symlinks and follow them to the actual shared libraries.
