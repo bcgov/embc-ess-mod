@@ -48,7 +48,7 @@ export class NeedsAssessmentComponent
   parentPageName = 'needs-assessment';
   showLoader = false;
   isSubmitted = false;
-  captchaResponse : CaptchaResponse;
+  captchaResponse: CaptchaResponse;
 
   constructor(
     private router: Router,
@@ -226,17 +226,19 @@ export class NeedsAssessmentComponent
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.nonVerifiedRegistrationService.submitRegistration(this.captchaResponse).subscribe({
-      next: (response: RegistrationResult) => {
-        this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
-        this.router.navigate(['/non-verified-registration/file-submission']);
-      },
-      error: (error: any) => {
-        this.showLoader = !this.showLoader;
-        this.isSubmitted = !this.isSubmitted;
-        this.alertService.setAlert('danger', globalConst.submissionError);
-      }
-    });
+    this.nonVerifiedRegistrationService
+      .submitRegistration(this.captchaResponse)
+      .subscribe({
+        next: (response: RegistrationResult) => {
+          this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
+          this.router.navigate(['/non-verified-registration/file-submission']);
+        },
+        error: (error: any) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.setAlert('danger', globalConst.submissionError);
+        }
+      });
   }
 
   submitVerified(): void {

@@ -1,9 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigService } from '../../services/config.service';
 
