@@ -13,13 +13,13 @@ jobs:
       runs-on: ubuntu-latest
       name: Scan Responders Portal
       steps:
-      - name: UI scan
-        uses: zaproxy/action-baseline@v0.7.0
+      - name: UI
+        uses: zaproxy/action-baseline@master
         with:
-          docker_name: 'owasp/zap2docker-stable'
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://era-responders-dev.apps.silver.devops.bc.ca'
-      - name: API scan
-        uses: zaproxy/action-api-scan@v0.2.0
+      - name: API
+        uses: zaproxy/action-api-scan@master
         with:
-          docker_name: 'owasp/zap2docker-stable'
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://era-responders-dev.apps.silver.devops.bc.ca/api'
