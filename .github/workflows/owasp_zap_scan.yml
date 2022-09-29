@@ -1,0 +1,23 @@
+# This is a basic workflow to help you get started with Actions
+
+name: OWASP Zap scan
+
+on:
+  schedule:
+    - cron: '0 10 * * 1'
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  responders-ui-scan:
+      runs-on: ubuntu-latest
+      name: Scan Responders Portal
+      steps:
+      - name: UI scan
+        uses: zaproxy/action-baseline@v0.4.0
+        with:
+          target: 'https://era-responders-dev.apps.silver.devops.bc.ca'
+      - name: AAPI scan
+        uses: zaproxy/action-api-scan@v0.4.0
+        with:
+          target: 'https://era-responders-dev.apps.silver.devops.bc.ca/api'
