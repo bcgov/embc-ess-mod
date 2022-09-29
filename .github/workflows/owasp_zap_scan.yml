@@ -19,7 +19,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://era-responders-dev.apps.silver.devops.bc.ca'
       - name: API
-        uses: zaproxy/action-api-scan@0.2.0
+        uses: zaproxy/action-api-scan@v0.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'https://era-responders-dev.apps.silver.devops.bc.ca/api'
