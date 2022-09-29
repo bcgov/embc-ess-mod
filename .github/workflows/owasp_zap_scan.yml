@@ -9,17 +9,50 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  responders-ui-scan:
+  responders-scan:
       runs-on: ubuntu-latest
       name: Scan Responders Portal
       steps:
       - name: UI
-        uses: zaproxy/action-baseline@master
+        uses: zaproxy/action-full-scan@v0.4.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca/'
+          target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca'
       - name: API
         uses: zaproxy/action-api-scan@v0.2.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca/api/'
+          target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca/api'
+  
+  registrants-scan:
+      runs-on: ubuntu-latest
+      name: Scan Registrants Portal
+      steps:
+      - name: UI
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          target: 'https://era-evacuees-dev.apps.silver.devops.gov.bc.ca'
+      - name: API
+        uses: zaproxy/action-api-scan@v0.2.0
+        with:
+          target: 'https://era-evacuees-dev.apps.silver.devops.gov.bc.ca/api'
+
+  suppliers-scan:
+      runs-on: ubuntu-latest
+      name: Scan Suppliers Portal
+      steps:
+      - name: UI
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          target: 'https://era-suppliers-dev.apps.silver.devops.gov.bc.ca'
+      - name: API
+        uses: zaproxy/action-api-scan@v0.2.0
+        with:
+          target: 'https://era-suppliers-dev.apps.silver.devops.gov.bc.ca/api'
+
+  oauth-server:
+      runs-on: ubuntu-latest
+      name: Scan OAuth Server
+      steps:
+      - name: SCAN
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          target: 'https://era-oauth-dev.apps.silver.devops.gov.bc.ca'
