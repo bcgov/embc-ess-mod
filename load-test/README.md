@@ -1,22 +1,40 @@
-Project to perform load tests on embc system.
+# ERA Load Test scripts
 
-To run locally:
-intall k6 cli (https://k6.io/docs/getting-started/installation/)
-npm install
+## Features
+
+- generates load based on real world use cases on the system
+- supports load test, stress test and benchmark scenarios
+
+## Installation
+
+Prerequisite: 
+- node.js
+- k6 cli (https://k6.io/docs/getting-started/installation/)
+
+1. in `load-test/src/`, run `npm install`
+2. clone `load-test.parameters-template.ts` to `load-test.parameters-dev.ts`
+3. modify `load-test.parameters-dev.ts` to the correct settings in dev environment
+
+
+## Usage
 
 Webpack is used to dynamically set the parameters import. By default there is a empty template file.
 It is configured that if you run one of the load test scripts, it expects to find a dev parameters file. This can be shared by the team.
 This can also be customized to whatever you want by updating the NormalModuleReplacementPlugin in webpack.config.js
 
-
 There are multiple test entry points configured in package.json (regAnonymous, regNewProfile, regExistingProfile, resNewRegistration, resExistingRegistration, loadTest, benchmark)
 e.g.
 
+```
 npm run <scriptName>
+```
 
 Responder and Registrant tests can be run independantly. They will by default do 1 vu and 1 iteration, but you can dynamically set those with arguments. e.g.
+
+```
 npm run regAnonymous -- -e VUS=# -e ITERS=#
 npm run resNewRegistration -- -e VUS=# -e DUR=#t
+```
 
 Argument options:
 VUS - number of virtual users
@@ -32,5 +50,7 @@ You can pass this a parameter for the number of vus to run for this benchmark. (
 By defaul this will run for a duration of 5 minutes.
 You can optionally pass in an iteration count for each vu to do instead of a set 5m duration.
 
+```
 npm run benchmark --- -e VUS=#
 npm run benchmark --- -e VUS=# -e ITERS=#
+```

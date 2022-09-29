@@ -1,41 +1,81 @@
-# Emergency Management BC - Emergency Support Services Modernization
+# Emergency Management BC - Evacuee Registration and Assistance (ERA)
 
-The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently.
+A system to manage evacuees registrations and support provisioning for residents of the province of British Columbia
 
-[![img](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+[![Lifecycle:Stable](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+
 [![CodeQL](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml)
-## Applications and services in this repository
-
-### [Suppliers portal](./suppliers)
-
-**Deployed environments:**
-
-| name       | purpose                               | url                                            |
-| ---------- | ------------------------------------- | ---------------------------------------------- |
-| dev1       | master branch development and testing | https://era-suppliers-dev.embc.gov.bc.ca/      |
-| test       | regression and UAT environment        | https://era-suppliers-test.embc.gov.bc.ca/     |
-| training   | training env for field users          | https://era-suppliers-training.embc.gov.bc.ca/ |
-| production | production environment                | https://era-suppliers.embc.gov.bc.ca/          |
-
-## Getting Help or Reporting an Issue
-
-To report bugs/issues/feature requests, please file an [issue](../../issues).
-
-## How to Contribute
-
-If you would like to contribute, please see our [CONTRIBUTING](./CONTRIBUTING.md) guidelines.
-
-Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
-
-## License
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-    Copyright 2020 Province of British Columbia
+## Getting Help or Reporting an Issue
+
+To report bugs/issues/feature requests, please email us at essmodernization@gov.bc.ca
+
+## How to Contribute
+
+If you would like to contribute, please see our [Contributing](./CONTRIBUTING.md) guidelines.
+
+Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
+## Architecture
+
+```mermaid
+graph LR;
+
+   classDef openshift_era fill:#1C6758,stroke:#333,stroke-width:4px;
+   classDef openshift_util fill:#607EAA,stroke:#333,stroke-width:4px;
+   classDef bcgov fill:#839AA8,stroke:#333,stroke-width:4px,color:#000;
+
+   Responders([Responders])
+   Suppliers([Suppliers])
+   Registrants([Registrants])
+   ESS(ESS Backend)
+   SSO(BCeID SSO)
+   OAuth(OIDC)
+   Dynamics[(Dynamics)]
+   CAS[CAS]
+   BCSC[BCSC]
+
+   class Responders,Registrants,Suppliers,ESS,OAuth openshift_era
+   class SSO openshift_util
+   class BCSC,CAS,Dynamics bcgov
+
+   Responders-->SSO;
+   Responders-->ESS;
+   Suppliers-->ESS;
+   Registrants-->OAuth-->BCSC
+   Registrants-->ESS;
+   ESS-->Dynamics;
+   ESS-->CAS;
+```
+
+## Components
+
+| Directory                       | Role               |
+| ------------------------------- | ------------------ |
+| [ess](./ess/)                   | backend service    |
+| [suppliers](./suppliers/)       | suppliers portal   |
+| [registrants](./registrants/)   | registrants portal |
+| [responders](./responders/)     | responders portal  |
+| [landing-page](./landing-page/) | ESS landing page   |
+| [oauth-server](./oauth-server/) | Oauth/OIDC service |
+| [shared](./shared/)             | shared libraries   |
+
+## Tests
+
+| Directory                             | Role                                 |
+| ------------------------------------- | ------------------------------------ |
+| [automated-tests](./automated-tests/) | automated UI tests based on SpecFlow |
+| [load-test](./load-test/)             | load test generator based on K9      |
+
+## License
+
+    Copyright 2022 Province of British Columbia
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+    You may obtain a copy of the License at 
 
        http://www.apache.org/licenses/LICENSE-2.0
 
@@ -44,3 +84,4 @@ Please note that this project is released with a [Contributor Code of Conduct](.
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+   
