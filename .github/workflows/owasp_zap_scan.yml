@@ -17,9 +17,9 @@ jobs:
         uses: zaproxy/action-baseline@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://era-responders-dev.apps.silver.devops.bc.ca'
+          target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca/'
       - name: API
         uses: zaproxy/action-api-scan@v0.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://era-responders-dev.apps.silver.devops.bc.ca/api'
+          target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca/api/'
