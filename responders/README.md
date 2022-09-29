@@ -1,10 +1,13 @@
----
-title: ERA Responders Portal
-description: ERA Responders Portal
----
-
 # ERA Responders Portal
 
+## Features
+
+- login with BCeID
+- manage team users, suppliers, areas of responsibility
+- look up evacuees and needs assessments
+- register evacuees and evaluate needs assessments
+- issue referrals, e-transfers
+- extract data to Excel
 ## Project Status
 
 ![webapp](https://img.shields.io/website?url=https%3A%2F%2Fera-responders.embc.gov.bc.ca%2F)
@@ -13,7 +16,7 @@ description: ERA Responders Portal
 
 [![ci-responders-portal-ui](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-responders-portal-ui.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-responders-portal-ui.yml)
 
-## Configuration
+## Install
 
 API Env vars:
 ```s
@@ -45,7 +48,7 @@ messaging__oauth__clientSecret=<api client secret as defined in oauth server con
 messaging__oauth__scope=ess-backend
 ```
 
-## local development environment
+## Usage
 
 1. set the above env vars in the API project's secrets.json file
 2. in `responders/src/API/EMBC.responders.API`, run `dotnet watch`

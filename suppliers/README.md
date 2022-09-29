@@ -1,10 +1,8 @@
----
-title: ERA Suppliers Portal
-description: ERA Suppliers Portal
----
-
 # ERA Suppliers Portal
 
+## Features
+
+- submit invoices and referrals to be reimbursed by the province
 ## Project Status
 
 ![webapp](https://img.shields.io/website?url=https%3A%2F%2Fera-suppliers.embc.gov.bc.ca%2F)
@@ -14,7 +12,7 @@ description: ERA Suppliers Portal
 [![ci-suppliers-portal-ui](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-ui.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-ui.yml)
 
 
-## Configuration
+## Install
 
 API Env vars:
 ```s
@@ -43,7 +41,7 @@ SPLUNK_URL=<Splunk collector url (optional)>
 SPLUNK_TOKEN=<Splunk token (optional)>
 ```
 
-## local development environment
+## Usage
 
 1. set the above env vars in the API project's secrets.json file
 2. in `suppliers/src/API/EMBC.Suppliers.API`, run `dotnet watch`

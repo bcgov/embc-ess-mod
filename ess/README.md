@@ -1,16 +1,74 @@
-﻿---
-title: EMBC ESS Back-end Services
-description: EMBC ESS Back-end Services
----
-# EMBC ESS Back-end Services
+﻿# EMBC ESS Back-end Services
 
-Back-end service to provide data and business logic to ESS portals.
+Back-end service to provide data and business logic to ESS portals
+
+## Features
+
+- gRPC service to send and receive data from Dynamics
+- business logic layer and mappings
+- active background tasks to populate cache and perform timed actions
+- connect to external services
+
+```mermaid
+flowchart TB
+
+    classDef manager fill:#ffff00,stroke:#333,stroke-width:4px,color:#000
+    classDef engine fill:#ffc000,stroke:#333,stroke-width:4px,color:#000
+    classDef ra fill:#c0c0c0,stroke:#333,stroke-width:4px,color:#000
+    classDef resource fill:#00ffff,stroke:#333,stroke-width:4px,color:#000
+    classDef layer fill:#fff,color:#000
+
+    subgraph Resources[Resources]
+        direction TB
+        Dynamics[(Dynamics)]
+        CAS([CAS AP])
+    end    
+
+    subgraph RAs[Resource Access]
+        direction TB
+        EvacuationsResource([Evacuations Resource])
+        EvacueesResource([Evacuees Resource])
+        SuppliersResource([Suppliers Resource])
+        SupportsResource([Supports Resource])
+        TeamsResource([Teams Resource])
+        TasksResource([Tasks Resource])
+        PaymentsResource([Payments Resource])
+        ReportsResource([Reports Resource])
+        PrintResource([Print Resource])
+        MetadataResource([Metadata Resource])    
+    end
+            
+    subgraph Engines[Engines]
+        direction TB
+        SearchEngine([Search Engine])
+        SupportingEngine([Supporting Engine])
+    end
+    
+    subgraph Managers[Managers]
+        direction TB
+        EventsManager([Events Manager])
+        TeamsManager([Teams Manager])
+        AdminManager([Admin Manager])
+        ReportsManager([Reports Manager])
+    end
+
+    Engines-->RAs
+    Managers-->Engines & RAs
+    RAs-->Resources
+
+    class Dynamics,CAS resource
+    class EvacuationsResource,EvacueesResource,SuppliersResource,SupportsResource,TeamsResource,TasksResource,PaymentsResource,PaymentsResource,ReportsResource,PrintResource,MetadataResource ra
+    class SearchEngine,SupportingEngine engine
+    class EventsManager,TeamsManager,AdminManager,ReportsManager manager
+    class RAs,Engines,Managers,Resources layer
+   
+```
 
 ## Project status
 
 [![ci-ess-backend](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-ess-backend.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-ess-backend.yml)
 
-## Configuration
+## Installation
 
 API Env vars:
 ```s
@@ -46,15 +104,9 @@ SPLUNK_TOKEN=<optional Splunk token>
 cas__clientId=<CAS client id>
 cas__clientSecret=-<CAS client secret>
 ```
+### Dynamics OData code generation
 
-## local development environment
-
-1. set the above env vars in the API project's secrets.json file
-2. in `ess/src/API/EMBC.ESS.Host`, run `dotnet watch`
-
-## Dynamics OData code generation
-
-### prerequisites
+#### prerequisites
 
 -  [OData Connected Services extension for VS2022](https://github.com/odata/ODataConnectedService)
 - Access to ERA Dynamics instance
@@ -68,3 +120,9 @@ cas__clientSecret=-<CAS client secret>
 6. if authentication is successful, the next screen will show the list of entities in Dynamics
 7. Finish the update wizard to complete the generated code refresh
 8. compile and run the integration tests suite to verify Dynamics integration functionality is not broken
+
+## Usage
+
+1. set the above env vars in the API project's secrets.json file
+2. in `ess/src/API/EMBC.ESS.Host`, run `dotnet watch`
+

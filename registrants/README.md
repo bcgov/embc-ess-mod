@@ -1,10 +1,10 @@
----
-title: ERA Registrants Portal
-description: ERA Registrants Portal
----
 
 # ERA Registrants Portal
 
+## Features
+
+- anonymous registration submission
+- register and login with BC Service Card
 ## Project Status
 
 ![webapp](https://img.shields.io/website?url=https%3A%2F%2Fera-evacuees.embc.gov.bc.ca%2F)
@@ -13,7 +13,7 @@ description: ERA Registrants Portal
 
 [![ci-registrants-portal-ui](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-registrants-portal-ui.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-registrants-portal-ui.yml)
 
-## Configuration
+## Installation
 
 API Env vars:
 ```s
@@ -46,7 +46,7 @@ messaging__oauth__clientSecret=<api client secret as defined in oauth server con
 messaging__oauth__scope=ess-backend
 ```
 
-## local development environment
+## Usage
 
 1. set the above env vars in the API project's secrets.json file
 2. in `registrants/src/API/EMBC.Registrants.API`, run `dotnet watch`

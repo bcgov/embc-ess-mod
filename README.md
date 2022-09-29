@@ -2,13 +2,15 @@
 
 A system to manage evacuees registrations and support provisioning for residents of the province of British Columbia
 
-[![img](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+[![Lifecycle:Stable](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+
 [![CodeQL](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml)
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ## Getting Help or Reporting an Issue
 
-To report bugs/issues/feature requests, please file an [issue](../../issues).
+To report bugs/issues/feature requests, please email us at essmodernization@gov.bc.ca
 
 ## How to Contribute
 
@@ -52,7 +54,7 @@ graph LR;
 
 | Directory                       | Role               |
 | ------------------------------- | ------------------ |
-| [ess](./ess/)                   | shared backend     |
+| [ess](./ess/)                   | backend service    |
 | [suppliers](./suppliers/)       | suppliers portal   |
 | [registrants](./registrants/)   | registrants portal |
 | [responders](./responders/)     | responders portal  |
