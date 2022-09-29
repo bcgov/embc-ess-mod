@@ -1,13 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigService } from '../../services/config.service';
 
@@ -48,8 +39,8 @@ export class CaptchaV2Component implements OnInit {
 
 export interface CaptchaResponse {
   type: CaptchaResponseType;
-  resolved?: boolean;
-  error?: boolean;
+  resolved?: string;
+  error?: string;
 }
 
 export enum CaptchaResponseType {

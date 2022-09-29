@@ -168,7 +168,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         [Display(Name = "GROUP LODGING")]
         GroupLodging,
 
-        [Display(Name = "HOTEL/MOTEL")]
+        [Display(Name = "HOTEL/MOTEL/CAMPGROUND")]
         Hotel,
 
         [Display(Name = "INCIDENTALS")]
