@@ -126,3 +126,4 @@ cas__clientSecret=-<CAS client secret>
 1. set the above env vars in the API project's secrets.json file
 2. in `ess/src/API/EMBC.ESS.Host`, run `dotnet watch`
 
+This project has an extensive suit of integration tests, to run them, ensure you're on the gov network and have access to Dynamics first, then using VS, run all the tests.
