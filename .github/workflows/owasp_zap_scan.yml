@@ -17,10 +17,12 @@ jobs:
         uses: zaproxy/action-full-scan@v0.4.0
         with:
           target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca'
+          issue_title: 'ZAP report for responder-portal-ui'
       - name: API
         uses: zaproxy/action-api-scan@v0.2.0
         with:
           target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca/api'
+          issue_title: 'ZAP report for responder-portal-api'
   
   registrants-scan:
       runs-on: ubuntu-latest
@@ -30,10 +32,12 @@ jobs:
         uses: zaproxy/action-full-scan@v0.4.0
         with:
           target: 'https://era-evacuees-dev.apps.silver.devops.gov.bc.ca'
+          issue_title: 'ZAP report for registrants-portal-ui'
       - name: API
         uses: zaproxy/action-api-scan@v0.2.0
         with:
           target: 'https://era-evacuees-dev.apps.silver.devops.gov.bc.ca/api'
+          issue_title: 'ZAP report for registrants-portal-api'
 
   suppliers-scan:
       runs-on: ubuntu-latest
@@ -43,16 +47,19 @@ jobs:
         uses: zaproxy/action-full-scan@v0.4.0
         with:
           target: 'https://era-suppliers-dev.apps.silver.devops.gov.bc.ca'
+          issue_title: 'ZAP report for suppliers-portal-ui'
       - name: API
         uses: zaproxy/action-api-scan@v0.2.0
         with:
           target: 'https://era-suppliers-dev.apps.silver.devops.gov.bc.ca/api'
+          issue_title: 'ZAP report for suppliers-portal-api'
 
   oauth-server:
       runs-on: ubuntu-latest
       name: Scan OAuth Server
       steps:
-      - name: SCAN
+      - name: Server
         uses: zaproxy/action-full-scan@v0.4.0
         with:
           target: 'https://era-oauth-dev.apps.silver.devops.gov.bc.ca'
+          issue_title: 'ZAP report for oauth-server'
