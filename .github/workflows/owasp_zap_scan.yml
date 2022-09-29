@@ -16,8 +16,10 @@ jobs:
       - name: UI scan
         uses: zaproxy/action-baseline@v0.7.0
         with:
+          docker_name: 'owasp/zap2docker-stable'
           target: 'https://era-responders-dev.apps.silver.devops.bc.ca'
-      - name: AAPI scan
+      - name: API scan
         uses: zaproxy/action-api-scan@v0.2.0
         with:
+          docker_name: 'owasp/zap2docker-stable'
           target: 'https://era-responders-dev.apps.silver.devops.bc.ca/api'
