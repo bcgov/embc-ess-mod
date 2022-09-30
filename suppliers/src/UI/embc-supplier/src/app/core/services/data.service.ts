@@ -46,7 +46,7 @@ export class DataService {
         const receipts = this.createReceiptslRecord(supplierDetails);
         const suppliers: Suppliers = new Suppliers(supplierInformationArr, receipts, invoices, referrals, lineItems, attachments);
         this.setPayload(suppliers);
-        console.log(JSON.stringify(suppliers));
+        // console.log(JSON.stringify(suppliers));
     }
 
     clearPayload() {
@@ -107,7 +107,8 @@ export class DataService {
     createInvoiceRecord(supplierDetails: any) {
         const invoices = [];
         supplierDetails.invoices.forEach(element => {
-            const formattedDate = new DatePipe('en-US').transform(element.invoiceDate, 'yyyy-MM-dd');
+            let invDate = new Date(element.invoiceDate);
+            const formattedDate = invDate.toISOString();
             invoices.push(new Invoices(element.invoiceNumber, formattedDate, +element.invoiceTotalAmount));
         });
         return invoices;

@@ -63,7 +63,7 @@ export class ReviewComponent implements OnInit {
     }
 
     public onValidToken(token: any) {
-        console.log('Valid token received: ', token);
+        // console.log('Valid token received: ', token);
         this.captchaVerified = true;
         this.captchaFilled = true;
         this.alertService.clearAlert();
