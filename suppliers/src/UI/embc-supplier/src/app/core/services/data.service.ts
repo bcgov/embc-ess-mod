@@ -46,7 +46,6 @@ export class DataService {
         const receipts = this.createReceiptslRecord(supplierDetails);
         const suppliers: Suppliers = new Suppliers(supplierInformationArr, receipts, invoices, referrals, lineItems, attachments);
         this.setPayload(suppliers);
-        // console.log(JSON.stringify(suppliers));
     }
 
     clearPayload() {

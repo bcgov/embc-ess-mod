@@ -384,7 +384,6 @@ export class SubmissionComponent implements OnInit {
 
     loadWithExistingValues(event: any) {
         const storedSupplierDetails = this.supplierService.getSupplierDetails();
-        // console.log(storedSupplierDetails);
         if (event.value === 'invoice') {
             storedSupplierDetails.invoices.forEach(invoice => {
                 this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
