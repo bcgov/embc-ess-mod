@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
 import { SupplierService } from '../../core/services/supplier.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import * as globalConst from 'src/app/core/services/globalConstants';
 })
 export class SubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService,
+    constructor(private router: Router, private builder: UntypedFormBuilder, private supplierService: SupplierService,
                 private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService,
                 private config: NgbTypeaheadConfig) {
         config.showHint = true;
@@ -29,14 +29,14 @@ export class SubmissionComponent implements OnInit {
     }
 
     get invoices() {
-        return this.supplierForm.get('invoices') as FormArray;
+        return this.supplierForm.get('invoices') as UntypedFormArray;
     }
 
     get receipts() {
-        return this.supplierForm.get('receipts') as FormArray;
+        return this.supplierForm.get('receipts') as UntypedFormArray;
     }
 
-    supplierForm: FormGroup;
+    supplierForm: UntypedFormGroup;
     remitDiv = false;
     addressDiv = false;
     countryList: Observable<Country[]>;

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, Validators } from '@angular/forms';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -13,7 +13,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 export class ReceiptComponent implements OnInit{
 
     @Input() formGroupName: number;
-    @Input() receiptForm: FormGroup;
+    @Input() receiptForm: UntypedFormGroup;
     @Input() index: number;
     @Input() formArraySize: number;
     @Output() indexToRemove = new EventEmitter<number>();
@@ -22,7 +22,7 @@ export class ReceiptComponent implements OnInit{
     reloadedFiles2: any;
     noOfAttachments = 1;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef,
+    constructor(private builder: UntypedFormBuilder, private cd: ChangeDetectorRef,
                 private supplierService: SupplierService, private customValidator: CustomValidationService) {}
 
     ngOnInit() {
@@ -73,21 +73,21 @@ export class ReceiptComponent implements OnInit{
      * Gets referrals as form array
      */
     get referrals() {
-        return this.receiptForm.get('referrals') as FormArray;
+        return this.receiptForm.get('referrals') as UntypedFormArray;
     }
 
     /**
      * Gets referral attachments as form array
      */
     get referralAttachments() {
-        return this.receiptForm.get('referralAttachments') as FormArray;
+        return this.receiptForm.get('referralAttachments') as UntypedFormArray;
     }
 
     /**
      * Gets receipt attachments as form array
      */
     get receiptAttachments() {
-        return this.receiptForm.get('receiptAttachments') as FormArray;
+        return this.receiptForm.get('receiptAttachments') as UntypedFormArray;
     }
 
     /**

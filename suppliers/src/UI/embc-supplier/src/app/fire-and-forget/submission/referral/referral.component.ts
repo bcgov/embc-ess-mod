@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder, AbstractControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormArray, UntypedFormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
@@ -19,7 +19,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 export class ReferralComponent implements OnInit {
 
     @Input() formGroupName: number;
-    @Input() referralForm: FormGroup;
+    @Input() referralForm: UntypedFormGroup;
     @Input() index: number;
     @Input() component: string;
     @Output() referralToRemove = new EventEmitter<number>();
@@ -30,7 +30,7 @@ export class ReferralComponent implements OnInit {
     reloadedFiles2: any;
     noOfAttachments = 1;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
+    constructor(private builder: UntypedFormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
                 private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
                 private customValidator: CustomValidationService, config: NgbDatepickerConfig) {
         config.minDate = { year: 1900, month: 1, day: 1 };
@@ -40,15 +40,15 @@ export class ReferralComponent implements OnInit {
     }
 
     get referralRows() {
-        return this.referralForm.get('referralRows') as FormArray;
+        return this.referralForm.get('referralRows') as UntypedFormArray;
     }
 
     get referralAttachments() {
-        return this.referralForm.get('referralAttachments') as FormArray;
+        return this.referralForm.get('referralAttachments') as UntypedFormArray;
     }
 
     get receiptAttachments() {
-        return this.referralForm.get('receiptAttachments') as FormArray;
+        return this.referralForm.get('receiptAttachments') as UntypedFormArray;
     }
 
     get referralControl() {
@@ -56,7 +56,7 @@ export class ReferralComponent implements OnInit {
     }
 
     get rowControl() {
-        return (this.referralForm.controls.referralRows as FormArray).controls;
+        return (this.referralForm.controls.referralRows as UntypedFormArray).controls;
     }
 
     ngOnInit() {

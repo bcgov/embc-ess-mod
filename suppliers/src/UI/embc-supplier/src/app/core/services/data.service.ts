@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Suppliers, ContactPerson, SupplierInformation, Address, Attachment } from '../model/suppliers';
 import { Invoices } from '../model/invoices';
 import { LineItems } from '../model/lineItems';
@@ -11,7 +11,7 @@ import { DatePipe } from '@angular/common';
     providedIn: 'root'
 })
 export class DataService {
-    supplierForm: FormGroup;
+    supplierForm: UntypedFormGroup;
     isReload = false;
     private payLoad: Suppliers;
 
