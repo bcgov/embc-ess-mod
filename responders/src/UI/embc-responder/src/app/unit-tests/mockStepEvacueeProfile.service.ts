@@ -33,28 +33,6 @@ export class MockStepEvacueeProfileService extends StepEvacueeProfileService {
     this.personalDetailsVal = personalDetailsVal;
   }
 
-  constructor(
-    dialog: MatDialog,
-    wizardService: WizardService,
-    locationService: LocationsService,
-    appBaseService: AppBaseService,
-    computeState: ComputeRulesService,
-    securityQuestionsService: SecurityQuestionsService,
-    alertService: AlertService,
-    router: Router
-  ) {
-    super(
-      dialog,
-      wizardService,
-      locationService,
-      appBaseService,
-      computeState,
-      securityQuestionsService,
-      alertService,
-      router
-    );
-  }
-
   public evacueeProfileTabs: Array<TabModel> = [
     {
       label: 'Collection Notice',
@@ -209,4 +187,26 @@ export class MockStepEvacueeProfileService extends StepEvacueeProfileService {
       previous: '/ess-wizard/evacuee-profile/contact'
     }
   ];
+
+  constructor(
+    dialog: MatDialog,
+    wizardService: WizardService,
+    locationService: LocationsService,
+    appBaseService: AppBaseService,
+    computeState: ComputeRulesService,
+    securityQuestionsService: SecurityQuestionsService,
+    alertService: AlertService,
+    router: Router
+  ) {
+    super(
+      dialog,
+      wizardService,
+      locationService,
+      appBaseService,
+      computeState,
+      securityQuestionsService,
+      alertService,
+      router
+    );
+  }
 }
