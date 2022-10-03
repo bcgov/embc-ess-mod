@@ -62,6 +62,10 @@ export class ReviewComponent implements OnInit {
         }
     }
 
+    print() {
+        window.print();
+    }
+
     public onValidToken(token: any) {
         this.captchaVerified = true;
         this.captchaFilled = true;
