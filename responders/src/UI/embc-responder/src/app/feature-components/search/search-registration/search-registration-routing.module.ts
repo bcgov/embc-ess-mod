@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { DashboardActivateGuard } from './dashboard-activate.guard';
 import { SearchRegistrationComponent } from './search-registration.component';
 
 const routes: Routes = [
@@ -52,14 +53,16 @@ const routes: Routes = [
         loadChildren: () =>
           import(
             '../evacuee-profile-dashboard/evacuee-profile-dashboard.module'
-          ).then((m) => m.EvacueeProfileDashboardModule)
+          ).then((m) => m.EvacueeProfileDashboardModule),
+        canActivate: [DashboardActivateGuard]
       },
       {
         path: 'essfile-dashboard',
         loadChildren: () =>
           import('../essfile-dashboard/essfile-dashboard.module').then(
             (m) => m.EssfileDashboardModule
-          )
+          ),
+        canActivate: [DashboardActivateGuard]
       }
     ]
   }

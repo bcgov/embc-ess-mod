@@ -2,16 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
-import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { Community } from 'src/app/core/services/locations.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssfileDashboardService } from './essfile-dashboard.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { Note } from 'src/app/core/api/models';
-import { map } from 'rxjs/operators';
 import { DashboardBanner } from 'src/app/core/models/dialog-content.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
-import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 
