@@ -73,14 +73,14 @@ export class StepEvacueeProfileService {
   private confirmInviteEmailVal: string;
 
   constructor(
-    private dialog: MatDialog,
-    private wizardService: WizardService,
-    private locationService: LocationsService,
-    private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService,
-    private securityQuestionsService: SecurityQuestionsService,
-    private alertService: AlertService,
-    private router: Router
+    protected dialog: MatDialog,
+    protected wizardService: WizardService,
+    protected locationService: LocationsService,
+    protected appBaseService: AppBaseService,
+    protected computeState: ComputeRulesService,
+    protected securityQuestionsService: SecurityQuestionsService,
+    protected alertService: AlertService,
+    protected router: Router
   ) {}
   // Wizard variables
   public get profileTabs(): Array<TabModel> {

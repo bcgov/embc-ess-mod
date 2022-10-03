@@ -5,6 +5,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { TabModel } from 'src/app/core/models/tab.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { WizardService } from '../../wizard.service';
@@ -12,6 +13,7 @@ import { WizardService } from '../../wizard.service';
 @Injectable({ providedIn: 'root' })
 export class ContactService {
   contactInfoForm: UntypedFormGroup;
+  tabMetaData: TabModel;
 
   constructor(
     private stepEvacueeProfileService: StepEvacueeProfileService,
@@ -19,6 +21,10 @@ export class ContactService {
     private customValidation: CustomValidationService,
     private wizardService: WizardService
   ) {}
+
+  init() {
+    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('contact');
+  }
 
   public createForm(): UntypedFormGroup {
     this.contactInfoForm = this.formBuilder.group(
