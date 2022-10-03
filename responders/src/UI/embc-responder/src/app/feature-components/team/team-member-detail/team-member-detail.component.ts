@@ -123,7 +123,7 @@ export class TeamMemberDetailComponent {
    * @returns true/false
    */
   isEditAllowed(row: TeamMember): boolean {
-    const loggedInRole = this.userService.currentProfile.role;
+    const loggedInRole = this.userService?.currentProfile?.role;
     if (loggedInRole === MemberRole.Tier2) {
       return row.role === MemberRole.Tier1 ? true : false;
     } else if (loggedInRole === MemberRole.Tier3) {

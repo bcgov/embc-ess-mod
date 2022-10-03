@@ -131,7 +131,7 @@ export class StepSupportsService {
   public getSupplierList(): Observable<Array<SupplierListItemModel>> {
     return this.taskService
       .tasksGetSuppliersList({
-        taskId: this.userService.currentProfile.taskNumber
+        taskId: this.userService?.currentProfile?.taskNumber
       })
       .pipe(
         map((supplierList: Array<SupplierListItem>) => {

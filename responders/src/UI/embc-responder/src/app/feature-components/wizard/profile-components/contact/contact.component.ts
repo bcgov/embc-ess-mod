@@ -11,7 +11,6 @@ import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -72,7 +71,6 @@ export class ContactComponent implements OnInit, OnDestroy {
   ];
   emailMatcher = new CustomErrorMailMatcher();
   tabUpdateSubscription: Subscription;
-  tabMetaData: TabModel;
 
   constructor(
     private router: Router,
@@ -82,6 +80,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.contactService.init();
     this.contactInfoForm = this.contactService.createForm();
 
     this.contactInfoForm
@@ -124,8 +123,6 @@ export class ContactComponent implements OnInit, OnDestroy {
     this.tabUpdateSubscription = this.contactService.updateTabStatus(
       this.contactInfoForm
     );
-
-    this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('contact');
   }
 
   /**
@@ -155,10 +152,10 @@ export class ContactComponent implements OnInit, OnDestroy {
           globalConst.wizardProfileMessage
         );
       } else {
-        this.router.navigate([this.tabMetaData?.next]);
+        this.router.navigate([this.contactService?.tabMetaData?.next]);
       }
     } else {
-      this.router.navigate([this.tabMetaData?.next]);
+      this.router.navigate([this.contactService?.tabMetaData?.next]);
     }
   }
 
@@ -166,7 +163,7 @@ export class ContactComponent implements OnInit, OnDestroy {
    * Navigates to previous tab
    */
   back(): void {
-    this.router.navigate([this.tabMetaData?.previous]);
+    this.router.navigate([this.contactService?.tabMetaData?.previous]);
   }
 
   /**
