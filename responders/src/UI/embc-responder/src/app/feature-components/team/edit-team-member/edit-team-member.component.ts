@@ -63,11 +63,11 @@ export class EditTeamMemberComponent implements OnInit {
     this.roles = this.filteredRoleList();
     this.labels = this.listService.getMemberLabels();
     const defaultText = (): string => {
-      if (this.teamMember.role === MemberRole.Tier1) {
+      if (this.teamMember?.role === MemberRole.Tier1) {
         return globalConst.tier1Notes;
-      } else if (this.teamMember.role === MemberRole.Tier2) {
+      } else if (this.teamMember?.role === MemberRole.Tier2) {
         return globalConst.tier2Notes;
-      } else if (this.teamMember.role === MemberRole.Tier3) {
+      } else if (this.teamMember?.role === MemberRole.Tier3) {
         return globalConst.tier3Notes;
       }
     };
@@ -87,24 +87,24 @@ export class EditTeamMemberComponent implements OnInit {
   constructEditForm(): void {
     this.editForm = this.builder.group({
       firstName: [
-        this.teamMember.firstName,
+        this.teamMember?.firstName,
         [this.customValidation.whitespaceValidator()]
       ],
       lastName: [
-        this.teamMember.lastName,
+        this.teamMember?.lastName,
         [this.customValidation.whitespaceValidator()]
       ],
       userName: [
-        { value: this.teamMember.userName, disabled: !this.isEditAllowed() },
+        { value: this.teamMember?.userName, disabled: !this.isEditAllowed() },
         [this.customValidation.whitespaceValidator()]
       ],
       role: [
-        { value: this.teamMember.role, disabled: this.isNotTier2() },
+        { value: this.teamMember?.role, disabled: this.isNotTier2() },
         [this.customValidation.whitespaceValidator()]
       ],
-      label: [this.teamMember.label],
-      email: [{ value: this.teamMember.email, disabled: true }],
-      phone: [{ value: this.teamMember.phone, disabled: true }]
+      label: [this.teamMember?.label],
+      email: [{ value: this.teamMember?.email, disabled: true }],
+      phone: [{ value: this.teamMember?.phone, disabled: true }]
     });
   }
 
@@ -124,7 +124,7 @@ export class EditTeamMemberComponent implements OnInit {
    * @returns true/false
    */
   isEditAllowed(): boolean {
-    return this.teamMember.isUserNameEditable;
+    return this.teamMember?.isUserNameEditable;
   }
 
   /**
@@ -194,7 +194,7 @@ export class EditTeamMemberComponent implements OnInit {
    * @returns member role list
    */
   filteredRoleList(): MemberRoleDescription[] {
-    const loggedInRole = this.userService.currentProfile.role;
+    const loggedInRole = this.userService?.currentProfile?.role;
     if (loggedInRole === MemberRole.Tier2) {
       return this.listService
         .getMemberRoles()
@@ -224,6 +224,6 @@ export class EditTeamMemberComponent implements OnInit {
    * @returns true/false
    */
   isNotTier2(): boolean {
-    return this.userService.currentProfile.role === MemberRole.Tier2;
+    return this.userService?.currentProfile?.role === MemberRole.Tier2;
   }
 }

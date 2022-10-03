@@ -6,6 +6,8 @@ A system to manage evacuees registrations and support provisioning for residents
 
 [![CodeQL](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml)
 
+[![OWASP Zap scan](https://github.com/bcgov/embc-ess-mod/actions/workflows/owasp_zap_scan.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/owasp_zap_scan.yml)
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ## Getting Help or Reporting an Issue
