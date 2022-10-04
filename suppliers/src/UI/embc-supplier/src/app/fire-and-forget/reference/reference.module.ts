@@ -4,14 +4,8 @@ import { ReferenceComponent } from './reference.component';
 import { ReferenceRoutingModule } from './reference-routing.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    ReferenceRoutingModule
-  ],
-  declarations: [
-    ReferenceComponent,
-    ],
-  exports: [
-    ]
+  imports: [CommonModule, ReferenceRoutingModule],
+  declarations: [ReferenceComponent],
+  exports: [],
 })
-export class ReferenceModule { }
+export class ReferenceModule {}

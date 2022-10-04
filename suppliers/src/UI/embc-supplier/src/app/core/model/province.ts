@@ -1,5 +1,5 @@
 export class Province {
-    code: string;
-    name: string;
-    countryCode: string;
+  code: string;
+  name: string;
+  countryCode: string;
 }

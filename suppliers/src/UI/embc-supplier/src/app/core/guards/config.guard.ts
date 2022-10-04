@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+} from '@angular/router';
 import { SupplierHttpService } from '../services/supplierHttp.service';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -7,7 +12,7 @@ import { ServerConfig } from '../model/server-config';
 import { ConfigService } from '../services/config.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigGuard implements CanActivate {
   public configResult: ServerConfig = new ServerConfig();
@@ -18,7 +23,10 @@ export class ConfigGuard implements CanActivate {
     private supplierHttp: SupplierHttpService
   ) {}
 
-  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
+  public canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | boolean {
     // Always allow error page to load
     if (state.url === '/error') {
       return true;
@@ -30,19 +38,28 @@ export class ConfigGuard implements CanActivate {
     }
 
     return this.configService.getServerConfig().pipe(
-      map(config => {
+      map((config) => {
         // Set global maint/notice vars and redirect if site down
         this.configResult = config;
 
-        if (this.configResult.siteDown && this.configResult.maintMsg !== '' && state.url !== '/maintenance') {
+        if (
+          this.configResult.siteDown &&
+          this.configResult.maintMsg !== '' &&
+          state.url !== '/maintenance'
+        ) {
           this.router.navigate(['/maintenance']);
           return false;
-        }
-        else if (this.configResult.siteDown && this.configResult.maintMsg === '' && state.url !== '/error') {
+        } else if (
+          this.configResult.siteDown &&
+          this.configResult.maintMsg === '' &&
+          state.url !== '/error'
+        ) {
           this.router.navigate(['/error']);
           return false;
-        }
-        else if (!this.configResult.siteDown && state.url === '/maintenance') {
+        } else if (
+          !this.configResult.siteDown &&
+          state.url === '/maintenance'
+        ) {
           this.router.navigate(['/']);
           return false;
         }

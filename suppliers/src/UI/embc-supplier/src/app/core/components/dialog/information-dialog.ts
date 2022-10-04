@@ -5,13 +5,15 @@ import { DialogContent } from '../../model/dialog-content.model';
 @Component({
   selector: 'app-info.dialog',
   templateUrl: 'information-dialog.html',
-  styleUrls: ['./information-dialog.scss']
+  styleUrls: ['./information-dialog.scss'],
 })
 export class InformationDialog {
   title: string;
   content: DialogContent;
-  constructor(public dialogRef: MatDialogRef<InformationDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(
+    public dialogRef: MatDialogRef<InformationDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     this.title = data.content.title;
     this.content = data.content;
   }
