@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { WarningModalComponent } from '../components/warningModal/warningModal.component';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WarningService {
-
   constructor(private warningService: NgbModal) {}
 
   warningModal(message: string) {

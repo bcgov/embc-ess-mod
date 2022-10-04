@@ -3,23 +3,24 @@ import { SupplierService } from '../../core/services/supplier.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-reference',
-    templateUrl: './reference.component.html',
-    styleUrls: ['./reference.component.scss']
+  selector: 'app-reference',
+  templateUrl: './reference.component.html',
+  styleUrls: ['./reference.component.scss'],
 })
-export class ReferenceComponent implements OnInit{
+export class ReferenceComponent implements OnInit {
+  referenceNumber: any;
 
-    referenceNumber: any;
+  constructor(
+    public supplierService: SupplierService,
+    private router: Router
+  ) {}
 
-    constructor(public supplierService: SupplierService, private router: Router) { }
+  ngOnInit() {
+    this.referenceNumber = this.supplierService.getReferenceNumber();
+  }
 
-    ngOnInit() {
-        this.referenceNumber = this.supplierService.getReferenceNumber();
-    }
-
-    newSubmission() {
-        this.supplierService.setSupplierDetails(null);
-        this.router.navigate(['/submission']);
-    }
-
+  newSubmission() {
+    this.supplierService.setSupplierDetails(null);
+    this.router.navigate(['/submission']);
+  }
 }

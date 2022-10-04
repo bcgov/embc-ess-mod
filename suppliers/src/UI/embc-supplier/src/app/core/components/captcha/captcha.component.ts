@@ -1,6 +1,17 @@
 import {
-  Component, ElementRef, ViewChild, SimpleChanges, NgZone, ChangeDetectorRef,
-  Output, Input, AfterViewInit, OnInit, OnChanges, EventEmitter, OnDestroy
+  Component,
+  ElementRef,
+  ViewChild,
+  SimpleChanges,
+  NgZone,
+  ChangeDetectorRef,
+  Output,
+  Input,
+  AfterViewInit,
+  OnInit,
+  OnChanges,
+  EventEmitter,
+  OnDestroy,
 } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Subscription, Subject } from 'rxjs';
@@ -15,7 +26,7 @@ export const SupportedLanguages = [
   ['zh', 'Chinese'],
   ['en', 'English'],
   ['fr', 'French'],
-  ['pa', 'Punjabi']
+  ['pa', 'Punjabi'],
 ];
 
 // 7 mutually exclusive states
@@ -26,17 +37,18 @@ enum CAPTCHA_STATE {
   ERROR_FETCH_IMG = 3,
   VERIFYING_ANSWER = 4,
   SUCCESS_VERIFY_ANSWER_CORRECT = 5,
-  ERROR_VERIFY = 6
+  ERROR_VERIFY = 6,
 }
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'captcha',
   templateUrl: './captcha.component.html',
-  styleUrls: ['./captcha.component.scss']
+  styleUrls: ['./captcha.component.scss'],
 })
-export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
-
+export class CaptchaComponent
+  implements AfterViewInit, OnInit, OnChanges, OnDestroy
+{
   @ViewChild('image') imageContainer: ElementRef;
   @ViewChild('audioElement') audioElement: ElementRef;
 
@@ -88,13 +100,13 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     loadingImage: {
       en: 'Loading CAPTCHA image',
       zh: '正在下载验证码',
-      fr: 'Chargement de l\'image CAPTCHA',
+      fr: "Chargement de l'image CAPTCHA",
       pa: 'ਕੈਪਟਚਾ ਚਿੱਤਰ ਲੋਡ ਕਰ ਰਿਹਾ ਹੈ',
     },
     browserNotSupportAudio: {
       en: 'Your browser does not support the audio element.',
       zh: '你的浏览器不支持播音',
-      fr: 'Votre navigateur ne supporte pas l\'élément audio.',
+      fr: "Votre navigateur ne supporte pas l'élément audio.",
       pa: 'ਤੁਹਾਡਾ ਬ੍ਰਾਉਜ਼ਰ ਆਡੀਓ ਐਲੀਮੈਂਟ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ.',
     },
     verifyingAnswer: {
@@ -147,7 +159,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     private dataService: SupplierHttpService,
     private cd: ChangeDetectorRef,
     private ngZone: NgZone
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.forceRefresh.bind(this);
@@ -165,9 +177,15 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
   ngOnChanges(changes: SimpleChanges) {
     // when changing language, if audio is empty then no need to refresh
     if (!changes.language || !this.audio || this.audio.length === 0) {
-      if (!(changes.reloadCaptcha && (true === changes.reloadCaptcha.previousValue
-        || false === changes.reloadCaptcha.previousValue)
-        && (changes.reloadCaptcha.currentValue !== changes.reloadCaptcha.previousValue))) {
+      if (
+        !(
+          changes.reloadCaptcha &&
+          (true === changes.reloadCaptcha.previousValue ||
+            false === changes.reloadCaptcha.previousValue) &&
+          changes.reloadCaptcha.currentValue !==
+            changes.reloadCaptcha.previousValue
+        )
+      ) {
         return;
       }
     }
@@ -203,23 +221,27 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
         this.verifySub.unsubscribe();
       }
 
-      this.verifySub = this.dataService.verifyCaptcha(this.nonce, this.answer, this.validation)
+      this.verifySub = this.dataService
+        .verifyCaptcha(this.nonce, this.answer, this.validation)
         .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((response: HttpResponse<any>) => {
-          const payload = response.body;
-          if (this.isValidPayload(payload)) {
-            this.handleVerify(payload);
-          } else {
+        .subscribe(
+          (response: HttpResponse<any>) => {
+            const payload = response.body;
+            if (this.isValidPayload(payload)) {
+              this.handleVerify(payload);
+            } else {
+              this.state = CAPTCHA_STATE.ERROR_VERIFY;
+              this.errorVerifyAnswer = this.createErrorTextLine(response);
+            }
+          },
+          (error) => {
             this.state = CAPTCHA_STATE.ERROR_VERIFY;
-            this.errorVerifyAnswer = this.createErrorTextLine(response);
+            this.errorVerifyAnswer = this.createErrorTextLine(error);
+            console.log('Error response from verifying user answer: ', error);
+            // let UI know about error
+            this.serverError.emit(error);
           }
-        }, error => {
-          this.state = CAPTCHA_STATE.ERROR_VERIFY;
-          this.errorVerifyAnswer = this.createErrorTextLine(error);
-          console.log('Error response from verifying user answer: ', error);
-          // let UI know about error
-          this.serverError.emit(error);
-        });
+        );
     }
   }
 
@@ -251,7 +273,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     } else {
       const hasValueProp = payload.hasOwnProperty('valid');
       if (!hasValueProp) {
-        console.error('Payload must have its own property named \'valid\'');
+        console.error("Payload must have its own property named 'valid'");
         return false;
       } else {
         return true;
@@ -275,22 +297,26 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
       this.audioSub.unsubscribe();
     }
 
-    this.audioSub = this.dataService.fetchAudio(this.validation, this.language)
+    this.audioSub = this.dataService
+      .fetchAudio(this.validation, this.language)
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((response: HttpResponse<any>) => {
-        this.fetchingAudioInProgress = false;
-        this.audio = response.body.audio;
-        this.cd.detectChanges();
-        if (playImmediately) {
-          this.audioElement.nativeElement.play();
+      .subscribe(
+        (response: HttpResponse<any>) => {
+          this.fetchingAudioInProgress = false;
+          this.audio = response.body.audio;
+          this.cd.detectChanges();
+          if (playImmediately) {
+            this.audioElement.nativeElement.play();
+          }
+        },
+        (error) => {
+          this.fetchingAudioInProgress = false;
+          console.log('Error response from fetching audio CAPTCHA: ', error);
+          this.cd.detectChanges();
+          // let UI know about error
+          this.serverError.emit(error);
         }
-      }, error => {
-        this.fetchingAudioInProgress = false;
-        console.log('Error response from fetching audio CAPTCHA: ', error);
-        this.cd.detectChanges();
-        // let UI know about error
-        this.serverError.emit(error);
-      });
+      );
   }
 
   getNewCaptcha(errorCase: boolean) {
@@ -309,29 +335,33 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
       this.dataSub.unsubscribe();
     }
 
-    this.dataSub = this.dataService.fetchData(this.nonce)
+    this.dataSub = this.dataService
+      .fetchData(this.nonce)
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((response: HttpResponse<any>) => {
-        this.state = CAPTCHA_STATE.SUCCESS_FETCH_IMG;
-        const payload = response.body;
-        this.imageContainer.nativeElement.innerHTML = payload.captcha;
-        this.validation = payload.validation;
-        this.cd.detectChanges();
+      .subscribe(
+        (response: HttpResponse<any>) => {
+          this.state = CAPTCHA_STATE.SUCCESS_FETCH_IMG;
+          const payload = response.body;
+          this.imageContainer.nativeElement.innerHTML = payload.captcha;
+          this.validation = payload.validation;
+          this.cd.detectChanges();
 
-        if (this.eagerFetchAudio) {
-          // console.log('Fetch audio eagerly');
-          this.fetchAudio();
-        } else {
-          // console.log('Not to fetch audio eagerly');
+          if (this.eagerFetchAudio) {
+            // console.log('Fetch audio eagerly');
+            this.fetchAudio();
+          } else {
+            // console.log('Not to fetch audio eagerly');
+          }
+        },
+        (error) => {
+          this.state = CAPTCHA_STATE.ERROR_FETCH_IMG;
+          this.errorFetchingImg = this.createErrorTextLine(error);
+          console.log('Error esponse from fetching CAPTCHA text: %o', error);
+          this.cd.detectChanges();
+          // let UI know about error
+          this.serverError.emit(error);
         }
-      }, error => {
-        this.state = CAPTCHA_STATE.ERROR_FETCH_IMG;
-        this.errorFetchingImg = this.createErrorTextLine(error);
-        console.log('Error esponse from fetching CAPTCHA text: %o', error);
-        this.cd.detectChanges();
-        // let UI know about error
-        this.serverError.emit(error);
-      });
+      );
   }
 
   private createErrorTextLine(error: any) {
@@ -341,5 +371,4 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     }
     return line;
   }
-
 }
