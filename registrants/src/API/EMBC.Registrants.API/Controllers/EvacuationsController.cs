@@ -520,7 +520,7 @@ namespace EMBC.Registrants.API.Controllers
     {
         None,
 
-        [Description("Hotel/Motel")]
+        [Description("Hotel/Motel/Campground")]
         Lodging_Hotel,
 
         [Description("Billeting")]
