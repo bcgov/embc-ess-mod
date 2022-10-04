@@ -3,6 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditTeamMemberComponent } from './edit-team-member.component';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MaterialModule } from 'src/app/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('EditTeamMemberComponent', () => {
   let component: EditTeamMemberComponent;
@@ -11,7 +15,14 @@ describe('EditTeamMemberComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EditTeamMemberComponent],
-      imports: [ReactiveFormsModule, RouterTestingModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MaterialModule,
+        BrowserAnimationsModule
+      ],
       providers: [UntypedFormBuilder]
     }).compileComponents();
   });
@@ -22,7 +33,7 @@ describe('EditTeamMemberComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

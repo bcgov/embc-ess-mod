@@ -183,7 +183,7 @@ export class AddTeamMemberComponent implements OnInit {
    * @returns member role list
    */
   filteredRoleList(): MemberRoleDescription[] {
-    const loggedInRole = this.userService.currentProfile.role;
+    const loggedInRole = this.userService?.currentProfile?.role;
     if (loggedInRole === MemberRole.Tier2) {
       return this.listService
         .getMemberRoles()
