@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn, FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, ValidatorFn, UntypedFormArray, FormGroup } from '@angular/forms';
 import { Injectable, Predicate } from '@angular/core';
 import { SupplierService } from './supplier.service';
 import { formatDate } from '@angular/common';
@@ -12,7 +12,7 @@ export class CustomValidationService {
      * Validation for the invoice number to be always unique
      * @param invoices Invoice Array
      */
-    invoiceValidator(invoices: FormArray): ValidatorFn {
+    invoiceValidator(invoices: UntypedFormArray): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             const currentContrrol = control.value;
             let check = '';
@@ -31,7 +31,7 @@ export class CustomValidationService {
      * Validation for the referral number to be always unique
      * @param referrals Referrals Array
      */
-    referralNumberValidator(referrals: FormArray): ValidatorFn {
+    referralNumberValidator(referrals: UntypedFormArray): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             const currentContrrol = control.value;
             let check = '';
