@@ -10,7 +10,7 @@ export class BannerComponent implements OnInit {
   @Input() bannerMsg: string | SafeHtml;
   @Input() bannerType: string;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 }

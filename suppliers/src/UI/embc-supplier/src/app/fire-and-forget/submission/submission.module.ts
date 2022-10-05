@@ -25,4 +25,4 @@ import { ModalComponent } from '../../core/components/modal/modal.component';
     ReceiptComponent
   ]
 })
-export class SubmissionModule { }
+export class SubmissionModule {}

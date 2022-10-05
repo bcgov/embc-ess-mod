@@ -13,7 +13,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy{
+export class AppComponent implements OnInit, OnDestroy {
   title = 'embc-supplier';
 
   noticeMsg: SafeHtml = '';
@@ -40,26 +40,37 @@ export class AppComponent implements OnInit, OnDestroy{
       this.configService.setServerConfig(this.supplierHttp.getServerConfig());
     }
 
-    this.bannerSubscription = this.configService.getServerConfig().subscribe(config => {
-      this.noticeMsg = (config.noticeMsg) ? this.sanitizer.bypassSecurityTrustHtml(config.noticeMsg) : '';
-      this.maintMsg = (config.maintMsg) ? this.sanitizer.bypassSecurityTrustHtml(config.maintMsg) : '';
-      this.siteDown = config.siteDown;
-    }, err => {
-      console.log(err);
-    });
+    this.bannerSubscription = this.configService.getServerConfig().subscribe(
+      (config) => {
+        this.noticeMsg = config.noticeMsg
+          ? this.sanitizer.bypassSecurityTrustHtml(config.noticeMsg)
+          : '';
+        this.maintMsg = config.maintMsg
+          ? this.sanitizer.bypassSecurityTrustHtml(config.maintMsg)
+          : '';
+        this.siteDown = config.siteDown;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   setUpData() {
     this.configService.setServerConfig(this.supplierHttp.getServerConfig());
 
     this.supplierService.setCityList(this.supplierHttp.getListOfCities());
-    this.supplierService.setProvinceList(this.supplierHttp.getListOfProvinces());
+    this.supplierService.setProvinceList(
+      this.supplierHttp.getListOfProvinces()
+    );
     this.supplierService.setStateList(this.supplierHttp.getListOfStates());
     this.supplierService.setCountryList(this.supplierHttp.getListOfCountries());
 
-    this.listItemSubscription = this.supplierHttp.getListOfSupportItems().subscribe((data: any[]) => {
-      this.supplierService.setSupportItems(data);
-    });
+    this.listItemSubscription = this.supplierHttp
+      .getListOfSupportItems()
+      .subscribe((data: any[]) => {
+        this.supplierService.setSupportItems(data);
+      });
   }
 
   ngOnDestroy() {

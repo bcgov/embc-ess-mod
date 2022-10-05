@@ -2,11 +2,10 @@ import { Directive, HostListener } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
-  selector: '[formControlName][appGSTMask]',
+  selector: '[formControlName][appGSTMask]'
 })
 export class GSTCodeDirective {
-
-  constructor(public ngControl: NgControl) { }
+  constructor(public ngControl: NgControl) {}
 
   @HostListener('ngModelChange', ['$event'])
   onModelChange(evt) {
@@ -18,12 +17,11 @@ export class GSTCodeDirective {
     this.onInputChange(evt.target.value, true);
   }
 
+  //   Char 1-9 (Main Number): Must be whole number between 0 - 9
 
-//   Char 1-9 (Main Number): Must be whole number between 0 - 9
+  // Char 10-11(Program Identifier): Must be RT
 
-// Char 10-11(Program Identifier): Must be RT
-
-// Char 12-15 (Reference Number): Must be whole number between 0 - 9
+  // Char 12-15 (Reference Number): Must be whole number between 0 - 9
 
   onInputChange(evt, backspace) {
     let newVal = evt.replace(/\D/g, '');

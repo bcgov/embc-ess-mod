@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree,
+  Router
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ServerConfig } from '../model/server-config';
@@ -18,14 +24,17 @@ export class DevGuard implements CanActivate {
     private supplierHttp: SupplierHttpService
   ) {}
 
-  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  public canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> {
     // This is set in app.component.ts
     if (!this.configService.getServerConfig()) {
       this.configService.setServerConfig(this.supplierHttp.getServerConfig());
     }
 
     return this.configService.getServerConfig().pipe(
-      map(config => {
+      map((config) => {
         // If code is up in PROD, prevent from loading whatever is behind this guard.
         this.configResult = config;
 

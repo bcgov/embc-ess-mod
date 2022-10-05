@@ -17,12 +17,7 @@ import { BannerComponent } from './components/banner/banner.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatDialogModule,
-    NgbModule
-  ],
+  imports: [CommonModule, FormsModule, MatDialogModule, NgbModule],
   declarations: [
     AlertComponent,
     BannerComponent,
@@ -35,7 +30,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ModalComponent,
     PhoneMaskDirective,
     ToastsComponent,
-    WarningModalComponent,
+    WarningModalComponent
   ],
   exports: [
     AlertComponent,
@@ -48,7 +43,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     LoaderComponent,
     MatDialogModule,
     PhoneMaskDirective,
-    ToastsComponent,
+    ToastsComponent
   ]
 })
-export class CoreModule { }
+export class CoreModule {}

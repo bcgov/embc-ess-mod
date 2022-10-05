@@ -5,13 +5,7 @@ import { MaintenanceRoutingModule } from '../maintenance/maintenance-routing.mod
 import { CoreModule } from '../core/core.module';
 
 @NgModule({
-  declarations: [
-    MaintenanceComponent
-  ],
-  imports: [
-    CoreModule,
-    CommonModule,
-    MaintenanceRoutingModule
-  ]
+  declarations: [MaintenanceComponent],
+  imports: [CoreModule, CommonModule, MaintenanceRoutingModule]
 })
-export class MaintenanceModule { }
+export class MaintenanceModule {}

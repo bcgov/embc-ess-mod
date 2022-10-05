@@ -5,6 +5,8 @@ import { ToastService } from '../../services/toast.service';
   templateUrl: './toasts.component.html'
 })
 export class ToastsComponent {
-  constructor(public toastService: ToastService) { }
-  isTemplate(toast) { return toast.textOrTpl instanceof TemplateRef; }
+  constructor(public toastService: ToastService) {}
+  isTemplate(toast) {
+    return toast.textOrTpl instanceof TemplateRef;
+  }
 }

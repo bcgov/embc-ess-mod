@@ -3,16 +3,14 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-warning-modal',
-  templateUrl: './warningModal.component.html',
+  templateUrl: './warningModal.component.html'
 })
 export class WarningModalComponent {
+  @Input() messageBody: string;
 
-    @Input() messageBody: string;
+  constructor(public activeModal: NgbActiveModal) {}
 
-    constructor(public activeModal: NgbActiveModal) {}
-
-    action() {
-      this.activeModal.close();
-    }
-
+  action() {
+    this.activeModal.close();
+  }
 }
