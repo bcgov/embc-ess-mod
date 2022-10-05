@@ -6,11 +6,11 @@ import {
 
 @Injectable()
 export class DateParserService extends NgbDateParserFormatter {
-  readonly DELIMITER = '/';
+  readonly delimiter = '/';
 
   parse(value: string): NgbDateStruct | null {
     if (value) {
-      const date = value.split(this.DELIMITER);
+      const date = value.split(this.delimiter);
       return {
         month: parseInt(date[0], 10),
         day: parseInt(date[1], 10),
@@ -22,7 +22,7 @@ export class DateParserService extends NgbDateParserFormatter {
 
   format(date: NgbDateStruct | null): string {
     return date
-      ? date.month + this.DELIMITER + date.day + this.DELIMITER + date.year
+      ? date.month + this.delimiter + date.day + this.delimiter + date.year
       : '';
   }
 }

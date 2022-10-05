@@ -74,6 +74,17 @@ export class InvoiceComponent implements OnInit {
   }
 
   /**
+   * Gets attachment form array
+   */
+  get invoiceAttachments() {
+    return this.invoiceForm.get('invoiceAttachments') as UntypedFormArray;
+  }
+
+  get referrals() {
+    return this.invoiceForm.get('referrals') as UntypedFormArray;
+  }
+
+  /**
    * Creates attachment form group
    *
    * @param data :Attachment metadata
@@ -87,13 +98,6 @@ export class InvoiceComponent implements OnInit {
     if (this.supplierService.isReload) {
       this.loadWithExistingValues();
     }
-  }
-
-  /**
-   * Gets attachment form array
-   */
-  get invoiceAttachments() {
-    return this.invoiceForm.get('invoiceAttachments') as UntypedFormArray;
   }
 
   /**
@@ -160,10 +164,6 @@ export class InvoiceComponent implements OnInit {
    */
   deleteFileFormControl(event: any) {
     this.invoiceAttachments.removeAt(event);
-  }
-
-  get referrals() {
-    return this.invoiceForm.get('referrals') as UntypedFormArray;
   }
 
   /**
