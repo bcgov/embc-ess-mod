@@ -8,7 +8,7 @@ import { InformationDialogComponent } from '../../components/dialog/information-
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss'],
+  styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
   appVersion: string;
@@ -24,10 +24,10 @@ export class FooterComponent implements OnInit {
       const dialog = this.dialog.open(InformationDialogComponent, {
         data: {
           title: 'Version Information',
-          content: this.versionDialog(content),
+          content: this.versionDialog(content)
         },
         autoFocus: false,
-        width: '530px',
+        width: '530px'
       });
     });
   }
@@ -44,7 +44,7 @@ export class FooterComponent implements OnInit {
     return {
       text: `<table class="versions-table">${rows}</table>`,
       cancelButton: 'Close',
-      title: 'Version Information',
+      title: 'Version Information'
     };
   }
 }

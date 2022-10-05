@@ -25,11 +25,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       resourceServer: {
         customUrlValidation: (url) =>
           url.startsWith('/api') && !url.endsWith('/Config'),
-        sendAccessToken: true,
-      },
-    }),
+        sendAccessToken: true
+      }
+    })
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

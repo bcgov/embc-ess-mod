@@ -8,7 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../components/modal/modal.component';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SupplierService extends DataService {
   private supplierDetails: any;

@@ -4,20 +4,20 @@ import {
   OnInit,
   ChangeDetectorRef,
   Output,
-  EventEmitter,
+  EventEmitter
 } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormArray,
   UntypedFormBuilder,
   AbstractControl,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {
   NgbDateParserFormatter,
   NgbCalendar,
   NgbDateAdapter,
-  NgbDatepickerConfig,
+  NgbDatepickerConfig
 } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { SupplierService } from 'src/app/core/services/supplier.service';
@@ -31,8 +31,8 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
   providers: [
     { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
     { provide: NgbDateParserFormatter, useClass: DateParserService },
-    NgbDatepickerConfig,
-  ],
+    NgbDatepickerConfig
+  ]
 })
 export class ReferralComponent implements OnInit {
   @Input() formGroupName: number;
@@ -60,7 +60,7 @@ export class ReferralComponent implements OnInit {
     config.maxDate = {
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1,
-      day: new Date().getDate(),
+      day: new Date().getDate()
     };
     config.outsideDays = 'hidden';
     config.firstDayOfWeek = 7;
@@ -114,7 +114,7 @@ export class ReferralComponent implements OnInit {
         this.referralAttachments.push(
           this.createAttachmentObject({
             fileName: element.fileName,
-            file: element.file,
+            file: element.file
           })
         );
       });
@@ -126,7 +126,7 @@ export class ReferralComponent implements OnInit {
         this.receiptAttachments.push(
           this.createAttachmentObject({
             fileName: element.fileName,
-            file: element.file,
+            file: element.file
           })
         );
       });
@@ -149,7 +149,7 @@ export class ReferralComponent implements OnInit {
     return this.builder.group({
       supportProvided: ['', Validators.required],
       description: [''],
-      amount: ['', Validators.required],
+      amount: ['', Validators.required]
     });
   }
 
@@ -179,7 +179,7 @@ export class ReferralComponent implements OnInit {
         this.createAttachmentObject({
           fileName: event.name,
           file: reader.result,
-          contentType: event.type,
+          contentType: event.type
         })
       );
     };
@@ -198,7 +198,7 @@ export class ReferralComponent implements OnInit {
         this.createAttachmentObject({
           fileName: event.name,
           file: reader.result,
-          contentType: event.type,
+          contentType: event.type
         })
       );
     };
@@ -217,7 +217,7 @@ export class ReferralComponent implements OnInit {
     return this.builder.group({
       supportProvided: [row.supportProvided, Validators.required],
       description: [row.description],
-      amount: [row.amount, Validators.required],
+      amount: [row.amount, Validators.required]
     });
   }
 

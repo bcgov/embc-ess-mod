@@ -4,13 +4,13 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   UntypedFormArray,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
@@ -19,7 +19,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 @Component({
   selector: 'app-receipt',
   templateUrl: './receipt.component.html',
-  styleUrls: ['./receipt.component.scss'],
+  styleUrls: ['./receipt.component.scss']
 })
 export class ReceiptComponent implements OnInit {
   @Input() formGroupName: number;
@@ -89,7 +89,7 @@ export class ReceiptComponent implements OnInit {
       this.referralAttachments.push(
         this.createAttachmentObject({
           fileName: element.fileName,
-          file: element.file,
+          file: element.file
         })
       );
     });
@@ -99,7 +99,7 @@ export class ReceiptComponent implements OnInit {
       this.receiptAttachments.push(
         this.createAttachmentObject({
           fileName: element.fileName,
-          file: element.file,
+          file: element.file
         })
       );
     });
@@ -120,12 +120,12 @@ export class ReceiptComponent implements OnInit {
         [
           Validators.required,
           this.customValidator.futureDateValidator().bind(this.customValidator),
-          Validators.pattern(globalConst.datePattern),
-        ],
+          Validators.pattern(globalConst.datePattern)
+        ]
       ],
       receiptNumber: [''],
       referralRows: this.builder.array([], Validators.required),
-      totalAmount: [''],
+      totalAmount: ['']
     });
   }
 
@@ -170,7 +170,7 @@ export class ReceiptComponent implements OnInit {
         this.createAttachmentObject({
           fileName: event.name,
           file: reader.result,
-          contentType: event.type,
+          contentType: event.type
         })
       );
     };
@@ -199,7 +199,7 @@ export class ReceiptComponent implements OnInit {
         this.createAttachmentObject({
           fileName: event.name,
           file: reader.result,
-          contentType: event.type,
+          contentType: event.type
         })
       );
     };
@@ -244,12 +244,12 @@ export class ReceiptComponent implements OnInit {
         [
           Validators.required,
           this.customValidator.futureDateValidator().bind(this.customValidator),
-          Validators.pattern(globalConst.datePattern),
-        ],
+          Validators.pattern(globalConst.datePattern)
+        ]
       ],
       receiptNumber: [referral.receiptNumber],
       referralRows: this.builder.array([], Validators.required),
-      totalAmount: [referral.totalAmount],
+      totalAmount: [referral.totalAmount]
     });
   }
 

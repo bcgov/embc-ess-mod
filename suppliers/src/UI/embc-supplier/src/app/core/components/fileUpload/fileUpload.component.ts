@@ -6,7 +6,7 @@ import * as constant from 'src/app/core/services/globalConstants';
 @Component({
   selector: 'app-file-upload',
   templateUrl: './fileUpload.component.html',
-  styleUrls: ['./fileUpload.component.scss'],
+  styleUrls: ['./fileUpload.component.scss']
 })
 export class FileUploadComponent implements OnInit {
   @Output() attachedFile = new EventEmitter<any>();

@@ -5,7 +5,7 @@ import { DialogContent } from '../../model/dialog-content.model';
 @Component({
   selector: 'app-info.dialog',
   templateUrl: 'information-dialog.component.html',
-  styleUrls: ['./information-dialog.component.scss'],
+  styleUrls: ['./information-dialog.component.scss']
 })
 export class InformationDialogComponent {
   title: string;

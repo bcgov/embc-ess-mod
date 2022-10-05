@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   NgbDateParserFormatter,
-  NgbDateStruct,
+  NgbDateStruct
 } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class DateParserService extends NgbDateParserFormatter {
       return {
         month: parseInt(date[0], 10),
         day: parseInt(date[1], 10),
-        year: parseInt(date[2], 10),
+        year: parseInt(date[2], 10)
       };
     }
     return null;

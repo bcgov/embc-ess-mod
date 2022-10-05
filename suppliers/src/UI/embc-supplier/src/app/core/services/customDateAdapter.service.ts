@@ -11,7 +11,7 @@ export class CustomDateAdapterService extends NgbDateAdapter<string> {
       return {
         month: parseInt(date[0], 10),
         day: parseInt(date[1], 10),
-        year: parseInt(date[2], 10),
+        year: parseInt(date[2], 10)
       };
     }
     return null;

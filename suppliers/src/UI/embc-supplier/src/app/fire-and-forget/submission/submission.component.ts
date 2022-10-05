@@ -4,7 +4,7 @@ import {
   UntypedFormBuilder,
   UntypedFormGroup,
   UntypedFormArray,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { SupplierService } from '../../core/services/supplier.service';
 import { Observable } from 'rxjs';
@@ -12,7 +12,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   map,
-  switchMap,
+  switchMap
 } from 'rxjs/operators';
 import { NgbModal, NgbTypeaheadConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../../core/components/modal/modal.component';
@@ -24,7 +24,7 @@ import * as globalConst from 'src/app/core/services/globalConstants';
   selector: 'app-supplier-submission',
   templateUrl: './submission.component.html',
   styleUrls: ['./submission.component.scss'],
-  providers: [CustomValidationService, NgbTypeaheadConfig],
+  providers: [CustomValidationService, NgbTypeaheadConfig]
 })
 export class SubmissionComponent implements OnInit {
   supplierForm: UntypedFormGroup;
@@ -181,8 +181,8 @@ export class SubmissionComponent implements OnInit {
               () => this.supplierForm.get('remitToOtherBusiness').value,
               this.customValidator.whitespaceValidator()
             )
-            .bind(this.customValidator),
-        ],
+            .bind(this.customValidator)
+        ]
       ],
       businessCountry: [
         '',
@@ -192,8 +192,8 @@ export class SubmissionComponent implements OnInit {
               () => this.supplierForm.get('remitToOtherBusiness').value,
               Validators.required
             )
-            .bind(this.customValidator),
-        ],
+            .bind(this.customValidator)
+        ]
       ],
       supplierBC: [''],
 
@@ -204,9 +204,9 @@ export class SubmissionComponent implements OnInit {
         province: [globalConst.defaultProvince.name],
         postalCode: [
           '',
-          [Validators.required, Validators.pattern(globalConst.postalPattern)],
+          [Validators.required, Validators.pattern(globalConst.postalPattern)]
         ],
-        country: [globalConst.defaultCountry.name],
+        country: [globalConst.defaultCountry.name]
       }),
 
       contactPerson: this.builder.group({
@@ -214,7 +214,7 @@ export class SubmissionComponent implements OnInit {
         lastName: ['', this.customValidator.whitespaceValidator()],
         email: ['', Validators.email],
         phone: ['', [Validators.required, Validators.minLength(12)]],
-        fax: ['', Validators.minLength(12)],
+        fax: ['', Validators.minLength(12)]
       }),
 
       remittanceAddress: this.builder.group({
@@ -226,8 +226,8 @@ export class SubmissionComponent implements OnInit {
                 () => this.supplierForm.get('remitToOtherBusiness').value,
                 this.customValidator.whitespaceValidator()
               )
-              .bind(this.customValidator),
-          ],
+              .bind(this.customValidator)
+          ]
         ],
         address2: [''],
         city: [
@@ -238,8 +238,8 @@ export class SubmissionComponent implements OnInit {
                 () => this.supplierForm.get('remitToOtherBusiness').value,
                 Validators.required
               )
-              .bind(this.customValidator),
-          ],
+              .bind(this.customValidator)
+          ]
         ],
         province: [
           '',
@@ -255,8 +255,8 @@ export class SubmissionComponent implements OnInit {
                   this.supplierForm.get('supplierBC').value === 'no',
                 Validators.required
               )
-              .bind(this.customValidator),
-          ],
+              .bind(this.customValidator)
+          ]
         ],
         state: [
           '',
@@ -271,8 +271,8 @@ export class SubmissionComponent implements OnInit {
                   ),
                 Validators.required
               )
-              .bind(this.customValidator),
-          ],
+              .bind(this.customValidator)
+          ]
         ],
         region: [''],
         postalCode: [
@@ -289,8 +289,8 @@ export class SubmissionComponent implements OnInit {
                   ),
                 this.customValidator.whitespaceValidator()
               )
-              .bind(this.customValidator),
-          ],
+              .bind(this.customValidator)
+          ]
         ],
         zipCode: [
           '',
@@ -306,15 +306,15 @@ export class SubmissionComponent implements OnInit {
                   ),
                 Validators.required
               )
-              .bind(this.customValidator),
-          ],
+              .bind(this.customValidator)
+          ]
         ],
-        otherCode: [''],
+        otherCode: ['']
       }),
 
       supplierSubmissionType: [''],
       invoices: this.builder.array([]),
-      receipts: this.builder.array([]),
+      receipts: this.builder.array([])
     });
   }
 
@@ -357,21 +357,21 @@ export class SubmissionComponent implements OnInit {
           Validators.required,
           this.customValidator
             .invoiceValidator(this.invoices)
-            .bind(this.customValidator),
-        ],
+            .bind(this.customValidator)
+        ]
       ],
       invoiceDate: [
         null,
         [
           Validators.required,
           this.customValidator.futureDateValidator().bind(this.customValidator),
-          Validators.pattern(globalConst.datePattern),
-        ],
+          Validators.pattern(globalConst.datePattern)
+        ]
       ],
       invoiceAttachments: this.builder.array([], [Validators.required]),
       referralList: ['', Validators.required],
       referrals: this.builder.array([], Validators.required),
-      invoiceTotalAmount: [''],
+      invoiceTotalAmount: ['']
     });
   }
 
@@ -383,13 +383,13 @@ export class SubmissionComponent implements OnInit {
           Validators.required,
           this.customValidator
             .referralNumberValidator(this.receipts)
-            .bind(this.customValidator),
-        ],
+            .bind(this.customValidator)
+        ]
       ],
       referrals: this.builder.array([]),
       receiptTotalAmount: [''],
       referralAttachments: this.builder.array([], [Validators.required]),
-      receiptAttachments: this.builder.array([], [Validators.required]),
+      receiptAttachments: this.builder.array([], [Validators.required])
     });
   }
 
@@ -594,13 +594,13 @@ export class SubmissionComponent implements OnInit {
         [
           Validators.required,
           this.customValidator.futureDateValidator().bind(this.customValidator),
-          Validators.pattern(globalConst.datePattern),
-        ],
+          Validators.pattern(globalConst.datePattern)
+        ]
       ],
       invoiceAttachments: this.builder.array([], [Validators.required]),
       referralList: [invoice.referralList, Validators.required],
       referrals: this.builder.array([], Validators.required),
-      invoiceTotalAmount: [invoice.invoiceTotalAmount],
+      invoiceTotalAmount: [invoice.invoiceTotalAmount]
     });
   }
 
@@ -610,7 +610,7 @@ export class SubmissionComponent implements OnInit {
       referrals: this.builder.array([]),
       receiptTotalAmount: [receipt.receiptTotalAmount],
       referralAttachments: this.builder.array([], [Validators.required]),
-      receiptAttachments: this.builder.array([], [Validators.required]),
+      receiptAttachments: this.builder.array([], [Validators.required])
     });
   }
 

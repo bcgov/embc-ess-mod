@@ -4,6 +4,6 @@ import { SupplierPublicRoutingModule } from './supplier-public-routing.module';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, SupplierPublicRoutingModule],
+  imports: [CommonModule, SupplierPublicRoutingModule]
 })
 export class SupplierPublicModule {}

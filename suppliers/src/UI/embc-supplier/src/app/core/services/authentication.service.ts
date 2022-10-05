@@ -18,7 +18,7 @@ export class AuthenticationService {
     await this.configureOAuthService();
     const returnRoute = location.pathname.substring(1);
     const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({
-      state: returnRoute,
+      state: returnRoute
     });
     if (isLoggedIn) {
       return Promise.resolve(this.oauthService.state || returnRoute);

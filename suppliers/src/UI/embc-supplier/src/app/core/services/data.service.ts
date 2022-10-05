@@ -5,7 +5,7 @@ import {
   ContactPerson,
   SupplierInformation,
   Address,
-  Attachment,
+  Attachment
 } from '../model/suppliers';
 import { Invoices } from '../model/invoices';
 import { LineItems } from '../model/lineItems';
@@ -14,7 +14,7 @@ import { Receipts } from '../model/receipts';
 import { DatePipe } from '@angular/common';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DataService {
   supplierForm: UntypedFormGroup;

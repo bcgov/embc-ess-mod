@@ -3,7 +3,7 @@ import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router,
+  Router
 } from '@angular/router';
 import { SupplierHttpService } from '../services/supplierHttp.service';
 import { Observable } from 'rxjs';
@@ -12,7 +12,7 @@ import { ServerConfig } from '../model/server-config';
 import { ConfigService } from '../services/config.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ConfigGuard implements CanActivate {
   public configResult: ServerConfig = new ServerConfig();
