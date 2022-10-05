@@ -9,12 +9,12 @@ import * as constant from 'src/app/core/services/globalConstants';
   styleUrls: ['./fileUpload.component.scss'],
 })
 export class FileUploadComponent implements OnInit {
-  invoiceAttachments: string[] = [];
   @Output() attachedFile = new EventEmitter<any>();
   @Output() deleteFile = new EventEmitter<any>();
   @Input() reloadedFiles: any;
-  showToast = false;
   @Input() noOfAttachments: number;
+  showToast = false;
+  invoiceAttachments: string[] = [];
   attachSizeError = false;
 
   constructor(

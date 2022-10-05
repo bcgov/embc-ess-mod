@@ -39,6 +39,34 @@ export class ReceiptComponent implements OnInit {
     private customValidator: CustomValidationService
   ) {}
 
+  /**
+   * Gets receipts form control
+   */
+  get receiptControl() {
+    return this.receiptForm.controls;
+  }
+
+  /**
+   * Gets referrals as form array
+   */
+  get referrals() {
+    return this.receiptForm.get('referrals') as UntypedFormArray;
+  }
+
+  /**
+   * Gets referral attachments as form array
+   */
+  get referralAttachments() {
+    return this.receiptForm.get('referralAttachments') as UntypedFormArray;
+  }
+
+  /**
+   * Gets receipt attachments as form array
+   */
+  get receiptAttachments() {
+    return this.receiptForm.get('receiptAttachments') as UntypedFormArray;
+  }
+
   ngOnInit() {
     if (this.supplierService.isReload) {
       this.loadWithExistingValues();
@@ -80,34 +108,6 @@ export class ReceiptComponent implements OnInit {
       this.referrals.push(this.createReferralFormArrayWithValues(rec));
     });
     this.cd.detectChanges();
-  }
-
-  /**
-   * Gets receipts form control
-   */
-  get receiptControl() {
-    return this.receiptForm.controls;
-  }
-
-  /**
-   * Gets referrals as form array
-   */
-  get referrals() {
-    return this.receiptForm.get('referrals') as UntypedFormArray;
-  }
-
-  /**
-   * Gets referral attachments as form array
-   */
-  get referralAttachments() {
-    return this.receiptForm.get('referralAttachments') as UntypedFormArray;
-  }
-
-  /**
-   * Gets receipt attachments as form array
-   */
-  get receiptAttachments() {
-    return this.receiptForm.get('receiptAttachments') as UntypedFormArray;
   }
 
   /**

@@ -23,10 +23,6 @@ export class DataService {
 
   constructor() {}
 
-  private setPayload(payLoad: Suppliers) {
-    this.payLoad = payLoad;
-  }
-
   getPayload() {
     return this.payLoad;
   }
@@ -353,5 +349,9 @@ export class DataService {
       );
     });
     return referrals;
+  }
+
+  private setPayload(payLoad: Suppliers) {
+    this.payLoad = payLoad;
   }
 }

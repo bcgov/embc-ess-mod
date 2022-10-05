@@ -27,6 +27,14 @@ import * as globalConst from 'src/app/core/services/globalConstants';
   providers: [CustomValidationService, NgbTypeaheadConfig],
 })
 export class SubmissionComponent implements OnInit {
+  supplierForm: UntypedFormGroup;
+  remitDiv = false;
+  addressDiv = false;
+  countryList: Observable<Country[]>;
+  selectedRemitCountry: string;
+  locatedInBC: string;
+
+  refArray: any = [];
   constructor(
     private router: Router,
     private builder: UntypedFormBuilder,
@@ -50,15 +58,6 @@ export class SubmissionComponent implements OnInit {
   get receipts() {
     return this.supplierForm.get('receipts') as UntypedFormArray;
   }
-
-  supplierForm: UntypedFormGroup;
-  remitDiv = false;
-  addressDiv = false;
-  countryList: Observable<Country[]>;
-  selectedRemitCountry: string;
-  locatedInBC: string;
-
-  refArray: any = [];
 
   ngOnInit() {
     this.initializeForm();
