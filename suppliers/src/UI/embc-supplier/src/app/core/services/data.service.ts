@@ -5,7 +5,7 @@ import {
   ContactPerson,
   SupplierInformation,
   Address,
-  Attachment,
+  Attachment
 } from '../model/suppliers';
 import { Invoices } from '../model/invoices';
 import { LineItems } from '../model/lineItems';
@@ -14,7 +14,7 @@ import { Receipts } from '../model/receipts';
 import { DatePipe } from '@angular/common';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DataService {
   supplierForm: UntypedFormGroup;
@@ -22,10 +22,6 @@ export class DataService {
   private payLoad: Suppliers;
 
   constructor() {}
-
-  private setPayload(payLoad: Suppliers) {
-    this.payLoad = payLoad;
-  }
 
   getPayload() {
     return this.payLoad;
@@ -353,5 +349,9 @@ export class DataService {
       );
     });
     return referrals;
+  }
+
+  private setPayload(payLoad: Suppliers) {
+    this.payLoad = payLoad;
   }
 }

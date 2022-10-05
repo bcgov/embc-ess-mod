@@ -30,7 +30,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ModalComponent,
     PhoneMaskDirective,
     ToastsComponent,
-    WarningModalComponent,
+    WarningModalComponent
   ],
   exports: [
     AlertComponent,
@@ -43,7 +43,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     LoaderComponent,
     MatDialogModule,
     PhoneMaskDirective,
-    ToastsComponent,
-  ],
+    ToastsComponent
+  ]
 })
 export class CoreModule {}

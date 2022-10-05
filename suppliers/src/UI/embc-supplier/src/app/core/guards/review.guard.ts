@@ -3,12 +3,12 @@ import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  Router,
+  Router
 } from '@angular/router';
 import { SupplierService } from '../services/supplier.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ReviewGuard implements CanActivate {
   constructor(

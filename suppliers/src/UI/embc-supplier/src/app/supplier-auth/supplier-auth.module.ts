@@ -4,6 +4,6 @@ import { SupplierAuthRoutingModule } from './supplier-auth-routing.module';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, SupplierAuthRoutingModule],
+  imports: [CommonModule, SupplierAuthRoutingModule]
 })
 export class SupplierAuthModule {}

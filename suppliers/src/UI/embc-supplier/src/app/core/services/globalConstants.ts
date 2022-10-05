@@ -3,7 +3,7 @@ export const referralList: any = [
   { id: 2, name: '2' },
   { id: 3, name: '3' },
   { id: 4, name: '4' },
-  { id: 5, name: '5' },
+  { id: 5, name: '5' }
 ];
 
 export const captchaErr = 'Please complete the captcha above.';
@@ -30,13 +30,13 @@ export const defaultCountry = { code: 'CAN', name: 'Canada' };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$'; // '^([0-9]{5})(?:[-\s]*([0-9]{4}))?$';
 export const usDefaultObject = {
   code: 'USA',
-  name: 'United States of America',
+  name: 'United States of America'
 };
 export const allowedFileTypes = [
   'application/pdf',
   'image/jpg',
   'image/jpeg',
-  'image/png',
+  'image/png'
 ];
 export const zeroFileMessage = 'Attachment file size must be greater than 0Kb';
 export const fileTypeMessage = 'File type pdf, jpg, jpeg, png allowed';

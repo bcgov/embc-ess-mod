@@ -4,13 +4,13 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   UntypedFormArray,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { SupplierService } from 'src/app/core/services/supplier.service';
 import * as globalConst from 'src/app/core/services/globalConstants';
@@ -19,7 +19,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 @Component({
   selector: 'app-receipt',
   templateUrl: './receipt.component.html',
-  styleUrls: ['./receipt.component.scss'],
+  styleUrls: ['./receipt.component.scss']
 })
 export class ReceiptComponent implements OnInit {
   @Input() formGroupName: number;
@@ -38,49 +38,6 @@ export class ReceiptComponent implements OnInit {
     private supplierService: SupplierService,
     private customValidator: CustomValidationService
   ) {}
-
-  ngOnInit() {
-    if (this.supplierService.isReload) {
-      this.loadWithExistingValues();
-    } else {
-      this.addReferralTemplate();
-    }
-    this.onChanges();
-  }
-
-  /**
-   * Loads data for back/forward navigation
-   */
-  loadWithExistingValues() {
-    const storedSupplierDetails = this.supplierService.getSupplierDetails();
-    const referralList = storedSupplierDetails.receipts[this.index].referrals;
-
-    this.reloadedFiles =
-      storedSupplierDetails.receipts[this.index].referralAttachments;
-    this.reloadedFiles.forEach((element) => {
-      this.referralAttachments.push(
-        this.createAttachmentObject({
-          fileName: element.fileName,
-          file: element.file,
-        })
-      );
-    });
-    this.reloadedFiles2 =
-      storedSupplierDetails.receipts[this.index].receiptAttachments;
-    this.reloadedFiles2.forEach((element) => {
-      this.receiptAttachments.push(
-        this.createAttachmentObject({
-          fileName: element.fileName,
-          file: element.file,
-        })
-      );
-    });
-
-    referralList.forEach((rec) => {
-      this.referrals.push(this.createReferralFormArrayWithValues(rec));
-    });
-    this.cd.detectChanges();
-  }
 
   /**
    * Gets receipts form control
@@ -110,6 +67,49 @@ export class ReceiptComponent implements OnInit {
     return this.receiptForm.get('receiptAttachments') as UntypedFormArray;
   }
 
+  ngOnInit() {
+    if (this.supplierService.isReload) {
+      this.loadWithExistingValues();
+    } else {
+      this.addReferralTemplate();
+    }
+    this.onChanges();
+  }
+
+  /**
+   * Loads data for back/forward navigation
+   */
+  loadWithExistingValues() {
+    const storedSupplierDetails = this.supplierService.getSupplierDetails();
+    const referralList = storedSupplierDetails.receipts[this.index].referrals;
+
+    this.reloadedFiles =
+      storedSupplierDetails.receipts[this.index].referralAttachments;
+    this.reloadedFiles.forEach((element) => {
+      this.referralAttachments.push(
+        this.createAttachmentObject({
+          fileName: element.fileName,
+          file: element.file
+        })
+      );
+    });
+    this.reloadedFiles2 =
+      storedSupplierDetails.receipts[this.index].receiptAttachments;
+    this.reloadedFiles2.forEach((element) => {
+      this.receiptAttachments.push(
+        this.createAttachmentObject({
+          fileName: element.fileName,
+          file: element.file
+        })
+      );
+    });
+
+    referralList.forEach((rec) => {
+      this.referrals.push(this.createReferralFormArrayWithValues(rec));
+    });
+    this.cd.detectChanges();
+  }
+
   /**
    *  Creates Referral form array
    */
@@ -120,12 +120,12 @@ export class ReceiptComponent implements OnInit {
         [
           Validators.required,
           this.customValidator.futureDateValidator().bind(this.customValidator),
-          Validators.pattern(globalConst.datePattern),
-        ],
+          Validators.pattern(globalConst.datePattern)
+        ]
       ],
       receiptNumber: [''],
       referralRows: this.builder.array([], Validators.required),
-      totalAmount: [''],
+      totalAmount: ['']
     });
   }
 
@@ -170,7 +170,7 @@ export class ReceiptComponent implements OnInit {
         this.createAttachmentObject({
           fileName: event.name,
           file: reader.result,
-          contentType: event.type,
+          contentType: event.type
         })
       );
     };
@@ -199,7 +199,7 @@ export class ReceiptComponent implements OnInit {
         this.createAttachmentObject({
           fileName: event.name,
           file: reader.result,
-          contentType: event.type,
+          contentType: event.type
         })
       );
     };
@@ -244,12 +244,12 @@ export class ReceiptComponent implements OnInit {
         [
           Validators.required,
           this.customValidator.futureDateValidator().bind(this.customValidator),
-          Validators.pattern(globalConst.datePattern),
-        ],
+          Validators.pattern(globalConst.datePattern)
+        ]
       ],
       receiptNumber: [referral.receiptNumber],
       referralRows: this.builder.array([], Validators.required),
-      totalAmount: [referral.totalAmount],
+      totalAmount: [referral.totalAmount]
     });
   }
 

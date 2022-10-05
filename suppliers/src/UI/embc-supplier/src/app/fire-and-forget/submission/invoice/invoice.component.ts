@@ -4,19 +4,19 @@ import {
   ChangeDetectorRef,
   Output,
   EventEmitter,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
   UntypedFormArray,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {
   NgbDateParserFormatter,
   NgbCalendar,
   NgbDateAdapter,
-  NgbDatepickerConfig,
+  NgbDatepickerConfig
 } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/core/services/dateParser.service';
 import { CustomDateAdapterService } from 'src/app/core/services/customDateAdapter.service';
@@ -32,8 +32,8 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
     { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
     { provide: NgbDateParserFormatter, useClass: DateParserService },
     CustomValidationService,
-    NgbDatepickerConfig,
-  ],
+    NgbDatepickerConfig
+  ]
 })
 export class InvoiceComponent implements OnInit {
   @Input() formGroupName: number;
@@ -60,7 +60,7 @@ export class InvoiceComponent implements OnInit {
     config.maxDate = {
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1,
-      day: new Date().getDate(),
+      day: new Date().getDate()
     };
     config.outsideDays = 'hidden';
     config.firstDayOfWeek = 7;
@@ -71,6 +71,17 @@ export class InvoiceComponent implements OnInit {
    */
   get invoiceControl() {
     return this.invoiceForm.controls;
+  }
+
+  /**
+   * Gets attachment form array
+   */
+  get invoiceAttachments() {
+    return this.invoiceForm.get('invoiceAttachments') as UntypedFormArray;
+  }
+
+  get referrals() {
+    return this.invoiceForm.get('referrals') as UntypedFormArray;
   }
 
   /**
@@ -90,13 +101,6 @@ export class InvoiceComponent implements OnInit {
   }
 
   /**
-   * Gets attachment form array
-   */
-  get invoiceAttachments() {
-    return this.invoiceForm.get('invoiceAttachments') as UntypedFormArray;
-  }
-
-  /**
    * Loads data for back/forward navigation
    */
   loadWithExistingValues() {
@@ -108,7 +112,7 @@ export class InvoiceComponent implements OnInit {
         this.invoiceAttachments.push(
           this.createAttachmentObject({
             fileName: element.fileName,
-            file: element.file,
+            file: element.file
           })
         );
       }
@@ -137,7 +141,7 @@ export class InvoiceComponent implements OnInit {
           fileName: event.name,
           file: reader.result,
           contentType: event.type,
-          fileSize: event.size,
+          fileSize: event.size
         })
       );
     };
@@ -162,10 +166,6 @@ export class InvoiceComponent implements OnInit {
     this.invoiceAttachments.removeAt(event);
   }
 
-  get referrals() {
-    return this.invoiceForm.get('referrals') as UntypedFormArray;
-  }
-
   /**
    * Creates Referral form array
    */
@@ -177,13 +177,13 @@ export class InvoiceComponent implements OnInit {
           Validators.required,
           this.customValidator
             .referralNumberValidator(this.referrals)
-            .bind(this.customValidator),
-        ],
+            .bind(this.customValidator)
+        ]
       ],
       referralRows: this.builder.array([], Validators.required),
       totalAmount: [''],
       referralAttachments: this.builder.array([], [Validators.required]),
-      receiptAttachments: this.builder.array([]),
+      receiptAttachments: this.builder.array([])
     });
   }
 
@@ -246,7 +246,7 @@ export class InvoiceComponent implements OnInit {
       referralRows: this.builder.array([], Validators.required),
       totalAmount: [referral.totalAmount],
       referralAttachments: this.builder.array([], [Validators.required]),
-      receiptAttachments: this.builder.array([]),
+      receiptAttachments: this.builder.array([])
     });
   }
 

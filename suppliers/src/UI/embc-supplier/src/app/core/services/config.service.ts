@@ -7,7 +7,7 @@ import { ServerConfig } from '../model/server-config';
 import { SupplierHttpService } from './supplierHttp.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ConfigService {
   private authConfig?: Configuration = null;
@@ -51,7 +51,7 @@ export class ConfigService {
           scope: 'openid profile email offline_access',
           showDebugInformation: !environment.production,
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          customQueryParams: { kc_idp_hint: 'bceid' },
+          customQueryParams: { kc_idp_hint: 'bceid' }
         }))
       )
       .toPromise();

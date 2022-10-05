@@ -6,6 +6,6 @@ import { ReferenceRoutingModule } from './reference-routing.module';
 @NgModule({
   imports: [CommonModule, ReferenceRoutingModule],
   declarations: [ReferenceComponent],
-  exports: [],
+  exports: []
 })
 export class ReferenceModule {}
