@@ -37,6 +37,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.addressService.init();
     this.primaryAddressForm = this.addressService.createForm();
     this.countries = this.locationService.getActiveCountriesList();
 

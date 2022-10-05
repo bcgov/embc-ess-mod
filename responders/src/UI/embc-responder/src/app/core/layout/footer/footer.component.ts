@@ -25,6 +25,7 @@ export class FooterComponent implements OnInit {
           component: InformationDialogComponent,
           content: this.versionDialog(content)
         },
+        autoFocus: false,
         width: '530px'
       });
     });

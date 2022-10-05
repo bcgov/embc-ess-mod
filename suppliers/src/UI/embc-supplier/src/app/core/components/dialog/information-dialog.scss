@@ -1,0 +1,42 @@
+.close-image img:last-child {
+    display: none;
+}
+
+.close-image:hover img:last-child {
+    display: inline;
+}
+
+.close-image:hover img:first-child {
+    display: none;
+}
+
+.close-image {
+    border-width: 0;
+    background-color: white;
+    float: right;
+}
+
+.close-button {
+    border-radius: 0;
+    border: 1px solid #b5b5b5 !important;
+    color: #606060;
+    background-color: #fff !important;
+    font-size: 16px;
+    font-family: BC Sans, sans-serif;
+    height: 55px;
+    width: 90px;
+}
+
+.close-button:hover {
+    background-color: #e5e5e5 !important;
+}
+
+::ng-deep .versions-table {
+    width: 100%;
+}
+
+.mat-title {
+    font: 500 20px/32px BC Sans, sans-serif;
+    letter-spacing: normal;
+    margin: 0 0 16px;
+}

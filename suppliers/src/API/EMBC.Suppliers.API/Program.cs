@@ -2,6 +2,7 @@
 using System.Net.Http;
 using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -60,6 +61,11 @@ namespace EMBC.Suppliers.API
                          }
                      }
                  })
+                .ConfigureServices((context, services) =>
+                {
+                    services.Configure<KestrelServerOptions>(
+                        context.Configuration.GetSection("Kestrel"));
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

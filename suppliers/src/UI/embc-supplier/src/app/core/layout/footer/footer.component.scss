@@ -6,4 +6,9 @@
 
 .app-version {
     color: white !important;
+    cursor: pointer;
+}
+
+.app-version:hover {
+    text-decoration: underline;
 }

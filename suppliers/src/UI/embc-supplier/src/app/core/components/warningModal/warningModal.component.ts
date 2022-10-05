@@ -6,13 +6,11 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './warningModal.component.html',
 })
 export class WarningModalComponent {
+  @Input() messageBody: string;
 
-    @Input() messageBody: string;
+  constructor(public activeModal: NgbActiveModal) {}
 
-    constructor(public activeModal: NgbActiveModal) {}
-
-    action() {
-      this.activeModal.close();
-    }
-
+  action() {
+    this.activeModal.close();
+  }
 }

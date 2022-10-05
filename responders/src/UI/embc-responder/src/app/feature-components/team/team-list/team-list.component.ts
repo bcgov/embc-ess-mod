@@ -65,7 +65,7 @@ export class TeamListComponent implements OnInit {
     });
     this.filtersToLoad = this.teamDataService.filtersToLoad;
     this.displayedColumns = this.teamDataService.displayedColumns;
-    this.loggedInRole = this.userService.currentProfile.role;
+    this.loggedInRole = this.userService?.currentProfile?.role;
   }
 
   /**

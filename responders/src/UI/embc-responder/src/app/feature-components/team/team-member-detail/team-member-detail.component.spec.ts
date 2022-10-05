@@ -4,6 +4,9 @@ import { TeamMemberDetailComponent } from './team-member-detail.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from 'src/app/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TeamMemberDetailComponent', () => {
   let component: TeamMemberDetailComponent;
@@ -11,7 +14,14 @@ describe('TeamMemberDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MaterialModule,
+        BrowserAnimationsModule
+      ],
       declarations: [TeamMemberDetailComponent]
     }).compileComponents();
   });
@@ -22,7 +32,7 @@ describe('TeamMemberDetailComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

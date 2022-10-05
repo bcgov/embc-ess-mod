@@ -20,7 +20,6 @@ using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Events;
-using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.Utilities.Caching;
 using EMBC.Utilities.Notifications;
 using EMBC.Utilities.Telemetry;
@@ -49,7 +48,6 @@ namespace EMBC.ESS.Managers.Events
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
         private readonly IPrintRequestsRepository printingRepository;
-        private readonly IPdfGenerator pdfGenerator;
         private readonly IMetadataRepository metadataRepository;
         private readonly IDataProtectionProvider dataProtectionProvider;
         private readonly IConfiguration configuration;
@@ -75,7 +73,6 @@ namespace EMBC.ESS.Managers.Events
             ISupplierRepository supplierRepository,
             ISearchEngine searchEngine,
             IPrintRequestsRepository printingRepository,
-            IPdfGenerator pdfGenerator,
             IWebHostEnvironment env,
             IMetadataRepository metadataRepository,
             IDataProtectionProvider dataProtectionProvider,
@@ -98,7 +95,6 @@ namespace EMBC.ESS.Managers.Events
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
             this.printingRepository = printingRepository;
-            this.pdfGenerator = pdfGenerator;
             this.metadataRepository = metadataRepository;
             this.dataProtectionProvider = dataProtectionProvider;
             this.configuration = configuration;
@@ -595,13 +591,6 @@ namespace EMBC.ESS.Managers.Events
 
             var content = generatedReferrals.Content;
             var contentType = "text/html";
-
-            //convert to pdf
-            if (configuration.GetValue("pdfGenerator:enabled", false))
-            {
-                content = await pdfGenerator.Generate(generatedReferrals.Content);
-                contentType = "application/pdf";
-            }
 
             await printingRepository.Manage(new MarkPrintRequestAsComplete { PrintRequestId = printRequest.Id });
 

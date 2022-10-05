@@ -21,7 +21,6 @@ COPY ["EMBC.ESS.Shared.Contracts/EMBC.ESS.Shared.Contracts.csproj", "EMBC.ESS.Sh
 COPY ["EMBC.ESS.Utilities.Dynamics/EMBC.ESS.Utilities.Dynamics.csproj", "EMBC.ESS.Utilities.Dynamics/"]
 COPY ["EMBC.ESS.Utilities.BceidWS/EMBC.ESS.Utilities.BceidWS.csproj", "EMBC.ESS.Utilities.BceidWS/"]
 COPY ["EMBC.ESS.Utilities.Cas/EMBC.ESS.Utilities.Cas.csproj", "EMBC.ESS.Utilities.Cas/"]
-COPY ["EMBC.Utilities.PdfGenerator/EMBC.Utilities.PdfGenerator.csproj", "EMBC.Utilities.PdfGenerator/"]
 COPY ["EMBC.Utilities.Hosting/EMBC.Utilities.Hosting.csproj", "EMBC.Utilities.Hosting/"]
 COPY ["EMBC.Utilities.Caching/EMBC.Utilities.Caching.csproj", "EMBC.Utilities.Caching/"]
 COPY ["EMBC.Utilities.Telemetry/EMBC.Utilities.Telemetry.csproj", "EMBC.Utilities.Telemetry/"]
@@ -34,7 +33,7 @@ RUN dotnet restore .
 COPY . .
 
 # run unit tests
-RUN dotnet test -c Release --filter "Category!=IntegrationTest" 
+RUN dotnet test -c Release --filter "Category!=IntegrationTest"
 
 FROM build AS publish
 # build

@@ -20,6 +20,10 @@ import { NeedsAssessmentService } from './needs-assessment.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import * as globalConst from '../../core/services/globalConstants';
 import { map, mergeMap } from 'rxjs/operators';
+import {
+  CaptchaResponse,
+  CaptchaResponseType
+} from 'src/app/core/components/captcha-v2/captcha-v2.component';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -44,6 +48,7 @@ export class NeedsAssessmentComponent
   parentPageName = 'needs-assessment';
   showLoader = false;
   isSubmitted = false;
+  captchaResponse: CaptchaResponse;
 
   constructor(
     private router: Router,
@@ -221,17 +226,19 @@ export class NeedsAssessmentComponent
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.nonVerifiedRegistrationService.submitRegistration().subscribe({
-      next: (response: RegistrationResult) => {
-        this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
-        this.router.navigate(['/non-verified-registration/file-submission']);
-      },
-      error: (error: any) => {
-        this.showLoader = !this.showLoader;
-        this.isSubmitted = !this.isSubmitted;
-        this.alertService.setAlert('danger', globalConst.submissionError);
-      }
-    });
+    this.nonVerifiedRegistrationService
+      .submitRegistration(this.captchaResponse)
+      .subscribe({
+        next: (response: RegistrationResult) => {
+          this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
+          this.router.navigate(['/non-verified-registration/file-submission']);
+        },
+        error: (error: any) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.setAlert('danger', globalConst.submissionError);
+        }
+      });
   }
 
   submitVerified(): void {
@@ -266,7 +273,12 @@ export class NeedsAssessmentComponent
     });
   }
 
-  allowSubmit($event: boolean): void {
-    this.captchaPassed = $event;
+  allowSubmit($event: CaptchaResponse): void {
+    this.captchaResponse = $event;
+    if ($event.type === CaptchaResponseType.success) {
+      this.captchaPassed = true;
+    } else {
+      this.captchaPassed = false;
+    }
   }
 }

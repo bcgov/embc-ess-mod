@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.model';
 import { SearchFormRegistery } from 'src/app/core/services/helper/search-data.service';
+import { padFileIdForSearch } from '../../../../core/services/helper/search.formatter';
 
 @Component({
   selector: 'app-remote-search',
@@ -27,7 +28,9 @@ export class RemoteSearchComponent implements OnInit {
       this.isLoading = !this.isLoading;
       this.isSubmitted = !this.isSubmitted;
       const searchParams: EvacueeDetailsModel = {
-        essFileNumber: this.fileSearchForm.get('essFileNumber').value
+        essFileNumber: padFileIdForSearch(
+          this.fileSearchForm.get('essFileNumber').value
+        )
       };
 
       (
@@ -35,7 +38,7 @@ export class RemoteSearchComponent implements OnInit {
           {
             evacueeSearchParameters: searchParams
           },
-          this.fileSearchForm.get('essFileNumber').value
+          padFileIdForSearch(this.fileSearchForm.get('essFileNumber').value)
         ) as Promise<boolean>
       )
         .then(() => {

@@ -9,13 +9,13 @@ import { LayoutModule } from './core/layout/layout.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
 import { OAuthModule } from 'angular-oauth2-oidc';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CoreModule,
     AppRoutingModule,
     LayoutModule,
@@ -23,12 +23,13 @@ import { OAuthModule } from 'angular-oauth2-oidc';
     ReactiveFormsModule,
     OAuthModule.forRoot({
       resourceServer: {
-        customUrlValidation: url => url.startsWith('/api') && !url.endsWith('/Config'),
-        sendAccessToken: true
-      }
+        customUrlValidation: (url) =>
+          url.startsWith('/api') && !url.endsWith('/Config'),
+        sendAccessToken: true,
+      },
     }),
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

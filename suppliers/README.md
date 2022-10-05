@@ -1,152 +1,62 @@
----
-title: EMBC Suppliers Portal
-description: EMBC's suppliers' portal
----
-
-# EMBC Suppliers Portal
+# ERA Suppliers Portal
 
 ## Features
 
-A web based portal for EMBC suppliers to submit their invoices and receipts for supports provided to evacuees
-
+- submit invoices and referrals to be reimbursed by the province
 ## Project Status
 
 ![webapp](https://img.shields.io/website?url=https%3A%2F%2Fera-suppliers.embc.gov.bc.ca%2F)
-![suppliers-portal-ui](https://github.com/bcgov/embc-ess-mod/workflows/master-build-suppliers-portal-ui/badge.svg)
-![suppliers-portal-api](https://github.com/bcgov/embc-ess-mod/workflows/master-build-suppliers-portal-api/badge.svg)
+
+[![ci-suppliers-portal-api](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-api.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-api.yml)
+
+[![ci-suppliers-portal-ui](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-ui.yml/badge.svg)](https://github.com/bcgov/embc-ess-mod/actions/workflows/ci-suppliers-portal-ui.yml)
+
+
+## Install
+
+API Env vars:
+```s
+APP_NAME=local-suppliers-portal
+ASPNETCORE_ENVIRONMENT=development
+Kestrel__Limits__MaxRequestBodySize=104857600
+Dynamics__ADFS__OAuth2TokenEndpoint=<ADFS token endpoint>
+Dynamics__DynamicsApiEndpoint=<Dynamics url>/api/data/v9.0/
+MAINTENANCE_START=<start time of maintenance window in DateTime formate, i.e. 2021-04-21T11:45:00.000Z (optional)>
+NOTICE_MESSAGE=<pre maintenance window message (optional)>
+MAINTENANCE_WARNING=<warning maintenance window message (optional)>
+MAINTENANCE_PAGEDOWN=<maintenance window message (optional)>
+```
+
+API secret env vars:
+
+```s
+Dynamics__ADFS__ClientId=<ADFS client id>
+Dynamics__ADFS__ClientSecret=<ADFS client secret>
+Dynamics__ADFS__ResourceName=<ADFS resource name>
+Dynamics__ADFS__serviceAccountDomain=<Dynamics service account domain>
+Dynamics__ADFS__serviceAccountName=<Dynamics service account name>
+Dynamics__ADFS__serviceAccountPassword=<Dynamics service account password>
+REDIS_CONNECTIONSTRING=<redis cache connection string (optional)>
+SPLUNK_URL=<Splunk collector url (optional)>
+SPLUNK_TOKEN=<Splunk token (optional)>
+```
 
 ## Usage
 
-The portal is accessible from EMBC-ESS landing page, follow the training materials and link provided at ess.gov.bc.ca
-
-# Development
-
-## Requirements
-
-- VS2019
-- VSCode
-- Docker-Desktop (optional for Docker build and run)
-
-## Local development environment setup
-
-**API**
-
-1. fork the main repository and checkout the fork to your local machine
-2. open `suppliers/src/API/EMBC.Suppliers.sln` in Visual Studio
-3. right click on `EMBC.Suppliers.API` project and select `Manage User Secrets`
-4. add the following configuration values:
-
+1. set the above env vars in the API project's secrets.json file
+2. in `suppliers/src/API/EMBC.Suppliers.API`, run `dotnet watch`
+3. in `suppliers/src/UI/embc-supplier`, run 
 ```
-"Dynamics:ADFS:OAuth2TokenEndpoint": "<BC Gov ADFS OIDC token endpoint url>",
-"Dynamics:ADFS:ResourceName": "<Dynamics resource name>",
-"Dynamics:ADFS:ClientId": "<client id>",
-"Dynamics:ADFS:ClientSecret": "<client secret>",
-"Dynamics:ADFS:serviceAccountDomain": "<service account domain>",
-"Dynamics:ADFS:serviceAccountName": "<service account name",
-"Dynamics:ADFS:serviceAccountPassword": "<service account password>",
-"Dynamics:DynamicsApiEndpoint": "https://<Dynamics host url>/api/data/v9.0/"
+npm install --ignore-scripts
 ```
-
-5. The following envirnment variables can be set in `properties/launchSettings.json, these are the default, checked in to github:
-
+4. to run the UI with a local API, run
 ```
-"Submission_Storage_Path": "%TEMP%",
-"Dynamics__Cache__CachePath": "%TEMP%",
-"Dynamics__Cache__UpdateFrequency": "1",
-"ASPNETCORE_ENVIRONMENT": "Development"
+npm run startlocal
 ```
-
-6. build and run
-7. to test the API, use swagger from `http://localhost:5000/api/swagger` or Postman
-8. to run the integration tests, make sure the solution is set to Debug, and that you're connected to the BC GOV VPN service
-
-- To run the API in hot loading from the command line, execute the following command from the root folder of the repository
-
+5. to run the UI and use the development environment API, run
 ```
-dotnet watch --project .\suppliers\src\API\EMBC.Suppliers.API\ run
+npm run start
 ```
+Note - in both cases, the UI auto generates client side proxy services using the API's OpenAPI specs (http://localhost:5000/api/openapi)
 
-**UI**
-
-1. cd to `suppliers/src/UI/embc-supplier`
-2. run
-
-```
-npm install
-```
-
-3. run the API
-4. to start the portal with hot loading, run
-
-```
-ng serve
-```
-
-5. use `npm run test` and `npm run lint` to test and lint
-
-**Docker**
-
-1. create .env file with the following env vars:
-
-```
-Dynamics__DynamicsApiEndpoint=https://<Dynamics host url>/api/data/v9.0/
-Dynamics__ADFS__OAuth2TokenEndpoint=<BC Gov ADFS OIDC token endpoint url>
-Dynamics__ADFS__ResourceName=<Dynamics resource name>
-Dynamics__ADFS__ClientId=<client id>
-Dynamics__ADFS__ClientSecret=<client secret>
-Dynamics__ADFS__serviceAccountDomain=<service account domain>
-Dynamics__ADFS__serviceAccountName=<service account name>
-Dynamics__ADFS__serviceAccountPassword=<service account password>
-Dynamics__Cache__CachePath=/dynamics_cache
-Submission_Storage_Path=/submissions
-```
-
-2. from the root repository folder, run
-
-```
-docker-compose up --build
-```
-
-3. the API will be available at `http://localhost:8080/api` and the UI will be available at `http://localhost:2015`
-
-# CI/CD
-
-## Pull requests (CI)
-
-Every pull request to the main repository will trigger a the CI github workflow. There are 2 workflows, one for the API and one for the UI, and they are triggered only when the respective source changed. For example, a change to the UI will only trigger CI for the UI CI workflow.
-
-the CI pipeline is included in the dockerfile of each deployable unit. The pipeline itself only triggers `docker build` command, if an image can be built, the result is 'pass'.
-
-## Dev deployment (CD)
-
-Once the PR is reviewed and merged to master, the CD workflows will start. The exact same build process is invoked as the CI, resulting in the built image being pushed to Openshift and tagged 'latest'. The image tag change will trigger the dev environment deployment and will deploy the latest build.
-
-```
-commit to fork -> create PR -> CI build -> merge -> CD build -> automatic deployment in dev
-```
-
-The CD workflow depends on the availability of Openshift docker registry, the credentials to access the registry are stored in Github secrets of the repository:
-
-| key                  | value                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------- |
-| OKD_DOCKERREGISTRY   | url of the remote registry, for Pathfinder it is docker-registry.pathfinder.gov.bc.ca |
-| OKD_DOCKERREPOSITORY | name of the repository, usually the tools namespace/project                           |
-| OKD_USERNAME         | user which allows to push and pull images                                             |
-| OKD_PASSWORD         | the openshift token of the above user                                                 |
-
-Follow [Thor's instructions](https://gist.github.com/thorwolpert/3ed23bd1548346e1231611cee80d3bbe) how to set up a docker service account in Openshift. The token will be available in the tools namespace secrets
-
-## Deployment to higher environments
-
-Higher environment deployments are triggered within Openshift tools project pipelines:
-
-- test - tag `latest` as `test` and trigger test environment deployment
-- training - tag `test` as `training` and trigger training environment deployment
-- prod - tag `test` as `production` and trigger production environment deployment
-
-```
-dev -> test --> training
-            \-> production
-```
-
-See [openshift readme](./openshift/README.md) for more details
+1. open http://localhost:3200

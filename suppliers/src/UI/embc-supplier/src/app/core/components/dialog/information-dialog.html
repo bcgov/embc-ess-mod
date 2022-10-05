@@ -1,0 +1,27 @@
+<div class="row justify-content-between">
+  <div class="col-md-10">
+    <h1 class="mat-title" mat-dialog-title>{{ title }}</h1>
+  </div>
+  <div class="col-md-2">
+    <button class="close-image" aria-label="Close" (click)="close()">
+      <img src="/assets/images/close.svg" height="20" width="20" />
+      <img src="/assets/images/close_onhover.svg" height="20" width="20" />
+    </button>
+  </div>
+</div>
+
+<div mat-dialog-content>
+  <div class="row">
+    <div
+      id="dialog-content"
+      class="col-md-12"
+      [innerHTML]="content?.text"
+    ></div>
+  </div>
+</div>
+
+<div mat-dialog-actions class="pt-3">
+  <button type="button" class="btn close-button" (click)="close()">
+    Close
+  </button>
+</div>

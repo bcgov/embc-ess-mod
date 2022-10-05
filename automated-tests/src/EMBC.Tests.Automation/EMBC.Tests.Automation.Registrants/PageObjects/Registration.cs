@@ -44,8 +44,7 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
 
         private By securityPhraseFormPhraseInput = By.CssSelector("input[formcontrolname='secretPhrase']");
 
-        private By submitFormCAPTCHAInput = By.Name("answer");
-        private By submitFormIncorrectCAPTCHAError = By.XPath("//body[contains(.,' Incorrect answer, please try again. ')]");
+        private By submitFormCAPTCHAForm = By.CssSelector("re-captcha div iframe");
         private By submissionCompleteDialog = By.XPath("//mat-dialog-container[contains(.,' Submission Complete')]");
 
         public Registration(IWebDriver webDriver) : base(webDriver)
@@ -271,25 +270,12 @@ namespace EMBC.Tests.Automation.Registrants.PageObjects
             ButtonElement("Save & Submit");
         }
 
-        public void CAPTCHAFails(string captchaEntry)
-        {
-            Wait();
-
-            webDriver.FindElement(submitFormCAPTCHAInput).SendKeys(captchaEntry);
-            Assert.True(webDriver.FindElement(submitFormIncorrectCAPTCHAError).Displayed);
-        }
-
-        public void SubmitForm(string captchaAnswer)
+        public void SubmitForm()
         {
             var js = (IJavaScriptExecutor)webDriver;
 
-            if (string.IsNullOrWhiteSpace(captchaAnswer)) throw new ArgumentNullException(nameof(captchaAnswer));
-            //create the captcha automation answer - captcha is limited to 6 characters
-            var answer = captchaAnswer.Substring(0, 6);
-
             Wait();
-
-            webDriver.FindElement(submitFormCAPTCHAInput).SendKeys(answer);
+            FocusAndClick(submitFormCAPTCHAForm);
 
             Wait(2000);
 

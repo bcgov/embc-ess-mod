@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
-import {
-  Address,
-  AnonymousRegistration,
-  EvacuationFile,
-  NeedsAssessment,
-  Profile
-} from '../../core/api/models';
+import { CaptchaResponse } from 'src/app/core/components/captcha-v2/captcha-v2.component';
+import { AnonymousRegistration, Profile } from '../../core/api/models';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class NonVerifiedRegistrationMappingService {
   constructor(
     private profileDataService: ProfileDataService,
-    private needsService: NeedsAssessmentService,
     private evacuationFileDataService: EvacuationFileDataService
   ) {}
 
-  mapAnonymousRegistration(): AnonymousRegistration {
+  mapAnonymousRegistration(
+    captchaResponse: CaptchaResponse
+  ): AnonymousRegistration {
     return {
       informationCollectionConsent: true,
       preliminaryNeedsAssessment:
@@ -27,40 +22,12 @@ export class NonVerifiedRegistrationMappingService {
         this.createRegistration(),
         this.profileDataService.createProfileDTO()
       ),
-      captcha: 'abc'
+      captcha: captchaResponse.resolved
     };
   }
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {
     return { ...finalValue, ...incomingValue };
-  }
-
-  private createEvacuationFile(): EvacuationFile {
-    return {
-      evacuatedFromAddress: null,
-      isRestricted: null,
-      needsAssessment: null,
-      secretPhrase: null,
-      secretPhraseEdited: null,
-      status: null
-    };
-  }
-
-  private createNeedsAssessment(): NeedsAssessment {
-    return {
-      canEvacueeProvideClothing: null,
-      canEvacueeProvideFood: null,
-      canEvacueeProvideIncidentals: null,
-      canEvacueeProvideLodging: null,
-      canEvacueeProvideTransportation: null,
-      householdMembers: null,
-      hasPetsFood: null,
-      haveMedication: null,
-      haveSpecialDiet: null,
-      specialDietDetails: null,
-      insurance: null,
-      pets: null
-    };
   }
 
   private createRegistration(): Profile {
@@ -73,24 +40,5 @@ export class NonVerifiedRegistrationMappingService {
       restrictedAccess: null,
       securityQuestions: null
     };
-  }
-
-  private setAddressObject(addressObject): Address {
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      country: addressObject.country.code,
-      community:
-        addressObject.community.code === undefined
-          ? null
-          : addressObject.community.code,
-      postalCode: addressObject.postalCode,
-      stateProvince:
-        addressObject.stateProvince === null
-          ? addressObject.stateProvince
-          : addressObject.stateProvince.code
-    };
-
-    return address;
   }
 }

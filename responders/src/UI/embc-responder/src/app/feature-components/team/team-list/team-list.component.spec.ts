@@ -4,6 +4,9 @@ import { TeamListComponent } from './team-list.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from 'src/app/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TeamListComponent', () => {
   let component: TeamListComponent;
@@ -11,7 +14,14 @@ describe('TeamListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule],
+      imports: [
+        RouterTestingModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MaterialModule,
+        BrowserAnimationsModule
+      ],
       declarations: [TeamListComponent]
     }).compileComponents();
   });
@@ -22,7 +32,7 @@ describe('TeamListComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

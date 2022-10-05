@@ -23,11 +23,11 @@ export class ConfigService {
   public environmentBanner: EnvironmentInformation;
   private configurationGetEnvironmentInfoPath = '/env/info.json';
 
-  private get configuration(): Configuration {
+  public get configuration(): Configuration {
     return JSON.parse(this.cacheService.get('configuration'));
   }
 
-  private set configuration(v: Configuration) {
+  public set configuration(v: Configuration) {
     this.cacheService.set('configuration', v);
   }
 

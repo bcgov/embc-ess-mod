@@ -16,13 +16,13 @@ import { ModalComponent } from '../../core/components/modal/modal.component';
     SupplierRoutingModule,
     ReactiveFormsModule,
     CoreModule,
-    NgbModule
+    NgbModule,
   ],
   declarations: [
     SubmissionComponent,
     InvoiceComponent,
     ReferralComponent,
-    ReceiptComponent
-  ]
+    ReceiptComponent,
+  ],
 })
-export class SubmissionModule { }
+export class SubmissionModule {}

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CaptchaComponent } from './components/captcha/captcha.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
@@ -22,6 +21,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { TimeOutDialogComponent } from './components/dialog-components/time-out-dialog/time-out-dialog.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { CaptchaV2Component } from './components/captcha-v2/captcha-v2.component';
 
 @NgModule({
   imports: [
@@ -39,7 +39,6 @@ import { MatButtonModule } from '@angular/material/button';
     MarkdownModule.forRoot({ loader: HttpClient })
   ],
   declarations: [
-    CaptchaComponent,
     AppLoaderComponent,
     AlertComponent,
     HeaderComponent,
@@ -52,7 +51,6 @@ import { MatButtonModule } from '@angular/material/button';
     TimeOutDialogComponent
   ],
   exports: [
-    CaptchaComponent,
     AppLoaderComponent,
     AlertComponent,
     HeaderComponent,

@@ -55,7 +55,6 @@
         <ProjectReference Include="..\EMBC.ESS.Utilities.Cas\EMBC.ESS.Utilities.Cas.csproj" />
         <ProjectReference Include="..\EMBC.ESS.Utilities.Dynamics\EMBC.ESS.Utilities.Dynamics.csproj" />
         <ProjectReference Include="..\EMBC.Utilities.Messaging\EMBC.Utilities.Messaging.csproj" />
-        <ProjectReference Include="..\EMBC.Utilities.PdfGenerator\EMBC.Utilities.PdfGenerator.csproj" />
         <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
     </ItemGroup>
 

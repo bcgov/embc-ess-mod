@@ -58,7 +58,7 @@ export class SuppliersListComponent implements OnInit {
       this.supplierListDataService.primarySupplierColumns;
     this.mutualAidSuppliersColumns =
       this.supplierListDataService.mutualAidSupplierColumns;
-    this.loggedInRole = this.userService.currentProfile.role;
+    this.loggedInRole = this.userService?.currentProfile?.role;
 
     this.getSuppliersLists();
   }

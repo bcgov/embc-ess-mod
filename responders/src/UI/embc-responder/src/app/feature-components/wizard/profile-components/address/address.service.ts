@@ -30,7 +30,9 @@ export class AddressService {
     private customValidation: CustomValidationService,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private wizardService: WizardService
-  ) {
+  ) {}
+
+  init() {
     this.tabMetaData = this.stepEvacueeProfileService.getNavLinks('address');
   }
 
