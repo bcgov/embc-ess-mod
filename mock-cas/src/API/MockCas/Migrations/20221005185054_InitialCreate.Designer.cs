@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MockCas.Models;
 
@@ -10,9 +11,10 @@ using MockCas.Models;
 namespace MockCas.Migrations
 {
     [DbContext(typeof(MockCasDb))]
-    partial class MockCasDbModelSnapshot : ModelSnapshot
+    [Migration("20221005185054_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
