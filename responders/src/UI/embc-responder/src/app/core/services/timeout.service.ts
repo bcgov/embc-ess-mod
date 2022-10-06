@@ -41,7 +41,7 @@ export class TimeoutService {
       this.timedOut = true;
       this.dialog.closeAll();
       this.userService.clearAppStorage();
-      this.authenticationService.logout('https://ess.gov.bc.ca/');
+      this.authenticationService.logout();
     });
 
     this.reset();
