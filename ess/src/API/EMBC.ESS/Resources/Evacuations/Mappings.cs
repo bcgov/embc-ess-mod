@@ -255,7 +255,7 @@ namespace EMBC.ESS.Resources.Evacuations
         }
 
         public static bool ShouldMaskSecretPhrase(ResolutionContext ctx) =>
-            ctx.Options.Items.ContainsKey("MaskSecurityPhrase") && bool.Parse(ctx.Options.Items["MaskSecurityPhrase"].ToString());
+            ctx.Items.ContainsKey("MaskSecurityPhrase") && bool.Parse(ctx.Items["MaskSecurityPhrase"].ToString());
     }
 
     public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
