@@ -23,13 +23,17 @@ export class DashboardActivateGuard implements CanActivate {
     const registrantProfileId =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.id;
-    if (this.canActivateRoute(registrantProfileId)) {
+    const selectedFileId = this.appBaseService?.appModel?.selectedEssFile?.id;
+    if (this.canActivateRoute(registrantProfileId, selectedFileId)) {
       return true;
     }
     return false;
   }
 
-  private canActivateRoute(registrantProfileId: string): boolean {
+  private canActivateRoute(
+    registrantProfileId: string,
+    selectedFileId: string
+  ): boolean {
     if (
       this.appBaseService?.appModel?.selectedUserPathway ===
         SelectedPathType.remoteExtensions ||
@@ -37,6 +41,8 @@ export class DashboardActivateGuard implements CanActivate {
         SelectedPathType.caseNotes
     ) {
       return (
+        selectedFileId !== null &&
+        selectedFileId !== undefined &&
         this.evacueeSearchService?.evacueeSearchContext
           ?.evacueeSearchParameters !== null &&
         this.evacueeSearchService?.evacueeSearchContext
