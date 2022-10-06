@@ -70,7 +70,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.era_verified))
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.era_authenticated))
-                .ForMember(d => d.Minor, opts => opts.MapFrom(s => s.birthdate.HasValue ? ((DateTime)s.birthdate.Value).CalculatetAge() < 19 : false))
+                .ForMember(d => d.Minor, opts => opts.MapFrom(s => s.birthdate.HasValue && ((DateTime)s.birthdate.Value).CalculatetAge() < 19))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
                 .ForMember(d => d.SecurityQuestions, opts => opts.ConvertUsing<SecurityQuestionConverter, contact>(s => s))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initial))
@@ -130,7 +130,7 @@ namespace EMBC.ESS.Resources.Evacuees
     {
         public IEnumerable<SecurityQuestion> Convert(contact sourceMember, ResolutionContext context)
         {
-            var mask = (string)(context.Options.Items.ContainsKey("MaskSecurityAnswers") ? context.Options.Items["MaskSecurityAnswers"] : "true");
+            var mask = (string)(context.Items.ContainsKey("MaskSecurityAnswers") ? context.Items["MaskSecurityAnswers"] : "true");
             var maskSecurityAnswers = mask.Equals("true", StringComparison.OrdinalIgnoreCase);
             var ret = new List<SecurityQuestion>();
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext1) && !string.IsNullOrEmpty(sourceMember.era_securityquestion1answer))
