@@ -60,7 +60,7 @@ namespace EMBC.Responders.API.Controllers
                 {
                     ClientId = configuration.GetValue<string>("oidc:clientId"),
                     Issuer = configuration.GetValue<string>("oidc:issuer"),
-                    PostLogoutRedirectUrl = $"{configuration.GetValue<string>("oidc:bceidLogoutUrl")}?retnow=1&returl={configuration.GetValue<string>("oidc:returnUrl", "ess.gov.bc.ca")}"
+                    PostLogoutRedirectUrl = $"{configuration.GetValue<string>("oidc:bceidLogoutUrl")}?retnow=1&returl={configuration.GetValue<string>("oidc:returnUrl", "https://ess.gov.bc.ca")}"
                 },
                 OutageInfo = mapper.Map<OutageInformation>(outageInfo),
                 TimeoutInfo = new TimeoutConfiguration
