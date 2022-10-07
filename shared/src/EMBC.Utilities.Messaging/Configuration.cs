@@ -3,6 +3,7 @@ using EMBC.Utilities.Configuration;
 using EMBC.Utilities.Messaging.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Utilities.Messaging
 {
@@ -11,6 +12,7 @@ namespace EMBC.Utilities.Messaging
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
             var options = configurationServices.Configuration.GetSection("messaging").Get<MessagingOptions>() ?? new MessagingOptions() { Mode = MessagingMode.Server };
+            configurationServices.Services.Configure<HandlerRegistry>(sp => { });
             Grpc.Configuration.Configure(configurationServices, options);
         }
 

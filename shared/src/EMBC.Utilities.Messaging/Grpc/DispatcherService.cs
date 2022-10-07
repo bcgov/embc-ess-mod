@@ -11,6 +11,7 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EMBC.Utilities.Messaging.Grpc
 {
@@ -20,14 +21,14 @@ namespace EMBC.Utilities.Messaging.Grpc
         public override async Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
         {
             var serviceProvider = context.GetHttpContext().RequestServices;
-            var serviceRegistry = serviceProvider.GetRequiredService<MessageHandlerRegistry>();
+            var handlerRegistry = serviceProvider.GetRequiredService<IOptions<HandlerRegistry>>().Value;
             var logger = serviceProvider.GetRequiredService<ITelemetryProvider>().Get<DispatcherService>();
 
             var sw = Stopwatch.StartNew();
             try
             {
                 var requestType = Type.GetType(request.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
-                var handlers = serviceRegistry.Resolve(requestType);
+                var handlers = handlerRegistry.Resolve(requestType);
                 if (handlers == null || !handlers.Any()) throw new InvalidOperationException($"Message handler for {requestType} not found");
 
                 var handler = handlers[0];

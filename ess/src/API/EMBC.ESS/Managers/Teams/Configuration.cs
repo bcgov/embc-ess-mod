@@ -9,7 +9,7 @@ namespace EMBC.ESS.Managers.Teams
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
             configurationServices.Services.AddTransient<TeamsManager>();
-            configurationServices.Services.Configure<MessageHandlingConfiguration>(opts => opts.AddAllHandlersFrom(typeof(TeamsManager)));
+            configurationServices.Services.Configure<HandlerRegistry>(opts => opts.AddAllHandlersFrom(typeof(TeamsManager)));
         }
     }
 }

@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Messaging;
 using EMBC.Utilities.Messaging.Grpc;
-using EMBC.Utilities.Telemetry;
 using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Core.Testing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,10 +23,11 @@ namespace EMBC.Tests.Unit.ESS
 
         public DispatcherServiceTests(ITestOutputHelper output)
         {
-            var messageHandlerRegistryOptions = new MessageHandlingConfiguration();
-            messageHandlerRegistryOptions.AddAllHandlersFrom(typeof(TestHandler));
             var services = TestHelper.CreateDIContainer().AddLogging(output);
-            services.AddSingleton(sp => new MessageHandlerRegistry(sp.GetRequiredService<ITelemetryProvider>(), Options.Create(messageHandlerRegistryOptions)));
+            services.Configure<HandlerRegistry>(handlerRegistry =>
+            {
+                handlerRegistry.AddAllHandlersFrom(typeof(TestHandler));
+            });
             services.AddTransient<TestHandler>();
             httpContextFactory = () => new DefaultHttpContext
             {
