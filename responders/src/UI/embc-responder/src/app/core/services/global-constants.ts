@@ -150,7 +150,7 @@ export const otherRateSheet: DialogContent = {
 
 export const hotelRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Lodging</span></b>',
-  text: '<p class="primary bold">Hotel/Motel/B&B</p><p>Emergency Support Services is eligible for approved Provincial Government Rates from commercial accommodations supplier listed in the Ministry of Labour and Citizens Services Business Travel Accommodation Listing for government travel.</p><p class="bold">Only the cost of the room is covered.</p><p>The evacuee is responsible for all other charges (e.g. video rentals, damages, parking, local and long distance calls).</p>',
+  text: '<p class="primary bold">Hotel/Motel/Campground</p><p>Emergency Support Services is eligible for approved Provincial Government Rates from commercial accommodations supplier listed in the Ministry of Labour and Citizens Services Business Travel Accommodation Listing for government travel.</p><p class="bold">Only the cost of the room is covered.</p><p>The evacuee is responsible for all other charges (e.g. video rentals, damages, parking, local and long distance calls).</p>',
   cancelButton: 'Close'
 };
 
