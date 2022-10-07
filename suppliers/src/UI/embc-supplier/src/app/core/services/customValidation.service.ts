@@ -2,7 +2,7 @@ import {
   AbstractControl,
   ValidatorFn,
   UntypedFormArray,
-  FormGroup,
+  FormGroup
 } from '@angular/forms';
 import { Injectable, Predicate } from '@angular/core';
 import { SupplierService } from './supplier.service';

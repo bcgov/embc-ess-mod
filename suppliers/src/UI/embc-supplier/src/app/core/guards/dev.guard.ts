@@ -4,7 +4,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
-  Router,
+  Router
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { ConfigService } from '../services/config.service';
 import { SupplierHttpService } from '../services/supplierHttp.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DevGuard implements CanActivate {
   public configResult: ServerConfig = new ServerConfig();

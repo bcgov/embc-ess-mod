@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OptionInjectionService } from 'src/app/core/interfaces/searchOptions.service';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
-import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { EvacueeSearchService } from '../evacuee-search.service';
 
 @Component({
   selector: 'app-zero-file-result',
@@ -11,7 +11,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 export class ZeroFileResultComponent implements OnInit {
   readonly selectedPathType = SelectedPathType;
   constructor(
-    public appBaseService: AppBaseService,
+    public evacueeSearchService: EvacueeSearchService,
     public optionInjectionService: OptionInjectionService
   ) {}
 

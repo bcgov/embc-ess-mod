@@ -3,7 +3,10 @@
     <div class="no-results">
       <p>
         No matching Active ESS Files in the ERA Tool for
-        {{ appBaseService?.appModel?.selectedEssFile?.id }}.
+        {{
+          evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
+            ?.essFileNumber
+        }}.
       </p>
     </div>
   </div>

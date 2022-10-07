@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[appDecimalCurrency]',
+  selector: '[appDecimalCurrency]'
 })
 export class DecimalCurrencyDirective {
   private regex = new RegExp(/^\d*\.?\d{0,2}$/g);
@@ -14,7 +14,7 @@ export class DecimalCurrencyDirective {
     'ArrowLeft',
     'ArrowRight',
     'Del',
-    'Delete',
+    'Delete'
   ];
 
   constructor(private el: ElementRef) {}
@@ -30,7 +30,7 @@ export class DecimalCurrencyDirective {
     const next: string = [
       current.slice(0, position),
       event.key === 'Decimal' ? '.' : event.key,
-      current.slice(position),
+      current.slice(position)
     ].join('');
     if (next && !String(next).match(this.regex)) {
       event.preventDefault();

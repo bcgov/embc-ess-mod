@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -13,7 +14,7 @@ import { SupplierService } from './supplier.service';
 //
 
 // const BaseUrl = 'https://embcess-captcha.pathfinder.gov.bc.ca';
-const BaseUrl = 'https://embcess-captcha.apps.silver.devops.gov.bc.ca';
+const baseUrl = 'https://embcess-captcha.apps.silver.devops.gov.bc.ca';
 
 // payload returned from the server
 @Injectable()
@@ -28,14 +29,14 @@ export class ServerPayload {
   providedIn: 'root',
 })
 export class SupplierHttpService {
-  get headers(): HttpHeaders {
-    return new HttpHeaders({ 'Content-Type': 'application/json' });
-  }
-
   constructor(
     private http: HttpClient,
     private supplierService: SupplierService
   ) {}
+
+  get headers(): HttpHeaders {
+    return new HttpHeaders({ 'Content-Type': 'application/json' });
+  }
 
   getServerConfig() {
     return this.http
@@ -113,22 +114,9 @@ export class SupplierHttpService {
       );
   }
 
-  protected handleError(err): Observable<never> {
-    let errorMessage = '';
-    if (err.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      errorMessage = err.error.message;
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      errorMessage = err.error;
-    }
-    return throwError(errorMessage);
-  }
-
   fetchData(nonce: string): Observable<HttpResponse<ServerPayload>> {
     return this.http.post<ServerPayload>(
-      BaseUrl + '/captcha',
+      baseUrl + '/captcha',
       { nonce },
       { observe: 'response' }
     );
@@ -140,7 +128,7 @@ export class SupplierHttpService {
     encryptedAnswer: string
   ): Observable<HttpResponse<ServerPayload>> {
     return this.http.post<ServerPayload>(
-      BaseUrl + '/verify/captcha',
+      baseUrl + '/verify/captcha',
       { nonce, answer, validation: encryptedAnswer },
       { observe: 'response' }
     );
@@ -154,8 +142,21 @@ export class SupplierHttpService {
     if (translation) {
       payload.translation = translation;
     }
-    return this.http.post<string>(BaseUrl + '/captcha/audio', payload, {
+    return this.http.post<string>(baseUrl + '/captcha/audio', payload, {
       observe: 'response',
     });
+  }
+
+  protected handleError(err): Observable<never> {
+    let errorMessage = '';
+    if (err.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      errorMessage = err.error.message;
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      errorMessage = err.error;
+    }
+    return throwError(errorMessage);
   }
 }

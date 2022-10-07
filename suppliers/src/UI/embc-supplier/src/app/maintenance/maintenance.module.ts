@@ -6,6 +6,6 @@ import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [MaintenanceComponent],
-  imports: [CoreModule, CommonModule, MaintenanceRoutingModule],
+  imports: [CoreModule, CommonModule, MaintenanceRoutingModule]
 })
 export class MaintenanceModule {}

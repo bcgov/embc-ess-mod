@@ -8,7 +8,7 @@ import { AuthenticationService } from './core/services/authentication.service';
 import {
   OAuthLogger,
   OAuthService,
-  UrlHelperService,
+  UrlHelperService
 } from 'angular-oauth2-oidc';
 
 describe('AppComponent', () => {
@@ -18,7 +18,7 @@ describe('AppComponent', () => {
         RouterTestingModule,
         HttpClientTestingModule,
         FormsModule,
-        ReactiveFormsModule,
+        ReactiveFormsModule
       ],
       declarations: [AppComponent],
       providers: [
@@ -26,8 +26,8 @@ describe('AppComponent', () => {
         AuthenticationService,
         OAuthService,
         UrlHelperService,
-        OAuthLogger,
-      ],
+        OAuthLogger
+      ]
     }).compileComponents();
   }));
 
