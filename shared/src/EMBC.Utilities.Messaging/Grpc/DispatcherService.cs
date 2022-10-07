@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.Utilities.Messaging
+namespace EMBC.Utilities.Messaging.Grpc
 {
     internal class DispatcherService : Dispatcher.DispatcherBase
     {
@@ -25,13 +26,15 @@ namespace EMBC.Utilities.Messaging
             var sw = Stopwatch.StartNew();
             try
             {
-                var requestType = System.Type.GetType(request.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
-                var messageHandler = serviceRegistry.Resolve(requestType);
-                if (messageHandler == null) throw new InvalidOperationException($"Message handler for {requestType} not found");
-                var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType ?? null!);
+                var requestType = Type.GetType(request.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
+                var handlers = serviceRegistry.Resolve(requestType);
+                if (handlers == null || !handlers.Any()) throw new InvalidOperationException($"Message handler for {requestType} not found");
+
+                var handler = handlers[0];
+                var handlerInstance = serviceProvider.GetRequiredService(handler.DeclaringType ?? null!);
                 using var ms = new MemoryStream(request.Data.ToByteArray());
                 var requestMessage = await JsonSerializer.DeserializeAsync(ms, requestType) ?? null!;
-                var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
+                var replyMessage = await handler.InvokeAsync(handlerInstance, new object[] { requestMessage });
                 var replyType = replyMessage?.GetType();
 
                 var reply = new ReplyEnvelope

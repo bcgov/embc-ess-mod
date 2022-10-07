@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Messaging;
+using EMBC.Utilities.Messaging.Grpc;
 using EMBC.Utilities.Telemetry;
 using Google.Protobuf;
 using Grpc.Core;
@@ -24,8 +25,8 @@ namespace EMBC.Tests.Unit.ESS
 
         public DispatcherServiceTests(ITestOutputHelper output)
         {
-            var messageHandlerRegistryOptions = new MessageHandlerRegistryOptions();
-            messageHandlerRegistryOptions.Add(typeof(TestHandler));
+            var messageHandlerRegistryOptions = new MessageHandlingConfiguration();
+            messageHandlerRegistryOptions.AddAllHandlersFrom(typeof(TestHandler));
             var services = TestHelper.CreateDIContainer().AddLogging(output);
             services.AddSingleton(sp => new MessageHandlerRegistry(sp.GetRequiredService<ITelemetryProvider>(), Options.Create(messageHandlerRegistryOptions)));
             services.AddTransient<TestHandler>();

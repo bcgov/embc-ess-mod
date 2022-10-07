@@ -30,7 +30,9 @@ namespace EMBC.Utilities.Messaging
                 var handler = new HttpClientHandler();
                 if (configuration.GetValue("messaging:AllowInvalidServerCertificate", false))
                 {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
                     handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+#pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
                 }
                 using var client = new HttpClient(handler);
                 client.BaseAddress = url;

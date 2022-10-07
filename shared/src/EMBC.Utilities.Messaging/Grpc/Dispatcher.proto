@@ -1,20 +1,16 @@
 ﻿syntax = "proto3";
 
-//import "google/protobuf/struct.proto";
-
-package EMBC.Utilities.Messaging;
+package EMBC.Utilities.Messaging.Grpc;
 
 message RequestEnvelope {
     string CorrelationId = 1;
     string Type = 10;
-    //google.protobuf.Value Content = 11;
     bytes Data = 11;
 }
 
 message ReplyEnvelope {
     string CorrelationId = 1;
     string Type = 10;
-    //google.protobuf.Value Content = 11;
     bytes Data = 11;
     bool Empty = 12;
     bool Error = 30;
