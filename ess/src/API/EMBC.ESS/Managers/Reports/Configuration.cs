@@ -11,7 +11,7 @@ namespace EMBC.ESS.Managers.Reports
             var services = configurationServices.Services;
 
             services.AddTransient<ReportsManager>();
-            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(ReportsManager)));
+            services.Configure<MessageHandlingConfiguration>(opts => opts.AddAllHandlersFrom(typeof(ReportsManager)));
         }
     }
 }

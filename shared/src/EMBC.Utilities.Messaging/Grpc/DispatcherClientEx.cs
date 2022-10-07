@@ -3,11 +3,10 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts;
 using Google.Protobuf;
 using Grpc.Core;
 
-namespace EMBC.Utilities.Messaging
+namespace EMBC.Utilities.Messaging.Grpc
 {
     internal static class DispatcherClientEx
     {
@@ -30,13 +29,9 @@ namespace EMBC.Utilities.Messaging
                 using var ms = new MemoryStream(response.Data.ToByteArray());
                 return (TReply?)JsonSerializer.Deserialize(ms, responseType);
             }
-            catch (RpcException e)
+            catch (RpcException e) when (e.Status.StatusCode == StatusCode.DeadlineExceeded)
             {
-                switch (e.Status.StatusCode)
-                {
-                    case StatusCode.DeadlineExceeded: throw new ClientException(typeof(ESS.Shared.Contracts.TimeoutException).AssemblyQualifiedName ?? string.Empty, e.Message);
-                    default: throw;
-                }
+                throw new ClientException(typeof(ESS.Shared.Contracts.TimeoutException).AssemblyQualifiedName ?? string.Empty, e.Message);
             }
         }
     }

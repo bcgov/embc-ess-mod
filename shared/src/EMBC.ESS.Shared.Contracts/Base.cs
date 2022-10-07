@@ -5,6 +5,7 @@ using EMBC.ESS.Shared.Contracts.Teams;
 namespace EMBC.ESS.Shared.Contracts
 {
 #pragma warning disable SA1302 // Interface names should begin with I
+#pragma warning disable S2326 // Unused type parameters should be removed
 
     public interface Command
     { }
@@ -12,7 +13,11 @@ namespace EMBC.ESS.Shared.Contracts
     public interface Query<TResponse>
     { }
 
+    public interface Event
+    { }
+
 #pragma warning restore SA1302 // Interface names should begin with I
+#pragma warning restore S2326 // Unused type parameters should be removed
 
     [Serializable]
     [KnownType(typeof(NotFoundException))]
