@@ -77,10 +77,6 @@ export class CaseNotesOptionService implements SearchOptionsService {
         'responder-access/search/essfile-dashboard'
       ]);
     } else {
-      this.dataService.setSelectedFile(
-        (value as EvacueeSearchContextModel).evacueeSearchParameters
-          ?.essFileNumber
-      );
       return this.router.navigate(
         ['/responder-access/search/evacuee/search-results'],
         {
