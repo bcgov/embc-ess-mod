@@ -13,7 +13,7 @@ namespace EMBC.ESS.Managers.Events
             var services = configurationServices.Services;
 
             services.AddTransient<EventsManager>();
-            services.Configure<MessageHandlingConfiguration>(opts => opts.AddAllHandlersFrom(typeof(EventsManager)));
+            services.Configure<HandlerRegistry>(opts => opts.AddAllHandlersFrom(typeof(EventsManager)));
             services.AddTransient<EmailTemplateProvider>();
             services.AddTransient<ITemplateProviderResolver>(sp =>
             {

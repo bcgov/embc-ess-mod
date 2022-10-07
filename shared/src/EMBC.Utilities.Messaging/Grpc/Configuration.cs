@@ -35,8 +35,6 @@ namespace EMBC.Utilities.Messaging.Grpc
             });
             if (options.Mode == MessagingMode.Server || options.Mode == MessagingMode.Both)
             {
-                configurationServices.Services.Configure<MessageHandlingConfiguration>(opts => { });
-                configurationServices.Services.AddSingleton<MessageHandlerRegistry>();
                 configurationServices.Services
                     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddScheme<AuthenticationSchemeOptions, AnonymousAuthenticationHandler>(AnonymousAuthenticationHandler.AuthenticationScheme, opts => { })
