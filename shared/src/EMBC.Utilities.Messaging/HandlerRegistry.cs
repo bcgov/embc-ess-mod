@@ -23,7 +23,7 @@ namespace EMBC.Utilities.Messaging
 
         public void AddAllHandlersFrom(Type handlerType)
         {
-            var methods = handlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var methods = handlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(m => !m.IsSpecialName).ToArray();
             foreach (var method in methods)
             {
                 Register(method);

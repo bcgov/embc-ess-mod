@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Telemetry;
 using Google.Protobuf;
 using Grpc.Core;
@@ -17,60 +19,83 @@ namespace EMBC.Utilities.Messaging.Grpc
 {
     internal class DispatcherService : Dispatcher.DispatcherBase
     {
+        private readonly ITelemetryReporter logger;
+
+        public DispatcherService(ITelemetryProvider telemetryProvider)
+        {
+            logger = telemetryProvider.Get<DispatcherService>();
+        }
+
         [Authorize]
         public override async Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
         {
             var serviceProvider = context.GetHttpContext().RequestServices;
             var handlerRegistry = serviceProvider.GetRequiredService<IOptions<HandlerRegistry>>().Value;
-            var logger = serviceProvider.GetRequiredService<ITelemetryProvider>().Get<DispatcherService>();
 
+            var requestType = Type.GetType(request.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
+            var handlers = handlerRegistry.Resolve(requestType);
+            if (handlers == null || !handlers.Any()) throw new InvalidOperationException($"Message handler for {requestType} not found");
+
+            using var ms = new MemoryStream(request.Data.ToByteArray());
+            var message = await JsonSerializer.DeserializeAsync(ms, requestType) ?? null!;
+
+            var ct = context.CancellationToken;
+            if (requestType.IsAssignableTo(typeof(Event)))
+            {
+                await Parallel.ForEachAsync(handlers, ct, async (handler, ct) => await DispatchHandler(handler, request, message, serviceProvider, ct));
+
+                return CreateReply(request, null);
+            }
+            else
+            {
+                return await DispatchHandler(handlers[0], request, message, serviceProvider, ct);
+            }
+        }
+
+        private async Task<ReplyEnvelope> DispatchHandler(MethodInfo handler, RequestEnvelope request, object message, IServiceProvider serviceProvider, CancellationToken ct)
+        {
             var sw = Stopwatch.StartNew();
             try
             {
-                var requestType = Type.GetType(request.Type, an => Assembly.Load(an.Name ?? null!), null, true, true) ?? null!;
-                var handlers = handlerRegistry.Resolve(requestType);
-                if (handlers == null || !handlers.Any()) throw new InvalidOperationException($"Message handler for {requestType} not found");
-
-                var handler = handlers[0];
                 var handlerInstance = serviceProvider.GetRequiredService(handler.DeclaringType ?? null!);
-                using var ms = new MemoryStream(request.Data.ToByteArray());
-                var requestMessage = await JsonSerializer.DeserializeAsync(ms, requestType) ?? null!;
-                var replyMessage = await handler.InvokeAsync(handlerInstance, new object[] { requestMessage });
-                var replyType = replyMessage?.GetType();
+                var replyMessage = await handler.InvokeAsync(handlerInstance, new object[] { message });
 
-                var reply = new ReplyEnvelope
-                {
-                    CorrelationId = request.CorrelationId,
-                    Type = replyType?.AssemblyQualifiedName ?? string.Empty,
-                    Data = replyMessage == null
-                        ? ByteString.Empty
-                        : UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(replyMessage)),
-                    Empty = replyMessage == null
-                };
+                var reply = CreateReply(request, replyMessage);
 
                 sw.Stop();
-                logger.LogInformation("GRPC Dispatch request {requestId} {requestType} responded {status} with {replyType} in {elapsed} ms", request.CorrelationId, requestType.FullName, "OK", replyType?.FullName, sw.Elapsed.TotalMilliseconds);
+                logger.LogInformation("GRPC Dispatch request {requestId} {requestType} responded {status} with {replyType} in {elapsed} ms", request.CorrelationId, request.Type, "OK", reply.Type, sw.Elapsed.TotalMilliseconds);
                 return reply;
             }
             catch (Exception e)
             {
-                var reply = new ReplyEnvelope
-                {
-                    CorrelationId = request.CorrelationId,
-                    Error = true,
-                    ErrorType = e.GetType().AssemblyQualifiedName,
-                    ErrorMessage = e.Message,
-                };
                 sw.Stop();
+                var reply = CreateErrorReply(request, e);
 
-                logger.LogError(e, "GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds);
-
+                logger.LogError("GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms: {error}", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds, reply.ErrorMessage);
                 return reply;
             }
         }
+
+        private ReplyEnvelope CreateReply(RequestEnvelope request, object? replyMessage) => new ReplyEnvelope
+        {
+            CorrelationId = request.CorrelationId,
+            Type = replyMessage?.GetType()?.AssemblyQualifiedName ?? string.Empty,
+            Data = replyMessage == null
+                        ? ByteString.Empty
+                        : UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(replyMessage)),
+            Empty = replyMessage == null
+        };
+
+        private ReplyEnvelope CreateErrorReply(RequestEnvelope request, Exception error) => new ReplyEnvelope
+        {
+            CorrelationId = request.CorrelationId,
+            Error = true,
+            ErrorType = error.GetType().AssemblyQualifiedName,
+            ErrorMessage = error.Message,
+        };
     }
 
-    public static class DispatcherServiceEx
+    internal static class DispatcherServiceEx
     {
         public static async Task<object?> InvokeAsync(this MethodInfo method, object obj, params object[] parameters)
         {
