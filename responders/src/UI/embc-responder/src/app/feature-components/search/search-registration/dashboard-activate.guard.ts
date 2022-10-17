@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
-  RouterStateSnapshot
+  Router,
+  RouterStateSnapshot,
+  UrlTree
 } from '@angular/router';
+import { Observable } from 'rxjs';
 import { SelectedPathType } from 'src/app/core/models/appBase.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
@@ -14,12 +17,17 @@ import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 export class DashboardActivateGuard implements CanActivate {
   constructor(
     private evacueeSearchService: EvacueeSearchService,
-    private appBaseService: AppBaseService
+    private appBaseService: AppBaseService,
+    private router: Router
   ) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean {
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
     const registrantProfileId =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
         ?.id;
@@ -27,7 +35,7 @@ export class DashboardActivateGuard implements CanActivate {
     if (this.canActivateRoute(registrantProfileId, selectedFileId)) {
       return true;
     }
-    return false;
+    return this.router.navigate(['/responder-access/search/evacuee']);
   }
 
   private canActivateRoute(
