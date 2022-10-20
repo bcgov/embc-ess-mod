@@ -29,6 +29,8 @@ namespace EMBC.Tests.Integration.ESS
             {
                 services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy), typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
                 services.AddSingleton<EMBC.ESS.Utilities.Cas.IWebProxy, MockCasProxy>();
+                //override grpc client configuration to make it work in the test web server
+                services.AddGrpcClient<Utilities.Messaging.Grpc.Dispatcher.DispatcherClient>().ConfigurePrimaryHttpMessageHandler(() => this.Server.CreateHandler());
             });
         }
     }

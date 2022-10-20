@@ -143,11 +143,11 @@ namespace EMBC.Utilities.Messaging.Grpc
                     if (options.Url.Scheme == "dns")
                     {
                         opts.Credentials = ChannelCredentials.SecureSsl;
-                    }
-                    opts.ServiceConfig = new ServiceConfig
-                    {
-                        LoadBalancingConfigs = { new RoundRobinConfig() },
-                        MethodConfigs =
+
+                        opts.ServiceConfig = new ServiceConfig
+                        {
+                            LoadBalancingConfigs = { new RoundRobinConfig() },
+                            MethodConfigs =
                         {
                             new MethodConfig
                             {
@@ -161,7 +161,8 @@ namespace EMBC.Utilities.Messaging.Grpc
                                 }
                             }
                         }
-                    };
+                        };
+                    }
                 }).AddInterceptor<ClientAuthenticationInterceptor>(InterceptorScope.Client);
 
                 configurationServices.Services
