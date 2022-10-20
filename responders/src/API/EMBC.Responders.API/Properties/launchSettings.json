@@ -5,8 +5,6 @@
       "applicationUrl": "http://localhost:6020",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "messaging__url": "https://localhost:2020",
-        "messaging_allowInvalidServerCertificate": "true",
         "DOTNET_gcServer": "1"
       }
     }

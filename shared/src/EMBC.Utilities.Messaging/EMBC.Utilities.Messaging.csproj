@@ -35,14 +35,17 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
-      <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
+        <ProjectReference Include="..\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
+        <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>EMBC.Tests.Unit.ESS</_Parameter1>
         </AssemblyAttribute>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>EMBC.Tests.Integration.ESS</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
-    
+
 </Project>

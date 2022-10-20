@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Reports;
 using EMBC.Responders.API.Helpers;
 using EMBC.Utilities.Messaging;
-using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +17,7 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient messagingClient;
 
         private string currentUserRole => User.FindFirstValue("user_role");
-        private ErrorParser errorParser;
+        private readonly ErrorParser errorParser;
 
         public ReportsController(IMessagingClient messagingClient)
         {
@@ -27,18 +25,34 @@ namespace EMBC.Responders.API.Controllers
             this.errorParser = new ErrorParser();
         }
 
+        [HttpPost("evacuee")]
+        public async Task<string?> CreateEvacueeReport(string? taskNumber, string? fileId, string? evacuatedFrom, string? evacuatedTo, DateTime? from, DateTime? to)
+        {
+            var userRole = Enum.Parse<MemberRole>(currentUserRole);
+            var includePersonalInfo = userRole == MemberRole.Tier3 || userRole == MemberRole.Tier4;
+
+            var requestId = await messagingClient.Send(new RequestEvacueeReportCommand
+            {
+                TaskNumber = taskNumber,
+                FileId = fileId,
+                EvacuatedFrom = evacuatedFrom,
+                EvacuatedTo = evacuatedTo,
+                From = from,
+                To = to,
+                IncludePersonalInfo = includePersonalInfo
+            });
+
+            return requestId;
+        }
+
         [HttpGet("evacuee")]
-        public async Task<IActionResult> GetEvacueeReport(string? taskNumber, string? fileId, string? evacuatedFrom, string? evacuatedTo, string? from, string? to)
+        public async Task<IActionResult> GetEvacueeReport(string reportRequestId)
         {
             try
             {
-                var userRole = Enum.Parse<MemberRole>(currentUserRole);
-                var includePersonalInfo = userRole == MemberRole.Tier3 || userRole == MemberRole.Tier4;
-                var dateFrom = string.IsNullOrEmpty(from) ? (DateTime?)null : DateTime.Parse(from);
-                var dateTo = string.IsNullOrEmpty(to) ? (DateTime?)null : DateTime.Parse(to);
-                var result = await messagingClient.Send(new EvacueeReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo, From = dateFrom, To = dateTo, IncludePersonalInfo = includePersonalInfo });
+                var report = await messagingClient.Send(new EvacueeReportQuery { ReportRequestId = reportRequestId });
 
-                return new FileContentResult(result.Content, result.ContentType);
+                return new FileContentResult(report.Content, report.ContentType);
             }
             catch (Exception e)
             {
@@ -46,16 +60,30 @@ namespace EMBC.Responders.API.Controllers
             }
         }
 
+        [HttpPost("support")]
+        public async Task<string?> CreateSupportReport(string? taskNumber, string? fileId, string? evacuatedFrom, string? evacuatedTo, DateTime? from, DateTime? to)
+        {
+            var requestId = await messagingClient.Send(new RequestSupportReportCommand
+            {
+                TaskNumber = taskNumber,
+                FileId = fileId,
+                EvacuatedFrom = evacuatedFrom,
+                EvacuatedTo = evacuatedTo,
+                From = from,
+                To = to
+            });
+
+            return requestId;
+        }
+
         [HttpGet("support")]
-        public async Task<IActionResult> GetSupportReport(string? taskNumber, string? fileId, string? evacuatedFrom, string? evacuatedTo, string? from, string? to)
+        public async Task<IActionResult> GetSupportReport(string reportRequestId)
         {
             try
             {
-                var dateFrom = string.IsNullOrEmpty(from) ? (DateTime?)null : DateTime.Parse(from);
-                var dateTo = string.IsNullOrEmpty(to) ? (DateTime?)null : DateTime.Parse(to);
-                var result = await messagingClient.Send(new SupportReportQuery { TaskNumber = taskNumber, FileId = fileId, EvacuatedFrom = evacuatedFrom, EvacuatedTo = evacuatedTo, From = dateFrom, To = dateTo });
+                var report = await messagingClient.Send(new SupportReportQuery { ReportRequestId = reportRequestId });
 
-                return new FileContentResult(result.Content, result.ContentType);
+                return new FileContentResult(report.Content, report.ContentType);
             }
             catch (Exception e)
             {

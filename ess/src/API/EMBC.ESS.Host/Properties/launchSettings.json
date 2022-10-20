@@ -9,8 +9,7 @@
         "DOTNET_ENVIRONMENT": "Development",
         "ASPNETCORE_URLS": "https://localhost:2020",
         "DOTNET_gcServer": "1",
-        "backgroundTask__enabled": "false",
-        "redis_connectionstring": "localhost:6380"
+        "backgroundTask__enabled": "false"
       }
     }
   }
