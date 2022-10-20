@@ -64,7 +64,7 @@ export class ReportingComponent implements OnInit {
       this.showErrorMessage = false;
       this.isLoading = !this.isLoading;
       this.reportService
-        .reportsGetEvacueeReport(this.getDataFromForm())
+        .reportsCreateEvacueeReport(this.getDataFromForm())
         .subscribe({
           next: (reportResponse) => {
             // Downloading a csv document:
@@ -98,7 +98,7 @@ export class ReportingComponent implements OnInit {
       this.showErrorMessage = false;
       this.isLoading = !this.isLoading;
       this.reportService
-        .reportsGetSupportReport(this.getDataFromForm())
+        .reportsCreateSupportReport(this.getDataFromForm())
         .subscribe({
           next: (reportResponse) => {
             // Downloading a csv document:
