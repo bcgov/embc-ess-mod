@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using MockCas.Models;
 using NSwag;
@@ -43,14 +43,14 @@ builder.Services.AddOpenApiDocument(document =>
     document.GenerateAbstractProperties = true;
 });
 
-builder.Services.AddCors(opts =>
-{
-    opts.AddPolicy(name: "test",
-                      policy =>
-                      {
-                          policy.WithOrigins("https://localhost:1200").AllowAnyHeader().AllowAnyMethod();
-                      });
-});
+//builder.Services.AddCors(opts =>
+//{
+//    opts.AddPolicy(name: "test",
+//                      policy =>
+//                      {
+//                          policy.WithOrigins("https://localhost:1200").AllowAnyHeader().AllowAnyMethod();
+//                      });
+//});
 
 var app = builder.Build();
 
@@ -61,8 +61,8 @@ if (!app.Environment.IsDevelopment())
     app.UseSwaggerUi3();
 }
 
-app.UseHttpsRedirection();
-app.UseCors("test");
+//app.UseHttpsRedirection();
+//app.UseCors("test");
 app.UseAuthorization();
 app.UseStaticFiles();
 app.UseRouting();
