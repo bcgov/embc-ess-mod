@@ -190,10 +190,21 @@ export class SupplierDetailComponent implements OnInit {
    * Navigates to edit team member component
    */
   editSupplier(): void {
+    // TODO: check editing is allowed
     this.editSupplierService.editedSupplier = this.selectedSupplier;
     this.router.navigate([
       '/responder-access/supplier-management/edit-supplier'
     ]);
+  }
+
+  editNotAllowedDialog() {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: globalConst.editExistingSupplierMessage
+      },
+      width: '600px'
+    });
   }
 
   /**

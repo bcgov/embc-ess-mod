@@ -127,13 +127,21 @@ export class EditSupplierComponent implements OnInit {
       gstNumber: this.formBuilder.group(
         {
           part1: [
-            this.editSupplierService.editedSupplier?.supplierGstNumber?.part1 ??
-              '',
+            {
+              value:
+                this.editSupplierService.editedSupplier?.supplierGstNumber
+                  ?.part1 ?? '',
+              disabled: true
+            },
             [Validators.required, Validators.pattern(globalConst.gstFirstField)]
           ],
           part2: [
-            this.editSupplierService.editedSupplier?.supplierGstNumber?.part2 ??
-              '',
+            {
+              value:
+                this.editSupplierService.editedSupplier?.supplierGstNumber
+                  ?.part2 ?? '',
+              disabled: true
+            },
             [
               Validators.required,
               Validators.pattern(globalConst.gstSecondField)

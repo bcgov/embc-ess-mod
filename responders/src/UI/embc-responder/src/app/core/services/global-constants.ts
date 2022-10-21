@@ -302,6 +302,12 @@ export const gender = [
   { name: 'X', value: 'X' }
 ];
 
+export const editExistingSupplierMessage: DialogContent = {
+  title: 'Editing this Supplier is Disabled',
+  text: '<p>Supplier details cannot be edited as this supplier has an agreement with more than one ESS Team. If you are required to edit the supplier information please send an email to:</p><p class="supplier-link">essmodernization@gov.bc.ca</p>',
+  cancelButton: 'Close'
+};
+
 export const supportDataLossDialog: DialogContent = {
   text: '<p><b>Warning:</b> Any unsaved data will be lost. Do you wish to continue?</p>',
   confirmButton: 'Yes, Continue',
