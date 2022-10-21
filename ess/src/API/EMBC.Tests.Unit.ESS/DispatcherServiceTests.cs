@@ -115,6 +115,7 @@ namespace EMBC.Tests.Unit.ESS
             var response = await dispatcher.Dispatch(request, serverCallContext);
 
             response.ShouldNotBeNull().Error.ShouldBeFalse();
+            await Task.Delay(2000);
             testHandler.Calls.Count().ShouldBe(2);
             testHandler.Calls.ShouldContain(nameof(testHandler.Handle1));
             testHandler.Calls.ShouldContain(nameof(testHandler.Handle2));
