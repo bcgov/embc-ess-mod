@@ -6,7 +6,7 @@
           Review Supplier Details
         </p>
         <p class="review-heading" *ngIf="reviewAction === 'add'">Step 3 of 3</p>
-        <p class="review-heading" *ngIf="reviewAction === 'claim'">
+        <p class="review-heading" *ngIf="reviewAction === 'add-existing'">
           Select Supplier
         </p>
       </div>
@@ -14,15 +14,12 @@
 
     <div class="row">
       <div class="col-md-12">
-        <p class="details-subtitle" *ngIf="reviewAction !== 'claim'">
+        <p class="details-subtitle" *ngIf="reviewAction !== 'add-existing'">
           Please review all of the information below before submitting.
         </p>
-        <p *ngIf="reviewAction === 'claim'">
-          <b
-            >Please review all of the information below before submitting. Once
-            added to your ESS Team you will be able to edit the suppliers
-            details.
-          </b>
+        <p class="bold" *ngIf="reviewAction === 'add-existing'">
+          Please review all of the information below prior to saving the
+          supplier.
         </p>
       </div>
     </div>
@@ -99,7 +96,7 @@
           mat-button
           [disabled]="isSubmitted"
           (click)="save()"
-          *ngIf="reviewAction !== 'claim'"
+          *ngIf="reviewAction !== 'add-existing'"
         >
           Save Supplier
           <app-loader
@@ -113,10 +110,10 @@
           class="button-p button-width"
           mat-button
           [disabled]="isSubmitted"
-          (click)="claim()"
-          *ngIf="reviewAction === 'claim'"
+          (click)="addExisting()"
+          *ngIf="reviewAction === 'add-existing'"
         >
-          Select Supplier
+          Save & Add Supplier
           <app-loader
             [strokeWidth]="3"
             [diameter]="25"
