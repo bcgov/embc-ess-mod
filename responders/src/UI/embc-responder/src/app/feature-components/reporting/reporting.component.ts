@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable, timer } from 'rxjs';
-import { delayWhen, map, retryWhen, startWith, switchMap, tap } from 'rxjs/operators';
+import {
+  delayWhen,
+  map,
+  retryWhen,
+  startWith,
+  switchMap,
+  tap
+} from 'rxjs/operators';
 import { ReportsService } from 'src/app/core/api/services';
 import { ReportParams } from 'src/app/core/models/report-params.model';
 import {
@@ -35,7 +42,7 @@ export class ReportingComponent implements OnInit {
     private alertService: AlertService,
     private locationService: LocationsService,
     private customValidation: CustomValidationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.createReportingForm();
@@ -66,19 +73,25 @@ export class ReportingComponent implements OnInit {
       this.reportService
         .reportsCreateEvacueeReport(this.getDataFromForm())
         .pipe(
-          switchMap(reportId =>
-            this.reportService.reportsGetEvacueeReport({ reportRequestId: reportId })
+          switchMap((reportId) =>
+            this.reportService
+              .reportsGetEvacueeReport({ reportRequestId: reportId })
               .pipe(
-                retryWhen(errors => errors.pipe(
-                  tap(e => console.error(e)),
-                  delayWhen(_ => timer(5000))
-                ))
+                retryWhen((errors) =>
+                  errors.pipe(
+                    tap((e) => console.error(e)),
+                    delayWhen((_) => timer(5000))
+                  )
+                )
               )
           )
         )
         .subscribe({
-          next: reportResponse => {
-            this.downloadFile(reportResponse, 'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
+          next: (reportResponse) => {
+            this.downloadFile(
+              reportResponse,
+              'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv'
+            );
             this.isLoading = !this.isLoading;
           },
           error: (error) => {
@@ -93,7 +106,7 @@ export class ReportingComponent implements OnInit {
     }
   }
 
-  private downloadFile(file: Blob, fileName: string): void {
+  downloadFile(file: Blob, fileName: string): void {
     const blob = new Blob([file], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const anchor = document.createElement('a');
@@ -113,19 +126,25 @@ export class ReportingComponent implements OnInit {
       this.reportService
         .reportsCreateSupportReport(this.getDataFromForm())
         .pipe(
-          switchMap(reportId =>
-            this.reportService.reportsGetSupportReport({ reportRequestId: reportId })
+          switchMap((reportId) =>
+            this.reportService
+              .reportsGetSupportReport({ reportRequestId: reportId })
               .pipe(
-                retryWhen(errors => errors.pipe(
-                  tap(e => console.error(e)),
-                  delayWhen(_ => timer(5000))
-                ))
+                retryWhen((errors) =>
+                  errors.pipe(
+                    tap((e) => console.error(e)),
+                    delayWhen((_) => timer(5000))
+                  )
+                )
               )
           )
         )
         .subscribe({
           next: (reportResponse) => {
-            this.downloadFile(reportResponse, 'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
+            this.downloadFile(
+              reportResponse,
+              'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv'
+            );
             this.isLoading = !this.isLoading;
           },
           error: (error) => {
