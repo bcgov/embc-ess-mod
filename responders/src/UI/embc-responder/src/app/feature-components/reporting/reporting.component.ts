@@ -1,14 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Observable, timer } from 'rxjs';
-import {
-  delayWhen,
-  map,
-  retryWhen,
-  startWith,
-  switchMap,
-  tap
-} from 'rxjs/operators';
+import { Observable, Subscription, timer } from 'rxjs';
+import { map, retry, startWith, switchMap } from 'rxjs/operators';
 import { ReportsService } from 'src/app/core/api/services';
 import { ReportParams } from 'src/app/core/models/report-params.model';
 import {
@@ -26,7 +19,7 @@ import { padFileIdForSearch } from '../../core/services/helper/search.formatter'
   templateUrl: './reporting.component.html',
   styleUrls: ['./reporting.component.scss']
 })
-export class ReportingComponent implements OnInit {
+export class ReportingComponent implements OnInit, OnDestroy {
   reportForm: UntypedFormGroup;
   showErrorMessage = false;
   color = '#FFFFFF';
@@ -35,6 +28,9 @@ export class ReportingComponent implements OnInit {
   cityTo: Community[] = [];
   filteredOptionsEvacFrom: Observable<Community[]>;
   filteredOptionsEvacTo: Observable<Community[]>;
+
+  private evacueeReportPoll$: Subscription;
+  private supportReportPoll$: Subscription;
 
   constructor(
     private builder: UntypedFormBuilder,
@@ -63,6 +59,14 @@ export class ReportingComponent implements OnInit {
         map((value) => (value ? this.filterTo(value) : this.cityTo.slice()))
       );
   }
+  ngOnDestroy(): void {
+    if (this.evacueeReportPoll$) {
+      this.evacueeReportPoll$.unsubscribe();
+    }
+    if (this.supportReportPoll$) {
+      this.supportReportPoll$.unsubscribe();
+    }
+  }
 
   evacueeReport(): void {
     if (!this.reportForm.valid) {
@@ -70,20 +74,14 @@ export class ReportingComponent implements OnInit {
     } else {
       this.showErrorMessage = false;
       this.isLoading = !this.isLoading;
-      this.reportService
+      this.evacueeReportPoll$ = this.reportService
         .reportsCreateEvacueeReport(this.getDataFromForm())
         .pipe(
           switchMap((reportId) =>
             this.reportService
               .reportsGetEvacueeReport({ reportRequestId: reportId })
-              .pipe(
-                retryWhen((errors) =>
-                  errors.pipe(
-                    tap((e) => console.error(e)),
-                    delayWhen((_) => timer(5000))
-                  )
-                )
-              )
+              // try to get the report for 5 minutes
+              .pipe(retry({ delay: 6000, count: 50 }))
           )
         )
         .subscribe({
@@ -94,7 +92,8 @@ export class ReportingComponent implements OnInit {
             );
             this.isLoading = !this.isLoading;
           },
-          error: (error) => {
+          error: (_) => {
+            console.error('Evacuees report was not ready on time');
             this.isLoading = !this.isLoading;
             this.alertService.clearAlert();
             this.alertService.setAlert(
@@ -123,20 +122,14 @@ export class ReportingComponent implements OnInit {
     } else {
       this.showErrorMessage = false;
       this.isLoading = !this.isLoading;
-      this.reportService
+      this.supportReportPoll$ = this.reportService
         .reportsCreateSupportReport(this.getDataFromForm())
         .pipe(
           switchMap((reportId) =>
             this.reportService
               .reportsGetSupportReport({ reportRequestId: reportId })
-              .pipe(
-                retryWhen((errors) =>
-                  errors.pipe(
-                    tap((e) => console.error(e)),
-                    delayWhen((_) => timer(5000))
-                  )
-                )
-              )
+              // try to get the report for 5 minutes
+              .pipe(retry({ delay: 6000, count: 50 }))
           )
         )
         .subscribe({
@@ -147,7 +140,8 @@ export class ReportingComponent implements OnInit {
             );
             this.isLoading = !this.isLoading;
           },
-          error: (error) => {
+          error: (_) => {
+            console.error('Evacuees report was not ready on time');
             this.isLoading = !this.isLoading;
             this.alertService.clearAlert();
             this.alertService.setAlert(
