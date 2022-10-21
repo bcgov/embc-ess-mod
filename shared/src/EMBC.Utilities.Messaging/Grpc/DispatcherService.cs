@@ -42,7 +42,7 @@ namespace EMBC.Utilities.Messaging.Grpc
             var ct = context.CancellationToken;
             if (requestType.IsAssignableTo(typeof(Event)))
             {
-                Parallel.ForEach(handlers, handler => _ = ThreadPool.QueueUserWorkItem(state => DispatchHandler(handler, request, message, serviceProvider.CreateScope().ServiceProvider, ct).RunSynchronously()));
+                Parallel.ForEach(handlers, handler => _ = ThreadPool.QueueUserWorkItem(state => DispatchHandler(handler, request, message, serviceProvider.CreateScope().ServiceProvider, ct).GetAwaiter().GetResult()));
                 return CreateReply(request, null);
             }
             else
