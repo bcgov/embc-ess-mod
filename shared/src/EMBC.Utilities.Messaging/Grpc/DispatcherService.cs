@@ -42,8 +42,7 @@ namespace EMBC.Utilities.Messaging.Grpc
             var ct = context.CancellationToken;
             if (requestType.IsAssignableTo(typeof(Event)))
             {
-                await Parallel.ForEachAsync(handlers, ct, async (handler, ct) => await DispatchHandler(handler, request, message, serviceProvider, ct));
-
+                Parallel.ForEach(handlers, handler => _ = DispatchHandler(handler, request, message, serviceProvider.CreateScope().ServiceProvider, ct));
                 return CreateReply(request, null);
             }
             else
@@ -71,7 +70,7 @@ namespace EMBC.Utilities.Messaging.Grpc
                 sw.Stop();
                 var reply = CreateErrorReply(request, e);
 
-                logger.LogError("GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms: {error}", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds, reply.ErrorMessage);
+                logger.LogError(e, "GRPC Dispatch request {requestId} {requestType} responded {status} in {elapsed} ms: {error}", request.CorrelationId, request.Type, "ERROR", sw.Elapsed.TotalMilliseconds, reply.ErrorMessage);
                 return reply;
             }
         }

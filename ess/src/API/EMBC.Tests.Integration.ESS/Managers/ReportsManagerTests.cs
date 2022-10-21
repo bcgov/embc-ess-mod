@@ -29,10 +29,25 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             reportId.ShouldNotBeEmpty();
 
-            var report = await messagingClient.Send(new EvacueeReportQuery { ReportRequestId = reportId });
+            var success = false;
+            for (int attempt = 0; attempt < 30; attempt++)
+            {
+                try
+                {
+                    var report = await messagingClient.Send(new EvacueeReportQuery { ReportRequestId = reportId });
+                    report.ShouldNotBeNull().Content.ShouldNotBeEmpty();
+                    report.ContentType.ShouldBe("text/csv");
+                    success = true;
 
-            report.ShouldNotBeNull().Content.ShouldNotBeEmpty();
-            report.ContentType.ShouldBe("text/csv");
+                    break;
+                }
+                catch (ServerException e)
+                {
+                    output.WriteLine(e.Message);
+                    await Task.Delay(1000);
+                }
+            }
+            success.ShouldBeTrue();
         }
 
         [Fact]
@@ -48,11 +63,25 @@ namespace EMBC.Tests.Integration.ESS.Managers
             });
 
             reportId.ShouldNotBeEmpty();
+            var success = false;
+            for (int attempt = 0; attempt < 30; attempt++)
+            {
+                try
+                {
+                    var report = await messagingClient.Send(new SupportReportQuery { ReportRequestId = reportId });
+                    report.ShouldNotBeNull().Content.ShouldNotBeEmpty();
+                    report.ContentType.ShouldBe("text/csv");
+                    success = true;
 
-            var report = await messagingClient.Send(new SupportReportQuery { ReportRequestId = reportId });
-
-            report.ShouldNotBeNull().Content.ShouldNotBeEmpty();
-            report.ContentType.ShouldBe("text/csv");
+                    break;
+                }
+                catch (ServerException e)
+                {
+                    output.WriteLine(e.Message);
+                    await Task.Delay(1000);
+                }
+            }
+            success.ShouldBeTrue();
         }
     }
 }
