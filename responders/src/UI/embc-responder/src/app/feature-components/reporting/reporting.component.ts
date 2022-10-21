@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, timer } from 'rxjs';
+import { delayWhen, map, retryWhen, startWith, switchMap, tap } from 'rxjs/operators';
 import { ReportsService } from 'src/app/core/api/services';
 import { ReportParams } from 'src/app/core/models/report-params.model';
 import {
@@ -35,7 +35,7 @@ export class ReportingComponent implements OnInit {
     private alertService: AlertService,
     private locationService: LocationsService,
     private customValidation: CustomValidationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.createReportingForm();
@@ -65,18 +65,20 @@ export class ReportingComponent implements OnInit {
       this.isLoading = !this.isLoading;
       this.reportService
         .reportsCreateEvacueeReport(this.getDataFromForm())
+        .pipe(
+          switchMap(reportId =>
+            this.reportService.reportsGetEvacueeReport({ reportRequestId: reportId })
+              .pipe(
+                retryWhen(errors => errors.pipe(
+                  tap(e => console.error(e)),
+                  delayWhen(_ => timer(5000))
+                ))
+              )
+          )
+        )
         .subscribe({
-          next: (reportResponse) => {
-            // Downloading a csv document:
-            const blob = new Blob([reportResponse], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.download =
-              'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
-            anchor.href = url;
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
+          next: reportResponse => {
+            this.downloadFile(reportResponse, 'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (error) => {
@@ -91,6 +93,17 @@ export class ReportingComponent implements OnInit {
     }
   }
 
+  private downloadFile(file: Blob, fileName: string): void {
+    const blob = new Blob([file], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.download = fileName;
+    anchor.href = url;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }
+
   supportReport(): void {
     if (!this.reportForm.valid) {
       this.showErrorMessage = true;
@@ -99,18 +112,20 @@ export class ReportingComponent implements OnInit {
       this.isLoading = !this.isLoading;
       this.reportService
         .reportsCreateSupportReport(this.getDataFromForm())
+        .pipe(
+          switchMap(reportId =>
+            this.reportService.reportsGetSupportReport({ reportRequestId: reportId })
+              .pipe(
+                retryWhen(errors => errors.pipe(
+                  tap(e => console.error(e)),
+                  delayWhen(_ => timer(5000))
+                ))
+              )
+          )
+        )
         .subscribe({
           next: (reportResponse) => {
-            // Downloading a csv document:
-            const blob = new Blob([reportResponse], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.download =
-              'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
-            anchor.href = url;
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
+            this.downloadFile(reportResponse, 'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv');
             this.isLoading = !this.isLoading;
           },
           error: (error) => {
