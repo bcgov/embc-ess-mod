@@ -79,7 +79,7 @@ namespace EMBC.ESS.Resources.Suppliers
             foreach (var ts in supplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
                 ts.era_active = cmd.Supplier.Status == SupplierStatus.Active;
-                ts.era_isprimarysupplier = cmd.Supplier.Team?.Id != null && ts._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id);
+                ts.era_isprimarysupplier = cmd.Supplier.PrimaryTeams.Any(t => ts._era_essteamid_value == Guid.Parse(t.Id));
             }
 
             AddTeamSuppliers(essContext, existingSupplier, supplier);
@@ -235,7 +235,7 @@ namespace EMBC.ESS.Resources.Suppliers
 
             foreach (var ts1 in existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
-                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value);
+                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.FirstOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value);
                 if (currentTeamSupplier == null)
                 {
                     essContext.DeleteObject(ts1);
