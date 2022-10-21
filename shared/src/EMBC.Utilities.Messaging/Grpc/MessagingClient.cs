@@ -1,17 +1,9 @@
 ﻿using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.Utilities.Telemetry;
-using Microsoft.Extensions.Logging;
 
-namespace EMBC.Utilities.Messaging
+namespace EMBC.Utilities.Messaging.Grpc
 {
-    public interface IMessagingClient
-    {
-        Task<TResponse?> Send<TResponse>(Query<TResponse> command);
-
-        Task<string?> Send(Command command);
-    }
-
     internal class MessagingClient : IMessagingClient
     {
         private readonly Dispatcher.DispatcherClient dispatcherClient;
@@ -21,6 +13,13 @@ namespace EMBC.Utilities.Messaging
         {
             this.dispatcherClient = dispatcherClient;
             this.telemetryProvider = telemetryProvider;
+        }
+
+        public async Task Publish(Event evt)
+        {
+            var logger = telemetryProvider.Get<MessagingClient>();
+            logger.LogDebug("Publishing event {0}", evt.GetType().FullName);
+            await dispatcherClient.DispatchAsync<string>(evt);
         }
 
         public async Task<string?> Send(Command command)

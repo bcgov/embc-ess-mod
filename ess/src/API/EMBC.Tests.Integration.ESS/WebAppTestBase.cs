@@ -29,6 +29,8 @@ namespace EMBC.Tests.Integration.ESS
             {
                 services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy), typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
                 services.AddSingleton<EMBC.ESS.Utilities.Cas.IWebProxy, MockCasProxy>();
+                //override grpc client configuration to make it work in the test web server
+                services.AddGrpcClient<Utilities.Messaging.Grpc.Dispatcher.DispatcherClient>().ConfigurePrimaryHttpMessageHandler(() => this.Server.CreateHandler());
             });
         }
     }
@@ -48,7 +50,7 @@ namespace EMBC.Tests.Integration.ESS
                builder.UseSerilog((ctx, cfg) =>
                {
                    cfg
-                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Information)
+                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
                     .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
                });

@@ -9,7 +9,7 @@ namespace EMBC.ESS.Managers.Admin
         public void ConfigureServices(ConfigurationServices configurationServices)
         {
             configurationServices.Services.AddTransient<AdminManager>();
-            configurationServices.Services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(AdminManager)));
+            configurationServices.Services.Configure<HandlerRegistry>(opts => opts.AddAllHandlersFrom(typeof(AdminManager)));
         }
     }
 }
