@@ -91,8 +91,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                     support.Status.ShouldBe(SupportStatus.PendingApproval);
                 }
                 support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
-                support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
-                support.IssuedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
+                support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow.AddSeconds(2));
+                support.IssuedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow.AddSeconds(2));
                 support.IssuedBy.ShouldNotBeNull().Id.ShouldBe(TestData.Tier4TeamMemberId);
                 support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
             }
@@ -275,7 +275,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                     }
                 }
                 support.CreatedBy.Id.ShouldBe(TestData.Tier4TeamMemberId);
-                support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow);
+                support.CreatedOn.ShouldNotBeNull().ShouldBeInRange(DateTime.UtcNow.AddSeconds(-30), DateTime.UtcNow.AddSeconds(2));
                 support.IssuedBy.ShouldNotBeNull().DisplayName.ShouldBe(sourceSupport.IssuedBy.DisplayName);
                 support.IssuedOn.ShouldNotBeNull().ShouldBe(sourceSupport.IssuedOn.ShouldNotBeNull());
                 support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
