@@ -343,7 +343,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
 
-            if (testSupplier.PrimaryTeams == null)
+            if (!testSupplier.PrimaryTeams.Any())
             {
                 await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });
                 testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
@@ -449,7 +449,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var supplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
 
-            if (supplier.PrimaryTeams == null)
+            if (!supplier.PrimaryTeams.Any())
             {
                 await manager.Handle(new ClaimSupplierCommand { SupplierId = supplier.Id, TeamId = TestData.OtherTeamId });
             }
@@ -467,7 +467,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
 
-            if (testSupplier.PrimaryTeams != null)
+            if (testSupplier.PrimaryTeams.Any())
             {
                 testSupplier.PrimaryTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Teams.SupplierTeam>();
                 testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Teams.SupplierTeam>();
@@ -476,6 +476,29 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
 
                 updatedSupplier.PrimaryTeams.ShouldBeEmpty();
+            }
+
+            await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });
+
+            var twiceUpdatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+
+            twiceUpdatedSupplier.PrimaryTeams.ShouldContain(t => t.Id == TestData.TeamId);
+        }
+
+        [Fact]
+        public async Task Claim_OtherTeamPrimarySupplier_ReturnsSupplierId()
+        {
+            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
+
+            if (testSupplier.PrimaryTeams.Any(t => t.Id == TestData.TeamId))
+            {
+                testSupplier.PrimaryTeams = testSupplier.PrimaryTeams.Where(t => t.Id != TestData.TeamId);
+                testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Teams.SupplierTeam>();
+
+                await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
+
+                updatedSupplier.PrimaryTeams.ShouldNotContain(t => t.Id == TestData.TeamId);
             }
 
             await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });

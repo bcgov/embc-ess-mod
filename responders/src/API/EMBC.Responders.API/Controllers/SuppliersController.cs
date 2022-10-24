@@ -85,11 +85,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SupplierResult>> CreateSupplier([FromBody] Supplier supplier)
         {
-            if (supplier.PrimaryTeams == null)
-            {
-                supplier.PrimaryTeams = new[] { new SupplierTeamDetails() };
-            }
-            supplier.PrimaryTeams.FirstOrDefault().Id = teamId;
+            supplier.PrimaryTeams = new[] { new SupplierTeamDetails { Id = teamId } };
             var id = await messagingClient.Send(new SaveSupplierCommand
             {
                 Supplier = mapper.Map<ESS.Shared.Contracts.Teams.Supplier>(supplier),
@@ -259,7 +255,7 @@ namespace EMBC.Responders.API.Controllers
         public string GSTNumber { get; set; }
         public Address Address { get; set; } = null!;
         public SupplierContact Contact { get; set; } = null!;
-        public IEnumerable<SupplierTeamDetails> PrimaryTeams { get; set; }
+        public IEnumerable<SupplierTeamDetails> PrimaryTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
         public IEnumerable<SupplierTeamDetails> SharedWithTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
         public SupplierStatus Status { get; set; }
     }

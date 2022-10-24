@@ -32,7 +32,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .AfterMap((s, d) =>
                 {
                     var responsibleTeams = s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier == true);
-                    if (responsibleTeams == null)
+                    if (!responsibleTeams.Any())
                         d.Status = SupplierStatus.NotSet;
                     else
                         d.Status = responsibleTeams.Any(t => t.era_active == true) ? SupplierStatus.Active : SupplierStatus.Inactive;
