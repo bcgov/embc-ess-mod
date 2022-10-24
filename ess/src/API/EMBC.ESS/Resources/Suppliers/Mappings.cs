@@ -27,15 +27,15 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForPath(d => d.Contact.LastName, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_lastname : null))
                 .ForPath(d => d.Contact.Phone, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_contactnumber : null))
                 .ForPath(d => d.Contact.Email, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.emailaddress : null))
-                .ForMember(d => d.Team, opts => opts.MapFrom(s => s.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts => ts.era_isprimarysupplier == true)))
+                .ForMember(d => d.PrimaryTeams, opts => opts.MapFrom(s => s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier == true)))
                 .ForMember(d => d.SharedWithTeams, opts => opts.MapFrom(s => s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier != true)))
                 .AfterMap((s, d) =>
                 {
-                    var responsibleTeam = s.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts => ts.era_isprimarysupplier == true);
-                    if (responsibleTeam == null)
+                    var responsibleTeams = s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier == true);
+                    if (!responsibleTeams.Any())
                         d.Status = SupplierStatus.NotSet;
                     else
-                        d.Status = responsibleTeam.era_active == true ? SupplierStatus.Active : SupplierStatus.Inactive;
+                        d.Status = responsibleTeams.Any(t => t.era_active == true) ? SupplierStatus.Active : SupplierStatus.Inactive;
                 })
                 .ReverseMap()
                 .ForMember(d => d.era_supplierid, opts => opts.MapFrom(s => s.Id))
@@ -46,7 +46,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.Address.AddressLine2))
                 .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.Address.PostalCode))
                 .ForMember(d => d._era_primarycontact_value, opts => opts.MapFrom(s => s.Contact.Id))
-                .ForMember(d => d.era_era_supplier_era_essteamsupplier_SupplierId, opts => opts.MapFrom(s => s.Team != null ? s.SharedWithTeams.Concat(new[] { s.Team }) : s.SharedWithTeams))
+                .ForMember(d => d.era_era_supplier_era_essteamsupplier_SupplierId, opts => opts.MapFrom(s => s.SharedWithTeams.Concat(s.PrimaryTeams)))
                 ;
 
             CreateMap<era_suppliercontact, SupplierContact>()

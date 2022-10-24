@@ -196,7 +196,7 @@ namespace EMBC.ESS.Managers.Teams
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
 
-            if (supplier.Team != null && supplier.Team.Id != null) supplier.Team.Id = null;
+            if (supplier.PrimaryTeams != null) supplier.PrimaryTeams = Array.Empty<Resources.Suppliers.Team>();
             supplier.SharedWithTeams = Array.Empty<Resources.Suppliers.Team>();
             var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
 
@@ -238,9 +238,8 @@ namespace EMBC.ESS.Managers.Teams
                 SupplierId = cmd.SupplierId,
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
-            if (supplier.Team != null && supplier.Team.Id != null) throw new BusinessLogicException($"Supplier already has a primary team");
 
-            supplier.Team = new Resources.Suppliers.Team { Id = cmd.TeamId };
+            supplier.PrimaryTeams = supplier.PrimaryTeams.Concat(new[] { new Resources.Suppliers.Team { Id = cmd.TeamId } });
             supplier.Status = Resources.Suppliers.SupplierStatus.Active;
             var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
 
@@ -254,7 +253,7 @@ namespace EMBC.ESS.Managers.Teams
                 SupplierId = cmd.SupplierId,
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
-            if (supplier.Team.Id == cmd.TeamId) throw new BusinessLogicException("Can not share with primary team");
+            if (supplier.PrimaryTeams.Any(t => t.Id == cmd.TeamId)) throw new BusinessLogicException("Can not share with primary team");
             if (supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new BusinessLogicException("Already shared with this team");
 
             var team = new Resources.Suppliers.Team { Id = cmd.TeamId };
@@ -271,7 +270,7 @@ namespace EMBC.ESS.Managers.Teams
                 SupplierId = cmd.SupplierId,
             })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
             if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
-            if (supplier.Team?.Id == cmd.TeamId) throw new BusinessLogicException("Can not remove primary team");
+            if (supplier.PrimaryTeams.Any(t => t.Id == cmd.TeamId)) throw new BusinessLogicException("Can not remove primary team");
             if (!supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new BusinessLogicException("Not shared with this team");
 
             supplier.SharedWithTeams = supplier.SharedWithTeams.Where(t => t.Id != cmd.TeamId);
