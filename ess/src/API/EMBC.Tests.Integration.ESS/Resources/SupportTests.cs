@@ -90,7 +90,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 support.To.ShouldBe(sourceSupport.To);
                 support.CreatedByTeamMemberId.ShouldBe(sourceSupport.CreatedByTeamMemberId);
                 support.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
-                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-5), DateTime.UtcNow);
+                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-5), DateTime.UtcNow.AddSeconds(2));
                 support.IssuedOn.ShouldBe(support.CreatedOn);
 
                 if (sourceSupport.SupportDelivery is Referral sourceReferral)
@@ -198,7 +198,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 referral.SupplierId.ShouldBe(sourceReferral.SupplierId);
                 referral.ManualReferralId.ShouldNotBeNull().ShouldBe(sourceReferral.ManualReferralId);
                 referral.IssuedByDisplayName.ShouldNotBeNull().ShouldBe(sourceReferral.IssuedByDisplayName);
-                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-10), DateTime.UtcNow);
+                support.CreatedOn.ShouldBeInRange(now.AddSeconds(-10), DateTime.UtcNow.AddSeconds(2));
                 support.IssuedOn.ShouldBe(sourceSupport.IssuedOn);
             }
         }

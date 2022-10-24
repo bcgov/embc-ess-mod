@@ -420,6 +420,17 @@ export class SubmissionComponent implements OnInit {
             this.supplierForm.get('supplierSubmissionType').setValue('receipt');
           }
         });
+
+        modalRef.result.then(
+          () => {
+            //When user closes modal
+            this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+          },
+          () => {
+            //On backdrop click
+            this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+          }
+        );
       } else {
         this.injectInvoiceTemplate();
       }
@@ -436,6 +447,17 @@ export class SubmissionComponent implements OnInit {
             this.supplierForm.get('supplierSubmissionType').setValue('invoice');
           }
         });
+
+        modalRef.result.then(
+          () => {
+            //When user closes modal
+            this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+          },
+          () => {
+            //On backdrop click
+            this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+          }
+        );
       } else {
         this.injectReceiptTemplate();
       }
