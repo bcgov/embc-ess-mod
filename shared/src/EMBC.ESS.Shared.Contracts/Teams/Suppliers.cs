@@ -65,8 +65,8 @@ namespace EMBC.ESS.Shared.Contracts.Teams
         public bool Verified { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
-        public IEnumerable<SupplierTeam> PrimaryTeams { get; set; }
-        public IEnumerable<SupplierTeam> SharedWithTeams { get; set; }
+        public IEnumerable<SupplierTeam> PrimaryTeams { get; set; } = Array.Empty<SupplierTeam>();
+        public IEnumerable<SupplierTeam> SharedWithTeams { get; set; } = Array.Empty<SupplierTeam>();
         public SupplierStatus Status { get; set; }
     }
 
