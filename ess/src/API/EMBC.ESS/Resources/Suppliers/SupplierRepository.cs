@@ -235,7 +235,7 @@ namespace EMBC.ESS.Resources.Suppliers
 
             foreach (var ts1 in existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
-                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.FirstOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value);
+                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value);
                 if (currentTeamSupplier == null)
                 {
                     essContext.DeleteObject(ts1);

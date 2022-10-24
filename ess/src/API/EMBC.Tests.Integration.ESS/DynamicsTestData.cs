@@ -423,7 +423,7 @@ namespace EMBC.Tests.Integration.ESS
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCountry), canada);
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedProvinceState), bc);
 
-            if (assignedTeam != null) AssignSupplierToTeam(essContext, supplier, testTeam);
+            if (assignedTeam != null) AssignSupplierToTeam(essContext, supplier, assignedTeam);
 
             return supplier;
         }
