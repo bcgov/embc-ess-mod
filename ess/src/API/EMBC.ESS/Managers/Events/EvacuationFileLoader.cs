@@ -98,8 +98,6 @@ namespace EMBC.ESS.Managers.Events
                     referral.SupplierDetails.Name = supplier.Name;
                     referral.SupplierDetails.LegalName = supplier.LegalName;
                     referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Events.Address>(supplier.Address);
-                    referral.SupplierDetails.TeamId = supplier.Team?.Id;
-                    referral.SupplierDetails.TeamName = supplier.Team?.Name;
                     referral.SupplierDetails.Phone = supplier.Contact.Phone;
                 }
             }

@@ -55,7 +55,7 @@ namespace EMBC.ESS.Resources.Suppliers
         public bool Verified { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
-        public Team Team { get; set; }
+        public IEnumerable<Team> PrimaryTeams { get; set; }
         public IEnumerable<Team> SharedWithTeams { get; set; }
         public SupplierStatus Status { get; set; }
     }

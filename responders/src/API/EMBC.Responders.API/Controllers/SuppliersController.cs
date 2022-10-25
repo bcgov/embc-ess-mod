@@ -85,11 +85,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SupplierResult>> CreateSupplier([FromBody] Supplier supplier)
         {
-            if (supplier.Team == null)
-            {
-                supplier.Team = new SupplierTeamDetails();
-            }
-            supplier.Team.Id = teamId;
+            supplier.PrimaryTeams = new[] { new SupplierTeamDetails { Id = teamId } };
             var id = await messagingClient.Send(new SaveSupplierCommand
             {
                 Supplier = mapper.Map<ESS.Shared.Contracts.Teams.Supplier>(supplier),
@@ -245,7 +241,7 @@ namespace EMBC.Responders.API.Controllers
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
-        public SupplierTeamDetails Team { get; set; }
+        public IEnumerable<SupplierTeamDetails> PrimaryTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
         public SupplierStatus Status { get; set; }
         public bool IsPrimarySupplier { get; set; }
         public bool ProvidesMutualAid { get; set; }
@@ -259,7 +255,7 @@ namespace EMBC.Responders.API.Controllers
         public string GSTNumber { get; set; }
         public Address Address { get; set; } = null!;
         public SupplierContact Contact { get; set; } = null!;
-        public SupplierTeamDetails? Team { get; set; }
+        public IEnumerable<SupplierTeamDetails> PrimaryTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
         public IEnumerable<SupplierTeamDetails> SharedWithTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
         public SupplierStatus Status { get; set; }
     }
@@ -301,8 +297,8 @@ namespace EMBC.Responders.API.Controllers
         {
             CreateMap<ESS.Shared.Contracts.Teams.Supplier, SupplierListItem>()
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Teams.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
-                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null && context.Options.Items["UserTeamId"].Equals(s.Team.Id)))
-                .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null && context.Options.Items["UserTeamId"].Equals(s.Team.Id) && s.SharedWithTeams.Any()))
+                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Items.ContainsKey("UserTeamId") && s.PrimaryTeams.Any(t => t.Id.Equals(context.Items["UserTeamId"]))))
+                .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Items.ContainsKey("UserTeamId") && s.PrimaryTeams.Any(t => t.Id.Equals(context.Items["UserTeamId"])) && s.SharedWithTeams.Any()))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Teams.Supplier, Supplier>()
