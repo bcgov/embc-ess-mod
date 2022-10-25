@@ -94,7 +94,7 @@ export class ReferralComponent implements OnInit {
     }
     if (this.supplierService.isReload) {
       this.loadWithExistingValues();
-    } else {
+    } else if (!this.referralRows?.controls?.length) {
       this.referralRows.push(this.createRowForm());
     }
     this.onChanges();
