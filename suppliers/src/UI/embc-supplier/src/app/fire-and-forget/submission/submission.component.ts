@@ -422,13 +422,17 @@ export class SubmissionComponent implements OnInit {
         });
 
         modalRef.result.then(
-          () => {
+          (res) => {
             //When user closes modal
-            this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+            if (res !== true) {
+              this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+            }
           },
-          () => {
+          (res) => {
             //On backdrop click
-            this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+            if (res !== true) {
+              this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+            }
           }
         );
       } else {
@@ -449,13 +453,15 @@ export class SubmissionComponent implements OnInit {
         });
 
         modalRef.result.then(
-          () => {
+          (res) => {
             //When user closes modal
-            this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+            if (res !== true)
+              this.supplierForm.get('supplierSubmissionType').setValue('invoice');
           },
-          () => {
+          (res) => {
             //On backdrop click
-            this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+            if (res !== true)
+              this.supplierForm.get('supplierSubmissionType').setValue('invoice');
           }
         );
       } else {
