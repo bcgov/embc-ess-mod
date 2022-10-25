@@ -14,6 +14,6 @@ export class ModalComponent {
 
   action(indicator: boolean) {
     this.clearIndicator.emit(indicator);
-    this.activeModal.close(true);
+    this.activeModal.close('action');
   }
 }

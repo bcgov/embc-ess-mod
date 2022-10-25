@@ -424,14 +424,18 @@ export class SubmissionComponent implements OnInit {
         modalRef.result.then(
           (res) => {
             //When user closes modal
-            if (res !== true) {
-              this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+            if (res !== 'action') {
+              this.supplierForm
+                .get('supplierSubmissionType')
+                .setValue('receipt');
             }
           },
           (res) => {
             //On backdrop click
-            if (res !== true) {
-              this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+            if (res !== 'action') {
+              this.supplierForm
+                .get('supplierSubmissionType')
+                .setValue('receipt');
             }
           }
         );
@@ -455,13 +459,17 @@ export class SubmissionComponent implements OnInit {
         modalRef.result.then(
           (res) => {
             //When user closes modal
-            if (res !== true)
-              this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+            if (res !== 'action')
+              this.supplierForm
+                .get('supplierSubmissionType')
+                .setValue('invoice');
           },
           (res) => {
             //On backdrop click
-            if (res !== true)
-              this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+            if (res !== 'action')
+              this.supplierForm
+                .get('supplierSubmissionType')
+                .setValue('invoice');
           }
         );
       } else {
