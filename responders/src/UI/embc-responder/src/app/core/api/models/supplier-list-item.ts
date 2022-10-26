@@ -10,7 +10,7 @@ export interface SupplierListItem {
   isPrimarySupplier?: boolean;
   legalName?: string;
   name?: string;
+  primaryTeams?: Array<SupplierTeamDetails>;
   providesMutualAid?: boolean;
   status?: SupplierStatus;
-  team?: SupplierTeamDetails;
 }

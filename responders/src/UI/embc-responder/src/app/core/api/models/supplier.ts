@@ -11,7 +11,7 @@ export interface Supplier {
   id?: null | string;
   legalName?: string;
   name?: null | string;
+  primaryTeams?: Array<SupplierTeamDetails>;
   sharedWithTeams?: Array<SupplierTeamDetails>;
   status?: SupplierStatus;
-  team?: null | SupplierTeamDetails;
 }
