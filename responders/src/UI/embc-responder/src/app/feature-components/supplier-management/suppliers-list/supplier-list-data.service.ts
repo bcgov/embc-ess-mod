@@ -161,7 +161,9 @@ export class SupplierListDataService {
 
     // Filtering the main ESS Team from the list
     filteredEssTeams = filteredEssTeams.filter((e) => {
-      return e.id !== this.selectedSupplier?.team?.id;
+      return this.selectedSupplier?.primaryTeams?.find(
+        (team) => e.id !== team?.id
+      );
     });
     return filteredEssTeams;
   }

@@ -35,7 +35,7 @@ export class EditSupplierService {
       name: this.editedSupplier.name,
       sharedWithTeams: this.editedSupplier.sharedWithTeams,
       status: this.editedSupplier.status,
-      team: this.editedSupplier.team
+      primaryTeams: this.editedSupplier.primaryTeams 
     };
   }
 }
