@@ -9,7 +9,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
     public class TeamRepositoryTests : DynamicsWebAppTestBase
     {
         private readonly ITeamRepository teamRepository;
-        private string teamId => TestData.TeamId;
+        private string teamId => TestData.Team1Id;
 
         public TeamRepositoryTests(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
