@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Debugging;
+using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
 using Serilog.Formatting.Elasticsearch;
 
@@ -15,6 +16,8 @@ namespace EMBC.Suppliers.API
 {
     public static class Program
     {
+        public const string LogOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}";
+
         public static void Main(string[] args)
         {
             SelfLog.Enable(Console.Error);
@@ -28,10 +31,17 @@ namespace EMBC.Suppliers.API
                      loggerConfiguration
                         .ReadFrom.Configuration(hostingContext.Configuration)
                         .Enrich.WithMachineName()
-                        .Enrich.WithProcessId()
-                        .Enrich.WithProcessName()
                         .Enrich.FromLogContext()
                         .Enrich.WithExceptionDetails()
+                        .Enrich.WithProperty("app", Environment.GetEnvironmentVariable("APP_NAME") ?? "EMBC.Suppliers.API")
+                        .Enrich.WithEnvironmentName()
+                        .Enrich.WithEnvironmentUserName()
+                        .Enrich.WithCorrelationId()
+                        .Enrich.WithCorrelationIdHeader()
+                        .Enrich.WithClientAgent()
+                        .Enrich.WithClientIp()
+                        .Enrich.WithSpan()
+                        .WriteTo.Console(outputTemplate: LogOutputTemplate)
                         ;
 
                      if (hostingContext.HostingEnvironment.IsDevelopment())
