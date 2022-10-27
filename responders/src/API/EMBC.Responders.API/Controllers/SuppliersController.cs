@@ -207,7 +207,8 @@ namespace EMBC.Responders.API.Controllers
             var reply = await messagingClient.Send(new ShareSupplierWithTeamCommand
             {
                 SupplierId = supplierId,
-                TeamId = sharedTeamId
+                TeamId = sharedTeamId,
+                SharingTeamId = teamId
             });
             return Ok(new SupplierResult { Id = reply });
         }
@@ -228,7 +229,8 @@ namespace EMBC.Responders.API.Controllers
             var reply = await messagingClient.Send(new UnshareSupplierWithTeamCommand
             {
                 SupplierId = supplierId,
-                TeamId = sharedTeamId
+                TeamId = sharedTeamId,
+                SharingTeamId = teamId
             });
             return Ok(new SupplierResult { Id = reply });
         }
@@ -256,7 +258,7 @@ namespace EMBC.Responders.API.Controllers
         public Address Address { get; set; } = null!;
         public SupplierContact Contact { get; set; } = null!;
         public IEnumerable<SupplierTeamDetails> PrimaryTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
-        public IEnumerable<SupplierTeamDetails> SharedWithTeams { get; set; } = Array.Empty<SupplierTeamDetails>();
+        public IEnumerable<MutualAid> MutualAids { get; set; } = Array.Empty<MutualAid>();
         public SupplierStatus Status { get; set; }
     }
 
@@ -264,7 +266,6 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public DateTime SharedWithDate { get; set; }
         public bool IsActive { get; set; } = true;
     }
 
@@ -291,6 +292,13 @@ namespace EMBC.Responders.API.Controllers
         Deactivated
     }
 
+    public class MutualAid
+    {
+        public string GivenByTeamId { get; set; }
+        public DateTime GivenOn { get; set; }
+        public SupplierTeam GivenToTeam { get; set; }
+    }
+
     public class SuppliersMapping : Profile
     {
         public SuppliersMapping()
@@ -298,7 +306,7 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<ESS.Shared.Contracts.Teams.Supplier, SupplierListItem>()
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Teams.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
                 .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Items.ContainsKey("UserTeamId") && s.PrimaryTeams.Any(t => t.Id.Equals(context.Items["UserTeamId"]))))
-                .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Items.ContainsKey("UserTeamId") && s.PrimaryTeams.Any(t => t.Id.Equals(context.Items["UserTeamId"])) && s.SharedWithTeams.Any()))
+                .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Items.ContainsKey("UserTeamId") && s.PrimaryTeams.Any(t => t.Id.Equals(context.Items["UserTeamId"])) && s.MutualAids.Any()))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Teams.Supplier, Supplier>()
@@ -334,6 +342,9 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<SupplierContact, ESS.Shared.Contracts.Teams.SupplierContact>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 ;
+
+            CreateMap<MutualAid, ESS.Shared.Contracts.Teams.MutualAid>();
+            CreateMap<ESS.Shared.Contracts.Teams.MutualAid, MutualAid>();
         }
     }
 }
