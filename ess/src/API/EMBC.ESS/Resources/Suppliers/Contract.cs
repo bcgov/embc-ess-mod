@@ -55,8 +55,8 @@ namespace EMBC.ESS.Resources.Suppliers
         public bool Verified { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
-        public IEnumerable<Team> PrimaryTeams { get; set; }
-        public IEnumerable<Team> SharedWithTeams { get; set; }
+        public IEnumerable<Team> PrimaryTeams { get; set; } = Array.Empty<Team>();
+        public IEnumerable<MutualAid> MutualAids { get; set; } = Array.Empty<MutualAid>();
         public SupplierStatus Status { get; set; }
     }
 
@@ -91,6 +91,12 @@ namespace EMBC.ESS.Resources.Suppliers
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public DateTime SharedWithDate { get; set; }
+    }
+
+    public class MutualAid
+    {
+        public string GivenByTeamId { get; set; }
+        public DateTime GivenOn { get; set; }
+        public Team GivenToTeam { get; set; }
     }
 }

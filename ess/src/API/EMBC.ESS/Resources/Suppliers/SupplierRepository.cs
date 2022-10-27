@@ -96,8 +96,8 @@ namespace EMBC.ESS.Resources.Suppliers
 
             var supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
-                //.Expand(s => s.era_ESSTeamID)
-                .Where(s => s.statecode == (int)EntityState.Active);
+                .Expand(s => s.era_ESSTeamID)
+                .Where(s => s.era_SupplierId != null && s.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(queryRequest.TeamId)) supplierQuery = supplierQuery.Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
             if (queryRequest.ActiveOnly) supplierQuery = supplierQuery.Where(s => s.era_active == true);
@@ -201,30 +201,45 @@ namespace EMBC.ESS.Resources.Suppliers
 
         private static void AddTeamSuppliers(EssContext essContext, era_supplier existingSupplier, era_supplier updatedSupplier)
         {
-            foreach (var ts1 in updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
+            foreach (var teamSupplier in updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
-                var team = essContext.era_essteams
-                        .Where(t => t.era_essteamid == ts1._era_essteamid_value).SingleOrDefault();
+                var sharedWithTeam = essContext.era_essteams.Where(t => t.era_essteamid == teamSupplier._era_essteamid_value).SingleOrDefault();
+                if (sharedWithTeam == null) throw new InvalidOperationException($"shared with team '{teamSupplier._era_essteamid_value}' not found");
 
-                if (team == null) continue;
+                var sharingTeam = essContext.era_essteams.Where(t => t.era_essteamid == teamSupplier._era_sharingteam_value).SingleOrDefault();
+                if (teamSupplier.era_isprimarysupplier == false && sharingTeam == null) throw new InvalidOperationException($"sharing team '{teamSupplier._era_sharingteam_value}' not found");
 
-                var currentTeamSupplier = existingSupplier != null ? existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value) : null;
+                var currentTeamSupplier = existingSupplier != null ? existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts => ts._era_essteamid_value == teamSupplier._era_essteamid_value) : null;
                 if (currentTeamSupplier == null)
                 {
-                    essContext.AddToera_essteamsuppliers(ts1);
-                    essContext.AddLink(updatedSupplier, nameof(updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId), ts1);
-                    essContext.SetLink(ts1, nameof(era_essteamsupplier.era_SupplierId), updatedSupplier);
+                    essContext.AddToera_essteamsuppliers(teamSupplier);
+                    essContext.AddLink(updatedSupplier, nameof(updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId), teamSupplier);
+                    essContext.SetLink(teamSupplier, nameof(era_essteamsupplier.era_SupplierId), updatedSupplier);
 
-                    essContext.AddLink(team, nameof(team.era_essteam_essteamsupplier_ESSTeamID), ts1);
-                    essContext.SetLink(ts1, nameof(era_essteamsupplier.era_ESSTeamID), team);
+                    essContext.AddLink(sharedWithTeam, nameof(sharedWithTeam.era_essteam_essteamsupplier_ESSTeamID), teamSupplier);
+                    essContext.SetLink(teamSupplier, nameof(era_essteamsupplier.era_ESSTeamID), sharedWithTeam);
+
+                    if (sharingTeam != null)
+                    {
+                        essContext.AddLink(sharingTeam, nameof(sharedWithTeam.era_essteam_era_essteamsupplier_SharingTeam), teamSupplier);
+                        essContext.SetLink(teamSupplier, nameof(era_essteamsupplier.era_SharingTeam), sharingTeam);
+                    }
                 }
                 else
                 {
-                    currentTeamSupplier.era_isprimarysupplier = ts1.era_isprimarysupplier;
-                    currentTeamSupplier.era_active = ts1.era_active;
+                    currentTeamSupplier.era_isprimarysupplier = teamSupplier.era_isprimarysupplier;
+                    currentTeamSupplier.era_active = teamSupplier.era_active;
                     essContext.UpdateObject(currentTeamSupplier);
                     essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_SupplierId), updatedSupplier);
-                    essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_ESSTeamID), team);
+
+                    essContext.AddLink(sharedWithTeam, nameof(sharedWithTeam.era_essteam_essteamsupplier_ESSTeamID), currentTeamSupplier);
+                    essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_ESSTeamID), sharedWithTeam);
+
+                    if (sharingTeam != null)
+                    {
+                        essContext.AddLink(sharingTeam, nameof(sharedWithTeam.era_essteam_era_essteamsupplier_SharingTeam), currentTeamSupplier);
+                        essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_SharingTeam), sharingTeam);
+                    }
                 }
             }
         }
@@ -235,8 +250,8 @@ namespace EMBC.ESS.Resources.Suppliers
 
             foreach (var ts1 in existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
-                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value);
-                if (currentTeamSupplier == null)
+                var existsInUpdatedSupplier = !updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.Any(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value);
+                if (existsInUpdatedSupplier)
                 {
                     essContext.DeleteObject(ts1);
                     essContext.DeleteLink(existingSupplier, nameof(existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId), ts1);
