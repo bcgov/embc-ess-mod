@@ -50,7 +50,6 @@ namespace EMBC.Suppliers.API
                      }
                      else
                      {
-                         loggerConfiguration.WriteTo.Console(formatter: new ElasticsearchJsonFormatter());
                          var splunkUrl = hostingContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
                          var splunkToken = hostingContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
                          if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
