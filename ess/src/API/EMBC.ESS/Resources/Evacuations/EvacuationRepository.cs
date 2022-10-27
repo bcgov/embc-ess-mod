@@ -305,9 +305,10 @@ namespace EMBC.ESS.Resources.Evacuations
                 file.era_era_evacuationfile_era_householdmember_EvacuationFileid = new Collection<era_householdmember>(
                     members.Where(m => m.era_Registrant == null || m.era_Registrant.statecode == (int)EntityState.Active).ToArray());
 
-                var naHouseholdMembers = await ctx.era_era_householdmember_era_needassessmentset
+                var naHouseholdMembers = (await ctx.era_era_householdmember_era_needassessmentset
                     .Where(m => m.era_needassessmentid == file._era_currentneedsassessmentid_value)
-                    .GetAllPagesAsync(ct);
+                    .GetAllPagesAsync(ct))
+                    .ToArray();
 
                 file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment = new Collection<era_householdmember>(
                     file.era_era_evacuationfile_era_householdmember_EvacuationFileid

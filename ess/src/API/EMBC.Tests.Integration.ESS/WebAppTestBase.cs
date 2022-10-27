@@ -18,7 +18,7 @@ namespace EMBC.Tests.Integration.ESS
             var host = new Utilities.Hosting.Host("ess-tests");
             return host.CreateHost("EMBC").ConfigureHostConfiguration(opts =>
             {
-                // add secerts from host assembly
+                // add secrets from host assembly
 #pragma warning disable S3885 // "Assembly.Load" should be used
                 opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), true, false);
 #pragma warning restore S3885 // "Assembly.Load" should be used
