@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -112,6 +113,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         public string filename { get; set; }
         public string subject { get; set; }
         public string activitysubject { get; set; }
-        public string body { get; set; }
+        public byte[] body { get; set; }
     }
 }
