@@ -35,7 +35,7 @@ export class SupplierListDataService {
     { label: 'Supplier Legal Name', ref: 'legalName' },
     { label: 'Supplier Name', ref: 'name' },
     { label: 'Address', ref: 'address' },
-    { label: 'Mutual Aid Provided by', ref: 'team' },
+    { label: 'Mutual Aid Provided by', ref: 'mutualAid' },
     { label: 'Status', ref: 'status' }
   ];
 
@@ -154,8 +154,8 @@ export class SupplierListDataService {
 
     // Filtering the ESS Teams that already has a mutual Aid relationship with this supplier
     filteredEssTeams = allEssTeamList.filter((e) => {
-      return !this.selectedSupplier.sharedWithTeams.find((item) => {
-        return item.id === e.id;
+      return !this.selectedSupplier.mutualAids.find((item) => {
+        return item.givenByTeamId === e.id;
       });
     });
 

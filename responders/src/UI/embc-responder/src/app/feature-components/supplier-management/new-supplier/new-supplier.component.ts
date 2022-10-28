@@ -154,6 +154,6 @@ export class NewSupplierComponent implements OnInit {
     this.addSupplierService.supplierAddress = this.newForm.get('address').value;
     this.addSupplierService.contact = this.newForm.get('primaryContact').value;
     this.addSupplierService.status = SupplierStatus.Active;
-    this.addSupplierService.sharedWithTeams = [];
+    this.addSupplierService.mutualAids = [];
   }
 }

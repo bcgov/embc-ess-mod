@@ -44,8 +44,8 @@
         <span *ngIf="column?.ref === 'providesMutualAid'">
           <span>{{ row[column?.ref] ? 'Yes' : 'No' }}</span>
         </span>
-        <span *ngIf="column?.ref === 'team'">
-          <span>{{ row[column?.ref]?.name }}</span>
+        <span *ngIf="column?.ref === 'mutualAid'">
+          <span>{{ row[column?.ref]?.givenToTeam?.name }}</span>
         </span>
         <span *ngIf="column?.ref === 'status'">
           <span *ngIf="showToggle; else status">
