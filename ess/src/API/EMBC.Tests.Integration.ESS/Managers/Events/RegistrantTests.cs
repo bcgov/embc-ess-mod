@@ -47,9 +47,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         {
             var registrant = await GetRegistrantByUserId(TestData.ContactUserId);
             var currentCommunity = registrant.PrimaryAddress.Community;
-            var newCommunity = currentCommunity == TestData.TeamCommunityId
+            var newCommunity = currentCommunity == TestData.Team1CommunityId
                 ? TestData.OtherCommunityId
-                : TestData.TeamCommunityId;
+                : TestData.Team1CommunityId;
 
             var currentCountry = registrant.PrimaryAddress.Country;
             string newCountry;
