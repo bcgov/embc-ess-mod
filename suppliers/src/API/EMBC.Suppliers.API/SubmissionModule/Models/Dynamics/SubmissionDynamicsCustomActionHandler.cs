@@ -50,8 +50,6 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             {
                 foreach (var submission in submissions)
                 {
-                    logger.LogDebug(JsonConvert.SerializeObject(submission));
-
                     dynamic result = await api.ExecuteAction("era_SubmitUnauthInvoices", submission);
 
                     if (!result.submissionFlag)
