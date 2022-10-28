@@ -46,12 +46,14 @@ namespace EMBC.ESS.Shared.Contracts.Teams
 
     public class ShareSupplierWithTeamCommand : Command
     {
+        public string SharingTeamId { get; set; }
         public string TeamId { get; set; }
         public string SupplierId { get; set; }
     }
 
     public class UnshareSupplierWithTeamCommand : Command
     {
+        public string SharingTeamId { get; set; }
         public string TeamId { get; set; }
         public string SupplierId { get; set; }
     }
@@ -66,7 +68,7 @@ namespace EMBC.ESS.Shared.Contracts.Teams
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
         public IEnumerable<SupplierTeam> PrimaryTeams { get; set; } = Array.Empty<SupplierTeam>();
-        public IEnumerable<SupplierTeam> SharedWithTeams { get; set; } = Array.Empty<SupplierTeam>();
+        public IEnumerable<MutualAid> MutualAids { get; set; } = Array.Empty<MutualAid>();
         public SupplierStatus Status { get; set; }
     }
 
@@ -101,6 +103,12 @@ namespace EMBC.ESS.Shared.Contracts.Teams
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public DateTime SharedWithDate { get; set; }
+    }
+
+    public class MutualAid
+    {
+        public string GivenByTeamId { get; set; }
+        public DateTime GivenOn { get; set; }
+        public SupplierTeam GivenToTeam { get; set; }
     }
 }
