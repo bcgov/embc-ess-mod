@@ -232,7 +232,6 @@ namespace EMBC.ESS.Resources.Suppliers
                     essContext.UpdateObject(currentTeamSupplier);
                     essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_SupplierId), updatedSupplier);
 
-                    essContext.AddLink(sharedWithTeam, nameof(sharedWithTeam.era_essteam_essteamsupplier_ESSTeamID), currentTeamSupplier);
                     essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_ESSTeamID), sharedWithTeam);
 
                     if (sharingTeam != null)
