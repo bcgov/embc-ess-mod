@@ -90,7 +90,7 @@ export class SupplierDetailComponent implements OnInit {
 
     // In case the selected supplier has associated mutual Aid Teams, the corresponding table is filled up with this information.
     this.mutualAidDataSource = new MatTableDataSource(
-      this.selectedSupplier?.sharedWithTeams
+      this.selectedSupplier?.mutualAids
     );
 
     // Gets the community List for mutual Aid Search by Community field
