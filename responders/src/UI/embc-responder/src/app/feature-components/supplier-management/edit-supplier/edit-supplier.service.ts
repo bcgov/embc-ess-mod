@@ -33,9 +33,9 @@ export class EditSupplierService {
       id: this.editedSupplier.id,
       legalName: this.editedSupplier.legalName,
       name: this.editedSupplier.name,
-      sharedWithTeams: this.editedSupplier.sharedWithTeams,
+      mutualAids: this.editedSupplier.mutualAids,
       status: this.editedSupplier.status,
-      team: this.editedSupplier.team
+      primaryTeams: this.editedSupplier.primaryTeams
     };
   }
 }

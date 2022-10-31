@@ -247,6 +247,7 @@ namespace EMBC.Responders.API.Controllers
         public SupplierStatus Status { get; set; }
         public bool IsPrimarySupplier { get; set; }
         public bool ProvidesMutualAid { get; set; }
+        public MutualAid MutualAid { get; set; }
     }
 
     public class Supplier
@@ -307,6 +308,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Teams.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
                 .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Items.ContainsKey("UserTeamId") && s.PrimaryTeams.Any(t => t.Id.Equals(context.Items["UserTeamId"]))))
                 .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Items.ContainsKey("UserTeamId") && s.PrimaryTeams.Any(t => t.Id.Equals(context.Items["UserTeamId"])) && s.MutualAids.Any()))
+                .ForMember(d => d.MutualAid, opts => opts.MapFrom((s, dst, arg, context) => s.MutualAids.SingleOrDefault(ma => context.Items.ContainsKey("UserTeamId") && ma.GivenToTeam.Equals(context.Items["UserTeamId"]))))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Teams.Supplier, Supplier>()

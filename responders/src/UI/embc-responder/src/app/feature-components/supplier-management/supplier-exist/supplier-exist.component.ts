@@ -17,7 +17,8 @@ export class SupplierExistComponent implements OnInit {
     'name',
     'gstNumber',
     'address',
-    'primaryTeam'
+    'primaryTeam',
+    'action'
   ];
   dataSource = new BehaviorSubject([]);
   constructor(
@@ -51,16 +52,16 @@ export class SupplierExistComponent implements OnInit {
   }
 
   /**
-   * Claims a supplier as a main supplier for responder's ESS Team
+   * Adds an existing supplier as a main supplier for responder's ESS Team
    *
    * @param $event the supplier object to be claimed as main supplier
    */
-  claimSupplier($event): void {
+  addSupplier($event): void {
     this.supplierService.getSupplierById($event.id).subscribe({
       next: (supplier) => {
         this.router.navigate(
           ['/responder-access/supplier-management/review-supplier'],
-          { state: { ...supplier }, queryParams: { action: 'claim' } }
+          { state: { ...supplier }, queryParams: { action: 'add-existing' } }
         );
       },
       error: (error) => {

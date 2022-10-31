@@ -56,6 +56,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
+      console.log(this.incomingData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     }
@@ -95,10 +96,10 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
             );
           case 'name':
             return compare(a.name.toLowerCase(), b.name.toLowerCase(), isAsc);
-          case 'team':
+          case 'mutualAid':
             return compare(
-              a.team?.name.toLowerCase(),
-              b.team?.name.toLowerCase(),
+              a.mutualAid?.givenToTeam?.name.toLowerCase(),
+              b.mutualAid?.givenToTeam?.name.toLowerCase(),
               isAsc
             );
           case 'status':
