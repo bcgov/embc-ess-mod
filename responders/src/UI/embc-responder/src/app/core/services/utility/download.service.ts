@@ -47,10 +47,14 @@ export class DownloadService {
             if (titleMatch) fileName = titleMatch[1];
             win.document.title = fileName;
             printWindow.contentWindow.print();
-            win.document.body.removeChild(printWindow);
 
-            win.document.title = originalTital;
-            resolve();
+            //on mobile, print is asynchronus, so if we don't delay before removing the iframe, we get a blank screen
+            //and unfortunately iframe afterprint event is also buggy on mobile
+            setTimeout(() => {
+              win.document.body.removeChild(printWindow);
+              win.document.title = originalTital;
+              resolve();
+            }, 1500);
           }, 300);
         })
         .catch((err) => {
