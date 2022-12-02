@@ -54,3 +54,42 @@ You can optionally pass in an iteration count for each vu to do instead of a set
 npm run benchmark --- -e VUS=#
 npm run benchmark --- -e VUS=# -e ITERS=#
 ```
+
+
+## Configuring test users
+
+Oauth server supports a special test-client configuration to allow automated tools like load test generators, security scanners, to obtain a token programmatically using 'resource owner password' OIDC flow.
+
+The test client is configured only for non production environments and requires a pre provisioned client id/secret to authenticate.
+
+The following commands will create a config map from a file, attach it as a volume to the pods, and set the env var that tells the server where to find the test users data file. 
+
+```cmd
+oc -n b5e079-dev create configmap oauth-server-test-users --from-file .\test-users.json
+oc -n b5e079-dev set volume deployment/dev-oauth-server-deployment --add --configmap-name oauth-server-test-users --mount-path /data
+oc -n b5e079-dev set env deployment/dev-oauth-server-deployment IDENTITYSERVER_TESTUSERS_FILE=/data/test-users.json
+```
+
+Test users can be generated using the following format:
+
+```[
+    {
+        "sub": "<unique id - i.e. same as username>",
+        "userName": "<username>",
+        "password": "<password>",
+        "aud": "<audience>",
+        "birthdate": "yyyy-mm-dd",
+        "address": {
+            "street_address": "<address>",
+            "country": "CA",
+            "formatted": "<address>\n<city>, BC  <postal code>",
+            "locality": "<city>",
+            "region": "BC",
+            "postal_code": "<postal code>"
+        },
+        "iss": "<issuer>",
+        "given_name": "<first name>",
+        "display_name": "<full name>",
+        "family_name": "<last name>"
+    },...]
+```
