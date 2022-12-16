@@ -65,9 +65,9 @@ The test client is configured only for non production environments and requires 
 The following commands will create a config map from a file, attach it as a volume to the pods, and set the env var that tells the server where to find the test users data file. 
 
 ```cmd
-oc -n b5e079-dev create configmap oauth-server-test-users --from-file .\test-users.json
-oc -n b5e079-dev set volume deployment/dev-oauth-server-deployment --add --configmap-name oauth-server-test-users --mount-path /data
-oc -n b5e079-dev set env deployment/dev-oauth-server-deployment IDENTITYSERVER_TESTUSERS_FILE=/data/test-users.json
+oc -n <repalcewith_licenseplate>-dev create configmap oauth-server-test-users --from-file .\test-users.json
+oc -n <repalcewith_licenseplate>-dev set volume deployment/dev-oauth-server-deployment --add --configmap-name oauth-server-test-users --mount-path /data
+oc -n <repalcewith_licenseplate>-dev set env deployment/dev-oauth-server-deployment IDENTITYSERVER_TESTUSERS_FILE=/data/test-users.json
 ```
 
 Test users can be generated using the following format:
