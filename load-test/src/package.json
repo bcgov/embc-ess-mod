@@ -12,7 +12,7 @@
     "@types/faker": "^5.5.9",
     "@types/k6": "~0.35.0",
     "@types/webpack": "5.28.0",
-    "babel-loader": "8.2.2",
+    "babel-loader": "8.3.0",
     "clean-webpack-plugin": "4.0.0-alpha.0",
     "copy-webpack-plugin": "^9.0.1",
     "faker": "5.5.3",
