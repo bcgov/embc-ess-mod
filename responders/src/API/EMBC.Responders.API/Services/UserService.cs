@@ -23,7 +23,7 @@ namespace EMBC.Responders.API.Services
         private readonly IHttpContextAccessor httpContext;
 
         private ClaimsPrincipal currentPrincipal => httpContext.HttpContext?.User;
-        private readonly Func<ClaimsPrincipal, string> getCurrentUserName = principal => principal.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
+        private readonly Func<ClaimsPrincipal, string> getCurrentUserName = principal => principal.FindFirstValue("bceid_username");
 
         private static Func<string, string> generateCacheKeyName = userName => $"_userprincipal_{userName}";
 
