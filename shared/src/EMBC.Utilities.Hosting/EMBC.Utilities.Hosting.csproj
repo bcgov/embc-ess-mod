@@ -21,11 +21,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
         <PackageReference Include="Cronos" Version="0.7.1" />
         <PackageReference Include="DistributedLock.Redis" Version="1.0.2" />
         <PackageReference Include="DistributedLock.WaitHandles" Version="1.0.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.48.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
         <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />

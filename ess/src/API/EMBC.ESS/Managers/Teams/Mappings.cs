@@ -46,6 +46,12 @@ namespace EMBC.ESS.Managers.Teams
 
             CreateMap<Shared.Contracts.Teams.Address, Resources.Suppliers.Address>()
                 ;
+
+            CreateMap<Shared.Contracts.Teams.MutualAid, Resources.Suppliers.MutualAid>()
+                 ;
+
+            CreateMap<Resources.Suppliers.MutualAid, Shared.Contracts.Teams.MutualAid>()
+                 ;
         }
     }
 }

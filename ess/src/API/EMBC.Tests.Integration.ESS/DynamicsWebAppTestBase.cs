@@ -23,7 +23,7 @@ namespace EMBC.Tests.Integration.ESS
     {
         public DynamicsTestData TestData { get; }
 
-        public DynamicsWebAppTestBase(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
+        protected DynamicsWebAppTestBase(ITestOutputHelper output, DynamicsWebAppFixture fixture) : base(output, fixture)
         {
             this.TestData = fixture.TestData;
         }

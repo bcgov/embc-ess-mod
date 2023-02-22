@@ -90,7 +90,7 @@ export class SupplierDetailComponent implements OnInit {
 
     // In case the selected supplier has associated mutual Aid Teams, the corresponding table is filled up with this information.
     this.mutualAidDataSource = new MatTableDataSource(
-      this.selectedSupplier?.sharedWithTeams
+      this.selectedSupplier?.mutualAids
     );
 
     // Gets the community List for mutual Aid Search by Community field
@@ -190,10 +190,24 @@ export class SupplierDetailComponent implements OnInit {
    * Navigates to edit team member component
    */
   editSupplier(): void {
-    this.editSupplierService.editedSupplier = this.selectedSupplier;
-    this.router.navigate([
-      '/responder-access/supplier-management/edit-supplier'
-    ]);
+    if (this.selectedSupplier.primaryTeams.length > 1) {
+      this.editNotAllowedDialog();
+    } else {
+      this.editSupplierService.editedSupplier = this.selectedSupplier;
+      this.router.navigate([
+        '/responder-access/supplier-management/edit-supplier'
+      ]);
+    }
+  }
+
+  editNotAllowedDialog() {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: globalConst.editExistingSupplierMessage
+      },
+      width: '600px'
+    });
   }
 
   /**

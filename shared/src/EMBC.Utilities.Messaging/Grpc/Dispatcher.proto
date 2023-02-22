@@ -1,0 +1,23 @@
+﻿syntax = "proto3";
+
+package EMBC.Utilities.Messaging.Grpc;
+
+message RequestEnvelope {
+    string CorrelationId = 1;
+    string Type = 10;
+    bytes Data = 11;
+}
+
+message ReplyEnvelope {
+    string CorrelationId = 1;
+    string Type = 10;
+    bytes Data = 11;
+    bool Empty = 12;
+    bool Error = 30;
+    string ErrorType = 31;
+    string ErrorMessage = 32;
+}
+
+service Dispatcher {
+    rpc Dispatch (RequestEnvelope) returns (ReplyEnvelope);
+}

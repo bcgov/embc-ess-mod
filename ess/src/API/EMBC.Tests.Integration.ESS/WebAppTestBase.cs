@@ -18,7 +18,7 @@ namespace EMBC.Tests.Integration.ESS
             var host = new Utilities.Hosting.Host("ess-tests");
             return host.CreateHost("EMBC").ConfigureHostConfiguration(opts =>
             {
-                // add secerts from host assembly
+                // add secrets from host assembly
 #pragma warning disable S3885 // "Assembly.Load" should be used
                 opts.AddUserSecrets(Assembly.LoadFile($"{Environment.CurrentDirectory}/EMBC.ESS.Host.dll"), true, false);
 #pragma warning restore S3885 // "Assembly.Load" should be used
@@ -29,6 +29,8 @@ namespace EMBC.Tests.Integration.ESS
             {
                 services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy), typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
                 services.AddSingleton<EMBC.ESS.Utilities.Cas.IWebProxy, MockCasProxy>();
+                //override grpc client configuration to make it work in the test web server
+                services.AddGrpcClient<Utilities.Messaging.Grpc.Dispatcher.DispatcherClient>().ConfigurePrimaryHttpMessageHandler(() => this.Server.CreateHandler());
             });
         }
     }
@@ -48,7 +50,7 @@ namespace EMBC.Tests.Integration.ESS
                builder.UseSerilog((ctx, cfg) =>
                {
                    cfg
-                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Information)
+                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
                     .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
                     .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
                });

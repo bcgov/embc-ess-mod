@@ -27,6 +27,16 @@ namespace EMBC.Responders.API.Controllers
         private readonly IUserService userService;
         private readonly ITelemetryReporter telemetryReporter;
 
+        private string GetCurrentUserName() => User.FindFirstValue("bceid_username");
+
+        private string GetCurrentUserId() => User.FindFirstValue("bceid_user_guid");
+
+        private string GetCurrentUserSourceSystem()
+        {
+            var identityProvider = User.FindFirstValue("identity_provider");
+            return identityProvider.StartsWith("bceid") ? "bceid" : identityProvider;
+        }
+
         public ProfileController(IMessagingClient messagingClient, IMapper mapper, IUserService userService, ITelemetryProvider telemetryProvider)
         {
             this.messagingClient = messagingClient;
@@ -44,9 +54,10 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<UserProfile>> GetCurrentUserProfile()
         {
-            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
-            var userId = User.FindFirstValue(ClaimTypes.Sid);
-            var sourceSystem = User.FindFirstValue("identity_source");
+            var userName = GetCurrentUserName();
+            var userId = GetCurrentUserId();
+
+            var sourceSystem = GetCurrentUserSourceSystem();
 
             // Get the current user
             var currentMember = await userService.GetTeamMember();
@@ -86,7 +97,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(UpdateUserProfileRequest request)
         {
-            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
+            var userName = GetCurrentUserName();
 
             // Get the current user
             var reply = await messagingClient.Send(new TeamMembersQuery { UserName = userName, IncludeActiveUsersOnly = false });
@@ -121,7 +132,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SignAgreement()
         {
-            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
+            var userName = GetCurrentUserName();
 
             // Get the current user
             var reply = await messagingClient.Send(new TeamMembersQuery { UserName = userName, IncludeActiveUsersOnly = true });
@@ -157,16 +168,16 @@ namespace EMBC.Responders.API.Controllers
         public bool RequiredToSignAgreement { get; set; }
         public DateTime? AgreementSignDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
     }
 
     public class UpdateUserProfileRequest
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
     }
 
     public class SecurityMapping : Profile

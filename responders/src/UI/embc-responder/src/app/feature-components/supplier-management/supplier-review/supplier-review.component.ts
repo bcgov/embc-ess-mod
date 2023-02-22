@@ -72,7 +72,7 @@ export class SupplierReviewComponent {
     }
   }
 
-  claim(): void {
+  addExisting(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.supplierService.claimSupplier(this.selectedSupplier.id).subscribe({

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, Subscription, timer } from 'rxjs';
+import { map, retry, startWith, switchMap } from 'rxjs/operators';
 import { ReportsService } from 'src/app/core/api/services';
 import { ReportParams } from 'src/app/core/models/report-params.model';
 import {
@@ -19,7 +19,7 @@ import { padFileIdForSearch } from '../../core/services/helper/search.formatter'
   templateUrl: './reporting.component.html',
   styleUrls: ['./reporting.component.scss']
 })
-export class ReportingComponent implements OnInit {
+export class ReportingComponent implements OnInit, OnDestroy {
   reportForm: UntypedFormGroup;
   showErrorMessage = false;
   color = '#FFFFFF';
@@ -28,6 +28,9 @@ export class ReportingComponent implements OnInit {
   cityTo: Community[] = [];
   filteredOptionsEvacFrom: Observable<Community[]>;
   filteredOptionsEvacTo: Observable<Community[]>;
+
+  private evacueeReportPoll$: Subscription;
+  private supportReportPoll$: Subscription;
 
   constructor(
     private builder: UntypedFormBuilder,
@@ -56,6 +59,14 @@ export class ReportingComponent implements OnInit {
         map((value) => (value ? this.filterTo(value) : this.cityTo.slice()))
       );
   }
+  ngOnDestroy(): void {
+    if (this.evacueeReportPoll$) {
+      this.evacueeReportPoll$.unsubscribe();
+    }
+    if (this.supportReportPoll$) {
+      this.supportReportPoll$.unsubscribe();
+    }
+  }
 
   evacueeReport(): void {
     if (!this.reportForm.valid) {
@@ -63,23 +74,26 @@ export class ReportingComponent implements OnInit {
     } else {
       this.showErrorMessage = false;
       this.isLoading = !this.isLoading;
-      this.reportService
-        .reportsGetEvacueeReport(this.getDataFromForm())
+      this.evacueeReportPoll$ = this.reportService
+        .reportsCreateEvacueeReport(this.getDataFromForm())
+        .pipe(
+          switchMap((reportId) =>
+            this.reportService
+              .reportsGetEvacueeReport({ reportRequestId: reportId })
+              // try to get the report for 5 minutes
+              .pipe(retry({ delay: 6000, count: 50 }))
+          )
+        )
         .subscribe({
           next: (reportResponse) => {
-            // Downloading a csv document:
-            const blob = new Blob([reportResponse], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.download =
-              'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
-            anchor.href = url;
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
+            this.downloadFile(
+              reportResponse,
+              'Evacuee_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv'
+            );
             this.isLoading = !this.isLoading;
           },
-          error: (error) => {
+          error: (_) => {
+            console.error('Evacuees report was not ready on time');
             this.isLoading = !this.isLoading;
             this.alertService.clearAlert();
             this.alertService.setAlert(
@@ -91,29 +105,43 @@ export class ReportingComponent implements OnInit {
     }
   }
 
+  downloadFile(file: Blob, fileName: string): void {
+    const blob = new Blob([file], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.download = fileName;
+    anchor.href = url;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }
+
   supportReport(): void {
     if (!this.reportForm.valid) {
       this.showErrorMessage = true;
     } else {
       this.showErrorMessage = false;
       this.isLoading = !this.isLoading;
-      this.reportService
-        .reportsGetSupportReport(this.getDataFromForm())
+      this.supportReportPoll$ = this.reportService
+        .reportsCreateSupportReport(this.getDataFromForm())
+        .pipe(
+          switchMap((reportId) =>
+            this.reportService
+              .reportsGetSupportReport({ reportRequestId: reportId })
+              // try to get the report for 5 minutes
+              .pipe(retry({ delay: 6000, count: 50 }))
+          )
+        )
         .subscribe({
           next: (reportResponse) => {
-            // Downloading a csv document:
-            const blob = new Blob([reportResponse], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.download =
-              'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv';
-            anchor.href = url;
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
+            this.downloadFile(
+              reportResponse,
+              'Support_Export_' + moment().format('YYYYMMDD_HHmmss') + '.csv'
+            );
             this.isLoading = !this.isLoading;
           },
-          error: (error) => {
+          error: (_) => {
+            console.error('Evacuees report was not ready on time');
             this.isLoading = !this.isLoading;
             this.alertService.clearAlert();
             this.alertService.setAlert(

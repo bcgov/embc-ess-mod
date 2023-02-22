@@ -57,9 +57,7 @@ All csproj files must have the following settings:
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <Nullable>enable</Nullable>
 
-.editorconfig and stylecop are used to enforce code style.
-
-*TBD: describe how to link .editorconfig and stylecop.json*
+.editorconfig and stylecop are used to enforce code style. and are linked to each project separately from the solution folder.
 
 ### Angular applications
 

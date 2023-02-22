@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
 using EMBC.Utilities.Configuration;
-using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -102,7 +101,6 @@ namespace EMBC.Responders.API
                 {
                     policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                         .RequireAuthenticatedUser()
-                        .RequireScope("responders-portal-api")
                         .RequireClaim("user_role")
                         .RequireClaim("user_team");
                 });

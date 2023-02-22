@@ -60,6 +60,7 @@ namespace EMBC.Responders.API.Controllers
                 {
                     ClientId = configuration.GetValue<string>("oidc:clientId"),
                     Issuer = configuration.GetValue<string>("oidc:issuer"),
+                    Scope = configuration.GetValue<string>("oidc:scope", OidcConfiguration.DefaultScopes),
                     PostLogoutRedirectUrl = $"{configuration.GetValue<string>("oidc:bceidLogoutUrl")}?retnow=1&returl={configuration.GetValue<string>("oidc:returnUrl", "https://ess.gov.bc.ca")}"
                 },
                 OutageInfo = mapper.Map<OutageInformation>(outageInfo),
@@ -174,10 +175,11 @@ namespace EMBC.Responders.API.Controllers
 
     public class OidcConfiguration
     {
+        public const string DefaultScopes = "openid profile email offline_access";
         public string Issuer { get; set; }
         public string ClientId { get; set; }
         public string PostLogoutRedirectUrl { get; set; }
-        public string Scope { get; set; } = "openid profile email offline_access responders-portal-api ess-backend";
+        public string Scope { get; set; } = DefaultScopes;
     }
 
     public class Code

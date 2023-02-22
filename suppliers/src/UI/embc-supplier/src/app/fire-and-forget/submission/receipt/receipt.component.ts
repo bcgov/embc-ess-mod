@@ -70,7 +70,7 @@ export class ReceiptComponent implements OnInit {
   ngOnInit() {
     if (this.supplierService.isReload) {
       this.loadWithExistingValues();
-    } else {
+    } else if (!this.referrals?.controls?.length) {
       this.addReferralTemplate();
     }
     this.onChanges();

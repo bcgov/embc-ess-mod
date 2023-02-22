@@ -128,5 +128,8 @@
       }
     }
   },
-  "defaultProject": "embc-responder"
+  "defaultProject": "embc-responder",
+  "cli": {
+    "analytics": false
+  }
 }

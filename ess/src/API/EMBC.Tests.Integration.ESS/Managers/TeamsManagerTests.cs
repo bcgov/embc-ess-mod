@@ -34,7 +34,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 LastSuccessfulLogin = now,
                 ExternalUserId = uniqueSignature + "-extid",
                 Phone = "1234",
-                TeamId = TestData.TeamId,
+                TeamId = TestData.Team1Id,
                 UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
@@ -42,10 +42,10 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             memberId.ShouldNotBeNull();
 
-            var existingMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId })).TeamMembers.ShouldHaveSingleItem();
+            var existingMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id, MemberId = memberId })).TeamMembers.ShouldHaveSingleItem();
 
             existingMember.Id.ShouldBe(memberId);
-            existingMember.TeamId.ShouldBe(TestData.TeamId);
+            existingMember.TeamId.ShouldBe(TestData.Team1Id);
             existingMember.TeamName.ShouldNotBeNull();
             existingMember.Email.ShouldBe(newMember.Email);
             existingMember.Phone.ShouldBe(newMember.Phone);
@@ -63,11 +63,11 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task CanActivateTeamMember()
         {
-            var memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id })).TeamMembers.First();
 
-            await manager.Handle(new ActivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id });
+            await manager.Handle(new ActivateTeamMemberCommand { TeamId = TestData.Team1Id, MemberId = memberToUpdate.Id });
 
-            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeTrue();
         }
 
@@ -90,7 +90,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 LastSuccessfulLogin = now,
                 ExternalUserId = "deactivate-extid",
                 Phone = "1234",
-                TeamId = TestData.TeamId,
+                TeamId = TestData.Team1Id,
                 UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
@@ -98,27 +98,27 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             memberId.ShouldNotBeNull();
 
-            await manager.Handle(new DeactivateTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
+            await manager.Handle(new DeactivateTeamMemberCommand { TeamId = TestData.Team1Id, MemberId = memberId });
 
-            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId, IncludeActiveUsersOnly = false })).TeamMembers.Single();
+            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id, MemberId = memberId, IncludeActiveUsersOnly = false })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeFalse();
         }
 
         [Fact]
         public async Task RemoveLabel_TeamMemberWithLabel_LabelRemoved()
         {
-            var memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id })).TeamMembers.First();
             if (string.IsNullOrEmpty(memberToUpdate.Label))
             {
                 memberToUpdate.Label = "Volunteer";
                 await manager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
-                memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+                memberToUpdate = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             }
             memberToUpdate.Label.ShouldNotBeNull();
             memberToUpdate.Label = null;
             await manager.Handle(new SaveTeamMemberCommand { Member = memberToUpdate });
 
-            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            var updatedMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             updatedMember.Label.ShouldBeNull();
         }
 
@@ -141,23 +141,23 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 LastSuccessfulLogin = now,
                 ExternalUserId = "deactivate-extid",
                 Phone = "1234",
-                TeamId = TestData.TeamId,
+                TeamId = TestData.Team1Id,
                 UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
             var memberId = await manager.Handle(new SaveTeamMemberCommand { Member = newMember });
             memberId.ShouldNotBeNull();
 
-            await manager.Handle(new DeleteTeamMemberCommand { TeamId = TestData.TeamId, MemberId = memberId });
+            await manager.Handle(new DeleteTeamMemberCommand { TeamId = TestData.Team1Id, MemberId = memberId });
 
-            var teamMembers = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId, MemberId = memberId })).TeamMembers;
+            var teamMembers = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id, MemberId = memberId })).TeamMembers;
             teamMembers.Where(m => m.Id == memberId).ShouldBeEmpty();
         }
 
         [Fact]
         public async Task CanValidateNewUserNameForExistingMember()
         {
-            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id })).TeamMembers.First();
             aMember.UserName = Guid.NewGuid().ToString().Substring(0, 5);
             var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
@@ -169,7 +169,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task CanValidateSameUserNameForExistingMember()
         {
-            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id })).TeamMembers.First();
 
             var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
@@ -181,7 +181,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task CanValidatExistingUserNameForExistingMember()
         {
-            var members = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers;
+            var members = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id })).TeamMembers;
             var aMember = members.Skip(0).First();
             var bMember = members.Skip(1).First();
 
@@ -206,7 +206,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task CanValidateDuplicateUserNameForNewMember()
         {
-            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.TeamId })).TeamMembers.First();
+            var aMember = (await manager.Handle(new TeamMembersQuery { TeamId = TestData.Team1Id })).TeamMembers.First();
 
             var validationResult = await manager.Handle(new ValidateTeamMemberCommand
             {
@@ -218,8 +218,8 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task CanQuerySingleTeam()
         {
-            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
-            team.Id.ShouldBe(TestData.TeamId);
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.Team1Id })).Teams.ShouldHaveSingleItem();
+            team.Id.ShouldBe(TestData.Team1Id);
             team.Name.ShouldNotBeNull();
             team.AssignedCommunities.ShouldNotBeEmpty();
         }
@@ -227,9 +227,9 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task CanQueryTeamByCommunity()
         {
-            var teams = (await manager.Handle(new TeamsQuery { CommunityCode = TestData.TeamCommunityId })).Teams;
+            var teams = (await manager.Handle(new TeamsQuery { CommunityCode = TestData.Team1CommunityId })).Teams;
             teams.ShouldNotBeEmpty();
-            teams.ShouldAllBe(t => t.AssignedCommunities.Any(c => c.Code == TestData.TeamCommunityId));
+            teams.ShouldAllBe(t => t.AssignedCommunities.Any(c => c.Code == TestData.Team1CommunityId));
         }
 
         [Fact]
@@ -238,7 +238,7 @@ namespace EMBC.Tests.Integration.ESS.Managers
             var teams = (await manager.Handle(new TeamsQuery())).Teams;
 
             teams.ShouldNotBeEmpty();
-            teams.Single(t => t.Id == TestData.TeamId).AssignedCommunities.ShouldNotBeEmpty();
+            teams.Single(t => t.Id == TestData.Team1Id).AssignedCommunities.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -248,14 +248,14 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             var assignedCommunities = (await manager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 
-            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.Team1Id })).Teams.ShouldHaveSingleItem();
 
             var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c)).Take(5).ToList();
             if (!assignedCommunities.Any(c => c.Code == TestData.ActiveTaskCommunity) && !newCommunities.Any(c => c == TestData.ActiveTaskCommunity)) newCommunities.Add(TestData.ActiveTaskCommunity);
 
-            await manager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
+            await manager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.Team1Id, Communities = newCommunities });
 
-            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.Team1Id })).Teams.ShouldHaveSingleItem();
 
             updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).Concat(newCommunities).OrderBy(c => c));
         }
@@ -268,14 +268,14 @@ namespace EMBC.Tests.Integration.ESS.Managers
 
             var assignedCommunities = (await manager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 
-            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.Team1Id })).Teams.ShouldHaveSingleItem();
 
             var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c)).Take(5).ToList();
             if (!assignedCommunities.Any(c => c.Code == TestData.ActiveTaskCommunity) && !newCommunities.Any(c => c == TestData.ActiveTaskCommunity)) newCommunities.Add(TestData.ActiveTaskCommunity);
 
-            await manager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.TeamId, Communities = newCommunities });
+            await manager.Handle(new AssignCommunitiesToTeamCommand { TeamId = TestData.Team1Id, Communities = newCommunities });
 
-            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.Team1Id })).Teams.ShouldHaveSingleItem();
 
             updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).Concat(newCommunities).OrderBy(c => c));
 
@@ -289,13 +289,13 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task CanUnassignCommunitiesToTeam()
         {
-            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var team = (await manager.Handle(new TeamsQuery { TeamId = TestData.Team1Id })).Teams.ShouldHaveSingleItem();
 
             var removedCommunities = team.AssignedCommunities.Where(c => c.Code != TestData.ActiveTaskCommunity).Take(2);
 
-            await manager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = TestData.TeamId, Communities = removedCommunities.Select(c => c.Code) });
+            await manager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = TestData.Team1Id, Communities = removedCommunities.Select(c => c.Code) });
 
-            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.TeamId })).Teams.ShouldHaveSingleItem();
+            var updatedTeam = (await manager.Handle(new TeamsQuery { TeamId = TestData.Team1Id })).Teams.ShouldHaveSingleItem();
 
             updatedTeam.AssignedCommunities.Where(c => removedCommunities.Contains(c)).ShouldBeEmpty();
         }
@@ -303,26 +303,12 @@ namespace EMBC.Tests.Integration.ESS.Managers
         [Fact]
         public async Task Query_Suppliers_ReturnsAllSuppliersForTeam()
         {
-            var searchResults = await manager.Handle(new SuppliersQuery { TeamId = TestData.TeamId });
+            var searchResults = await manager.Handle(new SuppliersQuery { TeamId = TestData.Team1Id });
 
             foreach (var supplier in searchResults.Items)
             {
-                supplier.Team.ShouldNotBeNull().Id.ShouldNotBeNull();
-                foreach (var sharedTeam in supplier.SharedWithTeams)
-                {
-                    sharedTeam.Id.ShouldNotBeNull();
-                }
-            }
-            var primarySuppliers = searchResults.Items.Where(s => s.Team.Id == TestData.TeamId);
-            var mutualAidSuppliers = searchResults.Items.Where(s => s.Team.Id != TestData.TeamId);
-
-            foreach (var supplier in primarySuppliers)
-            {
-                supplier.SharedWithTeams.ShouldAllBe(t => t.Id == TestData.TeamId);
-            }
-            foreach (var supplier in mutualAidSuppliers)
-            {
-                supplier.SharedWithTeams.ShouldAllBe(t => t.Id != TestData.TeamId);
+                supplier.PrimaryTeams.ShouldContain(s => s.Id == TestData.Team1Id);
+                supplier.MutualAids.ShouldAllBe(ma => supplier.PrimaryTeams.Any(pt => pt.Id == ma.GivenByTeamId));
             }
         }
 
@@ -340,14 +326,14 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
 
-            if (testSupplier.Team == null || testSupplier.Team.Id == null || testSupplier.Team.Name == null)
+            if (!testSupplier.PrimaryTeams.Any())
             {
-                await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });
+                await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.Team1Id });
                 testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
             }
 
-            testSupplier.Team.Id.ShouldBe(TestData.TeamId);
-            testSupplier.Team.Name.ShouldBe(TestData.TeamName);
+            testSupplier.PrimaryTeams.ShouldContain(s => s.Id == TestData.Team1Id);
+            testSupplier.PrimaryTeams.ShouldContain(s => s.Name == TestData.Team1Name);
         }
 
         [Fact]
@@ -375,7 +361,161 @@ namespace EMBC.Tests.Integration.ESS.Managers
         }
 
         [Fact]
-        public async Task Create_Suppliers_ReturnsSupplierId()
+        public async Task Create_Suppliers_NewSupplier()
+        {
+            var supplier = CreateSupplier(TestData.Team1Id);
+
+            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            var newSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
+            newSupplier.Status.ShouldBe(SupplierStatus.Active);
+            newSupplier.MutualAids.ShouldBeEmpty();
+            var primaryTeam = newSupplier.PrimaryTeams.ShouldHaveSingleItem();
+            primaryTeam.Id.ShouldBe(TestData.Team1Id);
+            primaryTeam.Name.ShouldNotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Update_Suppliers_SupplierUpdated()
+        {
+            var supplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+
+            var currentCommunity = supplier.Address.Community;
+            var newCommunity = currentCommunity == TestData.Team1CommunityId
+                ? TestData.OtherCommunityId
+                : TestData.Team1CommunityId;
+
+            supplier.Address.Community = newCommunity;
+
+            await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            updatedSupplier.Address.Community.ShouldBe(newCommunity);
+        }
+
+        [Fact]
+        public async Task Activate_Supplier_SupplierIsActive()
+        {
+            await manager.Handle(new ActivateSupplierCommand { TeamId = TestData.Team1Id, SupplierId = TestData.SupplierAId });
+
+            var searchResults = await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId });
+            var updatedSupplier = searchResults.Items.ShouldHaveSingleItem();
+            updatedSupplier.Status.ShouldBe(SupplierStatus.Active);
+        }
+
+        [Fact]
+        public async Task Deactivate_Suppliers_ReturnsSupplierId()
+        {
+            var supplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
+
+            if (!supplier.PrimaryTeams.Any())
+            {
+                await manager.Handle(new ClaimSupplierCommand { SupplierId = supplier.Id, TeamId = TestData.Team2Id });
+            }
+
+            var results = await manager.Handle(new DeactivateSupplierCommand { TeamId = TestData.Team2Id, SupplierId = TestData.SupplierCId });
+
+            results.ShouldBe(TestData.SupplierCId);
+
+            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
+            updatedSupplier.Status.ShouldBe(SupplierStatus.Inactive);
+        }
+
+        [Fact]
+        public async Task ClaimSupplier_TwoTeams_ClaimedByBoth()
+        {
+            var supplier = CreateSupplier(TestData.Team1Id);
+
+            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            (await manager.Handle(new ClaimSupplierCommand { SupplierId = supplierId, TeamId = TestData.Team2Id })).ShouldBe(supplierId);
+
+            var actualSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
+
+            actualSupplier.PrimaryTeams.Count().ShouldBe(2);
+            actualSupplier.PrimaryTeams.ShouldContain(t => t.Id == TestData.Team1Id);
+            actualSupplier.PrimaryTeams.ShouldContain(t => t.Id == TestData.Team2Id);
+        }
+
+        [Fact]
+        public async Task RemoveSupplier_Supplier_NotClaimedAndNoMutualAids()
+        {
+            await manager.Handle(new RemoveSupplierCommand { SupplierId = TestData.SupplierAId });
+
+            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
+            updatedSupplier.PrimaryTeams.ShouldBeEmpty();
+            updatedSupplier.MutualAids.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public async Task ShareSupplier_Supplier_MutualAidAdded()
+        {
+            var supplier = CreateSupplier(TestData.Team1Id);
+            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            await manager.Handle(new ShareSupplierWithTeamCommand { TeamId = TestData.Team2Id, SharingTeamId = TestData.Team1Id, SupplierId = supplierId });
+
+            var actualSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
+
+            actualSupplier.MutualAids.ShouldNotBeEmpty();
+            actualSupplier.MutualAids.ShouldContain(ma => ma.GivenByTeamId == TestData.Team1Id && ma.GivenToTeam.Id == TestData.Team2Id);
+        }
+
+        [Fact]
+        public async Task UnshareSupplier_Supplier_MutualAidRemoved()
+        {
+            var supplier = CreateSupplier(TestData.Team1Id);
+            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
+            await manager.Handle(new ShareSupplierWithTeamCommand { TeamId = TestData.Team2Id, SharingTeamId = TestData.Team1Id, SupplierId = supplierId });
+            await manager.Handle(new UnshareSupplierWithTeamCommand { TeamId = TestData.Team2Id, SharingTeamId = TestData.Team1Id, SupplierId = supplierId });
+            var actualSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
+            actualSupplier.MutualAids.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public async Task ShareSupplier_SupplierWithTwoPrimaryTeams_MutualAidAdded()
+        {
+            var supplier = CreateSupplier(TestData.Team1Id);
+            supplier.PrimaryTeams = new[] {
+                new SupplierTeam { Id = TestData.Team1Id },
+                new SupplierTeam { Id = TestData.Team2Id }
+            };
+            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            await manager.Handle(new ShareSupplierWithTeamCommand { TeamId = TestData.Team3Id, SharingTeamId = TestData.Team1Id, SupplierId = supplierId });
+            await manager.Handle(new ShareSupplierWithTeamCommand { TeamId = TestData.Team4Id, SharingTeamId = TestData.Team2Id, SupplierId = supplierId });
+
+            var actualSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
+
+            actualSupplier.PrimaryTeams.Count().ShouldBe(2);
+            actualSupplier.MutualAids.Count().ShouldBe(2);
+            actualSupplier.MutualAids.ShouldContain(ma => ma.GivenByTeamId == TestData.Team1Id && ma.GivenToTeam.Id == TestData.Team3Id);
+            actualSupplier.MutualAids.ShouldContain(ma => ma.GivenByTeamId == TestData.Team2Id && ma.GivenToTeam.Id == TestData.Team4Id);
+        }
+
+        [Fact]
+        public async Task UnshareSupplier_SupplierWithTwoPrimaryTeams_CorrectMutualAidRemoved()
+        {
+            var supplier = CreateSupplier(TestData.Team1Id);
+            supplier.PrimaryTeams = new[] {
+                new SupplierTeam { Id = TestData.Team1Id },
+                new SupplierTeam { Id = TestData.Team2Id }
+            };
+            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            await manager.Handle(new ShareSupplierWithTeamCommand { TeamId = TestData.Team3Id, SharingTeamId = TestData.Team1Id, SupplierId = supplierId });
+            await manager.Handle(new ShareSupplierWithTeamCommand { TeamId = TestData.Team4Id, SharingTeamId = TestData.Team2Id, SupplierId = supplierId });
+            await manager.Handle(new UnshareSupplierWithTeamCommand { TeamId = TestData.Team4Id, SharingTeamId = TestData.Team2Id, SupplierId = supplierId });
+
+            var actualSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
+
+            actualSupplier.PrimaryTeams.Count().ShouldBe(2);
+            actualSupplier.MutualAids.Count().ShouldBe(1);
+            actualSupplier.MutualAids.ShouldContain(ma => ma.GivenByTeamId == TestData.Team1Id && ma.GivenToTeam.Id == TestData.Team3Id);
+            actualSupplier.MutualAids.ShouldNotContain(ma => ma.GivenByTeamId == TestData.Team2Id && ma.GivenToTeam.Id == TestData.Team4Id);
+        }
+
+        private Supplier CreateSupplier(string primaryTeamId)
         {
             var uniqueSignature = TestData.TestPrefix + "-" + Guid.NewGuid().ToString().Substring(0, 4);
             var supplier = new Supplier
@@ -398,144 +538,14 @@ namespace EMBC.Tests.Integration.ESS.Managers
                     Phone = "6049877897",
                     Email = $"{uniqueSignature}eraunitest@test.gov.bc.ca"
                 },
-                Team = new EMBC.ESS.Shared.Contracts.Teams.SupplierTeam
+                PrimaryTeams = new[] {new SupplierTeam
                 {
-                    Id = TestData.TeamId
-                },
+                    Id = primaryTeamId
+                } },
                 Status = SupplierStatus.Active
             };
 
-            var supplierId = await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
-
-            var newSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.ShouldHaveSingleItem();
-            newSupplier.Status.ShouldBe(SupplierStatus.Active);
-        }
-
-        [Fact]
-        public async Task Update_Suppliers_ReturnsSupplierId()
-        {
-            var supplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
-
-            var currentCommunity = supplier.Address.Community;
-            var newCommunity = currentCommunity == TestData.TeamCommunityId
-                ? TestData.OtherCommunityId
-                : TestData.TeamCommunityId;
-
-            supplier.Address.Community = newCommunity;
-
-            await manager.Handle(new SaveSupplierCommand { Supplier = supplier });
-
-            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
-            updatedSupplier.Address.Community.ShouldBe(newCommunity);
-        }
-
-        [Fact]
-        public async Task Activate_Suppliers_ReturnsSupplierId()
-        {
-            var results = await manager.Handle(new ActivateSupplierCommand { TeamId = TestData.TeamId, SupplierId = TestData.SupplierAId });
-
-            results.ShouldBe(TestData.SupplierAId);
-
-            var searchResults = await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId });
-            var updatedSupplier = searchResults.Items.ShouldHaveSingleItem();
-            updatedSupplier.Status.ShouldBe(SupplierStatus.Active);
-        }
-
-        [Fact]
-        public async Task Deactivate_Suppliers_ReturnsSupplierId()
-        {
-            var supplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
-
-            if (supplier.Team == null)
-            {
-                await manager.Handle(new ClaimSupplierCommand { SupplierId = supplier.Id, TeamId = TestData.OtherTeamId });
-            }
-
-            var results = await manager.Handle(new DeactivateSupplierCommand { TeamId = TestData.OtherTeamId, SupplierId = TestData.SupplierCId });
-
-            results.ShouldBe(TestData.SupplierCId);
-
-            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierCId })).Items.ShouldHaveSingleItem();
-            updatedSupplier.Status.ShouldBe(SupplierStatus.Inactive);
-        }
-
-        [Fact]
-        public async Task Claim_Suppliers_ReturnsSupplierId()
-        {
-            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
-
-            if (testSupplier.Team != null && testSupplier.Team.Id != null)
-            {
-                testSupplier.Team.Id = null;
-                testSupplier.Team.Name = null;
-
-                testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Teams.SupplierTeam>();
-
-                await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
-                var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
-
-                updatedSupplier.Team.ShouldBe(null);
-            }
-
-            await manager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = TestData.TeamId });
-
-            var twiceUpdatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
-
-            twiceUpdatedSupplier.Team.Id.ShouldBe(TestData.TeamId);
-        }
-
-        [Fact]
-        public async Task Remove_Suppliers_ReturnsSupplierId()
-        {
-            await manager.Handle(new RemoveSupplierCommand { SupplierId = TestData.SupplierAId });
-
-            var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
-            updatedSupplier.Team.ShouldBe(null);
-            updatedSupplier.SharedWithTeams.ShouldBeEmpty();
-        }
-
-        [Fact]
-        public async Task AddSharedWithTeam_Suppliers_ReturnsSupplierId()
-        {
-            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
-
-            if (testSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId) != null)
-            {
-                testSupplier.SharedWithTeams = testSupplier.SharedWithTeams.Where(t => t.Id != TestData.OtherTeamId);
-                await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
-                var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
-
-                updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldBe(null);
-            }
-
-            await manager.Handle(new ShareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
-
-            var twiceUpdatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
-
-            twiceUpdatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldNotBe(null);
-        }
-
-        [Fact]
-        public async Task RemoveSharedWithTeam_Suppliers_ReturnsSupplierId()
-        {
-            var testSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = TestData.SupplierAId })).Items.ShouldHaveSingleItem();
-
-            if (testSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId) == null)
-            {
-                var team = new EMBC.ESS.Shared.Contracts.Teams.SupplierTeam { Id = TestData.OtherTeamId };
-                testSupplier.SharedWithTeams = testSupplier.SharedWithTeams.Concat(new[] { team });
-
-                await manager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
-                var updatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
-
-                updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldNotBe(null);
-            }
-
-            await manager.Handle(new UnshareSupplierWithTeamCommand { SupplierId = testSupplier.Id, TeamId = TestData.OtherTeamId });
-
-            var twiceUpdatedSupplier = (await manager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.ShouldHaveSingleItem();
-
-            twiceUpdatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == TestData.OtherTeamId).ShouldBe(null);
+            return supplier;
         }
     }
 }

@@ -42,13 +42,14 @@ export class MockSupplierListDataService extends SupplierListDataService {
       phone: '123-234-3244',
       email: null
     },
-    team: {
-      id: '08cab1d6-dd73-ec11-b830-00505683fbf4',
-      name: 'DEV Team',
-      sharedWithDate: '2022-05-27T20:07:58Z',
-      isActive: true
-    },
-    sharedWithTeams: [],
+    primaryTeams: [
+      {
+        id: '08cab1d6-dd73-ec11-b830-00505683fbf4',
+        name: 'DEV Team',
+        isActive: true
+      }
+    ],
+
     status: SupplierStatus.Active,
     supplierGstNumber: {
       part1: '343455466',

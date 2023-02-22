@@ -40,7 +40,7 @@ export class ConfigService {
       showDebugInformation: !environment.production,
       postLogoutRedirectUri: c.oidc.postLogoutRedirectUrl,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      customQueryParams: { kc_idp_hint: 'bceid' }
+      customQueryParams: { kc_idp_hint: 'bceidboth' }
     }));
   }
 

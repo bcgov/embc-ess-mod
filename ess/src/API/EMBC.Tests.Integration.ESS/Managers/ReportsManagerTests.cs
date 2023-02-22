@@ -1,40 +1,60 @@
-﻿using EMBC.ESS.Managers.Reports;
-using EMBC.ESS.Shared.Contracts.Reports;
+﻿using EMBC.ESS.Shared.Contracts.Reports;
+using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Managers
 {
     public class ReportsManagerTests : WebAppTestBase
     {
-        private readonly ReportsManager reportsManager;
+        private readonly IMessagingClient messagingClient;
 
         public ReportsManagerTests(ITestOutputHelper output, WebAppTestFixture fixture) : base(output, fixture)
         {
-            reportsManager = Services.GetRequiredService<ReportsManager>();
+            messagingClient = Services.GetRequiredService<IMessagingClient>();
         }
 
         [Fact]
         public async Task CanGetEvacueeReport()
         {
-            var res = await reportsManager.Handle(new EvacueeReportQuery
+            var reportId = await messagingClient.Send(new RequestEvacueeReportCommand
             {
                 TaskNumber = "1234",
                 //FileId = "101010",
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
-                IncludePersonalInfo = false,
+                //IncludePersonalInfo = false,
                 //From = DateTime.UtcNow.AddDays(-1),
                 //To = DateTime.UtcNow,
             });
 
-            res.Content.ShouldNotBeEmpty();
-            res.ContentType.ShouldBe("text/csv");
+            reportId.ShouldNotBeEmpty();
+
+            var success = false;
+            for (int attempt = 0; attempt < 30; attempt++)
+            {
+                try
+                {
+                    var report = await messagingClient.Send(new EvacueeReportQuery { ReportRequestId = reportId });
+                    report.ShouldNotBeNull().Content.ShouldNotBeEmpty();
+                    report.ContentType.ShouldBe("text/csv");
+                    success = true;
+
+                    break;
+                }
+                catch (ServerException e)
+                {
+                    output.WriteLine(e.Message);
+                    await Task.Delay(1000);
+                }
+            }
+            success.ShouldBeTrue();
         }
 
         [Fact]
         public async Task CanGetSupportReport()
         {
-            var res = await reportsManager.Handle(new SupportReportQuery
+            var reportId = await messagingClient.Send(new RequestSupportReportCommand
+
             {
                 TaskNumber = "1234",
                 //FileId = "101010",
@@ -42,8 +62,26 @@ namespace EMBC.Tests.Integration.ESS.Managers
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
             });
 
-            res.Content.ShouldNotBeEmpty();
-            res.ContentType.ShouldBe("text/csv");
+            reportId.ShouldNotBeEmpty();
+            var success = false;
+            for (int attempt = 0; attempt < 30; attempt++)
+            {
+                try
+                {
+                    var report = await messagingClient.Send(new SupportReportQuery { ReportRequestId = reportId });
+                    report.ShouldNotBeNull().Content.ShouldNotBeEmpty();
+                    report.ContentType.ShouldBe("text/csv");
+                    success = true;
+
+                    break;
+                }
+                catch (ServerException e)
+                {
+                    output.WriteLine(e.Message);
+                    await Task.Delay(1000);
+                }
+            }
+            success.ShouldBeTrue();
         }
     }
 }

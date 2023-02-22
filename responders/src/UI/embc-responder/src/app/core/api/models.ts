@@ -66,6 +66,8 @@ export { SupportReprintReason } from './models/support-reprint-reason';
 export { SupplierListItem } from './models/supplier-list-item';
 export { SupplierTeamDetails } from './models/supplier-team-details';
 export { SupplierStatus } from './models/supplier-status';
+export { MutualAid } from './models/mutual-aid';
+export { SupplierTeam } from './models/supplier-team';
 export { Supplier } from './models/supplier';
 export { SupplierContact } from './models/supplier-contact';
 export { SupplierResult } from './models/supplier-result';

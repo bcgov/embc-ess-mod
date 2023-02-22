@@ -4,7 +4,8 @@ import {
   SupplierStatus,
   Team,
   SupplierListItem,
-  Supplier
+  Supplier,
+  MutualAid
 } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { GstNumberModel } from 'src/app/core/models/gst-number.model';
@@ -17,7 +18,7 @@ export class AddSupplierService {
   private supplierLegalNameVal: string;
   private supplierNameVal: string;
   private supplierAddressVal: AddressModel;
-  private sharedWithTeamsVal: Array<Team>;
+  private mutualAidsVal: Array<MutualAid>;
   private statusVal: SupplierStatus;
   private supplierGstNumberVal: GstNumberModel;
   private contactVal: SupplierContact;
@@ -50,11 +51,11 @@ export class AddSupplierService {
     this.supplierAddressVal = value;
   }
 
-  public get sharedWithTeams(): Array<Team> {
-    return this.sharedWithTeamsVal;
+  public get mutualAids(): Array<MutualAid> {
+    return this.mutualAidsVal;
   }
-  public set sharedWithTeams(value: Array<Team>) {
-    this.sharedWithTeamsVal = value;
+  public set mutualAids(value: Array<MutualAid>) {
+    this.mutualAidsVal = value;
   }
 
   public get status(): SupplierStatus {
@@ -95,7 +96,7 @@ export class AddSupplierService {
       legalName: this.supplierLegalName,
       name: this.supplierName,
       address: this.supplierAddress,
-      sharedWithTeams: this.sharedWithTeams,
+      mutualAids: this.mutualAidsVal,
       status: this.status,
       supplierGstNumber: this.supplierGstNumber,
       contact: this.contact
@@ -109,7 +110,7 @@ export class AddSupplierService {
     this.supplierLegalName = undefined;
     this.supplierName = undefined;
     this.supplierAddress = undefined;
-    this.sharedWithTeams = undefined;
+    this.mutualAidsVal = undefined;
     this.status = undefined;
     this.supplierGstNumber = undefined;
     this.contact = undefined;

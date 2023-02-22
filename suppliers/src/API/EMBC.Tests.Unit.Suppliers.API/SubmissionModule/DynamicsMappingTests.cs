@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Newtonsoft.Json;
@@ -108,7 +109,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
 
             var attachment = new Attachment
             {
-                Content = "content",
+                Content = Encoding.ASCII.GetBytes("content"),
                 ContentType = "contenttype",
                 FileName = "filename",
                 ReferralNumber = referenceNumber,
@@ -197,7 +198,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
             {
                 new Attachment
                 {
-                    Content = "content",
+                    Content = Encoding.ASCII.GetBytes("content"),
                     ContentType = "contenttype",
                     FileName ="filename",
                     ReferralNumber = referenceNumber,
@@ -206,7 +207,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                 },
                 new Attachment
                 {
-                    Content = "content",
+                    Content = Encoding.ASCII.GetBytes("content"),
                     ContentType = "contenttype",
                     FileName ="filename",
                     ReferralNumber = referenceNumber,
@@ -215,7 +216,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                 },
                 new Attachment
                 {
-                    Content = "content",
+                    Content = Encoding.ASCII.GetBytes("content"),
                     ContentType = "contenttype",
                     FileName ="filename",
                     ReferralNumber = referenceNumber,
@@ -292,7 +293,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                 {
                     new Attachment
                     {
-                        Content = "content",
+                        Content = Encoding.ASCII.GetBytes("content"),
                         ContentType = "contenttype",
                         FileName =fileName,
                         ReferralNumber = referenceNumber,
@@ -301,7 +302,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                     },
                     new Attachment
                     {
-                        Content = "content",
+                        Content = Encoding.ASCII.GetBytes("content"),
                         ContentType = "contenttype",
                         FileName =fileName,
                         ReferralNumber = referenceNumber,
@@ -310,7 +311,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
                     },
                     new Attachment
                     {
-                        Content = "content",
+                        Content = Encoding.ASCII.GetBytes("content"),
                         ContentType = "contenttype",
                         FileName =fileName,
                         ReferralNumber = referenceNumber,

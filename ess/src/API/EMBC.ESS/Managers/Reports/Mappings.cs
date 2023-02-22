@@ -43,7 +43,7 @@ namespace EMBC.ESS.Managers.Reports
             }
 
             public static bool ShouldShowPersonalInfo(ResolutionContext ctx) =>
-                ctx.Options.Items.ContainsKey("IncludePersonalInfo") && bool.Parse(ctx.Options.Items["IncludePersonalInfo"].ToString());
+                ctx.Items.ContainsKey("IncludePersonalInfo") && bool.Parse(ctx.Items["IncludePersonalInfo"].ToString());
         }
     }
 }

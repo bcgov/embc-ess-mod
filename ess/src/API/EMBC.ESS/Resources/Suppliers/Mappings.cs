@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
@@ -27,15 +30,25 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForPath(d => d.Contact.LastName, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_lastname : null))
                 .ForPath(d => d.Contact.Phone, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_contactnumber : null))
                 .ForPath(d => d.Contact.Email, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.emailaddress : null))
-                .ForMember(d => d.Team, opts => opts.MapFrom(s => s.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts => ts.era_isprimarysupplier == true)))
-                .ForMember(d => d.SharedWithTeams, opts => opts.MapFrom(s => s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier != true)))
-                .AfterMap((s, d) =>
+                .ForMember(d => d.PrimaryTeams, opts => opts.Ignore())
+                .ForMember(d => d.MutualAids, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
                 {
-                    var responsibleTeam = s.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts => ts.era_isprimarysupplier == true);
-                    if (responsibleTeam == null)
+                    var primaryTeams = s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier == true).ToArray();
+                    var mutualAidTeams = s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier != true).ToArray();
+                    if (!primaryTeams.Any())
+                    {
                         d.Status = SupplierStatus.NotSet;
+                        d.MutualAids = Array.Empty<MutualAid>();
+                    }
                     else
-                        d.Status = responsibleTeam.era_active == true ? SupplierStatus.Active : SupplierStatus.Inactive;
+                    {
+                        d.Status = primaryTeams.Any(t => t.era_active == true) ? SupplierStatus.Active : SupplierStatus.Inactive;
+                        d.PrimaryTeams = ctx.Mapper.Map<IEnumerable<Team>>(primaryTeams);
+                        d.MutualAids = ctx.Mapper.Map<IEnumerable<MutualAid>>(primaryTeams
+                            .SelectMany(pt => mutualAidTeams.Where(mat => mat._era_sharingteam_value == pt._era_essteamid_value))
+                            .ToArray());
+                    }
                 })
                 .ReverseMap()
                 .ForMember(d => d.era_supplierid, opts => opts.MapFrom(s => s.Id))
@@ -46,7 +59,11 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.Address.AddressLine2))
                 .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.Address.PostalCode))
                 .ForMember(d => d._era_primarycontact_value, opts => opts.MapFrom(s => s.Contact.Id))
-                .ForMember(d => d.era_era_supplier_era_essteamsupplier_SupplierId, opts => opts.MapFrom(s => s.Team != null ? s.SharedWithTeams.Concat(new[] { s.Team }) : s.SharedWithTeams))
+                .AfterMap((s, d, ctx) =>
+                {
+                    var teamSuppliers = ctx.Mapper.Map<IEnumerable<era_essteamsupplier>>(s.PrimaryTeams).Concat(ctx.Mapper.Map<IEnumerable<era_essteamsupplier>>(s.MutualAids)).ToArray();
+                    d.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>(teamSuppliers);
+                })
                 ;
 
             CreateMap<era_suppliercontact, SupplierContact>()
@@ -67,9 +84,17 @@ namespace EMBC.ESS.Resources.Suppliers
             CreateMap<era_essteamsupplier, Team>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_ESSTeamID.era_essteamid))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_ESSTeamID.era_name))
-                .ForMember(d => d.SharedWithDate, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
                 .ReverseMap()
                 .ForMember(d => d._era_essteamid_value, opts => opts.MapFrom(s => s.Id))
+                ;
+
+            CreateMap<era_essteamsupplier, MutualAid>()
+                .ForMember(d => d.GivenByTeamId, opts => opts.MapFrom(s => s._era_sharingteam_value))
+                .ForMember(d => d.GivenToTeam, opts => opts.MapFrom(s => new Team { Id = s.era_ESSTeamID.era_essteamid.ToString(), Name = s.era_ESSTeamID.era_name }))
+                .ForMember(d => d.GivenOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
+                .ReverseMap()
+                .ForMember(d => d._era_essteamid_value, opts => opts.MapFrom(s => s.GivenToTeam.Id))
+                .ForMember(d => d._era_sharingteam_value, opts => opts.MapFrom(s => s.GivenByTeamId))
                 ;
         }
     }
