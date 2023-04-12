@@ -5,7 +5,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
-import { MemberRole, Team } from 'src/app/core/api/models';
+import { MemberRole, MutualAid, Team } from 'src/app/core/api/models';
 import * as globalConst from '../../../core/services/global-constants';
 import {
   AbstractControl,
@@ -277,9 +277,9 @@ export class SupplierDetailComponent implements OnInit {
   /**
    * Rescinds the selected Supplier for the selected ESS Team
    *
-   * @param team The Team which mutual Aid relationship will be rescind
+   * @param mutualAid The MutalAid which team relationship will be rescind
    */
-  rescindSupplier(team: Team): void {
+  rescindSupplier(mutialAid: MutualAid): void {
     this.dialog
       .open(DialogComponent, {
         data: {
@@ -295,7 +295,7 @@ export class SupplierDetailComponent implements OnInit {
             this.showLoader = !this.showLoader;
             this.supplierDetailService.rescindMutualAid(
               this.selectedSupplier.id,
-              team.id
+              mutialAid.givenToTeam.id
             );
           }
         }
