@@ -569,6 +569,10 @@ namespace EMBC.ESS.Managers.Events
             })).Items.SingleOrDefault());
             if (file == null) throw new NotFoundException($"Evacuation file {printRequest.FileId} not found", printRequest.Id);
 
+            var evacuee = (await evacueesRepository.Query(new EvacueeQuery { EvacueeId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+
+            if (evacuee == null) throw new NotFoundException($"Registrant not found '{file.PrimaryRegistrantId}'", file.PrimaryRegistrantId);
+
             var ct = new CancellationTokenSource().Token;
             await evacuationFileLoader.Load(file, ct);
 
@@ -586,7 +590,8 @@ namespace EMBC.ESS.Managers.Events
                 Supports = referrals,
                 AddSummary = printRequest.IncludeSummary,
                 AddWatermark = !isProduction,
-                PrintingMember = requestingUser
+                PrintingMember = requestingUser,
+                evacuee = evacuee
             });
 
             var content = generatedReferrals.Content;

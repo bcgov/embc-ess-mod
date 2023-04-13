@@ -40,12 +40,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return handleBars;
         }
 
-        public static async Task<string> CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, IEnumerable<PrintSummary> summaryItems, bool includeSummary, bool displayWatermark, string title)
+        public static async Task<string> CreateSingleHtmlDocument(PrintRequestingUser printingUser, IEnumerable<PrintReferral> referrals, IEnumerable<PrintSummary> summaryItems, bool includeSummary, bool displayWatermark, string title, PrintEvacuee evacuee)
         {
             var html = new StringBuilder();
             if (includeSummary)
             {
-                html.Append(await CreateReferalHtmlSummary(summaryItems, printingUser, displayWatermark));
+                html.Append(await CreateReferalHtmlSummary(summaryItems, printingUser, displayWatermark, evacuee));
                 html.Append(PageBreak);
             }
             foreach (var referral in referrals)
@@ -84,7 +84,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             return template(referral);
         }
 
-        public static async Task<string> CreateReferalHtmlSummary(IEnumerable<PrintSummary> summaryItems, PrintRequestingUser requestingUser, bool displayWatermark)
+        public static async Task<string> CreateReferalHtmlSummary(IEnumerable<PrintSummary> summaryItems, PrintRequestingUser requestingUser, bool displayWatermark, PrintEvacuee evacuee)
         {
             var handlebars = CreateHandleBars();
 
@@ -117,6 +117,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 var volunteerLastName = requestingUser.LastName;
                 var itemResult = template(summary);
                 var essNumber = summary.EssNumber;
+                var evacueeName = evacuee.LastName + ", " + evacuee.FirstName;
                 items.Append(itemResult);
 
                 if (summaryBreakCount >= 3 || printedCount == summaryItems.Count())
@@ -125,7 +126,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                     handlebars.RegisterTemplate("summaryItemsPartial", items.ToString());
 
                     var mainTemplate = handlebars.Compile(await LoadTemplate(ReferalMainViews.Summary.ToString()));
-                    var data = new { volunteerFirstName, volunteerLastName, purchaserName, displayWatermark, essNumber };
+                    var data = new { volunteerFirstName, volunteerLastName, purchaserName, displayWatermark, essNumber, evacueeName };
                     html.Append(mainTemplate(data));
                     html.Append(PageBreak);
                     items.Clear();
