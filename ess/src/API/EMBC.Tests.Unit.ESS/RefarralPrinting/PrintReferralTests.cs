@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Bogus;
 using EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting;
 using EMBC.Utilities.Extensions;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Shouldly;
 using Xunit;
 
@@ -19,8 +20,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 1, false);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
+            var printingEvacuee = new PrintEvacuee { FirstName = "First Name", LastName = "LastName" };
 
-            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title, printingEvacuee);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfFile.html", content);
@@ -32,8 +34,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var requestingUser = new PrintRequestingUser { Id = "123", FirstName = "First Name", LastName = "LastName" };
             var referrals = GeneratePrintReferral(requestingUser, 5, false);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
+            var printingEvacuee = new PrintEvacuee { FirstName = "First Name", LastName = "LastName" };
 
-            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, Enumerable.Empty<PrintSummary>(), false, false, title, printingEvacuee);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsFile.html", content);
@@ -46,8 +49,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var referrals = GeneratePrintReferral(requestingUser, 1, true);
             var summaryItems = GetSummaryFromReferrals(referrals);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
+            var printingEvacuee = new PrintEvacuee { FirstName = "First Name", LastName = "LastName" };
 
-            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title, printingEvacuee);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfWithSummaryFile.html", content);
@@ -60,8 +64,9 @@ namespace EMBC.Tests.Unit.ESS.Prints
             var referrals = GeneratePrintReferral(requestingUser, 10, true);
             var summaryItems = GetSummaryFromReferrals(referrals);
             var title = $"supportstest-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
+            var printingEvacuee = new PrintEvacuee { FirstName = "First Name", LastName = "LastName" };
 
-            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title);
+            var content = await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title, printingEvacuee);
 
             content.ShouldNotBeNullOrEmpty();
             await File.WriteAllTextAsync("./newSupportPdfsWithSummaryFile.html", content);
@@ -76,7 +81,8 @@ namespace EMBC.Tests.Unit.ESS.Prints
                    var referrals = GeneratePrintReferral(requestingUser, Random.Shared.Next(1, 10), true);
                    var summaryItems = GetSummaryFromReferrals(referrals);
                    var title = $"supportstest-{i}";
-                   (await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title)).ShouldNotBeEmpty();
+                   var printEvacuee = GeneratePrintEvacuee();
+                   (await ReferralHtmlGenerator.CreateSingleHtmlDocument(requestingUser, referrals, summaryItems, true, true, title, printEvacuee)).ShouldNotBeEmpty();
                });
         }
 
@@ -85,6 +91,12 @@ namespace EMBC.Tests.Unit.ESS.Prints
                 .RuleFor(o => o.FirstName, f => f.Person.FirstName)
                 .RuleFor(o => o.LastName, f => f.Person.LastName)
                 .RuleFor(o => o.Id, f => f.Random.Number(1000, 9999).ToString())
+            ;
+
+        private PrintEvacuee GeneratePrintEvacuee() =>
+            new Faker<PrintEvacuee>()
+                .RuleFor(o => o.FirstName, f => f.Person.FirstName)
+                .RuleFor(o => o.LastName, f => f.Person.LastName)
             ;
 
         private IEnumerable<PrintReferral> GeneratePrintReferral(PrintRequestingUser requestingUser, int numberOfReferrals, bool displayWatermark) =>
