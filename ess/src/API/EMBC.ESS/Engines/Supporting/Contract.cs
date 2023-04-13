@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Shared.Contracts.Events;
 
@@ -110,6 +111,7 @@ namespace EMBC.ESS.Engines.Supporting
         public string RequestingUserId { get; set; }
         public TeamMember PrintingMember { get; set; }
         public EvacuationFile File { get; set; }
+        public Evacuee evacuee { get; set; }
     }
 
     public class GenerateReferralsResponse : GenerateResponse

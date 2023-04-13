@@ -34,6 +34,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
             var referrals = mapper.Map<IEnumerable<PrintReferral>>(request.Supports.Where(s => s.SupportDelivery is Shared.Contracts.Events.Referral), opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
             var summaryItems = mapper.Map<IEnumerable<PrintSummary>>(request.Supports, opts => opts.Items.Add("evacuationFile", request.File)).ToArray();
             var printingUser = new PrintRequestingUser { Id = request.PrintingMember.Id, FirstName = request.PrintingMember.FirstName, LastName = request.PrintingMember.LastName, TeamName = request.PrintingMember.TeamName };
+            var printingEvacuee = new PrintEvacuee { FirstName = request.evacuee.FirstName, LastName = request.evacuee.LastName };
 
             var communities = (await metadataRepository.GetCommunities()).ToDictionary(c => c.Code, c => c.Name);
 
@@ -48,7 +49,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration
             }
 
             var title = $"supports-{request.File.Id}-{DateTime.UtcNow.ToPST().ToString("yyyyMMddhhmmss")}";
-            var referralsHtml = await ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, summaryItems, request.AddSummary, request.AddWatermark, title);
+            var referralsHtml = await ReferralHtmlGenerator.CreateSingleHtmlDocument(printingUser, referrals, summaryItems, request.AddSummary, request.AddWatermark, title, printingEvacuee);
 
             return new GenerateReferralsResponse
             {
