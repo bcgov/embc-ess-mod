@@ -667,7 +667,7 @@ export const activeStatusText: DashboardBanner = {
 
 export const remoteActiveStatusText: DashboardBanner = {
   heading: 'Active:',
-  buttonText: 'Extend Supports',
+  buttonText: 'Extend or Reprint Supports',
   content: 'Extend Supports associated with the Current ESS File.'
 };
 

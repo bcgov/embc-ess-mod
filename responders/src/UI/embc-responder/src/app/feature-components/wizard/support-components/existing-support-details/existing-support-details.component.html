@@ -339,41 +339,39 @@
           </div>
         </div>
 
-        <div
-          *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports"
-          class="col-md-4 link-padding"
-        >
+        <div *ngIf="selectedSupport?.status !== 'Draft' && isExtendSupports"
+             class="col-md-4 link-padding">
           <div class="row">
             <div class="col-md-12">
-              <a (click)="extendSupport()"
-                ><img
-                  src="/assets/images/extend-support.svg"
-                  width="15"
-                  height="15"
-                /><span class="back-link needs-padding">Clone & Extend</span></a
-              >
+              <a (click)="extendSupport()">
+                <img src="/assets/images/extend-support.svg"
+                     width="15"
+                     height="15" /><span class="back-link needs-padding">Clone & Extend</span>
+              </a>
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-12">
-              <a (click)="openAssessment()"
-                ><img
-                  src="/assets/images/view-assessment.svg"
-                  width="7"
-                  height="21"
-                /><img
-                  src="/assets/images/view-assessment-spoon.svg"
-                  width="7"
-                  height="21"
-                /><span class="back-link needs-padding"
-                  >View Needs Assessment</span
-                ></a
-              >
+              <a (click)="reprint()">
+                <img src="/assets/images/reprint.svg"
+                     width="18"
+                     height="18" /><span class="back-link img-padding">Reprint Referral</span>
+              </a>
+            </div>
+          </div>
+            <div class="row">
+              <div class="col-md-12">
+                <a (click)="openAssessment()">
+                  <img src="/assets/images/view-assessment.svg"
+                       width="7"
+                       height="21" /><img src="/assets/images/view-assessment-spoon.svg"
+                                          width="7"
+                                          height="21" /><span class="back-link needs-padding">View Needs Assessment</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
 

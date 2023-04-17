@@ -617,7 +617,10 @@ namespace EMBC.Responders.API.Controllers
         PrinterError,
 
         [Description("Evacuee Lost the Referral")]
-        EvacueeLostTheReferral
+        EvacueeLostTheReferral,
+
+        [Description("Remote Supports")]
+        RemoteSupports
     }
 
     public class ReferralPrintRequestResponse
