@@ -3,13 +3,13 @@
     <div class="col-12">
       <mat-card>
         <p>
-          In the event of an emergency, concerned family and friends may inquire
-          about you and your family.
+          <b>Consent to share registration status:</b>
         </p>
         <p>
-          Do you consent to have your location and contact information
-          <b>shared with concerned family or friends</b> who ask about your
-          wellbeing?
+         Concerned family and friends may inquire about your household because of this emergency event.
+        </p>
+        <p>
+         Do you consent to have your registration STATUS shared with those who may ask about your household's wellbeing?
         </p>
 
         <div class="row">
@@ -20,13 +20,27 @@
               required
             >
               <mat-radio-button [value]="false" id="yesOption"
-                ><span class="radio-text"><b>Yes</b></span> - You may disclose
-                my location and contact information with family or
-                friends</mat-radio-button
+                ><span class="radio-text"><b>Yes</b></span> - you may share the status of my ESS registration status:</mat-radio-button
+              >
+              <p>I acknowledge that an ESS Responder may ONLY share the status of my ESS registration (pending, active or complete) with concerned family and friends. For reunification purposes, concerned family and friends may opt to leave their contact details (telephone number and/ or email address) where they can be reached. These contact details can be added under the Notes section of the active ESS File, by trained ESS Responder.
+              </p
               >
               <mat-radio-button [value]="true" id="noOption"
-                ><span class="radio-text"><b>No</b></span> - You may not
-                disclose my location or contact information</mat-radio-button
+                ><span class="radio-text"><b>No</b></span> - please <b>RESTRICT</b> access to my ESS registration status:</mat-radio-button
+              >
+              <p>I acknowledge that by RESTRICTING access to my registration status I am:
+              </p
+              >
+              <ul>
+                <li>
+                  restricting access to my ERA Profile and ESS File, including ALL household members listed on ESS file(s) and past ESS Files and Profile.
+                </li
+                >
+                <li>
+                  limiting access to ERA users with permission to view/locate RESTRICTED status files (ERA Manager/Director and above), which may increase wait times for service delivery (in-person or virtually).
+                </li
+                >
+              </ul
               >
               <mat-error
                 class="custom-mat-error field-error"
