@@ -25,3 +25,7 @@ a:hover {
 .field-error {
   color: red;
 }
+
+::ng-deep .mat-dialog-content {
+  overflow: revert !important;
+}
