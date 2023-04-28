@@ -84,9 +84,18 @@ a:hover {
     max-width: inherit;
 }
 
+.alert {
+  background-color: red;
+}
+
+.alert-era-img {
+  width: 18px;
+}
+
 @media (min-width:769px) and (max-width:1199px) {
     .button-yellow {
         white-space: normal;
         height: auto !important;
     }
 }
+
