@@ -354,7 +354,13 @@
               >
             </div>
           </div>
-          <div class="row">
+          <div
+            class="row"
+            *ngIf="
+              selectedSupport?.status !== 'Void'
+              && selectedSupport?.status !== 'Expired'
+            "
+          >
             <div class="col-md-12">
               <a (click)="reprint()">
                 <img src="/assets/images/reprint.svg" width="18" height="18" />
