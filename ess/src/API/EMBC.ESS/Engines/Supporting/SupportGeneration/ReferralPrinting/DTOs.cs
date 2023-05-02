@@ -46,7 +46,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 var evacueesToPrint = new List<PrintableEvacueesRow>();
                 var evacuees = Evacuees.ToArray();
 
-                for (var i = 0; i <= 7; i++)
+                for (var i = 0; i <= evacuees.Length; i++)
                 {
                     evacueesToPrint.Add(new PrintableEvacueesRow(evacuees.ElementAtOrDefault(i), evacuees.ElementAtOrDefault(i + 7)));
                 }
