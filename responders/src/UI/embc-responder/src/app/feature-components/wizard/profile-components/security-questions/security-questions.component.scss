@@ -42,6 +42,14 @@ p {
   text-align: left;
 }
 
+::ng-deep .mat-select-panel {
+  max-width: 100% !important;
+}
+
+::ng-deep .mat-form-field-infix {
+  width: fit-content !important;
+}
+
 @media (max-width: 920px) {
   .col-md-6 {
     width: 100%;
