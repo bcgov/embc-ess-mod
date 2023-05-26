@@ -1,5 +1,5 @@
 <div class="row row-padding">
-  <div class="col-md-12 heading">Send BC Services Card Invitation</div>
+  <div class="col-md-12 heading">BC Services Card Invite</div>
 </div>
 
 <div
@@ -56,12 +56,7 @@
 
 <ng-template #emailForm>
   <form [formGroup]="emailFormGroup">
-    <div class="row">
-      <div class="col-md-12">
-        <p>Please provide an <strong>email address</strong></p>
-      </div>
-    </div>
-
+    
     <div class="row">
       <div class="col-md-6">
         <mat-form-field appearance="outline">
@@ -91,12 +86,6 @@
     </div>
 
     <div *ngIf="showConfirm">
-      <div class="row">
-        <div class="col-md-12">
-          <p><strong>Confirm email</strong> address</p>
-        </div>
-      </div>
-
       <div class="row">
         <div class="col-md-6">
           <mat-form-field appearance="outline">
