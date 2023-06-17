@@ -248,6 +248,8 @@ namespace EMBC.Responders.API.Controllers
         public bool VerifiedUser { get; set; }
 
         public bool IsMinor { get; set; }
+
+        public string Era_SupplierNumber { get; set; }
     }
 
     public class InviteRequest

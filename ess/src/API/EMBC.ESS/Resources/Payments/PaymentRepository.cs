@@ -36,6 +36,7 @@ namespace EMBC.ESS.Resources.Payments
                 CancelPaymentRequest r => await Handle(r, CreateCancellationToken()),
                 MarkPaymentAsPaidRequest r => await Handle(r, CreateCancellationToken()),
                 MarkPaymentAsIssuedRequest r => await Handle(r, CreateCancellationToken()),
+                ReconcileSupplierIdRequest r => await Handle(r, CreateCancellationToken()),
 
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
@@ -167,6 +168,69 @@ namespace EMBC.ESS.Resources.Payments
             };
         }
 
+        private async Task<ReconcileSupplierIdsBatchResponse> Handle(ReconcileSupplierIdsBatchRequest request, CancellationToken ct)
+        {
+            var registrantIdsReconciled = new ConcurrentBag<string>();
+            var rejectedRegistrants = new ConcurrentBag<(string Id, Exception Error)>();
+            var contactsMissingData = new ConcurrentBag<(string Id, Exception Error)>();
+
+            await Parallel.ForEachAsync(request.RegitrantIds, new ParallelOptions { MaxDegreeOfParallelism = 1, CancellationToken = ct }, async (registrantId, ct) =>
+            {
+                var ctx = essContextFactory.Create();
+                try
+                {
+                    var payee = await SetPayee(ctx, Guid.Parse(registrantId), ct);
+                    if (payee != null)
+                    {
+                        registrantIdsReconciled.Add(registrantId);
+                    }
+                }
+                catch (CasException e)
+                {
+                    rejectedRegistrants.Add((registrantId, e));
+                }
+                catch (ArgumentNullException e)
+                {
+                    contactsMissingData.Add((registrantId, e));
+                }
+                finally
+                {
+                    ctx.DetachAll();
+                }
+            });
+
+            return new ReconcileSupplierIdsBatchResponse
+            {
+                RegistrantIdsReconciled = registrantIdsReconciled,
+                RejectedRegistrants = rejectedRegistrants,
+                ContactsMissingData = contactsMissingData
+            };
+        }
+
+        private async Task<ReconcileSupplierIdResponse> Handle(ReconcileSupplierIdRequest request, CancellationToken ct)
+        {
+            var ctx = essContextFactory.Create();
+            var response = new ReconcileSupplierIdResponse();
+            try
+            {
+                var payee = await SetPayee(ctx, Guid.Parse(request.RegitrantId), ct);
+                if (payee != null)
+                {
+                    response.SupplierNumber = payee.era_suppliernumber;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.Message);
+            }
+            finally
+            {
+                ctx.DetachAll();
+            }
+
+            return response;
+        }
+
         private async Task SendPaymentToCas(EssContext ctx, string paymentId, string batch, CancellationToken ct)
         {
             var payment = (await ((DataServiceQuery<era_etransfertransaction>)ctx.era_etransfertransactions
@@ -269,6 +333,81 @@ namespace EMBC.ESS.Resources.Payments
                 // store supplier info
                 ctx.UpdateObject(payee);
                 await ctx.SaveChangesAsync(ct);
+            }
+
+            return payee;
+        }
+
+        private async Task<contact> SetPayee(EssContext ctx, Guid payeeId, CancellationToken ct)
+        {
+            var payee = (await ((DataServiceQuery<contact>)ctx.contacts
+                  .Expand(c => c.era_ProvinceState)
+                  .Expand(c => c.era_Country)
+                  .Expand(c => c.era_City)
+                  .Where(c => c.contactid == payeeId))
+                  .ExecuteAsync(ct))
+                  .SingleOrDefault();
+
+            if (payee == null) throw new InvalidOperationException($"Payee {payeeId} was not found");
+
+            if (payee.era_suppliernumber == null)
+            {
+                ctx.Detach(payee);
+                // search CAS for supplier information
+                try
+                {
+                    var supplierDetails = await casGateway.GetSupplier(payee, ct);
+                    if (supplierDetails == null)
+                    {
+                        // create new supplier in CAS
+                        try
+                        {
+                            supplierDetails = await casGateway.CreateSupplier(payee, ct);
+                        }
+                        catch (CasException e)
+                        {
+                            if (e.Message.StartsWith("CAS supplier creation failed"))
+                            {
+                                payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                                payee.era_suppliernumber = "Rejected";
+                                // store supplier info
+                                ctx.UpdateObject(payee);
+                                await ctx.SaveChangesAsync(ct);
+                            }
+                        }
+                        catch (System.ArgumentNullException e)
+                        {
+                            if (e.Message.StartsWith("contact"))
+                            {
+                                payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                                payee.era_suppliernumber = "MissingData";
+                                // store supplier info
+                                ctx.UpdateObject(payee);
+                                await ctx.SaveChangesAsync(ct);
+                            }
+                        }
+                    }
+                    if (supplierDetails != null)
+                    {
+                        payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                        payee.era_suppliernumber = supplierDetails.Value.SupplierNumber;
+                        payee.era_sitesuppliernumber = supplierDetails.Value.SiteCode;
+                        // store supplier info
+                        ctx.UpdateObject(payee);
+                        await ctx.SaveChangesAsync(ct);
+                    }
+                }
+                catch (System.ArgumentNullException e)
+                {
+                    if (e.Message.StartsWith("contact"))
+                    {
+                        payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                        payee.era_suppliernumber = "MissingData";
+                        // store supplier info
+                        ctx.UpdateObject(payee);
+                        await ctx.SaveChangesAsync(ct);
+                    }
+                }
             }
 
             return payee;

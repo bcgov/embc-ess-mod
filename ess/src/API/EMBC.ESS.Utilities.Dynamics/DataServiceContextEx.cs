@@ -51,5 +51,9 @@ namespace EMBC.ESS.Utilities.Dynamics
         public static async Task<IEnumerable<T>> GetAllPagesAsync<T>(this IQueryable<T> query, CancellationToken? ct = null)
             where T : crmbaseentity =>
             await ((DataServiceQuery<T>)query).GetAllPagesAsync(ct ?? CancellationToken.None);
+
+        public static async Task<IEnumerable<T>> GetTopAsync<T>(this IQueryable<T> query, string top, CancellationToken? ct = null)
+            where T : crmbaseentity =>
+            await ((DataServiceQuery<T>)query).AddQueryOption("$top", top).GetAllPagesAsync(ct ?? CancellationToken.None);
     }
 }

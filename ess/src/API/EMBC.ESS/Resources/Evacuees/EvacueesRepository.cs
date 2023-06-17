@@ -105,7 +105,7 @@ namespace EMBC.ESS.Resources.Evacuees
 
         private async Task<EvacueeQueryResult> Handle(EvacueeQuery query, CancellationToken ct)
         {
-            if (query.UserId == null && query.EvacueeId == null) throw new ArgumentNullException($"Must query registrants by user id or contact id");
+            if (query.UserId == null && query.EvacueeId == null && !query.BCSCWithNoSupplierId) throw new ArgumentNullException($"Must query registrants by user id or contact id");
 
             var readCtx = essContextFactory.CreateReadOnly();
 
@@ -120,10 +120,19 @@ namespace EMBC.ESS.Resources.Evacuees
 
             if (!string.IsNullOrEmpty(query.EvacueeId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.EvacueeId));
             if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
+            if (query.BCSCWithNoSupplierId) contactQuery = contactQuery.Where(c => c.era_bcservicescardid != null && c.era_suppliernumber == null);
+            if (query.BCSCWithNoSupplierId)
+            {
+                var contacts = await contactQuery.GetTopAsync("100", ct);
 
-            var contacts = await contactQuery.GetAllPagesAsync(ct);
+                return new EvacueeQueryResult { Items = mapper.Map<IEnumerable<Evacuee>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
+            }
+            else
+            {
+                var contacts = await contactQuery.GetAllPagesAsync(ct);
 
-            return new EvacueeQueryResult { Items = mapper.Map<IEnumerable<Evacuee>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
+                return new EvacueeQueryResult { Items = mapper.Map<IEnumerable<Evacuee>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
+            }
         }
 
         private async Task<ManageInvitationCommandResult> Handle(CreateNewEmailInvitation cmd, CancellationToken ct)

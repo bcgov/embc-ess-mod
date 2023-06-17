@@ -74,6 +74,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool? AuthenticatedUser { get; set; }
         public bool? VerifiedUser { get; set; }
         public bool IsMinor { get; set; }
+        public string Era_SupplierNumber { get; set; }
     }
 
     public class Address
