@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Managers.Events;
+using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Shared.Contracts.Events;
+using Address = EMBC.ESS.Shared.Contracts.Events.Address;
 
 namespace EMBC.Tests.Integration.ESS
 {
@@ -111,6 +113,30 @@ namespace EMBC.Tests.Integration.ESS
                 Email = $"{uniqueIdentifier}eratest@test.gov.bc.ca",
                 DateOfBirth = "12/13/2000",
                 Gender = "M",
+                PrimaryAddress = address,
+                MailingAddress = address
+            };
+        }
+
+        public static RegistrantProfile CreateRegistrantProfileWithBCSC(string prefix)
+        {
+            var uniqueIdentifier = GenerateNewUniqueId(prefix);
+            var address = new Address
+            {
+                AddressLine1 = $"{uniqueIdentifier} st.",
+                Community = "9e6adfaf-9f97-ea11-b813-005056830319",
+                StateProvince = "BC",
+                Country = "CAN",
+                PostalCode = "V1V1V1"
+            };
+            return new RegistrantProfile
+            {
+                FirstName = $"autotest-dev-{uniqueIdentifier}_first",
+                LastName = $"{uniqueIdentifier}_last",
+                Email = $"{uniqueIdentifier}eratest@test.gov.bc.ca",
+                DateOfBirth = "12/13/2000",
+                Gender = "M",
+                UserId = uniqueIdentifier,
                 PrimaryAddress = address,
                 MailingAddress = address
             };
