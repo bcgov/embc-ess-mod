@@ -32,6 +32,7 @@ namespace EMBC.ESS.Resources.Evacuees
         public string EvacueeId { get; set; }
         public string UserId { get; set; }
         public bool MaskSecurityAnswers { get; set; } = true;
+        public bool BCSCWithNoSupplierId { get; set; } = false;
     }
 
     public class EvacueeQueryResult
@@ -120,6 +121,7 @@ namespace EMBC.ESS.Resources.Evacuees
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
         public string? UserId { get; set; }
+        public string? Era_SupplierNumber { get; set; }
     }
 
     public class Address

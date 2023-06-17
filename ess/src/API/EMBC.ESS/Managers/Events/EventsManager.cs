@@ -1012,5 +1012,30 @@ namespace EMBC.ESS.Managers.Events
 
             return lastPollDate.Value;
         }
+
+        public async System.Threading.Tasks.Task Handle(ReconcileSupplierInfoCommand _)
+        {
+            var logger = telemetryProvider.Get(nameof(ReconcileSupplierInfoCommand));
+            var ct = new CancellationTokenSource().Token;
+
+            var evacueesWithNoSupplier = ((EvacueeQueryResult)await evacueesRepository.Query(new EvacueeQuery
+            {
+                BCSCWithNoSupplierId = true,
+            })).Items.Cast<Evacuee>().ToArray();
+
+            logger.LogInformation("Found {0} Registrants with a BCSC but no SupplierId", evacueesWithNoSupplier.Length);
+
+            if (evacueesWithNoSupplier.Any())
+            {
+                var jobName = $"ERA-Reconcile Supplier Ids-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
+                var result = (ReconcileSupplierIdsBatchResponse)await paymentRepository.Manage(new ReconcileSupplierIdsBatchRequest
+                {
+                    BatchId = jobName,
+                    RegitrantIds = evacueesWithNoSupplier.Select(e => e.Id)
+                });
+
+                logger.LogInformation("Batch {0} results: {1} SupplierIdsReconciled: {2} Registrants rejected: {3} Registrants missing first/last name or postalcode", jobName, result.RegistrantIdsReconciled.Count(), result.RejectedRegistrants.Count(), result.ContactsMissingData.Count());
+            }
+        }
     }
 }
