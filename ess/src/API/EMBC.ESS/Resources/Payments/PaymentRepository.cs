@@ -8,6 +8,8 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Payments
@@ -219,6 +221,14 @@ namespace EMBC.ESS.Resources.Payments
                     response.SupplierNumber = payee.era_suppliernumber;
                 }
             }
+            catch (CasException e)
+            {
+                throw e;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw e;
+            }
             catch (Exception e)
             {
                 throw new InvalidOperationException(e.Message);
@@ -366,25 +376,21 @@ namespace EMBC.ESS.Resources.Payments
                         }
                         catch (CasException e)
                         {
-                            if (e.Message.StartsWith("CAS supplier creation failed"))
-                            {
-                                payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
-                                payee.era_suppliernumber = "Rejected";
-                                // store supplier info
-                                ctx.UpdateObject(payee);
-                                await ctx.SaveChangesAsync(ct);
-                            }
+                            payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                            payee.era_suppliernumber = "Rejected";
+                            // store supplier info
+                            ctx.UpdateObject(payee);
+                            await ctx.SaveChangesAsync(ct);
+                            throw e;
                         }
-                        catch (System.ArgumentNullException e)
+                        catch (ArgumentNullException e)
                         {
-                            if (e.Message.StartsWith("contact"))
-                            {
-                                payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
-                                payee.era_suppliernumber = "MissingData";
-                                // store supplier info
-                                ctx.UpdateObject(payee);
-                                await ctx.SaveChangesAsync(ct);
-                            }
+                            payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                            payee.era_suppliernumber = "MissingData";
+                            // store supplier info
+                            ctx.UpdateObject(payee);
+                            await ctx.SaveChangesAsync(ct);
+                            throw e;
                         }
                     }
                     if (supplierDetails != null)
@@ -399,17 +405,14 @@ namespace EMBC.ESS.Resources.Payments
                 }
                 catch (System.ArgumentNullException e)
                 {
-                    if (e.Message.StartsWith("contact"))
-                    {
-                        payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
-                        payee.era_suppliernumber = "MissingData";
-                        // store supplier info
-                        ctx.UpdateObject(payee);
-                        await ctx.SaveChangesAsync(ct);
-                    }
+                    payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
+                    payee.era_suppliernumber = "MissingData";
+                    // store supplier info
+                    ctx.UpdateObject(payee);
+                    await ctx.SaveChangesAsync(ct);
+                    throw e;
                 }
             }
-
             return payee;
         }
 

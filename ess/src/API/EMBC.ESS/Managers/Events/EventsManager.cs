@@ -26,6 +26,7 @@ using EMBC.Utilities.Telemetry;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -1055,9 +1056,20 @@ namespace EMBC.ESS.Managers.Events
                 var results = new ConcurrentBag<ReconcileSupplierIdResponse>();
                 try
                 {
+                    logger.LogInformation("Attempting to Reconcile Supplier Info for Registrant {0} ", evacuee.Id, evacuee.Id);
                     var result = await paymentRepository.Manage(new ReconcileSupplierIdRequest { RegitrantId = evacuee.Id });
                     var outResult = (ReconcileSupplierIdResponse)result;
                     logger.LogInformation("Registrant {0} updated with SupplierNumber {1}", evacuee.Id, outResult.SupplierNumber);
+                }
+                catch (CasException e)
+                {
+                    logger.LogInformation("Registrant {0} SupplierNumber was Rejected.", evacuee.Id);
+                    logger.LogInformation(e.Message);
+                }
+                catch (ArgumentNullException e)
+                {
+                    logger.LogInformation("Registrant {0} SupplierNumber could not be set do to missing data.", evacuee.Id);
+                    logger.LogInformation(e.Message);
                 }
                 catch (Exception e)
                 {
