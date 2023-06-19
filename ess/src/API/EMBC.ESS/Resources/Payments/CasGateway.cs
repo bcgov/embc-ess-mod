@@ -102,6 +102,8 @@ namespace EMBC.ESS.Resources.Payments
             if (string.IsNullOrEmpty(contact.address1_postalcode)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.address1_postalcode));
             if (string.IsNullOrEmpty(contact.firstname)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.firstname));
             if (string.IsNullOrEmpty(contact.lastname)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.lastname));
+            if (string.IsNullOrEmpty(contact.address1_line1)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.address1_line1));
+            if (contact.era_City == null && string.IsNullOrEmpty(contact.address1_city)) throw new ArgumentNullException($"contact {contact.contactid}", nameof(contact.era_City));
 
             var config = await casSystemConfigurationProvider.Get(ct);
             var response = await casWebProxy.CreateSupplierAsync(new CreateSupplierRequest
