@@ -8,6 +8,8 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Payments
@@ -36,7 +38,7 @@ namespace EMBC.ESS.Resources.Payments
                 CancelPaymentRequest r => await Handle(r, CreateCancellationToken()),
                 MarkPaymentAsPaidRequest r => await Handle(r, CreateCancellationToken()),
                 MarkPaymentAsIssuedRequest r => await Handle(r, CreateCancellationToken()),
-                ReconcileSupplierIdsBatchRequest r => await Handle(r, CreateCancellationToken()),
+                ReconcileSupplierIdRequest r => await Handle(r, CreateCancellationToken()),
 
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
@@ -207,6 +209,38 @@ namespace EMBC.ESS.Resources.Payments
             };
         }
 
+        private async Task<ReconcileSupplierIdResponse> Handle(ReconcileSupplierIdRequest request, CancellationToken ct)
+        {
+            var ctx = essContextFactory.Create();
+            var response = new ReconcileSupplierIdResponse();
+            try
+            {
+                var payee = await SetPayee(ctx, Guid.Parse(request.RegitrantId), ct);
+                if (payee != null)
+                {
+                    response.SupplierNumber = payee.era_suppliernumber;
+                }
+            }
+            catch (CasException e)
+            {
+                throw e;
+            }
+            catch (ArgumentNullException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.Message);
+            }
+            finally
+            {
+                ctx.DetachAll();
+            }
+
+            return response;
+        }
+
         private async Task SendPaymentToCas(EssContext ctx, string paymentId, string batch, CancellationToken ct)
         {
             var payment = (await ((DataServiceQuery<era_etransfertransaction>)ctx.era_etransfertransactions
@@ -349,7 +383,7 @@ namespace EMBC.ESS.Resources.Payments
                             await ctx.SaveChangesAsync(ct);
                             throw e;
                         }
-                        catch (System.ArgumentNullException e)
+                        catch (ArgumentNullException e)
                         {
                             payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
                             payee.era_suppliernumber = "MissingData";
@@ -379,7 +413,6 @@ namespace EMBC.ESS.Resources.Payments
                     throw e;
                 }
             }
-
             return payee;
         }
 

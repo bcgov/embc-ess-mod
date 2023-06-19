@@ -26,6 +26,7 @@ using EMBC.Utilities.Telemetry;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -1013,7 +1014,7 @@ namespace EMBC.ESS.Managers.Events
             return lastPollDate.Value;
         }
 
-        public async System.Threading.Tasks.Task Handle(ReconcileSupplierInfoCommand _)
+        /*public async System.Threading.Tasks.Task Handle(ReconcileSupplierInfoCommand _)
         {
             var logger = telemetryProvider.Get(nameof(ReconcileSupplierInfoCommand));
             var ct = new CancellationTokenSource().Token;
@@ -1036,6 +1037,45 @@ namespace EMBC.ESS.Managers.Events
 
                 logger.LogInformation("Batch {0} results: {1} SupplierIdsReconciled: {2} Registrants rejected: {3} Registrants missing first/last name or postalcode", jobName, result.RegistrantIdsReconciled.Count(), result.RejectedRegistrants.Count(), result.ContactsMissingData.Count());
             }
+        }*/
+
+        public async System.Threading.Tasks.Task Handle(ReconcileSupplierInfoCommand _)
+        {
+            var logger = telemetryProvider.Get(nameof(ReconcileSupplierInfoCommand));
+            var ct = new CancellationTokenSource().Token;
+
+            var evacueesWithNoSupplier = ((EvacueeQueryResult)await evacueesRepository.Query(new EvacueeQuery
+            {
+                BCSCWithNoSupplierId = true,
+            })).Items.Cast<Evacuee>().ToArray();
+
+            logger.LogInformation("Found {0} Registrants with a BCSC but no SupplierId", evacueesWithNoSupplier.Length);
+
+            await Parallel.ForEachAsync(evacueesWithNoSupplier, ct, async (evacuee, ct) =>
+            {
+                var results = new ConcurrentBag<ReconcileSupplierIdResponse>();
+                try
+                {
+                    logger.LogInformation("Attempting to Reconcile Supplier Info for Registrant {0} ", evacuee.Id, evacuee.Id);
+                    var result = await paymentRepository.Manage(new ReconcileSupplierIdRequest { RegitrantId = evacuee.Id });
+                    var outResult = (ReconcileSupplierIdResponse)result;
+                    logger.LogInformation("Registrant {0} updated with SupplierNumber {1}", evacuee.Id, outResult.SupplierNumber);
+                }
+                catch (CasException e)
+                {
+                    logger.LogInformation("Registrant {0} SupplierNumber was Rejected.", evacuee.Id);
+                    logger.LogInformation(e.Message);
+                }
+                catch (ArgumentNullException e)
+                {
+                    logger.LogInformation("Registrant {0} SupplierNumber could not be set do to missing data.", evacuee.Id);
+                    logger.LogInformation(e.Message);
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, $"Failed to reconcile Supplier Info {evacuee.Id}: {e.Message}");
+                }
+            });
         }
     }
 }
