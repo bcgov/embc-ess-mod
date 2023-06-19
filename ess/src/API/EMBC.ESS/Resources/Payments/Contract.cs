@@ -106,12 +106,23 @@ namespace EMBC.ESS.Resources.Payments
         public IEnumerable<string> RegitrantIds { get; set; } = Array.Empty<string>();
     }
 
+    public class ReconcileSupplierIdRequest : ManagePaymentRequest
+    {
+        public string BatchId { get; set; }
+        public string RegitrantId { get; set; }
+    }
+
     public class ReconcileSupplierIdsBatchResponse : ManagePaymentResponse
     {
         public IEnumerable<string> RegistrantIdsReconciled { get; set; } = Array.Empty<string>();
         public IEnumerable<(string Id, Exception Error)> RejectedRegistrants { get; set; } = Array.Empty<(string, Exception)>();
 
         public IEnumerable<(string Id, Exception Error)> ContactsMissingData { get; set; } = Array.Empty<(string, Exception)>();
+    }
+
+    public class ReconcileSupplierIdResponse : ManagePaymentResponse
+    {
+        public string SupplierNumber { get; set; }
     }
 
     public class GetCasPaymentStatusRequest : QueryPaymentRequest
