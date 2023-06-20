@@ -262,6 +262,18 @@ namespace EMBC.ESS.Resources.Payments
                 if (validations.Any()) throw new CasException($"Payment {payment.era_name} validation errors: {string.Join(';', validations)}");
 
                 var payee = await GetPayee(ctx, payment._era_payee_value.Value, ct);
+                if (payee == null || payee.era_suppliernumber == null)
+                {
+                    throw new CasException($"Payment Error, {payment.era_name} does not have an assigned supplier number");
+                }
+                if (payee.era_suppliernumber.Equals("Rejected", StringComparison.OrdinalIgnoreCase) || payee.era_suppliernumber.Equals("MissingData", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new CasException($"Payment Error {payment.era_name} SupplierNumber was Rejected");
+                }
+                if (payee.era_suppliernumber.Equals("MissingData", StringComparison.OrdinalIgnoreCase) || payee.era_suppliernumber.Equals("MissingData", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new CasException($"Payment Error {payment.era_name} Supplier Number not created due to missing data");
+                }
 
                 // update CAS related fields
                 var now = DateTime.UtcNow;
