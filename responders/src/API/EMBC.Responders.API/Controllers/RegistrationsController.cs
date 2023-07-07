@@ -293,6 +293,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.PersonalDetails.Initials))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.PersonalDetails.LastName))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
+                .ForMember(d => d.Era_SupplierNumber, opts => opts.MapFrom(s => s.Era_SupplierNumber))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
