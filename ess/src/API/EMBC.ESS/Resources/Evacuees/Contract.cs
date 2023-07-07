@@ -121,7 +121,7 @@ namespace EMBC.ESS.Resources.Evacuees
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
         public string? UserId { get; set; }
-        public string? Era_SupplierNumber { get; set; }
+        public string Era_SupplierNumber { get; set; }
     }
 
     public class Address
