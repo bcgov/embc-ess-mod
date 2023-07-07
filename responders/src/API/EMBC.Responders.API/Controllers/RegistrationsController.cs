@@ -307,6 +307,7 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<ESS.Shared.Contracts.Events.RegistrantProfile, RegistrantProfile>()
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.Era_SupplierNumber, opts => opts.MapFrom(s => s.Era_SupplierNumber))
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
                 {
                     FirstName = s.FirstName,
