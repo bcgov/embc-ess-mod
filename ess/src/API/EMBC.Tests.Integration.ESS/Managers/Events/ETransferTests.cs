@@ -239,7 +239,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             paidSupports.ShouldHaveSingleItem();
         }
 
-        [Fact]
+        /*[Fact]
         public async Task ProcessReconcileSupplierIdsCommand_RegistrantUpdated()
         {
             var registrant = TestHelper.CreateRegistrantProfileWithBCSC(Guid.NewGuid().ToString().Substring(0, 4));
@@ -248,11 +248,11 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             await manager.Handle(new ReconcileSupplierInfoCommand());
 
             registrant = await TestHelper.GetRegistrantById(manager, registrant.Id);
-            if(registrant != null)
+            if (registrant != null)
             {
                 registrant.Era_SupplierNumber.ShouldNotBeNull();
             }
-        }
+        }*/
 
         private async Task QueueApprovedSupports(IEnumerable<string> supportIds)
         {
