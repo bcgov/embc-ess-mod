@@ -28,7 +28,6 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
-                .ForMember(d => d.Era_SupplierNumber, opts => opts.Ignore())
                 .ReverseMap()
 
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>

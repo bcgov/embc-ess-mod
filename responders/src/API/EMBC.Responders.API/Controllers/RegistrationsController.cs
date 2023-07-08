@@ -248,8 +248,6 @@ namespace EMBC.Responders.API.Controllers
         public bool VerifiedUser { get; set; }
 
         public bool IsMinor { get; set; }
-
-        public string Era_SupplierNumber { get; set; }
     }
 
     public class InviteRequest
@@ -293,7 +291,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.PersonalDetails.Initials))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.PersonalDetails.LastName))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
-                .ForMember(d => d.Era_SupplierNumber, opts => opts.MapFrom(s => s.Era_SupplierNumber))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
@@ -307,7 +304,6 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<ESS.Shared.Contracts.Events.RegistrantProfile, RegistrantProfile>()
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.Era_SupplierNumber, opts => opts.MapFrom(s => s.Era_SupplierNumber))
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
                 {
                     FirstName = s.FirstName,
