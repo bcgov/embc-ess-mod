@@ -40,7 +40,7 @@ p {
 h1 {
 	font-size: 28px;
 	font-weight: bold;
-	max-width: 540px;
+	max-width: 940px;
 	margin-bottom: 10px;
 }
 
@@ -79,7 +79,7 @@ h3 {
 	.lead {
 		font-size: 19px;
 		line-height: 29px;
-		max-width: 540px;
+		max-width: 940px;
 		margin-bottom: 20px;
 		font-weight: medium;
 	}
@@ -209,9 +209,8 @@ a:hover {
 
 @media (min-width: 1024px) {
 	.hero-content {
-		background: url(img/hands.png) no-repeat top right;
 		padding: 54px 0;
-		height: 320px;
+		height: 620px;
 		display: -webkit-box;
 		display: -ms-flexbox;
 		display: flex;
@@ -254,14 +253,14 @@ a:hover {
 
 @media (min-width: 720px) {
 	.are-evacuated-description {
-		width: 60%;
+		width: 100%;
 		padding-right: 30px;
 	}
 }
 
 @media (min-width: 1024px) {
 	.are-evacuated-description {
-		width: 60%;
+		width: 100%;
 		padding-right: 30px;
 		padding-left: 120px;
 	}
@@ -560,31 +559,44 @@ a:hover {
 	</header>
 
 	<main>
-		<section class="hero">
-			<div class="container">
-				<div class="hero-content">
-					<img class="emergency-support-logo" src="img/ess-logo.png" alt="Emergency Support Services">
-					<div>
-						<h1>Evacuee Registration &amp; Assistance (ERA)</h1>
-						<p class="lead"><strong>British Columbians</strong> forced from their homes by fire, floods, earthquakes or other emergencies may receive emergency support services for up to 72 hours.</p>
-						<p class="lead"><a class="--link-light-blue --link-strong" href="https://www2.gov.bc.ca/gov/content/safety/emergency-management/local-emergency-programs/ess" target="_blank">Learn more ></a></p>
-					</div>
-				</div>
-			</div>
-		</section>
 
 		<section class="are-evacuated">
 			<div class="container --are-evacuated-cols">
 				<div class="are-evacuated-description">
 					<h1>Are You Evacuated?</h1>
-					<p>If you are on an evacuation <strong>ALERT</strong> or <strong>ORDER</strong>, or if you have been displaced from your home due to an emergency please <strong>self-register</strong> for Emergency Support Services here.</p>
+					<p>If you are under an Evacuation Order, follow instructions from your First Nation or localgovernment. Visit your First Nation or local government's website or social media, or <a class="--link-light-blue --link-strong" href="https://www.emergencyinfobc.gov.bc.ca/" target="_blank">EmergencyInfoBC.ca</a> for evacuation information and next steps</p>
 				</div>
 				<div class="are-evacuated-registration center">
-					<a class="btn btn--dark-blue btn--strong" href="https://era-evacuees.embc.gov.bc.ca">Self-Register Now</a>
-					<a class="--link-black center" href="https://era-evacuees.embc.gov.bc.ca/verified-registration">Already have an account? Log in ></a>
+					<a class="btn btn--dark-blue btn--strong" style="width: 300px;" href="https://www.emergencyinfobc.gov.bc.ca/"> Emergency Info BC </a>
 				</div>
 			</div>
 		</section>
+		<section class="hero">
+			<div class="container">
+				<div class="hero-content">
+					<img class="emergency-support-logo" src="img/ess-logo.png" alt="Emergency Support Services">
+					<div>
+						<h1>Do you need Emergency Support Services?</h1>
+						<p class="lead">Your First Nation or local government will instruct you to register for Emergency SupportServices in one of two ways:</p>
+						<br />
+						<ul class="lead">
+							<li>In person at a designated evacuee Reception Centre. This information is often included in Evacuation Order documents.</li>
+							<br />
+							<li>Online using the Evacuee Registration and Assistance (ERA) tool. This can help streamlinethe process for when you arrive at the Reception Centre.</li>
+						</ul>
+						<br />
+						<p class="lead">To receive supports you need to go to the Reception Centre that is designated by your FirstNation or local government. Supports will not be available if you travel to a non-designatedlocation.</p>
+						<p class="lead"><a class="--link-light-blue --link-strong" href="https://www2.gov.bc.ca/gov/content/safety/emergency-management/preparedbc/evacuation-recovery/ess-how" target="_blank">Learn more about Emergency Support Services</a></p>
+					</div>
+					<div class="are-evacuated-registration center">
+						<a class="btn btn--dark-blue btn--strong" href="https://era-evacuees.embc.gov.bc.ca">Self-Register Now</a>
+						<a class="--link-black center" href="https://era-evacuees.embc.gov.bc.ca/verified-registration">Already have an account? Log in ></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		
 
 
 <div class="grey-wrapper">
