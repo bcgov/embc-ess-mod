@@ -20,7 +20,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
 
     internal class SupportComplianceStrategyFactory
     {
-        private IServiceProvider services;
+        private readonly IServiceProvider services;
 
         public SupportComplianceStrategyFactory(IServiceProvider services)
         {
