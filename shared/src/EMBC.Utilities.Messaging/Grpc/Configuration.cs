@@ -27,11 +27,15 @@ namespace EMBC.Utilities.Messaging.Grpc
 {
     public static class Configuration
     {
+        private static readonly int maximumMessageSize = 15 * 1024 * 1024; // 15MB
+
         public static void Configure(ConfigurationServices configurationServices, MessagingOptions options)
         {
             configurationServices.Services.AddGrpc(opts =>
             {
                 opts.EnableDetailedErrors = configurationServices.Environment.IsDevelopment();
+                opts.MaxReceiveMessageSize = maximumMessageSize;
+                opts.MaxSendMessageSize = maximumMessageSize;
             });
             if (options.Mode == MessagingMode.Server || options.Mode == MessagingMode.Both)
             {
@@ -140,6 +144,9 @@ namespace EMBC.Utilities.Messaging.Grpc
                     return handler;
                 }).ConfigureChannel(opts =>
                 {
+                    opts.MaxReceiveMessageSize = maximumMessageSize;
+                    opts.MaxSendMessageSize = maximumMessageSize;
+
                     if (options.Url.Scheme == "dns")
                     {
                         opts.Credentials = ChannelCredentials.SecureSsl;
