@@ -91,11 +91,8 @@
           #setEmailCheckbox
           id="setEmailCheckbox"
         >
-          <span *ngIf="emailOnFile && !previousEmail"
+          <span *ngIf="emailOnFile"
             >Use email address on file</span
-          >
-          <span *ngIf="previousEmail"
-            >Use email address recorded for previous e-Transfer</span
           >
         </mat-checkbox>
       </div>
