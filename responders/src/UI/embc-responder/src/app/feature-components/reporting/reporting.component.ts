@@ -38,7 +38,7 @@ export class ReportingComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private locationService: LocationsService,
     private customValidation: CustomValidationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.createReportingForm();
@@ -80,8 +80,8 @@ export class ReportingComponent implements OnInit, OnDestroy {
           switchMap((reportId) =>
             this.reportService
               .reportsGetEvacueeReport({ reportRequestId: reportId })
-              // try to get the report for 5 minutes
-              .pipe(retry({ delay: 6000, count: 50 }))
+              // try to get the report for 10 minutes
+              .pipe(retry({ delay: 10000, count: 60 }))
           )
         )
         .subscribe({
