@@ -75,7 +75,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
     }
     this.emailOnFile =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.email;
-    this.previousEmail = this.cacheService.get('previousEmail');
+    //this.previousEmail = this.cacheService.get('previousEmail');
     if (!this.cloneFlag && (this.emailOnFile || this.previousEmail))
       this.showEmailCheckBox = true;
 
