@@ -87,7 +87,7 @@ namespace EMBC.ESS.Managers.Reports
                 ContentType = contentType
             };
             var cacheKey = ReportRequestKey(evt.ReportRequestId);
-            await cache.Set(cacheKey, report, TimeSpan.FromHours(1));
+            await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
         }
 
         public async Task<ReportQueryResult> Handle(EvacueeReportQuery query)
@@ -147,7 +147,7 @@ namespace EMBC.ESS.Managers.Reports
                 ContentType = contentType
             };
             var cacheKey = ReportRequestKey(evt.ReportRequestId);
-            await cache.Set(cacheKey, report, TimeSpan.FromHours(1));
+            await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
         }
 
         public async Task<ReportQueryResult> Handle(SupportReportQuery query)
