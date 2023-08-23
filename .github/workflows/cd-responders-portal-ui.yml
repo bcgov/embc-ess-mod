@@ -3,7 +3,8 @@ name: cd-responders-portal-ui
 on:
   push:
     branches:
-      - master
+      #- master
+      - Hotfix-EMBCESSMOD-4674
 
     paths:
       - "responders/src/UI/**"
