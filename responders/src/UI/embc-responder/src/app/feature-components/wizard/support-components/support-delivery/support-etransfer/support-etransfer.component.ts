@@ -81,7 +81,7 @@ export class SupportEtransferComponent implements OnInit, OnDestroy {
 
     this.mobileOnFile =
       this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.contactDetails?.phone;
-    this.previousMobile = this.cacheService.get('previousMobile');
+    //this.previousMobile = this.cacheService.get('previousMobile');
 
     if (!this.cloneFlag && (this.mobileOnFile || this.previousMobile))
       this.showMobileCheckBox = true;
