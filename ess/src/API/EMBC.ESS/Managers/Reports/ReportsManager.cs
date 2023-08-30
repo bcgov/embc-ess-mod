@@ -76,7 +76,7 @@ namespace EMBC.ESS.Managers.Reports
             evacueeQuery.EvacuatedFrom = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedFrom)?.Name;
             evacueeQuery.EvacuatedTo = communities.SingleOrDefault(c => c.Code == evacueeQuery.EvacuatedTo)?.Name;
 
-            var csv = evacuees.ToCSV(evacueeQuery, "\"");
+            var csv = evacuees.ToCSV(evacueeQuery);
 
             var content = Encoding.UTF8.GetBytes(csv);
             var contentType = "text/csv";
@@ -87,7 +87,7 @@ namespace EMBC.ESS.Managers.Reports
                 ContentType = contentType
             };
             var cacheKey = ReportRequestKey(evt.ReportRequestId);
-            await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
+            await cache.Set(cacheKey, report, TimeSpan.FromHours(1));
         }
 
         public async Task<ReportQueryResult> Handle(EvacueeReportQuery query)
@@ -147,7 +147,7 @@ namespace EMBC.ESS.Managers.Reports
                 ContentType = contentType
             };
             var cacheKey = ReportRequestKey(evt.ReportRequestId);
-            await cache.Set(cacheKey, report, TimeSpan.FromMinutes(10));
+            await cache.Set(cacheKey, report, TimeSpan.FromHours(1));
         }
 
         public async Task<ReportQueryResult> Handle(SupportReportQuery query)
