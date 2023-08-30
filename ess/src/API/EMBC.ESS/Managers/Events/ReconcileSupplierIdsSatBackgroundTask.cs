@@ -6,11 +6,11 @@ using EMBC.Utilities.Hosting;
 
 namespace EMBC.ESS.Managers.Events
 {
-    public class PendingPaymentsProcessingBackgroundTask : IBackgroundTask
+    public class ReconcileSupplierIdsSatBackgroundTask : IBackgroundTask
     {
         private readonly EventsManager eventsManager;
 
-        public string Schedule => "45 * 9-19 * * ?"; //At 45 seconds past the minute, between 09:00 AM and 07:59 PM
+        public string Schedule => "0 */5 6-18 * * SAT"; //Every 5 minutes, between 06:00 AM and 06:59 PM, only on Saturday
 
         public int DegreeOfParallelism => 1;
 
@@ -18,14 +18,14 @@ namespace EMBC.ESS.Managers.Events
 
         public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(5);
 
-        public PendingPaymentsProcessingBackgroundTask(EventsManager eventsManager)
+        public ReconcileSupplierIdsSatBackgroundTask(EventsManager eventsManager)
         {
             this.eventsManager = eventsManager;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await eventsManager.Handle(new ProcessPendingPaymentsCommand());
+            await eventsManager.Handle(new ReconcileSupplierInfoCommand());
         }
     }
 }
