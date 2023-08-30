@@ -8,6 +8,7 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Grpc.Core;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client;
@@ -48,6 +49,7 @@ namespace EMBC.ESS.Resources.Payments
         {
             SearchPaymentRequest r => await Handle(r, CreateCancellationToken()),
             GetCasPaymentStatusRequest r => await Handle(r, CreateCancellationToken()),
+            GetCasInvoiceRequest r => await Handle(r, CreateCancellationToken()),
 
             _ => throw new NotSupportedException($"type {request.GetType().Name}")
         };
@@ -81,7 +83,7 @@ namespace EMBC.ESS.Resources.Payments
             {
                 // link to payee
                 var payee = await ctx.contacts.ByKey(payment._era_payee_value).GetValueAsync();
-                payment.era_suppliernumber = payee.era_sitesuppliernumber;
+                payment.era_suppliernumber = payee.era_suppliernumber;
                 payment.era_sitesuppliernumber = payee.era_sitesuppliernumber;
                 ctx.SetLink(payment, nameof(era_etransfertransaction.era_Payee_contact), payee);
             }
@@ -457,6 +459,19 @@ namespace EMBC.ESS.Resources.Payments
                     StatusDescription = p.Voidreason
                 })
             };
+        }
+
+        private async Task<GetCasInvoiceResponse> Handle(GetCasInvoiceRequest request, CancellationToken ct)
+        {
+            var invoice = await casGateway.QueryInvoice(request.InvoiceNumber, ct);
+            if (invoice != null)
+            {
+                return new GetCasInvoiceResponse
+                {
+                    Invoice = invoice,
+                };
+            }
+            return null;
         }
 
         private static IEnumerable<string> MapCasStatus(CasPaymentStatus? s) =>
