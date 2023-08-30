@@ -29,4 +29,3 @@ namespace EMBC.ESS.Managers.Events
         }
     }
 }
-
