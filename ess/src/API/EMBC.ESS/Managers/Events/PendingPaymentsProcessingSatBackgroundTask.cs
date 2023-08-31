@@ -10,7 +10,7 @@ namespace EMBC.ESS.Managers.Events
     {
         private readonly EventsManager eventsManager;
 
-        public string Schedule => "45 * 6-18 * * SAT"; //At 45 seconds past the minute, between 06:00 AM and 06:59 PM, only on Saturday
+        public string Schedule => "45 * 13-1 * * SAT"; //At 45 seconds past the minute, between 06:00 AM and 06:59 PM, only on Saturday
 
         public int DegreeOfParallelism => 1;
 
