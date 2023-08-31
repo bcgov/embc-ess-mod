@@ -10,7 +10,7 @@ namespace EMBC.ESS.Managers.Events
     {
         private readonly EventsManager eventsManager;
 
-        public string Schedule => "0 */5 16-3 * * SUN"; //Every 5 minutes, between 09:00 AM and 08:59 PM, only on Sunday
+        public string Schedule => "0 */5 16-1 * * SUN"; //Every 5 minutes, between 09:00 AM and 08:59 PM, only on Sunday
 
         public int DegreeOfParallelism => 1;
 
