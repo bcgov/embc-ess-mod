@@ -193,11 +193,15 @@ namespace EMBC.ESS.Utilities.Cas
         public DateTime Invoicecreationdate { get; set; }
         public int? Paymentnumber { get; set; }
         public string? Paygroup { get; set; }
+        //CAS Talks in PST Payment date is read in converted to UTC write out converted to PST
         public DateTime? Paymentdate { get; set; }
         public decimal? Paymentamount { get; set; }
         public string? Paymentstatus { get; set; }
+        //CAS Talks in PST and Payment status date is read in converted to UTC write out converted to PST
         public DateTime? Paymentstatusdate { get; set; }
+        //CAS Talks in PST Cleared date is read in converted to UTC write out converted to PST
         public DateTime? Cleareddate { get; set; }
+        //CAS Talks in PST Void date is read in converted to UTC write out converted to PST
         public DateTime? voiddate { get; set; }
         public string? Voidreason { get; set; }
         public DateTime Systemdate { get; set; }
@@ -207,7 +211,8 @@ namespace EMBC.ESS.Utilities.Cas
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return DateTime.SpecifyKind(DateTime.Parse(reader.GetString() ?? string.Empty), DateTimeKind.Local);
+            var tmp = DateTime.SpecifyKind(DateTime.Parse(reader.GetString() ?? string.Empty), DateTimeKind.Unspecified);
+            return TimeZoneInfo.ConvertTimeToUtc(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(tmp, DateTimeEx.GetPSTTimeZone()));
         }
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
