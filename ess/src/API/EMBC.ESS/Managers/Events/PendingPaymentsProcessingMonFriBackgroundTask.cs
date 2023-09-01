@@ -6,11 +6,11 @@ using EMBC.Utilities.Hosting;
 
 namespace EMBC.ESS.Managers.Events
 {
-    public class PendingPaymentsProcessingBackgroundTask : IBackgroundTask
+    public class PendingPaymentsProcessingMonFriBackgroundTask : IBackgroundTask
     {
         private readonly EventsManager eventsManager;
 
-        public string Schedule => "45 * 9-19 * * ?"; //At 45 seconds past the minute, between 09:00 AM and 07:59 PM
+        public string Schedule => "45 * 13-3 * * MON-FRI"; //At 45 seconds past the minute, between 06:00 AM and 08:59 PM, Monday through Friday
 
         public int DegreeOfParallelism => 1;
 
@@ -18,7 +18,7 @@ namespace EMBC.ESS.Managers.Events
 
         public TimeSpan InactivityTimeout => TimeSpan.FromMinutes(5);
 
-        public PendingPaymentsProcessingBackgroundTask(EventsManager eventsManager)
+        public PendingPaymentsProcessingMonFriBackgroundTask(EventsManager eventsManager)
         {
             this.eventsManager = eventsManager;
         }

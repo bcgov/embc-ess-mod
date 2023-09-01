@@ -35,16 +35,11 @@ namespace EMBC.Utilities.Csv
             }
         }
 
-        private static string Quote(object value, string quoteIdentifier) =>
-            $"{quoteIdentifier}{Escape(value ?? string.Empty, quoteIdentifier)}{quoteIdentifier}";
-
-        private static string Escape(object value, string quoteIdentifier) =>
-            (quoteIdentifier switch
-            {
-                "\"" => value.ToString().Replace("\"", "\"\""),
-                "'" => value.ToString().Replace("'", "''"),
-                _ => value.ToString()
-            }).Replace("\r", string.Empty).Replace("\n", string.Empty);
+        private static string Quote(object value, string quoteIdentifier)
+        {
+            if (value == null) return string.Empty;
+            return quoteIdentifier + value + quoteIdentifier;
+        }
 
         public static void CreateCSV<T>(this IEnumerable<T> list, string filePath)
         {

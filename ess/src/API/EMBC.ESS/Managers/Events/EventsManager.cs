@@ -835,7 +835,7 @@ namespace EMBC.ESS.Managers.Events
 
             if (newPayments.Any())
             {
-                var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
+                var casBatchName = $"ERA-batch-{DateTime.Now.ToString("yyyyMMddHHmmss")}";
                 var result = (IssuePaymentsBatchResponse)await paymentRepository.Manage(new IssuePaymentsBatchRequest
                 {
                     BatchId = casBatchName,
