@@ -12,7 +12,7 @@ namespace EMBC.Utilities.Extensions
             return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZone());
         }
 
-        private static string GetPSTTimeZone()
+        public static string GetPSTTimeZone()
         {
             return Environment.OSVersion.Platform switch
             {
