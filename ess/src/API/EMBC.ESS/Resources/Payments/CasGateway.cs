@@ -19,6 +19,8 @@ namespace EMBC.ESS.Resources.Payments
         public Task<string> CreateInvoice(string batchName, era_etransfertransaction payment, CancellationToken ct);
 
         public Task<IEnumerable<InvoiceItem>> QueryInvoices(string status, DateTime? statusChangedFrom, DateTime? statusChangedTo, CancellationToken ct);
+
+        public Task<InvoiceItem> QueryInvoice(string invoiceNumber, string suppliernumber, string suppliersitecode, CancellationToken ct);
     }
 
     [Serializable]
@@ -174,6 +176,26 @@ namespace EMBC.ESS.Resources.Payments
             }
 
             return items;
+        }
+
+        public async Task<InvoiceItem> QueryInvoice(string invoiceNumber, string suppliernumber, string suppliersitecode, CancellationToken ct)
+        {
+            var config = await casSystemConfigurationProvider.Get(ct);
+            var response = await casWebProxy.GetInvoiceAsync(new GetInvoiceRequest
+            {
+                PayGroup = config.PayGroup,
+                InvoiceNumber = invoiceNumber,
+                SupplierNumber = suppliernumber,
+                SupplierSiteCode = suppliersitecode,
+            }, ct);
+
+            var items = new List<InvoiceItem>(response.Items);
+            if (items.Count > 0)
+            {
+                return items[0];
+            }
+            //should only be one page
+            return null;
         }
     }
 }
