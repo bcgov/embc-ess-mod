@@ -35,7 +35,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
             var type = checkedSupport.era_supporttype.Value;
             var householdMembers = checkedSupport.era_era_householdmember_era_evacueesupport.ToList();
 
-            var similarSupports = new era_evacueesupport[0];
+            var similarSupports = new List<era_evacueesupport>();
 
             //EMBCESSMOD-4653 - treat 'Food - Groceries' and 'Food - Restaurant Meals' as the same support type
             if (type == (int)SupportType.Food_Groceries ||
@@ -43,19 +43,17 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
             {
                 similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
                 s.era_name != checkedSupport.era_name && (s.era_supporttype == (int)SupportType.Food_Groceries || s.era_supporttype == (int)SupportType.Food_Restaurant) &&
-                s.statuscode != (int)SupportStatus.Cancelled && s.statuscode != (int)SupportStatus.Void &&
-                ((s.era_validfrom >= from && s.era_validfrom <= to) ||
-                (s.era_validto >= from && s.era_validto <= to))))
-                .GetAllPagesAsync()).ToArray();
+                s.statuscode != (int)Resources.Supports.SupportStatus.Cancelled && s.statuscode != (int)Resources.Supports.SupportStatus.Void &&
+                ((s.era_validfrom >= from && s.era_validfrom <= to) || (s.era_validto >= from && s.era_validto <= to) || (s.era_validfrom < from && s.era_validto > to))))
+                .GetAllPagesAsync()).ToList();
             }
             else
             {
                 similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
                 s.era_name != checkedSupport.era_name && s.era_supporttype == type &&
-                s.statuscode != (int)SupportStatus.Cancelled && s.statuscode != (int)SupportStatus.Void &&
-                ((s.era_validfrom >= from && s.era_validfrom <= to) ||
-                (s.era_validto >= from && s.era_validto <= to))))
-                .GetAllPagesAsync()).ToArray();
+                s.statuscode != (int)Resources.Supports.SupportStatus.Cancelled && s.statuscode != (int)Resources.Supports.SupportStatus.Void &&
+                ((s.era_validfrom >= from && s.era_validfrom <= to) || (s.era_validto >= from && s.era_validto <= to) || (s.era_validfrom < from && s.era_validto > to))))
+                .GetAllPagesAsync()).ToList();
             }
 
             similarSupports.AsParallel().ForAll(s =>
