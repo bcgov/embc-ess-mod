@@ -34,13 +34,28 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
             var type = checkedSupport.era_supporttype.Value;
             var householdMembers = checkedSupport.era_era_householdmember_era_evacueesupport.ToArray();
 
-            var similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
+            var similarSupports = new era_evacueesupport[0];
+
+            //EMBCESSMOD-4653 - treat 'Food - Groceries' and 'Food - Restaurant Meals' as the same support type
+            if (type == (int)SupportType.Food_Groceries ||
+                    type == (int)SupportType.Food_Restaurant)
+            {
+                similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
+                s.era_name != checkedSupport.era_name && (s.era_supporttype == (int)SupportType.Food_Groceries || s.era_supporttype == (int)SupportType.Food_Restaurant) &&
+                s.statuscode != (int)SupportStatus.Cancelled && s.statuscode != (int)SupportStatus.Void &&
+                ((s.era_validfrom >= from && s.era_validfrom <= to) ||
+                (s.era_validto >= from && s.era_validto <= to))))
+                .GetAllPagesAsync()).ToArray();
+            }
+            else
+            {
+                similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
                 s.era_name != checkedSupport.era_name && s.era_supporttype == type &&
                 s.statuscode != (int)SupportStatus.Cancelled && s.statuscode != (int)SupportStatus.Void &&
                 ((s.era_validfrom >= from && s.era_validfrom <= to) ||
                 (s.era_validto >= from && s.era_validto <= to))))
                 .GetAllPagesAsync()).ToArray();
-
+            }
             foreach (var similarSupport in similarSupports)
             {
                 await ctx.LoadPropertyAsync(similarSupport, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
