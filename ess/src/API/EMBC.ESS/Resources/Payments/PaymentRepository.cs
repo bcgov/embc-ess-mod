@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Grpc.Core;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client;
@@ -40,6 +40,7 @@ namespace EMBC.ESS.Resources.Payments
                 MarkPaymentAsPaidRequest r => await Handle(r, CreateCancellationToken()),
                 MarkPaymentAsIssuedRequest r => await Handle(r, CreateCancellationToken()),
                 ReconcileSupplierIdRequest r => await Handle(r, CreateCancellationToken()),
+                ReconcileEtransferRequest r => await Handle(r, CreateCancellationToken()),
 
                 _ => throw new NotSupportedException($"type {request.GetType().Name}")
             };
@@ -49,7 +50,6 @@ namespace EMBC.ESS.Resources.Payments
         {
             SearchPaymentRequest r => await Handle(r, CreateCancellationToken()),
             GetCasPaymentStatusRequest r => await Handle(r, CreateCancellationToken()),
-            GetCasInvoiceRequest r => await Handle(r, CreateCancellationToken()),
 
             _ => throw new NotSupportedException($"type {request.GetType().Name}")
         };
@@ -83,9 +83,10 @@ namespace EMBC.ESS.Resources.Payments
             {
                 // link to payee
                 var payee = await ctx.contacts.ByKey(payment._era_payee_value).GetValueAsync();
-                payment.era_suppliernumber = payee.era_suppliernumber;
-                payment.era_sitesuppliernumber = payee.era_sitesuppliernumber;
                 ctx.SetLink(payment, nameof(era_etransfertransaction.era_Payee_contact), payee);
+                //Supplier Info should not be copied here. It should be copied just before send.
+                //There can be seconds or hours before actual send
+                //In that time it could change on payee.
             }
 
             await ctx.SaveChangesAsync(ct);
@@ -97,9 +98,53 @@ namespace EMBC.ESS.Resources.Payments
             return new CreatePaymentResponse { Id = id };
         }
 
+        private async Task<ReconcileEtransferResponse> Handle(ReconcileEtransferRequest request, CancellationToken ct)
+        {
+            if (request.InvoiceId == null) throw new ArgumentNullException(nameof(request.InvoiceId));
+            var ctx = essContextFactory.Create();
+            IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
+            if (!string.IsNullOrEmpty(request.InvoiceId)) query = query.Where(tx => tx.era_name == request.InvoiceId);
+            query = query.OrderBy(q => q.createdon);
+            IEnumerable<era_etransfertransaction> payments = Array.Empty<era_etransfertransaction>();
+            payments = (await query.GetAllPagesAsync(ct)).ToArray();
+            if (payments.Any())
+            {
+                //Should be 1 result
+                var payment = payments.FirstOrDefault();
+                if (payment._era_payee_value.HasValue)
+                {
+                    // link to payee
+                    var payee = await ctx.contacts.ByKey(payment._era_payee_value).GetValueAsync();
+                    if (payee != null
+                        && payee.era_suppliernumber != null && !"Rejected".Equals(payee.era_suppliernumber) && !"MissingData".Equals(payee.era_sitesuppliernumber)
+                        && payee.era_sitesuppliernumber != null)
+                    {
+                        var invoice = await casGateway.QueryInvoice(request.InvoiceId, payee.era_suppliernumber, payee.era_sitesuppliernumber, ct);
+                        if (invoice != null)
+                        {
+                            //Copy date from CAS Result
+                            payment.era_suppliernumber = invoice.Suppliernumber;
+                            payment.era_sitesuppliernumber = invoice.Sitecode;
+                            payment.era_casresponsedate = invoice.Paymentstatusdate;
+                            payment.era_gldate = invoice.Invoicecreationdate;
+                            payment.era_invoicedate = invoice.Invoicecreationdate;
+                            payment.era_dateinvoicereceived = invoice.Invoicecreationdate;
+                            var casBatchName = $"ERA-batch-{invoice.Invoicecreationdate.ToString("yyyyMMddHHmmss")}";
+                            payment.era_invoicebatchname = casBatchName;
+                            //Save the data
+                            ctx.UpdateObject(payment);
+                            await ctx.SaveChangesAsync(ct);
+                        }
+                    }
+                }
+            }
+            ctx.DetachAll();
+            return new ReconcileEtransferResponse { EtrasnferIdReconciled = request.InvoiceId };
+        }
+
         private async Task<SearchPaymentResponse> Handle(SearchPaymentRequest request, CancellationToken ct)
         {
-            if (string.IsNullOrEmpty(request.ById) && string.IsNullOrEmpty(request.ByLinkedSupportId) && !request.ByStatus.HasValue)
+            if (string.IsNullOrEmpty(request.ById) && string.IsNullOrEmpty(request.ByLinkedSupportId) && !request.ByStatus.HasValue && !request.InvoiceDateEmpty)
                 throw new ArgumentException("Payments query must have at least one criteria", nameof(request));
 
             var ctx = essContextFactory.CreateReadOnly();
@@ -126,9 +171,17 @@ namespace EMBC.ESS.Resources.Payments
                 if (!string.IsNullOrEmpty(request.ById)) query = query.Where(tx => tx.era_name == request.ById);
                 if (request.ByStatus.HasValue) query = query.Where(tx => tx.statuscode == (int)request.ByStatus.Value);
                 if (request.ByQueueStatus.HasValue) query = query.Where(tx => tx.era_queueprocessingstatus == (int)request.ByQueueStatus.Value);
+                if (request.InvoiceDateEmpty) query = query.Where(c => c.era_invoicedate == null);
                 query = query.OrderBy(q => q.createdon);
                 if (request.LimitNumberOfItems.HasValue) query = query.Take(request.LimitNumberOfItems.Value);
-
+                if (request.InvoiceDateEmpty)
+                {
+                    payments = (await query.GetTopAsync("100", ct)).ToArray();
+                }
+                else
+                {
+                    payments = (await query.GetAllPagesAsync(ct)).ToArray();
+                }
                 payments = (await query.GetAllPagesAsync(ct)).ToArray();
                 await Parallel.ForEachAsync(payments, ct, async (tx, ct) =>
                 {
@@ -282,11 +335,13 @@ namespace EMBC.ESS.Resources.Payments
                 payment.era_gldate = now;
                 payment.era_invoicedate = now;
                 payment.era_dateinvoicereceived = now;
+                payment.era_invoicebatchname = batch;
                 payment.era_suppliernumber = payee.era_suppliernumber;
                 payment.era_sitesuppliernumber = payee.era_sitesuppliernumber;
 
                 // lock payment
                 payment.era_queueprocessingstatus = (int)QueueStatus.Processing;
+                ctx.UpdateObject(payment);
                 await ctx.SaveChangesAsync(ct);
                 ctx.Detach(payment);
 
@@ -459,19 +514,6 @@ namespace EMBC.ESS.Resources.Payments
                     StatusDescription = p.Voidreason
                 })
             };
-        }
-
-        private async Task<GetCasInvoiceResponse> Handle(GetCasInvoiceRequest request, CancellationToken ct)
-        {
-            var invoice = await casGateway.QueryInvoice(request.InvoiceNumber, ct);
-            if (invoice != null)
-            {
-                return new GetCasInvoiceResponse
-                {
-                    Invoice = invoice,
-                };
-            }
-            return null;
         }
 
         private static IEnumerable<string> MapCasStatus(CasPaymentStatus? s) =>

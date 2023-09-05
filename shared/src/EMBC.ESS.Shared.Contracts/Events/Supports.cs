@@ -90,6 +90,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
     { }
     public class ReconcileSupplierInfoCommand : Command
     { }
+    public class FullReconcilePaymentsCommand : Command
+    { }
 
     [JsonConverter(typeof(PolymorphicJsonConverter<Support>))]
     public abstract class Support

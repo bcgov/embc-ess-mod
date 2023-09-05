@@ -994,94 +994,6 @@ namespace EMBC.ESS.Managers.Events
                 nextPollDate);
         }
 
-        public async System.Threading.Tasks.Task Handle(FullReconcilePaymentsCommand _)
-        {
-            var ct = new CancellationTokenSource().Token;
-            var logger = telemetryProvider.Get(nameof(ReconcilePaymentsCommand));
-            //Get the date to reconcile to
-
-            //Fetch all etransfer_transastions
-
-            //For each etransfer fetch the Invoice from CAS and reconcile the data
-            var paymentsToReconcile = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
-            {
-                ByStatus = PaymentStatus.Created,
-                ByQueueStatus = QueueStatus.Pending,
-            })).Items.Cast<InteracSupportPayment>().ToArray();
-
-            logger.LogInformation("Found {100} payments to reconcile (Max per = 100)", paymentsToReconcile.Length);
-
-            if (paymentsToReconcile.Any())
-            {
-            }
-            var lastPollDate = await CalculateEarliestDateForPolling(ct);
-            logger.LogInformation($"Polling for CAS payments after {lastPollDate}");
-
-            var issuedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
-            {
-                ChangedFrom = lastPollDate,
-                InStatus = CasPaymentStatus.Pending
-            })).Payments.ToArray();
-
-            await Parallel.ForEachAsync(issuedPayments, ct, async (paymentDetails, ct) =>
-            {
-                try
-                {
-                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = paymentDetails });
-                }
-                catch (Exception e)
-                {
-                    logger.LogError(e, $"Failed to reconcile issued payment {paymentDetails.PaymentId}: {e.Message}");
-                }
-            });
-
-            var clearedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
-            {
-                ChangedFrom = lastPollDate,
-                InStatus = CasPaymentStatus.Cleared
-            })).Payments.ToArray();
-
-            await Parallel.ForEachAsync(clearedPayments, ct, async (paymentDetails, ct) =>
-            {
-                try
-                {
-                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = paymentDetails });
-                }
-                catch (Exception e)
-                {
-                    logger.LogError(e, $"Failed to reconcile cleared payment {paymentDetails.PaymentId}: {e.Message}");
-                }
-            });
-
-            var failedPayments = ((GetCasPaymentStatusResponse)await paymentRepository.Query(new GetCasPaymentStatusRequest
-            {
-                ChangedFrom = lastPollDate,
-                InStatus = CasPaymentStatus.Failed
-            })).Payments.ToArray();
-
-            await Parallel.ForEachAsync(failedPayments, ct, async (paymentDetails, ct) =>
-            {
-                try
-                {
-                    await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = paymentDetails });
-                }
-                catch (Exception e)
-                {
-                    logger.LogError(e, $"Failed to reconcile failed payment {paymentDetails.PaymentId}: {e.Message}");
-                }
-            });
-
-            // set the last poll time to -5 mins to account for system clock differences
-            var nextPollDate = DateTime.SpecifyKind(DateTime.UtcNow.AddMinutes(-5), DateTimeKind.Utc);
-            await cache.Set(paymentPollingCacheKey, nextPollDate, TimeSpan.FromDays(7), ct);
-
-            logger.LogInformation("Reconciled {0} issued payments, {1} failed payments, {2} cleared payments; set last polling date to {3} UTC",
-                issuedPayments.Length,
-                clearedPayments.Length,
-                failedPayments.Length,
-                nextPollDate);
-        }
-
         private const string paymentPollingCacheKey = "CASPollDate";
 
         private async Task<DateTime> CalculateEarliestDateForPolling(CancellationToken ct)
@@ -1101,31 +1013,6 @@ namespace EMBC.ESS.Managers.Events
 
             return lastPollDate.Value;
         }
-
-        /*public async System.Threading.Tasks.Task Handle(ReconcileSupplierInfoCommand _)
-        {
-            var logger = telemetryProvider.Get(nameof(ReconcileSupplierInfoCommand));
-            var ct = new CancellationTokenSource().Token;
-
-            var evacueesWithNoSupplier = ((EvacueeQueryResult)await evacueesRepository.Query(new EvacueeQuery
-            {
-                BCSCWithNoSupplierId = true,
-            })).Items.Cast<Evacuee>().ToArray();
-
-            logger.LogInformation("Found {0} Registrants with a BCSC but no SupplierId", evacueesWithNoSupplier.Length);
-
-            if (evacueesWithNoSupplier.Any())
-            {
-                var jobName = $"ERA-Reconcile Supplier Ids-batch-{DateTime.Now.ToString("yyyyMMddhhmmss")}";
-                var result = (ReconcileSupplierIdsBatchResponse)await paymentRepository.Manage(new ReconcileSupplierIdsBatchRequest
-                {
-                    BatchId = jobName,
-                    RegitrantIds = evacueesWithNoSupplier.Select(e => e.Id)
-                });
-
-                logger.LogInformation("Batch {0} results: {1} SupplierIdsReconciled: {2} Registrants rejected: {3} Registrants missing first/last name or postalcode", jobName, result.RegistrantIdsReconciled.Count(), result.RejectedRegistrants.Count(), result.ContactsMissingData.Count());
-            }
-        }*/
 
         public async System.Threading.Tasks.Task Handle(ReconcileSupplierInfoCommand _)
         {
@@ -1166,14 +1053,15 @@ namespace EMBC.ESS.Managers.Events
             });
         }
 
-        /*public async System.Threading.Tasks.Task Handle(ReconcileSupplierInfoCommand _)
+        public async System.Threading.Tasks.Task Handle(FullReconcilePaymentsCommand _)
         {
-            var logger = telemetryProvider.Get(nameof(ReconcileSupplierInfoCommand));
+            //Fetch all etransfer_transastions
+            var logger = telemetryProvider.Get(nameof(FullReconcilePaymentsCommand));
             var ct = new CancellationTokenSource().Token;
 
             var payments = ((SearchPaymentResponse)await paymentRepository.Query(new SearchPaymentRequest
             {
-                //ByCreatedOn = ??
+                InvoiceDateEmpty = true,
             })).Items.Cast<Payment>().ToArray();
 
             logger.LogInformation("Found {0} etransfer_transactions to Reconcile", payments.Length);
@@ -1184,25 +1072,25 @@ namespace EMBC.ESS.Managers.Events
                 try
                 {
                     logger.LogInformation("Attempting to Reconcile Invoice Info for etransfer {0} ", payment.Id);
-                    var result = await paymentRepository.Manage(new ReconcileSupplierIdRequest { RegitrantId = evacuee.Id });
-                    var outResult = (ReconcileSupplierIdResponse)result;
-                    logger.LogInformation("Registrant {0} updated with SupplierNumber {1}", evacuee.Id, outResult.SupplierNumber);
+                    var result = await paymentRepository.Manage(new ReconcileEtransferRequest { InvoiceId = payment.Id });
+                    var outResult = (ReconcileEtransferResponse)result;
+                    logger.LogInformation("Invoice {0} has been reconciled", payment.Id);
                 }
                 catch (CasException e)
                 {
-                    logger.LogInformation("Registrant {0} SupplierNumber was Rejected.", evacuee.Id);
+                    logger.LogInformation("Unable not Reconcile Invoice Info for etransfer {0} ", payment.Id);
                     logger.LogInformation(e.Message);
                 }
                 catch (ArgumentNullException e)
                 {
-                    logger.LogInformation("Registrant {0} SupplierNumber could not be set do to missing data.", evacuee.Id);
+                    logger.LogInformation("Unable not Reconcile Invoice Info for etransfer {0} ", payment.Id);
                     logger.LogInformation(e.Message);
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, $"Failed to reconcile Supplier Info {evacuee.Id}: {e.Message}");
+                    logger.LogError(e, $"Failed to reconcile Invoice Info {payment.Id}: {e.Message}");
                 }
             });
-        }*/
+        }
     }
 }

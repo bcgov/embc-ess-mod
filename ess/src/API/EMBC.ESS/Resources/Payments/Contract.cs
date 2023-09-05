@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EMBC.ESS.Utilities.Cas;
 
 namespace EMBC.ESS.Resources.Payments
 {
@@ -82,7 +81,7 @@ namespace EMBC.ESS.Resources.Payments
         public string ByLinkedSupportId { get; set; }
         public int? LimitNumberOfItems { get; set; }
         public QueueStatus? ByQueueStatus { get; set; }
-        public DateTime ByCreatedOn { get; set; }
+        public bool InvoiceDateEmpty { get; set; } = false;
     }
 
     public class SearchPaymentResponse : QueryPaymentResponse
@@ -122,6 +121,17 @@ namespace EMBC.ESS.Resources.Payments
         public IEnumerable<(string Id, Exception Error)> ContactsMissingData { get; set; } = Array.Empty<(string, Exception)>();
     }
 
+    public class ReconcileEtransferRequest : ManagePaymentRequest
+    {
+        public string BatchId { get; set; }
+        public string InvoiceId { get; set; }
+    }
+
+    public class ReconcileEtransferResponse : ManagePaymentResponse
+    {
+        public string EtrasnferIdReconciled { get; set; }
+    }
+
     public class ReconcileSupplierIdResponse : ManagePaymentResponse
     {
         public string SupplierNumber { get; set; }
@@ -137,16 +147,6 @@ namespace EMBC.ESS.Resources.Payments
     public class GetCasPaymentStatusResponse : QueryPaymentResponse
     {
         public IEnumerable<CasPaymentDetails> Payments { get; set; } = Array.Empty<CasPaymentDetails>();
-    }
-
-    public class GetCasInvoiceRequest : QueryPaymentRequest
-    {
-        public string? InvoiceNumber { get; set; }
-    }
-
-    public class GetCasInvoiceResponse : QueryPaymentResponse
-    {
-        public InvoiceItem Invoice { get; set; }
     }
 
     public class CasPaymentDetails
