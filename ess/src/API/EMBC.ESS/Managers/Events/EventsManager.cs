@@ -939,6 +939,7 @@ namespace EMBC.ESS.Managers.Events
              {
                  try
                  {
+                     logger.LogInformation($"Reconciling {paymentDetails.PaymentId}, PaymentDetails.StatusChangeDate is {paymentDetails.StatusChangeDate}");
                      await paymentRepository.Manage(new ProcessCasPaymentReconciliationStatusRequest { CasPaymentDetails = paymentDetails });
                  }
                  catch (Exception e)

@@ -3,6 +3,7 @@ using System.Linq;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Utilities.Cas;
+using EMBC.Utilities.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Tests.Integration.ESS.Resources
@@ -264,6 +265,17 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var invoice = mockedCas.GetInvoiceByInvoiceNumber(createdPayment.PaymentId).ShouldNotBeNull();
             invoice.NameLine1.ShouldBeNull();
             invoice.NameLine2.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task ConvertPstToUtc()
+        {
+            var registrantId = await CreateNewRegistrant();
+            var tmp = DateTime.SpecifyKind(DateTime.Parse("07-SEP-2023 14:00:41"), DateTimeKind.Unspecified);
+            tmp = TimeZoneInfo.ConvertTimeToUtc(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(tmp, DateTimeEx.GetPSTTimeZone()));
+            tmp.Second.ShouldBe(41);
+            tmp.Minute.ShouldBe(0);
+            tmp.Hour.ShouldBe(21);
         }
     }
 }
