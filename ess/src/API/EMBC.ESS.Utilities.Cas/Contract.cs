@@ -212,7 +212,7 @@ namespace EMBC.ESS.Utilities.Cas
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var tmp = DateTime.SpecifyKind(DateTime.Parse(reader.GetString() ?? string.Empty), DateTimeKind.Unspecified);
-            return TimeZoneInfo.ConvertTimeToUtc(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(tmp, DateTimeEx.GetPSTTimeZone()));
+            return tmp.FromUnspecifiedPstToUtc();
         }
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)

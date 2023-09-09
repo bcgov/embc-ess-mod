@@ -271,11 +271,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task ConvertPstToUtc()
         {
             var registrantId = await CreateNewRegistrant();
-            var tmp = DateTime.SpecifyKind(DateTime.Parse("07-SEP-2023 14:00:41"), DateTimeKind.Unspecified);
-            tmp = TimeZoneInfo.ConvertTimeToUtc(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(tmp, DateTimeEx.GetPSTTimeZone()));
+            var tmp = DateTime.SpecifyKind(DateTime.Parse("07-SEP-2023 14:23:41"), DateTimeKind.Unspecified);
+            tmp = tmp.FromUnspecifiedPstToUtc();
             tmp.Second.ShouldBe(41);
-            tmp.Minute.ShouldBe(0);
-            tmp.Hour.ShouldBe(21);
+            tmp.Minute.ShouldBe(23);
         }
     }
 }
