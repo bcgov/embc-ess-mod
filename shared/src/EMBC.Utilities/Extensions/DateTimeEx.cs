@@ -12,7 +12,14 @@ namespace EMBC.Utilities.Extensions
             return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZone());
         }
 
-        public static string GetPSTTimeZone()
+        public static DateTime FromUnspecifiedPstToUtc(this DateTime date)
+        {
+            //convert from Unspecified PST to UTC
+            if (date.Kind != DateTimeKind.Unspecified) date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(date, GetPSTTimeZone(), GetUTCTimeZone());
+        }
+
+        private static string GetPSTTimeZone()
         {
             return Environment.OSVersion.Platform switch
             {
