@@ -38,7 +38,7 @@ namespace EMBC.ESS.Resources.Reports
         public async Task<SupportQueryResult> QuerySupport(ReportQuery query)
         {
             var ct = new CancellationTokenSource().Token;
-            var files = (await QueryEvacuationFiles(readCtx, query, ct)).Concat(await QueryTasks(readCtx, query, ct));
+            var files = (await QueryEvacuationFiles(readCtx, query, ct)).Concat(await QueryTasks(readCtx, query, ct)).ToList();
 
             var results = await ParallelLoadSupportsAsync(readCtx, files, ct);
 
@@ -65,9 +65,9 @@ namespace EMBC.ESS.Resources.Reports
             if (query.StartDate.HasValue) filesQuery = filesQuery.Where(f => f.createdon >= query.StartDate.Value);
             if (query.EndDate.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.EndDate.Value);
 
-            var files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync(ct)).ToArray();
-            if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase)).ToArray();
-            if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo)).ToArray();
+            IEnumerable<era_evacuationfile> files = (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync(ct)).ToList();
+            if (!string.IsNullOrEmpty(query.TaskNumber)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId.era_name.Equals(query.TaskNumber, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.EvacuatedTo)) files = files.Where(f => f.era_TaskId != null && f.era_TaskId._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo));
 
             return files;
         }
@@ -85,7 +85,7 @@ namespace EMBC.ESS.Resources.Reports
             if (!string.IsNullOrEmpty(query.TaskNumber)) taskQuery = taskQuery.Where(f => f.era_name == query.TaskNumber);
             if (!string.IsNullOrEmpty(query.EvacuatedTo)) taskQuery = taskQuery.Where(f => f._era_jurisdictionid_value == Guid.Parse(query.EvacuatedTo));
 
-            var tasks = (await ((DataServiceQuery<era_task>)taskQuery).GetAllPagesAsync(ct)).ToArray();
+            var tasks = (await ((DataServiceQuery<era_task>)taskQuery).GetAllPagesAsync(ct)).ToList();
 
             await Parallel.ForEachAsync(tasks, ct, async (t, ct) =>
             {
@@ -123,7 +123,7 @@ namespace EMBC.ESS.Resources.Reports
                 .Expand(m => m.era_Registrant)
                 .Where(m => m._era_evacuationfileid_value == file.era_evacuationfileid))
                 .GetAllPagesAsync(ct))
-                .ToArray();
+                .ToList();
 
             householdMembers.AsParallel().ForAll(m => m.era_EvacuationFileid = file);
             file.era_era_evacuationfile_era_householdmember_EvacuationFileid = new Collection<era_householdmember>(householdMembers);
@@ -151,7 +151,7 @@ namespace EMBC.ESS.Resources.Reports
                 .Expand(s => s.era_GroupLodgingCityID)
                 .Where(s => s._era_evacuationfileid_value == file.era_evacuationfileid))
                 .GetAllPagesAsync(ct))
-                .ToArray();
+                .ToList();
 
             supports.AsParallel().ForAll(s => ctx.AttachTo(nameof(EssContext.era_evacueesupports), s));
 
@@ -159,7 +159,7 @@ namespace EMBC.ESS.Resources.Reports
 
             await Task.WhenAll(loadTasks);
 
-            file.era_era_evacuationfile_era_evacueesupport_ESSFileId = new Collection<era_evacueesupport>(supports.ToArray());
+            file.era_era_evacuationfile_era_evacueesupport_ESSFileId = new Collection<era_evacueesupport>(supports);
             if (file.era_TaskId != null) file.era_TaskId.era_JurisdictionID = ctx.LookupJurisdictionByCode(file.era_TaskId._era_jurisdictionid_value?.ToString());
             supports.AsParallel().ForAll(s =>
             {
