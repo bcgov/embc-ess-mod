@@ -74,9 +74,6 @@ export class EssFilesResultsComponent
    */
   async openESSFile(selectedESSFile: EvacuationFileSearchResultModel) {
     this.essFilesResultsService.setSelectedFile(selectedESSFile.id);
-    const profile$ = await this.essFilesResultsService.getSearchedUserProfile(
-      selectedESSFile
-    );
     if (this.evacueeSessionService.isPaperBased) {
       if (
         this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
