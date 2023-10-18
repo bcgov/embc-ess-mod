@@ -101,6 +101,7 @@ namespace EMBC.ESS.Resources.Payments
         private async Task<ReconcileEtransferResponse> Handle(ReconcileEtransferRequest request, CancellationToken ct)
         {
             if (request.InvoiceId == null) throw new ArgumentNullException(nameof(request.InvoiceId));
+            bool success = false;
             var ctx = essContextFactory.Create();
             IQueryable<era_etransfertransaction> query = ctx.era_etransfertransactions;
             if (!string.IsNullOrEmpty(request.InvoiceId)) query = query.Where(tx => tx.era_name == request.InvoiceId);
@@ -134,12 +135,13 @@ namespace EMBC.ESS.Resources.Payments
                             //Save the data
                             ctx.UpdateObject(payment);
                             await ctx.SaveChangesAsync(ct);
+                            success = true;
                         }
                     }
                 }
             }
             ctx.DetachAll();
-            return new ReconcileEtransferResponse { EtrasnferIdReconciled = request.InvoiceId };
+            return new ReconcileEtransferResponse { EtrasnferIdReconciled = request.InvoiceId, reconciled = success };
         }
 
         private async Task<SearchPaymentResponse> Handle(SearchPaymentRequest request, CancellationToken ct)

@@ -130,6 +130,8 @@ namespace EMBC.ESS.Resources.Payments
     public class ReconcileEtransferResponse : ManagePaymentResponse
     {
         public string EtrasnferIdReconciled { get; set; }
+
+        public bool reconciled { get; set; }
     }
 
     public class ReconcileSupplierIdResponse : ManagePaymentResponse
