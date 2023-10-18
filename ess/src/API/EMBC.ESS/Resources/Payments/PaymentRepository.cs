@@ -145,7 +145,6 @@ namespace EMBC.ESS.Resources.Payments
                             //Save the data
                             ctx.UpdateObject(payment);
                             await ctx.SaveChangesAsync(ct);
-                            success = true;
                         }
                     }
                 }
