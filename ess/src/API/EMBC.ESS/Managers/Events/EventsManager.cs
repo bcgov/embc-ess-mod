@@ -1075,7 +1075,17 @@ namespace EMBC.ESS.Managers.Events
                     logger.LogInformation("Attempting to Reconcile Invoice Info for etransfer {0} ", payment.Id);
                     var result = await paymentRepository.Manage(new ReconcileEtransferRequest { InvoiceId = payment.Id });
                     var outResult = (ReconcileEtransferResponse)result;
-                    logger.LogInformation("Invoice {0} has been reconciled", payment.Id);
+                    if (outResult != null)
+                    {
+                        if (outResult.reconciled == true)
+                        {
+                            logger.LogInformation("Invoice {0} has been reconciled", payment.Id);
+                        }
+                        else
+                        {
+                            logger.LogInformation("Unable to reconile Invoice {0}", payment.Id);
+                        }
+                    }
                 }
                 catch (CasException e)
                 {
