@@ -137,6 +137,16 @@ namespace EMBC.ESS.Resources.Payments
                             await ctx.SaveChangesAsync(ct);
                             success = true;
                         }
+                        else
+                        {
+                            //Invoice not found in CAS
+                            //SET to epoch date to flag records. This will prevent it from being picked up again
+                            payment.era_invoicedate = new DateTime(2999, 12, 31);
+                            //Save the data
+                            ctx.UpdateObject(payment);
+                            await ctx.SaveChangesAsync(ct);
+                            success = true;
+                        }
                     }
                 }
             }
