@@ -17,6 +17,7 @@ export class ComputeWizardService implements Compute {
   ) {}
 
   execute() {
+    console.log('calc exit link ' + this.calculateExitLink());
     this.calculateExitLink();
     this.calculateEvacueeTipText();
     this.calculateMemberTipText();
