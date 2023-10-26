@@ -38,6 +38,7 @@ export class EssfileDashboardComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    console.log('essfile-dashboard component onInit');
     if (
       this.optionInjectionService.instance.optionType ===
         SelectedPathType.remoteExtensions ||
@@ -64,6 +65,7 @@ export class EssfileDashboardComponent implements OnInit {
             });
         });
     } else {
+      console.log('essfile-dashboard component onInit-getEssFile');
       this.getEssFile();
     }
 
@@ -144,8 +146,10 @@ export class EssfileDashboardComponent implements OnInit {
         this.displayBanner =
           this.optionInjectionService.instance.getDashboardBanner(file?.status);
         this.isLoading = !this.isLoading;
+        console.log('essfile-dashboard component getEssFile = file loaded');
       })
       .catch((error) => {
+        console.log('essfile-dashboard component getEssFile - error');
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.fileDashboardError);
