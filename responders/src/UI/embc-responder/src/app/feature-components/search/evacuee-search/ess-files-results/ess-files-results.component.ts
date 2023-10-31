@@ -74,9 +74,6 @@ export class EssFilesResultsComponent
    */
   async openESSFile(selectedESSFile: EvacuationFileSearchResultModel) {
     this.essFilesResultsService.setSelectedFile(selectedESSFile.id);
-    console.log('openEssfile - file: ' + selectedESSFile);
-    console.log('openEssfile - fileid: ' + selectedESSFile.id);
-    console.log('openEssfile - isPaperBased: ' + this.evacueeSessionService.isPaperBased);
     if (this.evacueeSessionService.isPaperBased) {
       if (
         this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters
@@ -87,19 +84,15 @@ export class EssFilesResultsComponent
         this.router.navigate(['responder-access/search/essfile-dashboard']);
       }
     } else {
-      console.log('openEssfile - hasShownIdentification: ' + this.evacueeSearchService.evacueeSearchContext.hasShownIdentification);
-      console.log('openEssfile - isFileCompleted: ' + selectedESSFile.isFileCompleted);
       if (
         !this.evacueeSearchService.evacueeSearchContext
           .hasShownIdentification &&
         !selectedESSFile.isFileCompleted
       ) {
-        console.log('openEssfile - : openUnableAccessDialog');
         this.essFilesResultsService.openUnableAccessDialog();
       } else if (
         !this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
       ) {
-        console.log('openEssfile - : security phrase');
         this.essFilesResultsService.setloadingOverlay(true);
         this.essFileSecurityPhraseService
           .getSecurityPhrase(this.appBaseService?.appModel?.selectedEssFile?.id)
@@ -123,7 +116,6 @@ export class EssFilesResultsComponent
             }
           });
       } else {
-        console.log('openEssfile - routing to: ' + 'responder-access/search/essfile-dashboard');
         this.router.navigate(['responder-access/search/essfile-dashboard']);
       }
     }
