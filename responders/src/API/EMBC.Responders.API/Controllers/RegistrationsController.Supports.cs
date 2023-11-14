@@ -620,7 +620,10 @@ namespace EMBC.Responders.API.Controllers
         EvacueeLostTheReferral,
 
         [Description("Remote Supports")]
-        RemoteSupports
+        RemoteSupports,
+
+        [Description("Remote Mutual Aid")]
+        RemoteMutualAid
     }
 
     public class ReferralPrintRequestResponse
