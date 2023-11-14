@@ -3,5 +3,6 @@
 export enum SupportReprintReason {
   ErrorOnPrintedReferral = 'ErrorOnPrintedReferral',
   PrinterError = 'PrinterError',
-  EvacueeLostTheReferral = 'EvacueeLostTheReferral'
+  EvacueeLostTheReferral = 'EvacueeLostTheReferral',
+  RemoteMutualAid = 'RemoteMutualAid'
 }
