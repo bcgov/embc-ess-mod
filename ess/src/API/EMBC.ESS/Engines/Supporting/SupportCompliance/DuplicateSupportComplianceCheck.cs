@@ -43,7 +43,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
             {
                 similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
                 s.era_name != checkedSupport.era_name && (s.era_supporttype == (int)SupportType.Food_Groceries || s.era_supporttype == (int)SupportType.Food_Restaurant) &&
-                s.statuscode != (int)Resources.Supports.SupportStatus.Cancelled && s.statuscode != (int)Resources.Supports.SupportStatus.Void &&
+                s.statuscode.Value != (int)Resources.Supports.SupportStatus.Cancelled && s.statuscode.Value != (int)Resources.Supports.SupportStatus.Void &&
                 ((s.era_validfrom >= from && s.era_validfrom <= to) || (s.era_validto >= from && s.era_validto <= to) || (s.era_validfrom < from && s.era_validto > to))))
                 .GetAllPagesAsync()).ToList();
             }
@@ -51,7 +51,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportCompliance
             {
                 similarSupports = (await ((DataServiceQuery<era_evacueesupport>)ctx.era_evacueesupports.Where(s =>
                 s.era_name != checkedSupport.era_name && s.era_supporttype == type &&
-                s.statuscode != (int)Resources.Supports.SupportStatus.Cancelled && s.statuscode != (int)Resources.Supports.SupportStatus.Void &&
+                s.statuscode.Value != (int)Resources.Supports.SupportStatus.Cancelled && s.statuscode.Value != (int)Resources.Supports.SupportStatus.Void &&
                 ((s.era_validfrom >= from && s.era_validfrom <= to) || (s.era_validto >= from && s.era_validto <= to) || (s.era_validfrom < from && s.era_validto > to))))
                 .GetAllPagesAsync()).ToList();
             }
