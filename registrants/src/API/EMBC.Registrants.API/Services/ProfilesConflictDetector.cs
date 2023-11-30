@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Services
@@ -39,7 +40,7 @@ namespace EMBC.Registrants.API.Services
             (address == null && other == null) ||
             (address != null &&
             address.AddressLine1.StringSafeEquals(other?.AddressLine1) &&
-            address.PostalCode.StringSafeEquals(other?.PostalCode) &&
+            address.PostalCode.RemoveWhitespace().StringSafeEquals(other?.PostalCode.RemoveWhitespace()) &&
             address.StateProvince.StringSafeEquals(other?.StateProvince));
 
         private static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
@@ -52,5 +53,11 @@ namespace EMBC.Registrants.API.Services
 
         private static bool StringSafeEquals(this string s, string other) =>
             string.Equals((s ?? string.Empty).Trim(), (other ?? string.Empty).Trim(), StringComparison.InvariantCultureIgnoreCase);
+        public static string RemoveWhitespace(this string input)
+        {
+            return new string(input.ToCharArray()
+                .Where(c => !char.IsWhiteSpace(c))
+                .ToArray());
+        }
     }
 }
