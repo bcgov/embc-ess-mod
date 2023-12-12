@@ -404,18 +404,11 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       thisSupport.toTime
     );
     const overlappingSupports = existingSupports.filter(
-      (s) => {
-        if (this.stepSupportsService.supportTypeToAdd.description === SupportSubCategory.Food_Groceries || this.stepSupportsService.supportTypeToAdd.description === SupportSubCategory.Food_Restaurant) {
-          this.generateSupportType(s) === SupportSubCategory.Food_Groceries || this.generateSupportType(s) === SupportSubCategory.Food_Restaurant &&
-            moment(to).isSameOrAfter(moment(s.from)) &&
-            moment(from).isSameOrBefore(moment(s.to))
-        } else {
-          this.generateSupportType(s) ===
-            this.stepSupportsService.supportTypeToAdd.description &&
-            moment(to).isSameOrAfter(moment(s.from)) &&
-            moment(from).isSameOrBefore(moment(s.to))
-        }
-      }
+      (s) =>
+        this.generateSupportType(s) ===
+          this.stepSupportsService.supportTypeToAdd.description &&
+        moment(to).isSameOrAfter(moment(s.from)) &&
+        moment(from).isSameOrBefore(moment(s.to))
     );
     hasConflict = overlappingSupports.length > 0;
 
