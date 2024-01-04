@@ -76,7 +76,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             }
             catch (Exception e)
             {
-                throw new Exception($"Failed to post submission '{evt.ReferenceNumber}' to Dynamics: {e.Message}", e);
+                throw new Exception($"Database Error or Unavailable! Details: Failed to post submission '{evt.ReferenceNumber}' to Dynamics: {e.Message}", e);
             }
         }
 
