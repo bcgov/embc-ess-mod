@@ -379,6 +379,20 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  generateSupportTypeValue(element: Support): string {
+    if (element?.subCategory === 'None') {
+      const category = this.loadEvacueeListService
+        .getSupportCategories()
+        .find((value) => value.value === element?.category);
+      return category?.value;
+    } else {
+      const subCategory = this.loadEvacueeListService
+        .getSupportSubCategories()
+        .find((value) => value.value === element?.subCategory);
+      return subCategory?.value;
+    }
+  }
+
   validateDelivery() {
     let hasConflict = false;
     if (!this.supportDetailsForm.valid) {
@@ -407,10 +421,19 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       (s) =>
         this.generateSupportType(s) ===
           this.stepSupportsService.supportTypeToAdd.description &&
-        moment(to).isSameOrAfter(moment(s.from)) &&
-        moment(from).isSameOrBefore(moment(s.to))
+          moment(to).isSameOrAfter(moment(s.from)) &&
+          moment(from).isSameOrBefore(moment(s.to))
     );
-    hasConflict = overlappingSupports.length > 0;
+    const overlappingSupportsFood = existingSupports.filter(
+      (s) =>
+        (((this.generateSupportTypeValue(s) == SupportSubCategory.Food_Groceries.toString()) &&
+          moment(to).isSameOrAfter(moment(s.from)) &&
+          moment(from).isSameOrBefore(moment(s.to))) || ((this.generateSupportTypeValue(s) == SupportSubCategory.Food_Restaurant.toString()) &&
+            moment(to).isSameOrAfter(moment(s.from)) &&
+            moment(from).isSameOrBefore(moment(s.to))))
+    );
+    
+    hasConflict = overlappingSupports.length > 0 || overlappingSupportsFood.length > 0;
 
     if (hasConflict) {
       this.dialog
