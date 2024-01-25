@@ -19,7 +19,7 @@ import { SupportDetailsService } from './support-details.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { Support, SupportSubCategory } from 'src/app/core/api/models';
+import { Support, SupportStatus, SupportSubCategory } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { ReferralCreationService } from '../../step-supports/referral-creation.service';
@@ -399,9 +399,9 @@ export class SupportDetailsComponent implements OnInit, OnDestroy {
       this.supportDetailsForm.markAllAsTouched();
       return;
     }
-
-    let existingSupports = this.existingSupports;
-
+    
+    let existingSupports = this.existingSupports.filter((x) => x.status !== SupportStatus.Cancelled.toString());
+    
     if (this.editFlag) {
       existingSupports = existingSupports.filter(
         (s) => s !== this.stepSupportsService.selectedSupportDetail
