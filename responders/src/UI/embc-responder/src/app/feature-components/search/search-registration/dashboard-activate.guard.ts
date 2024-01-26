@@ -64,7 +64,14 @@ export class DashboardActivateGuard implements CanActivate {
           ?.evacueeSearchParameters !== null &&
         this.evacueeSearchService?.evacueeSearchContext
           ?.evacueeSearchParameters !== undefined
-      );
+      ) || (
+          selectedFileId !== null &&
+          selectedFileId !== undefined &&
+          this.evacueeSearchService?.evacueeSearchContext
+            ?.evacueeSearchParameters !== null &&
+          this.evacueeSearchService?.evacueeSearchContext
+            ?.evacueeSearchParameters !== undefined
+        );
     }
   }
 }
