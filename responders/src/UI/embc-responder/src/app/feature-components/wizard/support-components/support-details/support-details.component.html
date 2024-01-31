@@ -104,7 +104,7 @@
                 </div>
               </div>
               <div class="row align-items-center">
-                <div class="col-md-4">
+                <div class="col-md-8">
                   <mat-form-field appearance="outline">
                     <input
                       formControlName="paperSupportNumber"
@@ -153,7 +153,9 @@
                         )
                       "
                     >
-                      Paper Referral Number already exists</mat-error
+                      Paper Referral Number already exists for the same Support type: {{
+          stepSupportsService?.supportTypeToAdd?.description
+        }}</mat-error
                     >
                   </mat-form-field>
                 </div>
