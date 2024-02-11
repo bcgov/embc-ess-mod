@@ -23,7 +23,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/build-template.yml
     with:
-      IMAGE_CONTEXT: src
+      IMAGE_CONTEXT: oauth-server/src/API
       IMAGE_FILE: oauth-server/src/API/Dockerfile
       IMAGE_NAME: oauth-server
       REGISTRY: ${{ vars.DOCKER_REGISTRY }}

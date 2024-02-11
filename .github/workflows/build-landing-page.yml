@@ -23,7 +23,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/build-template.yml
     with:
-      IMAGE_CONTEXT: src
+      IMAGE_CONTEXT: landing-page/src
       IMAGE_FILE: landing-page/src/Dockerfile
       IMAGE_NAME: landing-page
       REGISTRY: ${{ vars.DOCKER_REGISTRY }}
