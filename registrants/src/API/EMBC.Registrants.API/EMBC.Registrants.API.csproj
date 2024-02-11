@@ -27,7 +27,7 @@
     <ItemGroup>
         <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="6.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
-        <PackageReference Include="NSwag.AspNetCore" Version="13.17.0" />
+        <PackageReference Include="NSwag.AspNetCore" Version="13.20.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
