@@ -1,4 +1,6 @@
 .vs
+.idea
+.cr
 **/node_modules/
 # environment variables for docker-compose
 *.env

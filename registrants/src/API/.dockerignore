@@ -23,3 +23,11 @@
 **/values.dev.yaml
 LICENSE
 README.md
+
+# ignore symlinks
+EMBC.ESS.Shared.Contracts
+EMBC.Utilities
+EMBC.Utilities.Caching
+EMBC.Utilities.Hosting
+EMBC.Utilities.Messaging
+EMBC.Utilities.Telemetry

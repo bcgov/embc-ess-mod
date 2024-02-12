@@ -6,6 +6,10 @@ on:
       IMAGE_CONTEXT:
         required: true
         type: string
+      BUILD_CONTEXT:
+        required: false
+        type: string
+        default: "[]"
       IMAGE_FILE:
         required: true
         type: string
@@ -63,6 +67,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ inputs.IMAGE_CONTEXT }}
+          build-contexts: ${{ fromJson(inputs.BUILD_CONTEXT) }}
           file: ${{ inputs.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
