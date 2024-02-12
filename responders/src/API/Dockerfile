@@ -14,16 +14,23 @@ RUN dotnet tool install --tool-path /tools dotnet-counters
 RUN dotnet tool install --tool-path /tools dotnet-dump
 
 WORKDIR /src
-COPY ["EMBC.Responders.API/EMBC.Responders.API.csproj", "EMBC.Responders.API/"]
-COPY ["EMBC.ESS.Shared.Contracts/EMBC.ESS.Shared.Contracts.csproj", "EMBC.ESS.Shared.Contracts/"]
-COPY ["EMBC.Utilities/EMBC.Utilities.csproj", "EMBC.Utilities/"]
-COPY ["EMBC.Utilities.Hosting/EMBC.Utilities.Hosting.csproj", "EMBC.Utilities.Hosting/"]
-COPY ["EMBC.Utilities.Caching/EMBC.Utilities.Caching.csproj", "EMBC.Utilities.Caching/"]
-COPY ["EMBC.Utilities.Telemetry/EMBC.Utilities.Telemetry.csproj", "EMBC.Utilities.Telemetry/"]
-COPY ["EMBC.Utilities.Messaging/EMBC.Utilities.Messaging.csproj", "EMBC.Utilities.Messaging/"]
-COPY ["EMBC.Tests.Unit.Responders.API/EMBC.Tests.Unit.Responders.API.csproj", "EMBC.Tests.Unit.Responders.API/"]
+
+# copy sln and csproj files to their directories
 COPY ["EMBC.Responders.sln", ".editorconfig", "./"]
+COPY */*.csproj ./
+COPY --from=shared */*.csproj ./
+RUN cat EMBC.Responders.sln \
+| grep "\.csproj" \
+| awk '{print $4}' \
+| sed -e 's/[",]//g' \
+| sed 's#\\#/#g' \
+| xargs -I % sh -c 'mkdir -p $(dirname %) && mv $(basename %) $(dirname %)/'
+
+# restore dependencies
 RUN dotnet restore .
+
+# copy the rest of the files
+COPY --from=shared . .
 COPY . .
 
 # run unit tests

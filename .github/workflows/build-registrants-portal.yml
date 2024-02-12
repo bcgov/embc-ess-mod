@@ -1,0 +1,53 @@
+name: registrant-portal-api Build
+on:
+  push:
+    branches:
+      - master
+      - 'release/**'
+    paths:
+      - "registrants/src/API/**"
+      - "registrants/src/UI/**"
+      - "shared/src/**"
+      - .github/workflows/build-registrants-portal.yml
+      - .github/workflows/build-template.yml
+
+  pull_request:
+    paths:
+      - "registrants/src/API/**"
+      - "registrants/src/UI/**"
+      - "shared/src/**"
+      - .github/workflows/build-registrants-portal.yml
+      - .github/workflows/build-template.yml
+
+jobs:
+  build-api:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: registrants/src/API
+      BUILD_CONTEXT: "shared=./shared/src"
+      IMAGE_FILE: registrants/src/API/Dockerfile
+      IMAGE_NAME: registrants-portal-api
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  build-ui:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: registrants/src/UI
+      IMAGE_FILE: registrants/src/UI/Dockerfile
+      IMAGE_NAME: registrants-portal-ui
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      

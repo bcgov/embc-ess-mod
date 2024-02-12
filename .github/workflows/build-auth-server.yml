@@ -1,0 +1,32 @@
+name: oauth-server Build
+on:
+  push:
+    branches:
+      - master
+      - 'release/**'
+    paths:
+      - "oauth-server/src/API/**"
+      - .github/workflows/build-oauth-server.yml
+      - .github/workflows/build-template.yml
+
+  pull_request:
+    paths:
+      - "oauth-server/src/API/**"
+      - .github/workflows/build-oauth-server.yml
+      - .github/workflows/build-template.yml
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: oauth-server/src/API
+      IMAGE_FILE: oauth-server/src/API/Dockerfile
+      IMAGE_NAME: oauth-server
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

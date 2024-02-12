@@ -1,0 +1,35 @@
+name: ess-backend Build
+on:
+  push:
+    branches:
+      - master
+      - 'release/**'
+    paths:
+      - "ess/src/API/**"
+      - "shared/src/**"
+      - .github/workflows/build-ess-backend.yml
+      - .github/workflows/build-template.yml
+
+  pull_request:
+    paths:
+      - "ess/src/API/**"
+      - "shared/src/**"
+      - .github/workflows/build-ess-backend.yml
+      - .github/workflows/build-template.yml
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: ess/src/API
+      BUILD_CONTEXT: "shared=./shared/src"
+      IMAGE_FILE: ess/src/API/Dockerfile
+      IMAGE_NAME: ess-backend
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

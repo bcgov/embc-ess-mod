@@ -38,13 +38,11 @@ You must be on the BC government network to be able to access the Dynamics backe
 
 Every deployable component of the system has its own dockerfile which includes the entire CI pipeline - build, verify quality and run all tests. The philosophy behind this is to ensure that if a container can be built, it is tested and verified. It also means the repeatability of the build process as it would be the same in CI/CD pipelines and in local developer environment.
 
-Due to the usage of symlinks to share code, docker builds must pass the context as tar files and not as a directory. To build the docker image locally, run the following command in a component's root folder:
+As the shared libraries are symlinked to the API projects, the image build process relies on build-context to pass in the shared libraries' code. To build an image manually, pass in a build context referring to the relative path of the shared libraries:
 
 ```cmd
-tar -czh . | docker build -t <tag> -
+docker build -t <tag> --build-context shared=../../../shared/src .
 ```
-
-Note: tar to pipe is not supported currently in Windows, this command would only work in GIT Bash and Docker-Desktop/Rancher-Desktop, or in wsl2 with podman.
 
 ## Code Quality
 

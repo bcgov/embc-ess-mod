@@ -1,0 +1,52 @@
+name: responders-portal-api Build
+on:
+  push:
+    branches:
+      - master
+      - 'release/**'
+    paths:
+      - "responders/src/API/**"
+      - "responders/src/UI/**"
+      - "shared/src/**"
+      - .github/workflows/build-responders-portal.yml
+      - .github/workflows/build-template.yml
+
+  pull_request:
+    paths:
+      - "responders/src/API/**"
+      - "responders/src/UI/**"
+      - "shared/src/**"
+      - .github/workflows/build-responders-portal.yml
+      - .github/workflows/build-template.yml
+
+jobs:
+  build-api:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT:  responders/src/API
+      BUILD_CONTEXT: "shared=./shared/src"
+      IMAGE_FILE: responders/src/API/Dockerfile
+      IMAGE_NAME: responders-portal-api
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  build-ui:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: responders/src/UI
+      IMAGE_FILE: responders/src/UI/Dockerfile
+      IMAGE_NAME: responders-portal-ui
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

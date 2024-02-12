@@ -1,0 +1,50 @@
+name: suppliers-portal-api Build
+on:
+  push:
+    branches:
+      - master
+      - 'release/**'
+    paths:
+      - "suppliers/src/API/**"
+      - "suppliers/src/UI/**"
+      - "shared/src/**"
+      - .github/workflows/build-suppliers-portal.yml
+      - .github/workflows/build-template.yml
+
+  pull_request:
+    paths:
+      - "suppliers/src/API/**"
+      - "suppliers/src/UI/**"
+      - "shared/src/**"
+      - .github/workflows/build-suppliers-portal.yml
+      - .github/workflows/build-template.yml
+
+jobs:
+  build-api:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: suppliers/src/API
+      IMAGE_FILE: suppliers/src/API/Dockerfile
+      IMAGE_NAME: suppliers-portal-api
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  build-ui:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: ./.github/workflows/build-template.yml
+    with:
+      IMAGE_CONTEXT: suppliers/src/UI
+      IMAGE_FILE: suppliers/src/UI/Dockerfile
+      IMAGE_NAME: suppliers-portal-ui
+      REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+    secrets:
+      REGISTRY_USER: ${{ secrets.DOCKER_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
