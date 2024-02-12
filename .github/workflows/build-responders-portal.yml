@@ -28,7 +28,7 @@ jobs:
     uses: ./.github/workflows/build-template.yml
     with:
       IMAGE_CONTEXT:  responders/src/API
-      BUILD_CONTEXT: "['shared=../../../shared/src']"
+      BUILD_CONTEXT: "shared=../../../shared/src"
       IMAGE_FILE: responders/src/API/Dockerfile
       IMAGE_NAME: responders-portal-api
       REGISTRY: ${{ vars.DOCKER_REGISTRY }}
