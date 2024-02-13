@@ -44,4 +44,5 @@ COPY --from=build /tools .
 # copy app
 WORKDIR /app
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "OAuthServer.dll"]
