@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: test-release-pipeline
+
+spec:
+  tasks:
+    {{- range $key, $value := .Values.images }}
+    - name: test-{{ $key }}
+      params:
+        - name: imageName
+          value: {{ $key }}
+        - name: fromTag
+          value: dev
+        - name: toTag
+          value: test
+        - name: referencePolicy
+          value: local
+      taskRef:
+        kind: Task
+        name: promote-image-task1
+    {{- end }}

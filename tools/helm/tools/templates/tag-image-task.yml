@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: tag-image-task
+spec:
+  params:
+    - name: sourceImage
+      type: string
+    - name: sourceTag
+      type: string
+    - name: destinationImage
+      type: string
+    - name: destinationTag
+      type: string
+    - name: scheduled
+      type: string
+      default: false
+    - name: referencePolicy
+      type: string
+      default: source
+  steps:
+    - name: tag
+      image: 'image-registry.openshift-image-registry.svc:5000/openshift/cli:latest'
+      resources:
+        limits:
+          cpu: 25m
+          memory: 64Mi
+        requests:
+          cpu: 5m
+          memory: 32Mi
+      script: |
+        oc tag $(params.sourceImage):$(params.sourceTag) $(params.destinationImage):$(params.destinationTag) --scheduled=$(params.scheduled) --reference-policy=$(params.referencePolicy)
