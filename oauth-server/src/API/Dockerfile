@@ -13,9 +13,21 @@ RUN dotnet tool install --tool-path /tools dotnet-counters
 RUN dotnet tool install --tool-path /tools dotnet-dump
 
 WORKDIR /src
-COPY ["OAuthServer/OAuthServer.csproj", "OAuthServer/"]
+
+# copy sln and csproj files to their directories
 COPY ["oauth-server.sln", ".editorconfig", "./"]
+COPY */*.csproj ./
+RUN cat oauth-server.sln \
+| grep "\.csproj" \
+| awk '{print $4}' \
+| sed -e 's/[",]//g' \
+| sed 's#\\#/#g' \
+| xargs -I % sh -c 'mkdir -p $(dirname %) && mv $(basename %) $(dirname %)/'
+
+# restore dependencies
 RUN dotnet restore .
+
+# copy the rest of the files
 COPY . .
 
 # run unit tests
