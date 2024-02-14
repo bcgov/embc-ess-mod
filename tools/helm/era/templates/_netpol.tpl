@@ -9,12 +9,22 @@ spec:
   podSelector:
     matchLabels:
       name: {{ .name }}
-  {{- if and .Values.port (eq "app" .Values.role)}}
+  {{- if and .Values.port (eq "external-app" .Values.role)}}
   ingress:
     - from:
       - namespaceSelector:
           matchLabels:
             network.openshift.io/policy-group: ingress
+      ports:
+        - protocol: {{ .Values.protocol | upper }}
+          port: {{ .Values.port }}
+  {{- end }}
+  {{- if and .Values.port (eq "internal-app" .Values.role)}}
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: external-app              
       ports:
         - protocol: {{ .Values.protocol | upper }}
           port: {{ .Values.port }}

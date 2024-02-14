@@ -10,6 +10,8 @@
     {{ "---" | nindent 0 }}
     {{ include "pdb.tpl" $context | nindent 0 }}
     {{ "---" | nindent 0 }}
+    {{ include "configmap.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
     {{ include "secret.tpl" $context | nindent 0 }}
     {{ "---" | nindent 0 }}
     {{ include "netpol.tpl" $context | nindent 0 }}

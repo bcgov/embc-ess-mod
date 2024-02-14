@@ -26,6 +26,14 @@ spec:
         role: {{ .Values.role }}
       {{- if or .Values.secrets (.Values.secretFiles).files }}
       annotations:
+        {{- if gt (len .Values.env) 0 }}
+        checksum/configmap: {{ .Values.env | toYaml | sha256sum }}
+        {{- end }}
+        {{- if (.Values.files).files }}
+        {{- range $file :=.Values.files.files }}
+        checksum/{{ base $file | replace "." "-" }}: {{ $.Files.Get $file | toYaml | sha256sum }}
+        {{- end -}}
+        {{- end }}
         {{- if gt (len .Values.secrets) 0 }}
         checksum/secret: {{ .Values.secrets | toYaml | sha256sum }}
         {{- end }}
@@ -43,27 +51,32 @@ spec:
           securityContext:
             allowPrivilegeEscalation: {{ .Values.allowPrivilegeEscalation | default "false" }}
           resources: {{ .Values.resources | toYaml | nindent 12 }}
-          {{- if .Values.env }}
-          env:
-          {{- range $key, $value := .Values.env }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-          {{- end }}
-          {{- end -}}
-          {{- if .Values.secrets }}
+
+          {{- if or .Values.env or .Values.files .Values.secrets }}
           envFrom:
+            {{- if or .Values.env or .Values.files .Values.secrets }}
+            - configMapRef:
+                name: {{.name }}-configmap
+            {{- end }}
+            {{- if .Values.secrets }}
             - secretRef:
                 name: {{ .name }}-secret
+            {{- end }}
           {{- end }}
+
           {{- if or .Values.volumeMounts .Values.secretFiles }}
           volumeMounts:
             {{- if .Values.volumeMounts }}
             {{ .Values.volumeMounts | toYaml | nindent 12 }}
-            {{ end -}}
+            {{- end -}}
+            {{- if (.Values.files).files }}
+            - name: {{ $.name}}-files
+              mountPath: {{ .Values.files.mountPath }}
+            {{- end -}}
             {{- if (.Values.secretFiles).files }}
             - name: {{ $.name}}-secret
               mountPath: {{ .Values.secretFiles.mountPath }}
-            {{ end -}}
+            {{- end -}}
             {{- end }}
 
           {{- if .Values.port }}
@@ -88,15 +101,25 @@ spec:
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 
-      {{- if or .Values.volumes .Values.secretFiles }}
+      {{- if or .Values.volumes or .Values.files .Values.secretFiles }}
       volumes:
-        {{- if .Values.volumes }}
+        {{- if .Values.volumes -}}
         {{ tpl (.Values.volumes | toYaml) $ | nindent 8 }}
-        {{ end -}}      
+        {{- end -}}
+        {{- if (.Values.files).files }}
+        - name: {{ $.name}}-files
+          configMap:
+            name: {{ $.name}}-configmap
+            items:
+            {{- range $key, $value :=.Values.files.files }}
+            - key: {{ $key }}
+              path: {{ $key }}
+            {{- end }}
+        {{- end -}}
         {{- if (.Values.secretFiles).files }}
         - name: {{ $.name}}-secret
           secret:
             secretName: {{ $.name}}-secret
-        {{- end }}
+        {{- end -}}
       {{- end }}
 {{- end }}
