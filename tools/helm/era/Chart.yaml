@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ERA
+description: A Helm chart for ERA
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

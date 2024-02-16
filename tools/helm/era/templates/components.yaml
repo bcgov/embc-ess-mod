@@ -1,0 +1,22 @@
+{{- $labels := include "standard.labels" . -}}
+# creates each defined component using the templates
+{{- range $key, $values := .Values.components -}}
+    {{- $values := merge $values $.Values.defaults -}}
+    {{- $name := print $.Release.Name "-" $key -}}
+    {{- $context := dict "name" $name "labels" $labels "Values" $values "Release" $.Release "Files" $.Files "Template" $.Template -}}
+    {{ include "deployment.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
+    {{ include "hpa.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
+    {{ include "pdb.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
+    {{ include "configmap.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
+    {{ include "secret.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
+    {{ include "netpol.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
+    {{ include "service.tpl" $context | nindent 0 }}
+    {{ "---" | nindent 0 }}
+    {{ include "route.tpl" $context | nindent 0 }}
+{{- end -}}
