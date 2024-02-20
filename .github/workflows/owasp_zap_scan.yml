@@ -19,7 +19,7 @@ jobs:
           target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca'
           issue_title: 'ZAP report for responders-portal-ui'
       - name: API
-        uses: zaproxy/action-api-scan@v0.2.0
+        uses: zaproxy/action-api-scan@v0.6.0
         with:
           target: 'https://era-responders-dev.apps.silver.devops.gov.bc.ca/api'
           issue_title: 'ZAP report for responders-portal-api'
@@ -34,7 +34,7 @@ jobs:
           target: 'https://era-evacuees-dev.apps.silver.devops.gov.bc.ca'
           issue_title: 'ZAP report for registrants-portal-ui'
       - name: API
-        uses: zaproxy/action-api-scan@v0.2.0
+        uses: zaproxy/action-api-scan@v0.6.0
         with:
           target: 'https://era-evacuees-dev.apps.silver.devops.gov.bc.ca/api'
           issue_title: 'ZAP report for registrants-portal-api'
@@ -49,7 +49,7 @@ jobs:
           target: 'https://era-suppliers-dev.apps.silver.devops.gov.bc.ca'
           issue_title: 'ZAP report for suppliers-portal-ui'
       - name: API
-        uses: zaproxy/action-api-scan@v0.2.0
+        uses: zaproxy/action-api-scan@v0.6.0
         with:
           target: 'https://era-suppliers-dev.apps.silver.devops.gov.bc.ca/api'
           issue_title: 'ZAP report for suppliers-portal-api'
