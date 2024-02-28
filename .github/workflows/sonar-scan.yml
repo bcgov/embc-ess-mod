@@ -5,10 +5,9 @@ on:
     - cron: '0 0 * * Mon'
     
 jobs:
-  sonar-scan:
+  sonar-scan-net:
     runs-on: ubuntu-latest
-    steps:
-    
+    steps:    
     - name: Checkout
       uses: actions/checkout@master
       with:
@@ -25,7 +24,7 @@ jobs:
       with:
         dotnet-version: '6'
 
-    - name: SonarCloud scan .net
+    - name: Scan .net
       run: |
         dotnet tool install --global dotnet-sonarscanner
         dotnet sonarscanner begin /k:"${{ vars.SONAR_PROJECT_KEY }}" /o:"${{ vars.SONAR_ORGANIZATION }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ vars.SONAR_URL }}"
@@ -35,7 +34,21 @@ jobs:
         dotnet build oauth-server/src/API --no-incremental
         dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-    - name: SonarCloud scan
+  sonar-scan-all:
+    runs-on: ubuntu-latest
+    steps:    
+    - name: Checkout
+      uses: actions/checkout@master
+      with:
+        fetch-depth: 0
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '21'
+
+    - name: Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
