@@ -1,0 +1,29 @@
+name: Code scans
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * Mon'
+    
+jobs:
+  sonar-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 0
+    # Setup java 21
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '21'
+    # Setup sonar-scanner
+    - name: Setup SonarQube
+      uses: warchant/setup-sonar-scanner@v8
+    # Run sonar-scanner
+    - name: SonarQube Scan
+      run: sonar-scanner
+           -Dsonar.host.url=${{ vars.SONAR_URL }}
+           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+           -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+           -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+           -Dsonar.sources=$GITHUB_WORKSPACE
