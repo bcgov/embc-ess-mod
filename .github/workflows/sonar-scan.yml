@@ -25,7 +25,7 @@ jobs:
         dotnet-version: '6'
 
     - name: Cache SonarCloud packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/sonar/cache
         key: ${{ runner.os }}-sonar
@@ -33,7 +33,7 @@ jobs:
 
     - name: Cache SonarCloud scanner
       id: cache-sonar-scanner
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ./.sonar/scanner
         key: ${{ runner.os }}-sonar-scanner
@@ -47,10 +47,10 @@ jobs:
     - name: Scan .net
       run: |
         ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ vars.SONAR_PROJECT_KEY }}" /o:"${{ vars.SONAR_ORGANIZATION }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ vars.SONAR_URL }}"
-        dotnet build ess/src/API --no-incremental
-        dotnet build responders/src/API --no-incremental
-        dotnet build registrants/src/API --no-incremental
-        dotnet build oauth-server/src/API --no-incremental
+        dotnet build ess/src/API
+        dotnet build responders/src/API 
+        dotnet build registrants/src/API
+        dotnet build oauth-server/src/API
         ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   sonar-scan-all:
