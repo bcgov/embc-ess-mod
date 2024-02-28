@@ -5,12 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Payments
@@ -296,13 +293,13 @@ namespace EMBC.ESS.Resources.Payments
                     response.SupplierNumber = payee.era_suppliernumber;
                 }
             }
-            catch (CasException e)
+            catch (CasException)
             {
-                throw e;
+                throw;
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException)
             {
-                throw e;
+                throw;
             }
             catch (Exception e)
             {
@@ -463,23 +460,23 @@ namespace EMBC.ESS.Resources.Payments
                         {
                             supplierDetails = await casGateway.CreateSupplier(payee, ct);
                         }
-                        catch (CasException e)
+                        catch (CasException)
                         {
                             payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
                             payee.era_suppliernumber = "Rejected";
                             // store supplier info
                             ctx.UpdateObject(payee);
                             await ctx.SaveChangesAsync(ct);
-                            throw e;
+                            throw;
                         }
-                        catch (ArgumentNullException e)
+                        catch (ArgumentNullException)
                         {
                             payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
                             payee.era_suppliernumber = "MissingData";
                             // store supplier info
                             ctx.UpdateObject(payee);
                             await ctx.SaveChangesAsync(ct);
-                            throw e;
+                            throw;
                         }
                     }
                     if (supplierDetails != null)
@@ -492,14 +489,14 @@ namespace EMBC.ESS.Resources.Payments
                         await ctx.SaveChangesAsync(ct);
                     }
                 }
-                catch (System.ArgumentNullException e)
+                catch (System.ArgumentNullException)
                 {
                     payee = await ctx.contacts.ByKey(payee.contactid).GetValueAsync();
                     payee.era_suppliernumber = "MissingData";
                     // store supplier info
                     ctx.UpdateObject(payee);
                     await ctx.SaveChangesAsync(ct);
-                    throw e;
+                    throw;
                 }
             }
             return payee;
