@@ -43,5 +43,5 @@ jobs:
         SONAR_HOST_URL: ${{ vars.SONAR_URL }}
       with:
         args: >
-         -Dsonar.organization="${{ vars.SONAR_ORGANIZATION }}"
-         -Dsonar.projectKey="${{ vars.SONAR_PROJECT_KEY }}"
+         -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+         -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
