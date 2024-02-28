@@ -83,7 +83,7 @@ namespace EMBC.Utilities.Caching
             }
         }
 
-        private static T? Deserialize<T>(byte[] data) => data == null || data.Length == 0 ? default(T?) : JsonSerializer.Deserialize<T?>(data);
+        private static T? Deserialize<T>(byte[]? data) => data == null || data.Length == 0 ? default(T?) : JsonSerializer.Deserialize<T?>(data);
 
         private static byte[] Serialize<T>(T obj) => obj == null ? Array.Empty<byte>() : JsonSerializer.SerializeToUtf8Bytes(obj);
     }
