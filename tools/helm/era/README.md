@@ -4,6 +4,12 @@ This directory contains a Helm chart to deploy ERA
 
 ## Usage
 
+To build and update the chart's dependencies, run the following command:
+
+```sh
+helm dep update
+```
+
 To install a new environment, ensure the values.yaml matches the environment, then run the following command:
 
 ```sh
