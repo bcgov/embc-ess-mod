@@ -265,10 +265,6 @@ export class MockDashboardService extends SearchDataService {
           isVerified: null
         }
       ],
-      haveSpecialDiet: false,
-      specialDietDetails: null,
-      takeMedication: false,
-      haveMedicalSupplies: false,
       pets: [],
       havePetsFood: false,
       canProvideFood: false,

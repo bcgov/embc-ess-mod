@@ -291,13 +291,6 @@ export class WizardService {
     } else if (
       this.fileObjectReference !== null &&
       this.fileObjectReference !== undefined &&
-      type === 'householdMember'
-    ) {
-      const initialValue = this.fileObjectReference as EvacuationFileModel;
-      return this.compareHouseholdMembers(initialValue, form);
-    } else if (
-      this.fileObjectReference !== null &&
-      this.fileObjectReference !== undefined &&
       type === 'animals'
     ) {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
@@ -370,35 +363,6 @@ export class WizardService {
       form.externalServices.value ===
         initialValue.needsAssessment.evacuationExternalReferrals &&
       this.compareAddress(form.evacAddress, initialValue.evacuatedFromAddress)
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  compareHouseholdMembers(initialValue: EvacuationFileModel, form) {
-    const specialDietDetails =
-      form.specialDietDetails.value === ''
-        ? null
-        : form.specialDietDetails.value;
-    const medSupply =
-      globalConst.radioButtonOptions.find(
-        (ins) => ins.value === form.medicationSupply.value
-      )?.apiValue === null
-        ? 'No'
-        : globalConst.radioButtonOptions.find(
-            (ins) => ins.value === form.medicationSupply.value
-          )?.apiValue === null;
-    if (
-      globalConst.radioButtonOptions.find(
-        (ins) => ins.value === form.hasSpecialDiet.value
-      )?.apiValue === initialValue.needsAssessment.haveSpecialDiet &&
-      specialDietDetails === initialValue.needsAssessment.specialDietDetails &&
-      globalConst.radioButtonOptions.find(
-        (ins) => ins.value === form.hasMedication.value
-      )?.apiValue === initialValue.needsAssessment.takeMedication &&
-      medSupply === initialValue.needsAssessment.haveMedicalSupplies
     ) {
       return false;
     } else {

@@ -183,10 +183,6 @@ export class MockStepEssFileService extends StepEssFileService {
           isVerified: true
         }
       ],
-      haveSpecialDiet: false,
-      specialDietDetails: null,
-      takeMedication: false,
-      haveMedicalSupplies: false,
       pets: [],
       havePetsFood: false,
       canProvideFood: true,

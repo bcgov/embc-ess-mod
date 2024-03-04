@@ -359,10 +359,6 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
 
-        public bool HaveSpecialDiet { get; set; }
-        public string? SpecialDietDetails { get; set; }
-        public bool TakeMedication { get; set; }
-        public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HavePetsFood { get; set; }
         public bool? CanProvideFood { get; set; }

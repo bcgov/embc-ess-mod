@@ -71,11 +71,6 @@ export class StepEssFileService {
   private addMemberIndicatorVal: boolean;
   private addMemberFormIndicatorVal: boolean;
 
-  private haveSpecialDietVal: string;
-  private specialDietDetailsVal: string;
-  private takeMedicationVal: string;
-  private haveMedicationSupplyVal: string;
-
   // Animals tab
   private havePetsVal: string;
   private petsListVal: Pet[];
@@ -309,34 +304,6 @@ export class StepEssFileService {
     this.addMemberFormIndicatorVal = addMemberFormIndicatorVal;
   }
 
-  public get haveSpecialDiet(): string {
-    return this.haveSpecialDietVal;
-  }
-  public set haveSpecialDiet(haveSpecialDietVal: string) {
-    this.haveSpecialDietVal = haveSpecialDietVal;
-  }
-
-  public get specialDietDetails(): string {
-    return this.specialDietDetailsVal;
-  }
-  public set specialDietDetails(specialDietDetailsVal: string) {
-    this.specialDietDetailsVal = specialDietDetailsVal;
-  }
-
-  public get takeMedication(): string {
-    return this.takeMedicationVal;
-  }
-  public set takeMedication(takeMedicationVal: string) {
-    this.takeMedicationVal = takeMedicationVal;
-  }
-
-  public get haveMedicationSupply(): string {
-    return this.haveMedicationSupplyVal;
-  }
-  public set haveMedicationSupply(haveMedicationSupplyVal: string) {
-    this.haveMedicationSupplyVal = haveMedicationSupplyVal;
-  }
-
   // Animals tab
   public get havePets(): string {
     return this.havePetsVal;
@@ -474,18 +441,6 @@ export class StepEssFileService {
   public createEvacFileDTO(): EvacuationFile {
     // Get Correct API values for Household Members selections
 
-    const haveSpecialDietDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.haveSpecialDiet
-    )?.apiValue;
-
-    const takeMedicationDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.takeMedication
-    )?.apiValue;
-
-    const haveMedicalSuppliesDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.haveMedicationSupply
-    )?.apiValue;
-
     // Get correct API values for Animals selections
     const havePetsFoodDTO = globalConst.radioButtonOptions.find(
       (ins) => ins.value === this.havePetsFood
@@ -520,10 +475,6 @@ export class StepEssFileService {
       evacuationExternalReferrals: this.evacuationExternalReferrals,
 
       householdMembers: this.householdMembers,
-      haveSpecialDiet: haveSpecialDietDTO,
-      specialDietDetails: this.specialDietDetails,
-      takeMedication: takeMedicationDTO,
-      haveMedicalSupplies: haveMedicalSuppliesDTO,
 
       pets: this.petsList,
       havePetsFood: havePetsFoodDTO,
@@ -569,18 +520,6 @@ export class StepEssFileService {
   public updateEvacFileDTO(): EvacuationFile {
     // Get Correct API values for Household Members selections
 
-    const haveSpecialDietDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.haveSpecialDiet
-    )?.apiValue;
-
-    const takeMedicationDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.takeMedication
-    )?.apiValue;
-
-    const haveMedicalSuppliesDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.haveMedicationSupply
-    )?.apiValue;
-
     // Get correct API values for Animals selections
     const havePetsFoodDTO = globalConst.radioButtonOptions.find(
       (ins) => ins.value === this.havePetsFood
@@ -615,11 +554,7 @@ export class StepEssFileService {
       evacuationExternalReferrals: this.evacuationExternalReferrals,
 
       householdMembers: this.selectedHouseholdMembers,
-      haveSpecialDiet: haveSpecialDietDTO,
-      specialDietDetails: this.specialDietDetails,
-      takeMedication: takeMedicationDTO,
-      haveMedicalSupplies: haveMedicalSuppliesDTO,
-
+   
       pets: this.petsList,
       havePetsFood: havePetsFoodDTO,
       petCarePlans: this.petCarePlans,
@@ -694,11 +629,6 @@ export class StepEssFileService {
     this.selectedHouseholdMembers = undefined;
     this.addMemberIndicator = undefined;
     this.addMemberFormIndicator = undefined;
-
-    this.haveSpecialDiet = undefined;
-    this.specialDietDetails = undefined;
-    this.takeMedication = undefined;
-    this.haveMedicationSupply = undefined;
 
     // Animals tab
     this.havePets = undefined;
@@ -788,20 +718,6 @@ export class StepEssFileService {
 
     this.haveHouseHoldMembers = globalConst.radioButtonOptions.find(
       (ins) => ins.apiValue === this.householdMembers?.length > 2
-    )?.value;
-
-    this.haveSpecialDiet = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === essNeeds.haveSpecialDiet
-    )?.value;
-
-    this.specialDietDetails = essNeeds.specialDietDetails;
-
-    this.takeMedication = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === essNeeds.takeMedication
-    )?.value;
-
-    this.haveMedicationSupply = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === essNeeds.haveMedicalSupplies
     )?.value;
 
     // Animals tab
