@@ -186,15 +186,6 @@ namespace EMBC.ESS.Resources.Reports
         [Display(Name = "Able to Provide Transportation")]
         public bool CanProvideTransportation { get; set; }
 
-        [Display(Name = "Medication Needs")]
-        public bool NeedsMedication { get; set; }
-
-        [Display(Name = "Medication supply for 3 days")]
-        public bool HasEnoughSupply { get; set; }
-
-        [Display(Name = "Dietary Needs")]
-        public string DietaryNeeds { get; set; }
-
         [Display(Name = "Supports Provided")]
         public int NumberOfSupports { get; set; }
 

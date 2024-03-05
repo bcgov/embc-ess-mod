@@ -221,12 +221,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             needsAssessment.CanProvideIncidentals.ShouldBe(originalNeedsAssessment.CanProvideIncidentals);
             needsAssessment.CanProvideLodging.ShouldBe(originalNeedsAssessment.CanProvideLodging);
             needsAssessment.CanProvideTransportation.ShouldBe(originalNeedsAssessment.CanProvideTransportation);
-            needsAssessment.TakeMedication.ShouldBe(originalNeedsAssessment.TakeMedication);
-            needsAssessment.HaveMedicalSupplies.ShouldBe(originalNeedsAssessment.HaveMedicalSupplies);
             needsAssessment.HavePetsFood.ShouldBe(originalNeedsAssessment.HavePetsFood);
-            needsAssessment.HaveSpecialDiet.ShouldBe(originalNeedsAssessment.HaveSpecialDiet);
-            needsAssessment.SpecialDietDetails.ShouldBe(originalNeedsAssessment.SpecialDietDetails);
-
+  
             needsAssessment.HouseholdMembers.Count().ShouldBe(originalNeedsAssessment.HouseholdMembers.Count());
             needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem().LinkedRegistrantId.ShouldBe(primaryContact.Id);
             for (var j = 0; j < originalNeedsAssessment.HouseholdMembers.Count(); j++)
@@ -292,11 +288,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         PostalCode = "V8V 2W3"
                     },
                     Type = NeedsAssessmentType.Preliminary,
-                    TakeMedication = false,
-                    HaveMedicalSupplies = false,
                     Insurance = InsuranceOption.Yes,
-                    HaveSpecialDiet = true,
-                    SpecialDietDetails = "Shellfish allergy",
                     HavePetsFood = true,
                     CanProvideClothing = true,
                     CanProvideFood = true,

@@ -34,11 +34,7 @@ namespace EMBC.Tests.Integration.ESS
                     new NeedsAssessment
                     {
                         Type = NeedsAssessmentType.Preliminary,
-                        TakeMedication = false,
-                        HaveMedicalSupplies = false,
                         Insurance = InsuranceOption.Yes,
-                        HaveSpecialDiet = true,
-                        SpecialDietDetails = "Shellfish allergy",
                         HavePetsFood = true,
                         CanProvideClothing = true,
                         CanProvideFood = true,
