@@ -52,13 +52,11 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.RecommendedReferralServices, opts => opts.Ignore())
-                .ForMember(d => d.HaveMedicalSupplies, opts => opts.Ignore())
                 .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => s.CanEvacueeProvideFood))
                 .ForMember(d => d.CanProvideLodging, opts => opts.MapFrom(s => s.CanEvacueeProvideLodging))
                 .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => s.CanEvacueeProvideClothing))
                 .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => s.CanEvacueeProvideTransportation))
                 .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => s.CanEvacueeProvideIncidentals))
-                .ForMember(d => d.TakeMedication, opts => opts.MapFrom(s => s.HaveMedication))
                 .ForMember(d => d.HavePetsFood, opts => opts.MapFrom(s => s.HasPetsFood))
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
              ;
@@ -69,7 +67,6 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.CanProvideClothing))
                 .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => s.CanProvideTransportation))
                 .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => s.CanProvideIncidentals))
-                .ForMember(d => d.HaveMedication, opts => opts.MapFrom(s => s.TakeMedication))
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.HavePetsFood))
              ;
 

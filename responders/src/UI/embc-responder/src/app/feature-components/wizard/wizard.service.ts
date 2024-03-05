@@ -291,6 +291,13 @@ export class WizardService {
     } else if (
       this.fileObjectReference !== null &&
       this.fileObjectReference !== undefined &&
+      type === 'householdMember'
+    ) {
+      const initialValue = this.fileObjectReference as EvacuationFileModel;
+      return this.compareHouseholdMembers(initialValue, form);
+    } else if (
+      this.fileObjectReference !== null &&
+      this.fileObjectReference !== undefined &&
       type === 'animals'
     ) {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
@@ -368,6 +375,10 @@ export class WizardService {
     } else {
       return true;
     }
+  }
+
+  compareHouseholdMembers(initialValue: EvacuationFileModel, form) {
+      return true;
   }
 
   hasPetsChanged(pets: Pet[]): boolean {
