@@ -260,39 +260,6 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-4">Household Dietary Requirements</div>
-              <div class="col-8 bold">
-                {{
-                  stepEssFileService?.haveSpecialDiet === 'Yes'
-                    ? stepEssFileService?.specialDietDetails
-                      ? 'Yes - ' + stepEssFileService?.specialDietDetails
-                      : 'Yes'
-                    : 'No'
-                }}
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-4">Household Medication Requirements</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.takeMedication }}
-              </div>
-            </div>
-
-            <div
-              class="row"
-              *ngIf="stepEssFileService?.takeMedication === 'Yes'"
-            >
-              <div class="col-4">Has Sufficient Medication</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.haveMedicationSupply }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="row">
         <div class="col-12">
           <div class="review-panel data-panel">

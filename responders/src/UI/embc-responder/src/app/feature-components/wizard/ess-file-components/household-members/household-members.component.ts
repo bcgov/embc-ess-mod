@@ -269,28 +269,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listen to changes on special diet option to display the special diet details field
-   *
-   * @param event
-   */
-  hasSpecialDietChange(event: MatRadioChange): void {
-    if (event.value === 'No') {
-      this.householdForm.get('specialDietDetails').reset();
-    }
-  }
-
-  /**
-   * Listen to changes on medication option to show the 72 hours supply option
-   *
-   * @param event
-   */
-  hasMedicationChange(event: MatRadioChange): void {
-    if (event.value === 'No') {
-      this.householdForm.get('medicationSupply').reset();
-    }
-  }
-
-  /**
    * Goes back to the previous tab from the ESS File Wizard
    */
   back(): void {
@@ -338,26 +316,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         Validators.required
       ],
       houseHoldMember: this.createHouseholdMemberForm(),
-      hasSpecialDiet: [
-        this.stepEssFileService.haveSpecialDiet,
-        Validators.required
-      ],
-      specialDietDetails: [this.stepEssFileService.specialDietDetails ?? ''],
-      hasMedication: [
-        this.stepEssFileService.takeMedication,
-        Validators.required
-      ],
-      medicationSupply: [
-        this.stepEssFileService.haveMedicationSupply,
-        [
-          this.customValidation
-            .conditionalValidation(
-              () => this.householdForm.get('hasMedication').value === 'Yes',
-              Validators.required
-            )
-            .bind(this.customValidation)
-        ]
-      ],
       addMemberIndicator: [this.stepEssFileService.addMemberIndicator ?? false],
       addMemberFormIndicator: [
         this.stepEssFileService.addMemberFormIndicator ?? false
@@ -496,14 +454,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.stepEssFileService.householdMembers = this.members;
     this.stepEssFileService.selectedHouseholdMembers = this.selection.selected;
 
-    this.stepEssFileService.haveSpecialDiet =
-      this.householdForm.get('hasSpecialDiet').value;
-    this.stepEssFileService.specialDietDetails =
-      this.householdForm.get('specialDietDetails').value;
-    this.stepEssFileService.takeMedication =
-      this.householdForm.get('hasMedication').value;
-    this.stepEssFileService.haveMedicationSupply =
-      this.householdForm.get('medicationSupply').value;
     this.stepEssFileService.addMemberFormIndicator = this.householdForm.get(
       'addMemberFormIndicator'
     ).value;

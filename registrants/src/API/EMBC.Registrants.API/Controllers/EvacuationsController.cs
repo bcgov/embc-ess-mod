@@ -185,9 +185,6 @@ namespace EMBC.Registrants.API.Controllers
         public bool? CanEvacueeProvideClothing { get; set; }
         public bool? CanEvacueeProvideTransportation { get; set; }
         public bool? CanEvacueeProvideIncidentals { get; set; }
-        public bool HaveSpecialDiet { get; set; }
-        public string? SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }

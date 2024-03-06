@@ -2,13 +2,13 @@
 /* eslint-disable */
 export interface UserProfile {
   agreementSignDate?: null | string;
-  email?: string;
+  email?: null | string;
   firstName?: string;
   id?: string;
   label?: string;
   lastLoginDate?: null | string;
   lastName?: string;
-  phone?: string;
+  phone?: null | string;
   requiredToSignAgreement?: boolean;
   role?: string;
   teamId?: string;

@@ -163,31 +163,6 @@
               </mat-table>
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-md-4">Household Dietary Requirements</div>
-            <div class="col-md-8 bold">
-              {{
-                essFile?.needsAssessment?.haveSpecialDiet
-                  ? 'Yes - ' + essFile?.needsAssessment?.specialDietDetails
-                  : 'No'
-              }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4">Household Medication Requirements</div>
-            <div class="col-md-8 bold">
-              {{ essFile?.needsAssessment?.takeMedication ? 'Yes' : 'No' }}
-            </div>
-          </div>
-
-          <div class="row" *ngIf="essFile?.needsAssessment?.takeMedication">
-            <div class="col-md-4">Has Sufficient Medication</div>
-            <div class="col-md-8 bold">
-              {{ essFile?.needsAssessment?.haveMedicalSupplies ? 'Yes' : 'No' }}
-            </div>
-          </div>
         </div>
       </div>
 

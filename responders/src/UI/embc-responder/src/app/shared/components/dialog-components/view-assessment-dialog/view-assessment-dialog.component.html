@@ -172,30 +172,6 @@
   </div>
 </div>
 
-<div class="row row-padding">
-  <div class="col-5">Household Dietary Requirements</div>
-  <div class="col-7 bold">
-    {{ mapDietaryValue() }}
-  </div>
-</div>
-
-<div class="row row-padding">
-  <div class="col-5">Household Medication Requirements</div>
-  <div class="col-7 bold">
-    {{ profileData?.needsAssessment?.takeMedication ? 'Yes' : 'No' }}
-  </div>
-</div>
-
-<div
-  class="row row-padding"
-  *ngIf="profileData?.needsAssessment?.takeMedication"
->
-  <div class="col-5">Has Sufficient Medication</div>
-  <div class="col-7 bold">
-    {{ profileData?.needsAssessment?.haveMedicalSupplies ? 'Yes' : 'No' }}
-  </div>
-</div>
-
 <hr class="dotted-hr hr-padding" />
 <div class="row row-padding">
   <div class="col-md-12">

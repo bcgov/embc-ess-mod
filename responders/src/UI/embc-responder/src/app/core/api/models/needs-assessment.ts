@@ -18,9 +18,7 @@ export interface NeedsAssessment {
   createdOn?: null | string;
   evacuationExternalReferrals?: null | string;
   evacuationImpact?: null | string;
-  haveMedicalSupplies?: null | boolean;
   havePetsFood?: null | boolean;
-  haveSpecialDiet?: boolean;
   houseHoldRecoveryPlan?: null | string;
   householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
@@ -31,7 +29,5 @@ export interface NeedsAssessment {
   recommendedReferralServices?: Array<ReferralServices>;
   reviewingTeamMemberDisplayName?: null | string;
   reviewingTeamMemberId?: null | string;
-  specialDietDetails?: null | string;
-  takeMedication?: boolean;
   type?: null | NeedsAssessmentType;
 }

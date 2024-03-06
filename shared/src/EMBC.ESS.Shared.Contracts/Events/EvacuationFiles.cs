@@ -94,10 +94,6 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool? CanProvideClothing { get; set; }
         public bool? CanProvideTransportation { get; set; }
         public bool? CanProvideIncidentals { get; set; }
-        public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
-        public bool TakeMedication { get; set; }
-        public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HavePetsFood { get; set; }

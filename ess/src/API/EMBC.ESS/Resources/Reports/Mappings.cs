@@ -63,9 +63,6 @@ namespace EMBC.ESS.Resources.Reports
                 .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovidefood))
                 .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovideincidentals))
                 .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovidetransportation))
-                .ForMember(d => d.NeedsMedication, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_medicationrequirement))
-                .ForMember(d => d.HasEnoughSupply, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_hasenoughsupply))
-                .ForMember(d => d.DietaryNeeds, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_dietaryrequirement))
                 .ForMember(d => d.NumberOfSupports, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? 0 : s.era_EvacuationFileid.era_era_evacuationfile_era_evacueesupport_ESSFileId.Count))
                 .ForMember(d => d.SupportsTotalAmount, opts => opts.Ignore())
                 .AfterMap((s, d) =>

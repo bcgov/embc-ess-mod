@@ -378,32 +378,7 @@ export class WizardService {
   }
 
   compareHouseholdMembers(initialValue: EvacuationFileModel, form) {
-    const specialDietDetails =
-      form.specialDietDetails.value === ''
-        ? null
-        : form.specialDietDetails.value;
-    const medSupply =
-      globalConst.radioButtonOptions.find(
-        (ins) => ins.value === form.medicationSupply.value
-      )?.apiValue === null
-        ? 'No'
-        : globalConst.radioButtonOptions.find(
-            (ins) => ins.value === form.medicationSupply.value
-          )?.apiValue === null;
-    if (
-      globalConst.radioButtonOptions.find(
-        (ins) => ins.value === form.hasSpecialDiet.value
-      )?.apiValue === initialValue.needsAssessment.haveSpecialDiet &&
-      specialDietDetails === initialValue.needsAssessment.specialDietDetails &&
-      globalConst.radioButtonOptions.find(
-        (ins) => ins.value === form.hasMedication.value
-      )?.apiValue === initialValue.needsAssessment.takeMedication &&
-      medSupply === initialValue.needsAssessment.haveMedicalSupplies
-    ) {
-      return false;
-    } else {
       return true;
-    }
   }
 
   hasPetsChanged(pets: Pet[]): boolean {

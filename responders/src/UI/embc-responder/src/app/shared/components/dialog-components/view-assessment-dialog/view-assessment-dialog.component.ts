@@ -48,14 +48,4 @@ export class ViewAssessmentDialogComponent implements OnInit {
       (ins) => ins.value === incomingValue
     )?.name;
   }
-
-  mapDietaryValue(): string {
-    if (!this.profileData?.needsAssessment?.haveSpecialDiet) {
-      return 'No';
-    } else if (this.profileData?.needsAssessment?.specialDietDetails === null) {
-      return 'Yes';
-    } else {
-      return 'Yes - ' + this.profileData?.needsAssessment?.specialDietDetails;
-    }
-  }
 }

@@ -91,11 +91,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                         DateOfBirth = "2010-01-01"
                     }
                 },
-                TakeMedication = false,
-                HaveMedicalSupplies = false,
                 Insurance = InsuranceOption.Yes,
-                HaveSpecialDiet = true,
-                SpecialDietDetails = "Gluten Free",
                 HavePetsFood = true,
                 CanProvideClothing = false,
                 CanProvideFood = true,

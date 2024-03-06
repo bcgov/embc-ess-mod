@@ -100,10 +100,6 @@ describe('EssFileDetailsComponent', () => {
           isVerified: null
         }
       ],
-      haveSpecialDiet: false,
-      specialDietDetails: null,
-      takeMedication: false,
-      haveMedicalSupplies: false,
       pets: [],
       havePetsFood: false,
       canProvideFood: false,
