@@ -81,10 +81,7 @@ namespace EMBC.Tests.Integration.ESS
                         },
                         Notes = new[]
                         {
-                            new Note{ Type = NoteType.EvacuationImpact, Content = "evac" },
-                            new Note{ Type = NoteType.EvacuationExternalReferrals, Content = "refer" },
                             new Note{ Type = NoteType.PetCarePlans, Content = "pat plans" },
-                            new Note{ Type = NoteType.RecoveryPlan, Content = "recovery" },
                         }
                     }
             };

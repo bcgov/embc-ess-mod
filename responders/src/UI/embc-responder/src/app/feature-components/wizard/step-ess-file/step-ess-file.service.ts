@@ -10,8 +10,7 @@ import {
   HouseholdMemberType,
   InsuranceOption,
   NeedsAssessment,
-  Pet,
-  ReferralServices
+  Pet
 } from 'src/app/core/api/models';
 import {
   UntypedFormArray,
@@ -57,11 +56,6 @@ export class StepEssFileService {
   private facilityNameVal: string;
   private insuranceVal: InsuranceOption;
 
-  private evacuationImpactVal: string;
-  private householdRecoveryPlanVal: string;
-  private referredServicesVal: string;
-  private referredServiceDetailsVal: ReferralServices[];
-  private evacuationExternalReferralsVal: string;
 
   // Household Members tab
   private haveHouseHoldMembersVal: string;
@@ -217,45 +211,6 @@ export class StepEssFileService {
   }
   public set insurance(insuranceVal: InsuranceOption) {
     this.insuranceVal = insuranceVal;
-  }
-
-  public get evacuationImpact(): string {
-    return this.evacuationImpactVal;
-  }
-  public set evacuationImpact(evacuationImpactVal: string) {
-    this.evacuationImpactVal = evacuationImpactVal;
-  }
-
-  public get householdRecoveryPlan(): string {
-    return this.householdRecoveryPlanVal;
-  }
-  public set householdRecoveryPlan(householdRecoveryPlanVal: string) {
-    this.householdRecoveryPlanVal = householdRecoveryPlanVal;
-  }
-
-  public get referredServices(): string {
-    return this.referredServicesVal;
-  }
-  public set referredServices(referredServicesVal: string) {
-    this.referredServicesVal = referredServicesVal;
-  }
-
-  public get referredServiceDetails(): ReferralServices[] {
-    return this.referredServiceDetailsVal;
-  }
-  public set referredServiceDetails(
-    referredServiceDetailsVal: ReferralServices[]
-  ) {
-    this.referredServiceDetailsVal = referredServiceDetailsVal;
-  }
-
-  public get evacuationExternalReferrals(): string {
-    return this.evacuationExternalReferralsVal;
-  }
-  public set evacuationExternalReferrals(
-    evacuationExternalReferralsVal: string
-  ) {
-    this.evacuationExternalReferralsVal = evacuationExternalReferralsVal;
   }
 
   // Household Members tab
@@ -469,10 +424,6 @@ export class StepEssFileService {
 
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
-      recommendedReferralServices: this.referredServiceDetails,
-      evacuationImpact: this.evacuationImpact,
-      houseHoldRecoveryPlan: this.householdRecoveryPlan,
-      evacuationExternalReferrals: this.evacuationExternalReferrals,
 
       householdMembers: this.householdMembers,
 
@@ -548,11 +499,7 @@ export class StepEssFileService {
 
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
-      recommendedReferralServices: this.referredServiceDetails,
-      evacuationImpact: this.evacuationImpact,
-      houseHoldRecoveryPlan: this.householdRecoveryPlan,
-      evacuationExternalReferrals: this.evacuationExternalReferrals,
-
+   
       householdMembers: this.selectedHouseholdMembers,
    
       pets: this.petsList,
@@ -616,12 +563,6 @@ export class StepEssFileService {
     this.evacAddress = undefined;
     this.facilityName = undefined;
     this.insurance = undefined;
-
-    this.evacuationImpact = undefined;
-    this.householdRecoveryPlan = undefined;
-    this.referredServices = undefined;
-    this.referredServiceDetails = undefined;
-    this.evacuationExternalReferrals = undefined;
 
     // Household Members tab
     this.haveHouseHoldMembers = undefined;
@@ -690,17 +631,6 @@ export class StepEssFileService {
     )?.value;
 
     this.insurance = essNeeds.insurance;
-
-    this.evacuationImpact = essNeeds.evacuationImpact;
-    this.householdRecoveryPlan = essNeeds.houseHoldRecoveryPlan;
-
-    this.referredServiceDetails = essNeeds.recommendedReferralServices;
-
-    this.referredServices = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === essNeeds.recommendedReferralServices.length > 0
-    )?.value;
-
-    this.evacuationExternalReferrals = essNeeds.evacuationExternalReferrals;
 
     // Household Members tab
     // Split main applicant from other household members, remap to UI model

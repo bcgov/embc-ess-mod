@@ -153,24 +153,6 @@ namespace EMBC.ESS.Resources.Reports
         [Display(Name = "Pets")]
         public int NumberOfPets { get; set; }
 
-        [Display(Name = "Service Recommendation Inquiry")]
-        public bool Inquiry { get; set; }
-
-        [Display(Name = "Service Recommendation Health Services")]
-        public bool HealthServices { get; set; }
-
-        [Display(Name = "Service Recommendation First Aid")]
-        public bool FirstAid { get; set; }
-
-        [Display(Name = "Service Recommendation Personal Services")]
-        public bool PersonalServices { get; set; }
-
-        [Display(Name = "Service Recommendation Child Care")]
-        public bool ChildCare { get; set; }
-
-        [Display(Name = "Service Recommendation Pet Care")]
-        public bool PetCare { get; set; }
-
         [Display(Name = "Able to Provide Accommodation")]
         public bool CanProvideAccommodation { get; set; }
 

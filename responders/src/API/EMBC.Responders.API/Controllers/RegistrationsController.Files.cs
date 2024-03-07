@@ -349,12 +349,7 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public string? EvacuationImpact { get; set; }
-        public string? EvacuationExternalReferrals { get; set; }
         public string? PetCarePlans { get; set; }
-        public string? HouseHoldRecoveryPlan { get; set; }
-
-        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; } = Array.Empty<ReferralServices>();
 
         [Required]
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
@@ -413,17 +408,8 @@ namespace EMBC.Responders.API.Controllers
         [Description("General")]
         General,
 
-        [Description("Evacuation Impact")]
-        EvacuationImpact,
-
-        [Description("Evacuation External Referrals")]
-        EvacuationExternalReferrals,
-
         [Description("Pet Care Plans")]
-        PetCarePlans,
-
-        [Description("HouseHold Recovery Plan")]
-        HouseHoldRecoveryPlan
+        PetCarePlans
     }
 
     /// <summary>
@@ -436,28 +422,6 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public string Quantity { get; set; } = null;
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ReferralServices
-    {
-        [Description("Inquiry")]
-        Inquiry,
-
-        [Description("Health")]
-        Health,
-
-        [Description("First Aid")]
-        FirstAid,
-
-        [Description("Personal")]
-        Personal,
-
-        [Description("Child Care")]
-        ChildCare,
-
-        [Description("Pet Care")]
-        PetCare
     }
 
     public class EvacuationFileNotesResult
@@ -583,10 +547,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.ReviewingTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.ReviewingTeamMemberDisplayName, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.DisplayName))
-                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == ESS.Shared.Contracts.Events.NoteType.EvacuationImpact, n => n.Content)))
-                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationExternalReferrals, n => n.Content)))
                 .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.PetCarePlans, n => n.Content)))
-                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.RecoveryPlan, n => n.Content)))
                 ;
 
             CreateMap<EvacuationFileHouseholdMember, HouseholdMember>()
@@ -631,39 +592,12 @@ namespace EMBC.Responders.API.Controllers
         {
             List<EMBC.ESS.Shared.Contracts.Events.Note> ret = new List<EMBC.ESS.Shared.Contracts.Events.Note>();
 
-            if (!string.IsNullOrEmpty(sourceMember.EvacuationImpact))
-            {
-                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
-                {
-                    Content = sourceMember.EvacuationImpact,
-                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationImpact,
-                });
-            }
-
-            if (!string.IsNullOrEmpty(sourceMember.EvacuationExternalReferrals))
-            {
-                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
-                {
-                    Content = sourceMember.EvacuationExternalReferrals,
-                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.EvacuationExternalReferrals,
-                });
-            }
-
             if (!string.IsNullOrEmpty(sourceMember.PetCarePlans))
             {
                 ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
                 {
                     Content = sourceMember.PetCarePlans,
                     Type = EMBC.ESS.Shared.Contracts.Events.NoteType.PetCarePlans,
-                });
-            }
-
-            if (!string.IsNullOrEmpty(sourceMember.HouseHoldRecoveryPlan))
-            {
-                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
-                {
-                    Content = sourceMember.HouseHoldRecoveryPlan,
-                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.RecoveryPlan,
                 });
             }
 
