@@ -1,6 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: "nuget"
+    directory: "/shared/src"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "nuget"
     directory: "/ess/src/API"
     schedule:
       interval: "weekly"
