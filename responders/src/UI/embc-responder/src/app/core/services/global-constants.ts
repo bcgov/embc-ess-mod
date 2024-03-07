@@ -80,14 +80,6 @@ export const needsOptions = [
   { name: 'No', value: 'No', apiValue: false },
   { name: "I'm not sure", value: 'Unsure', apiValue: null }
 ];
-export const referredServiceOptions = [
-  { name: 'Inquiry', value: 'Inquiry' },
-  { name: 'Health Services', value: 'Health' },
-  { name: 'First Aid', value: 'FirstAid' },
-  { name: 'Personal Services', value: 'Personal' },
-  { name: 'Child Care', value: 'ChildCare' },
-  { name: 'Pet Care', value: 'PetCare' }
-];
 export const radioButtonOptions = [
   { name: 'Yes', value: 'Yes', apiValue: true },
   { name: 'No', value: 'No', apiValue: false }

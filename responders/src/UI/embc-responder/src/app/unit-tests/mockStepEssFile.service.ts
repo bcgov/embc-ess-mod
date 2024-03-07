@@ -161,11 +161,7 @@ export class MockStepEssFileService extends StepEssFileService {
       reviewingTeamMemberId: '49475fd6-df73-ec11-b830-00505683fbf4',
       reviewingTeamMemberDisplayName: 'Sue T.',
       insurance: InsuranceOption.Unsure,
-      evacuationImpact: 'evac',
-      evacuationExternalReferrals: null,
       petCarePlans: null,
-      houseHoldRecoveryPlan: null,
-      recommendedReferralServices: [],
       householdMembers: [
         {
           id: '76d303d5-7466-47ad-9df8-0c117fa56980',

@@ -116,7 +116,6 @@ namespace EMBC.ESS.Resources.Evacuations
         public bool? HavePetsFood { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public IEnumerable<Note> Notes { get; set; }
-        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
     }
 
     public class HouseholdMember
@@ -156,20 +155,7 @@ namespace EMBC.ESS.Resources.Evacuations
     public enum NoteType
     {
         General,
-        EvacuationImpact,
-        ExternalReferralServices,
-        PetCarePlans,
-        RecoveryPlan
-    }
-
-    public enum ReferralServices
-    {
-        Inquiry,
-        Health,
-        FirstAid,
-        Personal,
-        ChildCare,
-        PetCare
+        PetCarePlans
     }
 
     public enum InsuranceOption

@@ -85,44 +85,6 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-4">
-                How the Evacuee/Household are affected by the event
-              </div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.evacuationImpact }}
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-4">Post Evacuation Household Recovery Plans</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.householdRecoveryPlan }}
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-4">
-                Service Recommendations within the Reception Centre
-              </div>
-              <div class="col-8 bold">
-                {{
-                  stepEssFileService?.referredServices === 'Yes'
-                    ? 'Yes - ' +
-                      stepEssFileService?.referredServiceDetails?.join(', ')
-                    : 'No'
-                }}
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-4">
-                Other Service Recommendations outside of the Reception Centre
-              </div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.evacuationExternalReferrals }}
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -98,7 +98,6 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HavePetsFood { get; set; }
         public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
-        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; } = Array.Empty<ReferralServices>();
     }
 
     public class HouseholdMember
@@ -151,10 +150,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
     public enum NoteType
     {
         General,
-        EvacuationImpact,
-        EvacuationExternalReferrals,
-        PetCarePlans,
-        RecoveryPlan
+        PetCarePlans
     }
 
     public enum NoteStatus
@@ -162,15 +158,5 @@ namespace EMBC.ESS.Shared.Contracts.Events
         ReadOnly,
         Editable,
         Hidden
-    }
-
-    public enum ReferralServices
-    {
-        Inquiry,
-        Health,
-        FirstAid,
-        Personal,
-        ChildCare,
-        PetCare
     }
 }

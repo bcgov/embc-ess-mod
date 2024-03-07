@@ -75,11 +75,7 @@ export class MockHouseholdMemberService extends HouseholdMemberService {
       reviewingTeamMemberId: '8d955446-de73-ec11-b830-00505683fbf4',
       reviewingTeamMemberDisplayName: 'ESS D.',
       insurance: InsuranceOption.Unsure,
-      evacuationImpact: 'evac',
-      evacuationExternalReferrals: null,
       petCarePlans: null,
-      houseHoldRecoveryPlan: null,
-      recommendedReferralServices: [],
       householdMembers: [
         {
           id: '42ab5087-ce1c-48ec-b339-1b1c173842d7',

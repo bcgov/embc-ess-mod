@@ -51,7 +51,6 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Events.NeedsAssessment>()
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
-                .ForMember(d => d.RecommendedReferralServices, opts => opts.Ignore())
                 .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => s.CanEvacueeProvideFood))
                 .ForMember(d => d.CanProvideLodging, opts => opts.MapFrom(s => s.CanEvacueeProvideLodging))
                 .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => s.CanEvacueeProvideClothing))

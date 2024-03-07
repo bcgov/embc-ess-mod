@@ -65,53 +65,6 @@
           {{ essFile?.needsAssessment?.insurance }}
         </div>
       </div>
-      <div class="row row-align">
-        <div class="col-md-4">
-          How the Evacuee/Household are affected by the event
-        </div>
-        <div class="col-md-8 bold">
-          {{
-            essFile?.needsAssessment?.evacuationImpact
-              ? essFile?.needsAssessment?.evacuationImpact
-              : 'n/a'
-          }}
-        </div>
-      </div>
-      <div class="row row-align">
-        <div class="col-md-4">Post Evacuation Household Recovery Plan</div>
-        <div class="col-md-8 bold">
-          {{
-            essFile?.needsAssessment?.houseHoldRecoveryPlan
-              ? essFile?.needsAssessment?.houseHoldRecoveryPlan
-              : 'n/a'
-          }}
-        </div>
-      </div>
-      <div class="row row-align">
-        <div class="col-md-4">
-          Service Recommendations within the Reception Centre
-        </div>
-        <div class="col-md-8 bold">
-          {{
-            essFile?.needsAssessment?.recommendedReferralServices.length === 0
-              ? 'No'
-              : 'Yes - ' +
-                essFile?.needsAssessment?.recommendedReferralServices.join(',')
-          }}
-        </div>
-      </div>
-      <div class="row row-align">
-        <div class="col-md-4">
-          Other Service Recommendations outside of the Reception Centre
-        </div>
-        <div class="col-md-8 bold">
-          {{
-            essFile?.needsAssessment?.evacuationExternalReferrals
-              ? essFile?.needsAssessment?.evacuationExternalReferrals
-              : 'n/a'
-          }}
-        </div>
-      </div>
 
       <hr class="dotted-hr hr-padding" />
       <div class="row">

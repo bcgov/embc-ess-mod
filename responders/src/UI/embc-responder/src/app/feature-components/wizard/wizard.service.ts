@@ -356,19 +356,6 @@ export class WizardService {
     if (
       form.facilityName.value === initialValue.registrationLocation &&
       form.insurance.value === initialValue.needsAssessment.insurance &&
-      form.householdAffected.value ===
-        initialValue.needsAssessment.evacuationImpact &&
-      form.emergencySupportServices.value ===
-        initialValue.needsAssessment.houseHoldRecoveryPlan &&
-      ((form.referredServices.value === 'No' &&
-        initialValue.needsAssessment.recommendedReferralServices.length ===
-          0) ||
-        _.isEqual(
-          form.referredServiceDetails.value,
-          initialValue.needsAssessment.recommendedReferralServices
-        )) &&
-      form.externalServices.value ===
-        initialValue.needsAssessment.evacuationExternalReferrals &&
       this.compareAddress(form.evacAddress, initialValue.evacuatedFromAddress)
     ) {
       return false;
