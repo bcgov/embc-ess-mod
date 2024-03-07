@@ -30,11 +30,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: UntypedFormGroup;
   insuranceOption = globalConst.insuranceOptions;
   radioOption = globalConst.radioButtonOptions;
-  referredServicesOption = globalConst.referredServiceOptions;
   defaultCountry = globalConst.defaultCountry;
   defaultProvince = globalConst.defaultProvince;
 
-  showReferredServicesForm = false;
   showBCAddressForm = false;
   isBCAddress = true;
   showInsuranceMsg = false;
@@ -95,28 +93,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         this.updateTabStatus();
       });
 
-    // Update Value and Validity for referredServiceDetails if referredServices changes
-    this.evacDetailsForm
-      .get('referredServices')
-      .valueChanges.subscribe((value) => {
-        this.evacDetailsForm
-          .get('referredServiceDetails')
-          .updateValueAndValidity();
-      });
-
     // Updates the validations for the evacFromPrimary formControl
     this.evacDetailsForm
       .get('primaryAddressIndicator')
       .valueChanges.subscribe(() => this.updateOnVisibility());
-
-    // Display the referredServiceDetails in case referred Service is set as true
-    if (this.stepEssFileService.referredServices === 'Yes') {
-      this.showReferredServicesForm = true;
-
-      for (const option of this.stepEssFileService.referredServiceDetails) {
-        this.selection.toggle(option);
-      }
-    }
 
     // Display the Evacuation Address form if the answer is set as false
     if (
@@ -169,38 +149,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listens to changes on the Referred Services option
-   *
-   * @param event
-   */
-  referredServiceChange(event: MatRadioChange): void {
-    if (event.value === 'Yes') {
-      this.showReferredServicesForm = true;
-    } else {
-      this.showReferredServicesForm = false;
-      this.selection.clear();
-      this.evacDetailsForm
-        .get('referredServiceDetails')
-        .setValue(this.selection.selected);
-    }
-
-    // this.evacDetailsForm.get('referredServiceDetails').updateValueAndValidity();
-  }
-
-  /**
-   * Controls the selection of referred services
-   *
-   * @param option Referred Services
-   */
-  selectionToggle(option): void {
-    this.selection.toggle(option);
-
-    this.evacDetailsForm
-      .get('referredServiceDetails')
-      .setValue(this.selection.selected);
-  }
-
-  /**
    * Returns the control of the form
    */
   get evacDetailsFormControl(): { [key: string]: AbstractControl } {
@@ -245,8 +193,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Creates a new Evacuation Details form
    */
   private createEvacDetailsForm(): void {
-    if (!this.stepEssFileService.referredServiceDetails)
-      this.stepEssFileService.referredServiceDetails = [];
 
     this.evacDetailsForm = this.formBuilder.group({
       paperESSFile: [
@@ -278,39 +224,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           ? this.stepEssFileService.insurance
           : '',
         Validators.required
-      ],
-      householdAffected: [
-        this.stepEssFileService.evacuationImpact !== undefined
-          ? this.stepEssFileService.evacuationImpact
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      emergencySupportServices: [
-        this.stepEssFileService.householdRecoveryPlan !== undefined
-          ? this.stepEssFileService.householdRecoveryPlan
-          : ''
-      ],
-      referredServices: [
-        this.stepEssFileService.referredServices !== undefined
-          ? this.stepEssFileService.referredServices
-          : ''
-      ],
-      referredServiceDetails: [
-        this.stepEssFileService.referredServiceDetails,
-        [
-          this.customValidation
-            .conditionalValidation(
-              () =>
-                this.evacDetailsForm.get('referredServices').value === 'Yes',
-              Validators.required
-            )
-            .bind(this.customValidation)
-        ]
-      ],
-      externalServices: [
-        this.stepEssFileService.evacuationExternalReferrals !== undefined
-          ? this.stepEssFileService.evacuationExternalReferrals
-          : ''
       ],
       primaryAddressIndicator: [true],
       evacAddress: this.createEvacAddressForm(),
@@ -492,16 +405,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       this.evacDetailsForm.get('facilityName').value;
     this.stepEssFileService.insurance =
       this.evacDetailsForm.get('insurance').value;
-    this.stepEssFileService.evacuationImpact =
-      this.evacDetailsForm.get('householdAffected').value;
-    this.stepEssFileService.householdRecoveryPlan = this.evacDetailsForm.get(
-      'emergencySupportServices'
-    ).value;
-    this.stepEssFileService.referredServices =
-      this.evacDetailsForm.get('referredServices').value;
-    this.stepEssFileService.referredServiceDetails = this.selection.selected;
-    this.stepEssFileService.evacuationExternalReferrals =
-      this.evacDetailsForm.get('externalServices').value;
+
   }
 
   private savePaperFields() {

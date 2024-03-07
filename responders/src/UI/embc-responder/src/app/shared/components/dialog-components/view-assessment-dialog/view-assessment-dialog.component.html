@@ -73,52 +73,6 @@
     {{ mapInsuranceValues(profileData?.needsAssessment?.insurance) }}
   </div>
 </div>
-<div class="row row-padding">
-  <div class="col-md-5">How Affected by the Evacuation</div>
-  <div class="col-md-7 bold">
-    {{
-      profileData?.needsAssessment?.evacuationImpact
-        ? profileData?.needsAssessment?.evacuationImpact
-        : 'n/a'
-    }}
-  </div>
-</div>
-
-<div class="row row-padding">
-  <div class="col-md-5">Post Evacuation Recovery Plans</div>
-  <div class="col-md-7 bold">
-    {{
-      profileData?.needsAssessment?.houseHoldRecoveryPlan
-        ? profileData?.needsAssessment?.houseHoldRecoveryPlan
-        : 'n/a'
-    }}
-  </div>
-</div>
-<div class="row row-padding">
-  <div class="col-md-5">
-    Service Recommendations within the Reception Centre
-  </div>
-  <div class="col-md-7 bold">
-    {{
-      profileData?.needsAssessment?.recommendedReferralServices.length === 0
-        ? 'No'
-        : 'Yes - ' +
-          profileData?.needsAssessment?.recommendedReferralServices.join(',')
-    }}
-  </div>
-</div>
-<div class="row row-padding">
-  <div class="col-md-5">
-    Service Recommendations external of Reception Centre
-  </div>
-  <div class="col-md-7 bold">
-    {{
-      profileData?.needsAssessment?.evacuationExternalReferrals
-        ? profileData?.needsAssessment?.evacuationExternalReferrals
-        : 'n/a'
-    }}
-  </div>
-</div>
 
 <hr class="dotted-hr hr-padding" />
 <div class="row row-padding">
