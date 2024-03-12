@@ -57,7 +57,7 @@ export class StepEssFileService {
   private insuranceVal: InsuranceOption;
 
 
-  // Household Members tab
+  // Household Members & Pets tab
   private haveHouseHoldMembersVal: string;
   private householdMembersVal: HouseholdMemberModel[];
   private selectedHouseholdMembersVal: HouseholdMemberModel[];
@@ -65,7 +65,6 @@ export class StepEssFileService {
   private addMemberIndicatorVal: boolean;
   private addMemberFormIndicatorVal: boolean;
 
-  // Animals tab
   private havePetsVal: string;
   private petsListVal: Pet[];
   private addPetIndicatorVal: boolean;

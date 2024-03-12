@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
@@ -35,7 +35,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   showTable = true;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
-
+  @Output() ValidPetsIndicator : any = new EventEmitter();
+  
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -64,6 +65,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.animalsForm.get('hasPetsFood').updateValueAndValidity();
 
       this.animalsForm.get('pets').updateValueAndValidity();
+      this.ValidPetsIndicator.emit(this.animalsForm.valid);
+
     });
 
     // Updates the validations for the PetFormGroup
@@ -205,19 +208,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.animalsForm.get('addPetIndicator').setValue(true);
   }
 
-  /**
-   * Goes back to the previous ESS File Tab
-   */
-  back() {
-    this.router.navigate([this.tabMetaData?.previous]);
-  }
 
-  /**
-   * Goes to the next tab from the ESS File
-   */
-  next(): void {
-    this.router.navigate([this.tabMetaData?.next]);
-  }
 
   /**
    * When navigating away from tab, update variable value and status indicator

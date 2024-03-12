@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
@@ -45,6 +45,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   tabUpdateSubscription: Subscription;
   memberTipText: string;
   tabMetaData: TabModel;
+  @Output() ValidHouseholdMemebersIndicator : any = new EventEmitter();
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -106,7 +107,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Updates the status of the form according to changes
     this.householdForm
       .get('addMemberFormIndicator')
-      .valueChanges.subscribe(() => this.updateOnVisibility());
+      .valueChanges.subscribe(() => {this.updateOnVisibility();
+        this.ValidHouseholdMemebersIndicator.emit(this.householdForm.valid);
+      }    
+    );
+
+
 
     this.tabMetaData = this.stepEssFileService.getNavLinks('household-members');
   }
