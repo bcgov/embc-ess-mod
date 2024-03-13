@@ -149,7 +149,8 @@ namespace EMBC.ESS.Shared.Contracts.Events
 
     public enum NoteType
     {
-        General
+        General,
+        PetCarePlans
     }
 
     public enum NoteStatus

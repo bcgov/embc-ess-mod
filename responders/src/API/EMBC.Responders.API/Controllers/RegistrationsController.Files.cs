@@ -349,10 +349,13 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public InsuranceOption Insurance { get; set; }
 
+        public string? PetCarePlans { get; set; }
+
         [Required]
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
 
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
+        public bool? HavePetsFood { get; set; }
         public bool? CanProvideFood { get; set; }
         public bool? CanProvideLodging { get; set; }
         public bool? CanProvideClothing { get; set; }
@@ -403,7 +406,10 @@ namespace EMBC.Responders.API.Controllers
     public enum NoteType
     {
         [Description("General")]
-        General
+        General,
+
+        [Description("Pet Care Plans")]
+        PetCarePlans
     }
 
     /// <summary>
@@ -541,6 +547,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.ReviewingTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.ReviewingTeamMemberDisplayName, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.DisplayName))
+                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.SingleOrDefaultProperty(n => n.Type == EMBC.ESS.Shared.Contracts.Events.NoteType.PetCarePlans, n => n.Content)))
                 ;
 
             CreateMap<EvacuationFileHouseholdMember, HouseholdMember>()
@@ -584,6 +591,15 @@ namespace EMBC.Responders.API.Controllers
         public IEnumerable<EMBC.ESS.Shared.Contracts.Events.Note> Convert(NeedsAssessment sourceMember, ResolutionContext context)
         {
             List<EMBC.ESS.Shared.Contracts.Events.Note> ret = new List<EMBC.ESS.Shared.Contracts.Events.Note>();
+
+            if (!string.IsNullOrEmpty(sourceMember.PetCarePlans))
+            {
+                ret.Add(new EMBC.ESS.Shared.Contracts.Events.Note
+                {
+                    Content = sourceMember.PetCarePlans,
+                    Type = EMBC.ESS.Shared.Contracts.Events.NoteType.PetCarePlans,
+                });
+            }
 
             return ret;
         }
