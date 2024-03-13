@@ -380,16 +380,7 @@ export class WizardService {
   }
 
   comparePets(initialValue: EvacuationFileModel, form) {
-    if (
-      globalConst.radioButtonOptions.find(
-        (ins) => ins.value === form.hasPetsFood.value
-      )?.apiValue === initialValue.needsAssessment.havePetsFood &&
-      form.petCareDetails.value === initialValue.needsAssessment.petCarePlans
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+    return false;
   }
 
   compareNeeds(initialValue: EvacuationFileModel, form) {

@@ -1,5 +1,3 @@
-<div class="container container-frame">
-
   <div class="row">
     <div class="col-12 content-container">
       <form [formGroup]="animalsForm">
@@ -142,59 +140,6 @@
             </div>
           </div>
         </div>
-
-        <div *ngIf="petSource.getValue().length > 0" class="card-align">
-          <div class="row">
-            <div class="col-md-12">
-              <label
-                id="hasPetsFood-radio-group-label"
-                class="no-margin requiredField"
-              >
-                Do you have sufficient food for your pet(s)?
-              </label>
-
-              <mat-radio-group
-                aria-labelledby="hasPetsFood-radio-group-label"
-                formControlName="hasPetsFood"
-                class="primary-radio-group"
-              >
-                <mat-radio-button
-                  class="primary-radio-button"
-                  *ngFor="let option of radioOption"
-                  [value]="option.value"
-                >
-                  {{ option.name }}
-                </mat-radio-button>
-                <mat-error
-                  class="custom-mat-error"
-                  *ngIf="
-                    animalsFormControl?.hasPetsFood.touched &&
-                    animalsFormControl?.hasPetsFood.invalid &&
-                    animalsFormControl?.hasPetsFood.hasError('required')
-                  "
-                >
-                  Pet food is required</mat-error
-                >
-              </mat-radio-group>
-
-              <hr class="break-margin" />
-
-              <label class="no-margin">
-                What is your pet care plan for the duration of the evacuation?
-              </label>
-
-              <mat-form-field appearance="outline">
-                <textarea
-                  rows="10"
-                  formControlName="petCareDetails"
-                  placeholder="Please write in the evacuee's own words as much as possible."
-                  maxlength="4000"
-                  matInput
-                ></textarea>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
       </form>
 
 
@@ -241,4 +186,4 @@
       </div>
     </div>
   </div>
-</div>
+

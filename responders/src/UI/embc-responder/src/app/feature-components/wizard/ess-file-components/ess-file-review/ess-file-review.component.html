@@ -92,7 +92,7 @@
       <div class="row">
         <div class="col-12">
           <div class="review-panel data-panel">
-            <label class="tab-subtitle">Household Members & Pets</label>
+            <label class="tab-subtitle">Household Members</label>
 
             <div class="row">
               <div class="col-8">
@@ -229,7 +229,7 @@
             <div class="row">
               <div class="col-4">Pets?</div>
               <div class="col-8 bold">
-                {{ stepEssFileService?.havePets }}
+                {{ stepEssFileService?.havePets ? stepEssFileService?.havePets : "No" }}
               </div>
             </div>
 
@@ -267,20 +267,6 @@
                   ></mat-header-row>
                   <mat-row *matRowDef="let row; columns: petColumns"></mat-row>
                 </mat-table>
-              </div>
-            </div>
-
-            <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
-              <div class="col-4">Sufficient pet food?</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.havePetsFood }}
-              </div>
-            </div>
-
-            <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
-              <div class="col-4">Pet Care Plan</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.petCarePlans }}
               </div>
             </div>
           </div>
