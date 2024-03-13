@@ -99,6 +99,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 .RuleFor(o => o.CanProvideIncidentals, f => f.Random.NullableBool())
                 .RuleFor(o => o.CanProvideLodging, f => f.Random.NullableBool())
                 .RuleFor(o => o.CanProvideTransportation, f => f.Random.NullableBool())
+                .RuleFor(o => o.HavePetsFood, f => f.Random.NullableBool())
                 .RuleFor(o => o.Insurance, f => f.Random.Enum<InsuranceOption>())
                 .RuleFor(o => o.Type, f => f.Random.Enum<NeedsAssessmentType>())
                 .RuleFor(o => o.Notes, f => f.Make(f.Random.Int(0, 20), CreateNote))
