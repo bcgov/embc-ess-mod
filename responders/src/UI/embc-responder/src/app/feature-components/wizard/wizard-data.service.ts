@@ -211,23 +211,15 @@ export class WizardDataService {
       route: 'evacuation-details',
       name: 'evacuation-details',
       status: 'not-started',
-      next: '/ess-wizard/ess-file/household-members'
+      next: '/ess-wizard/ess-file/household-members-pets'
     },
     {
-      label: 'Household Members',
-      route: 'household-members',
-      name: 'household-members',
-      status: 'not-started',
-      next: '/ess-wizard/ess-file/animals',
-      previous: '/ess-wizard/ess-file/evacuation-details'
-    },
-    {
-      label: 'Pets',
-      route: 'animals',
-      name: 'animals',
+      label: 'Household Members & Pets',
+      route: 'household-members-pets',
+      name: 'household-members-pets',
       status: 'not-started',
       next: '/ess-wizard/ess-file/needs',
-      previous: '/ess-wizard/ess-file/household-members'
+      previous: '/ess-wizard/ess-file/evacuation-details'
     },
     {
       label: 'Needs',
@@ -235,7 +227,7 @@ export class WizardDataService {
       name: 'needs',
       status: 'not-started',
       next: '/ess-wizard/ess-file/review',
-      previous: '/ess-wizard/ess-file/animals'
+      previous: '/ess-wizard/ess-file/household-members-pets'
     },
     {
       label: 'Review & Save',
