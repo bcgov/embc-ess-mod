@@ -64,7 +64,7 @@ spec:
             {{- end }}
           {{- end }}
 
-          {{- if or .Values.volumeMounts .Values.secretFiles }}
+          {{- if (or $.Values.volumes (or ($.Values.files).files ($.Values.secretFiles).files)) }}
           volumeMounts:
             {{- if .Values.volumeMounts }}
             {{ .Values.volumeMounts | toYaml | nindent 12 }}
@@ -101,7 +101,7 @@ spec:
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 
-      {{- if or .Values.volumes or .Values.files .Values.secretFiles }}
+      {{- if (or $.Values.volumes (or ($.Values.files).files ($.Values.secretFiles).files)) }}
       volumes:
         {{- if .Values.volumes -}}
         {{ tpl (.Values.volumes | toYaml) $ | nindent 8 }}
