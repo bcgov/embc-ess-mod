@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Teams;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,20 +45,17 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact]
         public async Task CanSaveTeam()
         {
-            var metaDataRepository = Services.GetRequiredService<IMetadataRepository>();
-            var unavailableCommunities = (await teamRepository.QueryTeams(new TeamQuery())).Items.SelectMany(t => t.AssignedCommunities).Select(c => c.Code).ToArray();
+            var unavailableCommunities = (await teamRepository.QueryTeams(new TeamQuery())).Items.SelectMany(t => t.AssignedCommunities).Select(c => c.Code).ToList();
             var allCommunities = TestData.Commmunities;
-            var availableCommunities = allCommunities.Where(c => !unavailableCommunities.Any(uc => uc == c)).ToArray();
+            var availableCommunities = allCommunities.Where(c => !unavailableCommunities.Contains(c));
 
             var team = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
-            var toAssign = availableCommunities.Take(10).Select(c => new AssignedCommunity { Code = c, DateAssigned = DateTime.UtcNow }).ToList();
-            if (!toAssign.Any(c => c.Code == TestData.ActiveTaskCommunity)) toAssign.Add(new AssignedCommunity { Code = TestData.ActiveTaskCommunity, DateAssigned = DateTime.UtcNow });
-            team.AssignedCommunities = toAssign;
+            team.AssignedCommunities = availableCommunities.Take(10).Select(c => new AssignedCommunity { Code = c, DateAssigned = DateTime.UtcNow }).ToList();
 
-            var updatedTeamId = await teamRepository.SaveTeam(team);
+            await teamRepository.SaveTeam(team);
 
             var updatedTeam = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
-            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ToArray().ShouldBe(team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ToArray());
+            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c));
         }
 
         [Fact]

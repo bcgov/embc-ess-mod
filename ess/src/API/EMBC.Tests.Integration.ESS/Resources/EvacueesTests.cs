@@ -45,7 +45,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             evacuee.PrimaryAddress.Community = currentCity == newCommunity
               ? TestData.RandomCommunity
-              : newCommunity; ;
+              : newCommunity;
 
             var updatedEvacueeId = (await evacueeRepository.Manage(new SaveEvacuee
             {

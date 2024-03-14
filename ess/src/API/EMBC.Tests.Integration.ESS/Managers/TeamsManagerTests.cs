@@ -228,8 +228,8 @@ namespace EMBC.Tests.Integration.ESS.Managers
         public async Task CanQueryTeamByCommunity()
         {
             var teams = (await manager.Handle(new TeamsQuery { CommunityCode = TestData.Team1CommunityId })).Teams;
-            teams.ShouldNotBeEmpty();
-            teams.ShouldAllBe(t => t.AssignedCommunities.Any(c => c.Code == TestData.Team1CommunityId));
+            var team = teams.ShouldHaveSingleItem();
+            team.AssignedCommunities.ShouldContain(c => c.Code == TestData.Team1CommunityId);
         }
 
         [Fact]
