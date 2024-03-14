@@ -20,18 +20,11 @@ const routes: Routes = [
           ).then((m) => m.EvacuationDetailsModule)
       },
       {
-        path: 'household-members',
+        path: 'household-members-pets',
         loadChildren: () =>
           import(
-            '../ess-file-components/household-members/household-members.module'
-          ).then((m) => m.HouseholdMembersModule)
-      },
-      {
-        path: 'animals',
-        loadChildren: () =>
-          import('../ess-file-components/animals/animals.module').then(
-            (m) => m.AnimalsModule
-          )
+            '../ess-file-components/household-members-pets/household-members-pets.module'
+          ).then((m) => m.HouseholdMembersPetsModule)
       },
       {
         path: 'needs',

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
@@ -35,7 +35,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   showTable = true;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
-
+  @Output() ValidPetsIndicator : any = new EventEmitter();
+  
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -61,9 +62,10 @@ export class AnimalsComponent implements OnInit, OnDestroy {
 
     // Update Value and Validity for pets form if hasPets changes
     this.animalsForm.get('hasPets').valueChanges.subscribe(() => {
-      this.animalsForm.get('hasPetsFood').updateValueAndValidity();
 
       this.animalsForm.get('pets').updateValueAndValidity();
+      this.ValidPetsIndicator.emit(this.animalsForm.valid);
+
     });
 
     // Updates the validations for the PetFormGroup
@@ -104,8 +106,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
               this.pets = [];
               this.petSource.next(this.pets);
               this.animalsForm.get('pets').setValue(this.pets);
-              this.animalsForm.get('hasPetsFood').reset();
-              this.animalsForm.get('petCareDetails').reset();
             } else {
               this.animalsForm.get('hasPets').setValue('Yes');
             }
@@ -183,8 +183,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           this.animalsForm.get('addPetIndicator').setValue(false);
 
           if (this.pets.length === 0) {
-            this.animalsForm.get('hasPetsFood').reset();
-            this.animalsForm.get('petCareDetails').reset();
             this.animalsForm.get('hasPets').setValue('No');
           }
         }
@@ -205,19 +203,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.animalsForm.get('addPetIndicator').setValue(true);
   }
 
-  /**
-   * Goes back to the previous ESS File Tab
-   */
-  back() {
-    this.router.navigate([this.tabMetaData?.previous]);
-  }
 
-  /**
-   * Goes to the next tab from the ESS File
-   */
-  next(): void {
-    this.router.navigate([this.tabMetaData?.next]);
-  }
 
   /**
    * When navigating away from tab, update variable value and status indicator
@@ -260,16 +246,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           )
           .bind(this.customValidation)
       ],
-      hasPetsFood: [
-        this.stepEssFileService.havePetsFood,
-        this.customValidation
-          .conditionalValidation(
-            () => this.animalsForm.get('hasPets').value === 'Yes',
-            Validators.required
-          )
-          .bind(this.customValidation)
-      ],
-      petCareDetails: [this.stepEssFileService.petCarePlans],
       pet: this.createPetForm(),
       addPetIndicator: [false]
     });
@@ -343,10 +319,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   private saveFormData() {
     this.stepEssFileService.havePets = this.animalsForm.get('hasPets').value;
     this.stepEssFileService.petsList = this.animalsForm.get('pets').value;
-    this.stepEssFileService.havePetsFood =
-      this.animalsForm.get('hasPetsFood').value;
-    this.stepEssFileService.petCarePlans =
-      this.animalsForm.get('petCareDetails').value;
     this.stepEssFileService.addPetIndicator =
       this.animalsForm.get('addPetIndicator').value;
   }

@@ -62,7 +62,6 @@ describe('EssFileDetailsComponent', () => {
       reviewingTeamMemberId: '8d955446-de73-ec11-b830-00505683fbf4',
       reviewingTeamMemberDisplayName: 'ESS D.',
       insurance: InsuranceOption.Unsure,
-      petCarePlans: null,
       householdMembers: [
         {
           id: '42ab5087-ce1c-48ec-b339-1b1c173842d7',
@@ -97,7 +96,6 @@ describe('EssFileDetailsComponent', () => {
         }
       ],
       pets: [],
-      havePetsFood: false,
       canProvideFood: false,
       canProvideLodging: true,
       canProvideClothing: true,

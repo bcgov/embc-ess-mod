@@ -57,7 +57,7 @@ export class StepEssFileService {
   private insuranceVal: InsuranceOption;
 
 
-  // Household Members tab
+  // Household Members & Pets tab
   private haveHouseHoldMembersVal: string;
   private householdMembersVal: HouseholdMemberModel[];
   private selectedHouseholdMembersVal: HouseholdMemberModel[];
@@ -65,13 +65,9 @@ export class StepEssFileService {
   private addMemberIndicatorVal: boolean;
   private addMemberFormIndicatorVal: boolean;
 
-  // Animals tab
   private havePetsVal: string;
   private petsListVal: Pet[];
   private addPetIndicatorVal: boolean;
-
-  private havePetsFoodVal: string;
-  private petCarePlansVal: string;
 
   // Needs tab
   private canRegistrantProvideClothingVal: string;
@@ -281,20 +277,6 @@ export class StepEssFileService {
     this.addPetIndicatorVal = addPetIndicatorVal;
   }
 
-  public get havePetsFood(): string {
-    return this.havePetsFoodVal;
-  }
-  public set havePetsFood(havePetsFoodVal: string) {
-    this.havePetsFoodVal = havePetsFoodVal;
-  }
-
-  public get petCarePlans(): string {
-    return this.petCarePlansVal;
-  }
-  public set petCarePlans(petCarePlansVal: string) {
-    this.petCarePlansVal = petCarePlansVal;
-  }
-
   // Needs tab
   public get canRegistrantProvideClothing(): string {
     return this.canRegistrantProvideClothingVal;
@@ -396,11 +378,6 @@ export class StepEssFileService {
   public createEvacFileDTO(): EvacuationFile {
     // Get Correct API values for Household Members selections
 
-    // Get correct API values for Animals selections
-    const havePetsFoodDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.havePetsFood
-    )?.apiValue;
-
     // Get correct API values for Needs Assessment selections
     const needsClothingDTO = globalConst.needsOptions.find(
       (ins) => ins.value === this.canRegistrantProvideClothing
@@ -428,8 +405,6 @@ export class StepEssFileService {
       householdMembers: this.householdMembers,
 
       pets: this.petsList,
-      havePetsFood: havePetsFoodDTO,
-      petCarePlans: this.petCarePlans,
 
       canProvideFood: needsFoodDTO,
       canProvideLodging: needsLodgingDTO,
@@ -471,11 +446,6 @@ export class StepEssFileService {
   public updateEvacFileDTO(): EvacuationFile {
     // Get Correct API values for Household Members selections
 
-    // Get correct API values for Animals selections
-    const havePetsFoodDTO = globalConst.radioButtonOptions.find(
-      (ins) => ins.value === this.havePetsFood
-    )?.apiValue;
-
     // Get correct API values for Needs Assessment selections
     const needsClothingDTO = globalConst.needsOptions.find(
       (ins) => ins.value === this.canRegistrantProvideClothing
@@ -503,8 +473,6 @@ export class StepEssFileService {
       householdMembers: this.selectedHouseholdMembers,
    
       pets: this.petsList,
-      havePetsFood: havePetsFoodDTO,
-      petCarePlans: this.petCarePlans,
 
       canProvideFood: needsFoodDTO,
       canProvideLodging: needsLodgingDTO,
@@ -575,9 +543,6 @@ export class StepEssFileService {
     this.havePets = undefined;
     this.petsList = undefined;
     this.addPetIndicator = undefined;
-
-    this.havePetsFood = undefined;
-    this.petCarePlans = undefined;
 
     // Needs tab
     this.canRegistrantProvideClothing = undefined;
@@ -656,11 +621,6 @@ export class StepEssFileService {
     this.havePets = globalConst.radioButtonOptions.find(
       (ins) => ins.apiValue === essNeeds.pets?.length > 0
     )?.value;
-
-    this.havePetsFood = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === essNeeds.havePetsFood
-    )?.value;
-    this.petCarePlans = essNeeds.petCarePlans;
 
     // Needs tab
     this.canRegistrantProvideFood = globalConst.needsOptions.find(

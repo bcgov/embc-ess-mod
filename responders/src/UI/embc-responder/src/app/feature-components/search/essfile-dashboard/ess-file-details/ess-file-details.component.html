@@ -170,20 +170,6 @@
               </mat-table>
             </div>
           </div>
-
-          <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
-            <div class="col-md-4">Sufficient pet food?</div>
-            <div class="col-md-8 bold">
-              {{ essFile?.needsAssessment?.havePetsFood ? 'Yes' : 'No' }}
-            </div>
-          </div>
-
-          <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
-            <div class="col-md-4">Pet Care Plan</div>
-            <div class="col-md-8 bold">
-              {{ essFile?.needsAssessment?.petCarePlans }}
-            </div>
-          </div>
         </div>
       </div>
 
