@@ -105,18 +105,18 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             newRegistrant.UserId = newProfileBceId;
 
-            var id = await manager.Handle(new SaveRegistrantCommand { Profile = newRegistrant });
+            await manager.Handle(new SaveRegistrantCommand { Profile = newRegistrant });
 
             var registrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
 
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
-            var member = file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.FirstName != $"{TestData.TestPrefix}-member-no-registrant-first").First();
+            var member = file.NeedsAssessment.HouseholdMembers.First(m => !m.IsPrimaryRegistrant && m.FirstName != $"{TestData.TestPrefix}-member-no-registrant-first");
 
             var fileId = await manager.Handle(new LinkRegistrantCommand { FileId = file.Id, RegistantId = registrant.Id, HouseholdMemberId = member.Id });
             fileId.ShouldBe(file.Id);
 
             var updatedFile = await GetEvacuationFileById(TestData.EvacuationFileId);
-            updatedFile.NeedsAssessment.HouseholdMembers.Where(m => m.Id == member.Id).Single().LinkedRegistrantId.ShouldBe(registrant.Id);
+            updatedFile.NeedsAssessment.HouseholdMembers.Single(m => m.Id == member.Id).LinkedRegistrantId.ShouldBe(registrant.Id);
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             var currentVerifiedStatus = registrant.VerifiedUser;
             var newStatus = !currentVerifiedStatus;
 
-            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus.HasValue ? newStatus.Value : false });
+            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus.HasValue && newStatus.Value });
 
             var updatedRegistrant = await GetRegistrantByUserId(TestData.ContactUserId);
             updatedRegistrant.Id.ShouldBe(id);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using EMBC.ESS.Resources.Supports;
 using Microsoft.Extensions.DependencyInjection;
@@ -121,7 +122,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
-            var issueDate = DateTime.Parse("2021/12/31T16:14:32Z");
+            var issueDate = DateTime.Parse("2021/12/31T16:14:32Z", CultureInfo.InvariantCulture);
             var uniqueId = Guid.NewGuid().ToString().Substring(0, 4);
             var householdMembers = TestData.HouseholdMemberIds;
             var evacuationFileId = TestData.EvacuationFileId;

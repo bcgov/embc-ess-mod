@@ -17,10 +17,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig" />
-    </ItemGroup>
-
-    <ItemGroup>
         <None Remove="Connected Services\Dynamics\DynamicsCsdl.xml" />
     </ItemGroup>
 

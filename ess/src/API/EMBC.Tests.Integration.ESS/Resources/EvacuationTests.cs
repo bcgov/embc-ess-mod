@@ -50,7 +50,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var queryResult = await evacuationRepository.Query(caseQuery);
             queryResult.Items.ShouldHaveSingleItem();
 
-            var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
+            var evacuationFile = queryResult.Items.ShouldHaveSingleItem();
             evacuationFile.Id.ShouldBe(TestEssFileNumber);
             evacuationFile.NeedsAssessment.Id.ShouldBe(TestNeedsAssessmentId);
         }
@@ -61,7 +61,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var fileToUpdate = (await evacuationRepository.Query(new EvacuationFilesQuery
             {
                 FileId = TestEssFileNumber,
-            })).Items.Cast<EvacuationFile>().Single();
+            })).Items.Single();
 
             var needsAssessment = fileToUpdate.NeedsAssessment;
             needsAssessment.HouseholdMembers = needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant);
@@ -69,7 +69,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = fileToUpdate })).Id;
 
-            var onceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
+            var onceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
             var updatedNeedsAssessment = onceUpdatedFile.NeedsAssessment;
             var targetNeedsAssessmentId = updatedNeedsAssessment.Id;
 
@@ -80,7 +80,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = onceUpdatedFile })).Id;
 
-            var twiceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = targetNeedsAssessmentId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
+            var twiceUpdatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId, NeedsAssessmentId = targetNeedsAssessmentId })).Items.ShouldHaveSingleItem();
             twiceUpdatedFile.NeedsAssessment.HouseholdMembers.ShouldHaveSingleItem();
         }
 
@@ -115,7 +115,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 PrimaryRegistrantId = primaryContactId,
             };
-            var files = (await evacuationRepository.Query(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            var files = (await evacuationRepository.Query(caseQuery)).Items.ToArray();
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == primaryContactId));
             files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContactId);
@@ -128,7 +128,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 LinkedRegistrantId = TestContactId
             };
-            var files = (await evacuationRepository.Query(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            var files = (await evacuationRepository.Query(caseQuery)).Items.ToArray();
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == TestContactId));
         }
@@ -153,7 +153,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var fileToUpdate = (await evacuationRepository.Query(new EvacuationFilesQuery
             {
                 FileId = TestEssFileNumber,
-            })).Items.Cast<EvacuationFile>().Single();
+            })).Items.Single();
 
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
             var needsAssessment = fileToUpdate.NeedsAssessment;
@@ -169,7 +169,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var fileId = (await evacuationRepository.Manage(new SubmitEvacuationFileNeedsAssessment { EvacuationFile = fileToUpdate })).Id;
 
-            var updatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
+            var updatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
             var updatedNeedsAssessment = updatedFile.NeedsAssessment;
             updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
@@ -178,7 +178,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 member.FirstName.ShouldStartWith(newUniqueSignature);
                 member.LastName.ShouldStartWith(newUniqueSignature);
             }
-            var primaryRegistrant = updatedNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem();
+            updatedNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem();
             updatedFile.NeedsAssessment.Pets.Count().ShouldBe(fileToUpdate.NeedsAssessment.Pets.Count());
             updatedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(fileToUpdate.NeedsAssessment.HouseholdMembers.Count());
         }
@@ -195,7 +195,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 FileId = fileId
             };
-            var evacuationFile = (EvacuationFile)(await evacuationRepository.Query(caseQuery)).Items.ShouldHaveSingleItem();
+            var evacuationFile = (await evacuationRepository.Query(caseQuery)).Items.ShouldHaveSingleItem();
 
             // Evacuation file
             evacuationFile.EvacuatedFrom.ShouldNotBeNull();
@@ -222,7 +222,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             needsAssessment.CanProvideLodging.ShouldBe(originalNeedsAssessment.CanProvideLodging);
             needsAssessment.CanProvideTransportation.ShouldBe(originalNeedsAssessment.CanProvideTransportation);
             needsAssessment.HavePetsFood.ShouldBe(originalNeedsAssessment.HavePetsFood);
-  
+
             needsAssessment.HouseholdMembers.Count().ShouldBe(originalNeedsAssessment.HouseholdMembers.Count());
             needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem().LinkedRegistrantId.ShouldBe(primaryContact.Id);
             for (var j = 0; j < originalNeedsAssessment.HouseholdMembers.Count(); j++)

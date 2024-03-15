@@ -50,7 +50,7 @@ dotnet_style_prefer_conditional_expression_over_return = true:silent
 ###############################
 # Style Definitions
 dotnet_naming_style.pascal_case_style.capitalization             = pascal_case
-# Use PascalCase for constant fields  
+# Use PascalCase for constant fields
 dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols  = constant_fields
 dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case_style
@@ -67,6 +67,7 @@ dotnet_style_prefer_simplified_interpolation = true:suggestion
 dotnet_style_allow_multiple_blank_lines_experimental = true:silent
 dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
 dotnet_code_quality_unused_parameters = all:suggestion
+dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
 ###############################
 # C# Coding Conventions       #
 ###############################
@@ -268,7 +269,7 @@ dotnet_diagnostic.SA1633.severity = silent
 # SA1601: Partial elements should be documented
 dotnet_diagnostic.SA1601.severity = suggestion
 
-# S3928: Parameter names used into ArgumentException constructors should match an existing one 
+# S3928: Parameter names used into ArgumentException constructors should match an existing one
 dotnet_diagnostic.S3928.severity = suggestion
 
 # Default severity for analyzer diagnostics with category 'Minor Code Smell'
@@ -314,6 +315,15 @@ dotnet_diagnostic.IDE0022.severity = suggestion
 
 # S101: Types should be named in PascalCase
 dotnet_diagnostic.S101.severity = suggestion
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_prefer_utf8_string_literals = true:suggestion
+
+# S6608: Prefer indexing instead of "Enumerable" methods on types implementing "IList"
+dotnet_diagnostic.S6608.severity = suggestion
+
+# S6605: Collection-specific "Exists" method should be used instead of the "Any" extension
+dotnet_diagnostic.S6605.severity = suggestion
 
 [*.vb]
 # Modifier preferences

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using EMBC.ESS.Managers.Events;
@@ -192,6 +193,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 PrintRequestId = testPrintRequest.era_referralprintid.ToString(),
                 RequestingUserId = testPrintRequest._era_requestinguserid_value?.ToString()
             });
+            response.Content.ShouldNotBeEmpty();
             await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", response.Content);
         }
 
@@ -246,7 +248,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             {
                 s.From = DateTime.UtcNow.AddDays(-4);
                 s.To = DateTime.UtcNow.AddDays(-1);
-                s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
+                s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z", CultureInfo.InvariantCulture);
                 ((Referral)s.SupportDelivery).ManualReferralId = $"{TestData.TestPrefix}-paperreferral";
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
                 s.IncludedHouseholdMembers = householdMembers.TakeRandom();
@@ -347,7 +349,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
             {
                 s.From = DateTime.UtcNow;
                 s.To = DateTime.UtcNow.AddDays(3);
-                s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z");
+                s.IssuedOn = DateTime.Parse("2021/12/31T16:14:32Z", CultureInfo.InvariantCulture);
                 ((Referral)s.SupportDelivery).ManualReferralId = paperReferralId;
                 s.IssuedBy = new TeamMember { DisplayName = "autotest R" };
                 s.IncludedHouseholdMembers = householdMembers.TakeRandom();

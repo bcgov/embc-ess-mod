@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EMBC.ESS.Managers.Events;
-using EMBC.ESS.Resources.Evacuees;
 using EMBC.ESS.Shared.Contracts.Events;
 using Address = EMBC.ESS.Shared.Contracts.Events.Address;
 
@@ -156,8 +155,8 @@ namespace EMBC.Tests.Integration.ESS
             Func<Support, SupportDelivery> createSupportDelivery = sup =>
                 sup switch
                 {
-                    IncidentalsSupport s => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
-                    ClothingSupport s => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
+                    IncidentalsSupport _ => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
+                    ClothingSupport _ => new Interac { NotificationEmail = $"{prefix}-unitest@test.gov.bc.ca", ReceivingRegistrantId = file.PrimaryRegistrantId },
 
                     _ => new Referral { IssuedToPersonName = $"{prefix}-unitest" },
                 };

@@ -47,6 +47,7 @@ namespace EMBC.Tests.Integration.ESS
         public string ActiveTaskId => activeTaskId;
         public string ActiveTaskCommunity => activeTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string InactiveTaskId => inactiveTaskId;
+        public string InactiveTaskCommunity => inactiveTask._era_jurisdictionid_value.GetValueOrDefault().ToString();
         public string ContactId => testContact.contactid.GetValueOrDefault().ToString();
         public string ContactUserId => testContact.era_bcservicescardid;
         public string ContactFirstName => testContact.firstname;
