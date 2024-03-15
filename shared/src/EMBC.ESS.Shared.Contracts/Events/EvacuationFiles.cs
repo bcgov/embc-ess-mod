@@ -96,7 +96,6 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public bool? CanProvideIncidentals { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HavePetsFood { get; set; }
         public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
     }
 
@@ -149,8 +148,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
 
     public enum NoteType
     {
-        General,
-        PetCarePlans
+        General
     }
 
     public enum NoteStatus

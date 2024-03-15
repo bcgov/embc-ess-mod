@@ -158,7 +158,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
             var needsAssessment = fileToUpdate.NeedsAssessment;
 
-            needsAssessment.HavePetsFood = !needsAssessment.HavePetsFood;
             foreach (var member in needsAssessment.HouseholdMembers.Where(m => m.LinkedRegistrantId == null && !m.FirstName.Contains("no-registrant")))
             {
                 string originalFirstName = member.FirstName.Substring(member.FirstName.LastIndexOf("_") + 1);
@@ -172,7 +171,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var updatedFile = (await evacuationRepository.Query(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
 
             var updatedNeedsAssessment = updatedFile.NeedsAssessment;
-            updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
             foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.LinkedRegistrantId == null && !m.FirstName.Contains("no-registrant")))
             {
                 member.FirstName.ShouldStartWith(newUniqueSignature);
@@ -221,7 +219,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             needsAssessment.CanProvideIncidentals.ShouldBe(originalNeedsAssessment.CanProvideIncidentals);
             needsAssessment.CanProvideLodging.ShouldBe(originalNeedsAssessment.CanProvideLodging);
             needsAssessment.CanProvideTransportation.ShouldBe(originalNeedsAssessment.CanProvideTransportation);
-            needsAssessment.HavePetsFood.ShouldBe(originalNeedsAssessment.HavePetsFood);
   
             needsAssessment.HouseholdMembers.Count().ShouldBe(originalNeedsAssessment.HouseholdMembers.Count());
             needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem().LinkedRegistrantId.ShouldBe(primaryContact.Id);
@@ -289,7 +286,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
                     },
                     Type = NeedsAssessmentType.Preliminary,
                     Insurance = InsuranceOption.Yes,
-                    HavePetsFood = true,
                     CanProvideClothing = true,
                     CanProvideFood = true,
                     CanProvideIncidentals = true,
