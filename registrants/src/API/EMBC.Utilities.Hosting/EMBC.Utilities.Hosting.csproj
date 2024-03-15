@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <Company>Province of British Columbia</Company>
+        <Authors>Quartech Systems Limited</Authors>
+        <Copyright>Copyright 2021 Province of British Columbia</Copyright>
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
+        <RepositoryType>GIT</RepositoryType>
+        <AnalysisMode>Default</AnalysisMode>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <Nullable>enable</Nullable>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="Cronos" Version="0.7.1" />
+        <PackageReference Include="DistributedLock.Redis" Version="1.0.2" />
+        <PackageReference Include="DistributedLock.WaitHandles" Version="1.0.1" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+        <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.*" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.*" />
+        <PackageReference Include="OpenTelemetry.Contrib.Instrumentation.GrpcCore" Version="1.0.0-beta3" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.3.1" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9.4" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.4" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.0.0-rc9.4" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.4" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis" Version="1.0.0-rc9.5" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+        <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.2.0" />
+        <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+        <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.2" />
+        <PackageReference Include="Serilog.Enrichers.Span" Version="2.3.0" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="Serilog.Sinks.Splunk" Version="3.7.0" />
+        <PackageReference Include="SerilogTraceListener" Version="3.2.0" />
+        <PackageReference Include="StackExchange.Redis" Version="2.7.27" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EMBC.Utilities.Telemetry\EMBC.Utilities.Telemetry.csproj" />
+      <ProjectReference Include="..\EMBC.Utilities\EMBC.Utilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>EMBC.Tests.Unit.ESS</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+</Project>
