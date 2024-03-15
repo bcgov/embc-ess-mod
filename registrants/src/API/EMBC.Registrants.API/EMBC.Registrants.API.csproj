@@ -21,10 +21,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="6.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.20.0" />
