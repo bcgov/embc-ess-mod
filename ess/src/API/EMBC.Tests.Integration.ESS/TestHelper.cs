@@ -34,7 +34,6 @@ namespace EMBC.Tests.Integration.ESS
                     {
                         Type = NeedsAssessmentType.Preliminary,
                         Insurance = InsuranceOption.Yes,
-                        HavePetsFood = true,
                         CanProvideClothing = true,
                         CanProvideFood = true,
                         CanProvideIncidentals = true,
@@ -77,10 +76,6 @@ namespace EMBC.Tests.Integration.ESS
                         {
                             new Pet{ Type = $"{uniqueSignature}_Cat", Quantity = "1" },
                             new Pet{ Type = $"{uniqueSignature}_Dog", Quantity = "4" }
-                        },
-                        Notes = new[]
-                        {
-                            new Note{ Type = NoteType.PetCarePlans, Content = "pat plans" },
                         }
                     }
             };
