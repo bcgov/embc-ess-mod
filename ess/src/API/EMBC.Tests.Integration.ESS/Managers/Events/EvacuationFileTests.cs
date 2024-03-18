@@ -28,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact]
         public async Task CanSubmitAnonymousRegistration()
         {
-            var textContextIdentifier = Guid.NewGuid().ToString().Substring(0, 4);
+            var testContextIdentifier = Guid.NewGuid().ToString().Substring(0, 4);
             var securityQuestions = new List<SecurityQuestion>();
             securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
             securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
@@ -41,8 +41,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 VerifiedUser = false,
                 RestrictedAccess = false,
                 SecurityQuestions = securityQuestions,
-                FirstName = $"{textContextIdentifier}-PriRegTestFirst",
-                LastName = $"{textContextIdentifier}-PriRegTestLast",
+                FirstName = $"{testContextIdentifier}-PriRegTestFirst",
+                LastName = $"{testContextIdentifier}-PriRegTestLast",
                 DateOfBirth = "2000/01/01",
                 Gender = "Female",
                 Initials = "initials1",
@@ -85,8 +85,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                     {
                         IsPrimaryRegistrant = false,
                         Id = null,
-                        FirstName = $"{textContextIdentifier}-MemRegTestFirst",
-                        LastName = $"{textContextIdentifier}-MemRegTestLast",
+                        FirstName = $"{testContextIdentifier}-MemRegTestFirst",
+                        LastName = $"{testContextIdentifier}-MemRegTestLast",
                         Gender = "X",
                         DateOfBirth = "2010-01-01"
                     }
@@ -99,7 +99,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 CanProvideTransportation = true,
                 Pets = new[]
                 {
-                    new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
+                    new Pet{ Type = $"dog{testContextIdentifier}", Quantity = "4" }
                 }
             };
             var cmd = new SubmitAnonymousEvacuationFileCommand
@@ -123,9 +123,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var file = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
-            file.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
-            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
-            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
+            file.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
+            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
+            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => !m.IsPrimaryRegistrant && m.FirstName == $"{testContextIdentifier}-MemRegTestFirst" && m.LastName == $"{testContextIdentifier}-MemRegTestLast");
         }
 
         [Fact]
@@ -141,8 +141,8 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
 
             var savedFile = await GetEvacuationFileById(fileId);
             savedFile.PrimaryRegistrantId.ShouldBe(registrant.Id);
-            savedFile.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
-            savedFile.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
+            savedFile.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
+            savedFile.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
 
             savedFile.HouseholdMembers.Count().ShouldBe(file.NeedsAssessment.HouseholdMembers.Count());
             foreach (var member in file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
@@ -175,9 +175,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         [Fact]
         public async Task Update_EvacuationFileMultiplePrimaryRegistrants_ThrowsError()
         {
-            var now = DateTime.UtcNow;
-            now = new DateTime(now.Ticks - now.Ticks % TimeSpan.TicksPerSecond, now.Kind);
-
             var file = await GetEvacuationFileById(TestData.EvacuationFileId);
 
             var newPrimaryMember = new HouseholdMember

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using EMBC.ESS.Utilities.Cas;
-using EMBC.Utilities.Extensions;
 
 namespace EMBC.Tests.Integration.ESS
 {
     internal class MockCasProxy : IWebProxy
     {
-        private ConcurrentDictionary<string, GetSupplierResponse> Suppliers;
-        private ConcurrentDictionary<string, InvoiceItem> InvoiceItems;
-        private ConcurrentDictionary<string, Invoice> Invoices;
+        private readonly ConcurrentDictionary<string, GetSupplierResponse> Suppliers;
+        private readonly ConcurrentDictionary<string, InvoiceItem> InvoiceItems;
+        private readonly ConcurrentDictionary<string, Invoice> Invoices;
 
         public MockCasProxy()
         {
@@ -49,7 +47,7 @@ namespace EMBC.Tests.Integration.ESS
 
         public async Task<CreateSupplierResponse> CreateSupplierAsync(CreateSupplierRequest supplier, CancellationToken ct)
         {
-            supplier.SupplierAddress.First().Suppliersitecode = "site code";
+            supplier.SupplierAddress[0].Suppliersitecode = "site code";
             GetSupplierResponse toAdd = new GetSupplierResponse
             {
                 Suppliernumber = new Random().Next(1, 1000000).ToString(),
@@ -69,7 +67,7 @@ namespace EMBC.Tests.Integration.ESS
             return await Task.FromResult(response);
         }
 
-        private static Func<DateTime, string> CasDateTimeFormatter => d => d.ToPST().ToString("dd-MMM-yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+        //private static Func<DateTime, string> CasDateTimeFormatter => d => d.ToPST().ToString("dd-MMM-yyyy HH:mm:ss", CultureInfo.InvariantCulture);
 
         public async Task<GetInvoiceResponse> GetInvoiceAsync(GetInvoiceRequest getRequest, CancellationToken ct)
         {
@@ -113,7 +111,7 @@ namespace EMBC.Tests.Integration.ESS
 
         public int GetSuppliersCount()
         {
-            return Suppliers.Count();
+            return Suppliers.Count;
         }
 
         public void AddInvoice(Invoice invoice)

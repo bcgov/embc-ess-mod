@@ -34,8 +34,8 @@ namespace EMBC.ESS.Resources.Teams
             await Parallel.ForEachAsync(teams, ct, async (team, ct) =>
             {
                 context.AttachTo(nameof(EssContext.era_essteams), team);
-                await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID), ct);
-                await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId), ct);
+                if (team.era_ESSTeam_ESSTeamArea_ESSTeamID == null || !team.era_ESSTeam_ESSTeamArea_ESSTeamID.Any()) await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID), ct);
+                if (team.era_essteamuser_ESSTeamId == null || !team.era_essteamuser_ESSTeamId.Any()) await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId), ct);
             });
 
             return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };

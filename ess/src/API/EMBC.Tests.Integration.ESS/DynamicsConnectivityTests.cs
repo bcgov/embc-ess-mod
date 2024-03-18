@@ -13,14 +13,16 @@ namespace EMBC.Tests.Integration.ESS
         public async Task GetSecurityToken()
         {
             var tokenProvider = Services.GetRequiredService<ISecurityTokenProvider>();
-            output.WriteLine("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
+            var token = await tokenProvider.AcquireToken();
+            token.ShouldNotBeNullOrEmpty();
+            output.WriteLine("Authorization: Bearer {0}", token);
         }
 
         [Fact]
         public async Task CanConnectToDynamics()
         {
             var context = Services.GetRequiredService<EssContext>();
-            await context.era_countries.GetAllPagesAsync();
+            await Should.NotThrowAsync(async () => await context.era_countries.GetAllPagesAsync());
         }
     }
 }

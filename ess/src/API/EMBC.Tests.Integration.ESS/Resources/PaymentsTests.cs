@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using EMBC.ESS.Managers.Events;
 using EMBC.ESS.Resources.Payments;
@@ -123,7 +124,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 InvoiceDate = DateTime.UtcNow,
                 InvoiceAmount = 123,
             });
-            mockedCas.SetPaymentDate("1234", DateTime.Parse("2022-04-28 09:00:00z"), CasPaymentStatuses.Negotiable);
+            mockedCas.SetPaymentDate("1234", DateTime.Parse("2022-04-28 09:00:00z", CultureInfo.InvariantCulture), CasPaymentStatuses.Negotiable);
             mockedCas.AddInvoice(new Invoice
             {
                 InvoiceNumber = "1235",
@@ -132,7 +133,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 InvoiceDate = DateTime.UtcNow,
                 InvoiceAmount = 234,
             });
-            mockedCas.SetPaymentDate("1235", DateTime.Parse("2022-04-28 10:00:00z"), CasPaymentStatuses.Negotiable);
+            mockedCas.SetPaymentDate("1235", DateTime.Parse("2022-04-28 10:00:00z", CultureInfo.InvariantCulture), CasPaymentStatuses.Negotiable);
 
             //1 not expected
             mockedCas.AddInvoice(new Invoice
@@ -143,18 +144,18 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 InvoiceDate = DateTime.UtcNow,
                 InvoiceAmount = 111,
             });
-            mockedCas.SetPaymentDate("9876", DateTime.Parse("2022-05-15 09:00:00z"), CasPaymentStatuses.Negotiable);
+            mockedCas.SetPaymentDate("9876", DateTime.Parse("2022-05-15 09:00:00z", CultureInfo.InvariantCulture), CasPaymentStatuses.Negotiable);
 
-            var startDate = DateTime.Parse("2022-04-28");
-            var endDate = DateTime.Parse("2022-04-29");
+            var startDate = DateTime.Parse("2022-04-28", CultureInfo.InvariantCulture);
+            var endDate = DateTime.Parse("2022-04-29", CultureInfo.InvariantCulture);
 
             var response = (GetCasPaymentStatusResponse)await repository.Query(new GetCasPaymentStatusRequest { ChangedFrom = startDate, ChangedTo = endDate });
 
             response.Payments.ShouldNotBeEmpty();
             var expectedIds = new[] { "1234", "1235" };
             var notExpectedId = "9876";
-            response.Payments.Where(p => expectedIds.Contains(p.PaymentId)).Count().ShouldBe(2);
-            response.Payments.Where(p => p.PaymentId == notExpectedId).SingleOrDefault().ShouldBeNull();
+            response.Payments.Count(p => expectedIds.Contains(p.PaymentId)).ShouldBe(2);
+            response.Payments.SingleOrDefault(p => p.PaymentId == notExpectedId).ShouldBeNull();
             foreach (var payment in response.Payments)
             {
                 payment.StatusChangeDate.ShouldBeGreaterThanOrEqualTo(startDate.ToLocalTime());
@@ -227,7 +228,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact]
         public async Task SendPaymentToCas_InteracPayment_InvoiceNameShouldNotBePopulated()
         {
-            var manager = Services.GetRequiredService<EventsManager>();
             var registrantId = TestData.ContactId;
             var mockedCas = (MockCasProxy)Services.GetRequiredService<IWebProxy>();
 
@@ -268,10 +268,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact]
-        public async Task ConvertPstToUtc()
+        public void ConvertPstToUtc()
         {
-            var registrantId = await CreateNewRegistrant();
-            var tmp = DateTime.SpecifyKind(DateTime.Parse("07-SEP-2023 14:23:41"), DateTimeKind.Unspecified);
+            var tmp = DateTime.SpecifyKind(DateTime.Parse("07-SEP-2023 14:23:41", CultureInfo.InvariantCulture), DateTimeKind.Unspecified);
             tmp = tmp.FromUnspecifiedPstToUtc();
             tmp.Second.ShouldBe(41);
             tmp.Minute.ShouldBe(23);

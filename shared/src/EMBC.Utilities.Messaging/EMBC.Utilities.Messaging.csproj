@@ -21,10 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
         <PackageReference Include="IdentityModel" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.*" />
