@@ -60,23 +60,23 @@ export class ComponentCreationService {
       stepName: 'Location'
     },
     {
-      component: 'family-information',
-      nextButtonLabel: 'Next - Pets',
-      backButtonLabel: 'Go Back & Edit',
-      isLast: false,
-      loadWrapperButton: false,
-      lastStep: 0,
-      stepName: 'Household Members'
-    },
-    {
-      component: 'pets',
+      component: 'family-information-pets',
       nextButtonLabel: 'Next - Identify Needs',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Pets'
+      stepName: 'Household & Pets'
     },
+    // {
+    //   component: 'pets',
+    //   nextButtonLabel: 'Next - Identify Needs',
+    //   backButtonLabel: 'Go Back & Edit',
+    //   isLast: false,
+    //   loadWrapperButton: false,
+    //   lastStep: 0,
+    //   stepName: 'Pets'
+    // },
     {
       component: 'identify-needs',
       nextButtonLabel: 'Next - Security Phrase',

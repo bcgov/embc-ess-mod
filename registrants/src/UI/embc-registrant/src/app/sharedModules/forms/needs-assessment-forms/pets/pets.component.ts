@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, Inject } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,7 +32,7 @@ export default class PetsComponent implements OnInit {
   editIndex: number;
   rowEdit = false;
   showTable = true;
-
+   
   constructor(
     @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
@@ -58,7 +58,7 @@ export default class PetsComponent implements OnInit {
     this.dataSource.next(this.petsForm.get('pets').value);
     this.data = this.petsForm.get('pets').value;
   }
-
+   
   addPets(): void {
     this.petsForm.get('pet').reset();
     this.showPetsForm = !this.showPetsForm;
@@ -145,6 +145,7 @@ export default class PetsComponent implements OnInit {
     MatIconModule,
     PetFormModule
   ],
-  declarations: [PetsComponent]
+  declarations: [PetsComponent],
+  exports: [PetsComponent]
 })
-class PetsModule {}
+export class PetsModule {}

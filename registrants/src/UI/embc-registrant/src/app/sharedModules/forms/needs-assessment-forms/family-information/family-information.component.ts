@@ -180,6 +180,7 @@ export default class FamilyInformationComponent implements OnInit {
     MatTableModule,
     MatIconModule
   ],
-  declarations: [FamilyInformationComponent]
+  declarations: [FamilyInformationComponent],
+  exports: [FamilyInformationComponent]
 })
-class FamilyInformationModule {}
+export class FamilyInformationModule {}
