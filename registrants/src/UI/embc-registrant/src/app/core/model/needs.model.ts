@@ -43,18 +43,12 @@ export class EvacuatedForm {
 }
 
 export class HouseholdMembers {
-  haveMedication: boolean;
-  haveSpecialDiet: boolean;
-  specialDietDetails: string;
   householdMembers: Array<HouseholdMember>;
 
   constructor() {}
 }
 
 export class HouseholdMembersForm {
-  haveMedication = new UntypedFormControl();
-  haveSpecialDiet = new UntypedFormControl();
-  specialDietDetails = new UntypedFormControl();
   householdMember: UntypedFormGroup;
   householdMembers = new UntypedFormControl([]);
   addHouseholdMemberIndicator = new UntypedFormControl(false);
@@ -134,7 +128,6 @@ export class HouseholdMembersForm {
 export class Pet {
   quantity: number;
   type: string;
-  hasPetsFood: boolean;
 
   constructor() {}
 }
@@ -143,8 +136,6 @@ export class PetForm {
   pets = new UntypedFormControl([]);
   pet: UntypedFormGroup;
   addPetIndicator = new UntypedFormControl(false);
-  hasPetsFood = new UntypedFormControl();
-  addPetFoodIndicator = new UntypedFormControl(false);
 
   constructor(
     pet: Pet,
@@ -177,15 +168,6 @@ export class PetForm {
       ]
     });
 
-    this.hasPetsFood.setValue(pet.hasPetsFood);
-    this.hasPetsFood.setValidators([
-      customValidator
-        .conditionalValidation(
-          () => this.addPetFoodIndicator.value,
-          Validators.required
-        )
-        .bind(customValidator)
-    ]);
   }
 }
 

@@ -85,7 +85,7 @@ export class NeedsAssessmentComponent
   }
 
   ngAfterViewInit(): void {
-    if (this.stepToDisplay === 5) {
+    if (this.stepToDisplay === 4) {
       this.needsStepper.linear = false;
       setTimeout(() => {
         this.needsStepper.selectedIndex = this.stepToDisplay;
@@ -190,23 +190,11 @@ this.form$ = combineLatest(this.formCreationService.getHouseholdMembersForm(), t
           this.form.get('insurance').value;
         break;
       case 'family-information-pets':
-
-        console.log((this.form.get('householdMemberForm') as FormGroup).value);
-        console.log((this.form.get('petsForm') as FormGroup).value);
-        
-        this.needsAssessmentService.haveSpecialDiet =
-          this.form.get('householdMemberForm').value.haveSpecialDiet;
-        this.needsAssessmentService.haveMedication =
-          this.form.get('householdMemberForm').value.haveMedication;
-        this.needsAssessmentService.specialDietDetails =
-          this.form.get('householdMemberForm').value.specialDietDetails;
         this.needsAssessmentService.setHouseHoldMembers(
           this.form.get('householdMemberForm').value.householdMembers
         );
 
         this.needsAssessmentService.pets = this.form.get('petsForm').value.pets;
-        this.needsAssessmentService.hasPetsFood =
-          this.form.get('petsForm').value.hasPetsFood;
         break;
       case 'identify-needs':
         this.needsAssessmentService.setNeedsDetails(this.form);

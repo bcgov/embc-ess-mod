@@ -68,15 +68,6 @@ export class ComponentCreationService {
       lastStep: 0,
       stepName: 'Household & Pets'
     },
-    // {
-    //   component: 'pets',
-    //   nextButtonLabel: 'Next - Identify Needs',
-    //   backButtonLabel: 'Go Back & Edit',
-    //   isLast: false,
-    //   loadWrapperButton: false,
-    //   lastStep: 0,
-    //   stepName: 'Pets'
-    // },
     {
       component: 'identify-needs',
       nextButtonLabel: 'Next - Security Phrase',
