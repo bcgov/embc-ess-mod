@@ -59,6 +59,7 @@ jobs:
           images: ${{ inputs.REGISTRY }}/${{ inputs.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
+            type=schedule,pattern={{date 'YYYYMMDD-hhmmss' tz='America/Vancouver'}}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -68,9 +69,12 @@ jobs:
         with:
           context: ${{ inputs.IMAGE_CONTEXT }}
           build-contexts: ${{ inputs.BUILD_CONTEXT }}
+          build-args: |
+            VERSION=${{ fromJSON(steps.meta.outputs.json).tags['org.opencontainers.image.created'] }}
           file: ${{ inputs.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-          # labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
