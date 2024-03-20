@@ -187,7 +187,6 @@ namespace EMBC.Registrants.API.Controllers
         public bool? CanEvacueeProvideIncidentals { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
         public NeedsAssessmentType Type { get; set; }
     }
 

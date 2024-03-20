@@ -21,7 +21,6 @@ export { InviteRequest } from './models/invite-request';
 export { EvacuationFile } from './models/evacuation-file';
 export { NeedsAssessment } from './models/needs-assessment';
 export { InsuranceOption } from './models/insurance-option';
-export { ReferralServices } from './models/referral-services';
 export { EvacuationFileHouseholdMember } from './models/evacuation-file-household-member';
 export { HouseholdMemberType } from './models/household-member-type';
 export { Pet } from './models/pet';

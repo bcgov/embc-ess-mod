@@ -56,7 +56,6 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => s.CanEvacueeProvideClothing))
                 .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => s.CanEvacueeProvideTransportation))
                 .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => s.CanEvacueeProvideIncidentals))
-                .ForMember(d => d.HavePetsFood, opts => opts.MapFrom(s => s.HasPetsFood))
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
              ;
 
@@ -66,7 +65,6 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.CanProvideClothing))
                 .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => s.CanProvideTransportation))
                 .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => s.CanProvideIncidentals))
-                .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.HavePetsFood))
              ;
 
             CreateMap<HouseholdMember, ESS.Shared.Contracts.Events.HouseholdMember>()

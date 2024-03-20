@@ -26,8 +26,6 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.PrimaryRegistrantId))
                 .ForMember(d => d._era_evacuatedfromid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
-                .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => s.NeedsAssessment.HavePetsFood.HasValue && s.NeedsAssessment.HavePetsFood.Value ? EraTwoOptions.Yes : EraTwoOptions.No))
-                .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => resolveNoteContent(s.NeedsAssessment.Notes.FirstOrDefault(n => n.Type == NoteType.PetCarePlans))))
                 .ForMember(d => d.era_paperbasedessfile, opts => opts.MapFrom(s => s.ManualFileId))
                 .ForMember(d => d.era_registrationcompleteddate, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.era_interviewername, opts => opts.MapFrom(s => s.CompletedBy))
@@ -60,12 +58,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid))
                 .ForMember(d => d.Notes, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_essfilenote_ESSFileID))
                 .ForMember(d => d.Supports, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_name)))
-                .ForPath(d => d.NeedsAssessment.HavePetsFood, opts => opts.MapFrom(s => s.era_haspetfood == (int)EraTwoOptions.Yes))
                 .ForPath(d => d.NeedsAssessment.Pets, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_animal_ESSFileid))
-                .ForPath(d => d.NeedsAssessment.Notes, opts => opts.MapFrom(s => new[]
-                    {
-                         string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
-                    }.Where(n => n != null).ToArray()))
                 .ForMember(d => d.ManualFileId, opts => opts.MapFrom(s => s.era_paperbasedessfile))
                 .ForMember(d => d.IsPaper, opts => opts.MapFrom(s => s.era_paperbasedessfile != null))
                 ;
@@ -109,7 +102,6 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.CanProvideLodging, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidelodging)))
                 .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidetransportation)))
                 .ForMember(d => d.Insurance, opts => opts.MapFrom(s => Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_insurancecoverage).ToString())))
-                .ForMember(d => d.HavePetsFood, opts => opts.Ignore())
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_needassessment))
                 .ForMember(d => d.Pets, opts => opts.Ignore())
                 .ForMember(d => d.Notes, opts => opts.Ignore())

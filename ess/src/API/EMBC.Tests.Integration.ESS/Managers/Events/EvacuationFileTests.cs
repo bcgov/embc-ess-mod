@@ -92,7 +92,6 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                     }
                 },
                 Insurance = InsuranceOption.Yes,
-                HavePetsFood = true,
                 CanProvideClothing = false,
                 CanProvideFood = true,
                 CanProvideIncidentals = null,
