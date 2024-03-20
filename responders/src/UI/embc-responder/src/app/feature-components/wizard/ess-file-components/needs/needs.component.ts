@@ -6,12 +6,13 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-needs',
@@ -35,6 +36,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Creates the main form
     this.createNeedsForm();
+
+    // Creates conditional checkbox logic
+    this.subscribeToCheckboxes();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
@@ -96,8 +100,10 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.tabUpdateSubscription.unsubscribe();
   }
 
+  // TODO: all the hard work behind the scenes
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
+      doesEvacueeNotRequireAssistance: [false],
       canEvacueeProvideFood: [
         this.stepEssFileService.canRegistrantProvideFood ?? '',
         Validators.required
@@ -122,6 +128,47 @@ export class NeedsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Subscribes to changes in the form and updates the doesEvacueeNotRequireAssistance checkbox
+   */
+  private subscribeToCheckboxes() {
+    this.needsForm.get('doesEvacueeNotRequireAssistance').valueChanges.subscribe(value => {
+      if (value) {
+        // If doesEvacueeNotRequireAssistance is true, set all other form controls to false and disable them
+        Object.keys(this.needsForm.controls).forEach(key => {
+          if (key !== 'doesEvacueeNotRequireAssistance') {
+            this.needsForm.get(key).setValue(false, {emitEvent: false});
+            this.needsForm.get(key).disable({emitEvent: false});
+          }
+        });
+      } else {
+        // If doesEvacueeNotRequireAssistance is false, enable all other form controls
+        Object.keys(this.needsForm.controls).forEach(key => {
+          if (key !== 'doesEvacueeNotRequireAssistance') {
+            this.needsForm.get(key).enable({emitEvent: false});
+          }
+        });
+      }
+    });
+
+    // Subscribe to changes in all other checkboxes
+    const otherCheckboxes = Object.keys(this.needsForm.controls)
+      .filter(key => key !== 'doesEvacueeNotRequireAssistance')
+      .map(key => this.needsForm.get(key).valueChanges.pipe(startWith(this.needsForm.get(key).value)));
+
+    // Combine the changes and update the doesEvacueeNotRequireAssistance checkbox
+    combineLatest(otherCheckboxes).subscribe(values => {
+      let doesEvacueeNotRequireAssistance = this.needsForm.get('doesEvacueeNotRequireAssistance');
+      if (values.some(value => value)) {
+        doesEvacueeNotRequireAssistance.setValue(false, {emitEvent: false});        
+        doesEvacueeNotRequireAssistance.disable({emitEvent: false});
+      }
+      else {
+        doesEvacueeNotRequireAssistance.enable({emitEvent: false});
+      }      
+    });
+  }
+
+  /**
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
   private updateTabStatus() {
@@ -140,17 +187,14 @@ export class NeedsComponent implements OnInit, OnDestroy {
    */
   private saveFormData() {
     this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
-      'canEvacueeProvideFood'
-    ).value;
+      'canEvacueeProvideFood').value;
     this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
-      'canEvacueeProvideLodging'
-    ).value;
+      'canEvacueeProvideLodging').value;
     this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
-      'canEvacueeProvideClothing'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideTransportation =
-      this.needsForm.get('canEvacueeProvideTransportation').value;
-    this.stepEssFileService.canRegistrantProvideIncidentals =
-      this.needsForm.get('canEvacueeProvideIncidentals').value;
+      'canEvacueeProvideClothing').value;
+    this.stepEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
+      'canEvacueeProvideTransportation').value;
+    this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
+      'canEvacueeProvideIncidentals').value;
   }
 }
