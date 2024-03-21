@@ -74,7 +74,7 @@
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
           </mat-table>
 
-          <br />
+          <br /><br />
 
           <button
             *ngIf="!showPetsForm"
@@ -134,43 +134,4 @@
   </mat-card>
   <br />
   <br />
-
-  <mat-card *ngIf="dataSource.getValue().length > 0" class="card-align">
-    <mat-card-content>
-      <div class="row">
-        <div class="col-md-12">
-          <label
-            id="hasPetsFood-radio-group-label"
-            class="card-heading requiredField"
-          >
-            Do you have sufficient food for your pet(s)?
-          </label>
-          <br />
-          <mat-radio-group
-            aria-labelledby="hasPetsFood-radio-group-label"
-            formControlName="hasPetsFood"
-            class="primary-radio-group"
-          >
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of radioOption"
-              [value]="option.value"
-            >
-              {{ option.name }}
-            </mat-radio-button>
-            <mat-error
-              class="custom-mat-error"
-              *ngIf="
-                petsFormControl?.hasPetsFood.touched &&
-                petsFormControl?.hasPetsFood.invalid &&
-                petsFormControl?.hasPetsFood.hasError('required')
-              "
-            >
-              Pet food is required</mat-error
-            >
-          </mat-radio-group>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
 </form>
