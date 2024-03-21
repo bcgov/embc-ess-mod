@@ -67,14 +67,6 @@ export class EditService {
         ).value;
         this.needsAssessmentDataService.insurance = form.get('insurance').value;
         break;
-      // if Edit pets and family-information forms would be merged - merge it here
-      // case 'family-information-pets':
-      //   this.needsAssessmentDataService.setHouseHoldMembers(
-      //     form.get('householdMembers').value
-      //   );
-      //   this.needsAssessmentDataService.pets = form.get('pets').value;
-      //   break;
-
       case 'pets':
           this.needsAssessmentDataService.pets = form.get('pets').value;
           break;

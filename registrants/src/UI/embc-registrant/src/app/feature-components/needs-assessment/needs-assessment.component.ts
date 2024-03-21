@@ -117,20 +117,9 @@ export class NeedsAssessmentComponent
           });
         break;
       case 1:
-        // this.form$ = this.formCreationService
-        //   .getHouseholdMembersForm()
-        //   .subscribe((householdMemberForm) => {
-        //     this.form = householdMemberForm;
-        //   });
-        // this.form$ = this.formCreationService
-        //   .getPetsForm()
-        //   .subscribe((petsForm) => {
-        //     this.form = petsForm;
-        //   });
-
-this.form$ = combineLatest(this.formCreationService.getHouseholdMembersForm(), this.formCreationService.getPetsForm()).subscribe(([householdMemberForm, petsForm]) => {
-       this.form = new FormGroup({householdMemberForm, petsForm});
-   });
+        this.form$ = combineLatest(this.formCreationService.getHouseholdMembersForm(), this.formCreationService.getPetsForm()).subscribe(([householdMemberForm, petsForm]) => {
+          this.form = new FormGroup({householdMemberForm, petsForm});
+        });
         break;
       case 2:
         this.form$ = this.formCreationService
