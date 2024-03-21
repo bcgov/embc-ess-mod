@@ -112,6 +112,10 @@ export class NeedsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.canRegistrantProvideLodging ?? '',
         Validators.required
       ],
+      canEvacueeProvideLodgingType: [
+        this.stepEssFileService.canRegistrantProvideLodgingType ?? '', 
+        Validators.required
+      ],
       canEvacueeProvideClothing: [
         this.stepEssFileService.canRegistrantProvideClothing ?? '',
         Validators.required
@@ -165,6 +169,20 @@ export class NeedsComponent implements OnInit, OnDestroy {
       else {
         doesEvacueeNotRequireAssistance.enable({emitEvent: false});
       }      
+    });
+
+    // Subscribe to changes in canEvacueeProvideLodging and update the canEvacueeProvideLodgingType control
+    this.needsForm.get('canEvacueeProvideLodging').valueChanges.subscribe(value => {
+      const canEvacueeProvideLodgingTypeCtrl = this.needsForm.get('canEvacueeProvideLodgingType');
+
+      if (value) {
+        canEvacueeProvideLodgingTypeCtrl.setValidators(Validators.required);
+      } else {
+        canEvacueeProvideLodgingTypeCtrl.clearValidators();
+        canEvacueeProvideLodgingTypeCtrl.setValue(null);
+      }
+
+      canEvacueeProvideLodgingTypeCtrl.updateValueAndValidity();
     });
   }
 

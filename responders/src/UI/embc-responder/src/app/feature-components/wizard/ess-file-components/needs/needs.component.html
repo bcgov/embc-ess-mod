@@ -7,29 +7,68 @@
     </div>
   </div>
 
+  <div id="needsAssessmentSection-label" class="break-margin">
+    While evacuated, do you need government assistance with any of the following: Please check all that apply:
+  </div>
+
   <div class="row">
     <div class="col-12 content-container">
       <form [formGroup]="needsForm">
 
-        <div class="needs-section mt-3">
+        <div class="needs-section">
           <div>
             <mat-checkbox
-              aria-labelledby="doesEvacueeNotRequireAssistance-checkbox-label"
-              formControlName="doesEvacueeNotRequireAssistance"
+              aria-labelledby="canEvacueeProvideLodging-checkbox-label"
+              formControlName="canEvacueeProvideLodging"
               class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
+          <div class="needs-image-section">
+            <img
+              src="../../../../../assets/images/wizard/needs-lodging.svg"
+              width="40px"
+              height="42px"
+              [class.grayscale]="needsForm.get('canEvacueeProvideLodging').disabled"
+            />
+          </div>
           <div class="needs-text-section">
-            <div 
-              id="doesEvacueeNotRequireAssistance-checkbox-label"
-              [class.disabled-text]="needsForm.get('doesEvacueeNotRequireAssistance').disabled">
-              I do not require assistance.
+            <label class="tab-subtitle" id="lodging-label" [class.disabled-text]="needsForm.get('canEvacueeProvideLodging').disabled">
+              Shelter
+            </label>
+            <div id="canEvacueeProvideLodging-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideLodging').disabled">
+              Do you and your household members have lodging while evacuated?<br />
+              This could include staying with relatives, friends, or hotel accommodation.
             </div>
           </div>
         </div>
-
-        <hr class="break-margin" />
+        <div *ngIf="needsForm.get('canEvacueeProvideLodging').value">
+          <mat-radio-group
+            aria-labelledby="canEvacueeProvideLodging-radio-group-label"
+            formControlName="canEvacueeProvideLodgingType"
+            class="primary-radio-group"
+            required
+          >
+            <div class="shelter-radio-button">
+              <mat-radio-button class="primary-radio-button" value="shelterAllowance">
+                I need the Shelter Allowance and can find my own shelter.
+              </mat-radio-button>
+            </div>
+            <div class="shelter-radio-button">
+              <mat-radio-button class="primary-radio-button" value="shelterReferral">
+                I need a referral to shelter.
+              </mat-radio-button>
+            </div>
+            <mat-error
+              class="custom-mat-error"
+              *ngIf="needsFormControl?.canEvacueeProvideLodging.touched &&
+                    needsFormControl?.canEvacueeProvideLodging.invalid &&
+                    needsFormControl?.canEvacueeProvideLodging.hasError('required')"
+            >
+              Lodging is required
+            </mat-error>
+          </mat-radio-group><br />
+        </div>
 
         <div class="needs-section">
           <div>
@@ -54,34 +93,6 @@
             </label>
             <div id="canEvacueeProvideFood-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideFood').disabled">
               Do you and your household members have enough food while you are evacuated?
-            </div>
-          </div>
-        </div>
-
-        <div class="needs-section">
-          <div>
-            <mat-checkbox
-              aria-labelledby="canEvacueeProvideLodging-checkbox-label"
-              formControlName="canEvacueeProvideLodging"
-              class="primary-checkbox"
-            >
-            </mat-checkbox>
-          </div>
-          <div class="needs-image-section">
-            <img
-              src="../../../../../assets/images/wizard/needs-lodging.svg"
-              width="40px"
-              height="42px"
-              [class.grayscale]="needsForm.get('canEvacueeProvideLodging').disabled"
-            />
-          </div>
-          <div class="needs-text-section">
-            <label class="tab-subtitle" id="lodging-label" [class.disabled-text]="needsForm.get('canEvacueeProvideLodging').disabled">
-              Lodging
-            </label>
-            <div id="canEvacueeProvideLodging-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideLodging').disabled">
-              Do you and your household members have lodging while evacuated?<br />
-              This could include staying with relatives, friends, or hotel accommodation.
             </div>
           </div>
         </div>
@@ -117,6 +128,34 @@
         <div class="needs-section">
           <div>
             <mat-checkbox
+              aria-labelledby="canEvacueeProvideIncidentals-checkbox-label"
+              formControlName="canEvacueeProvideIncidentals"
+              class="primary-checkbox"
+            >
+            </mat-checkbox>
+          </div>
+          <div class="needs-image-section">
+            <img
+              src="../../../../../assets/images/wizard/needs-incidentals.svg"
+              width="40px"
+              height="42px"
+              [class.grayscale]="needsForm.get('canEvacueeProvideIncidentals').disabled"
+              />
+          </div>
+          <div class="needs-text-section">
+            <label class="tab-subtitle" id="incidentals-label" [class.disabled-text]="needsForm.get('canEvacueeProvideIncidentals').disabled">
+              Incidentals
+            </label>
+            <div id="canEvacueeProvideIncidentals-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideIncidentals').disabled">
+              Do you and your household members have access to incidentals while evacuated?<br />
+              This could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.
+            </div>
+          </div>
+        </div>
+
+        <div class="needs-section">
+          <div>
+            <mat-checkbox
               aria-labelledby="canEvacueeProvideTransportation-checkbox-label"
               formControlName="canEvacueeProvideTransportation"
               class="primary-checkbox"
@@ -142,30 +181,30 @@
           </div>
         </div>
 
-        <div class="needs-section">
+        <div class="needs-section mt-3">
           <div>
             <mat-checkbox
-              aria-labelledby="canEvacueeProvideIncidentals-checkbox-label"
-              formControlName="canEvacueeProvideIncidentals"
+              aria-labelledby="doesEvacueeNotRequireAssistance-checkbox-label"
+              formControlName="doesEvacueeNotRequireAssistance"
               class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
           <div class="needs-image-section">
             <img
-              src="../../../../../assets/images/wizard/needs-incidentals.svg"
+              src="../../../../../assets/images/wizard/does-not-need-support.svg"
               width="40px"
               height="42px"
-              [class.grayscale]="needsForm.get('canEvacueeProvideIncidentals').disabled"
-              />
+              [class.grayscale]="needsForm.get('canEvacueeProvideFood').disabled"
+            />
           </div>
           <div class="needs-text-section">
-            <label class="tab-subtitle" id="incidentals-label" [class.disabled-text]="needsForm.get('canEvacueeProvideIncidentals').disabled">
-              Incidentals
+            <label class="tab-subtitle" id="doesEvacueeNotRequireAssistance-label" [class.disabled-text]="needsForm.get('doesEvacueeNotRequireAssistance').disabled">
+              I can meet my basic needs.  I do not require assistance.
             </label>
-            <div id="canEvacueeProvideIncidentals-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideIncidentals').disabled">
-              Do you and your household members have access to incidentals while evacuated?<br />
-              This could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.
+            <div 
+              id="doesEvacueeNotRequireAssistance-checkbox-label"
+              [class.disabled-text]="needsForm.get('doesEvacueeNotRequireAssistance').disabled">
             </div>
           </div>
         </div>
