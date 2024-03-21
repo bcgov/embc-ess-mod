@@ -1,8 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
+  FormGroup,
   UntypedFormBuilder,
   UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,6 +16,10 @@ import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { startWith } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from '../../../../shared/components/dialog-components/information-dialog/information-dialog.component';
+import { needsShelterAllowanceMessage, needsIncidentalMessage } from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-needs',
@@ -30,19 +37,25 @@ export class NeedsComponent implements OnInit, OnDestroy {
     private stepEssFileService: StepEssFileService,
     private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService,
-    private evacueeSessionService: EvacueeSessionService
+    private evacueeSessionService: EvacueeSessionService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     // Creates the main form
     this.createNeedsForm();
 
-    // Creates conditional checkbox logic
-    this.subscribeToCheckboxes();
+    this.needsForm.get('canEvacueeProvideLodgingType').setValue(this.stepEssFileService.canEvacueeProvideLodgingType);
+
+    // Creates conditional checkbox and radio logic
+    this.noAssistanceRequiredChecked();
+    this.assistanceRequiredChecked();
+    this.subscribeShelterRadiosToCheckbox();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
       this.stepEssFileService.nextTabUpdate.subscribe(() => {
+        this.saveFormData();
         this.updateTabStatus();
       });
 
@@ -100,7 +113,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.tabUpdateSubscription.unsubscribe();
   }
 
-  // TODO: all the hard work behind the scenes
+  /**
+   * Creates the form with the fields and validations
+   */
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
       doesEvacueeNotRequireAssistance: [false],
@@ -127,6 +142,10 @@ export class NeedsComponent implements OnInit, OnDestroy {
       canEvacueeProvideIncidentals: [
         this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
         Validators.required
+      ],
+      shelterAllowance: [
+        this.stepEssFileService.canEvacueeProvideLodgingType ?? '',
+        Validators.required
       ]
     });
   }
@@ -134,7 +153,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
   /**
    * Subscribes to changes in the form and updates the doesEvacueeNotRequireAssistance checkbox
    */
-  private subscribeToCheckboxes() {
+  private noAssistanceRequiredChecked() {
     this.needsForm.get('doesEvacueeNotRequireAssistance').valueChanges.subscribe(value => {
       if (value) {
         // If doesEvacueeNotRequireAssistance is true, set all other form controls to false and disable them
@@ -153,7 +172,12 @@ export class NeedsComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
 
+  /**
+   * Subscribes to changes in the form and updates the doesEvacueeNotRequireAssistance checkbox
+   */
+  private assistanceRequiredChecked() {
     // Subscribe to changes in all other checkboxes
     const otherCheckboxes = Object.keys(this.needsForm.controls)
       .filter(key => key !== 'doesEvacueeNotRequireAssistance')
@@ -170,7 +194,12 @@ export class NeedsComponent implements OnInit, OnDestroy {
         doesEvacueeNotRequireAssistance.enable({emitEvent: false});
       }      
     });
+  }
 
+  /**
+   * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'canEvacueeProvideLodgingType' control.
+   */
+  private subscribeShelterRadiosToCheckbox() {  
     // Subscribe to changes in canEvacueeProvideLodging and update the canEvacueeProvideLodgingType control
     this.needsForm.get('canEvacueeProvideLodging').valueChanges.subscribe(value => {
       const canEvacueeProvideLodgingTypeCtrl = this.needsForm.get('canEvacueeProvideLodgingType');
@@ -185,23 +214,67 @@ export class NeedsComponent implements OnInit, OnDestroy {
       canEvacueeProvideLodgingTypeCtrl.updateValueAndValidity();
     });
   }
+  
+  /**
+   * Opens a dialog with information about shelter allowance.
+   */
+  openShelterAllowanceDialog(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: needsShelterAllowanceMessage
+      },
+      width: '630px'
+    });
+  }
+
+  /**
+   * Opens a dialog with information about incidentals.
+   */
+  openIncidentalsDialog(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: needsIncidentalMessage
+      },
+      width: '630px'
+    });
+  }
 
   /**
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
   private updateTabStatus() {
-    if (this.needsForm.valid) {
+    const doesEvacueeNotRequireAssistance = this.needsForm.get('doesEvacueeNotRequireAssistance').value;
+    const canEvacueeProvideLodging = this.needsForm.get('canEvacueeProvideLodging').value;
+    const lodgingOptions = this.needsForm.get('canEvacueeProvideLodgingType').value;
+
+    const otherCheckboxes = [
+      'canEvacueeProvideLodging', 
+      'canEvacueeProvideFood', 
+      'canEvacueeProvideClothing', 
+      'canEvacueeProvideIncidentals', 
+      'canEvacueeProvideTransportation'
+    ];
+
+    const otherCheckboxesValues = otherCheckboxes.map(name => this.needsForm.get(name).value);
+    const atLeastOneOtherCheckboxChecked = otherCheckboxesValues.some(value => value);
+
+    if (doesEvacueeNotRequireAssistance) {
       this.stepEssFileService.setTabStatus('needs', 'complete');
-    } else if (this.stepEssFileService.checkForPartialUpdates(this.needsForm)) {
-      this.stepEssFileService.setTabStatus('needs', 'incomplete');
+    } else if (atLeastOneOtherCheckboxChecked) {
+      if (canEvacueeProvideLodging && !lodgingOptions) {
+        this.stepEssFileService.setTabStatus('needs', 'incomplete');
+      } else {
+        this.stepEssFileService.setTabStatus('needs', 'complete');
+      }
     } else {
       this.stepEssFileService.setTabStatus('needs', 'not-started');
     }
-    this.saveFormData();
   }
 
   /**
-   * Saves information inserted inthe form into the service
+   * Saves information inserted in the form into the service
    */
   private saveFormData() {
     this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
@@ -214,5 +287,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
       'canEvacueeProvideTransportation').value;
     this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
       'canEvacueeProvideIncidentals').value;
+    this.stepEssFileService.canEvacueeProvideLodgingType = this.needsForm.get(
+      'canEvacueeProvideLodgingType').value;
   }
 }

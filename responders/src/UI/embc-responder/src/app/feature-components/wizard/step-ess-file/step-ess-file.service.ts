@@ -74,7 +74,9 @@ export class StepEssFileService {
   private canRegistrantProvideFoodVal: string;
   private canRegistrantProvideIncidentalsVal: string;
   private canRegistrantProvideLodgingVal: string;
+  private canRegistrantProvideLodgingTypeVal: string;
   private canRegistrantProvideTransportationVal: string;
+  private canEvacueeProvideLodgingTypeVal: string;
 
   // Security Phrase tab
   private bypassPhraseVal: boolean;
@@ -313,6 +315,15 @@ export class StepEssFileService {
     this.canRegistrantProvideLodgingVal = canRegistrantProvideLodgingVal;
   }
 
+  public get canRegistrantProvideLodgingType(): string {
+    return this.canRegistrantProvideLodgingTypeVal;
+  }
+  public set canRegistrantProvideLodgingType(
+    canRegistrantProvideLodgingTypeVal: string
+  ) {
+    this.canRegistrantProvideLodgingTypeVal = canRegistrantProvideLodgingTypeVal;
+  }
+
   public get canRegistrantProvideTransportation(): string {
     return this.canRegistrantProvideTransportationVal;
   }
@@ -321,6 +332,16 @@ export class StepEssFileService {
   ) {
     this.canRegistrantProvideTransportationVal =
       canRegistrantProvideTransportationVal;
+  }
+
+  public get canEvacueeProvideLodgingType(): string {
+    return this.canEvacueeProvideLodgingTypeVal;
+  }
+  public set canEvacueeProvideLodgingType(
+    canEvacueeProvideLodgingTypeVal: string
+  ) {
+    this.canEvacueeProvideLodgingTypeVal =
+    canEvacueeProvideLodgingTypeVal;
   }
 
   // Security Phrase tab
