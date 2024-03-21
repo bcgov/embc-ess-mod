@@ -113,15 +113,6 @@ export class HouseholdMembersForm {
       ],
       isPrimaryRegistrant: ['']
     });
-
-    // this.specialDietDetails.setValidators([
-    //   customValidator
-    //     .conditionalValidation(
-    //       () => this.haveSpecialDiet.value,
-    //       Validators.required
-    //     )
-    //     .bind(customValidator)
-    // ]);
   }
 }
 
