@@ -37,8 +37,8 @@
               Shelter
             </label>
             <div id="canEvacueeProvideLodging-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideLodging').disabled">
-              Do you and your household members have lodging while evacuated?<br />
-              This could include staying with relatives, friends, or hotel accommodation.
+              There are several ways to meet your shelter needs.<br>
+              You can receive a shelter allowance and use that money to find your own shelter or be provided with a referral to shelter (like a cot in a gym or a hotel/motel).
             </div>
           </div>
         </div>
@@ -61,6 +61,9 @@
               <mat-radio-button class="primary-radio-button" value="shelterReferral">
                 I need a referral to shelter.
               </mat-radio-button>
+              <a class="info-test" (click)="openShelterReferralDialog()">
+                <img src="/assets/images/info-on-hover.svg" height="25" width="25"
+              /></a>
             </div>
           </mat-radio-group><br />
         </div>
@@ -86,9 +89,7 @@
             <label class="tab-subtitle" id="food-label" [class.disabled-text]="needsForm.get('canEvacueeProvideFood').disabled">
               Food
             </label>
-            <div id="canEvacueeProvideFood-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideFood').disabled">
-              Do you and your household members have enough food while you are evacuated?
-            </div>
+            <div id="canEvacueeProvideFood-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideFood').disabled"></div>
           </div>
         </div>
 
@@ -113,10 +114,7 @@
             <label class="tab-subtitle" id="clothing-label" [class.disabled-text]="needsForm.get('canEvacueeProvideClothing').disabled">
               Clothing
             </label>
-            <div id="canEvacueeProvideClothing-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideClothing').disabled">
-              Do you and your household members have appropriate clothing while evacuated?<br />
-              This includes warm clothing should there be extreme winter conditions.
-            </div>
+            <div id="canEvacueeProvideClothing-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideClothing').disabled"></div>
           </div>
         </div>
 
@@ -150,9 +148,7 @@
                 />
               </a>
             </div>
-            <div id="canEvacueeProvideIncidentals-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideIncidentals').disabled">
-              Do you and your household members have access to incidentals while evacuated?
-            </div>
+            <div id="canEvacueeProvideIncidentals-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideIncidentals').disabled"></div>
           </div>
         </div>
 
@@ -177,10 +173,7 @@
             <label class="tab-subtitle" id="transport-label" [class.disabled-text]="needsForm.get('canEvacueeProvideTransportation').disabled">
               Transportation
             </label>
-            <div id="canEvacueeProvideTransportation-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideTransportation').disabled">
-              Do you and your household members have access to transportation while evacuated?<br />
-              This could include a personal vehicle, taxi, public transportation, or rideshare access.
-            </div>
+            <div id="canEvacueeProvideTransportation-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideTransportation').disabled"></div>
           </div>
         </div>
 
@@ -198,7 +191,7 @@
               src="../../../../../assets/images/wizard/does-not-need-support.svg"
               width="40px"
               height="42px"
-              [class.grayscale]="needsForm.get('canEvacueeProvideFood').disabled"
+              [class.grayscale]="needsForm.get('doesEvacueeNotRequireAssistance').disabled"
             />
           </div>
           <div class="needs-text-section">
@@ -207,7 +200,7 @@
             </label>
             <div 
               id="doesEvacueeNotRequireAssistance-checkbox-label"
-              [class.disabled-text]="needsForm.get('doesEvacueeNotRequireAssistance').disabled">
+              [class.disabled-text]="true">
             </div>
           </div>
         </div>

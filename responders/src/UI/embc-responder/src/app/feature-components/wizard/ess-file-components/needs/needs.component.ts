@@ -19,7 +19,7 @@ import { startWith } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from '../../../../shared/components/dialog-components/information-dialog/information-dialog.component';
-import { needsShelterAllowanceMessage, needsIncidentalMessage } from '../../../../core/services/global-constants';
+import { needsShelterAllowanceMessage, needsShelterReferralMessage, needsIncidentalMessage } from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-needs',
@@ -143,7 +143,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
         Validators.required
       ],
-      shelterAllowance: [
+      shelterOptions: [
         this.stepEssFileService.canEvacueeProvideLodgingType ?? '',
         Validators.required
       ]
@@ -223,6 +223,16 @@ export class NeedsComponent implements OnInit, OnDestroy {
       data: {
         component: InformationDialogComponent,
         content: needsShelterAllowanceMessage
+      },
+      width: '630px'
+    });
+  }
+
+  openShelterReferralDialog(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: needsShelterReferralMessage
       },
       width: '630px'
     });
