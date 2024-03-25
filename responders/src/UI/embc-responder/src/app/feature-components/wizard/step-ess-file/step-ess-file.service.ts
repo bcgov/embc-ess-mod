@@ -70,13 +70,13 @@ export class StepEssFileService {
   private addPetIndicatorVal: boolean;
 
   // Needs tab
-  private canRegistrantProvideClothingVal: string;
-  private canRegistrantProvideFoodVal: string;
-  private canRegistrantProvideIncidentalsVal: string;
   private canRegistrantProvideLodgingVal: string;
-  private canRegistrantProvideLodgingTypeVal: string;
+  private shelterOptionsVal: string;
+  private canRegistrantProvideFoodVal: string;
+  private canRegistrantProvideClothingVal: string;
+  private canRegistrantProvideIncidentalsVal: string;
   private canRegistrantProvideTransportationVal: string;
-  private canEvacueeProvideLodgingTypeVal: string;
+  private doesEvacueeNotRequireAssistanceVal: string;
 
   // Security Phrase tab
   private bypassPhraseVal: boolean;
@@ -280,6 +280,33 @@ export class StepEssFileService {
   }
 
   // Needs tab
+  public get canRegistrantProvideLodging(): string {
+    return this.canRegistrantProvideLodgingVal;
+  }
+  public set canRegistrantProvideLodging(
+    canRegistrantProvideLodgingVal: string
+  ) {
+    this.canRegistrantProvideLodgingVal = canRegistrantProvideLodgingVal;
+  }
+
+  public get shelterOptions(): string {
+    return this.shelterOptionsVal;
+  }
+  public set shelterOptions(
+    shelterOptionsVal: string
+  ) {
+    this.shelterOptionsVal = shelterOptionsVal;
+  }
+
+  public get canRegistrantProvideFood(): string {
+    return this.canRegistrantProvideFoodVal;
+  }
+  public set canRegistrantProvideFood(
+    canRegistrantProvideFoodVal: string
+  ) {
+    this.canRegistrantProvideFoodVal = canRegistrantProvideFoodVal;
+  }
+
   public get canRegistrantProvideClothing(): string {
     return this.canRegistrantProvideClothingVal;
   }
@@ -287,13 +314,6 @@ export class StepEssFileService {
     canRegistrantProvideClothingVal: string
   ) {
     this.canRegistrantProvideClothingVal = canRegistrantProvideClothingVal;
-  }
-
-  public get canRegistrantProvideFood(): string {
-    return this.canRegistrantProvideFoodVal;
-  }
-  public set canRegistrantProvideFood(canRegistrantProvideFoodVal: string) {
-    this.canRegistrantProvideFoodVal = canRegistrantProvideFoodVal;
   }
 
   public get canRegistrantProvideIncidentals(): string {
@@ -306,24 +326,6 @@ export class StepEssFileService {
       canRegistrantProvideIncidentalsVal;
   }
 
-  public get canRegistrantProvideLodging(): string {
-    return this.canRegistrantProvideLodgingVal;
-  }
-  public set canRegistrantProvideLodging(
-    canRegistrantProvideLodgingVal: string
-  ) {
-    this.canRegistrantProvideLodgingVal = canRegistrantProvideLodgingVal;
-  }
-
-  public get canRegistrantProvideLodgingType(): string {
-    return this.canRegistrantProvideLodgingTypeVal;
-  }
-  public set canRegistrantProvideLodgingType(
-    canRegistrantProvideLodgingTypeVal: string
-  ) {
-    this.canRegistrantProvideLodgingTypeVal = canRegistrantProvideLodgingTypeVal;
-  }
-
   public get canRegistrantProvideTransportation(): string {
     return this.canRegistrantProvideTransportationVal;
   }
@@ -334,14 +336,14 @@ export class StepEssFileService {
       canRegistrantProvideTransportationVal;
   }
 
-  public get canEvacueeProvideLodgingType(): string {
-    return this.canEvacueeProvideLodgingTypeVal;
+  public get doesEvacueeNotRequireAssistance(): string {
+    return this.doesEvacueeNotRequireAssistanceVal;
   }
-  public set canEvacueeProvideLodgingType(
-    canEvacueeProvideLodgingTypeVal: string
+  public set doesEvacueeNotRequireAssistance(
+    doesEvacueeNotRequireAssistanceVal: string
   ) {
-    this.canEvacueeProvideLodgingTypeVal =
-    canEvacueeProvideLodgingTypeVal;
+    this.doesEvacueeNotRequireAssistanceVal =
+    doesEvacueeNotRequireAssistanceVal;
   }
 
   // Security Phrase tab

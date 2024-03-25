@@ -28,7 +28,6 @@ import { needsShelterAllowanceMessage, needsShelterReferralMessage, needsInciden
 })
 export class NeedsComponent implements OnInit, OnDestroy {
   needsForm: UntypedFormGroup;
-  radioOption = globalConst.needsOptions;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
 
@@ -45,7 +44,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
     // Creates the main form
     this.createNeedsForm();
 
-    this.needsForm.get('canEvacueeProvideLodgingType').setValue(this.stepEssFileService.canEvacueeProvideLodgingType);
+    this.needsForm.get('shelterOptions').setValue(this.stepEssFileService.shelterOptions);
 
     // Creates conditional checkbox and radio logic
     this.noAssistanceRequiredChecked();
@@ -118,7 +117,10 @@ export class NeedsComponent implements OnInit, OnDestroy {
    */
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
-      doesEvacueeNotRequireAssistance: [false],
+      doesEvacueeNotRequireAssistance: [
+        this.stepEssFileService.doesEvacueeNotRequireAssistance ?? '',
+        Validators.required
+      ],
       canEvacueeProvideFood: [
         this.stepEssFileService.canRegistrantProvideFood ?? '',
         Validators.required
@@ -127,8 +129,8 @@ export class NeedsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.canRegistrantProvideLodging ?? '',
         Validators.required
       ],
-      canEvacueeProvideLodgingType: [
-        this.stepEssFileService.canRegistrantProvideLodgingType ?? '', 
+      shelterOptions: [
+        this.stepEssFileService.shelterOptions ?? '', 
         Validators.required
       ],
       canEvacueeProvideClothing: [
@@ -141,10 +143,6 @@ export class NeedsComponent implements OnInit, OnDestroy {
       ],
       canEvacueeProvideIncidentals: [
         this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
-        Validators.required
-      ],
-      shelterOptions: [
-        this.stepEssFileService.canEvacueeProvideLodgingType ?? '',
         Validators.required
       ]
     });
@@ -197,21 +195,21 @@ export class NeedsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'canEvacueeProvideLodgingType' control.
+   * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'shelterOptions' control.
    */
   private subscribeShelterRadiosToCheckbox() {  
-    // Subscribe to changes in canEvacueeProvideLodging and update the canEvacueeProvideLodgingType control
+    // Subscribe to changes in canEvacueeProvideLodging and update the shelterOptions control
     this.needsForm.get('canEvacueeProvideLodging').valueChanges.subscribe(value => {
-      const canEvacueeProvideLodgingTypeCtrl = this.needsForm.get('canEvacueeProvideLodgingType');
+      const shelterOptionsCtrl = this.needsForm.get('shelterOptions');
 
       if (value) {
-        canEvacueeProvideLodgingTypeCtrl.setValidators(Validators.required);
+        shelterOptionsCtrl.setValidators(Validators.required);
       } else {
-        canEvacueeProvideLodgingTypeCtrl.clearValidators();
-        canEvacueeProvideLodgingTypeCtrl.setValue(null);
+        shelterOptionsCtrl.clearValidators();
+        shelterOptionsCtrl.setValue(null);
       }
 
-      canEvacueeProvideLodgingTypeCtrl.updateValueAndValidity();
+      shelterOptionsCtrl.updateValueAndValidity();
     });
   }
   
@@ -228,6 +226,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Opens a dialog with information about shelter referral.
+   */
   openShelterReferralDialog(): void {
     this.dialog.open(DialogComponent, {
       data: {
@@ -257,7 +258,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
   private updateTabStatus() {
     const doesEvacueeNotRequireAssistance = this.needsForm.get('doesEvacueeNotRequireAssistance').value;
     const canEvacueeProvideLodging = this.needsForm.get('canEvacueeProvideLodging').value;
-    const lodgingOptions = this.needsForm.get('canEvacueeProvideLodgingType').value;
+    const lodgingOptions = this.needsForm.get('shelterOptions').value;
 
     const otherCheckboxes = [
       'canEvacueeProvideLodging', 
@@ -287,17 +288,21 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Saves information inserted in the form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
-      'canEvacueeProvideFood').value;
+    //sfdsfsd
+
     this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
       'canEvacueeProvideLodging').value;
+    this.stepEssFileService.shelterOptions = this.needsForm.get(
+      'shelterOptions').value;
+    this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
+      'canEvacueeProvideFood').value;
     this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
       'canEvacueeProvideClothing').value;
+    this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
+      'canEvacueeProvideIncidentals').value;  
     this.stepEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
       'canEvacueeProvideTransportation').value;
-    this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
-      'canEvacueeProvideIncidentals').value;
-    this.stepEssFileService.canEvacueeProvideLodgingType = this.needsForm.get(
-      'canEvacueeProvideLodgingType').value;
+    this.stepEssFileService.doesEvacueeNotRequireAssistance = this.needsForm.get(
+      'doesEvacueeNotRequireAssistance').value;
   }
 }

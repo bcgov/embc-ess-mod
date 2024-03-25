@@ -28,7 +28,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   insuranceDisplay: string;
 
   needsFoodDisplay: string;
-  needsLodgingDisplay: string;
+  shelterOptionsDisplay: string;
   needsClothingDisplay: string;
   needsTransportationDisplay: string;
   needsIncidentalsDisplay: string;
@@ -63,12 +63,12 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.insuranceDisplay = globalConst.insuranceOptions.find(
       (ins) => ins.value === this.stepEssFileService?.insurance
     )?.name;
-
+    
     this.needsFoodDisplay = globalConst.needsOptions.find(
       (ins) => ins.value === this.stepEssFileService?.canRegistrantProvideFood
     )?.name;
 
-    this.needsLodgingDisplay = globalConst.needsOptions.find(
+    this.shelterOptionsDisplay = globalConst.needsOptions.find(
       (ins) =>
         ins.value === this.stepEssFileService?.canRegistrantProvideLodging
     )?.name;

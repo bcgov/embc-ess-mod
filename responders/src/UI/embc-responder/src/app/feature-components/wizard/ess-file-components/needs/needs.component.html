@@ -45,12 +45,12 @@
         <div *ngIf="needsForm.get('canEvacueeProvideLodging').value">
           <mat-radio-group
             aria-labelledby="canEvacueeProvideLodging-radio-group-label"
-            formControlName="canEvacueeProvideLodgingType"
+            formControlName="shelterOptions"
             class="primary-radio-group"
             required
           >
             <div class="shelter-radio-button">
-              <mat-radio-button class="primary-radio-button" value="shelterAllowance">
+              <mat-radio-button class="primary-radio-button" value="Lodging - Shelter Allowance">
                 I need the Shelter Allowance and can find my own shelter.&nbsp;&nbsp;
               </mat-radio-button>
               <a class="info-test" (click)="openShelterAllowanceDialog()">
@@ -58,7 +58,7 @@
               /></a>
             </div>
             <div class="shelter-radio-button">
-              <mat-radio-button class="primary-radio-button" value="shelterReferral">
+              <mat-radio-button class="primary-radio-button" value="Lodging - Hotel/Motel/Campground">
                 I need a referral to shelter.
               </mat-radio-button>
               <a class="info-test" (click)="openShelterReferralDialog()">
