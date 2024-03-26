@@ -7,8 +7,17 @@ using EMBC.ESS.Utilities.Spatial.GeocoderApi;
 
 namespace EMBC.ESS.Utilities.Spatial
 {
-    internal class AddressLocator(IGeocoderAdapter geocoder, IArcGISAdapter arcGisAdapter) : IAddressLocator
+    internal class AddressLocator : IAddressLocator
     {
+        private readonly IGeocoderAdapter geocoder;
+        private readonly IArcGISAdapter arcGisAdapter;
+
+        public AddressLocator(IGeocoderAdapter geocoder, IArcGISAdapter arcGisAdapter)
+        {
+            this.geocoder = geocoder;
+            this.arcGisAdapter = arcGisAdapter;
+        }
+
         public async Task<AddressInformation> LocateAsync(Location location, CancellationToken ct)
         {
             if (location is null)
@@ -20,7 +29,7 @@ namespace EMBC.ESS.Utilities.Spatial
             if (geocode == null) return new AddressInformation(location, null, null);
             var features = await arcGisAdapter.QueryService(new PointIntersectionQuery("TASK_OA_24/FeatureServer/0", geocode));
 
-            return new AddressInformation(location, geocode, features.FirstOrDefault()?.Attributes.Select(a => new LocationAttribute(a.Item1, a.Item2?.ToString())));
+            return new AddressInformation(location, geocode, features.FirstOrDefault()?.Attributes.Select(a => new LocationAttribute(a.Key, a.Value?.ToString())));
         }
     }
 }

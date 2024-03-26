@@ -10,5 +10,5 @@ namespace EMBC.ESS.Utilities.Spatial.ArcGISApi
 
     internal record PointIntersectionQuery(string ServiceName, Geocode Point);
 
-    internal record GISFeature(IEnumerable<(string, object)> Attributes);
+    internal record GISFeature(IEnumerable<KeyValuePair<string, object>> Attributes);
 }

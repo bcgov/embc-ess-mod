@@ -7,8 +7,15 @@ using Anywhere.ArcGIS.Operation;
 
 namespace EMBC.ESS.Utilities.Spatial.ArcGISApi
 {
-    internal class ArcGISAdapter(PortalGateway portalGateway) : IArcGISAdapter
+    internal class ArcGISAdapter : IArcGISAdapter
     {
+        private readonly PortalGateway portalGateway;
+
+        public ArcGISAdapter(PortalGateway portalGateway)
+        {
+            this.portalGateway = portalGateway;
+        }
+
         public async Task<IEnumerable<GISFeature>> QueryService(PointIntersectionQuery query)
         {
             var arcGisQuery = new Query(query.ServiceName.AsEndpoint())
@@ -24,11 +31,7 @@ namespace EMBC.ESS.Utilities.Spatial.ArcGISApi
 
             var result = await portalGateway.Query(arcGisQuery);
 
-            return result.Features.Select(f => new GISFeature(f.Attributes.Select(a => (a.Key, a.Value)))).ToList();
-            //{
-            //    Active = f.Attributes.ContainsKey("ESS_STATUS") && f.Attributes["ESS_STATUS"].ToString()!.Equals("active", StringComparison.OrdinalIgnoreCase),
-            //    EssTaskNumber = f.Attributes["ESS_TASK_NUMBER"]?.ToString() ?? string.Empty
-            //});
+            return result.Features.Select(f => new GISFeature(f.Attributes.ToDictionary(a => a.Key, a => a.Value))).ToList();
         }
     }
 }
