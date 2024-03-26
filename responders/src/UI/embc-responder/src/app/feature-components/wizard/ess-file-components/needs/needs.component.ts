@@ -44,8 +44,6 @@ export class NeedsComponent implements OnInit, OnDestroy {
     // Creates the main form
     this.createNeedsForm();
 
-    this.needsForm.get('shelterOptions').setValue(this.stepEssFileService.shelterOptions);
-
     // Creates conditional checkbox and radio logic
     this.noAssistanceRequiredChecked();
     this.assistanceRequiredChecked();
@@ -282,14 +280,13 @@ export class NeedsComponent implements OnInit, OnDestroy {
     } else {
       this.stepEssFileService.setTabStatus('needs', 'not-started');
     }
+    this.saveFormData();
   }
 
   /**
    * Saves information inserted in the form into the service
    */
   private saveFormData() {
-    //sfdsfsd
-
     this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
       'canEvacueeProvideLodging').value;
     this.stepEssFileService.shelterOptions = this.needsForm.get(
