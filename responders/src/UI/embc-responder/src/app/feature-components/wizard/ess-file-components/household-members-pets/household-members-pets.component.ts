@@ -17,7 +17,7 @@ import { WizardService } from "../../wizard.service";
 export class HouseholdMembersPetsComponent implements OnInit {
 
   
-  petsValid = true;
+  petsValid = false;
   householdMembersValid = true;
   tabMetaData: TabModel;
   
