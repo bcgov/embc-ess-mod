@@ -1,5 +1,5 @@
 ﻿using System;
-using EMBC.ESS.Utilities.Spatial.EsriApi;
+using EMBC.ESS.Utilities.Spatial.ArcGISApi;
 using EMBC.ESS.Utilities.Spatial.GeocoderApi;
 using EMBC.Utilities.Configuration;
 using Microsoft.Extensions.Configuration;
