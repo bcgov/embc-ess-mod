@@ -183,7 +183,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<FileContentResult> GetPrint(string fileId, string printRequestId)
         {
             var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId, RequestingUserId = currentUserId });
-            Response.Headers.Add("Content-Disposition", "attachment;filename=" + result.FileName);
+            Response.Headers.Append("Content-Disposition", "attachment;filename=" + result.FileName);
             return new FileContentResult(result.Content, result.ContentType);
         }
 

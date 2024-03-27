@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Castle.Core.Internal;
 using EMBC.Responders.API.Controllers;
 using Shouldly;
 using Xunit;
@@ -35,7 +34,7 @@ namespace EMBC.Tests.Unit.Responders.API
             foreach (var support in supportsJsonElement.EnumerateArray())
             {
                 var id = support.EnumerateObject().FirstOrDefault(p => p.NameEquals(nameof(Support.Id))).Value.GetString().ShouldNotBeNull();
-                var originalSupport = supports.Find(s => s.Id == id).ShouldNotBeNull();
+                var originalSupport = supports.SingleOrDefault(s => s.Id == id).ShouldNotBeNull();
                 var category = support.EnumerateObject().FirstOrDefault(p => p.NameEquals(nameof(Support.Category))).Value.GetString().ShouldNotBeNull();
                 Enum.TryParse<SupportCategory>(category, out var value).ShouldNotBe(false);
                 value.ShouldBe(originalSupport.Category);
@@ -50,7 +49,7 @@ namespace EMBC.Tests.Unit.Responders.API
             ""from"": ""2022-04-25T21:58:14.290Z"",
             ""to"": ""2022-04-26T21:58:14.290Z"",
             ""status"": ""Draft"",
-			""category"": ""Incidentals"",
+            ""category"": ""Incidentals"",
             ""subCategory"": ""None"",
             ""method"": ""Referral"",
             ""supportDelivery"": {
