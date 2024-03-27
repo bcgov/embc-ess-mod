@@ -194,7 +194,8 @@ export class IdentifyNeeds {
   canEvacueeProvideFood: boolean;
   canEvacueeProvideIncidentals: boolean;
   canEvacueeProvideLodging: boolean;
-  canEvacueeProvideTransportation: boolean;
+  shelterOptions: boolean;
+  doesEvacueeNotRequireAssistance: boolean;
 }
 
 export class IdentifyNeedsForm {
@@ -202,7 +203,8 @@ export class IdentifyNeedsForm {
   canEvacueeProvideFood = new UntypedFormControl();
   canEvacueeProvideIncidentals = new UntypedFormControl();
   canEvacueeProvideLodging = new UntypedFormControl();
-  canEvacueeProvideTransportation = new UntypedFormControl();
+  shelterOptions = new UntypedFormControl();
+  doesEvacueeNotRequireAssistance = new UntypedFormControl();
 
   constructor(identifyNeeds: IdentifyNeeds) {
     this.canEvacueeProvideClothing.setValue(
@@ -210,7 +212,9 @@ export class IdentifyNeedsForm {
     );
     this.canEvacueeProvideClothing.setValidators([Validators.required]);
 
-    this.canEvacueeProvideFood.setValue(identifyNeeds.canEvacueeProvideFood);
+    this.canEvacueeProvideFood.setValue(
+      identifyNeeds.canEvacueeProvideFood
+    );
     this.canEvacueeProvideFood.setValidators([Validators.required]);
 
     this.canEvacueeProvideIncidentals.setValue(
@@ -223,10 +227,15 @@ export class IdentifyNeedsForm {
     );
     this.canEvacueeProvideLodging.setValidators([Validators.required]);
 
-    this.canEvacueeProvideTransportation.setValue(
-      identifyNeeds.canEvacueeProvideTransportation
+    this.shelterOptions.setValue(
+      identifyNeeds.shelterOptions
     );
-    this.canEvacueeProvideTransportation.setValidators([Validators.required]);
+    this.shelterOptions.setValidators([Validators.required]);
+
+    this.doesEvacueeNotRequireAssistance.setValue(
+      identifyNeeds.doesEvacueeNotRequireAssistance
+    );
+    this.doesEvacueeNotRequireAssistance.setValidators([Validators.required]);
   }
 }
 
