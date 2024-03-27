@@ -82,7 +82,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 if (file.HouseholdMembers.Any())
                 {
                     var restrictedMemberKey = Randomizer.Seed.Next(0, file.HouseholdMembers.Count() - 1);
-                    //file.HouseholdMembers.ElementAt(restrictedMemberKey).HasRestriction = true;
+                    file.HouseholdMembers.ElementAt(restrictedMemberKey).RestrictedAccess = true;
                 }
             }
 
@@ -150,7 +150,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 var filesSeed = Randomizer.Seed.Next(0, 3);
                 var files = CreateEvacuationFiles(filesSeed, withAtLeastOneRestrictedAccess);
                 yield return (profile, files);
-            };
+            }
         }
 
         public static IEnumerable<ProfileSearchResult> MapToSearchResults(this IEnumerable<(RegistrantProfile profile, IEnumerable<EvacuationFile> files)> source) =>

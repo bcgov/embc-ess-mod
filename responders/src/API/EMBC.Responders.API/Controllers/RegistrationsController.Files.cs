@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Events;
-using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -254,7 +253,7 @@ namespace EMBC.Responders.API.Controllers
         private bool UserCanHideNote()
         {
             var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            return new[] { MemberRole.Tier3, MemberRole.Tier4 }.Any(r => r == userRole);
+            return new[] { MemberRole.Tier3, MemberRole.Tier4 }.Contains(userRole);
         }
     }
 

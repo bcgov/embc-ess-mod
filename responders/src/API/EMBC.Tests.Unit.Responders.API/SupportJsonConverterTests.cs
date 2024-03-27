@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Castle.Core.Internal;
 using EMBC.Responders.API.Controllers;
 using Shouldly;
 using Xunit;
@@ -34,7 +35,7 @@ namespace EMBC.Tests.Unit.Responders.API
             foreach (var support in supportsJsonElement.EnumerateArray())
             {
                 var id = support.EnumerateObject().FirstOrDefault(p => p.NameEquals(nameof(Support.Id))).Value.GetString().ShouldNotBeNull();
-                var originalSupport = supports.FirstOrDefault(s => s.Id == id).ShouldNotBeNull();
+                var originalSupport = supports.Find(s => s.Id == id).ShouldNotBeNull();
                 var category = support.EnumerateObject().FirstOrDefault(p => p.NameEquals(nameof(Support.Category))).Value.GetString().ShouldNotBeNull();
                 Enum.TryParse<SupportCategory>(category, out var value).ShouldNotBe(false);
                 value.ShouldBe(originalSupport.Category);
