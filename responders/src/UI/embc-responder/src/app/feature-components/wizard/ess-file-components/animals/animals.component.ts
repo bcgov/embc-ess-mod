@@ -35,8 +35,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   showTable = true;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
-  @Output() ValidPetsIndicator : any = new EventEmitter();
-  
+  @Output() ValidPetsIndicator: any = new EventEmitter();
+
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -44,7 +44,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     private customValidation: CustomValidationService,
     private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Creates the Animals form
@@ -53,26 +53,33 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     // Adds pets list in case the user has previously inserted data
     this.petSource.next(this.animalsForm.get('pets').value);
     this.pets = this.animalsForm.get('pets').value;
-    if(this.animalsForm.get('hasPets').value === 'No' ||  (this.animalsForm.get('hasPets').value === 'Yes' && this.pets.length > 0)){
+
+    if (this.animalsForm.get('hasPets').value === 'No' || (this.animalsForm.get('hasPets').value === 'Yes' && this.pets.length > 0)) {
       this.ValidPetsIndicator.emit(true);
+
+
     }
-    else 
-    this.ValidPetsIndicator.emit(false);
+    else
+      this.ValidPetsIndicator.emit(false);
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
       this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
     this.animalsForm.valueChanges.subscribe(() => {
-      if(this.animalsForm.get('hasPets').value === 'No' ||  (this.animalsForm.get('hasPets').value === 'Yes' && this.pets.length > 0)){
+      if (this.animalsForm.get('hasPets').value === 'No' || (this.animalsForm.get('hasPets').value === 'Yes' && this.pets.length > 0)) {
         this.ValidPetsIndicator.emit(true);
-    }  else 
-    this.ValidPetsIndicator.emit(false);
-  })
+      } else
+        this.ValidPetsIndicator.emit(false);
+
+    })
 
     // Update Value and Validity for pets form if hasPets changes
     this.animalsForm.get('hasPets').valueChanges.subscribe(() => {
+
       this.animalsForm.get('pets').updateValueAndValidity();
+
+
     });
 
     // Updates the validations for the PetFormGroup
