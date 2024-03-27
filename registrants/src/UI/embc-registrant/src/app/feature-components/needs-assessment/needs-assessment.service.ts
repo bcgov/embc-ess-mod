@@ -57,20 +57,20 @@ export class NeedsAssessmentService {
     this.canEvacueesProvideLodging = value;
   }
 
-  public get doesEvacueeNotRequireAssistance(): string {
-    return this.doEvacueesNotRequireAssistance;
-  }
-
-  public set doesEvacueeNotRequireAssistance(value: string) {
-    this.doEvacueesNotRequireAssistance = value;
-  }
-
   public get shelterOptions(): string {
     return this.shelterOption;
   }
 
   public set shelterOptions(value: string) {
     this.shelterOption = value;
+  }
+
+  public get doesEvacueeNotRequireAssistance(): string {
+    return this.doEvacueesNotRequireAssistance;
+  }
+
+  public set doesEvacueeNotRequireAssistance(value: string) {
+    this.doEvacueesNotRequireAssistance = value;
   }
 
   public get canEvacueeProvideClothing(): string {
