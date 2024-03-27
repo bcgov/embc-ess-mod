@@ -16,12 +16,8 @@ import * as globalConst from '../../core/services/globalConstants';
 export class NeedsAssessmentService {
   private needsAssessmentID: string = null;
   private insuranceOption: InsuranceOption;
-  private haveMedications: boolean;
-  private haveSpecialDiets: boolean;
   private householdMember: Array<HouseholdMember> = [];
-  private specialDietDetail: string;
   private pet: Array<Pet> = [];
-  private hasPetFood: boolean;
   private canEvacueesProvideClothing: string;
   private canEvacueesProvideFood: string;
   private canEvacueesProvideIncidentals: string;
@@ -87,14 +83,6 @@ export class NeedsAssessmentService {
     this.canEvacueesProvideTransportation = value;
   }
 
-  public get hasPetsFood(): boolean {
-    return this.hasPetFood;
-  }
-
-  public set hasPetsFood(value: boolean) {
-    this.hasPetFood = value;
-  }
-
   public get pets(): Array<Pet> {
     return this.pet;
   }
@@ -103,21 +91,6 @@ export class NeedsAssessmentService {
     this.pet = value;
   }
 
-  public get haveMedication(): boolean {
-    return this.haveMedications;
-  }
-
-  public set haveMedication(value: boolean) {
-    this.haveMedications = value;
-  }
-
-  public get haveSpecialDiet(): boolean {
-    return this.haveSpecialDiets;
-  }
-
-  public set haveSpecialDiet(value: boolean) {
-    this.haveSpecialDiets = value;
-  }
 
   public get householdMembers(): Array<HouseholdMember> {
     return this.householdMember;
@@ -125,13 +98,6 @@ export class NeedsAssessmentService {
 
   public set householdMembers(value: Array<HouseholdMember>) {
     this.householdMember = value;
-  }
-
-  public get specialDietDetails(): string {
-    return this.specialDietDetail;
-  }
-  public set specialDietDetails(value: string) {
-    this.specialDietDetail = value;
   }
 
   public get mainHouseholdMember(): HouseholdMember {
@@ -221,10 +187,6 @@ export class NeedsAssessmentService {
       canEvacueeProvideLodging: needsLodgingDTO,
       canEvacueeProvideTransportation: needsTransportationDTO,
       householdMembers: this.addPrimaryApplicantToHousehold(),
-      hasPetsFood: this.hasPetsFood,
-      haveMedication: this.haveMedication,
-      haveSpecialDiet: this.haveSpecialDiet,
-      specialDietDetails: this.specialDietDetails,
       insurance: this.insurance,
       pets: this.pets,
       type: NeedsAssessmentType.Preliminary
@@ -262,12 +224,8 @@ export class NeedsAssessmentService {
     this.canEvacueeProvideIncidentals = undefined;
     this.canEvacueeProvideLodging = undefined;
     this.canEvacueeProvideTransportation = undefined;
-    this.hasPetsFood = undefined;
     this.pets = undefined;
-    this.haveMedication = undefined;
-    this.haveSpecialDiet = undefined;
     this.householdMembers = undefined;
-    this.specialDietDetails = undefined;
   }
 
   addPrimaryApplicantToHousehold() {

@@ -21,7 +21,7 @@ export class EditComponent implements OnInit, OnDestroy {
   componentToLoad: string;
   profileFolderPath: string;
   needsAssessmentNavigationExtras: NavigationExtras = {
-    state: { stepIndex: 5 }
+    state: { stepIndex: 4 }
   };
   profileNavigationExtras: NavigationExtras = { state: { stepIndex: 4 } };
   form$: Subscription;

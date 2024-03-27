@@ -848,67 +848,6 @@
 
       <mat-card-content>
         <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">
-            Household Medication & Dietary Requirements
-          </div>
-          <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('family-information')"
-            >
-              <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
-            </button>
-          </div>
-        </div>
-        <hr />
-        <div class="row info-detail">
-          <div class="col-md-3">Family Medication Requirements:</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.householdMembersForm$ | async)?.value
-                .haveMedication === true
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
-        </div>
-        <div class="row info-detail">
-          <div class="col-md-3">Family Dietary Requirements:</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.householdMembersForm$ | async)?.value
-                .haveSpecialDiet === true
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
-        </div>
-        <div
-          class="row info-detail"
-          *ngIf="
-            (formCreationService.householdMembersForm$ | async)?.value
-              .specialDietDetails
-          "
-        >
-          <div class="col-md-3">Special Dietary Details:</div>
-          <div class="col-md-3 wrap-text">
-            {{
-              (formCreationService.householdMembersForm$ | async)?.value
-                .specialDietDetails
-            }}
-          </div>
-        </div>
-      </mat-card-content>
-
-      <mat-card-content>
-        <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Pets</div>
           <div class="col-md-2" *ngIf="allowEdit">
             <button
@@ -941,22 +880,6 @@
             <div class="col-md-3">{{ pet.quantity }}</div>
           </div>
           <br />
-        </div>
-        <div
-          *ngIf="
-            (formCreationService.petsForm$ | async)?.value?.pets?.length > 0
-          "
-          class="row info-detail"
-        >
-          <div class="col-md-3">Has sufficient pet food?</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.petsForm$ | async)?.value.hasPetsFood ===
-              true
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
         </div>
       </mat-card-content>
 
