@@ -18,7 +18,7 @@ export class HouseholdMembersPetsComponent implements OnInit {
 
 
   petsValid = false;
-  householdMembersValid = true;
+  householdMembersValid = false;
   tabMetaData: TabModel;
 
   constructor(
