@@ -6,12 +6,12 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { MatStepper } from '@angular/material/stepper';
-import { forkJoin, Subscription } from 'rxjs';
+import { combineLatest, forkJoin, Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { RegistrationResult } from '../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -85,7 +85,7 @@ export class NeedsAssessmentComponent
   }
 
   ngAfterViewInit(): void {
-    if (this.stepToDisplay === 5) {
+    if (this.stepToDisplay === 4) {
       this.needsStepper.linear = false;
       setTimeout(() => {
         this.needsStepper.selectedIndex = this.stepToDisplay;
@@ -117,27 +117,18 @@ export class NeedsAssessmentComponent
           });
         break;
       case 1:
-        this.form$ = this.formCreationService
-          .getHouseholdMembersForm()
-          .subscribe((householdMemberForm) => {
-            this.form = householdMemberForm;
-          });
+        this.form$ = combineLatest(this.formCreationService.getHouseholdMembersForm(), this.formCreationService.getPetsForm()).subscribe(([householdMemberForm, petsForm]) => {
+          this.form = new FormGroup({householdMemberForm, petsForm});
+        });
         break;
       case 2:
-        this.form$ = this.formCreationService
-          .getPetsForm()
-          .subscribe((petsForm) => {
-            this.form = petsForm;
-          });
-        break;
-      case 3:
         this.form$ = this.formCreationService
           .getIndentifyNeedsForm()
           .subscribe((identifyNeedsForm) => {
             this.form = identifyNeedsForm;
           });
         break;
-      case 4:
+      case 3:
         this.form$ = this.formCreationService
           .getSecretForm()
           .subscribe((secret) => {
@@ -178,6 +169,7 @@ export class NeedsAssessmentComponent
   }
 
   setFormData(component: string): void {
+
     switch (component) {
       case 'evac-address':
         this.evacuationFileDataService.evacuatedAddress = this.form.get(
@@ -186,21 +178,12 @@ export class NeedsAssessmentComponent
         this.needsAssessmentService.insurance =
           this.form.get('insurance').value;
         break;
-      case 'family-information':
-        this.needsAssessmentService.haveSpecialDiet =
-          this.form.get('haveSpecialDiet').value;
-        this.needsAssessmentService.haveMedication =
-          this.form.get('haveMedication').value;
-        this.needsAssessmentService.specialDietDetails =
-          this.form.get('specialDietDetails').value;
+      case 'family-information-pets':
         this.needsAssessmentService.setHouseHoldMembers(
-          this.form.get('householdMembers').value
+          this.form.get('householdMemberForm').value.householdMembers
         );
-        break;
-      case 'pets':
-        this.needsAssessmentService.pets = this.form.get('pets').value;
-        this.needsAssessmentService.hasPetsFood =
-          this.form.get('hasPetsFood').value;
+
+        this.needsAssessmentService.pets = this.form.get('petsForm').value.pets;
         break;
       case 'identify-needs':
         this.needsAssessmentService.setNeedsDetails(this.form);

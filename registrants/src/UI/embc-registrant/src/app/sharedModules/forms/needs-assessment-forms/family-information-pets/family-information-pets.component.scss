@@ -1,0 +1,108 @@
+.primary-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.primary-radio-button {
+  margin: 5px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.family-button {
+  border: 2px solid #169bd5 !important;
+  color: #169bd5;
+  background-color: #ffffff !important;
+}
+
+.details-button {
+  width: 100%;
+}
+
+.save-button {
+  height: 55px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.mobile-label {
+  display: none;
+}
+
+.is-primary {
+  display: none;
+}
+
+.edit-image img:last-child {
+  display: none;
+}
+
+.edit-image:hover img:last-child {
+  display: block;
+}
+
+.edit-image:hover img:first-child {
+  display: none;
+}
+
+.delete-image img:last-child {
+  display: none;
+}
+
+.delete-image:hover img:last-child {
+  display: block;
+}
+
+.delete-image:hover img:first-child {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .mobile-label {
+    width: 80px;
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  // Remove the header row altogether
+  .mat-header-row {
+    display: none;
+  }
+
+  // The row cells should display as a column, justified left, with a bit of extra padding
+  .mat-row {
+    flex-direction: column;
+    align-items: start;
+    padding: 8px 24px;
+    min-height: unset; // Tweak for Angular Material 8
+  }
+
+  // Tweaks for Angular Material 8
+  .mat-cell:first-of-type,
+  .mat-footer-cell:first-of-type,
+  .mat-header-cell:first-of-type {
+    padding-left: unset;
+  }
+
+  .mat-cell {
+    align-items: unset;
+    min-height: unset;
+  }
+}
+
+.services-info {
+  background-color: #fcba19;
+  border-color: #fcba19;
+  margin: 7px;
+  padding: 15px;
+}

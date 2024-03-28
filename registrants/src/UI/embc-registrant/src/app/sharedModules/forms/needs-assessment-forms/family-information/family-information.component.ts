@@ -160,11 +160,6 @@ export default class FamilyInformationComponent implements OnInit {
       .updateValueAndValidity();
   }
 
-  hasSpecialDietChange(event: MatRadioChange): void {
-    if (event.value === false) {
-      this.householdMemberForm.get('specialDietDetails').reset();
-    }
-  }
 }
 
 @NgModule({
@@ -180,6 +175,7 @@ export default class FamilyInformationComponent implements OnInit {
     MatTableModule,
     MatIconModule
   ],
-  declarations: [FamilyInformationComponent]
+  declarations: [FamilyInformationComponent],
+  exports: [FamilyInformationComponent]
 })
-class FamilyInformationModule {}
+export class FamilyInformationModule {}
