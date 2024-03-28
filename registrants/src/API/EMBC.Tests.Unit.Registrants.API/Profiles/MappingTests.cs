@@ -1,8 +1,9 @@
 ﻿using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text.Json;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.Mappers;
+using EMBC.Registrants.API.Services;
 using Shouldly;
 using Xunit;
 
@@ -117,21 +118,35 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         [Fact]
         public void CanMapBcscUserToProfile()
         {
-            var bcscUser = FakeGenerator.CreateUser("BC", "CAN");
-            var profile = mapper.Map<Profile>(bcscUser);
+            var userInfo =
+@"{
+""address"": {
+    ""country"": ""CA"",
+    ""formatted"": ""818-9025 PEARL PLACE\nSURREY, BC  V3R 3H7"",
+    ""locality"": ""SURREY"",
+    ""postal_code"": ""V3R 3H7"",
+    ""region"": ""BC"",
+    ""street_address"": ""818-9025 PEARL PLACE""
+},
+""birthdate"": ""2000-04-14"",
+""display_name"": ""EVAC THREE"",
+""family_name"": ""THREE"",
+""given_name"": ""EVAC""
+}";
 
-            profile.Id.ShouldBe(bcscUser.Id);
+            var profile = BcscUserInfoMapper.MapBcscUserInfoToProfile("123", JsonDocument.Parse(userInfo));
+
+            profile.Id.ShouldBe("123");
             profile.ContactDetails.Email.ShouldBeNull();
-            profile.PersonalDetails.FirstName.ShouldBe(bcscUser.PersonalDetails.FirstName);
-            profile.PersonalDetails.LastName.ShouldBe(bcscUser.PersonalDetails.LastName);
+            profile.PersonalDetails.FirstName.ShouldBe("EVAC");
+            profile.PersonalDetails.LastName.ShouldBe("THREE");
             profile.PersonalDetails.Gender.ShouldBeNull();
-            profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(bcscUser.PersonalDetails.DateOfBirth,
-                @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
-            profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.PrimaryAddress.AddressLine1);
-            profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PrimaryAddress.PostalCode);
-            profile.PrimaryAddress.Community.ShouldBe(bcscUser.PrimaryAddress.Community);
-            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldBe("BC");
-            profile.PrimaryAddress.Country.ShouldNotBeNull().ShouldBe("CAN");
+            profile.PersonalDetails.DateOfBirth.ShouldBe("04/13/2000");
+            profile.PrimaryAddress.AddressLine1.ShouldBe("818-9025 PEARL PLACE");
+            profile.PrimaryAddress.PostalCode.ShouldBe("V3R 3H7");
+            profile.PrimaryAddress.Community.ShouldBe("SURREY");
+            profile.PrimaryAddress.StateProvince.ShouldBe("BC");
+            profile.PrimaryAddress.Country.ShouldBe("CA");
         }
     }
 }

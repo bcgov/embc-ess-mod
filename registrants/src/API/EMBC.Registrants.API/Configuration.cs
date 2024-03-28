@@ -124,7 +124,7 @@ namespace EMBC.Registrants.API
                 };
             });
 
-            services.Configure<SwaggerUi3Settings>(options =>
+            services.Configure<SwaggerUiSettings>(options =>
             {
                 options.Path = "/api/openapi";
                 options.DocumentTitle = "Registrants Portal API Documentation";
@@ -142,7 +142,6 @@ namespace EMBC.Registrants.API
                 });
 
                 document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
-                document.GenerateAbstractProperties = true;
             });
 
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
@@ -168,7 +167,7 @@ namespace EMBC.Registrants.API
             if (!env.IsProduction())
             {
                 app.UseOpenApi();
-                app.UseSwaggerUi3();
+                app.UseSwaggerUi();
             }
             app.UseAuthentication();
             app.UseAuthorization();
