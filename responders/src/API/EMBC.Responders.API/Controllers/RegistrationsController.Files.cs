@@ -373,7 +373,10 @@ namespace EMBC.Responders.API.Controllers
         Food,
 
         [Description("Incidentals")]
-        Incidentals
+        Incidentals,
+
+        [Description("Clothing")]
+        Clothing
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

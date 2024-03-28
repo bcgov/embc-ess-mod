@@ -106,15 +106,11 @@ namespace EMBC.ESS.Resources.Evacuations
         public DateTime LastModified { get; set; }
         public string LastModifiedTeamMemberId { get; set; }
         public InsuranceOption Insurance { get; set; }
-        public bool? CanProvideFood { get; set; }
-        public bool? CanProvideLodging { get; set; }
-        public bool? CanProvideClothing { get; set; }
-        public bool? CanProvideTransportation { get; set; }
-        public bool? CanProvideIncidentals { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public NeedsAssessmentType Type { get; set; }
         public IEnumerable<Note> Notes { get; set; }
+        public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
     }
 
     public class HouseholdMember
@@ -168,6 +164,16 @@ namespace EMBC.ESS.Resources.Evacuations
     {
         Preliminary,
         Assessed
+    }
+
+    public enum IdentifiedNeed
+    {
+        ShelterReferral,
+        ShelterAllowance,
+        Transportation,
+        Food,
+        Incidentals,
+        Clothing
     }
 
 #pragma warning disable CA1008 // Enums should have zero value

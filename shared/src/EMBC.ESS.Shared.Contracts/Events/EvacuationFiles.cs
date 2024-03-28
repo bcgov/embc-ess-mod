@@ -160,6 +160,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         ShelterAllowance,
         Transportation,
         Food,
-        Incidentals
+        Incidentals,
+        Clothing
     }
 }
