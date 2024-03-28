@@ -51,20 +51,10 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Events.NeedsAssessment>()
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
-                .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => s.CanEvacueeProvideFood))
-                .ForMember(d => d.CanProvideLodging, opts => opts.MapFrom(s => s.CanEvacueeProvideLodging))
-                .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => s.CanEvacueeProvideClothing))
-                .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => s.CanEvacueeProvideTransportation))
-                .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => s.CanEvacueeProvideIncidentals))
                 .ForMember(d => d.CompletedBy, opts => opts.Ignore())
              ;
 
             CreateMap<ESS.Shared.Contracts.Events.NeedsAssessment, NeedsAssessment>()
-                .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => s.CanProvideFood))
-                .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => s.CanProvideLodging))
-                .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.CanProvideClothing))
-                .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => s.CanProvideTransportation))
-                .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => s.CanProvideIncidentals))
              ;
 
             CreateMap<HouseholdMember, ESS.Shared.Contracts.Events.HouseholdMember>()

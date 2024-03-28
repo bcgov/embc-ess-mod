@@ -180,14 +180,32 @@ namespace EMBC.Registrants.API.Controllers
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public NeedsAssessmentType Type { get; set; }
+        public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum IdentifiedNeed
+    {
+        [Description("Shelter Referral")]
+        ShelterReferral,
+
+        [Description("Shelter Allowance")]
+        ShelterAllowance,
+
+        [Description("Transportation")]
+        Tranportation,
+
+        [Description("Food")]
+        Food,
+
+        [Description("Incidentals")]
+        Incidentals,
+
+        [Description("Clothing")]
+        Clothing
     }
 
     /// <summary>
@@ -605,6 +623,7 @@ namespace EMBC.Registrants.API.Controllers
             if (method == SupportMethod.Unknown || category == SupportCategory.Unknown) throw new JsonException($"Could not determine the support method or category");
 
             //Dserialize to the correct type
+#pragma warning disable S2583 // Conditionally executed code should be reachable
             return category switch
             {
                 SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingSupport>(ref reader, options),
@@ -618,6 +637,7 @@ namespace EMBC.Registrants.API.Controllers
                 SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherSupport>(ref reader, options),
                 _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
             };
+#pragma warning restore S2583 // Conditionally executed code should be reachable
         }
 
         public override void Write(Utf8JsonWriter writer, Support value, JsonSerializerOptions options)

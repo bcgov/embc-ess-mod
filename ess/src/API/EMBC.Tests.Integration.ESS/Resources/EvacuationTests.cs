@@ -214,11 +214,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var originalNeedsAssessment = originalFile.NeedsAssessment;
             var needsAssessment = evacuationFile.NeedsAssessment;
             needsAssessment.Insurance.ShouldBe(originalNeedsAssessment.Insurance);
-            needsAssessment.CanProvideClothing.ShouldBe(originalNeedsAssessment.CanProvideClothing);
-            needsAssessment.CanProvideFood.ShouldBe(originalNeedsAssessment.CanProvideFood);
-            needsAssessment.CanProvideIncidentals.ShouldBe(originalNeedsAssessment.CanProvideIncidentals);
-            needsAssessment.CanProvideLodging.ShouldBe(originalNeedsAssessment.CanProvideLodging);
-            needsAssessment.CanProvideTransportation.ShouldBe(originalNeedsAssessment.CanProvideTransportation);
+            needsAssessment.Needs.OrderBy(n => n).ShouldBe(originalNeedsAssessment.Needs.OrderBy(n => n));
 
             needsAssessment.HouseholdMembers.Count().ShouldBe(originalNeedsAssessment.HouseholdMembers.Count());
             needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem().LinkedRegistrantId.ShouldBe(primaryContact.Id);
@@ -286,11 +282,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                     },
                     Type = NeedsAssessmentType.Preliminary,
                     Insurance = InsuranceOption.Yes,
-                    CanProvideClothing = true,
-                    CanProvideFood = true,
-                    CanProvideIncidentals = true,
-                    CanProvideLodging = true,
-                    CanProvideTransportation = true,
+                    Needs = new[] { IdentifiedNeed.Food, IdentifiedNeed.Transportation, IdentifiedNeed.ShelterReferral },
                     HouseholdMembers = new[]
                         {
                             new HouseholdMember

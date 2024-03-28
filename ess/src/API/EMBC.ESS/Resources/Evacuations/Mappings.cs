@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -12,7 +14,6 @@ namespace EMBC.ESS.Resources.Evacuations
         public Mappings()
         {
             Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
-            Func<Note, string> resolveNoteContent = n => n?.Content;
 
             CreateMap<EvacuationFile, era_evacuationfile>(MemberList.None)
                 .IncludeAllDerived()
@@ -67,11 +68,10 @@ namespace EMBC.ESS.Resources.Evacuations
                   .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid()))
                   .ForMember(d => d._era_reviewedbyid_value, opts => opts.MapFrom(s => s.CompletedByTeamMemberId))
                   .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
-                  .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanProvideFood)))
-                  .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => Lookup(s.CanProvideClothing)))
-                  .ForMember(d => d.era_canevacueeprovideincidentals, opts => opts.MapFrom(s => Lookup(s.CanProvideIncidentals)))
-                  .ForMember(d => d.era_canevacueeprovidelodging, opts => opts.MapFrom(s => Lookup(s.CanProvideLodging)))
-                  .ForMember(d => d.era_canevacueeprovidetransportation, opts => opts.MapFrom(s => Lookup(s.CanProvideTransportation)))
+                  .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Food) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
+                  .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Clothing) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
+                  .ForMember(d => d.era_canevacueeprovideincidentals, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Clothing) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
+                  .ForMember(d => d.era_canevacueeprovidetransportation, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Transportation) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
                   .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
                   .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFrom.AddressLine1))
                   .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFrom.AddressLine2))
@@ -79,6 +79,17 @@ namespace EMBC.ESS.Resources.Evacuations
                   .ForMember(d => d._era_jurisdictionid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                   .ForMember(d => d.era_era_householdmember_era_needassessment, opts => opts.MapFrom(s => s.HouseholdMembers))
                   .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
+                  .AfterMap((s, d) =>
+                  {
+                      if (s.Needs.Contains(IdentifiedNeed.ShelterReferral))
+                      {
+                          d.era_shelteroptions = (int)ShelterOptionSet.Referral;
+                      }
+                      else if (s.Needs.Contains(IdentifiedNeed.ShelterAllowance))
+                      {
+                          d.era_shelteroptions = (int)ShelterOptionSet.Allowance;
+                      }
+                  })
                   ;
 
             CreateMap<era_needassessment, EvacuationAddress>()
@@ -96,15 +107,22 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.modifiedon.Value.UtcDateTime))
                 .ForMember(d => d.LastModifiedTeamMemberId, opts => opts.MapFrom(s => s._era_reviewedbyid_value))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentType>(((NeedsAssessmentTypeOptionSet)s.era_needsassessmenttype).ToString())))
-                .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideclothing)))
-                .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidefood)))
-                .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideincidentals)))
-                .ForMember(d => d.CanProvideLodging, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidelodging)))
-                .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidetransportation)))
                 .ForMember(d => d.Insurance, opts => opts.MapFrom(s => Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_insurancecoverage).ToString())))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_needassessment))
                 .ForMember(d => d.Pets, opts => opts.Ignore())
                 .ForMember(d => d.Notes, opts => opts.Ignore())
+                .ForMember(d => d.Needs, opts => opts.Ignore())
+                .AfterMap((s, d) =>
+                {
+                    var needs = new List<IdentifiedNeed>();
+                    if (s.era_canevacueeprovideclothing.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Clothing);
+                    if (s.era_canevacueeprovidefood.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Food);
+                    if (s.era_canevacueeprovideincidentals.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Incidentals);
+                    if (s.era_canevacueeprovidetransportation.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Transportation);
+                    if (s.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance) needs.Add(IdentifiedNeed.ShelterAllowance);
+                    if (s.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) needs.Add(IdentifiedNeed.ShelterReferral);
+                    d.Needs = needs;
+                })
                 ;
 
             CreateMap<era_householdmember, HouseholdMember>()
@@ -126,7 +144,7 @@ namespace EMBC.ESS.Resources.Evacuations
                 .ReverseMap()
                 .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : (Guid?)null))
                 .ForMember(d => d.era_isprimaryregistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
-                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => DateTime.Parse(s.DateOfBirth).CalculatetAge() < 19))
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => DateTime.Parse(s.DateOfBirth, CultureInfo.InvariantCulture).CalculatetAge() < 19))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.era_initials, opts => opts.MapFrom(s => s.Initials))
@@ -165,16 +183,6 @@ namespace EMBC.ESS.Resources.Evacuations
                 ;
         }
 
-        private static int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
-
-        private static bool? Lookup(int? value) => value switch
-        {
-            174360000 => true,
-            174360001 => false,
-            174360002 => null,
-            _ => null
-        };
-
         public static bool CheckIfUnder19Years(Date birthdate, Date currentDate)
         {
             return birthdate.AddYears(19) >= currentDate;
@@ -201,6 +209,18 @@ namespace EMBC.ESS.Resources.Evacuations
     {
         Primary = 174360000,
         Member = 174360001
+    }
+
+    public enum NeedTrueFalse
+    {
+        True = 174360000,
+        False = 174360001
+    }
+
+    public enum ShelterOptionSet
+    {
+        Allowance = 174360000,
+        Referral = 174360001
     }
 
 #pragma warning restore CA1008 // Enums should have zero value
