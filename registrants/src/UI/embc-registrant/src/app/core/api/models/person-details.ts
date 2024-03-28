@@ -11,4 +11,5 @@ export interface PersonDetails {
   initials?: null | string;
   lastName: string;
   preferredName?: null | string;
+  isPrimaryRegistrant?: boolean
 }
