@@ -108,7 +108,7 @@ namespace EMBC.Responders.API.Controllers
 
             if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
             if (!string.IsNullOrEmpty(stateProvinceId)) items = items.Where(i => i.StateProvinceCode == stateProvinceId);
-            if (types != null && types.Any()) items = items.Where(i => types.Any(t => t.ToString().Equals(i.Type.ToString(), StringComparison.InvariantCultureIgnoreCase)));
+            if (types != null && types.Length > 0) items = items.Where(i => Array.Exists(types, t => t.ToString().Equals(i.Type.ToString(), StringComparison.InvariantCultureIgnoreCase)));
 
             return Ok(mapper.Map<IEnumerable<CommunityCode>>(items));
         }

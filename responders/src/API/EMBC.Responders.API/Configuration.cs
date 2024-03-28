@@ -33,7 +33,7 @@ namespace EMBC.Responders.API
                 };
             });
 
-            services.Configure<SwaggerUi3Settings>(options =>
+            services.Configure<SwaggerUiSettings>(options =>
             {
                 options.Path = "/api/openapi";
                 options.DocumentTitle = "responders Portal API Documentation";
@@ -51,7 +51,6 @@ namespace EMBC.Responders.API
                 });
 
                 document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
-                document.GenerateAbstractProperties = true;
             });
 
             services.AddAuthentication(options =>
@@ -124,7 +123,7 @@ namespace EMBC.Responders.API
             if (!env.IsProduction())
             {
                 app.UseOpenApi();
-                app.UseSwaggerUi3();
+                app.UseSwaggerUi();
             }
             app.UseAuthentication();
             app.UseAuthorization();

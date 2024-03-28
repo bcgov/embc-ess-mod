@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using System.Text.Json;
 using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.Mappers;
+using EMBC.Registrants.API.Services;
 using Shouldly;
 using Xunit;
 
@@ -35,12 +37,12 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.ShouldNotBeNull();
 
             profile.Id.ShouldBe(registrantProfile.UserId);
-            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer);
-            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer);
-            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer);
-            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question);
-            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question);
-            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question.ShouldBe(registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question);
+            profile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Answer.ShouldBe(registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Answer);
+            profile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Answer.ShouldBe(registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Answer);
+            profile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Answer.ShouldBe(registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Answer);
+            profile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Question.ShouldBe(registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Question);
+            profile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Question.ShouldBe(registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Question);
+            profile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Question.ShouldBe(registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Question);
             profile.RestrictedAccess.ShouldBe(registrantProfile.RestrictedAccess);
 
             profile.PersonalDetails.DateOfBirth.ShouldBe(registrantProfile.DateOfBirth);
@@ -79,13 +81,12 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             registrantProfile.ShouldNotBeNull();
 
             registrantProfile.UserId.ShouldBe(profile.Id);
-            //registrantProfile.SecretPhrase.ShouldBe(profile.SecretPhrase);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Answer);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Answer);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Answer);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault()?.Question);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault()?.Question);
-            registrantProfile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault()?.Question);
+            registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Answer.ShouldBe(profile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Answer);
+            registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Answer.ShouldBe(profile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Answer);
+            registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Answer.ShouldBe(profile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Answer);
+            registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Question.ShouldBe(profile.SecurityQuestions.FirstOrDefault(q => q.Id == 1)?.Question);
+            registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Question.ShouldBe(profile.SecurityQuestions.FirstOrDefault(q => q.Id == 2)?.Question);
+            registrantProfile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Question.ShouldBe(profile.SecurityQuestions.FirstOrDefault(q => q.Id == 3)?.Question);
             registrantProfile.RestrictedAccess.ShouldBe(profile.RestrictedAccess);
 
             registrantProfile.FirstName.ShouldBe(profile.PersonalDetails.FirstName);
@@ -114,24 +115,38 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             registrantProfile.MailingAddress.PostalCode.ShouldBe(profile.MailingAddress.PostalCode);
         }
 
-        //[Fact]
-        //public void CanMapBcscUserToProfile()
-        //{
-        //    var bcscUser = FakeGenerator.CreateUser("BC", "CAN");
-        //    var profile = mapper.Map<Profile>(bcscUser);
+        [Fact]
+        public void CanMapBcscUserToProfile()
+        {
+            var userInfo =
+@"{
+""address"": {
+    ""country"": ""CA"",
+    ""formatted"": ""818-9025 PEARL PLACE\nSURREY, BC  V3R 3H7"",
+    ""locality"": ""SURREY"",
+    ""postal_code"": ""V3R 3H7"",
+    ""region"": ""BC"",
+    ""street_address"": ""818-9025 PEARL PLACE""
+},
+""birthdate"": ""2000-04-14"",
+""display_name"": ""EVAC THREE"",
+""family_name"": ""THREE"",
+""given_name"": ""EVAC""
+}";
 
-        //    profile.Id.ShouldBe(bcscUser.Id);
-        //    profile.ContactDetails.Email.ShouldBeNull();
-        //    profile.PersonalDetails.FirstName.ShouldBe(bcscUser.PersonalDetails.FirstName);
-        //    profile.PersonalDetails.LastName.ShouldBe(bcscUser.PersonalDetails.LastName);
-        //    profile.PersonalDetails.Gender.ShouldBeNull();
-        //    profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(bcscUser.PersonalDetails.DateOfBirth,
-        //        @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
-        //    profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.PrimaryAddress.AddressLine1);
-        //    profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PrimaryAddress.PostalCode);
-        //    profile.PrimaryAddress.Community.ShouldBe(bcscUser.PrimaryAddress.Community);
-        //    profile.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldBe("BC");
-        //    profile.PrimaryAddress.Country.ShouldNotBeNull().ShouldBe("CAN");
-        //}
+            var profile = BcscUserInfoMapper.MapBcscUserInfoToProfile("123", JsonDocument.Parse(userInfo));
+
+            profile.Id.ShouldBe("123");
+            profile.ContactDetails.Email.ShouldBeNull();
+            profile.PersonalDetails.FirstName.ShouldBe("EVAC");
+            profile.PersonalDetails.LastName.ShouldBe("THREE");
+            profile.PersonalDetails.Gender.ShouldBeNull();
+            profile.PersonalDetails.DateOfBirth.ShouldBe("04/14/2000");
+            profile.PrimaryAddress.AddressLine1.ShouldBe("818-9025 PEARL PLACE");
+            profile.PrimaryAddress.PostalCode.ShouldBe("V3R 3H7");
+            profile.PrimaryAddress.Community.ShouldBe("SURREY");
+            profile.PrimaryAddress.StateProvince.ShouldBe("BC");
+            profile.PrimaryAddress.Country.ShouldBe("CA");
+        }
     }
 }
