@@ -153,7 +153,9 @@
                   ></mat-header-row>
                   <mat-row
                     *matRowDef="let member; columns: memberColumns"
-                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
+                    [ngClass]="{
+                      'primary-member': member.isPrimaryRegistrant
+                    }"
                   ></mat-row>
                 </mat-table>
 
@@ -215,7 +217,9 @@
                   ></mat-header-row>
                   <mat-row
                     *matRowDef="let member; columns: memberColumns"
-                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
+                    [ngClass]="{
+                      'primary-member': member.isPrimaryRegistrant
+                    }"
                   ></mat-row>
                 </mat-table>
               </div>
