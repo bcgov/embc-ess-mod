@@ -28,7 +28,7 @@ import { InformationDialogComponent } from 'src/app/core/components/dialog-compo
 })
 export default class FamilyInformationComponent implements OnInit {
   householdMemberForm: UntypedFormGroup;
-  radioOption = globalConst.radioButton1;
+  booleanOptions = globalConst.booleanOptions;
   formBuilder: UntypedFormBuilder;
   householdMemberForm$: Subscription;
   formCreationService: FormCreationService;

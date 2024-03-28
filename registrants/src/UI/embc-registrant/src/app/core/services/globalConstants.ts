@@ -12,7 +12,7 @@ export const usDefaultObject = {
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
 export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
 
-export const radioButton1 = [
+export const booleanOptions = [
   { name: 'Yes', value: true },
   { name: 'No', value: false }
 ];
@@ -25,12 +25,6 @@ export const insuranceOptions = [
   },
   { name: 'No', value: 'No' },
   { name: 'Unknown', value: "I don't know" }
-];
-
-export const needsOptions = [
-  { name: 'Yes', value: 'Yes', apiValue: true },
-  { name: 'No', value: 'No', apiValue: false },
-  { name: "I'm not sure", value: 'Unsure', apiValue: null }
 ];
 
 export const gender = [

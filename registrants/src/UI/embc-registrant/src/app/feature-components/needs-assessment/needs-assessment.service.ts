@@ -199,31 +199,31 @@ export class NeedsAssessmentService {
 
   public createNeedsAssessmentDTO(): NeedsAssessment {
     // Get correct API values for Needs Assessment selections
-    const needsLodgingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideLodging
-    )?.apiValue;
+    const needsLodgingDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideLodging
+    )?.value;
 
     const shelterOptionsDTO = this.shelterOptions;
 
-    const needsClothingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideClothing
-    )?.apiValue;
+    const needsClothingDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideClothing
+    )?.value;
 
-    const needsFoodDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideFood
-    )?.apiValue;
+    const needsFoodDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideFood
+    )?.value;
 
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideIncidentals
-    )?.apiValue;
+    const needsIncidentalsDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideIncidentals
+    )?.value;
 
-    const needsTransportationDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideTransportation
-    )?.apiValue;
+    const needsTransportationDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideTransportation
+    )?.value;
 
-    const doesEvacueeNotRequireAssistanceDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.doesEvacueeNotRequireAssistance
-    )?.apiValue;
+    const doesEvacueeNotRequireAssistanceDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.doesEvacueeNotRequireAssistance
+    )?.value;
 
     return {
       id: this.id,

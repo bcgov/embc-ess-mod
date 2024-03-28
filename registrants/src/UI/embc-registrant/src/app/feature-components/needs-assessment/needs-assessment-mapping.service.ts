@@ -134,29 +134,29 @@ export class NeedsAssessmentMappingService {
     canEvacueeProvideTransportation: boolean
   ): void {
     this.needsAssessmentService.canEvacueeProvideFood =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideFood
-      )?.value;
+      globalConst.booleanOptions.find(
+        (ins) => ins.value === canEvacueeProvideFood
+      )?.name;
 
     this.needsAssessmentService.canEvacueeProvideLodging =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideLodging
-      )?.value;
+      globalConst.booleanOptions.find(
+        (ins) => ins.value === canEvacueeProvideLodging
+      )?.name;
 
     this.needsAssessmentService.canEvacueeProvideClothing =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideClothing
-      )?.value;
+      globalConst.booleanOptions.find(
+        (ins) => ins.value === canEvacueeProvideClothing
+      )?.name;
 
     this.needsAssessmentService.canEvacueeProvideTransportation =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideTransportation
-      )?.value;
+      globalConst.booleanOptions.find(
+        (ins) => ins.value === canEvacueeProvideTransportation
+      )?.name;
 
     this.needsAssessmentService.canEvacueeProvideIncidentals =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideIncidentals
-      )?.value;
+      globalConst.booleanOptions.find(
+        (ins) => ins.value === canEvacueeProvideIncidentals
+      )?.name;
 
     this.formCreationService
       .getIndentifyNeedsForm()
