@@ -15,7 +15,7 @@ import {
   LocationsService
 } from 'src/app/core/services/locations.service';
 import { AddressService } from './address.service';
-
+import * as globalConst from '../../../../core/services/global-constants';
 @Component({
   selector: 'app-address',
   templateUrl: './address.component.html',
@@ -23,7 +23,7 @@ import { AddressService } from './address.service';
 })
 export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   primaryAddressForm: UntypedFormGroup;
-  radioOption: string[] = ['Yes', 'No'];
+  booleanOption = globalConst.booleanOptions;
   filteredOptions: Observable<Country[]>;
   mailingFilteredOptions: Observable<Country[]>;
   countries: Country[] = [];
