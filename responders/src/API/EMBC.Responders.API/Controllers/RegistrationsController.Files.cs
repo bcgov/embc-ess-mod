@@ -354,11 +354,11 @@ namespace EMBC.Responders.API.Controllers
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
 
         public NeedsAssessmentType? Type { get; set; }
-        public IEnumerable<IdentitiedNeed> Needs { get; set; } = Array.Empty<IdentitiedNeed>();
+        public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum IdentitiedNeed
+    public enum IdentifiedNeed
     {
         [Description("Shelter Referral")]
         ShelterReferral,
