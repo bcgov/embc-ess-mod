@@ -29,7 +29,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
   needsFoodDisplay: string;
   shelterOptionsDisplay: string;
-  needsLodgingDisplay: string;
   needsClothingDisplay: string;
   needsTransportationDisplay: string;
   needsIncidentalsDisplay: string;

@@ -6,7 +6,6 @@
       </div>
     </div>
   </div>
-
   <div class="row">
     <div class="col-12 content-container">
       <div class="row">
@@ -14,39 +13,30 @@
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Evacuation Details</label>
 
-            <div
-              *ngIf="
+            <div *ngIf="
                 stepEssFileService?.paperESSFile ||
                 evacueeSessionService?.isPaperBased
-              "
-              class="row"
-            >
+              " class="row">
               <div class="col-4">Paper ESS File Number</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.paperESSFile }}
               </div>
             </div>
 
-            <div
-              *ngIf="
+            <div *ngIf="
                 stepEssFileService?.paperESSFile ||
                 evacueeSessionService?.isPaperBased
-              "
-              class="row"
-            >
+              " class="row">
               <div class="col-4">Paper ESS File Created by</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.completedBy }}
               </div>
             </div>
 
-            <div
-              *ngIf="
+            <div *ngIf="
                 stepEssFileService?.paperESSFile ||
                 evacueeSessionService?.isPaperBased
-              "
-              class="row"
-            >
+              " class="row">
               <div class="col-4">Paper ESS File Created on</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.completedOn | date: 'dd-MMM-yyyy' }} at
@@ -56,12 +46,9 @@
 
             <div class="row">
               <div class="col-4">Evacuated From</div>
-              <div
-                class="col-8 bold"
-                [innerHTML]="
+              <div class="col-8 bold" [innerHTML]="
                   stepEssFileService?.evacAddress | maskEvacuatedaddress
-                "
-              ></div>
+                "></div>
             </div>
 
             <div class="row">
@@ -88,23 +75,16 @@
           </div>
         </div>
       </div>
-
       <div class="row">
         <div class="col-12">
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Household Members</label>
-
             <div class="row">
               <div class="col-8">
-                <mat-table
-                  class="bottom-space"
-                  [dataSource]="stepEssFileService?.householdMembers"
-                  *ngIf="!this.essFileNumber"
-                >
+                <mat-table class="bottom-space" [dataSource]="stepEssFileService?.householdMembers"
+                  *ngIf="!this.essFileNumber">
                   <ng-container matColumnDef="firstName">
-                    <mat-header-cell *matHeaderCellDef
-                      >First Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">First Name:</span>
                       {{ member.firstName }}
@@ -112,9 +92,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="lastName">
-                    <mat-header-cell *matHeaderCellDef
-                      >Last Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Last Name:</span>
                       {{ member.lastName }}
@@ -122,9 +100,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="initials">
-                    <mat-header-cell *matHeaderCellDef
-                      >Initials</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Initials</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Initials:</span>
                       {{ member.initials }}
@@ -149,24 +125,15 @@
                     </mat-cell>
                   </ng-container>
 
-                  <mat-header-row
-                    *matHeaderRowDef="memberColumns"
-                  ></mat-header-row>
-                  <mat-row
-                    *matRowDef="let member; columns: memberColumns"
-                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
-                  ></mat-row>
+                  <mat-header-row *matHeaderRowDef="memberColumns"></mat-header-row>
+                  <mat-row *matRowDef="let member; columns: memberColumns"
+                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"></mat-row>
                 </mat-table>
 
-                <mat-table
-                  class="bottom-space"
-                  [dataSource]="stepEssFileService?.selectedHouseholdMembers"
-                  *ngIf="this.essFileNumber"
-                >
+                <mat-table class="bottom-space" [dataSource]="stepEssFileService?.selectedHouseholdMembers"
+                  *ngIf="this.essFileNumber">
                   <ng-container matColumnDef="firstName">
-                    <mat-header-cell *matHeaderCellDef
-                      >First Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">First Name: &nbsp;</span>
                       {{ member.firstName }}
@@ -174,9 +141,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="lastName">
-                    <mat-header-cell *matHeaderCellDef
-                      >Last Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Last Name: &nbsp;</span>
                       {{ member.lastName }}
@@ -184,9 +149,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="initials">
-                    <mat-header-cell *matHeaderCellDef
-                      >Initials</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Initials</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Initials: &nbsp;</span>
                       {{ member.initials }}
@@ -211,172 +174,140 @@
                     </mat-cell>
                   </ng-container>
 
-                  <mat-header-row
-                    *matHeaderRowDef="memberColumns"
-                  ></mat-header-row>
-                  <mat-row
-                    *matRowDef="let member; columns: memberColumns"
-                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
-                  ></mat-row>
+                  <mat-header-row *matHeaderRowDef="memberColumns"></mat-header-row>
+                  <mat-row *matRowDef="let member; columns: memberColumns"
+                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"></mat-row>
                 </mat-table>
               </div>
             </div>
-
-      <div class="row">
-        <div class="col-12">
-          <div class="review-panel data-panel">
-
             <div class="row">
-              <div class="col-4">Pets?</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.havePets ? stepEssFileService?.havePets : "No" }}
-              </div>
-            </div>
+              <div class="col-12">
+                <div class="data-panel">
+                  <label class="tab-subtitle">Pets</label>
+                  <div class="row">
+                    <div class="col-4">Pets?</div>
+                    <div class="col-8 bold">
+                      {{ stepEssFileService?.havePets ? stepEssFileService?.havePets : "No" }}
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
+                    <div class="col-8">
+                      <mat-table class="bottom-space" [dataSource]="stepEssFileService?.petsList">
+                        <ng-container matColumnDef="type">
+                          <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
+                          <mat-cell [ngClass]="element.type.length >= 40 ? 'wrapText' : ''" *matCellDef="let element">
+                            <span class="mobile-label">Pet Type:</span>
+                            {{ element.type }}
+                          </mat-cell>
+                        </ng-container>
 
-            <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
-              <div class="col-8">
-                <mat-table
-                  class="bottom-space"
-                  [dataSource]="stepEssFileService?.petsList"
-                >
-                  <ng-container matColumnDef="type">
-                    <mat-header-cell *matHeaderCellDef
-                      >Pet Type</mat-header-cell
-                    >
-                    <mat-cell
-                      [ngClass]="element.type.length >= 40 ? 'wrapText' : ''"
-                      *matCellDef="let element"
-                    >
-                      <span class="mobile-label">Pet Type:</span>
-                      {{ element.type }}
-                    </mat-cell>
-                  </ng-container>
+                        <ng-container matColumnDef="quantity">
+                          <mat-header-cell *matHeaderCellDef>
+                            Number
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let element">
+                            <span class="mobile-label">Number:</span>
+                            {{ element.quantity }}
+                          </mat-cell>
+                        </ng-container>
 
-                  <ng-container matColumnDef="quantity">
-                    <mat-header-cell *matHeaderCellDef>
-                      Number
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                      <span class="mobile-label">Number:</span>
-                      {{ element.quantity }}
-                    </mat-cell>
-                  </ng-container>
-
-                  <mat-header-row
-                    *matHeaderRowDef="petColumns"
-                  ></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: petColumns"></mat-row>
-                </mat-table>
+                        <mat-header-row *matHeaderRowDef="petColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: petColumns"></mat-row>
+                      </mat-table>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-12">
-          <div class="review-panel data-panel">
-            <label class="tab-subtitle">Needs Assessment</label>
-            <p class="bold">Can evacuee provide?</p>
-            <div class="row">
-              <div class="col-4">Food</div>
-              <div class="col-8 bold">
-                {{ needsFoodDisplay }}
+
+        <div class="row">
+          <div class="col-12">
+            <div class="review-panel data-panel">
+              <label class="tab-subtitle">Needs Assessment</label>
+              <p class="bold">Can evacuee provide?</p>
+              <div class="row">
+                <div class="col-4">Food</div>
+                <div class="col-8 bold">
+                  {{ needsFoodDisplay }}
+                </div>
               </div>
-            </div>
 
             <div class="row">
               <div class="col-4">Lodging</div>
               <div class="col-8 bold">
-                {{ needsLodgingDisplay }}
+                {{ shelterOptionsDisplay }}
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-4">Clothing</div>
-              <div class="col-8 bold">
-                {{ needsClothingDisplay }}
+              <div class="row">
+                <div class="col-4">Clothing</div>
+                <div class="col-8 bold">
+                  {{ needsClothingDisplay }}
+                </div>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-4">Transportation</div>
-              <div class="col-8 bold">
-                {{ needsTransportationDisplay }}
+              <div class="row">
+                <div class="col-4">Transportation</div>
+                <div class="col-8 bold">
+                  {{ needsTransportationDisplay }}
+                </div>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-4">Incidentals</div>
-              <div class="col-8 bold">
-                {{ needsIncidentalsDisplay }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div *ngIf="!evacueeSessionService?.isPaperBased" class="row">
-        <div class="col-12">
-          <div class="review-panel data-panel">
-            <label class="tab-subtitle">Security Phrase</label>
-
-            <div
-              class="row"
-              *ngIf="
-                wizardType === 'new-ess-file' &&
-                stepEssFileService?.bypassPhrase
-              "
-            >
-              <div class="col-8">
-                <mat-checkbox [checked]="true" [disabled]="true">
-                  Bypass security phrase for manual entry of paper ESS file.
-                </mat-checkbox>
-              </div>
-            </div>
-
-            <div
-              class="row"
-              *ngIf="
-                !stepEssFileService?.bypassPhrase ||
-                wizardType !== 'new-ess-file'
-              "
-            >
-              <div class="col-4">Security Phrase</div>
-              <div class="col-8 bold">
-                {{ stepEssFileService?.securityPhrase | maskText }}
+              <div class="row">
+                <div class="col-4">Incidentals</div>
+                <div class="col-8 bold">
+                  {{ needsIncidentalsDisplay }}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-12 nav-buttons">
-          <button class="button-s back" mat-button (click)="back()">
-            Back
-          </button>
+        <div *ngIf="!evacueeSessionService?.isPaperBased" class="row">
+          <div class="col-12">
+            <div class="review-panel data-panel">
+              <label class="tab-subtitle">Security Phrase</label>
 
-          <button
-            class="button-p save"
-            mat-stroked-button
-            (click)="save()"
-            [disabled]="saveLoader || disableButton"
-          >
-            Save ESS File
-            <app-loader
-              style="
-                display: inline-flex;
-                justify-content: center;
-                align-items: center;
-              "
-              [strokeWidth]="3"
-              [diameter]="20"
-              [showLoader]="saveLoader"
-            ></app-loader>
-          </button>
+              <div class="row" *ngIf="
+            wizardType === 'new-ess-file' &&
+            stepEssFileService?.bypassPhrase
+          ">
+                <div class="col-8">
+                  <mat-checkbox [checked]="true" [disabled]="true">
+                    Bypass security phrase for manual entry of paper ESS file.
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="
+            !stepEssFileService?.bypassPhrase ||
+            wizardType !== 'new-ess-file'
+          ">
+                <div class="col-4">Security Phrase</div>
+                <div class="col-8 bold">
+                  {{ stepEssFileService?.securityPhrase | maskText }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 nav-buttons">
+            <button class="button-s back" mat-button (click)="back()">
+              Back
+            </button>
+
+            <button class="button-p save" mat-stroked-button (click)="save()" [disabled]="saveLoader || disableButton">
+              Save ESS File
+              <app-loader style="
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+          " [strokeWidth]="3" [diameter]="20" [showLoader]="saveLoader"></app-loader>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>

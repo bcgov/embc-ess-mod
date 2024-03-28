@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, Inject } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,7 +32,7 @@ export default class PetsComponent implements OnInit {
   editIndex: number;
   rowEdit = false;
   showTable = true;
-
+   
   constructor(
     @Inject('formBuilder') formBuilder: UntypedFormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService
@@ -51,20 +51,16 @@ export default class PetsComponent implements OnInit {
     this.petsForm
       .get('addPetIndicator')
       .valueChanges.subscribe((value) => this.updateOnVisibility());
-    this.petsForm
-      .get('addPetFoodIndicator')
-      .valueChanges.subscribe((value) => this.updateOnVisibility());
 
-    this.dataSource.next(this.petsForm.get('pets').value);
+      this.dataSource.next(this.petsForm.get('pets').value);
     this.data = this.petsForm.get('pets').value;
   }
-
+   
   addPets(): void {
     this.petsForm.get('pet').reset();
     this.showPetsForm = !this.showPetsForm;
     // this.showTable = !this.showTable;
     this.petsForm.get('addPetIndicator').setValue(true);
-    this.petsForm.get('addPetFoodIndicator').setValue(true);
   }
 
   save(): void {
@@ -91,10 +87,6 @@ export default class PetsComponent implements OnInit {
 
     this.petsForm.get('pet').reset();
     this.petsForm.get('addPetIndicator').setValue(false);
-
-    if (this.data.length === 0) {
-      this.petsForm.get('addPetFoodIndicator').setValue(false);
-    }
   }
 
   /**
@@ -111,8 +103,6 @@ export default class PetsComponent implements OnInit {
 
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
-      this.petsForm.get('addPetFoodIndicator').setValue(false);
-      this.petsForm.get('hasPetsFood').reset();
     }
   }
 
@@ -128,7 +118,6 @@ export default class PetsComponent implements OnInit {
   updateOnVisibility(): void {
     this.petsForm.get('pet.type').updateValueAndValidity();
     this.petsForm.get('pet.quantity').updateValueAndValidity();
-    this.petsForm.get('hasPetsFood').updateValueAndValidity();
   }
 }
 
@@ -145,6 +134,7 @@ export default class PetsComponent implements OnInit {
     MatIconModule,
     PetFormModule
   ],
-  declarations: [PetsComponent]
+  declarations: [PetsComponent],
+  exports: [PetsComponent]
 })
-class PetsModule {}
+export class PetsModule {}

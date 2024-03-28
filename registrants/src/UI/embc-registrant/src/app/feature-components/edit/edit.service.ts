@@ -67,22 +67,14 @@ export class EditService {
         ).value;
         this.needsAssessmentDataService.insurance = form.get('insurance').value;
         break;
-      case 'family-information':
-        this.needsAssessmentDataService.haveSpecialDiet =
-          form.get('haveSpecialDiet').value;
-        this.needsAssessmentDataService.haveMedication =
-          form.get('haveMedication').value;
-        this.needsAssessmentDataService.specialDietDetails =
-          form.get('specialDietDetails').value;
-        this.needsAssessmentDataService.setHouseHoldMembers(
-          form.get('householdMembers').value
-        );
-        break;
       case 'pets':
-        this.needsAssessmentDataService.pets = form.get('pets').value;
-        this.needsAssessmentDataService.hasPetsFood =
-          form.get('hasPetsFood').value;
-        break;
+          this.needsAssessmentDataService.pets = form.get('pets').value;
+          break;
+      case 'family-information':
+          this.needsAssessmentDataService.setHouseHoldMembers(
+            form.get('householdMembers').value
+          );
+          break;
       case 'identify-needs':
         this.needsAssessmentDataService.setNeedsDetails(form);
         break;
@@ -191,23 +183,9 @@ export class EditService {
           form.reset();
         }
         break;
-      case 'family-information':
+      case 'family-information-pets':
         if (
-          this.needsAssessmentDataService.householdMembers.length !== 0 ||
-          (this.needsAssessmentDataService.haveMedication !== undefined &&
-            this.needsAssessmentDataService.haveSpecialDiet !== undefined &&
-            this.needsAssessmentDataService.specialDietDetails !== undefined)
-        ) {
-          form
-            .get('haveMedication')
-            .patchValue(this.needsAssessmentDataService.haveMedication);
-          form
-            .get('haveSpecialDiet')
-            .patchValue(this.needsAssessmentDataService.haveSpecialDiet);
-          form
-            .get('specialDietDetails')
-            .patchValue(this.needsAssessmentDataService.specialDietDetails);
-
+          this.needsAssessmentDataService.householdMembers.length !== 0 ) {
           if (path === 'verified-registration') {
             form
               .get('householdMembers')
@@ -227,23 +205,15 @@ export class EditService {
           }
         } else {
           form.get('householdMembers').patchValue([]);
-          form.get('haveMedication').reset();
-          form.get('haveSpecialDiet').reset();
-          form.get('specialDietDetails').reset();
         }
         break;
       case 'pets':
         if (
-          this.needsAssessmentDataService.pets.length !== 0 &&
-          this.needsAssessmentDataService.hasPetsFood !== undefined
+          this.needsAssessmentDataService.pets.length !== 0 
         ) {
           form.get('pets').patchValue(this.needsAssessmentDataService.pets);
-          form
-            .get('hasPetsFood')
-            .patchValue(this.needsAssessmentDataService.hasPetsFood);
         } else {
           form.get('pets').patchValue([]);
-          form.get('hasPetsFood').reset();
         }
         break;
       case 'identify-needs':
