@@ -46,6 +46,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   memberTipText: string;
   tabMetaData: TabModel;
   @Output() ValidHouseholdMemebersIndicator: any = new EventEmitter();
+  @Output() ValidSelectedHouseholdMembers: any = new EventEmitter();
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -266,6 +267,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.members.length;
+    this.ValidSelectedHouseholdMembers.emit(numSelected > 0);
     return numSelected === numRows;
   }
 
