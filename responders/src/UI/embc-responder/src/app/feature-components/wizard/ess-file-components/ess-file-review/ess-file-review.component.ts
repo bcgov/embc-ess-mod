@@ -29,6 +29,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
   needsFoodDisplay: string;
   shelterOptionsDisplay: string;
+  needsLodgingDisplay: string;
   needsClothingDisplay: string;
   needsTransportationDisplay: string;
   needsIncidentalsDisplay: string;
@@ -69,6 +70,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     )?.name;
 
     this.shelterOptionsDisplay = globalConst.booleanOptions.find(
+      (ins) =>
+        ins.value === this.stepEssFileService?.shelterOptions
+    )?.name;
+
+    this.needsLodgingDisplay = globalConst.booleanOptions.find(
       (ins) =>
         ins.value === this.stepEssFileService?.canRegistrantProvideLodging
     )?.name;
