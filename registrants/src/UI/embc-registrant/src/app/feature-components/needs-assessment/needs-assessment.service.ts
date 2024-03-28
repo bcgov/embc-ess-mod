@@ -18,7 +18,6 @@ export class NeedsAssessmentService {
   private insuranceOption: InsuranceOption;
   private householdMember: Array<HouseholdMember> = [];
   private pet: Array<Pet> = [];
-  private hasPetFood: boolean;
   private canEvacueesProvideLodging: string;
   private shelterOption: string;
   private canEvacueesProvideClothing: string;
@@ -109,7 +108,6 @@ export class NeedsAssessmentService {
   public set pets(value: Array<Pet>) {
     this.pet = value;
   }
-
 
   public get householdMembers(): Array<HouseholdMember> {
     return this.householdMember;
@@ -241,7 +239,6 @@ export class NeedsAssessmentService {
     this.canEvacueeProvideIncidentals = undefined;
     this.canEvacueeProvideTransportation = undefined;
     this.doesEvacueeNotRequireAssistance = undefined;
-    this.hasPetsFood = undefined;
     this.pets = undefined;
     this.householdMembers = undefined;
   }

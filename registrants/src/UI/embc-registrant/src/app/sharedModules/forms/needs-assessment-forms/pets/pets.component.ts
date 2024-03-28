@@ -21,7 +21,7 @@ import * as globalConst from '../../../../core/services/globalConstants';
 })
 export default class PetsComponent implements OnInit {
   petsForm: UntypedFormGroup;
-  radioOption = globalConst.radioButton1;
+  booleanOption = globalConst.booleanOptions;
   formBuilder: UntypedFormBuilder;
   petsForm$: Subscription;
   formCreationService: FormCreationService;

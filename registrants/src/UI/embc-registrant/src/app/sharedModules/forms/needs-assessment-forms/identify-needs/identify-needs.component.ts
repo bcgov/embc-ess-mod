@@ -29,7 +29,7 @@ export default class IdentifyNeedsComponent implements OnInit {
   formBuilder: UntypedFormBuilder;
   identifyNeedsForm$: Subscription;
   formCreationService: FormCreationService;
-  radioOption = globalConst.needsOptions;
+  booleanOption = globalConst.booleanOptions;
 
   constructor(
     @Inject('formBuilder') formBuilder: UntypedFormBuilder,
