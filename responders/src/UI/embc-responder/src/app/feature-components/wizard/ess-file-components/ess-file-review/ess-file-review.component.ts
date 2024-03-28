@@ -28,7 +28,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   insuranceDisplay: string;
 
   needsFoodDisplay: string;
-  needsLodgingDisplay: string;
+  shelterOptionsDisplay: string;
   needsClothingDisplay: string;
   needsTransportationDisplay: string;
   needsIncidentalsDisplay: string;
@@ -63,28 +63,28 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.insuranceDisplay = globalConst.insuranceOptions.find(
       (ins) => ins.value === this.stepEssFileService?.insurance
     )?.name;
-
-    this.needsFoodDisplay = globalConst.needsOptions.find(
+    
+    this.needsFoodDisplay = globalConst.booleanOptions.find(
       (ins) => ins.value === this.stepEssFileService?.canRegistrantProvideFood
     )?.name;
 
-    this.needsLodgingDisplay = globalConst.needsOptions.find(
+    this.shelterOptionsDisplay = globalConst.booleanOptions.find(
       (ins) =>
         ins.value === this.stepEssFileService?.canRegistrantProvideLodging
     )?.name;
 
-    this.needsClothingDisplay = globalConst.needsOptions.find(
+    this.needsClothingDisplay = globalConst.booleanOptions.find(
       (ins) =>
         ins.value === this.stepEssFileService?.canRegistrantProvideClothing
     )?.name;
 
-    this.needsTransportationDisplay = globalConst.needsOptions.find(
+    this.needsTransportationDisplay = globalConst.booleanOptions.find(
       (ins) =>
         ins.value ===
         this.stepEssFileService?.canRegistrantProvideTransportation
     )?.name;
 
-    this.needsIncidentalsDisplay = globalConst.needsOptions.find(
+    this.needsIncidentalsDisplay = globalConst.booleanOptions.find(
       (ins) =>
         ins.value === this.stepEssFileService?.canRegistrantProvideIncidentals
     )?.name;

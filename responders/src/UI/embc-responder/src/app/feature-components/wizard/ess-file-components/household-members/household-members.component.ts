@@ -32,7 +32,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   memberSource = new BehaviorSubject([]);
   selection = new SelectionModel<HouseholdMemberModel>(true, []);
   members: HouseholdMemberModel[] = [];
-  radioOption = globalConst.radioButtonOptions;
+  booleanOption = globalConst.booleanOptions;
   essFileNumber: string;
   editIndex: number;
   editFlag = false;

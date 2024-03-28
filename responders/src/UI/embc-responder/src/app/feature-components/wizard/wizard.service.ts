@@ -385,19 +385,19 @@ export class WizardService {
 
   compareNeeds(initialValue: EvacuationFileModel, form) {
     if (
-      globalConst.needsOptions.find(
+      globalConst.booleanOptions.find(
         (ins) => ins.value === form.canEvacueeProvideClothing.value
       )?.apiValue === initialValue.needsAssessment.canProvideClothing &&
-      globalConst.needsOptions.find(
+      globalConst.booleanOptions.find(
         (ins) => ins.value === form.canEvacueeProvideFood.value
       )?.apiValue === initialValue.needsAssessment.canProvideFood &&
-      globalConst.needsOptions.find(
+      globalConst.booleanOptions.find(
         (ins) => ins.value === form.canEvacueeProvideIncidentals.value
       )?.apiValue === initialValue.needsAssessment.canProvideIncidentals &&
-      globalConst.needsOptions.find(
+      globalConst.booleanOptions.find(
         (ins) => ins.value === form.canEvacueeProvideLodging.value
       )?.apiValue === initialValue.needsAssessment.canProvideLodging &&
-      globalConst.needsOptions.find(
+      globalConst.booleanOptions.find(
         (ins) => ins.value === form.canEvacueeProvideTransportation.value
       )?.apiValue === initialValue.needsAssessment.canProvideTransportation
     ) {
