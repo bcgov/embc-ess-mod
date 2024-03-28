@@ -1,11 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormGroup,
   UntypedFormBuilder,
   UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';

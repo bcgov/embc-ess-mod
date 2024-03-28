@@ -32,7 +32,7 @@ export class ViewAssessmentDialogComponent implements OnInit {
    * @returns
    */
   mapNeedsValues(incomingValue: boolean | null): string {
-    return globalConst.needsOptions.find(
+    return globalConst.booleanOptions.find(
       (ins) => ins.apiValue === incomingValue
     )?.name;
   }
