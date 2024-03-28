@@ -70,7 +70,7 @@ jobs:
           context: ${{ inputs.IMAGE_CONTEXT }}
           build-contexts: ${{ inputs.BUILD_CONTEXT }}
           build-args: |
-            VERSION=${{ fromJSON(steps.meta.outputs.json).tags['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).tags['org.opencontainers.image.version'] }}
           file: ${{ inputs.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
