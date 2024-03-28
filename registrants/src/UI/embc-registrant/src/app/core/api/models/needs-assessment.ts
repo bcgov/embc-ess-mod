@@ -23,6 +23,5 @@ export interface NeedsAssessment {
   id?: null | string;
   insurance: InsuranceOption;
   pets?: Array<Pet>;
-  specialDietDetails?: null | string;
   type?: NeedsAssessmentType;
 }
