@@ -16,9 +16,6 @@ export interface NeedsAssessment {
   shelterOption?: null | string;
   canEvacueeProvideTransportation?: null | boolean;
   doesEvacueeNotRequireAssistance?: null | boolean;
-  hasPetsFood?: null | boolean;
-  haveMedication?: boolean;
-  haveSpecialDiet?: boolean;
   householdMembers?: Array<HouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
