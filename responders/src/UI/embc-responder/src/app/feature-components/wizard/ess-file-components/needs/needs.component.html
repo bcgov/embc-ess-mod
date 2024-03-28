@@ -20,7 +20,6 @@
             <mat-checkbox
               aria-labelledby="canEvacueeProvideLodging-checkbox-label"
               formControlName="canEvacueeProvideLodging"
-              class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
@@ -53,15 +52,15 @@
               <mat-radio-button class="primary-radio-button" value="Lodging - Shelter Allowance">
                 I need the Shelter Allowance and can find my own shelter.&nbsp;&nbsp;
               </mat-radio-button>
-              <a class="info-test" (click)="openShelterAllowanceDialog()">
+              <a (click)="openShelterAllowanceDialog()">
                 <img src="/assets/images/info-on-hover.svg" height="25" width="25"
               /></a>
             </div>
             <div class="shelter-radio-button">
               <mat-radio-button class="primary-radio-button" value="Lodging - Hotel/Motel/Campground">
-                I need a referral to shelter.
+                I need a referral to shelter.&nbsp;&nbsp;
               </mat-radio-button>
-              <a class="info-test" (click)="openShelterReferralDialog()">
+              <a (click)="openShelterReferralDialog()">
                 <img src="/assets/images/info-on-hover.svg" height="25" width="25"
               /></a>
             </div>
@@ -73,7 +72,6 @@
             <mat-checkbox
               aria-labelledby="canEvacueeProvideFood-checkbox-label"
               formControlName="canEvacueeProvideFood"
-              class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
@@ -98,7 +96,6 @@
             <mat-checkbox
               aria-labelledby="canEvacueeProvideClothing-checkbox-label"
               formControlName="canEvacueeProvideClothing"
-              class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
@@ -123,7 +120,6 @@
             <mat-checkbox
               aria-labelledby="canEvacueeProvideIncidentals-checkbox-label"
               formControlName="canEvacueeProvideIncidentals"
-              class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
@@ -140,7 +136,7 @@
               <label class="tab-subtitle incidentals-label" id="incidentals-label" [class.disabled-text]="needsForm.get('canEvacueeProvideIncidentals').disabled">
                 Incidentals&nbsp;&nbsp;
               </label>
-              <a class="info-test" (click)="openIncidentalsDialog()">
+              <a (click)="openIncidentalsDialog()">
                 <img src="/assets/images/info-on-hover.svg" 
                   height="25" 
                   width="25"
@@ -157,7 +153,6 @@
             <mat-checkbox
               aria-labelledby="canEvacueeProvideTransportation-checkbox-label"
               formControlName="canEvacueeProvideTransportation"
-              class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
@@ -182,7 +177,6 @@
             <mat-checkbox
               aria-labelledby="doesEvacueeNotRequireAssistance-checkbox-label"
               formControlName="doesEvacueeNotRequireAssistance"
-              class="primary-checkbox"
             >
             </mat-checkbox>
           </div>
