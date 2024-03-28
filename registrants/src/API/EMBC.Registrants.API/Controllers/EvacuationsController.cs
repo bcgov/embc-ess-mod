@@ -180,11 +180,6 @@ namespace EMBC.Registrants.API.Controllers
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public NeedsAssessmentType Type { get; set; }
