@@ -208,33 +208,28 @@ export class IdentifyNeedsForm {
 
   constructor(identifyNeeds: IdentifyNeeds) {
     this.canEvacueeProvideClothing.setValue(
-      identifyNeeds.canEvacueeProvideClothing
-    );
+      identifyNeeds.canEvacueeProvideClothing?? false);
     this.canEvacueeProvideClothing.setValidators([Validators.required]);
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
     this.canEvacueeProvideFood.setValue(
-      identifyNeeds.canEvacueeProvideFood
-    );
-    this.canEvacueeProvideFood.setValidators([Validators.required]);
+      identifyNeeds.canEvacueeProvideFood ?? false);
+    this.canEvacueeProvideFood.setValidators([Validators.required]);  
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
     this.canEvacueeProvideIncidentals.setValue(
-      identifyNeeds.canEvacueeProvideIncidentals
-    );
+      identifyNeeds.canEvacueeProvideIncidentals ?? false);
     this.canEvacueeProvideIncidentals.setValidators([Validators.required]);
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
     this.canEvacueeProvideLodging.setValue(
-      identifyNeeds.canEvacueeProvideLodging
-    );
-    this.canEvacueeProvideLodging.setValidators([Validators.required]);
+      identifyNeeds.canEvacueeProvideLodging ?? false);
+    this.canEvacueeProvideLodging.setValidators([Validators.required]);  
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
-    this.shelterOptions.setValue(
-      identifyNeeds.shelterOptions
-    );
-    this.shelterOptions.setValidators([Validators.required]);
+    this.shelterOptions.setValue(identifyNeeds.shelterOptions);
 
-    this.doesEvacueeNotRequireAssistance.setValue(
-      identifyNeeds.doesEvacueeNotRequireAssistance
-    );
+    this.doesEvacueeNotRequireAssistance.setValue(null);
     this.doesEvacueeNotRequireAssistance.setValidators([Validators.required]);
   }
 }

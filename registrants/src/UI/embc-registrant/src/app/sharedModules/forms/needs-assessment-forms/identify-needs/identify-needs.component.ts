@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { AbstractControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -47,9 +47,14 @@ export default class IdentifyNeedsComponent implements OnInit {
       this.identifyNeedsForm = identifyNeedsForm;
     });
 
-    this.subscribeShelterRadiosToCheckbox();
-    this.noAssistanceRequiredChecked();
-    this.assistanceRequiredChecked();
+    const lodgingCtrl = this.identifyNeedsForm.get('canEvacueeProvideLodging');
+
+    lodgingCtrl.setErrors({ 'error': true });
+    this.identifyNeedsForm.updateValueAndValidity();
+
+    this.subscribeShelterRadiosToShelterCheckbox();
+    this.assistanceNotRequiredToggled();
+    this.anyNeedsToggled();
   }
 
   get needsFormControl(): { [key: string]: AbstractControl } { 
@@ -98,55 +103,113 @@ export default class IdentifyNeedsComponent implements OnInit {
   /**
    * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'shelterOptions' control.
    */
-  private subscribeShelterRadiosToCheckbox() {  
+  private subscribeShelterRadiosToShelterCheckbox() {  
     // Subscribe to changes in canEvacueeProvideLodging and update the shelterOptions control
     this.identifyNeedsForm.get('canEvacueeProvideLodging').valueChanges.subscribe(value => {
+      const lodgingCtrl = this.identifyNeedsForm.get('canEvacueeProvideLodging');
       const shelterOptionsCtrl = this.identifyNeedsForm.get('shelterOptions');
 
       if (value === true) {
+        lodgingCtrl.setErrors(null);
         shelterOptionsCtrl.setValidators([Validators.required]);
       } else {
+        shelterOptionsCtrl.setValue(null);
         shelterOptionsCtrl.clearValidators();
         shelterOptionsCtrl.setValidators([Validators.nullValidator]);
+        lodgingCtrl.setErrors({ 'error': true });
       }
       
-      shelterOptionsCtrl.setValue(null);
-      shelterOptionsCtrl.updateValueAndValidity();
+      // Update the parent form
+      this.identifyNeedsForm.updateValueAndValidity();
+    });
+  }
+  
+  /**
+   * Subscribes to changes in the 'doesEvacueeNotRequireAssistance' control and updates the form.
+   */
+  private assistanceNotRequiredToggled() {
     
+    this.identifyNeedsForm.get('doesEvacueeNotRequireAssistance').valueChanges.subscribe(value => {
+
+      const assistanceRequiredCtrl = this.identifyNeedsForm.get('doesEvacueeNotRequireAssistance');
+      const shelterOptionsCtrl = this.identifyNeedsForm.get('shelterOptions');
+
+      if (value === true) {
+        [
+        'canEvacueeProvideLodging', 
+        'canEvacueeProvideFood', 
+        'canEvacueeProvideClothing', 
+        'canEvacueeProvideIncidentals'
+        ].forEach(key => {
+            const control = this.identifyNeedsForm.get(key);
+            control.setValue(false);
+            control.setErrors(null);
+            control.disable();
+          });
+        assistanceRequiredCtrl.setErrors(null);
+      } else {
+        [
+        'canEvacueeProvideLodging', 
+        'canEvacueeProvideFood', 
+        'canEvacueeProvideClothing', 
+        'canEvacueeProvideIncidentals'
+        ].forEach(key => {
+          const control = this.identifyNeedsForm.get(key);
+          control.setValue(false);
+          control.setErrors({ 'error': true });
+          control.enable();
+          });
+          assistanceRequiredCtrl.setErrors({ 'error': true });
+        }
+
+      shelterOptionsCtrl.setValue(null);
+      shelterOptionsCtrl.clearValidators();
+      shelterOptionsCtrl.setValidators([Validators.nullValidator]);
+
       // Update the parent form
       this.identifyNeedsForm.updateValueAndValidity();
     });
   }
 
-  private noAssistanceRequiredChecked() {
-    this.identifyNeedsForm.get('doesEvacueeNotRequireAssistance').valueChanges.subscribe(value => {
-      this.updateFormControls(value);
-      this.identifyNeedsForm.updateValueAndValidity();
-    });
-  }
-  
-  private assistanceRequiredChecked() {
-    const otherCheckboxes = Object.keys(this.identifyNeedsForm.controls)
-      .filter(key => key !== 'doesEvacueeNotRequireAssistance')
-      .map(key => this.identifyNeedsForm.get(key).valueChanges.pipe(startWith(this.identifyNeedsForm.get(key).value)));
+  /**
+   * Subscribes to changes in the needs checkboxes and updates the 'doesEvacueeNotRequireAssistance' control.
+   */
+  private anyNeedsToggled() {
 
-    combineLatest(otherCheckboxes).subscribe(values => {
-      const doesEvacueeNotRequireAssistance = this.identifyNeedsForm.get('doesEvacueeNotRequireAssistance');
-      if (values.some(value => value === true)) {
-        doesEvacueeNotRequireAssistance.setValue(false, {emitEvent: false});        
+    // handling doesEvacueeNotRequireAssistance
+    const doesEvacueeNotRequireAssistance = this.identifyNeedsForm.get('doesEvacueeNotRequireAssistance');
+    
+    const controlNames = [
+      'canEvacueeProvideLodging', 
+      'canEvacueeProvideFood', 
+      'canEvacueeProvideClothing', 
+      'canEvacueeProvideIncidentals'
+    ];
+    
+    const needsControls = controlNames.map(key => 
+      this.identifyNeedsForm.get(key).valueChanges.pipe(startWith(this.identifyNeedsForm.get(key).value))
+    );
+
+    combineLatest(needsControls).subscribe(values => {
+      const atLeastOneChecked = values.includes(true);
+
+      if (atLeastOneChecked) {
         doesEvacueeNotRequireAssistance.disable({emitEvent: false});
-      } else {
+        doesEvacueeNotRequireAssistance.setErrors(null);  
+        doesEvacueeNotRequireAssistance.setValue(false, {emitEvent: false});    
+        controlNames.forEach(controlName => {
+          this.identifyNeedsForm.get(controlName).setErrors(null);
+        });
+       } else {
         doesEvacueeNotRequireAssistance.enable({emitEvent: false});
+        doesEvacueeNotRequireAssistance.setErrors({ 'error': true });
+        controlNames.forEach(controlName => {
+          this.identifyNeedsForm.get(controlName).setErrors({ 'error': true });
+        });     
       }
+
+      // Update the parent form
       this.identifyNeedsForm.updateValueAndValidity();
-    });
-  }
-  
-  private updateFormControls(value: boolean) {
-    Object.keys(this.identifyNeedsForm.controls).forEach(key => {
-      if (key !== 'doesEvacueeNotRequireAssistance') {
-        value ? this.identifyNeedsForm.get(key).disable({emitEvent: false}) : this.identifyNeedsForm.get(key).enable({emitEvent: false});
-      }
     });
   }
 
