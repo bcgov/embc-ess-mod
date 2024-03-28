@@ -184,6 +184,21 @@ export const duplicateSupportMessage: DialogContent = {
   cancelButton: 'No, Cancel'
 };
 
+export const needsShelterAllowanceMessage: DialogContent = {
+  title: 'Shelter',
+  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
+};
+
+export const needsShelterReferralMessage: DialogContent = {
+  title: 'Referral',
+  text: '<p>A paper form provided by an ESS responder, directing evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.</p>',
+};
+
+export const needsIncidentalMessage: DialogContent = {
+  title: 'Incidentals',
+  text: '<p>Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.</p>',
+};
+
 export const saveMessage: DialogContent = {
   text: '<p>Support successfully saved.</p>',
   cancelButton: 'Close'
