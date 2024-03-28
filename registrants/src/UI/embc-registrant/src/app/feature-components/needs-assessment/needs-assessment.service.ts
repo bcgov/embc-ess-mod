@@ -237,7 +237,7 @@ export class NeedsAssessmentService {
       return [...this.householdMembers, primaryMember];
     } else if (
       !this.householdMembers.find(
-        (member) => member.isPrimaryRegistrant === true
+        (member) => member.details.isPrimaryRegistrant === true
       )
     ) {
       return [...this.householdMembers, primaryMember];
