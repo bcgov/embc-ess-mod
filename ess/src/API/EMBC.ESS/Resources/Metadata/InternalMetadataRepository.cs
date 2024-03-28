@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -58,9 +59,8 @@ namespace EMBC.ESS.Resources.Metadata
         public async Task<string[]> GetSecurityQuestions()
         {
             var optionSetDefinitions = await essContext.GlobalOptionSetDefinitions.GetAllPagesAsync();
-            var securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name == "era_registrantsecretquestions").SingleOrDefault();
-            var options = securityQuestionsOptionSet.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray();
-            return options;
+            var securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.SingleOrDefault(t => t.Name == "era_registrantsecretquestions");
+            return securityQuestionsOptionSet?.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray() ?? Array.Empty<string>();
         }
 
         public async Task<IEnumerable<StateProvince>> GetStateProvinces()

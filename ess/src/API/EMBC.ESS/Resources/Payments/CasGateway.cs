@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using AutoMapper;
 using EMBC.ESS.Utilities.Cas;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
@@ -42,13 +41,11 @@ namespace EMBC.ESS.Resources.Payments
     internal class CasGateway : ICasGateway
     {
         private readonly IWebProxy casWebProxy;
-        private readonly IMapper mapper;
         private readonly ICasSystemConfigurationProvider casSystemConfigurationProvider;
 
-        public CasGateway(IWebProxy casWebProxy, IMapper mapper, ICasSystemConfigurationProvider casSystemConfigurationProvider)
+        public CasGateway(IWebProxy casWebProxy, ICasSystemConfigurationProvider casSystemConfigurationProvider)
         {
             this.casWebProxy = casWebProxy;
-            this.mapper = mapper;
             this.casSystemConfigurationProvider = casSystemConfigurationProvider;
         }
 

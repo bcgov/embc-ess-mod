@@ -136,5 +136,8 @@
       }
     }
   },
-  "defaultProject": "embc-registrant"
+  "defaultProject": "embc-registrant",
+  "cli": {
+    "analytics": false
+  }
 }

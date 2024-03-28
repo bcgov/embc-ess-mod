@@ -25,7 +25,7 @@ namespace EMBC.ESS.Shared.Contracts
     [KnownType(typeof(BusinessValidationException))]
     public abstract class EssApplicationException : Exception
     {
-        public EssApplicationException(string message) : base(message)
+        protected EssApplicationException(string message) : base(message)
         {
         }
 
@@ -78,7 +78,6 @@ namespace EMBC.ESS.Shared.Contracts
     }
 
     [Serializable]
-    //TODO: remove these dependencies
     [KnownType(typeof(CommunitiesAlreadyAssignedException))]
     [KnownType(typeof(UsernameAlreadyExistsException))]
     public class BusinessValidationException : EssApplicationException

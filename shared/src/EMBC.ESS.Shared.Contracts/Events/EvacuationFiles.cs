@@ -89,14 +89,10 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public TeamMember CompletedBy { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
-        public bool? CanProvideFood { get; set; }
-        public bool? CanProvideLodging { get; set; }
-        public bool? CanProvideClothing { get; set; }
-        public bool? CanProvideTransportation { get; set; }
-        public bool? CanProvideIncidentals { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
+        public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
     }
 
     public class HouseholdMember
@@ -156,5 +152,15 @@ namespace EMBC.ESS.Shared.Contracts.Events
         ReadOnly,
         Editable,
         Hidden
+    }
+
+    public enum IdentifiedNeed
+    {
+        ShelterReferral,
+        ShelterAllowance,
+        Transportation,
+        Food,
+        Incidentals,
+        Clothing
     }
 }

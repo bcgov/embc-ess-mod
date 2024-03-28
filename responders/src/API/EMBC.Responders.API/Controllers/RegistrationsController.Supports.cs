@@ -183,7 +183,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<FileContentResult> GetPrint(string fileId, string printRequestId)
         {
             var result = await messagingClient.Send(new PrintRequestQuery { PrintRequestId = printRequestId, RequestingUserId = currentUserId });
-            Response.Headers.Add("Content-Disposition", "attachment;filename=" + result.FileName);
+            Response.Headers.Append("Content-Disposition", "attachment;filename=" + result.FileName);
             return new FileContentResult(result.Content, result.ContentType);
         }
 
@@ -676,6 +676,7 @@ namespace EMBC.Responders.API.Controllers
             if (method == SupportMethod.Unknown || category == SupportCategory.Unknown) throw new JsonException($"Could not determine the support method or category");
 
             //Dserialize to the correct type
+#pragma warning disable S2583 // Conditionally executed code should be reachable
             return category switch
             {
                 SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingSupport>(ref reader, options),
@@ -689,6 +690,7 @@ namespace EMBC.Responders.API.Controllers
                 SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherSupport>(ref reader, options),
                 _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
             };
+#pragma warning restore S2583 // Conditionally executed code should be reachable
         }
 
         public override void Write(Utf8JsonWriter writer, Support value, JsonSerializerOptions options)

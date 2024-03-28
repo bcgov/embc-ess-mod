@@ -10,7 +10,6 @@ using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -21,14 +20,12 @@ namespace EMBC.Responders.API.Controllers
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
-        private readonly ILogger<TasksController> logger;
-        private ErrorParser errorParser;
+        private readonly ErrorParser errorParser;
 
-        public TasksController(IMessagingClient messagingClient, IMapper mapper, ILogger<TasksController> logger)
+        public TasksController(IMessagingClient messagingClient, IMapper mapper)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
-            this.logger = logger;
             this.errorParser = new ErrorParser();
         }
 

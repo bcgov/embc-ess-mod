@@ -82,7 +82,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 if (file.HouseholdMembers.Any())
                 {
                     var restrictedMemberKey = Randomizer.Seed.Next(0, file.HouseholdMembers.Count() - 1);
-                    //file.HouseholdMembers.ElementAt(restrictedMemberKey).HasRestriction = true;
+                    file.HouseholdMembers.ElementAt(restrictedMemberKey).RestrictedAccess = true;
                 }
             }
 
@@ -94,11 +94,7 @@ namespace EMBC.Tests.Unit.Responders.API
             return new Faker<NeedsAssessment>()
                 .RuleFor(o => o.HouseholdMembers, f => f.Make(f.Random.Int(1, 10), CreateHouseholdMember))
                 .RuleFor(o => o.Pets, f => f.Make(f.Random.Int(0, 5), CreatePet))
-                .RuleFor(o => o.CanProvideClothing, f => f.Random.NullableBool())
-                .RuleFor(o => o.CanProvideFood, f => f.Random.NullableBool())
-                .RuleFor(o => o.CanProvideIncidentals, f => f.Random.NullableBool())
-                .RuleFor(o => o.CanProvideLodging, f => f.Random.NullableBool())
-                .RuleFor(o => o.CanProvideTransportation, f => f.Random.NullableBool())
+                .RuleFor(o => o.Needs, f => f.Random.EnumValues<IdentifiedNeed>())
                 .RuleFor(o => o.Insurance, f => f.Random.Enum<InsuranceOption>())
                 .RuleFor(o => o.Type, f => f.Random.Enum<NeedsAssessmentType>())
                 .RuleFor(o => o.Notes, f => f.Make(f.Random.Int(0, 20), CreateNote))
@@ -150,7 +146,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 var filesSeed = Randomizer.Seed.Next(0, 3);
                 var files = CreateEvacuationFiles(filesSeed, withAtLeastOneRestrictedAccess);
                 yield return (profile, files);
-            };
+            }
         }
 
         public static IEnumerable<ProfileSearchResult> MapToSearchResults(this IEnumerable<(RegistrantProfile profile, IEnumerable<EvacuationFile> files)> source) =>

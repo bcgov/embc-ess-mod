@@ -34,11 +34,7 @@ namespace EMBC.Tests.Integration.ESS
                     {
                         Type = NeedsAssessmentType.Preliminary,
                         Insurance = InsuranceOption.Yes,
-                        CanProvideClothing = true,
-                        CanProvideFood = true,
-                        CanProvideIncidentals = true,
-                        CanProvideLodging = true,
-                        CanProvideTransportation = true,
+                        Needs = new[] { IdentifiedNeed.Food, IdentifiedNeed.ShelterReferral, IdentifiedNeed.Incidentals },
                         HouseholdMembers = new[]
                         {
                             new HouseholdMember

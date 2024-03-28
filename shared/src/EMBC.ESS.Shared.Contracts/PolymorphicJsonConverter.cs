@@ -12,14 +12,11 @@ namespace EMBC.ESS.Shared.Contracts
             Type type = null;
             while (clonedReader.Read())
             {
-                if (clonedReader.TokenType == JsonTokenType.PropertyName)
+                if (clonedReader.TokenType == JsonTokenType.PropertyName && clonedReader.GetString() == "_type")
                 {
-                    if (clonedReader.GetString() == "_type")
-                    {
-                        clonedReader.Read();
-                        type = Type.GetType(clonedReader.GetString());
-                        if (typeToConvert.IsAssignableFrom(type)) break;
-                    }
+                    clonedReader.Read();
+                    type = Type.GetType(clonedReader.GetString());
+                    if (typeToConvert.IsAssignableFrom(type)) break;
                 }
             }
             if (type == null) throw new JsonException("serialized json doesn't have a _type property");

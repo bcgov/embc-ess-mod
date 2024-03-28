@@ -15,7 +15,6 @@ using EMBC.Utilities.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Registrants.API.Controllers
 {
@@ -24,7 +23,6 @@ namespace EMBC.Registrants.API.Controllers
     [Authorize]
     public class ProfileController : ControllerBase
     {
-        private readonly IHostEnvironment env;
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IEvacuationSearchService evacuationSearchService;
@@ -33,13 +31,11 @@ namespace EMBC.Registrants.API.Controllers
         private string currentUserId => User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
         public ProfileController(
-            IHostEnvironment env,
             IMessagingClient messagingClient,
             IMapper mapper,
             IEvacuationSearchService evacuationSearchService,
             IProfileInviteService profileInviteService)
         {
-            this.env = env;
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.evacuationSearchService = evacuationSearchService;

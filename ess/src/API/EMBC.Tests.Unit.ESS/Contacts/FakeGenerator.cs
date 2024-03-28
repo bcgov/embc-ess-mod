@@ -7,7 +7,7 @@ using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.Tests.Unit.ESS.Contacts
 {
-    public class FakeGenerator
+    public static class FakeGenerator
     {
         //public static (string Code, string Name)[] Jurisdictions = new[]
         //{
