@@ -7,20 +7,8 @@ using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Tests.Unit.Registrants.API.Profiles
 {
-    public class FakeGenerator
+    public static class FakeGenerator
     {
-        //public static (string Code, string Name)[] Jurisdictions = new[]
-        //{
-        //    (Code:"j1", Name:"JUR1"),
-        //    (Code:"j2", Name:"JUR2"),
-        //    (Code:"j3", Name:"JUR3"),
-        //    (Code:"j4", Name:"JUR4"),
-        //    (Code:"j5", Name:"JUR5"),
-        //    (Code:"j6", Name:"JUR6"),
-        //    (Code:"j7", Name:"JUR7"),
-        //    (Code:"j8", Name:"JUR8"),
-        //};
-
         public static RegistrantProfile CreateServerRegistrantProfile()
         {
             return new Faker<RegistrantProfile>()
@@ -146,7 +134,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(u => u.ContactDetails, f => new Faker<ContactDetails>()
                      .RuleFor(o => o.Email, f => f.Internet.Email())
                 ).RuleFor(u => u.PersonalDetails, f => new Faker<PersonDetails>()
-                      .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female", "X" }))
+                      .RuleFor(u => u.Gender, f => f.PickRandom("Male", "Female", "X"))
                       .RuleFor(u => u.FirstName, f => f.Name.FirstName())
                       .RuleFor(u => u.LastName, f => f.Name.LastName())
                       .RuleFor(u => u.DateOfBirth, f => f.Date.Past(20).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))
@@ -158,23 +146,5 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 )
                 .Generate();
         }
-
-        //public static string GenderResolver(int? genderCode) =>
-        //    genderCode switch
-        //    {
-        //        0 => "Male",
-        //        1 => "Female",
-        //        2 => "X",
-        //        _ => null
-        //    };
-
-        //public static int? GenderResolver(string gender) =>
-        //    gender switch
-        //    {
-        //        "Male" => 0,
-        //        "Female" => 1,
-        //        "X" => 2,
-        //        _ => null
-        //    };
     }
 }

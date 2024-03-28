@@ -40,10 +40,12 @@ namespace EMBC.Registrants.API
              //JWT tokens handling
              .AddJwtBearer("jwt", options =>
              {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
                  options.BackchannelHttpHandler = new HttpClientHandler
                  {
                      ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                  };
+#pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
 
                  configuration.GetSection("auth:jwt").Bind(options);
                  options.TokenValidationParameters = new TokenValidationParameters
@@ -94,7 +96,7 @@ namespace EMBC.Registrants.API
                      {
                          await Task.CompletedTask;
                          var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                         logger.LogError(ctx?.Result?.Failure, "Introspection authantication failed");
+                         logger.LogError(ctx.Result?.Failure, "Introspection authantication failed");
                      }
                  };
              });

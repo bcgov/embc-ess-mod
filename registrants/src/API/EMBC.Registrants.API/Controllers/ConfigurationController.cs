@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -32,16 +31,14 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
         private readonly ICache cache;
-        private readonly IHostEnvironment environment;
         private const int cacheDuration = 60 * 1; //1 minute
 
-        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache, IHostEnvironment environment)
+        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper, ICache cache)
         {
             this.configuration = configuration;
             this.client = client;
             this.mapper = mapper;
             this.cache = cache;
-            this.environment = environment;
         }
 
         /// <summary>
@@ -108,7 +105,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("codes/communities")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string? stateProvinceId, [FromQuery] string? countryId, [FromQuery] CommunityType?[] types)
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string? stateProvinceId, [FromQuery] string? countryId, [FromQuery] CommunityType[]? types)
         {
             var items = await cache.GetOrSet(
                 "communities",
@@ -117,7 +114,7 @@ namespace EMBC.Responders.API.Controllers
 
             if (!string.IsNullOrEmpty(countryId)) items = items.Where(i => i.CountryCode == countryId);
             if (!string.IsNullOrEmpty(stateProvinceId)) items = items.Where(i => i.StateProvinceCode == stateProvinceId);
-            if (types != null && types.Any()) items = items.Where(i => types.Any(t => t.ToString().Equals(i.Type.ToString(), StringComparison.InvariantCultureIgnoreCase)));
+            if (types != null && types.Length > 0) items = items.Where(i => Array.Exists(types, t => t.ToString().Equals(i.Type.ToString(), StringComparison.InvariantCultureIgnoreCase)));
 
             return Ok(mapper.Map<IEnumerable<CommunityCode>>(items));
         }
