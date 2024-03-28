@@ -56,7 +56,7 @@ namespace EMBC.Registrants.API.Services
         private static string FormatDateOfBirth(string bcscFormattedBirthDate)
         {
             if (string.IsNullOrEmpty(bcscFormattedBirthDate)) return null;
-            if (!DateTime.TryParse(bcscFormattedBirthDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var date)) return null;
+            if (!DateTime.TryParse(bcscFormattedBirthDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var date)) return null;
             return date.ToString("MM'/'dd'/'yyyy");
         }
     }

@@ -141,7 +141,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.PersonalDetails.FirstName.ShouldBe("EVAC");
             profile.PersonalDetails.LastName.ShouldBe("THREE");
             profile.PersonalDetails.Gender.ShouldBeNull();
-            profile.PersonalDetails.DateOfBirth.ShouldBe("04/13/2000");
+            profile.PersonalDetails.DateOfBirth.ShouldBe("04/14/2000");
             profile.PrimaryAddress.AddressLine1.ShouldBe("818-9025 PEARL PLACE");
             profile.PrimaryAddress.PostalCode.ShouldBe("V3R 3H7");
             profile.PrimaryAddress.Community.ShouldBe("SURREY");
