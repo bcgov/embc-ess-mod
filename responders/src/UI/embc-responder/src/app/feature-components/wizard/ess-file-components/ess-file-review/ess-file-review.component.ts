@@ -73,11 +73,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
         ins.value === this.stepEssFileService?.shelterOptions
     )?.name;
 
-    this.needsLodgingDisplay = globalConst.booleanOptions.find(
-      (ins) =>
-        ins.value === this.stepEssFileService?.canRegistrantProvideLodging
-    )?.name;
-
     this.needsClothingDisplay = globalConst.booleanOptions.find(
       (ins) =>
         ins.value === this.stepEssFileService?.canRegistrantProvideClothing
