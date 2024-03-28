@@ -4,11 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Managers.Teams;
-using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Teams;
 using EMBC.ESS.Shared.Contracts.Teams;
-using EMBC.ESS.Utilities.Dynamics;
 using FakeItEasy;
 using Shouldly;
 using Xunit;
@@ -17,7 +15,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
 {
     public class TeamsManagerTests
     {
-        private TestTeamRepository teamRepository;
+        private readonly TestTeamRepository teamRepository;
         private readonly TeamsManager adminManager;
 
         public TeamsManagerTests()
@@ -28,8 +26,6 @@ namespace EMBC.Tests.Unit.ESS.Admin
             }).CreateMapper();
 
             teamRepository = new TestTeamRepository();
-            var essContextStatusReporter = A.Fake<IEssContextStateReporter>();
-            var metadataRepository = A.Fake<IMetadataRepository>();
             var supplierRepository = A.Fake<ISupplierRepository>();
             adminManager = new TeamsManager(mapper, teamRepository, supplierRepository);
         }
