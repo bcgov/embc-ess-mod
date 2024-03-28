@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Events;
-using EMBC.Utilities.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -254,7 +253,7 @@ namespace EMBC.Responders.API.Controllers
         private bool UserCanHideNote()
         {
             var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            return new[] { MemberRole.Tier3, MemberRole.Tier4 }.Any(r => r == userRole);
+            return new[] { MemberRole.Tier3, MemberRole.Tier4 }.Contains(userRole);
         }
     }
 
@@ -353,12 +352,31 @@ namespace EMBC.Responders.API.Controllers
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
 
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? CanProvideFood { get; set; }
-        public bool? CanProvideLodging { get; set; }
-        public bool? CanProvideClothing { get; set; }
-        public bool? CanProvideTransportation { get; set; }
-        public bool? CanProvideIncidentals { get; set; }
+
         public NeedsAssessmentType? Type { get; set; }
+        public IEnumerable<IdentifiedNeed> Needs { get; set; } = Array.Empty<IdentifiedNeed>();
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum IdentifiedNeed
+    {
+        [Description("Shelter Referral")]
+        ShelterReferral,
+
+        [Description("Shelter Allowance")]
+        ShelterAllowance,
+
+        [Description("Transportation")]
+        Tranportation,
+
+        [Description("Food")]
+        Food,
+
+        [Description("Incidentals")]
+        Incidentals,
+
+        [Description("Clothing")]
+        Clothing
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

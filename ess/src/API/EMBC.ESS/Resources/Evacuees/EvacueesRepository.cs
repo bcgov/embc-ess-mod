@@ -33,12 +33,7 @@ namespace EMBC.ESS.Resources.Evacuees
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
 
-        public async Task<EvacueeQueryResult> Query(EvacueeQuery query) =>
-            query switch
-            {
-                EvacueeQuery q => await Handle(q, GetCancellationToken()),
-                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
-            };
+        public async Task<EvacueeQueryResult> Query(EvacueeQuery query) => await Handle(query, GetCancellationToken());
 
         public async Task<ManageInvitationCommandResult> Manage(ManageInvitationCommand cmd) =>
             cmd switch

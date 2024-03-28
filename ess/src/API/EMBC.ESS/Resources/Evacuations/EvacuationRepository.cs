@@ -35,20 +35,7 @@ namespace EMBC.ESS.Resources.Evacuations
 
         public async Task<EvacuationFileQueryResult> Query(EvacuationFilesQuery query)
         {
-            return query switch
-            {
-                EvacuationFilesQuery q => await HandleQueryEvacuationFile(q),
-                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
-            };
-        }
-
-        private async Task<EvacuationFileQueryResult> HandleQueryEvacuationFile(EvacuationFilesQuery query)
-        {
-            var result = new EvacuationFileQueryResult();
-
-            result.Items = await Read(query);
-
-            return result;
+            return new EvacuationFileQueryResult() { Items = await Read(query) };
         }
 
         private async Task<ManageEvacuationFileCommandResult> HandleSubmitEvacuationFileNeedsAssessment(SubmitEvacuationFileNeedsAssessment cmd)

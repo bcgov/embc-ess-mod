@@ -7,7 +7,6 @@ namespace EMBC.Tests.Unit.Responders.API
     public class MappingTests
     {
         private readonly MapperConfiguration mapperConfig;
-        private IMapper mapper => mapperConfig.CreateMapper();
 
         public MappingTests()
         {

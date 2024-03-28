@@ -40,10 +40,12 @@ namespace EMBC.Registrants.API
              //JWT tokens handling
              .AddJwtBearer("jwt", options =>
              {
+#pragma warning disable S4830 // Server certificates should be verified during SSL/TLS connections
                  options.BackchannelHttpHandler = new HttpClientHandler
                  {
                      ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                  };
+#pragma warning restore S4830 // Server certificates should be verified during SSL/TLS connections
 
                  configuration.GetSection("auth:jwt").Bind(options);
                  options.TokenValidationParameters = new TokenValidationParameters
@@ -94,7 +96,7 @@ namespace EMBC.Registrants.API
                      {
                          await Task.CompletedTask;
                          var logger = ctx.HttpContext.RequestServices.GetRequiredService<ITelemetryProvider>().Get<JwtBearerEvents>();
-                         logger.LogError(ctx?.Result?.Failure, "Introspection authantication failed");
+                         logger.LogError(ctx.Result?.Failure, "Introspection authantication failed");
                      }
                  };
              });
@@ -122,7 +124,7 @@ namespace EMBC.Registrants.API
                 };
             });
 
-            services.Configure<SwaggerUi3Settings>(options =>
+            services.Configure<SwaggerUiSettings>(options =>
             {
                 options.Path = "/api/openapi";
                 options.DocumentTitle = "Registrants Portal API Documentation";
@@ -140,7 +142,6 @@ namespace EMBC.Registrants.API
                 });
 
                 document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
-                document.GenerateAbstractProperties = true;
             });
 
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
@@ -166,7 +167,7 @@ namespace EMBC.Registrants.API
             if (!env.IsProduction())
             {
                 app.UseOpenApi();
-                app.UseSwaggerUi3();
+                app.UseSwaggerUi();
             }
             app.UseAuthentication();
             app.UseAuthorization();

@@ -92,11 +92,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                     }
                 },
                 Insurance = InsuranceOption.Yes,
-                CanProvideClothing = false,
-                CanProvideFood = true,
-                CanProvideIncidentals = null,
-                CanProvideLodging = false,
-                CanProvideTransportation = true,
+                Needs = new[] { IdentifiedNeed.Food, IdentifiedNeed.ShelterReferral, IdentifiedNeed.Incidentals },
                 Pets = new[]
                 {
                     new Pet{ Type = $"dog{testContextIdentifier}", Quantity = "4" }

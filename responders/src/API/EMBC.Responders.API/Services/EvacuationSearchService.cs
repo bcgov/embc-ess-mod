@@ -136,7 +136,7 @@ namespace EMBC.Responders.API.Services
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFilesByFileId(string id)
         {
             var query = new EMBC.ESS.Shared.Contracts.Events.EvacuationFilesQuery();
-            if (id.StartsWith("T"))
+            if (id.StartsWith("T", StringComparison.OrdinalIgnoreCase))
             {
                 query.ManualFileId = id;
             }
