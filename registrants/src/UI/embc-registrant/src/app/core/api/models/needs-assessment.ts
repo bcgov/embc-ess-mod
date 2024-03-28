@@ -16,10 +16,12 @@ export interface NeedsAssessment {
   shelterOption?: null | string;
   canEvacueeProvideTransportation?: null | boolean;
   doesEvacueeNotRequireAssistance?: null | boolean;
-  householdMembers?: Array<HouseholdMember>; 
+  hasPetsFood?: null | boolean;
+  haveMedication?: boolean;
+  haveSpecialDiet?: boolean;
+  householdMembers?: Array<HouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
   pets?: Array<Pet>;
-  specialDietDetails?: null | string;
   type?: NeedsAssessmentType;
 }
