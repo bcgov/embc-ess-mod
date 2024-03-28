@@ -19,7 +19,7 @@ export class NeedsAssessmentService {
   private householdMember: Array<HouseholdMember> = [];
   private pet: Array<Pet> = [];
   private canEvacueesProvideLodging: string;
-  private shelterOption: string;
+  private shelterOptions: string;
   private canEvacueesProvideClothing: string;
   private canEvacueesProvideFood: string;
   private canEvacueesProvideIncidentals: string;
@@ -53,12 +53,12 @@ export class NeedsAssessmentService {
     this.canEvacueesProvideLodging = value;
   }
 
-  public get shelterOptions(): string {
-    return this.shelterOption;
+  public get shelterOption(): string {
+    return this.shelterOptions;
   }
 
-  public set shelterOptions(value: string) {
-    this.shelterOption = value;
+  public set shelterOption(value: string) {
+    this.shelterOptions= value;
   }
 
   public get doesEvacueeNotRequireAssistance(): string {
@@ -193,7 +193,7 @@ export class NeedsAssessmentService {
     return {
       id: this.id,
       canEvacueeProvideLodging: needsLodgingDTO,
-      shelterOptions: shelterOptionsDTO,
+      shelterOption: shelterOptionsDTO,
       canEvacueeProvideClothing: needsClothingDTO,
       canEvacueeProvideFood: needsFoodDTO,
       canEvacueeProvideIncidentals: needsIncidentalsDTO,

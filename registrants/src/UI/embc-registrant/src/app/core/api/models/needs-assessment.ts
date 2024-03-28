@@ -9,11 +9,11 @@ import { Pet } from './pet';
  * Needs assessment form
  */
 export interface NeedsAssessment {
-  canEvacueeProvideLodging?: null | boolean;
-  shelterOptions?: null | string;
   canEvacueeProvideClothing?: null | boolean;
   canEvacueeProvideFood?: null | boolean;
   canEvacueeProvideIncidentals?: null | boolean;
+  canEvacueeProvideLodging?: null | boolean;
+  shelterOption?: null | string;
   canEvacueeProvideTransportation?: null | boolean;
   doesEvacueeNotRequireAssistance?: null | boolean;
   hasPetsFood?: null | boolean;
@@ -23,5 +23,6 @@ export interface NeedsAssessment {
   id?: null | string;
   insurance: InsuranceOption;
   pets?: Array<Pet>;
+  specialDietDetails?: null | string;
   type?: NeedsAssessmentType;
 }
