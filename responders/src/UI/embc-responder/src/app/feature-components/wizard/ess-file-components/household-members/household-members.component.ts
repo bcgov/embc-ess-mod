@@ -45,7 +45,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   tabUpdateSubscription: Subscription;
   memberTipText: string;
   tabMetaData: TabModel;
-  @Output() ValidHouseholdMemebersIndicator : any = new EventEmitter();
+  @Output() ValidHouseholdMemebersIndicator: any = new EventEmitter();
+  @Output() ValidSelectedHouseholdMembers: any = new EventEmitter();
 
   constructor(
     public stepEssFileService: StepEssFileService,
@@ -56,7 +57,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     private householdService: HouseholdMembersService,
     private wizardService: WizardService,
     private appBaseService: AppBaseService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.memberTipText = this.appBaseService?.wizardProperties?.memberTipText;
@@ -81,6 +82,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         }
       }
     }
+
+    if ((this.householdForm.get('hasHouseholdMembers').value === 'No' && (this.householdForm.get('houseHoldMember').valid)) || (this.householdForm.get('hasHouseholdMembers').value === 'Yes' && this.memberSource.value.length > 1)) {
+      this.ValidHouseholdMemebersIndicator.emit(true);
+    }
+    else
+      this.ValidHouseholdMemebersIndicator.emit(false);
 
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
     if (
@@ -107,12 +114,19 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Updates the status of the form according to changes
     this.householdForm
       .get('addMemberFormIndicator')
-      .valueChanges.subscribe(() => {this.updateOnVisibility();
-        this.ValidHouseholdMemebersIndicator.emit(this.householdForm.valid);
-      }    
-    );
+      .valueChanges.subscribe(() => {
+        this.updateOnVisibility();
+      }
+      );
 
 
+    this.householdForm.valueChanges.subscribe(() => {
+      if ((this.householdForm.get('hasHouseholdMembers').value === 'No' && (this.householdForm.get('houseHoldMember').valid)) || (this.householdForm.get('hasHouseholdMembers').value === 'Yes' && this.memberSource.value.length > 1)) {
+        this.ValidHouseholdMemebersIndicator.emit(true);
+      } else
+        this.ValidHouseholdMemebersIndicator.emit(false);
+
+    })
 
     this.tabMetaData = this.stepEssFileService.getNavLinks('household-members');
   }
@@ -253,6 +267,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.members.length;
+    this.ValidSelectedHouseholdMembers.emit(numSelected > 0);
     return numSelected === numRows;
   }
 
