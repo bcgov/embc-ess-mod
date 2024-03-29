@@ -1,4 +1,6 @@
-﻿using EMBC.ESS.Shared.Contracts.Reports;
+﻿using System;
+using System.IO;
+using EMBC.ESS.Shared.Contracts.Reports;
 using EMBC.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,13 +20,13 @@ namespace EMBC.Tests.Integration.ESS.Managers
         {
             var reportId = await messagingClient.Send(new RequestEvacueeReportCommand
             {
-                TaskNumber = "1234",
+                //TaskNumber = "1234",
                 //FileId = "101010",
                 //EvacuatedFrom = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //EvacuatedTo = "9e6adfaf-9f97-ea11-b813-005056830319",
                 //IncludePersonalInfo = false,
-                //From = DateTime.UtcNow.AddDays(-1),
-                //To = DateTime.UtcNow,
+                From = DateTime.UtcNow.AddDays(-30),
+                To = DateTime.UtcNow,
             });
 
             reportId.ShouldNotBeEmpty();
@@ -38,6 +40,8 @@ namespace EMBC.Tests.Integration.ESS.Managers
                     report.ShouldNotBeNull().Content.ShouldNotBeEmpty();
                     report.ContentType.ShouldBe("text/csv");
                     success = true;
+
+                    await File.WriteAllBytesAsync("./evacuees.csv", report.Content);
 
                     break;
                 }
