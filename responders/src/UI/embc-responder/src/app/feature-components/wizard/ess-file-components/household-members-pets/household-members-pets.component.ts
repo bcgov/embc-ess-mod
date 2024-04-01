@@ -18,7 +18,8 @@ export class HouseholdMembersPetsComponent implements OnInit {
 
 
   petsValid = false;
-  householdMembersValid = true;
+  householdMembersValid = false;
+  householdMembersQuantityValid = true;
   tabMetaData: TabModel;
 
   constructor(
@@ -52,15 +53,15 @@ export class HouseholdMembersPetsComponent implements OnInit {
   }
   ValidPetsIndicator(data): void { this.petsValid = data }
   ValidHouseholdMemebersIndicator(data): void { this.householdMembersValid = data }
+  ValidSelectedHouseholdMembers(data): void { this.householdMembersQuantityValid = data }
 
   private updateTabStatus() {
-    if (this.petsValid && this.householdMembersValid) {
+    if (this.petsValid && this.householdMembersValid && this.householdMembersQuantityValid) {
       this.stepEssFileService.setTabStatus('household-members-pets', 'complete');
-    } else if (!this.petsValid || !this.householdMembersValid) {
-      this.stepEssFileService.setTabStatus('household-members-pets', 'incomplete');
-    }
-    else {
+    } else if (!this.petsValid && !this.householdMembersValid) {
       this.stepEssFileService.setTabStatus('household-members-pets', 'not-started');
+    } else if (!this.petsValid || !this.householdMembersValid || !this.householdMembersQuantityValid) {
+      this.stepEssFileService.setTabStatus('household-members-pets', 'incomplete');
     }
   }
 }
