@@ -153,7 +153,7 @@ export class NeedsAssessmentMappingService {
             this.needsAssessmentService.canEvacueeProvideIncidentals,
           canEvacueeProvideLodging:
             this.needsAssessmentService.canEvacueeProvideLodging,
-            canEvacueeProvideTransportation:
+          canEvacueeProvideTransportation:
             this.needsAssessmentService.canEvacueeProvideTransportation
         });
       });
