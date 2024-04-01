@@ -11,7 +11,6 @@ using EMBC.ESS.Engines.Supporting;
 using EMBC.ESS.Managers.Events.Notifications;
 using EMBC.ESS.Resources.Evacuations;
 using EMBC.ESS.Resources.Evacuees;
-using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Payments;
 using EMBC.ESS.Resources.Print;
 using EMBC.ESS.Resources.Suppliers;
@@ -26,7 +25,6 @@ using EMBC.Utilities.Telemetry;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -49,7 +47,6 @@ namespace EMBC.ESS.Managers.Events
         private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
         private readonly IPrintRequestsRepository printingRepository;
-        private readonly IMetadataRepository metadataRepository;
         private readonly IDataProtectionProvider dataProtectionProvider;
         private readonly IConfiguration configuration;
         private readonly ISupportingEngine supportingEngine;
@@ -75,7 +72,6 @@ namespace EMBC.ESS.Managers.Events
             ISearchEngine searchEngine,
             IPrintRequestsRepository printingRepository,
             IWebHostEnvironment env,
-            IMetadataRepository metadataRepository,
             IDataProtectionProvider dataProtectionProvider,
             IConfiguration configuration,
             ISupportingEngine supportingEngine,
@@ -96,7 +92,6 @@ namespace EMBC.ESS.Managers.Events
             this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
             this.printingRepository = printingRepository;
-            this.metadataRepository = metadataRepository;
             this.dataProtectionProvider = dataProtectionProvider;
             this.configuration = configuration;
             this.supportingEngine = supportingEngine;

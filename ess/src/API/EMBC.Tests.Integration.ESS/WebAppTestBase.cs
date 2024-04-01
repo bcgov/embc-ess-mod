@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
-using Serilog.Events;
 using Xunit.Categories;
 
 namespace EMBC.Tests.Integration.ESS
@@ -24,7 +22,7 @@ namespace EMBC.Tests.Integration.ESS
 #pragma warning restore S3885 // "Assembly.Load" should be used
                 opts.AddJsonFile("appsettings.json", false, false).AddJsonFile("appsettings.Development.json", true, false).AddJsonFile(Environment.GetEnvironmentVariable("secrets_file_path") ?? "secrets.json", true, false);
                 // disable background tasks during tests
-                opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
+                opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string?>("backgroundTask:enabled", "false") });
             }).ConfigureServices(services =>
             {
                 services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy), typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
@@ -46,15 +44,13 @@ namespace EMBC.Tests.Integration.ESS
         {
             var factory = fixture.WithWebHostBuilder(builder =>
            {
-#pragma warning disable CS0618 // Type or member is obsolete
-               builder.UseSerilog((ctx, cfg) =>
-               {
-                   cfg
-                    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
-                    .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
-                    .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
-               });
-#pragma warning restore CS0618 // Type or member is obsolete
+               //builder.UseSerilog((ctx, cfg) =>
+               //{
+               //    cfg
+               //     .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
+               //     .MinimumLevel.Override("Microsoft.OData.Extensions.Client.DefaultODataClientActivator", LogEventLevel.Warning)
+               //     .WriteTo.TestOutput(output, outputTemplate: "[{Timestamp:HH:mm:ss.sss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}");
+               //});
            });
             this.Services = factory.Server.Services.CreateScope().ServiceProvider;
             this.output = output;
