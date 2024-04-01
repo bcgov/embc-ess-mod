@@ -232,7 +232,7 @@ export class NeedsAssessmentService {
   public clearNeedsAssessmentData(): void {
     this.id = undefined;
     this.insurance = undefined;
-    this.canEvacueeProvideLodging = undefined; ////////////////////////// HEEEEEEEEEEEEEEEERREEE!!!!!!!!!!!!!!!!!!
+    this.canEvacueeProvideLodging = undefined; 
     this.shelterOptions = undefined;
     this.canEvacueeProvideClothing = undefined;
     this.canEvacueeProvideFood = undefined;
