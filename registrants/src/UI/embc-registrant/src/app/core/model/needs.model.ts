@@ -168,7 +168,9 @@ export class IdentifyNeeds {
   canEvacueeProvideFood: boolean;
   canEvacueeProvideIncidentals: boolean;
   canEvacueeProvideLodging: boolean;
+  shelterOptions: boolean;
   canEvacueeProvideTransportation: boolean;
+  doesEvacueeNotRequireAssistance: boolean;
 }
 
 export class IdentifyNeedsForm {
@@ -176,31 +178,35 @@ export class IdentifyNeedsForm {
   canEvacueeProvideFood = new UntypedFormControl();
   canEvacueeProvideIncidentals = new UntypedFormControl();
   canEvacueeProvideLodging = new UntypedFormControl();
+  shelterOptions = new UntypedFormControl();
+  doesEvacueeNotRequireAssistance = new UntypedFormControl();
   canEvacueeProvideTransportation = new UntypedFormControl();
 
   constructor(identifyNeeds: IdentifyNeeds) {
     this.canEvacueeProvideClothing.setValue(
-      identifyNeeds.canEvacueeProvideClothing
-    );
+      identifyNeeds.canEvacueeProvideClothing?? false);
     this.canEvacueeProvideClothing.setValidators([Validators.required]);
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
-    this.canEvacueeProvideFood.setValue(identifyNeeds.canEvacueeProvideFood);
-    this.canEvacueeProvideFood.setValidators([Validators.required]);
+    this.canEvacueeProvideFood.setValue(
+      identifyNeeds.canEvacueeProvideFood ?? false);
+    this.canEvacueeProvideFood.setValidators([Validators.required]);  
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
     this.canEvacueeProvideIncidentals.setValue(
-      identifyNeeds.canEvacueeProvideIncidentals
-    );
+      identifyNeeds.canEvacueeProvideIncidentals ?? false);
     this.canEvacueeProvideIncidentals.setValidators([Validators.required]);
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
     this.canEvacueeProvideLodging.setValue(
-      identifyNeeds.canEvacueeProvideLodging
-    );
-    this.canEvacueeProvideLodging.setValidators([Validators.required]);
+      identifyNeeds.canEvacueeProvideLodging ?? false);
+    this.canEvacueeProvideLodging.setValidators([Validators.required]);  
+    this.canEvacueeProvideIncidentals.setErrors({ 'error': true });
 
-    this.canEvacueeProvideTransportation.setValue(
-      identifyNeeds.canEvacueeProvideTransportation
-    );
-    this.canEvacueeProvideTransportation.setValidators([Validators.required]);
+    this.shelterOptions.setValue(identifyNeeds.shelterOptions);
+
+    this.doesEvacueeNotRequireAssistance.setValue(null);
+    this.doesEvacueeNotRequireAssistance.setValidators([Validators.required]);
   }
 }
 

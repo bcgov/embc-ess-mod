@@ -1,25 +1,50 @@
-.row-tile-style {
-    padding-top: 30px;
-    padding-bottom: 30px;
-}
-.row-tile {
-    @extend .row-tile-style;
-    background-color: rgba(242, 242, 242, 0.682352941176471);
-}
-mat-form-field {
-    width: 100%;
-}
+.tab-subtitle {
+    font-size: 21px;
+    color: #234075;
+    margin-bottom: 0;
+  }
 
 .mat-radio-button ~ .mat-radio-button {
     margin-left: 90px;
 }
 
-@media(max-width: 600px) {
-    .mat-radio-button ~ .mat-radio-button {
-        margin-left: 16px;
-    }
+.needs-section {
+    display: flex; 
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: 20px;
 }
 
-.question {
-    color: #606060;
+.needs-section-foods {
+    display: flex; 
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: 0px;
+}
+
+.needs-image-section {
+    margin-left: 20px;
+}
+
+.grayscale {
+    filter: grayscale(100%);
+}
+
+.needs-text-section {
+    margin-left: 20px;
+}
+
+.disabled-text {
+    color: grey;
+}
+
+.info-icon {
+    margin-left: 10px;
+}
+
+.shelter-radio-button {
+    margin-top: 10px;
+    margin-left: 120px;
+    display: flex;
+    align-items: center;
 }

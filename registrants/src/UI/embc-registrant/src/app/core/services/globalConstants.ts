@@ -12,7 +12,7 @@ export const usDefaultObject = {
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
 export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
 
-export const radioButton1 = [
+export const booleanOptions = [
   { name: 'Yes', value: true },
   { name: 'No', value: false }
 ];
@@ -25,12 +25,6 @@ export const insuranceOptions = [
   },
   { name: 'No', value: 'No' },
   { name: 'Unknown', value: "I don't know" }
-];
-
-export const needsOptions = [
-  { name: 'Yes', value: 'Yes', apiValue: true },
-  { name: 'No', value: 'No', apiValue: false },
-  { name: "I'm not sure", value: 'Unsure', apiValue: null }
 ];
 
 export const gender = [
@@ -61,6 +55,22 @@ export const invalidGoBack: DialogContent = {
 export const successfulBcscInvite: DialogContent = {
   text: '<p>Email successfully sent.</p>',
   cancelButton: 'Close'
+};
+
+
+export const needsShelterAllowanceMessage: DialogContent = {
+  title: 'Shelter',
+  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
+};
+
+export const needsShelterReferralMessage: DialogContent = {
+  title: 'Referrals',
+  text: '<p>A paper form provided by an ESS responder, directing evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.</p>',
+};
+
+export const needsIncidentalMessage: DialogContent = {
+  title: 'Incidentals',
+  text: '<p>Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.</p>',
 };
 
 export const securityQuesError =

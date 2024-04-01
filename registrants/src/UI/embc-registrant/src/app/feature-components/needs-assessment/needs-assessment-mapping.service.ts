@@ -116,30 +116,29 @@ export class NeedsAssessmentMappingService {
     canEvacueeProvideLodging: boolean,
     canEvacueeProvideTransportation: boolean
   ): void {
-    this.needsAssessmentService.canEvacueeProvideFood =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideFood
-      )?.value;
+    globalConst.booleanOptions.find(
+      (ins) => ins.value === canEvacueeProvideFood
+    )?.name;
 
-    this.needsAssessmentService.canEvacueeProvideLodging =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideLodging
-      )?.value;
+  this.needsAssessmentService.canEvacueeProvideLodging =
+    globalConst.booleanOptions.find(
+      (ins) => ins.value === canEvacueeProvideLodging
+    )?.name;
 
-    this.needsAssessmentService.canEvacueeProvideClothing =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideClothing
-      )?.value;
+  this.needsAssessmentService.canEvacueeProvideClothing =
+    globalConst.booleanOptions.find(
+      (ins) => ins.value === canEvacueeProvideClothing
+    )?.name;
 
-    this.needsAssessmentService.canEvacueeProvideTransportation =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideTransportation
-      )?.value;
+  this.needsAssessmentService.canEvacueeProvideTransportation =
+    globalConst.booleanOptions.find(
+      (ins) => ins.value === canEvacueeProvideTransportation
+    )?.name;
 
-    this.needsAssessmentService.canEvacueeProvideIncidentals =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideIncidentals
-      )?.value;
+  this.needsAssessmentService.canEvacueeProvideIncidentals =
+    globalConst.booleanOptions.find(
+      (ins) => ins.value === canEvacueeProvideIncidentals
+    )?.name;
 
     this.formCreationService
       .getIndentifyNeedsForm()
@@ -154,7 +153,7 @@ export class NeedsAssessmentMappingService {
             this.needsAssessmentService.canEvacueeProvideIncidentals,
           canEvacueeProvideLodging:
             this.needsAssessmentService.canEvacueeProvideLodging,
-          canEvacueeProvideTransportation:
+            canEvacueeProvideTransportation:
             this.needsAssessmentService.canEvacueeProvideTransportation
         });
       });

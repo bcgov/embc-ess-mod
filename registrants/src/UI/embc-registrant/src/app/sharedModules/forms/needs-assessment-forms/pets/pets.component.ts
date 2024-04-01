@@ -8,7 +8,6 @@ import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { PetFormModule } from '../../pet-form/pet-form.module';
@@ -21,7 +20,7 @@ import * as globalConst from '../../../../core/services/globalConstants';
 })
 export default class PetsComponent implements OnInit {
   petsForm: UntypedFormGroup;
-  radioOption = globalConst.radioButton1;
+  booleanOptions = globalConst.booleanOptions;
   formBuilder: UntypedFormBuilder;
   petsForm$: Subscription;
   formCreationService: FormCreationService;
@@ -129,7 +128,6 @@ export default class PetsComponent implements OnInit {
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatRadioModule,
     MatTableModule,
     MatIconModule,
     PetFormModule

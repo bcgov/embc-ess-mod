@@ -18,11 +18,13 @@ export class NeedsAssessmentService {
   private insuranceOption: InsuranceOption;
   private householdMember: Array<HouseholdMember> = [];
   private pet: Array<Pet> = [];
+  private canEvacueesProvideLodging: string;
+  private shelterOptions: string;
   private canEvacueesProvideClothing: string;
   private canEvacueesProvideFood: string;
   private canEvacueesProvideIncidentals: string;
-  private canEvacueesProvideLodging: string;
   private canEvacueesProvideTransportation: string;
+  private doEvacueesNotRequireAssistance: string;
   private mainHouseholdMembers: HouseholdMember;
   private registrationResult: RegistrationResult;
   private verifiedRegistrationResult: string;
@@ -41,6 +43,30 @@ export class NeedsAssessmentService {
   }
   public set insurance(value: InsuranceOption) {
     this.insuranceOption = value;
+  }
+
+  public get canEvacueeProvideLodging(): string {
+    return this.canEvacueesProvideLodging;
+  }
+
+  public set canEvacueeProvideLodging(value: string) {
+    this.canEvacueesProvideLodging = value;
+  }
+
+  public get shelterOption(): string {
+    return this.shelterOptions;
+  }
+
+  public set shelterOption(value: string) {
+    this.shelterOptions= value;
+  }
+
+  public get doesEvacueeNotRequireAssistance(): string {
+    return this.doEvacueesNotRequireAssistance;
+  }
+
+  public set doesEvacueeNotRequireAssistance(value: string) {
+    this.doEvacueesNotRequireAssistance = value;
   }
 
   public get canEvacueeProvideClothing(): string {
@@ -67,14 +93,6 @@ export class NeedsAssessmentService {
     this.canEvacueesProvideIncidentals = value;
   }
 
-  public get canEvacueeProvideLodging(): string {
-    return this.canEvacueesProvideLodging;
-  }
-
-  public set canEvacueeProvideLodging(value: string) {
-    this.canEvacueesProvideLodging = value;
-  }
-
   public get canEvacueeProvideTransportation(): string {
     return this.canEvacueesProvideTransportation;
   }
@@ -90,7 +108,6 @@ export class NeedsAssessmentService {
   public set pets(value: Array<Pet>) {
     this.pet = value;
   }
-
 
   public get householdMembers(): Array<HouseholdMember> {
     return this.householdMember;
@@ -122,70 +139,66 @@ export class NeedsAssessmentService {
   }
 
   public setNeedsDetails(formGroup: UntypedFormGroup): void {
-    this.canEvacueeProvideClothing = formGroup.get(
-      'canEvacueeProvideClothing'
-    ).value;
-    this.canEvacueeProvideFood = formGroup.get('canEvacueeProvideFood').value;
-    this.canEvacueeProvideIncidentals = formGroup.get(
-      'canEvacueeProvideIncidentals'
-    ).value;
     this.canEvacueeProvideLodging = formGroup.get(
       'canEvacueeProvideLodging'
-    ).value;
+    )?.value;
+    this.shelterOptions = formGroup.get(
+      'shelterOptions'
+    )?.value;
+    this.canEvacueeProvideClothing = formGroup.get(
+      'canEvacueeProvideClothing'
+    )?.value;
+    this.canEvacueeProvideFood = formGroup.get(
+      'canEvacueeProvideFood'
+    )?.value;
+    this.canEvacueeProvideIncidentals = formGroup.get(
+      'canEvacueeProvideIncidentals'
+    )?.value;
     this.canEvacueeProvideTransportation = formGroup.get(
       'canEvacueeProvideTransportation'
-    ).value;
-
-    // this.canEvacueeProvideClothing =
-    //   formGroup.get('canEvacueeProvideClothing').value === 'null'
-    //     ? null
-    //     : formGroup.get('canEvacueeProvideClothing').value;
-    // this.canEvacueeProvideFood =
-    //   formGroup.get('canEvacueeProvideFood').value === 'null'
-    //     ? null
-    //     : formGroup.get('canEvacueeProvideFood').value;
-    // this.canEvacueeProvideIncidentals =
-    //   formGroup.get('canEvacueeProvideIncidentals').value === 'null'
-    //     ? null
-    //     : formGroup.get('canEvacueeProvideIncidentals').value;
-    // this.canEvacueeProvideLodging =
-    //   formGroup.get('canEvacueeProvideLodging').value === 'null'
-    //     ? null
-    //     : formGroup.get('canEvacueeProvideLodging').value;
-    // this.canEvacueeProvideTransportation =
-    //   formGroup.get('canEvacueeProvideTransportation').value === 'null'
-    //     ? null
-    //     : formGroup.get('canEvacueeProvideTransportation').value;
+    )?.value;
+    this.doesEvacueeNotRequireAssistance = formGroup.get(
+      'doesEvacueeNotRequireAssistance'
+    )?.value;
   }
 
   public createNeedsAssessmentDTO(): NeedsAssessment {
     // Get correct API values for Needs Assessment selections
-    const needsClothingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideClothing
-    )?.apiValue;
+    const needsLodgingDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideLodging
+    )?.value;
 
-    const needsFoodDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideFood
-    )?.apiValue;
+    const shelterOptionsDTO = this.shelterOptions;
 
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideIncidentals
-    )?.apiValue;
+    const needsClothingDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideClothing
+    )?.value;
 
-    const needsLodgingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideLodging
-    )?.apiValue;
+    const needsFoodDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideFood
+    )?.value;
 
-    const needsTransportationDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canEvacueeProvideTransportation
-    )?.apiValue;
+    const needsIncidentalsDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideIncidentals
+    )?.value;
+
+    const needsTransportationDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.canEvacueeProvideTransportation
+    )?.value;
+
+    const doesEvacueeNotRequireAssistanceDTO = globalConst.booleanOptions.find(
+      (ins) => ins.name === this.doesEvacueeNotRequireAssistance
+    )?.value;
+
     return {
       id: this.id,
+      canEvacueeProvideLodging: needsLodgingDTO,
+      shelterOption: shelterOptionsDTO,
       canEvacueeProvideClothing: needsClothingDTO,
       canEvacueeProvideFood: needsFoodDTO,
       canEvacueeProvideIncidentals: needsIncidentalsDTO,
-      canEvacueeProvideLodging: needsLodgingDTO,
       canEvacueeProvideTransportation: needsTransportationDTO,
+      doesEvacueeNotRequireAssistance: doesEvacueeNotRequireAssistanceDTO,
       householdMembers: this.addPrimaryApplicantToHousehold(),
       insurance: this.insurance,
       pets: this.pets,
@@ -219,11 +232,13 @@ export class NeedsAssessmentService {
   public clearNeedsAssessmentData(): void {
     this.id = undefined;
     this.insurance = undefined;
+    this.canEvacueeProvideLodging = undefined; ////////////////////////// HEEEEEEEEEEEEEEEERREEE!!!!!!!!!!!!!!!!!!
+    this.shelterOptions = undefined;
     this.canEvacueeProvideClothing = undefined;
     this.canEvacueeProvideFood = undefined;
     this.canEvacueeProvideIncidentals = undefined;
-    this.canEvacueeProvideLodging = undefined;
     this.canEvacueeProvideTransportation = undefined;
+    this.doesEvacueeNotRequireAssistance = undefined;
     this.pets = undefined;
     this.householdMembers = undefined;
   }
@@ -237,7 +252,7 @@ export class NeedsAssessmentService {
       return [...this.householdMembers, primaryMember];
     } else if (
       !this.householdMembers.find(
-        (member) => member.details.isPrimaryRegistrant === true
+        (member) => member.isPrimaryRegistrant === true
       )
     ) {
       return [...this.householdMembers, primaryMember];
