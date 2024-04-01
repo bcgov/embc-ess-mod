@@ -65,7 +65,9 @@ export const supportNoOfDays = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
   23, 24, 25, 26, 27, 28, 29, 30
 ];
+
 export const mainApplicant = 'Main Applicant';
+
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
   {
@@ -75,12 +77,8 @@ export const insuranceOptions = [
   { name: 'No', value: 'No' },
   { name: "I don't know", value: 'Unknown' }
 ];
-export const needsOptions = [
-  { name: 'Yes', value: 'Yes', apiValue: true },
-  { name: 'No', value: 'No', apiValue: false },
-  { name: "I'm not sure", value: 'Unsure', apiValue: null }
-];
-export const radioButtonOptions = [
+
+export const booleanOptions = [
   { name: 'Yes', value: 'Yes', apiValue: true },
   { name: 'No', value: 'No', apiValue: false }
 ];

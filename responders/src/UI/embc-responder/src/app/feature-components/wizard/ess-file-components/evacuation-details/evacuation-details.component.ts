@@ -29,7 +29,7 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: UntypedFormGroup;
   insuranceOption = globalConst.insuranceOptions;
-  radioOption = globalConst.radioButtonOptions;
+  booleanOptions = globalConst.booleanOptions;
   defaultCountry = globalConst.defaultCountry;
   defaultProvince = globalConst.defaultProvince;
 

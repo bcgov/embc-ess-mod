@@ -25,7 +25,7 @@ import { TabModel } from 'src/app/core/models/tab.model';
 })
 export class AnimalsComponent implements OnInit, OnDestroy {
   animalsForm: UntypedFormGroup;
-  radioOption = globalConst.radioButtonOptions;
+  booleanOptions = globalConst.booleanOptions;
   showPetsForm = false;
   displayedColumns: string[] = ['type', 'quantity', 'buttons'];
   petSource = new BehaviorSubject([]);

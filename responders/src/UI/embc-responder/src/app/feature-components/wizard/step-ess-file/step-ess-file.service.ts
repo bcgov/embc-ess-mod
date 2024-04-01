@@ -402,23 +402,23 @@ export class StepEssFileService {
     // Get Correct API values for Household Members selections
 
     // Get correct API values for Needs Assessment selections
-    const needsClothingDTO = globalConst.needsOptions.find(
+    const needsClothingDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideClothing
     )?.apiValue;
 
-    const needsFoodDTO = globalConst.needsOptions.find(
+    const needsFoodDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideFood
     )?.apiValue;
 
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
+    const needsIncidentalsDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideIncidentals
     )?.apiValue;
 
-    const needsLodgingDTO = globalConst.needsOptions.find(
+    const needsLodgingDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideLodging
     )?.apiValue;
 
-    const needsTransportationDTO = globalConst.needsOptions.find(
+    const needsTransportationDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideTransportation
     )?.apiValue;
 
@@ -470,23 +470,23 @@ export class StepEssFileService {
     // Get Correct API values for Household Members selections
 
     // Get correct API values for Needs Assessment selections
-    const needsClothingDTO = globalConst.needsOptions.find(
+    const needsClothingDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideClothing
     )?.apiValue;
 
-    const needsFoodDTO = globalConst.needsOptions.find(
+    const needsFoodDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideFood
     )?.apiValue;
 
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
+    const needsIncidentalsDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideIncidentals
     )?.apiValue;
 
-    const needsLodgingDTO = globalConst.needsOptions.find(
+    const needsLodgingDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideLodging
     )?.apiValue;
 
-    const needsTransportationDTO = globalConst.needsOptions.find(
+    const needsTransportationDTO = globalConst.booleanOptions.find(
       (ins) => ins.value === this.canRegistrantProvideTransportation
     )?.apiValue;
 
@@ -614,7 +614,7 @@ export class StepEssFileService {
     this.evacAddress = essFile.evacuatedFromAddress;
     this.facilityName = essFile.registrationLocation;
 
-    this.evacuatedFromPrimary = globalConst.radioButtonOptions.find(
+    this.evacuatedFromPrimary = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === _.isEqual(this.primaryAddress, this.evacAddress)
     )?.value;
 
@@ -634,35 +634,35 @@ export class StepEssFileService {
 
     this.selectedHouseholdMembers = undefined;
 
-    this.haveHouseHoldMembers = globalConst.radioButtonOptions.find(
+    this.haveHouseHoldMembers = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === this.householdMembers?.length > 2
     )?.value;
 
     // Animals tab
     const petsArray = [];
     this.petsList = [...petsArray, ...essNeeds.pets];
-    this.havePets = globalConst.radioButtonOptions.find(
+    this.havePets = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === essNeeds.pets?.length > 0
     )?.value;
 
     // Needs tab
-    this.canRegistrantProvideFood = globalConst.needsOptions.find(
+    this.canRegistrantProvideFood = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === essNeeds.canProvideFood
     )?.value;
 
-    this.canRegistrantProvideLodging = globalConst.needsOptions.find(
+    this.canRegistrantProvideLodging = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === essNeeds.canProvideLodging
     )?.value;
 
-    this.canRegistrantProvideClothing = globalConst.needsOptions.find(
+    this.canRegistrantProvideClothing = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === essNeeds.canProvideClothing
     )?.value;
 
-    this.canRegistrantProvideTransportation = globalConst.needsOptions.find(
+    this.canRegistrantProvideTransportation = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === essNeeds.canProvideTransportation
     )?.value;
 
-    this.canRegistrantProvideIncidentals = globalConst.needsOptions.find(
+    this.canRegistrantProvideIncidentals = globalConst.booleanOptions.find(
       (ins) => ins.apiValue === essNeeds.canProvideIncidentals
     )?.value;
 
