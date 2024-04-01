@@ -31,7 +31,6 @@ namespace EMBC.Utilities.Hosting
                 .Enrich.WithEnvironmentUserName()
                 .Enrich.WithCorrelationId()
                 .Enrich.WithCorrelationIdHeader()
-                .Enrich.WithClientAgent()
                 .Enrich.WithClientIp()
                 .Enrich.WithSpan()
                 .WriteTo.Console(outputTemplate: LogOutputTemplate)
@@ -79,7 +78,7 @@ namespace EMBC.Utilities.Hosting
             return applicationBuilder;
         }
 
-        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex)
+        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception? ex)
         {
             if (ex != null || ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError) return LogEventLevel.Error;
             return ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)

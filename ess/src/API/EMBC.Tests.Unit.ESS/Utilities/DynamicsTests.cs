@@ -90,7 +90,7 @@ namespace EMBC.Tests.Unit.ESS.Utilities
             }
             (await reporter.IsBroken()).ShouldBeTrue();
             await Task.Delay(TimeSpan.FromSeconds(options.CircuitBreakerResetInSeconds).Add(TimeSpan.FromMilliseconds(1000)));
-            //TODO: add mocked odata server to enable connectivity recovery
+
             //(await reporter.IsBroken()).ShouldBeFalse();
         }
     }

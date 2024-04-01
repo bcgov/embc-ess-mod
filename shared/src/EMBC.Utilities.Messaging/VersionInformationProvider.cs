@@ -21,7 +21,7 @@ namespace EMBC.Utilities.Messaging
         {
             try
             {
-                var url = configuration.GetValue<Uri>("messaging:Url");
+                var url = configuration.GetValue<Uri>("messaging:Url")!;
                 if (url.Scheme == "dns")
                 {
                     var parts = url.LocalPath.Trim('/').Split(':');

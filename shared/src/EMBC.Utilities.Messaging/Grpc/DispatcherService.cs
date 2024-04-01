@@ -58,7 +58,7 @@ namespace EMBC.Utilities.Messaging.Grpc
             try
             {
                 var handlerInstance = serviceProvider.GetRequiredService(handler.DeclaringType ?? null!);
-                var replyMessage = await handler.InvokeAsync(handlerInstance, new object[] { message });
+                var replyMessage = await handler.InvokeAsync(handlerInstance, message);
 
                 var reply = CreateReply(request, replyMessage);
 
