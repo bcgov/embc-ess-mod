@@ -43,10 +43,7 @@
 <div class="row row-padding">
   <div class="col-md-5">Evacuated From</div>
   <div class="col-md-7">
-    <p
-      class="bold"
-      [innerHTML]="profileData?.evacuatedFromAddress | maskEvacuatedaddress"
-    ></p>
+    <p class="bold" [innerHTML]="profileData?.evacuatedFromAddress | maskEvacuatedaddress"></p>
   </div>
 </div>
 
@@ -54,9 +51,9 @@
   <div class="col-md-5">Facility/ Registration Location</div>
   <div class="col-md-7 bold">
     {{
-      profileData?.registrationLocation
-        ? profileData?.registrationLocation
-        : 'n/a'
+    profileData?.registrationLocation
+    ? profileData?.registrationLocation
+    : 'n/a'
     }}
   </div>
 </div>
@@ -83,23 +80,16 @@
 
 <div class="row row-padding">
   <div class="col-12">
-    <mat-table
-      class="table-outline"
-      [dataSource]="profileData?.needsAssessment?.householdMembers"
-    >
+    <mat-table class="table-outline" [dataSource]="profileData?.needsAssessment?.householdMembers">
       <ng-container matColumnDef="firstName">
-        <mat-header-cell class="header-cell" *matHeaderCellDef
-          >First Name</mat-header-cell
-        >
+        <mat-header-cell class="header-cell" *matHeaderCellDef>First Name</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ element.firstName }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="lastName">
-        <mat-header-cell class="header-cell" *matHeaderCellDef
-          >Last Name</mat-header-cell
-        >
+        <mat-header-cell class="header-cell" *matHeaderCellDef>Last Name</mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ element.lastName }}
         </mat-cell>
@@ -114,14 +104,8 @@
         </mat-cell>
       </ng-container>
 
-      <mat-header-row
-        class="table-header"
-        *matHeaderRowDef="memberColumns"
-      ></mat-header-row>
-      <mat-row
-        class="bold"
-        *matRowDef="let row; columns: memberColumns"
-      ></mat-row>
+      <mat-header-row class="table-header" *matHeaderRowDef="memberColumns"></mat-header-row>
+      <mat-row class="bold" *matRowDef="let row; columns: memberColumns"></mat-row>
     </mat-table>
   </div>
 </div>
@@ -129,42 +113,74 @@
 <hr class="dotted-hr hr-padding" />
 <div class="row row-padding">
   <div class="col-md-12">
-    <p class="subsection-heading">Needs Assessment</p>
-    <p class="bold">Can evacuee provide?</p>
+    <p class="subsection-heading">Pets</p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Pets?</div>
+  <div class="col-7 bold">
+    {{ profileData?.needsAssessment?.pets?.length !== 0 ? 'Yes' : 'No' }}
+  </div>
+</div>
+<div class="row" *ngIf="profileData?.needsAssessment?.pets?.length > 0">
+  <div class="col-md-8">
+    <mat-table class="table-outline" [dataSource]="profileData?.needsAssessment?.pets">
+      <ng-container matColumnDef="type">
+        <mat-header-cell class="header-cell" *matHeaderCellDef>Pet Type</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.type }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <mat-header-cell class="header-cell" *matHeaderCellDef>
+          Number
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.quantity }}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row class="table-header" *matHeaderRowDef="petColumns"></mat-header-row>
+      <mat-row class="bold" *matRowDef="let row; columns: petColumns"></mat-row>
+    </mat-table>
+  </div>
+</div>
+
+<hr class="dotted-hr hr-padding" />
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p class="subsection-heading">Needs</p>
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Food</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideFood) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Lodging</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideLodging) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Clothing</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideClothing) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Transportation</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideTransportation) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Incidentals</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideIncidentals) }}
   </div>
 </div>
