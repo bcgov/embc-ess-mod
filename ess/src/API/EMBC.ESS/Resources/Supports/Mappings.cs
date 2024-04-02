@@ -150,7 +150,7 @@ namespace EMBC.ESS.Resources.Supports
                 .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.FoodRestaurant))
                 ;
 
-            CreateMap<era_evacueesupport, LodgingBilletingSupport>()
+            CreateMap<era_evacueesupport, ShelterBilletingSupport>()
                 .IncludeBase<era_evacueesupport, Support>()
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.HostAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
@@ -161,10 +161,10 @@ namespace EMBC.ESS.Resources.Supports
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
                 .IncludeBase<Support, era_evacueesupport>()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingBilleting))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.ShelterBilleting))
                 ;
 
-            CreateMap<era_evacueesupport, LodgingGroupSupport>()
+            CreateMap<era_evacueesupport, ShelterGroupSupport>()
                 .IncludeBase<era_evacueesupport, Support>()
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.FacilityAddress, opts => opts.MapFrom(s => s.era_lodgingaddress))
@@ -175,17 +175,29 @@ namespace EMBC.ESS.Resources.Supports
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
                 .IncludeBase<Support, era_evacueesupport>()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingGroup))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.ShelterGroup))
                 ;
 
-            CreateMap<era_evacueesupport, LodgingHotelSupport>()
+            CreateMap<era_evacueesupport, ShelterHotelSupport>()
                 .IncludeBase<era_evacueesupport, Support>()
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.NumberOfRooms, opts => opts.MapFrom(s => s.era_numberofrooms))
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Source)
                 .IncludeBase<Support, era_evacueesupport>()
-                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingHotel))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.ShelterHotel))
+                ;
+
+            CreateMap<era_evacueesupport, ShelterAllowanceSupport>()
+                .IncludeBase<era_evacueesupport, Support>()
+                .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
+                .ForMember(d => d.ContactEmail, opts => opts.MapFrom(s => s.era_lodgingemailaddress))
+                .ForMember(d => d.ContactPhone, opts => opts.MapFrom(s => s.era_lodgingcontactnumber))
+                .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Source)
+                .IncludeBase<Support, era_evacueesupport>()
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.ShelterAllowance))
                 ;
 
             CreateMap<era_evacueesupport, TransportationOtherSupport>()
@@ -255,11 +267,12 @@ namespace EMBC.ESS.Resources.Supports
                 SupportType.Incidentals => context.Mapper.Map<IncidentalsSupport>(source),
                 SupportType.FoodGroceries => context.Mapper.Map<FoodGroceriesSupport>(source),
                 SupportType.FoodRestaurant => context.Mapper.Map<FoodRestaurantSupport>(source),
-                SupportType.LodgingBilleting => context.Mapper.Map<LodgingBilletingSupport>(source),
-                SupportType.LodgingGroup => context.Mapper.Map<LodgingGroupSupport>(source),
-                SupportType.LodgingHotel => context.Mapper.Map<LodgingHotelSupport>(source),
+                SupportType.ShelterBilleting => context.Mapper.Map<ShelterBilletingSupport>(source),
+                SupportType.ShelterGroup => context.Mapper.Map<ShelterGroupSupport>(source),
+                SupportType.ShelterHotel => context.Mapper.Map<ShelterHotelSupport>(source),
                 SupportType.TransporationTaxi => context.Mapper.Map<TransportationTaxiSupport>(source),
                 SupportType.TransportationOther => context.Mapper.Map<TransportationOtherSupport>(source),
+                SupportType.ShelterAllowance => context.Mapper.Map<ShelterAllowanceSupport>(source),
 
                 _ => throw new NotImplementedException($"No known type for SupportType value '{source.era_supporttype}'")
             };
@@ -271,11 +284,12 @@ namespace EMBC.ESS.Resources.Supports
                 IncidentalsSupport s => context.Mapper.Map<era_evacueesupport>(s),
                 FoodGroceriesSupport s => context.Mapper.Map<era_evacueesupport>(s),
                 FoodRestaurantSupport s => context.Mapper.Map<era_evacueesupport>(s),
-                LodgingBilletingSupport s => context.Mapper.Map<era_evacueesupport>(s),
-                LodgingGroupSupport s => context.Mapper.Map<era_evacueesupport>(s),
-                LodgingHotelSupport s => context.Mapper.Map<era_evacueesupport>(s),
+                ShelterBilletingSupport s => context.Mapper.Map<era_evacueesupport>(s),
+                ShelterGroupSupport s => context.Mapper.Map<era_evacueesupport>(s),
+                ShelterHotelSupport s => context.Mapper.Map<era_evacueesupport>(s),
                 TransportationTaxiSupport s => context.Mapper.Map<era_evacueesupport>(s),
                 TransportationOtherSupport s => context.Mapper.Map<era_evacueesupport>(s),
+                ShelterAllowanceSupport s => context.Mapper.Map<era_evacueesupport>(s),
 
                 _ => throw new NotImplementedException($"Unhandled support type '{source.GetType().Name}'")
             };
