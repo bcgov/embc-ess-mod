@@ -151,36 +151,42 @@
 <hr class="dotted-hr hr-padding" />
 <div class="row row-padding">
   <div class="col-md-12">
-    <p class="subsection-heading">Needs</p>
+    <p class="subsection-heading">Needs Assessment</p>
+    <p class="bold">Can evacuee provide?</p>
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Food</div>
   <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideFood) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Lodging</div>
   <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideLodging) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Clothing</div>
   <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideClothing) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Transportation</div>
   <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideTransportation) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Incidentals</div>
   <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideIncidentals) }}
   </div>
 </div>
