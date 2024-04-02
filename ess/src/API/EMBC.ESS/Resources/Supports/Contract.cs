@@ -99,7 +99,7 @@ namespace EMBC.ESS.Resources.Supports
         public IEnumerable<Support> Items { get; set; }
     }
 
-    public abstract class Support
+    public abstract record Support
     {
         public string Id { get; set; }
         public string FileId { get; set; }
@@ -119,10 +119,10 @@ namespace EMBC.ESS.Resources.Supports
         public string TaskId { get; set; }
     }
 
-    public abstract class SupportDelivery
+    public abstract record SupportDelivery
     { }
 
-    public class Referral : SupportDelivery
+    public record Referral : SupportDelivery
     {
         public string? SupplierId { get; set; }
         public string? SupplierNotes { get; set; }
@@ -131,10 +131,10 @@ namespace EMBC.ESS.Resources.Supports
         public string? IssuedByDisplayName { get; set; }
     }
 
-    public abstract class ETransfer : SupportDelivery
+    public abstract record ETransfer : SupportDelivery
     { }
 
-    public class Interac : ETransfer
+    public record Interac : ETransfer
     {
         public string? NotificationEmail { get; set; }
         public string? NotificationMobile { get; set; }
@@ -143,28 +143,28 @@ namespace EMBC.ESS.Resources.Supports
         public string RecipientLastName { get; set; }
     }
 
-    public class ClothingSupport : Support
+    public record ClothingSupport : Support
     {
         public bool ExtremeWinterConditions { get; set; }
         public decimal TotalAmount { get; set; }
         public string? ApproverName { get; set; }
     }
 
-    public class IncidentalsSupport : Support
+    public record IncidentalsSupport : Support
     {
         public string ApprovedItems { get; set; }
         public decimal TotalAmount { get; set; }
         public string? ApproverName { get; set; }
     }
 
-    public class FoodGroceriesSupport : Support
+    public record FoodGroceriesSupport : Support
     {
         public int NumberOfDays { get; set; }
         public decimal TotalAmount { get; set; }
         public string? ApproverName { get; set; }
     }
 
-    public class FoodRestaurantSupport : Support
+    public record FoodRestaurantSupport : Support
     {
         public int NumberOfBreakfastsPerPerson { get; set; }
         public int NumberOfLunchesPerPerson { get; set; }
@@ -172,13 +172,13 @@ namespace EMBC.ESS.Resources.Supports
         public decimal TotalAmount { get; set; }
     }
 
-    public class LodgingHotelSupport : Support
+    public record ShelterHotelSupport : Support
     {
         public int NumberOfNights { get; set; }
         public int NumberOfRooms { get; set; }
     }
 
-    public class LodgingBilletingSupport : Support
+    public record ShelterBilletingSupport : Support
     {
         public int NumberOfNights { get; set; }
         public string HostName { get; set; }
@@ -188,7 +188,7 @@ namespace EMBC.ESS.Resources.Supports
         public string HostPhone { get; set; }
     }
 
-    public class LodgingGroupSupport : Support
+    public record ShelterGroupSupport : Support
     {
         public int NumberOfNights { get; set; }
         public string FacilityName { get; set; }
@@ -198,13 +198,21 @@ namespace EMBC.ESS.Resources.Supports
         public string FacilityContactPhone { get; set; }
     }
 
-    public class TransportationTaxiSupport : Support
+    public record ShelterAllowanceSupport : Support
+    {
+        public int NumberOfNights { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string? ContactPhone { get; set; }
+        public string? ContactEmail { get; set; }
+    }
+
+    public record TransportationTaxiSupport : Support
     {
         public string FromAddress { get; set; }
         public string ToAddress { get; set; }
     }
 
-    public class TransportationOtherSupport : Support
+    public record TransportationOtherSupport : Support
     {
         public decimal TotalAmount { get; set; }
         public string TransportMode { get; set; }
@@ -254,13 +262,14 @@ namespace EMBC.ESS.Resources.Supports
     {
         FoodGroceries = 174360000,
         FoodRestaurant = 174360001,
-        LodgingHotel = 174360002,
-        LodgingBilleting = 174360003,
-        LodgingGroup = 174360004,
+        ShelterHotel = 174360002,
+        ShelterBilleting = 174360003,
+        ShelterGroup = 174360004,
         Incidentals = 174360005,
         Clothing = 174360006,
         TransporationTaxi = 174360007,
-        TransportationOther = 174360008
+        TransportationOther = 174360008,
+        ShelterAllowance = 174360009,
     }
 
 #pragma warning restore CA1008 // Enums should have zero value
