@@ -5,8 +5,8 @@ import { InsuranceOption } from './insurance-option';
 import { NeedsAssessmentType } from './needs-assessment-type';
 import { Pet } from './pet';
 
-/**	
- * Needs assessment form	
+/**
+ * Needs assessment form
  */
 export interface NeedsAssessment {
   canProvideClothing?: null | boolean;
@@ -22,5 +22,5 @@ export interface NeedsAssessment {
   pets?: Array<Pet>;
   reviewingTeamMemberDisplayName?: null | string;
   reviewingTeamMemberId?: null | string;
-  type?: null | NeedsAssessmentType;	
+  type?: null | NeedsAssessmentType;
 }
