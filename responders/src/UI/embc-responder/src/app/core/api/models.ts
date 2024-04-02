@@ -25,7 +25,6 @@ export { EvacuationFileHouseholdMember } from './models/evacuation-file-househol
 export { HouseholdMemberType } from './models/household-member-type';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
-export { IdentifiedNeed } from './models/identified-need';
 export { Note } from './models/note';
 export { Support } from './models/support';
 export { SupportStatus } from './models/support-status';
