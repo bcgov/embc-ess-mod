@@ -177,72 +177,57 @@
       <div class="row">
         <div class="col-md-12">
           <p class="subsection-heading">Needs Assessment</p>
-          <p class="bold">Can evacuee provide?</p>
-        </div>
+        </div> 
       </div>
 
       <div class="row">
         <div class="col-12">
-          <div class="row">
-            <div class="col-4">Food</div>
+
+          <div *ngIf="doesIncludeNeed(null)" class="row">
             <div class="col-8 bold">
-              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideFood) }}
+              Food
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-4">Lodging</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Food)" class="row">
             <div class="col-8 bold">
-              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideLodging) }}
+              Household currently does not require assistance.
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-4">Clothing</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.ShelterReferral)" class="row">
             <div class="col-8 bold">
-              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideClothing) }}
+              Shelter
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-4">Transportation</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.ShelterAllowance)" class="row">
             <div class="col-8 bold">
-              {{
-                mapNeedsValues(
-                  essFile?.needsAssessment?.canProvideTransportation
-                )
-              }}
+              Shelter Allowance
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-4">Incidentals</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Clothing)" class="row">
             <div class="col-8 bold">
-              {{
-                mapNeedsValues(essFile?.needsAssessment?.canProvideIncidentals)
-              }}
+              Clothing
             </div>
           </div>
+
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Tranportation)" class="row">
+            <div class="col-8 bold">
+              Transportation
+            </div>
+          </div>
+
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Incidentals)" class="row">
+            <div class="col-8 bold">
+              Incidentals
+            </div>
+          </div>
+          
         </div>
       </div>
 
-      <!-- <hr class="dotted-hr hr-padding" />
-      <div class="row">
-        <div class="col-md-12">
-          <p class="subsection-heading">Security Phrase</p>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12">
-          <div class="row">
-            <div class="col-4">Security Phrase</div>
-            <div class="col-8 bold">
-              {{ essFile?.securityPhrase | maskText }}
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </mat-card>

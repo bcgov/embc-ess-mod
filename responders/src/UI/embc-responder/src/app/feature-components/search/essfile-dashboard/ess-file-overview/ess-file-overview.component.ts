@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { IdentifiedNeed } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-ess-file-overview',
@@ -12,6 +13,8 @@ import * as globalConst from '../../../../core/services/global-constants';
 export class EssFileOverviewComponent implements OnInit {
   essFile: EvacuationFileModel;
   animalCount = 0;
+  
+  IdentifyNeed = IdentifiedNeed
 
   constructor(
     private router: Router,
@@ -34,15 +37,17 @@ export class EssFileOverviewComponent implements OnInit {
   }
 
   /**
-   * Maps needs assessment api value to UI string
-   *
-   * @param incomingValue needs assessment value
-   * @returns
-   */
-  mapNeedsValues(incomingValue: boolean | null): string {
-    return globalConst.needsOptions.find(
-      (ins) => ins.apiValue === incomingValue
-    )?.name;
+  * Returns if incoming need exists in ess file needs assessment needs
+  *
+  * @param incomingNeed needs assessment value
+  * @returns boolean
+  */
+  doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
+    if(incomingNeed === null) {
+      return true;
+    } else {
+      return this.essFile?.needsAssessment?.needs?.includes(incomingNeed);
+    }
   }
 
   private calculateAnimalsTotal(): void {

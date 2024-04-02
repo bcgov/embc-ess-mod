@@ -4,7 +4,7 @@ import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
+import { EvacuationFileHouseholdMember, IdentifiedNeed } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-ess-file-details',
@@ -13,6 +13,8 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
 })
 export class EssFileDetailsComponent implements OnInit {
   essFile: EvacuationFileModel;
+
+  IdentifiedNeed = IdentifiedNeed;
 
   memberListDisplay: EvacuationFileHouseholdMember[];
 
@@ -40,14 +42,16 @@ export class EssFileDetailsComponent implements OnInit {
   }
 
   /**
-   * Maps needs assessment api value to UI string
+  * Returns if incoming need exists in ess file needs assessment needs
    *
-   * @param incomingValue needs assessment value
-   * @returns
+   * @param incomingNeed needs assessment value
+   * @returns boolean
    */
-  mapNeedsValues(incomingValue: boolean | null): string {
-    return globalConst.needsOptions.find(
-      (ins) => ins.apiValue === incomingValue
-    )?.name;
+  doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
+    if(incomingNeed === null) {
+      return true;
+    } else {
+      return this.essFile?.needsAssessment?.needs?.includes(incomingNeed);
+    }
   }
 }

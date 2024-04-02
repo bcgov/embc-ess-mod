@@ -6,7 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Code } from 'src/app/core/api/models';
+import { Code, IdentifiedNeed } from 'src/app/core/api/models';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
@@ -19,6 +19,8 @@ import { StepSupportsService } from '../../step-supports/step-supports.service';
 export class SelectSupportComponent implements OnInit {
   supportList: Code[] = [];
   supportTypeForm: UntypedFormGroup;
+  
+  IdentifiedNeed = IdentifiedNeed;
 
   constructor(
     public stepSupportsService: StepSupportsService,
@@ -61,6 +63,14 @@ export class SelectSupportComponent implements OnInit {
       this.stepSupportsService.supportTypeToAdd =
         this.supportTypeForm.get('type').value;
       this.router.navigate(['/ess-wizard/add-supports/details']);
+    }
+  }
+
+  doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
+    if(incomingNeed === null) {
+      return true;
+    } else {
+      return this.evacueeSessionService?.currentNeedsAssessment?.needs.includes(incomingNeed);
     }
   }
 }

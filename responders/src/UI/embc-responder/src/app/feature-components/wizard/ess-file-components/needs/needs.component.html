@@ -18,8 +18,8 @@
         <div class="needs-section">
           <div>
             <mat-checkbox
-              aria-labelledby="canEvacueeProvideLodging-checkbox-label"
-              formControlName="canEvacueeProvideLodging"
+              aria-labelledby="canEvacueeProvideShelter-checkbox-label"
+              formControlName="canEvacueeProvideShelter"
               class="primary-checkbox"
             >
             </mat-checkbox>
@@ -29,22 +29,22 @@
               src="../../../../../assets/images/wizard/needs-lodging.svg"
               width="40px"
               height="42px"
-              [class.grayscale]="needsForm.get('canEvacueeProvideLodging').disabled"
+              [class.grayscale]="needsForm.get('canEvacueeProvideShelter').disabled"
             />
           </div>
           <div class="needs-text-section">
-            <label class="tab-subtitle" id="lodging-label" [class.disabled-text]="needsForm.get('canEvacueeProvideLodging').disabled">
+            <label class="tab-subtitle" id="lodging-label" [class.disabled-text]="needsForm.get('canEvacueeProvideShelter').disabled">
               Shelter
             </label>
-            <div id="canEvacueeProvideLodging-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideLodging').disabled">
+            <div id="canEvacueeProvideShelter-checkbox-label" [class.disabled-text]="needsForm.get('canEvacueeProvideShelter').disabled">
               There are several ways to meet your shelter needs.<br>
               You can receive a shelter allowance and use that money to find your own shelter or be provided with a referral to shelter (like a cot in a gym or a hotel/motel).
             </div>
           </div>
         </div>
-        <div *ngIf="needsForm.get('canEvacueeProvideLodging').value">
+        <div *ngIf="needsForm.get('canEvacueeProvideShelter').value">
           <mat-radio-group
-            aria-labelledby="canEvacueeProvideLodging-radio-group-label"
+            aria-labelledby="shelterOptions-radio-group-label"
             formControlName="shelterOptions"
             class="primary-radio-group"
             required

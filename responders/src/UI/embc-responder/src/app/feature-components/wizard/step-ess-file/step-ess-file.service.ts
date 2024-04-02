@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import {
   EvacuationFile,
   HouseholdMemberType,
+  IdentifiedNeed,
   InsuranceOption,
   NeedsAssessment,
   Pet
@@ -70,13 +71,7 @@ export class StepEssFileService {
   private addPetIndicatorVal: boolean;
 
   // Needs tab
-  private canRegistrantProvideLodgingVal: string;
-  private shelterOptionsVal: string;
-  private canRegistrantProvideFoodVal: string;
-  private canRegistrantProvideClothingVal: string;
-  private canRegistrantProvideIncidentalsVal: string;
-  private canRegistrantProvideTransportationVal: string;
-  private doesEvacueeNotRequireAssistanceVal: string;
+  private needs: IdentifiedNeed[] = [];
 
   // Security Phrase tab
   private bypassPhraseVal: boolean;
@@ -280,70 +275,24 @@ export class StepEssFileService {
   }
 
   // Needs tab
-  public get canRegistrantProvideLodging(): string {
-    return this.canRegistrantProvideLodgingVal;
-  }
-  public set canRegistrantProvideLodging(
-    canRegistrantProvideLodgingVal: string
-  ) {
-    this.canRegistrantProvideLodgingVal = canRegistrantProvideLodgingVal;
+  public setNeed(need: IdentifiedNeed) {
+    if (!this.isNeedIdentified(need)){
+      this.needs.push(need);
+    }
   }
 
-  public get shelterOptions(): string {
-    return this.shelterOptionsVal;
-  }
-  public set shelterOptions(
-    shelterOptionsVal: string
-  ) {
-    this.shelterOptionsVal = shelterOptionsVal;
+  public removeNeed(need: IdentifiedNeed) {
+    if (this.isNeedIdentified(need)){
+      delete this.needs[need];
+    }
   }
 
-  public get canRegistrantProvideFood(): string {
-    return this.canRegistrantProvideFoodVal;
-  }
-  public set canRegistrantProvideFood(
-    canRegistrantProvideFoodVal: string
-  ) {
-    this.canRegistrantProvideFoodVal = canRegistrantProvideFoodVal;
+  public isNeedIdentified(need: IdentifiedNeed): boolean {
+    return this.needs.indexOf(need)!== -1;
   }
 
-  public get canRegistrantProvideClothing(): string {
-    return this.canRegistrantProvideClothingVal;
-  }
-  public set canRegistrantProvideClothing(
-    canRegistrantProvideClothingVal: string
-  ) {
-    this.canRegistrantProvideClothingVal = canRegistrantProvideClothingVal;
-  }
-
-  public get canRegistrantProvideIncidentals(): string {
-    return this.canRegistrantProvideIncidentalsVal;
-  }
-  public set canRegistrantProvideIncidentals(
-    canRegistrantProvideIncidentalsVal: string
-  ) {
-    this.canRegistrantProvideIncidentalsVal =
-      canRegistrantProvideIncidentalsVal;
-  }
-
-  public get canRegistrantProvideTransportation(): string {
-    return this.canRegistrantProvideTransportationVal;
-  }
-  public set canRegistrantProvideTransportation(
-    canRegistrantProvideTransportationVal: string
-  ) {
-    this.canRegistrantProvideTransportationVal =
-      canRegistrantProvideTransportationVal;
-  }
-
-  public get doesEvacueeNotRequireAssistance(): string {
-    return this.doesEvacueeNotRequireAssistanceVal;
-  }
-  public set doesEvacueeNotRequireAssistance(
-    doesEvacueeNotRequireAssistanceVal: string
-  ) {
-    this.doesEvacueeNotRequireAssistanceVal =
-    doesEvacueeNotRequireAssistanceVal;
+  public isNoNeedsIdentified(): boolean {
+    return this.needs.length === 0;
   }
 
   // Security Phrase tab
@@ -402,26 +351,6 @@ export class StepEssFileService {
     // Get Correct API values for Household Members selections
 
     // Get correct API values for Needs Assessment selections
-    const needsClothingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideClothing
-    )?.apiValue;
-
-    const needsFoodDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideFood
-    )?.apiValue;
-
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideIncidentals
-    )?.apiValue;
-
-    const needsLodgingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideLodging
-    )?.apiValue;
-
-    const needsTransportationDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideTransportation
-    )?.apiValue;
-
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
 
@@ -429,11 +358,7 @@ export class StepEssFileService {
 
       pets: this.petsList,
 
-      canProvideFood: needsFoodDTO,
-      canProvideLodging: needsLodgingDTO,
-      canProvideClothing: needsClothingDTO,
-      canProvideTransportation: needsTransportationDTO,
-      canProvideIncidentals: needsIncidentalsDTO
+      needs: this.needs,
     };
 
     // Map out into DTO object and return
@@ -469,39 +394,11 @@ export class StepEssFileService {
   public updateEvacFileDTO(): EvacuationFile {
     // Get Correct API values for Household Members selections
 
-    // Get correct API values for Needs Assessment selections
-    const needsClothingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideClothing
-    )?.apiValue;
-
-    const needsFoodDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideFood
-    )?.apiValue;
-
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideIncidentals
-    )?.apiValue;
-
-    const needsLodgingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideLodging
-    )?.apiValue;
-
-    const needsTransportationDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideTransportation
-    )?.apiValue;
-
     const needsObject: NeedsAssessment = {
-      insurance: this.insurance,
-   
-      householdMembers: this.selectedHouseholdMembers,
-   
+      insurance: this.insurance,   
+      householdMembers: this.selectedHouseholdMembers,   
       pets: this.petsList,
-
-      canProvideFood: needsFoodDTO,
-      canProvideLodging: needsLodgingDTO,
-      canProvideClothing: needsClothingDTO,
-      canProvideTransportation: needsTransportationDTO,
-      canProvideIncidentals: needsIncidentalsDTO
+      needs: this.needs,    
     };
 
     // Map out into DTO object and return
@@ -568,11 +465,7 @@ export class StepEssFileService {
     this.addPetIndicator = undefined;
 
     // Needs tab
-    this.canRegistrantProvideClothing = undefined;
-    this.canRegistrantProvideFood = undefined;
-    this.canRegistrantProvideIncidentals = undefined;
-    this.canRegistrantProvideLodging = undefined;
-    this.canRegistrantProvideTransportation = undefined;
+    this.needs = [];
 
     // Security Phrase tab
     this.bypassPhrase = undefined;
@@ -646,25 +539,7 @@ export class StepEssFileService {
     )?.value;
 
     // Needs tab
-    this.canRegistrantProvideFood = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideFood
-    )?.value;
-
-    this.canRegistrantProvideLodging = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideLodging
-    )?.value;
-
-    this.canRegistrantProvideClothing = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideClothing
-    )?.value;
-
-    this.canRegistrantProvideTransportation = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideTransportation
-    )?.value;
-
-    this.canRegistrantProvideIncidentals = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideIncidentals
-    )?.value;
+   this.needs = essNeeds.needs;
 
     // Security Phrase tab
     this.securityPhrase = essFile.securityPhrase;

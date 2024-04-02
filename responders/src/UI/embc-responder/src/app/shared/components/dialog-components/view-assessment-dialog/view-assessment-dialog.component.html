@@ -137,34 +137,36 @@
 <div class="row row-padding">
   <div class="col-5">Food</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideFood) }}
+    {{ doesIncludeNeed(IdentifiedNeed.Food) }}
   </div>
 </div>
 
 <div class="row row-padding">
-  <div class="col-5">Lodging</div>
+  <div class="col-5">Shelter</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideLodging) }}
+    {{ doesIncludeNeed(IdentifiedNeed.ShelterReferral) 
+      ? IdentifiedNeed.ShelterReferral : doesIncludeNeed(IdentifiedNeed.ShelterAllowance) 
+        ? IdentifiedNeed.ShelterReferral : 'No' }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Clothing</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideClothing) }}
+    {{ doesIncludeNeed(IdentifiedNeed.Clothing) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Transportation</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideTransportation) }}
+    {{ doesIncludeNeed(IdentifiedNeed.Tranportation) }}
   </div>
 </div>
 
 <div class="row row-padding">
   <div class="col-5">Incidentals</div>
   <div class="col-7 bold">
-    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideIncidentals) }}
+    {{ doesIncludeNeed(IdentifiedNeed.Incidentals) }}
   </div>
 </div>

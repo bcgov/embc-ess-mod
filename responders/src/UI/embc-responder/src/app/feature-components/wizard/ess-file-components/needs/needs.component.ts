@@ -20,6 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from '../../../../shared/components/dialog-components/information-dialog/information-dialog.component';
 import { needsShelterAllowanceMessage, needsShelterReferralMessage, needsIncidentalMessage } from '../../../../core/services/global-constants';
+import { IdentifiedNeed } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-needs',
@@ -116,31 +117,35 @@ export class NeedsComponent implements OnInit, OnDestroy {
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
       doesEvacueeNotRequireAssistance: [
-        this.stepEssFileService.doesEvacueeNotRequireAssistance ?? '',
+        this.stepEssFileService.isNoNeedsIdentified(),
         Validators.required
       ],
       canEvacueeProvideFood: [
-        this.stepEssFileService.canRegistrantProvideFood ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Food),
         Validators.required
       ],
-      canEvacueeProvideLodging: [
-        this.stepEssFileService.canRegistrantProvideLodging ?? '',
+      canEvacueeProvideShelter: [
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterAllowance) 
+        || this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterReferral),
         Validators.required
       ],
       shelterOptions: [
-        this.stepEssFileService.shelterOptions ?? '', 
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterAllowance) 
+          ? IdentifiedNeed.ShelterAllowance 
+          : (this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterReferral) 
+            ? IdentifiedNeed.ShelterReferral : ''),
         Validators.required
       ],
       canEvacueeProvideClothing: [
-        this.stepEssFileService.canRegistrantProvideClothing ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Clothing),
         Validators.required
       ],
       canEvacueeProvideTransportation: [
-        this.stepEssFileService.canRegistrantProvideTransportation ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Tranportation),
         Validators.required
       ],
       canEvacueeProvideIncidentals: [
-        this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Incidentals),
         Validators.required
       ]
     });
@@ -193,11 +198,11 @@ export class NeedsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'shelterOptions' control.
+   * Subscribes to changes in the 'canEvacueeProvideShelter' control and updates the 'shelterOptions' control.
    */
   private subscribeShelterRadiosToCheckbox() {  
-    // Subscribe to changes in canEvacueeProvideLodging and update the shelterOptions control
-    this.needsForm.get('canEvacueeProvideLodging').valueChanges.subscribe(value => {
+    // Subscribe to changes in canEvacueeProvideShelter and update the shelterOptions control
+    this.needsForm.get('canEvacueeProvideShelter').valueChanges.subscribe(value => {
       const shelterOptionsCtrl = this.needsForm.get('shelterOptions');
 
       if (value) {
@@ -255,11 +260,11 @@ export class NeedsComponent implements OnInit, OnDestroy {
    */
   private updateTabStatus() {
     const doesEvacueeNotRequireAssistance = this.needsForm.get('doesEvacueeNotRequireAssistance').value;
-    const canEvacueeProvideLodging = this.needsForm.get('canEvacueeProvideLodging').value;
-    const lodgingOptions = this.needsForm.get('shelterOptions').value;
+    const canEvacueeProvideShelter = this.needsForm.get('canEvacueeProvideShelter').value;
+    const shelterOptions = this.needsForm.get('shelterOptions').value;
 
     const otherCheckboxes = [
-      'canEvacueeProvideLodging', 
+      'shelterOption', 
       'canEvacueeProvideFood', 
       'canEvacueeProvideClothing', 
       'canEvacueeProvideIncidentals', 
@@ -272,7 +277,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
     if (doesEvacueeNotRequireAssistance) {
       this.stepEssFileService.setTabStatus('needs', 'complete');
     } else if (atLeastOneOtherCheckboxChecked) {
-      if (canEvacueeProvideLodging && !lodgingOptions) {
+      if (canEvacueeProvideShelter && !shelterOptions) {
         this.stepEssFileService.setTabStatus('needs', 'incomplete');
       } else {
         this.stepEssFileService.setTabStatus('needs', 'complete');
@@ -287,19 +292,21 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Saves information inserted in the form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
-      'canEvacueeProvideLodging').value;
-    this.stepEssFileService.shelterOptions = this.needsForm.get(
-      'shelterOptions').value;
-    this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
-      'canEvacueeProvideFood').value;
-    this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
-      'canEvacueeProvideClothing').value;
-    this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
-      'canEvacueeProvideIncidentals').value;  
-    this.stepEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
-      'canEvacueeProvideTransportation').value;
-    this.stepEssFileService.doesEvacueeNotRequireAssistance = this.needsForm.get(
-      'doesEvacueeNotRequireAssistance').value;
+    if (this.needsForm.get('canEvacueeProvideFood').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Food);
+    } 
+    if (this.needsForm.get('canEvacueeProvideIncidentals').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Food);
+    }
+    if (this.needsForm.get('canEvacueeProvideClothing').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Food);
+    }
+    if (this.needsForm.get('canEvacueeProvideTransportation').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Food);
+    }
+    if (this.needsForm.get('canEvacueeProvideShelter').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.ShelterAllowance);
+      this.stepEssFileService.setNeed(IdentifiedNeed.ShelterReferral);
+    }
   }
 }
