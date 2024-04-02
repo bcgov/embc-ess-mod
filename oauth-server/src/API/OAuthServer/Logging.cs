@@ -4,10 +4,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Events;
@@ -32,7 +29,6 @@ namespace OAuthServer
                 .Enrich.WithEnvironmentUserName()
                 .Enrich.WithCorrelationId()
                 .Enrich.WithCorrelationIdHeader()
-                .Enrich.WithClientAgent()
                 .Enrich.WithClientIp()
                 .Enrich.WithSpan()
                 .WriteTo.Console(outputTemplate: LogOutputTemplate)
@@ -83,25 +79,6 @@ namespace OAuthServer
             return ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
                     ? LogEventLevel.Verbose
                     : LogEventLevel.Information;
-        }
-
-        public static IServiceCollection AddOpenTelemetry(this IServiceCollection services, string appName)
-        {
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                builder
-                    .AddConsoleExporter()
-                    .AddSource(appName)
-                    .SetResourceBuilder(ResourceBuilder
-                        .CreateDefault()
-                        .AddService(serviceName: appName, serviceVersion: Environment.GetEnvironmentVariable("VERSION")))
-                    .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddRedisInstrumentation();
-            });
-            services.AddSingleton(TracerProvider.Default.GetTracer(appName));
-
-            return services;
         }
     }
 }

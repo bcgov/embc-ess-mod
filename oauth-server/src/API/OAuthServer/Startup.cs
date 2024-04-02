@@ -252,7 +252,6 @@ namespace OAuthServer
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
-            services.AddOpenTelemetry(applicationName);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
