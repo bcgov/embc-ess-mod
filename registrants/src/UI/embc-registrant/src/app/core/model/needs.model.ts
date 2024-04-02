@@ -155,7 +155,7 @@ export class PetForm {
               Validators.required, 
             )
             .bind(customValidator),
-            customValidator.whitespaceValidator()
+            customValidator.whitespacePristineValidator()
         ]
       ]
     });

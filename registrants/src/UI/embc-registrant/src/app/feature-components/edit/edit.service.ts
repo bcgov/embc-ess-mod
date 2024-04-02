@@ -183,7 +183,7 @@ export class EditService {
           form.reset();
         }
         break;
-      case 'family-information-pets':
+      case 'family-information':
         if (
           this.needsAssessmentDataService.householdMembers.length !== 0 ) {
           if (path === 'verified-registration') {
@@ -207,15 +207,15 @@ export class EditService {
           form.get('householdMembers').patchValue([]);
         }
         break;
-      case 'pets':
-        if (
-          this.needsAssessmentDataService.pets.length !== 0 
-        ) {
-          form.get('pets').patchValue(this.needsAssessmentDataService.pets);
-        } else {
-          form.get('pets').patchValue([]);
-        }
-        break;
+        case 'pets':
+          if (
+            this.needsAssessmentDataService.pets?.length !== 0 
+          ) {
+            form.get('pets').patchValue(this.needsAssessmentDataService.pets);
+          } else {
+            form.get('pets').patchValue([]);
+          }
+          break;
       case 'identify-needs':
         if (
           this.needsAssessmentDataService.canEvacueeProvideClothing !==

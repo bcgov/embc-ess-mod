@@ -165,6 +165,17 @@ export class CustomValidationService {
     };
   }
 
+  whitespacePristineValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== undefined && !control.pristine) {
+        if ((control.value || '').trim().length === 0) {
+          return { whitespaceError: true };
+        }
+      }
+    };
+  }
+
+
   /**
    * Checks an array of controls by name, to see if they all have different values (unless empty)
    *
