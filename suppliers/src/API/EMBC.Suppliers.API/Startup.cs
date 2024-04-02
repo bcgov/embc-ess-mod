@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Abstractions;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
@@ -139,7 +138,7 @@ namespace EMBC.Suppliers.API
             {
                 options.Path = "/api/swagger/{documentName}/swagger.json";
             });
-            services.Configure<SwaggerUi3Settings>(options =>
+            services.Configure<SwaggerUiSettings>(options =>
             {
                 options.Path = "/api/swagger";
                 options.DocumentPath = "/api/swagger/{documentName}/swagger.json";
@@ -178,12 +177,12 @@ namespace EMBC.Suppliers.API
             });
         }
 
-        private IPNetwork ParseNetworkFromString(string network)
+        private Microsoft.AspNetCore.HttpOverrides.IPNetwork ParseNetworkFromString(string network)
         {
             var networkParts = network.Trim().Split('/');
             var prefix = IPAddress.Parse(networkParts[0]);
             var length = int.Parse(networkParts[1]);
-            return new IPNetwork(prefix, length);
+            return new Microsoft.AspNetCore.HttpOverrides.IPNetwork(prefix, length);
         }
 
         public void Configure(IApplicationBuilder app)
@@ -214,7 +213,7 @@ namespace EMBC.Suppliers.API
             app.UseForwardedHeaders();
 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi();
 
             app.UseRouting();
 

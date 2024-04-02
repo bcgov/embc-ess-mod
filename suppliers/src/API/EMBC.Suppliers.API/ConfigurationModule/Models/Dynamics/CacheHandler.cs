@@ -15,12 +15,10 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 using Cronos;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
@@ -78,5 +76,6 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
         }
     }
 
-    public class RefreshCacheCommand { }
+    public class RefreshCacheCommand
+    { }
 }
