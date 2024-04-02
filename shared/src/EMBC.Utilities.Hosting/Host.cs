@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Events;
 using Serilog.Extensions.Hosting;
@@ -104,7 +105,7 @@ namespace EMBC.Utilities.Hosting
                  .ConfigureHostConfiguration(opts =>
                  {
                      // add secrets json file if exists in the hosting assembly
-                     opts.AddUserSecrets(Assembly.GetEntryAssembly()!, true, true);
+                     opts.AddUserSecrets(Assembly.GetEntryAssembly(), true, true);
                  })
                 .UseSerilog((ctx, services, config) => Logging.ConfigureSerilog(ctx, services, config, appName))
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -177,11 +178,11 @@ namespace EMBC.Utilities.Hosting
                 // try to get array of origins from section array
                 var corsOrigins = configuration.GetSection("cors:origins").GetChildren().Select(c => c.Value).ToArray();
                 // try to get array of origins from value
-                if (!corsOrigins.Any()) corsOrigins = configuration.GetValue("cors:origins", string.Empty)!.Split(',');
+                if (!corsOrigins.Any()) corsOrigins = configuration.GetValue("cors:origins", string.Empty).Split(',');
                 corsOrigins = corsOrigins.Where(o => !string.IsNullOrWhiteSpace(o)).ToArray();
-                if (corsOrigins.Length > 0)
+                if (corsOrigins.Any())
                 {
-                    policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins!);
+                    policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins);
                 }
             }));
             services.Configure<ForwardedHeadersOptions>(options =>

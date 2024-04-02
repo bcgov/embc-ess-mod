@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
@@ -10,18 +10,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="bogus" Version="35.5.0" />
-        <PackageReference Include="FakeItEasy" Version="8.1.0" />
-        <PackageReference Include="Grpc.Core.Testing" Version="2.46.6" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-        <PackageReference Include="Serilog.Sinks.Xunit" Version="3.0.5" />
-        <PackageReference Include="shouldly" Version="4.2.1" />
-        <PackageReference Include="xunit" Version="2.7.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
+        <PackageReference Include="bogus" Version="34.0.2" />
+        <PackageReference Include="FakeItEasy" Version="7.3.1" />
+        <PackageReference Include="Grpc.Core.Testing" Version="2.46.5" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+        <PackageReference Include="Serilog.Sinks.Xunit" Version="3.0.3" />
+        <PackageReference Include="shouldly" Version="4.1.0" />
+        <PackageReference Include="xunit" Version="2.4.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="6.0.2">
+        <PackageReference Include="coverlet.collector" Version="3.1.2">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>

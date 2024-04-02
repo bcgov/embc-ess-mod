@@ -32,10 +32,13 @@ namespace EMBC.Utilities.Caching
             var prunned = 0;
             foreach (var item in this)
             {
-                if (item.Value.CurrentCount == 1 && TryRemove(item.Key, out var locker))
+                if (item.Value.CurrentCount == 1)
                 {
-                    locker.Dispose();
-                    prunned++;
+                    if (TryRemove(item.Key, out var locker))
+                    {
+                        locker.Dispose();
+                        prunned++;
+                    }
                 }
             }
             logger.LogDebug("end cache lockers prunning: {0} prunned", prunned);

@@ -14,7 +14,7 @@ namespace EMBC.Utilities.Notifications.Channels
     public class Email : INotificationChannel
     {
         private readonly ITelemetryReporter logger;
-        private readonly EmailChannelOptions settings;
+        private EmailChannelOptions settings;
 
         public Email(IOptions<EmailChannelOptions> options, ITelemetryProvider telemetryProvider)
         {

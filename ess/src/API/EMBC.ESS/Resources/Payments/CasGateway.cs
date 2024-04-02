@@ -32,6 +32,10 @@ namespace EMBC.ESS.Resources.Payments
         public CasException(string message, Exception inner) : base(message, inner)
         {
         }
+
+        protected CasException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 
     internal class CasGateway : ICasGateway

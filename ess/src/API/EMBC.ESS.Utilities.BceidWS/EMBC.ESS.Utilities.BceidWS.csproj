@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <Company>Province of British Columbia</Company>
@@ -18,11 +18,11 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-        <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
-        <PackageReference Include="System.ServiceModel.Http" Version="8.0.0" />
-        <PackageReference Include="System.ServiceModel.NetTcp" Version="8.0.0" />
-        <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.*" />
+        <PackageReference Include="System.ServiceModel.Duplex" Version="4.10.0" />
+        <PackageReference Include="System.ServiceModel.Http" Version="4.10.0" />
+        <PackageReference Include="System.ServiceModel.NetTcp" Version="4.10.0" />
+        <PackageReference Include="System.ServiceModel.Security" Version="4.10.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

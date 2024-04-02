@@ -24,9 +24,8 @@ namespace EMBC.ESS.Utilities.Dynamics
                 var ctx = essContextFactory.CreateReadOnly();
                 version = ctx.solutions.Where(s => s.isvisible == true && s.uniquename == "ERAEntitySolution").FirstOrDefault()?.version;
             }
-            catch
+            catch (Exception)
             {
-                //ignore if failed
             }
 
             return new[]
