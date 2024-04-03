@@ -152,10 +152,9 @@ export class PetForm {
           customValidator
             .conditionalValidation(
               () => this.addPetIndicator.value,
-              Validators.required, 
+              Validators.required
             )
-            .bind(customValidator),
-            customValidator.whitespacePristineValidator()
+            .bind(customValidator)
         ]
       ]
     });
