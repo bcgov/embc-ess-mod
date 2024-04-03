@@ -442,6 +442,23 @@ namespace EMBC.Registrants.API.Controllers
         public string FacilityContactPhone { get; set; }
     }
 
+    public class LodgingAllowanceSupport : Support
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Allowance;
+
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+
+        public string? ContactPhone { get; set; }
+
+        public string? ContactEmail { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+    }
+
     public class TransportationTaxiSupport : Support
     {
         public override SupportCategory Category => SupportCategory.Transportation;
@@ -543,6 +560,9 @@ namespace EMBC.Registrants.API.Controllers
         [Description("Group Lodging")]
         Lodging_Group,
 
+        [Description("Shelter Allowance")]
+        Lodging_Allowance,
+
         [Description("Groceries")]
         Food_Groceries,
 
@@ -633,6 +653,7 @@ namespace EMBC.Registrants.API.Controllers
                 SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelSupport>(ref reader, options),
                 SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingSupport>(ref reader, options),
                 SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Allowance => JsonSerializer.Deserialize<LodgingAllowanceSupport>(ref reader, options),
                 SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiSupport>(ref reader, options),
                 SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherSupport>(ref reader, options),
                 _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
@@ -670,6 +691,10 @@ namespace EMBC.Registrants.API.Controllers
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Group:
                     JsonSerializer.Serialize(writer, (LodgingGroupSupport)value, options);
+                    break;
+
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Allowance:
+                    JsonSerializer.Serialize(writer, (LodgingAllowanceSupport)value, options);
                     break;
 
                 case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Taxi:
