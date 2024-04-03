@@ -44,9 +44,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 new IncidentalsSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = email, ReceivingRegistrantId = registrant.Id } },
                 new FoodGroceriesSupport {TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = email, ReceivingRegistrantId = registrant.Id } },
                 new FoodRestaurantSupport { TotalAmount = 100, SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterAllowanceSupport { NumberOfNights = 1, ContactEmail = "email", ContactPhone = "phone", TotalAmount = 100.00m , SupportDelivery = new Interac { NotificationEmail = email, ReceivingRegistrantId = registrant.Id } },
                 new TransportationOtherSupport { TotalAmount = 100, SupportDelivery = new Interac { NotificationEmail = email, ReceivingRegistrantId = registrant.Id } },
                 new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
             };
@@ -100,7 +101,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task CanVoidReferral()
+        public async Task Void_Referral_Voided()
         {
             var fileId = TestData.EvacuationFileId;
             var supportId = TestData.ReferralIds.TakeRandom(1).Single();
@@ -117,7 +118,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task CanCancelETransfer()
+        public async Task CancelInteracSupport_NewSupport_Cancelled()
         {
             var fileId = TestData.EvacuationFileId;
             var registrantId = TestData.ContactId;
@@ -157,7 +158,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task CanReprintSupport()
+        public async Task ReprintSupport_Support_Printed()
         {
             var printRequestId = await manager.Handle(new ReprintSupportCommand
             {
@@ -171,7 +172,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task CanQuerySupplierList()
+        public async Task QuerySupplierList_Task_Returned()
         {
             var taskId = TestData.ActiveTaskId;
             var list = (await manager.Handle(new SuppliersListQuery { TaskId = taskId })).Items;
@@ -179,7 +180,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
         }
 
         [Fact]
-        public async Task CanQueryPrintRequest()
+        public async Task QueryPrintRequest_Request_Success()
         {
             var dynamicsContext = Services.GetRequiredService<EssContext>();
             var testPrintRequest = dynamicsContext.era_referralprints
@@ -237,9 +238,10 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 new IncidentalsSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
                 new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
                 new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterAllowanceSupport { NumberOfNights = 1, ContactEmail = "email", ContactPhone = "phone", TotalAmount = 100.00m , SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
                 new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
                 new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };
@@ -335,9 +337,9 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 new IncidentalsSupport { SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
                 new FoodGroceriesSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierBId } } },
                 new FoodRestaurantSupport {  SupportDelivery = new Referral { SupplierDetails = new SupplierDetails { Id = TestData.SupplierCId } } },
-                new LodgingBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
-                new LodgingHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterBilletingSupport() { NumberOfNights = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterGroupSupport { NumberOfNights = 1, FacilityCommunityCode = TestData.RandomCommunity, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
+                new ShelterHotelSupport { NumberOfNights = 1, NumberOfRooms = 1, SupportDelivery = new Referral { IssuedToPersonName = "test person" } },
                 new TransportationOtherSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
                 new TransportationTaxiSupport { SupportDelivery = new Referral { IssuedToPersonName = "test person" }},
             };

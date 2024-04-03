@@ -118,12 +118,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.NumDaysMeals, opts => opts.MapFrom(s => s.NumberOfDays))
                 ;
 
-            CreateMap<Shared.Contracts.Events.LodgingHotelSupport, PrintReferral>()
+            CreateMap<Shared.Contracts.Events.ShelterHotelSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.NumRooms, opts => opts.MapFrom(s => s.NumberOfRooms))
                 ;
 
-            CreateMap<Shared.Contracts.Events.LodgingBilletingSupport, PrintReferral>()
+            CreateMap<Shared.Contracts.Events.ShelterBilletingSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => new PrintSupplier
                 {
@@ -134,7 +134,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 }))
                 ;
 
-            CreateMap<Shared.Contracts.Events.LodgingGroupSupport, PrintReferral>()
+            CreateMap<Shared.Contracts.Events.ShelterGroupSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(supplier => new PrintSupplier
                 {
@@ -143,6 +143,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                     Telephone = supplier.FacilityContactPhone,
                     Name = supplier.FacilityName
                 }))
+                ;
+
+            CreateMap<Shared.Contracts.Events.ShelterAllowanceSupport, PrintReferral>()
+                .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
+                .ForMember(d => d.Comments, opts => opts.MapFrom(s => $"{s.ContactEmail}\n{s.ContactPhone}"))
                 ;
 
             CreateMap<Shared.Contracts.Events.TransportationOtherSupport, PrintReferral>()
@@ -175,12 +181,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.NumDaysMeals, opts => opts.MapFrom(s => s.NumberOfDays))
                 ;
 
-            CreateMap<Shared.Contracts.Events.LodgingHotelSupport, PrintSummary>()
+            CreateMap<Shared.Contracts.Events.ShelterHotelSupport, PrintSummary>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.NumRooms, opts => opts.MapFrom(s => s.NumberOfRooms))
                 ;
 
-            CreateMap<Shared.Contracts.Events.LodgingBilletingSupport, PrintSummary>()
+            CreateMap<Shared.Contracts.Events.ShelterBilletingSupport, PrintSummary>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => new PrintSupplier
                 {
@@ -191,7 +197,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 }))
                 ;
 
-            CreateMap<Shared.Contracts.Events.LodgingGroupSupport, PrintSummary>()
+            CreateMap<Shared.Contracts.Events.ShelterGroupSupport, PrintSummary>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(supplier => new PrintSupplier
                 {
@@ -242,9 +248,10 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 Shared.Contracts.Events.FoodGroceriesSupport _ => PrintReferralType.Groceries,
                 Shared.Contracts.Events.FoodRestaurantSupport _ => PrintReferralType.Meals,
                 Shared.Contracts.Events.IncidentalsSupport _ => PrintReferralType.Incidentals,
-                Shared.Contracts.Events.LodgingBilletingSupport _ => PrintReferralType.Billeting,
-                Shared.Contracts.Events.LodgingGroupSupport _ => PrintReferralType.GroupLodging,
-                Shared.Contracts.Events.LodgingHotelSupport _ => PrintReferralType.Hotel,
+                Shared.Contracts.Events.ShelterBilletingSupport _ => PrintReferralType.Billeting,
+                Shared.Contracts.Events.ShelterGroupSupport _ => PrintReferralType.GroupLodging,
+                Shared.Contracts.Events.ShelterHotelSupport _ => PrintReferralType.Hotel,
+                Shared.Contracts.Events.ShelterAllowanceSupport _ => PrintReferralType.Allowance,
                 Shared.Contracts.Events.TransportationOtherSupport _ => PrintReferralType.Transportation,
                 Shared.Contracts.Events.TransportationTaxiSupport _ => PrintReferralType.Taxi,
                 _ => throw new NotImplementedException()

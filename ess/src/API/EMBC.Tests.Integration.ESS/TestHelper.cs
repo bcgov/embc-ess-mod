@@ -136,11 +136,12 @@ namespace EMBC.Tests.Integration.ESS
                 new IncidentalsSupport { TotalAmount = RandomAmount() },
                 new FoodGroceriesSupport {TotalAmount = RandomAmount()},
                 new FoodRestaurantSupport { TotalAmount = RandomAmount() },
-                new LodgingBilletingSupport() { NumberOfNights = RandomInt()},
-                new LodgingGroupSupport { NumberOfNights = RandomInt(), FacilityCommunityCode = file.EvacuatedFromAddress.Community },
-                new LodgingHotelSupport { NumberOfNights = RandomInt(), NumberOfRooms = RandomInt() },
+                new ShelterBilletingSupport() { NumberOfNights = RandomInt()},
+                new ShelterGroupSupport { NumberOfNights = RandomInt(), FacilityCommunityCode = file.EvacuatedFromAddress.Community },
+                new ShelterHotelSupport { NumberOfNights = RandomInt(), NumberOfRooms = RandomInt() },
+                new ShelterAllowanceSupport { NumberOfNights = RandomInt(), ContactPhone = "phone", ContactEmail = "email" },
                 new TransportationOtherSupport { TotalAmount = RandomAmount() },
-                new TransportationTaxiSupport { FromAddress = "test",ToAddress="test" },
+                new TransportationTaxiSupport { FromAddress = "test", ToAddress = "test" },
             };
 
             Func<Support, SupportDelivery> createSupportDelivery = sup =>

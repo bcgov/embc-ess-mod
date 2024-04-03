@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -10,7 +11,7 @@ using HandlebarsDotNet;
 
 namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
 {
-    internal class ReferralHtmlGenerator
+    internal static class ReferralHtmlGenerator
     {
         public static readonly string PageBreak = $@"{Environment.NewLine}<div class=""page-break""></div>{Environment.NewLine}";
 
@@ -24,7 +25,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             });
             handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
             {
-                if (DateTime.TryParse((string)arguments[0], out var parsedDate)) output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
+                if (DateTime.TryParse((string)arguments[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate)) output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
             });
             handleBars.RegisterHelper("timeFormatter", (output, context, arguments) =>
             {
