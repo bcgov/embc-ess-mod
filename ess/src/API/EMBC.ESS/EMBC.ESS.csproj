@@ -33,7 +33,57 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsSummaryPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsSummaryPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Css.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelItemsSummaryPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\MasterLayout.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Referral.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Summary.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\SummaryItem.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiSupplierPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationSupplierPartial.hbs" />
+        <None Remove="Managers\Events\Notifications\Templates\AnonymousNewTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\InviteTemplate.hbs" />
+        <None Remove="Managers\Events\Notifications\Templates\NewTemplate.hbs" />
         <None Remove="Managers\Events\Notifications\Templates\RegisterNewTemplate.hbs" />
     </ItemGroup>
 
@@ -61,146 +111,58 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Managers\Events\Notifications\Templates\AnonymousNewTemplate.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Managers\Events\Notifications\Templates\InviteTemplate.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Managers\Events\Notifications\Templates\NewTemplate.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Managers\Events\Notifications\Templates\RegisterNewTemplate.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsSummaryPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Css.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelItemsSummaryPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\MasterLayout.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Referral.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\SummaryItem.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Summary.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationNotesPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationChecklistPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationSupplierPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationItemsPartial.hbs">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsSummaryPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsSummaryPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Clothing\ClothingSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Css.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Groceries\GroceriesSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\GroupLodging\GroupLodgingSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelItemsSummaryPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Hotel\HotelSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Incidentals\IncidentalsSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\MasterLayout.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Referral.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Summary.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\SummaryItem.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Transportation\TransportationSupplierPartial.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\AnonymousNewTemplate.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\InviteTemplate.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\NewTemplate.hbs" />
+      <EmbeddedResource Include="Managers\Events\Notifications\Templates\RegisterNewTemplate.hbs" />
     </ItemGroup>
+
 </Project>

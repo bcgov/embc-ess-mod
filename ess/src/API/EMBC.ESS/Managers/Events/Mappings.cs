@@ -227,17 +227,22 @@ namespace EMBC.ESS.Managers.Events
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination);
 
-            CreateMap<ShelterBilletingSupport, Shared.Contracts.Events.LodgingBilletingSupport>()
+            CreateMap<ShelterBilletingSupport, Shared.Contracts.Events.ShelterBilletingSupport>()
                 .IncludeBase<Support, Shared.Contracts.Events.Support>()
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination);
 
-            CreateMap<ShelterGroupSupport, Shared.Contracts.Events.LodgingGroupSupport>()
+            CreateMap<ShelterGroupSupport, Shared.Contracts.Events.ShelterGroupSupport>()
                 .IncludeBase<Support, Shared.Contracts.Events.Support>()
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination);
 
-            CreateMap<ShelterHotelSupport, Shared.Contracts.Events.LodgingHotelSupport>()
+            CreateMap<ShelterHotelSupport, Shared.Contracts.Events.ShelterHotelSupport>()
+                .IncludeBase<Support, Shared.Contracts.Events.Support>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<ShelterAllowanceSupport, Shared.Contracts.Events.ShelterAllowanceSupport>()
                 .IncludeBase<Support, Shared.Contracts.Events.Support>()
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination);

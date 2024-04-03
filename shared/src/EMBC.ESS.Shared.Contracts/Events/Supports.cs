@@ -88,8 +88,10 @@ namespace EMBC.ESS.Shared.Contracts.Events
 
     public class ReconcilePaymentsCommand : Command
     { }
+
     public class ReconcileSupplierInfoCommand : Command
     { }
+
     public class FullReconcilePaymentsCommand : Command
     { }
 
@@ -193,13 +195,13 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public decimal TotalAmount { get; set; }
     }
 
-    public class LodgingHotelSupport : Support
+    public class ShelterHotelSupport : Support
     {
         public int NumberOfNights { get; set; }
         public int NumberOfRooms { get; set; }
     }
 
-    public class LodgingBilletingSupport : Support
+    public class ShelterBilletingSupport : Support
     {
         public int NumberOfNights { get; set; }
         public string HostName { get; set; }
@@ -209,7 +211,7 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string HostPhone { get; set; }
     }
 
-    public class LodgingGroupSupport : Support
+    public class ShelterGroupSupport : Support
     {
         public int NumberOfNights { get; set; }
         public string FacilityName { get; set; }
@@ -217,6 +219,14 @@ namespace EMBC.ESS.Shared.Contracts.Events
         public string FacilityCity { get; set; }
         public string FacilityCommunityCode { get; set; }
         public string FacilityContactPhone { get; set; }
+    }
+
+    public class ShelterAllowanceSupport : Support
+    {
+        public int NumberOfNights { get; set; }
+        public string ContactEmail { get; set; }
+        public string ContactPhone { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 
     public class TransportationTaxiSupport : Support
