@@ -72,6 +72,8 @@ export class StepEssFileService {
 
   // Needs tab
   private needs: IdentifiedNeed[] = [];
+  private doesEvacueeNotRequireAssistanceVal: boolean;
+  private canEvacueeProvideShelterVal: boolean;
 
   // Security Phrase tab
   private bypassPhraseVal: boolean;
@@ -275,6 +277,21 @@ export class StepEssFileService {
   }
 
   // Needs tab
+
+  public get canEvacueeProvideShelter(): boolean {
+    return this.canEvacueeProvideShelterVal;
+  }
+  public set canEvacueeProvideShelter(canEvacueeProvideShelterVal: boolean) {
+    this.canEvacueeProvideShelterVal = canEvacueeProvideShelterVal;
+  }
+
+  public get doesEvacueeNotRequireAssistance(): boolean {
+    return this.doesEvacueeNotRequireAssistanceVal;
+  }
+  public set doesEvacueeNotRequireAssistance(doesEvacueeNotRequireAssistanceVal: boolean) {
+    this.doesEvacueeNotRequireAssistanceVal = doesEvacueeNotRequireAssistanceVal;
+  }
+
   public setNeed(need: IdentifiedNeed) {
     if (!this.isNeedIdentified(need)){
       this.needs.push(need);
@@ -293,6 +310,14 @@ export class StepEssFileService {
 
   public isNoNeedsIdentified(): boolean {
     return this.needs.length === 0;
+  }
+
+  public getNeeds(): any {
+    return this.needs;
+  }
+
+  public clearNeeds(): void {
+    this.needs = [];
   }
 
   // Security Phrase tab
