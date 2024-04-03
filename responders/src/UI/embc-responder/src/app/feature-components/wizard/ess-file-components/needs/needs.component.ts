@@ -130,7 +130,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterAllowance) 
           ? 'Lodging - Shelter Allowance' 
           : (this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterReferral) 
-            ? 'Lodging - Shelter Referral' : ''),
+            ? 'Lodging - Hotel/Motel/Campground' : ''),
         Validators.required
       ],
       canEvacueeProvideClothing: [
@@ -321,7 +321,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
       if (this.needsForm.get('shelterOptions').value === 'Lodging - Shelter Allowance') {
         this.stepEssFileService.setNeed(IdentifiedNeed.ShelterAllowance);
       }
-      if (this.needsForm.get('shelterOptions').value === 'Lodging - Shelter Referral') {
+      if (this.needsForm.get('shelterOptions').value === 'Lodging - Hotel/Motel/Campground') {
         this.stepEssFileService.setNeed(IdentifiedNeed.ShelterReferral);
       }
     }
