@@ -49,6 +49,4 @@ export class ViewAssessmentDialogComponent implements OnInit {
       (ins) => ins.value === incomingValue
     )?.name;
   }
-
-
 }

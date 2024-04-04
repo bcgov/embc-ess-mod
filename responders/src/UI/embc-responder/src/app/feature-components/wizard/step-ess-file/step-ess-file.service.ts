@@ -373,8 +373,6 @@ export class StepEssFileService {
    * @returns Evacuation File record usable by the API
    */
   public createEvacFileDTO(): EvacuationFile {
-    // Get Correct API values for Household Members selections
-
     // Get correct API values for Needs Assessment selections
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
