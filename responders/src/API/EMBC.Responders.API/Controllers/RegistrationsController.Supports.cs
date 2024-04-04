@@ -426,6 +426,26 @@ namespace EMBC.Responders.API.Controllers
         public string FacilityContactPhone { get; set; }
     }
 
+    public class LodgingAllowanceSupport : Support
+    {
+        [Required]
+        public override SupportCategory Category => SupportCategory.Lodging;
+
+        [Required]
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Allowance;
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+
+        public string ContactEmail { get; set; }
+        public string ContactPhone { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+    }
+
     public class TransportationTaxiSupport : Support
     {
         [Required]
@@ -572,14 +592,17 @@ namespace EMBC.Responders.API.Controllers
     {
         None,
 
-        [Description("Lodging - Hotel/Motel/Campground")]
+        [Description("Shelter - Hotel/Motel/Campground")]
         Lodging_Hotel,
 
-        [Description("Lodging - Billeting")]
+        [Description("Shelter - Billeting")]
         Lodging_Billeting,
 
-        [Description("Lodging - Group Lodging")]
+        [Description("Shelter - Group Lodging")]
         Lodging_Group,
+
+        [Description("Shelter - Allowance")]
+        Lodging_Allowance,
 
         [Description("Food - Groceries")]
         Food_Groceries,
@@ -686,6 +709,7 @@ namespace EMBC.Responders.API.Controllers
                 SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelSupport>(ref reader, options),
                 SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingSupport>(ref reader, options),
                 SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupSupport>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Allowance => JsonSerializer.Deserialize<LodgingAllowanceSupport>(ref reader, options),
                 SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiSupport>(ref reader, options),
                 SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherSupport>(ref reader, options),
                 _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
@@ -723,6 +747,10 @@ namespace EMBC.Responders.API.Controllers
 
                 case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Group:
                     JsonSerializer.Serialize(writer, (LodgingGroupSupport)value, options);
+                    break;
+
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Allowance:
+                    JsonSerializer.Serialize(writer, (LodgingAllowanceSupport)value, options);
                     break;
 
                 case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Taxi:
@@ -855,24 +883,26 @@ namespace EMBC.Responders.API.Controllers
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingBilletingSupport, LodgingBilletingSupport>()
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ShelterBilletingSupport, LodgingBilletingSupport>()
 
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
 
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingGroupSupport, LodgingGroupSupport>()
-
-                    .ReverseMap()
-
-                    .ValidateMemberList(MemberList.Destination)
-                    ;
-
-            CreateMap<EMBC.ESS.Shared.Contracts.Events.LodgingHotelSupport, LodgingHotelSupport>()
-
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ShelterGroupSupport, LodgingGroupSupport>()
                     .ReverseMap()
                     .ValidateMemberList(MemberList.Destination)
                     ;
+
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ShelterHotelSupport, LodgingHotelSupport>()
+                    .ReverseMap()
+                    .ValidateMemberList(MemberList.Destination)
+                    ;
+
+            CreateMap<EMBC.ESS.Shared.Contracts.Events.ShelterAllowanceSupport, LodgingAllowanceSupport>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
 
             CreateMap<EMBC.ESS.Shared.Contracts.Events.TransportationOtherSupport, TransportationOtherSupport>()
 

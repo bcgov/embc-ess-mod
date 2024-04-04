@@ -166,14 +166,17 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<ESS.Shared.Contracts.Events.FoodRestaurantSupport, FoodRestaurantSupport>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.LodgingBilletingSupport, LodgingBilletingSupport>()
+            CreateMap<ESS.Shared.Contracts.Events.ShelterBilletingSupport, LodgingBilletingSupport>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.LodgingGroupSupport, LodgingGroupSupport>()
+            CreateMap<ESS.Shared.Contracts.Events.ShelterGroupSupport, LodgingGroupSupport>()
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Events.LodgingHotelSupport, LodgingHotelSupport>()
+            CreateMap<ESS.Shared.Contracts.Events.ShelterHotelSupport, LodgingHotelSupport>()
                 ;
+
+            CreateMap<ESS.Shared.Contracts.Events.ShelterAllowanceSupport, LodgingAllowanceSupport>()
+    ;
 
             CreateMap<ESS.Shared.Contracts.Events.TransportationOtherSupport, TransportationOtherSupport>()
                 ;
