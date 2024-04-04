@@ -572,13 +572,13 @@ namespace EMBC.Responders.API.Controllers
     {
         None,
 
-        [Description("Lodging - Hotel/Motel/Campground")]
+        [Description("Shelter - Hotel/Motel/Campground")]
         Lodging_Hotel,
 
-        [Description("Lodging - Billeting")]
+        [Description("Shelter - Billeting")]
         Lodging_Billeting,
 
-        [Description("Lodging - Group Lodging")]
+        [Description("Shelter - Group Lodging")]
         Lodging_Group,
 
         [Description("Food - Groceries")]

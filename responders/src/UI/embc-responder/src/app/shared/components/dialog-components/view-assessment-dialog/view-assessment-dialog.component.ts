@@ -29,13 +29,17 @@ export class ViewAssessmentDialogComponent implements OnInit {
   }
 
   /**
-   * Returns if incoming need exists in ess file needs assessment needs
+  * Returns if incoming need exists in ess file needs assessment needs
    *
    * @param incomingNeed needs assessment value
    * @returns boolean
    */
-  doesIncludeNeed(incomingNeed: IdentifiedNeed | null): string {
-      return this.profileData?.needsAssessment?.needs.includes(incomingNeed) ? 'Yes' : 'No';
+  doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
+    if(incomingNeed === null && this.profileData?.needsAssessment?.needs?.length === 0){
+      return true;
+    } else {
+      return this.profileData?.needsAssessment?.needs?.includes(incomingNeed);
+    }
   }
 
   /**
