@@ -119,44 +119,25 @@
         </div>
         <div class="col-md-9 table-parent">
           <table class="table-details">
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideFood ||
-                essFile?.needsAssessment?.canProvideFood === null
-              "
-            >
+            <tr *ngIf="doesIncludeNeed(null)">
+              <th>Household currently does not require assistance.</th>
+            </tr>
+            <tr *ngIf="doesIncludeNeed(IdentifyNeed.ShelterReferral)">
+              <th>Shelter</th>
+            </tr>
+            <tr *ngIf="doesIncludeNeed(IdentifyNeed.ShelterAllowance)">
+              <th>Shelter Allowance</th>
+            </tr>
+            <tr *ngIf="doesIncludeNeed(IdentifyNeed.Food)">
               <th>Food</th>
             </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideLodging ||
-                essFile?.needsAssessment?.canProvideLodging === null
-              "
-            >
-              <th>Lodging</th>
-            </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideIncidentals ||
-                essFile?.needsAssessment?.canProvideIncidentals === null
-              "
-            >
+            <tr *ngIf="doesIncludeNeed(IdentifyNeed.Incidentals)">
               <th>Incidentals</th>
             </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideClothing ||
-                essFile?.needsAssessment?.canProvideClothing === null
-              "
-            >
+            <tr *ngIf="doesIncludeNeed(IdentifyNeed.Clothing)">
               <th>Clothing</th>
             </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideTransportation ||
-                essFile?.needsAssessment?.canProvideTransportation === null
-              "
-            >
+            <tr *ngIf="doesIncludeNeed(IdentifyNeed.Tranportation)">
               <th>Transportation</th>
             </tr>
           </table>

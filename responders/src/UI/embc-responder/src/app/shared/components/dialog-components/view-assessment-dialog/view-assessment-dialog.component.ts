@@ -3,6 +3,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { IdentifiedNeed } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-view-assessment-dialog',
@@ -13,6 +14,8 @@ export class ViewAssessmentDialogComponent implements OnInit {
   @Input() content: DialogContent;
   @Input() profileData: EvacuationFileModel;
   @Output() outputEvent = new EventEmitter<string>();
+  
+  IdentifiedNeed = IdentifiedNeed;
 
   memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
   petColumns: string[] = ['type', 'quantity'];
@@ -26,15 +29,17 @@ export class ViewAssessmentDialogComponent implements OnInit {
   }
 
   /**
-   * Maps needs assessment api value to UI string
+  * Returns if incoming need exists in ess file needs assessment needs
    *
-   * @param incomingValue needs assessment value
-   * @returns
+   * @param incomingNeed needs assessment value
+   * @returns boolean
    */
-  mapNeedsValues(incomingValue: boolean | null): string {
-    return globalConst.needsOptions.find(
-      (ins) => ins.apiValue === incomingValue
-    )?.name;
+  doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
+    if(incomingNeed === null && this.profileData?.needsAssessment?.needs?.length === 0){
+      return true;
+    } else {
+      return this.profileData?.needsAssessment?.needs?.includes(incomingNeed);
+    }
   }
 
   /**

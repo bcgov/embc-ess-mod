@@ -3,6 +3,7 @@ import {
   CommunityType,
   EvacuationFileStatus,
   HouseholdMemberType,
+  IdentifiedNeed,
   InsuranceOption,
   NeedsAssessmentType
 } from '../core/api/models';
@@ -261,11 +262,7 @@ export class MockDashboardService extends SearchDataService {
         }
       ],
       pets: [],
-      canProvideFood: false,
-      canProvideLodging: true,
-      canProvideClothing: true,
-      canProvideTransportation: false,
-      canProvideIncidentals: true,
+      needs: [IdentifiedNeed.Clothing, IdentifiedNeed.ShelterReferral, IdentifiedNeed.Incidentals],
       type: NeedsAssessmentType.Assessed
     },
     notes: [],

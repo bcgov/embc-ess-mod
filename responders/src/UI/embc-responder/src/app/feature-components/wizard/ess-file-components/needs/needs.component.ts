@@ -1,11 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormGroup,
   UntypedFormBuilder,
   UntypedFormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../../../../shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from '../../../../shared/components/dialog-components/information-dialog/information-dialog.component';
 import { needsShelterAllowanceMessage, needsShelterReferralMessage, needsIncidentalMessage } from '../../../../core/services/global-constants';
+import { IdentifiedNeed } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-needs',
@@ -55,6 +53,8 @@ export class NeedsComponent implements OnInit, OnDestroy {
         this.saveFormData();
         this.updateTabStatus();
       });
+
+    this.needsForm.get('doesEvacueeNotRequireAssistance').setValue(this.stepEssFileService.doesEvacueeNotRequireAssistance);
 
     this.tabMetaData = this.stepEssFileService.getNavLinks('needs');
   }
@@ -116,31 +116,36 @@ export class NeedsComponent implements OnInit, OnDestroy {
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
       doesEvacueeNotRequireAssistance: [
-        this.stepEssFileService.doesEvacueeNotRequireAssistance ?? '',
+        this.stepEssFileService.doesEvacueeNotRequireAssistance,
         Validators.required
       ],
       canEvacueeProvideFood: [
-        this.stepEssFileService.canRegistrantProvideFood ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Food),
         Validators.required
       ],
-      canEvacueeProvideLodging: [
-        this.stepEssFileService.canRegistrantProvideLodging ?? '',
+      canEvacueeProvideShelter: [
+        this.stepEssFileService.canEvacueeProvideShelter || 
+          this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterAllowance) || 
+          this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterReferral),
         Validators.required
       ],
       shelterOptions: [
-        this.stepEssFileService.shelterOptions ?? '', 
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterAllowance) 
+          ? 'Lodging - Shelter Allowance' 
+          : (this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterReferral) 
+            ? 'Lodging - Hotel/Motel/Campground' : ''),
         Validators.required
       ],
       canEvacueeProvideClothing: [
-        this.stepEssFileService.canRegistrantProvideClothing ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Clothing),
         Validators.required
       ],
       canEvacueeProvideTransportation: [
-        this.stepEssFileService.canRegistrantProvideTransportation ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Tranportation),
         Validators.required
       ],
       canEvacueeProvideIncidentals: [
-        this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
+        this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Incidentals),
         Validators.required
       ]
     });
@@ -193,21 +198,21 @@ export class NeedsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'shelterOptions' control.
-   */
+  * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'shelterOptions' control.
+  */
   private subscribeShelterRadiosToCheckbox() {  
     // Subscribe to changes in canEvacueeProvideLodging and update the shelterOptions control
-    this.needsForm.get('canEvacueeProvideLodging').valueChanges.subscribe(value => {
+    this.needsForm.get('canEvacueeProvideShelter').valueChanges.subscribe(value => {
       const shelterOptionsCtrl = this.needsForm.get('shelterOptions');
-
       if (value) {
-        shelterOptionsCtrl.setValidators(Validators.required);
+      shelterOptionsCtrl.setValidators(Validators.required);
       } else {
+        this.stepEssFileService.removeNeed(IdentifiedNeed.ShelterAllowance);
+        this.stepEssFileService.removeNeed(IdentifiedNeed.ShelterReferral);
         shelterOptionsCtrl.clearValidators();
         shelterOptionsCtrl.setValue(null);
       }
-
-      shelterOptionsCtrl.updateValueAndValidity();
+        shelterOptionsCtrl.updateValueAndValidity();
     });
   }
   
@@ -254,52 +259,91 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
   private updateTabStatus() {
+    const canEvacueeProvideShelter = this.needsForm.get('canEvacueeProvideShelter').value;
     const doesEvacueeNotRequireAssistance = this.needsForm.get('doesEvacueeNotRequireAssistance').value;
-    const canEvacueeProvideLodging = this.needsForm.get('canEvacueeProvideLodging').value;
-    const lodgingOptions = this.needsForm.get('shelterOptions').value;
 
-    const otherCheckboxes = [
-      'canEvacueeProvideLodging', 
-      'canEvacueeProvideFood', 
-      'canEvacueeProvideClothing', 
-      'canEvacueeProvideIncidentals', 
-      'canEvacueeProvideTransportation'
-    ];
+    if(!doesEvacueeNotRequireAssistance && !this.isAnyRegularNeedsIdentified() && !canEvacueeProvideShelter) {
+      // nothing checked - not started
+      this.stepEssFileService.setTabStatus('needs', 'not-started');
 
-    const otherCheckboxesValues = otherCheckboxes.map(name => this.needsForm.get(name).value);
-    const atLeastOneOtherCheckboxChecked = otherCheckboxesValues.some(value => value);
+    } else if(doesEvacueeNotRequireAssistance && (this.isAnyRegularNeedsIdentified() || canEvacueeProvideShelter)) {
+      // doesEvacueeNotRequireAssistance checked along with other checkboxes - error
+      this.stepEssFileService.setTabStatus('needs', 'incomplete');
 
-    if (doesEvacueeNotRequireAssistance) {
+    } else if (!this.isRadioSelectedIfShelterIsChecked()) {
+      // radio is not selected while shelter checkbox is ticked - valid
+      this.stepEssFileService.setTabStatus('needs', 'incomplete');
+
+    } else if (!doesEvacueeNotRequireAssistance && (this.isAnyRegularNeedsIdentified() 
+                || canEvacueeProvideShelter && this.isRadioSelectedIfShelterIsChecked())) {
+      // doesEvacueeNotRequireAssistance not checked and any regular needs checked or shelter option checked - valid
       this.stepEssFileService.setTabStatus('needs', 'complete');
-    } else if (atLeastOneOtherCheckboxChecked) {
-      if (canEvacueeProvideLodging && !lodgingOptions) {
-        this.stepEssFileService.setTabStatus('needs', 'incomplete');
-      } else {
-        this.stepEssFileService.setTabStatus('needs', 'complete');
-      }
+
+    } else if (doesEvacueeNotRequireAssistance && !this.isAnyRegularNeedsIdentified() && !canEvacueeProvideShelter) {
+      // only doesEvacueeNotRequireAssistance checked - valid
+      this.stepEssFileService.setTabStatus('needs', 'complete');
+
     } else {
+      // default
       this.stepEssFileService.setTabStatus('needs', 'not-started');
     }
+
     this.saveFormData();
+  }
+  
+  /**
+   * @returns true if any of the regular needs are identified
+   */
+  isAnyRegularNeedsIdentified() { 
+    return this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Food) 
+      || this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Clothing) 
+      || this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Tranportation) 
+      || this.stepEssFileService.isNeedIdentified(IdentifiedNeed.Incidentals);
+  }
+  
+  /**
+   * @returns true if the radio button is selected while the shelter checkbox is checked or shelter checkbox is not checked
+   */
+  isRadioSelectedIfShelterIsChecked() {
+    const canEvacueeProvideShelter = this.needsForm.get('canEvacueeProvideShelter').value;
+
+    if (!canEvacueeProvideShelter) {
+      return true;
+    } else if (canEvacueeProvideShelter 
+        && (this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterAllowance) 
+          || this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterReferral))) {
+      return true;
+    } else {
+      return false
+    }
   }
 
   /**
    * Saves information inserted in the form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
-      'canEvacueeProvideLodging').value;
-    this.stepEssFileService.shelterOptions = this.needsForm.get(
-      'shelterOptions').value;
-    this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
-      'canEvacueeProvideFood').value;
-    this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
-      'canEvacueeProvideClothing').value;
-    this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
-      'canEvacueeProvideIncidentals').value;  
-    this.stepEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
-      'canEvacueeProvideTransportation').value;
-    this.stepEssFileService.doesEvacueeNotRequireAssistance = this.needsForm.get(
-      'doesEvacueeNotRequireAssistance').value;
+    this.stepEssFileService.doesEvacueeNotRequireAssistance = this.needsForm.get('doesEvacueeNotRequireAssistance').value;
+    this.stepEssFileService.canEvacueeProvideShelter = this.needsForm.get('canEvacueeProvideShelter').value;
+
+    this.stepEssFileService.clearNeeds();
+    
+    if (this.needsForm.get('canEvacueeProvideFood').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Food);
+    } 
+    if (this.needsForm.get('canEvacueeProvideIncidentals').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Incidentals);
+    }
+    if (this.needsForm.get('canEvacueeProvideClothing').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Clothing);
+    }
+    if (this.needsForm.get('canEvacueeProvideTransportation').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Tranportation);
+    }
+    if (this.needsForm.get('shelterOptions').value === 'Lodging - Shelter Allowance') {
+      this.stepEssFileService.setNeed(IdentifiedNeed.ShelterAllowance);
+    }
+    if (this.needsForm.get('shelterOptions').value === 'Lodging - Hotel/Motel/Campground') {
+      this.stepEssFileService.setNeed(IdentifiedNeed.ShelterReferral);
+    }
   }
 }

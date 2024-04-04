@@ -11,6 +11,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
+import { IdentifiedNeed } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -25,13 +26,9 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   disableButton = false;
   wizardType: string;
 
-  insuranceDisplay: string;
+  IdentifiedNeed = IdentifiedNeed;
 
-  needsFoodDisplay: string;
-  shelterOptionsDisplay: string;
-  needsClothingDisplay: string;
-  needsTransportationDisplay: string;
-  needsIncidentalsDisplay: string;
+  insuranceDisplay: string;
 
   memberColumns: string[] = [
     'firstName',
@@ -58,36 +55,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
     this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
-
-    // Get the displayed value for radio options
-    this.insuranceDisplay = globalConst.insuranceOptions.find(
-      (ins) => ins.value === this.stepEssFileService?.insurance
-    )?.name;
-    
-    this.needsFoodDisplay = globalConst.needsOptions.find(
-      (ins) => ins.value === this.stepEssFileService?.canRegistrantProvideFood
-    )?.name;
-
-    this.shelterOptionsDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value === this.stepEssFileService?.canRegistrantProvideLodging
-    )?.name;
-
-    this.needsClothingDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value === this.stepEssFileService?.canRegistrantProvideClothing
-    )?.name;
-
-    this.needsTransportationDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value ===
-        this.stepEssFileService?.canRegistrantProvideTransportation
-    )?.name;
-
-    this.needsIncidentalsDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value === this.stepEssFileService?.canRegistrantProvideIncidentals
-    )?.name;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
@@ -226,5 +193,19 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
           this.alertService.setAlert('danger', globalConst.editEssFileError);
         }
       });
+  }
+
+  /**
+  * Returns if incoming need exists in ess file needs assessment needs
+  *
+  * @param incomingNeed needs assessment value
+  * @returns boolean
+  */
+  doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
+    if(incomingNeed === null && this.stepEssFileService?.getNeeds()?.length === 0){ 
+      return true;
+    } else {
+      return this.stepEssFileService?.isNeedIdentified(incomingNeed);
+    }
   }
 }

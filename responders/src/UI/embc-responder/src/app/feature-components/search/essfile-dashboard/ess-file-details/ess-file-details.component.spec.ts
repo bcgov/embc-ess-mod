@@ -13,6 +13,7 @@ import {
   CommunityType,
   EvacuationFileStatus,
   HouseholdMemberType,
+  IdentifiedNeed,
   InsuranceOption,
   NeedsAssessmentType
 } from 'src/app/core/api/models';
@@ -96,11 +97,7 @@ describe('EssFileDetailsComponent', () => {
         }
       ],
       pets: [],
-      canProvideFood: false,
-      canProvideLodging: true,
-      canProvideClothing: true,
-      canProvideTransportation: false,
-      canProvideIncidentals: true,
+      needs: [IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals],
       type: NeedsAssessmentType.Assessed
     },
     notes: [],

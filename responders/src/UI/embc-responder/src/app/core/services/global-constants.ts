@@ -75,11 +75,7 @@ export const insuranceOptions = [
   { name: 'No', value: 'No' },
   { name: "I don't know", value: 'Unknown' }
 ];
-export const needsOptions = [
-  { name: 'Yes', value: 'Yes', apiValue: true },
-  { name: 'No', value: 'No', apiValue: false },
-  { name: "I'm not sure", value: 'Unsure', apiValue: null }
-];
+
 export const radioButtonOptions = [
   { name: 'Yes', value: 'Yes', apiValue: true },
   { name: 'No', value: 'No', apiValue: false }

@@ -71,52 +71,48 @@
             </div>
           </div>
 
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideFood
-            "
-          >
-            <div class="col-4">Food</div>
+          <div *ngIf="doesIncludeNeed(null)" class="row">
+            <div class="col-8 bold">
+              Household currently does not require assistance.
+            </div>
           </div>
 
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideLodging
-            "
-          >
-            <div class="col-4">Lodging</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.ShelterReferral)" class="row">
+            <div class="col-8 bold">
+              Shelter
+            </div>
           </div>
 
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideClothing
-            "
-          >
-            <div class="col-4">Clothing</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.ShelterAllowance)" class="row">
+            <div class="col-8 bold">
+              Shelter Allowance
+            </div>
           </div>
 
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment
-                ?.canProvideTransportation
-            "
-          >
-            <div class="col-4">Transportation</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Food)" class="row">
+            <div class="col-8 bold">
+              Food
+            </div>
           </div>
 
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment
-                ?.canProvideIncidentals
-            "
-          >
-            <div class="col-4">Incidentals</div>
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Clothing)" class="row">
+            <div class="col-8 bold">
+              Clothing
+            </div>
           </div>
+
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Tranportation)" class="row">
+            <div class="col-8 bold">
+              Transportation
+            </div>
+          </div>
+
+          <div *ngIf="doesIncludeNeed(IdentifiedNeed.Incidentals)" class="row">
+            <div class="col-8 bold">
+              Incidentals
+            </div>
+          </div>
+          
         </mat-card>
       </div>
     </div>
