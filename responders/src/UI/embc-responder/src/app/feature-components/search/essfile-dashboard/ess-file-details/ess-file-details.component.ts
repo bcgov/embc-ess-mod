@@ -48,7 +48,7 @@ export class EssFileDetailsComponent implements OnInit {
    * @returns boolean
    */
   doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
-    if(incomingNeed === null) {
+    if(incomingNeed === null && this.essFile?.needsAssessment?.needs?.length === 0){
       return true;
     } else {
       return this.essFile?.needsAssessment?.needs?.includes(incomingNeed);

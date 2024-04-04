@@ -122,14 +122,14 @@
             <tr *ngIf="doesIncludeNeed(null)">
               <th>Household currently does not require assistance.</th>
             </tr>
-            <tr *ngIf="doesIncludeNeed(IdentifyNeed.Food)">
-              <th>Food</th>
-            </tr>
             <tr *ngIf="doesIncludeNeed(IdentifyNeed.ShelterReferral)">
               <th>Shleter</th>
             </tr>
             <tr *ngIf="doesIncludeNeed(IdentifyNeed.ShelterAllowance)">
               <th>Shelter Allowance</th>
+            </tr>
+            <tr *ngIf="doesIncludeNeed(IdentifyNeed.Food)">
+              <th>Food</th>
             </tr>
             <tr *ngIf="doesIncludeNeed(IdentifyNeed.Incidentals)">
               <th>Incidentals</th>

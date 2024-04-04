@@ -28,6 +28,12 @@ export class ViewAssessmentDialogComponent implements OnInit {
     this.outputEvent.emit('close');
   }
 
+  /**
+   * Returns if incoming need exists in ess file needs assessment needs
+   *
+   * @param incomingNeed needs assessment value
+   * @returns boolean
+   */
   doesIncludeNeed(incomingNeed: IdentifiedNeed | null): string {
       return this.profileData?.needsAssessment?.needs.includes(incomingNeed) ? 'Yes' : 'No';
   }

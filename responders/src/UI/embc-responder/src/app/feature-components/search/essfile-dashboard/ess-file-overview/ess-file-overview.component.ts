@@ -43,13 +43,16 @@ export class EssFileOverviewComponent implements OnInit {
   * @returns boolean
   */
   doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
-    if(incomingNeed === null) {
+    if(incomingNeed === null && this.essFile?.needsAssessment?.needs?.length === 0){
       return true;
     } else {
       return this.essFile?.needsAssessment?.needs?.includes(incomingNeed);
     }
   }
 
+  /**
+   * Calculate total number of animals
+   */
   private calculateAnimalsTotal(): void {
     if (this.essFile?.needsAssessment?.pets?.length > 0) {
       for (const pet of this.essFile?.needsAssessment?.pets) {

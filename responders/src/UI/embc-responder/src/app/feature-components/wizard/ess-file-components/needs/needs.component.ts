@@ -45,6 +45,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
     // Creates conditional checkbox and radio logic
     this.noAssistanceRequiredChecked();
     this.assistanceRequiredChecked();
+    this.subscribeShelterRadiosToCheckbox();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =
@@ -115,7 +116,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
       doesEvacueeNotRequireAssistance: [
-        this.stepEssFileService.doesEvacueeNotRequireAssistance ? this.stepEssFileService.doesEvacueeNotRequireAssistance : false,
+        this.stepEssFileService.doesEvacueeNotRequireAssistance,
         Validators.required
       ],
       canEvacueeProvideFood: [
@@ -123,7 +124,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
         Validators.required
       ],
       canEvacueeProvideShelter: [
-        this.stepEssFileService.canEvacueeProvideShelter ? this.stepEssFileService.canEvacueeProvideShelter : false,
+        this.stepEssFileService.canEvacueeProvideShelter || 
+          this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterAllowance) || 
+          this.stepEssFileService.isNeedIdentified(IdentifiedNeed.ShelterReferral),
         Validators.required
       ],
       shelterOptions: [
@@ -191,6 +194,25 @@ export class NeedsComponent implements OnInit, OnDestroy {
       else {
         doesEvacueeNotRequireAssistance.enable({emitEvent: false});
       }      
+    });
+  }
+
+  /**
+  * Subscribes to changes in the 'canEvacueeProvideLodging' control and updates the 'shelterOptions' control.
+  */
+  private subscribeShelterRadiosToCheckbox() {  
+    // Subscribe to changes in canEvacueeProvideLodging and update the shelterOptions control
+    this.needsForm.get('canEvacueeProvideShelter').valueChanges.subscribe(value => {
+      const shelterOptionsCtrl = this.needsForm.get('shelterOptions');
+      if (value) {
+      shelterOptionsCtrl.setValidators(Validators.required);
+      } else {
+        this.stepEssFileService.removeNeed(IdentifiedNeed.ShelterAllowance);
+        this.stepEssFileService.removeNeed(IdentifiedNeed.ShelterReferral);
+        shelterOptionsCtrl.clearValidators();
+        shelterOptionsCtrl.setValue(null);
+      }
+        shelterOptionsCtrl.updateValueAndValidity();
     });
   }
   

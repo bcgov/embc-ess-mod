@@ -384,8 +384,8 @@ export class WizardService {
   }
 
   compareNeeds(initialValue: EvacuationFileModel, form) {
-    return initialValue.needsAssessment.needs.length === form.needsAssessment.needs.length &&
-    initialValue.needsAssessment.needs.every(need => form.needsAssessment.needs.includes(need));
+    return initialValue.needsAssessment?.needs?.length === form.needsAssessment?.needs?.length &&
+    initialValue.needsAssessment?.needs?.every(need => form.needsAssessment?.needs?.includes(need));
   }
 
   public clearCachedServices() {
