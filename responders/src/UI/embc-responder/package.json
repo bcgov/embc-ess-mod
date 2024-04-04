@@ -10,7 +10,6 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "e2e": "ng e2e",
     "gen-api": "ng-openapi-gen -i https://era-responders-dev.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
     "gen-api-local": "ng-openapi-gen -i http://localhost:6020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
   },
