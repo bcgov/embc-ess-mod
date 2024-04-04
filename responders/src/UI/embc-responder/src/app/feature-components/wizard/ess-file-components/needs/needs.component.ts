@@ -324,28 +324,26 @@ export class NeedsComponent implements OnInit, OnDestroy {
   private saveFormData() {
     this.stepEssFileService.doesEvacueeNotRequireAssistance = this.needsForm.get('doesEvacueeNotRequireAssistance').value;
     this.stepEssFileService.canEvacueeProvideShelter = this.needsForm.get('canEvacueeProvideShelter').value;
+
+    this.stepEssFileService.clearNeeds();
     
-    if(this.needsForm.get('doesEvacueeNotRequireAssistance').value) {
-      this.stepEssFileService.clearNeeds();
-    } else {
-      if (this.needsForm.get('canEvacueeProvideFood').value) {
-        this.stepEssFileService.setNeed(IdentifiedNeed.Food);
-      } 
-      if (this.needsForm.get('canEvacueeProvideIncidentals').value) {
-        this.stepEssFileService.setNeed(IdentifiedNeed.Incidentals);
-      }
-      if (this.needsForm.get('canEvacueeProvideClothing').value) {
-        this.stepEssFileService.setNeed(IdentifiedNeed.Clothing);
-      }
-      if (this.needsForm.get('canEvacueeProvideTransportation').value) {
-        this.stepEssFileService.setNeed(IdentifiedNeed.Tranportation);
-      }
-      if (this.needsForm.get('shelterOptions').value === 'Lodging - Shelter Allowance') {
-        this.stepEssFileService.setNeed(IdentifiedNeed.ShelterAllowance);
-      }
-      if (this.needsForm.get('shelterOptions').value === 'Lodging - Hotel/Motel/Campground') {
-        this.stepEssFileService.setNeed(IdentifiedNeed.ShelterReferral);
-      }
+    if (this.needsForm.get('canEvacueeProvideFood').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Food);
+    } 
+    if (this.needsForm.get('canEvacueeProvideIncidentals').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Incidentals);
+    }
+    if (this.needsForm.get('canEvacueeProvideClothing').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Clothing);
+    }
+    if (this.needsForm.get('canEvacueeProvideTransportation').value) {
+      this.stepEssFileService.setNeed(IdentifiedNeed.Tranportation);
+    }
+    if (this.needsForm.get('shelterOptions').value === 'Lodging - Shelter Allowance') {
+      this.stepEssFileService.setNeed(IdentifiedNeed.ShelterAllowance);
+    }
+    if (this.needsForm.get('shelterOptions').value === 'Lodging - Hotel/Motel/Campground') {
+      this.stepEssFileService.setNeed(IdentifiedNeed.ShelterReferral);
     }
   }
 }
