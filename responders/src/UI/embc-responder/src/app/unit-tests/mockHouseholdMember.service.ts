@@ -4,6 +4,7 @@ import {
   EvacuationFileHouseholdMember,
   EvacuationFileStatus,
   HouseholdMemberType,
+  IdentifiedNeed,
   InsuranceOption,
   NeedsAssessmentType,
   RegistrantStatus
@@ -109,11 +110,7 @@ export class MockHouseholdMemberService extends HouseholdMemberService {
         }
       ],
       pets: [],
-      canProvideFood: false,
-      canProvideLodging: true,
-      canProvideClothing: true,
-      canProvideTransportation: false,
-      canProvideIncidentals: true,
+      needs: [IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Incidentals],
       type: NeedsAssessmentType.Assessed
     },
     notes: [],
