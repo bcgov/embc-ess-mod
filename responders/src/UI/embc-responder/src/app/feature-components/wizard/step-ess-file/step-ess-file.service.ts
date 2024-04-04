@@ -308,12 +308,8 @@ export class StepEssFileService {
     return this.needs.indexOf(need)!== -1;
   }
 
-  public isNoNeedsIdentified(): boolean {
+  public noIdentifiedNeeds(): boolean {
     return this.needs.length === 0;
-  }
-
-  public getNeeds(): any {
-    return this.needs;
   }
 
   public clearNeeds(): void {

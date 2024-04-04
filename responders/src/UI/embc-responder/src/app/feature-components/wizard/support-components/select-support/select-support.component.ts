@@ -67,10 +67,10 @@ export class SelectSupportComponent implements OnInit {
   }
 
   doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
-    if(incomingNeed === null && this.evacueeSessionService?.currentNeedsAssessment?.needs?.length === 0){
+    if(incomingNeed === null && this.evacueeSessionService?.noIdentifiedNeeds()) {
       return true;
     } else {
-      return this.evacueeSessionService?.currentNeedsAssessment?.needs.includes(incomingNeed);
+      return this.evacueeSessionService?.isNeedIdentified(incomingNeed);
     }
   }
 }

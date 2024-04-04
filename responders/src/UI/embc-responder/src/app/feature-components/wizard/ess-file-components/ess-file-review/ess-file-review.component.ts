@@ -202,7 +202,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   * @returns boolean
   */
   doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
-    if(incomingNeed === null && this.stepEssFileService?.getNeeds()?.length === 0){
+    if(incomingNeed === null && this.stepEssFileService?.noIdentifiedNeeds){
       return true;
     } else {
       return this.stepEssFileService?.isNeedIdentified(incomingNeed);
