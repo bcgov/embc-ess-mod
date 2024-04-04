@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EvacuationFileHouseholdMember, NeedsAssessment } from '../api/models';
+import { EvacuationFileHouseholdMember, IdentifiedNeed, NeedsAssessment } from '../api/models';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { CacheService } from './cache.service';
@@ -140,6 +140,14 @@ export class EvacueeSessionService {
   public set isPaperBased(value: boolean) {
     this.isPaperBasedVal = value;
     this.cacheService.set('paperBased', value);
+  }
+
+  public noIdentifiedNeeds(): boolean {
+    return this.currentNeedsAssessment?.needs?.length === 0;
+  }
+
+  public isNeedIdentified(need: IdentifiedNeed): boolean {
+    return this.currentNeedsAssessment?.needs?.indexOf(need)!== -1;
   }
 
   clearEvacueeSession() {

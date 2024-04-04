@@ -308,12 +308,16 @@ export class StepEssFileService {
     return this.needs.indexOf(need)!== -1;
   }
 
-  public noIdentifiedNeeds(): boolean {
+  public isNoNeedsIdentified(): boolean {
     return this.needs.length === 0;
   }
 
   public clearNeeds(): void {
     this.needs = [];
+  }
+
+  public getNeeds(): any {
+    return this.needs;
   }
 
   // Security Phrase tab
