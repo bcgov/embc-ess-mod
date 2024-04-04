@@ -16,53 +16,54 @@ import { WizardService } from "../../wizard.service";
 
 export class HouseholdMembersPetsComponent implements OnInit {
 
-  
-  petsValid = true;
-  householdMembersValid = true;
+
+  petsValid = false;
+  householdMembersValid = false;
+  householdMembersQuantityValid = true;
   tabMetaData: TabModel;
-  
-  constructor(   
-     private router: Router,
+
+  constructor(
+    private router: Router,
     private dialog: MatDialog,
     private stepEssFileService: StepEssFileService,
     private customValidation: CustomValidationService,
     private formBuilder: UntypedFormBuilder,
-    private wizardService: WizardService){
+    private wizardService: WizardService) {
 
   }
 
 
   ngOnInit(): void {
-   this.tabMetaData = this.stepEssFileService.getNavLinks('household-members-pets');
+    this.tabMetaData = this.stepEssFileService.getNavLinks('household-members-pets');
   }
-    /**
-   * Goes back to the previous ESS File Tab
-   */
-    back() {
-      this.updateTabStatus();
-      this.router.navigate([this.tabMetaData?.previous]);
-    }
-  
-    /**
-     * Goes to the next tab from the ESS File
-     */
-    next(): void {
-      this.updateTabStatus();
-      this.router.navigate([this.tabMetaData?.next]);
-    }
-    ValidPetsIndicator(data) : void{ this.petsValid = data}
-    ValidHouseholdMemebersIndicator(data) : void{ this.householdMembersValid = data} 
+  /**
+ * Goes back to the previous ESS File Tab
+ */
+  back() {
+    this.updateTabStatus();
+    this.router.navigate([this.tabMetaData?.previous]);
+  }
 
-    private updateTabStatus() {
-      if (this.petsValid && this.householdMembersValid) {
-        this.stepEssFileService.setTabStatus('household-members-pets', 'complete');
-      } else if(!this.petsValid || !this.householdMembersValid) {
-        this.stepEssFileService.setTabStatus('household-members-pets', 'incomplete');
-      }
-       else {
-        this.stepEssFileService.setTabStatus('household-members-pets', 'not-started');
-      }
+  /**
+   * Goes to the next tab from the ESS File
+   */
+  next(): void {
+    this.updateTabStatus();
+    this.router.navigate([this.tabMetaData?.next]);
+  }
+  ValidPetsIndicator(data): void { this.petsValid = data }
+  ValidHouseholdMemebersIndicator(data): void { this.householdMembersValid = data }
+  ValidSelectedHouseholdMembers(data): void { this.householdMembersQuantityValid = data }
+
+  private updateTabStatus() {
+    if (this.petsValid && this.householdMembersValid && this.householdMembersQuantityValid) {
+      this.stepEssFileService.setTabStatus('household-members-pets', 'complete');
+    } else if (!this.petsValid && !this.householdMembersValid) {
+      this.stepEssFileService.setTabStatus('household-members-pets', 'not-started');
+    } else if (!this.petsValid || !this.householdMembersValid || !this.householdMembersQuantityValid) {
+      this.stepEssFileService.setTabStatus('household-members-pets', 'incomplete');
     }
+  }
 }
 
 

@@ -14,13 +14,9 @@ export interface NeedsAssessment {
   canEvacueeProvideIncidentals?: null | boolean;
   canEvacueeProvideLodging?: null | boolean;
   canEvacueeProvideTransportation?: null | boolean;
-  hasPetsFood?: null | boolean;
-  haveMedication?: boolean;
-  haveSpecialDiet?: boolean;
   householdMembers?: Array<HouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
   pets?: Array<Pet>;
-  specialDietDetails?: null | string;
   type?: NeedsAssessmentType;
 }
