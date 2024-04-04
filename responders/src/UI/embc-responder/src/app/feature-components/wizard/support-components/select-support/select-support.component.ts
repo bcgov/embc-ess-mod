@@ -67,7 +67,7 @@ export class SelectSupportComponent implements OnInit {
   }
 
   doesIncludeNeed(incomingNeed: IdentifiedNeed | null): boolean {
-    if(incomingNeed === null) {
+    if(incomingNeed === null && this.evacueeSessionService?.currentNeedsAssessment?.needs?.length === 0){
       return true;
     } else {
       return this.evacueeSessionService?.currentNeedsAssessment?.needs.includes(incomingNeed);
