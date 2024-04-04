@@ -3,6 +3,7 @@ import {
   CommunityType,
   EvacuationFileStatus,
   HouseholdMemberType,
+  IdentifiedNeed,
   InsuranceOption,
   NeedsAssessmentType,
   SupportCategory,
@@ -179,11 +180,7 @@ export class MockStepEssFileService extends StepEssFileService {
         }
       ],
       pets: [],
-      canProvideFood: true,
-      canProvideLodging: true,
-      canProvideClothing: true,
-      canProvideTransportation: true,
-      canProvideIncidentals: true,
+      needs: [IdentifiedNeed.Food, IdentifiedNeed.ShelterReferral, IdentifiedNeed.Clothing, IdentifiedNeed.Tranportation, IdentifiedNeed.Incidentals],
       type: NeedsAssessmentType.Assessed
     },
     notes: [],
