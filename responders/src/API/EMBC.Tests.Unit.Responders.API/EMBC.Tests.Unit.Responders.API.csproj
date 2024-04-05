@@ -27,4 +27,10 @@
   <ItemGroup>
     <ProjectReference Include="..\EMBC.Responders.API\EMBC.Responders.API.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="supports.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
