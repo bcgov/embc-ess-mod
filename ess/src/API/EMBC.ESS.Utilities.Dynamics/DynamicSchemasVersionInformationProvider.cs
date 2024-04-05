@@ -26,11 +26,12 @@ namespace EMBC.ESS.Utilities.Dynamics
             }
             catch (Exception)
             {
+                version = "unknown";
             }
 
             return new[]
             {
-                new VersionInformation { Name = "Dynamics:ERAEntitySolution", Version = version == null ? null : Version.Parse(version) }
+                new VersionInformation { Name = "Dynamics:ERAEntitySolution", Version = version }
             };
         }
     }

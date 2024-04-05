@@ -17,7 +17,7 @@ export class EditService {
     private formCreationService: FormCreationService,
     private needsAssessmentMapping: NeedsAssessmentMappingService,
     private evacuationFileDataService: EvacuationFileDataService
-  ) {}
+  ) { }
 
   /**
    * Updates the form with latest values
@@ -68,13 +68,13 @@ export class EditService {
         this.needsAssessmentDataService.insurance = form.get('insurance').value;
         break;
       case 'pets':
-          this.needsAssessmentDataService.pets = form.get('pets').value;
-          break;
+        this.needsAssessmentDataService.pets = form.get('pets').value;
+        break;
       case 'family-information':
-          this.needsAssessmentDataService.setHouseHoldMembers(
-            form.get('householdMembers').value
-          );
-          break;
+        this.needsAssessmentDataService.setHouseHoldMembers(
+          form.get('householdMembers').value
+        );
+        break;
       case 'identify-needs':
         this.needsAssessmentDataService.setNeedsDetails(form);
         break;
@@ -183,9 +183,9 @@ export class EditService {
           form.reset();
         }
         break;
-      case 'family-information-pets':
+      case 'family-information':
         if (
-          this.needsAssessmentDataService.householdMembers.length !== 0 ) {
+          this.needsAssessmentDataService.householdMembers.length !== 0) {
           if (path === 'verified-registration') {
             form
               .get('householdMembers')
@@ -209,7 +209,7 @@ export class EditService {
         break;
       case 'pets':
         if (
-          this.needsAssessmentDataService.pets.length !== 0 
+          this.needsAssessmentDataService.pets?.length !== 0
         ) {
           form.get('pets').patchValue(this.needsAssessmentDataService.pets);
         } else {
@@ -219,14 +219,14 @@ export class EditService {
       case 'identify-needs':
         if (
           this.needsAssessmentDataService.canEvacueeProvideClothing !==
-            undefined &&
+          undefined &&
           this.needsAssessmentDataService.canEvacueeProvideFood !== undefined &&
           this.needsAssessmentDataService.canEvacueeProvideIncidentals !==
-            undefined &&
+          undefined &&
           this.needsAssessmentDataService.canEvacueeProvideLodging !==
-            undefined &&
+          undefined &&
           this.needsAssessmentDataService.canEvacueeProvideTransportation !==
-            undefined
+          undefined
         ) {
           form
             .get('canEvacueeProvideClothing')
