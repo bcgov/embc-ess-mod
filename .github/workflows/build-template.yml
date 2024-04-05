@@ -60,7 +60,6 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=ref,event=push
             type=ref,event=tag
             type=raw,pattern={{date 'YYYYMMDD-hhmmss' tz='America/Vancouver'}}
 
