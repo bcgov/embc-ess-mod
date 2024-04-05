@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using EMBC.Utilities.Extensions;
@@ -17,12 +18,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.Referral
                     ? ((Shared.Contracts.Events.Referral)s.SupportDelivery).IssuedToPersonName
                     : null))
-                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
-                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
                 .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
-                .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.Now.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.Now.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.Comments, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierNotes))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
                 .ForMember(d => d.IncidentTaskNumber, opts => opts.Ignore())
@@ -63,9 +64,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.Referral
                     ? ((Shared.Contracts.Events.Referral)s.SupportDelivery).IssuedToPersonName
                     : null))
-                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
-                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("dd-MMM-yyyy")))
+                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.Ignore())
                 .ForMember(d => d.NumBreakfasts, opts => opts.Ignore())

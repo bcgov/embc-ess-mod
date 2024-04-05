@@ -38,6 +38,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public string ToAddress { get; set; }
         public string OtherTransportModeDetails { get; set; }
         public IEnumerable<PrintEvacuee> Evacuees { get; set; } = Array.Empty<PrintEvacuee>();
+        public string? ContactName { get; set; }
+        public string? ContactEmail { get; set; }
+        public string? ContactPhone { get; set; }
 
         public IEnumerable<PrintableEvacueesRow> PrintableEvacuees
         {

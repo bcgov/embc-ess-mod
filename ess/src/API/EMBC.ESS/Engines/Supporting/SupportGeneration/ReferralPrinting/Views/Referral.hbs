@@ -31,7 +31,6 @@
             </div>
             <div class="col-6">
                 <div class="stamp-goes-here">
-
                 </div>
             </div>
         </div>
@@ -40,31 +39,6 @@
     <div class="row">
         <div class="col-6">
             <div class="info-block first">
-                <h3 class="with-icon supplier">Supplier Information</h3>
-                <div class="bigger">
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{{Supplier.Name}}</strong><br />
-                            {{Supplier.Address}}<br />
-                        </div>
-                        <div class="col-6">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            {{Supplier.City}}{{#if Supplier.PostalCode}}, {{Supplier.PostalCode}}{{/if}}<br />
-                            <strong>Phone:</strong> {{Supplier.Telephone}}
-                        </div>
-                    </div>
-                </div>
-                <br />
-                <p><strong>Send original referral form and itemized receipts to:</strong></p>
-                <p>
-                    Emergency Management BC<br />
-                    PO Box 9201, STN PROV GOVT<br />
-                    Victoria BC V8W 9J1<br />
-                    Telephone: 1-800-585-9559
-                </p>
                 {{> supplierPartial}}
             </div>
         </div>
@@ -93,8 +67,10 @@
 
                 {{> itemsPartial}}
 
+                {{#if (isDefined(CommentsPrinted)}}
                 <h3 class="with-icon comments">Comments</h3>
                 <p class="input-output comments-height">{{{CommentsPrinted}}}</p>
+                {{/if}}
                 <br />
             </div>
         </div>
@@ -129,18 +105,7 @@
 
     <div class="row bottomSpace">
         <div class="col-12">
-            <div class="info-block">
-                <h3 class="with-icon person">PERSON RESPONSIBLE FOR PURCHASING GOODS</h3>
-
-                <div class="goods-pick">
-                    <div class="row">
-                        <div class="col-6">
-                            <span class="personName">{{upperCase PurchaserName}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                </div>
+        </div>
     </div>
 
     {{> checklistPartial}}

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -25,7 +24,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             });
             handleBars.RegisterHelper("dateFormatter", (output, context, arguments) =>
             {
-                if (DateTime.TryParse((string)arguments[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate)) output.WriteSafeString(parsedDate.ToString("dd-MMM-yyyy"));
+                output.WriteSafeString(arguments[0]);
             });
             handleBars.RegisterHelper("timeFormatter", (output, context, arguments) =>
             {
@@ -37,6 +36,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 var upperCaseString = (string)arguments[0];
                 output.WriteSafeString(upperCaseString.ToUpperInvariant());
             });
+            handleBars.RegisterHelper("isDefined", (output, context, arguments) => arguments[0] != null);
 
             return handleBars;
         }
