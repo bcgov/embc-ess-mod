@@ -15,7 +15,7 @@ namespace EMBC.Utilities.Hosting
             var version = Environment.GetEnvironmentVariable("VERSION");
             return new[]
             {
-                new VersionInformation { Name = name ?? null!, Version = version == null ? null : Version.Parse(version) }
+                new VersionInformation { Name = name ?? null!, Version = version }
             };
         }
     }

@@ -48,6 +48,6 @@ namespace EMBC.Utilities.Configuration
     public class VersionInformation
     {
         public string Name { get; set; } = null!;
-        public Version? Version { get; set; }
+        public string? Version { get; set; }
     }
 }
