@@ -79,6 +79,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             handlebars.RegisterTemplate("itemsDetailTitle", string.Empty);
             handlebars.RegisterTemplate("supplierPartial", await GetSupplierPartialView(partialViewType));
             handlebars.RegisterTemplate("checklistPartial", await GetChecklistPartialView(partialViewType));
+            handlebars.RegisterTemplate("additionalInfoPartial", await GetAdditionalInfoPartialView(partialViewType));
 
             var template = handlebars.Compile(await LoadTemplate(ReferalMainViews.Referral.ToString()));
 
@@ -153,6 +154,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         private static Task<string> GetSupplierPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}SupplierPartial");
 
         private static Task<string> GetNotesPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}NotesPartial");
+        private static Task<string> GetAdditionalInfoPartialView(PrintReferralType partialView) => LoadTemplate($"{partialView}.{partialView}AdditionalInfoPartial");
 
         private enum ReferalMainViews
         {

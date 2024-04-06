@@ -46,14 +46,15 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         {
             get
             {
-                var evacueesToPrint = new List<PrintableEvacueesRow>();
-                var evacuees = Evacuees.ToArray();
-
-                for (var i = 0; i <= evacuees.Length; i++)
+                var evacuees = Evacuees.ToList();
+                while (evacuees.Count > 0)
                 {
-                    evacueesToPrint.Add(new PrintableEvacueesRow(evacuees.ElementAtOrDefault(i), evacuees.ElementAtOrDefault(i + 7)));
+                    var firstRowEvacuee = evacuees[0];
+                    var secondRowEvacuee = evacuees.Count > 1 ? evacuees[1] : null;
+                    evacuees.Remove(firstRowEvacuee);
+                    if (secondRowEvacuee != null) evacuees.Remove(secondRowEvacuee);
+                    yield return new PrintableEvacueesRow(firstRowEvacuee, secondRowEvacuee);
                 }
-                return evacueesToPrint.ToArray();
             }
         }
 

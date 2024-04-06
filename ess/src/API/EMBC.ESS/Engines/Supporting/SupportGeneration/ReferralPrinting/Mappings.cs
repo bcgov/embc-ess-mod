@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Events;
 using EMBC.Utilities.Extensions;
 
 namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
@@ -149,7 +150,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             CreateMap<Shared.Contracts.Events.ShelterAllowanceSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
-                .ForMember(d => d.Comments, opts => opts.MapFrom(s => $"{s.ContactEmail}\n{s.ContactPhone}"))
+                .ForMember(d => d.ContactPhone, opts => opts.MapFrom(s => s.ContactPhone))
+                .ForMember(d => d.ContactEmail, opts => opts.MapFrom(s => s.ContactEmail))
+                .AfterMap((s, d) =>
+                {
+                    if (s.SupportDelivery is Referral r) d.ContactName = r.IssuedToPersonName;
+                    if (s.SupportDelivery is Interac i) d.ContactName = $"{i.RecipientFirstName} {i.RecipientLastName}";
+                })
                 ;
 
             CreateMap<Shared.Contracts.Events.TransportationOtherSupport, PrintReferral>()
