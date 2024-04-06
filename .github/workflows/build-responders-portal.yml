@@ -1,4 +1,4 @@
-name: responders-portal-api Build
+name: responders-portal Build
 on:
   push:
     branches:
