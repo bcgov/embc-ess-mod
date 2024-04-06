@@ -30,12 +30,12 @@ namespace EMBC.Tests.Unit.ESS.Contacts
 
             profile.Id.ShouldBe(contact.contactid.ToString());
             profile.UserId.ShouldBe(contact.era_bcservicescardid);
-            profile.SecurityQuestions.Where(q => q.Id == 1).Single().Answer.ShouldBe(contact.era_securityquestion1answer);
-            profile.SecurityQuestions.Where(q => q.Id == 2).Single().Answer.ShouldBe(contact.era_securityquestion2answer);
-            profile.SecurityQuestions.Where(q => q.Id == 3).Single().Answer.ShouldBe(contact.era_securityquestion3answer);
-            profile.SecurityQuestions.Where(q => q.Id == 1).Single().Question.ShouldBe(contact.era_securityquestiontext1);
-            profile.SecurityQuestions.Where(q => q.Id == 2).Single().Question.ShouldBe(contact.era_securityquestiontext2);
-            profile.SecurityQuestions.Where(q => q.Id == 3).Single().Question.ShouldBe(contact.era_securityquestiontext3);
+            profile.SecurityQuestions.Single(q => q.Id == 1).Answer.ShouldBe(contact.era_securityquestion1answer);
+            profile.SecurityQuestions.Single(q => q.Id == 2).Answer.ShouldBe(contact.era_securityquestion2answer);
+            profile.SecurityQuestions.Single(q => q.Id == 3).Answer.ShouldBe(contact.era_securityquestion3answer);
+            profile.SecurityQuestions.Single(q => q.Id == 1).Question.ShouldBe(contact.era_securityquestiontext1);
+            profile.SecurityQuestions.Single(q => q.Id == 2).Question.ShouldBe(contact.era_securityquestiontext2);
+            profile.SecurityQuestions.Single(q => q.Id == 3).Question.ShouldBe(contact.era_securityquestiontext3);
             profile.RestrictedAccess.ShouldBe(contact.era_restriction ?? default);
 
             profile.DateOfBirth.ShouldBe(Regex.Replace(contact.birthdate?.ToString() ?? string.Empty,

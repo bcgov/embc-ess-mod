@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using EMBC.Registrants.API.Controllers;
 
@@ -24,20 +25,6 @@ namespace EMBC.Registrants.API.Services
 
     public static class BcscUserInfoMapper
     {
-        //public static Profile GetDummyProfile(string userId) => MapBCSCUserDataToProfile(userId, JsonDocument.Parse(
-        //    $"{{" +
-        //    $"\"{BcscTokenKeys.GivenName}\": \"dummygiver\"," +
-        //    $" \"{BcscTokenKeys.FamilyName}\": \"dummyfamily\"," +
-        //    $" \"{BcscTokenKeys.BirthDate}\": \"2000-01-13\"," +
-        //    $" \"{BcscTokenKeys.Address}\": {{" +
-        //    $" \"{BcscTokenKeys.AddressStreet}\": \"dummystreet\"," +
-        //    $" \"{BcscTokenKeys.AddressRegion}\": \"BC\"," +
-        //    $" \"{BcscTokenKeys.AddressCountry}\": \"CA\"," +
-        //    $" \"{BcscTokenKeys.AddressPostalCode}\": \"V1V 1V1\"," +
-        //    $" \"{BcscTokenKeys.AddressLocality}\": \"Vancouver\"" +
-        //    $"}}" +
-        //    $"}}"));
-
         public static Profile MapBcscUserInfoToProfile(string userId, JsonDocument userData)
         {
             return new Profile
@@ -69,7 +56,7 @@ namespace EMBC.Registrants.API.Services
         private static string FormatDateOfBirth(string bcscFormattedBirthDate)
         {
             if (string.IsNullOrEmpty(bcscFormattedBirthDate)) return null;
-            if (!DateTime.TryParse(bcscFormattedBirthDate, out var date)) return null;
+            if (!DateTime.TryParse(bcscFormattedBirthDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var date)) return null;
             return date.ToString("MM'/'dd'/'yyyy");
         }
     }

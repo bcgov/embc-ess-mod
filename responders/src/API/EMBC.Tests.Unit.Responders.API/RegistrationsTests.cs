@@ -13,7 +13,6 @@ namespace EMBC.Tests.Unit.Responders.API
     public class RegistrationsTests
     {
         private readonly IMessagingClient messagingClient;
-        private readonly IMapper mapper;
 
         private static RegistrantProfile[] stagedRegistrants = InitializeRegistrants();
 
@@ -156,7 +155,7 @@ namespace EMBC.Tests.Unit.Responders.API
             return ret;
         }
 
-        private Dictionary<string, RegistrantProfile> stagedRegistrantsDictionary = new Dictionary<string, RegistrantProfile>()
+        private readonly Dictionary<string, RegistrantProfile> stagedRegistrantsDictionary = new Dictionary<string, RegistrantProfile>()
         {
             { "r1", stagedRegistrants[0] },
             { "r2", stagedRegistrants[1] },
@@ -165,7 +164,7 @@ namespace EMBC.Tests.Unit.Responders.API
 
         public RegistrationsTests()
         {
-            mapper = new MapperConfiguration(cfg =>
+            _ = new MapperConfiguration(cfg =>
             {
                 cfg.AddMaps(typeof(EMBC.Responders.API.Configuration));
             }).CreateMapper();
@@ -189,7 +188,6 @@ namespace EMBC.Tests.Unit.Responders.API
                 });
         }
 
-        //TODO - use fake messaging client to test search service
         [Fact]
         public async Task GetRegistrantProfileById()
         {
