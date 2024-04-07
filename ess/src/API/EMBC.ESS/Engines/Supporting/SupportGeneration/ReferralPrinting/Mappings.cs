@@ -13,11 +13,11 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public Mappings()
         {
             //referral printing mappings
-            CreateMap<Shared.Contracts.Events.Support, PrintReferral>()
+            CreateMap<Support, PrintReferral>()
                 .IncludeAllDerived()
                 .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
-                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.Referral
-                    ? ((Shared.Contracts.Events.Referral)s.SupportDelivery).IssuedToPersonName
+                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Referral
+                    ? ((Referral)s.SupportDelivery).IssuedToPersonName
                     : null))
                 .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
@@ -52,7 +52,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.PrintableEvacuees, opts => opts.Ignore())
                 .AfterMap((s, d, ctx) =>
                 {
-                    var file = (Shared.Contracts.Events.EvacuationFile)ctx.Items["evacuationFile"];
+                    var file = (EvacuationFile)ctx.Items["evacuationFile"];
                     if (file == null) return;
                     d.IncidentTaskNumber = file.RelatedTask.Id;
                     d.EssNumber = file.Id;
@@ -61,12 +61,12 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 })
                 ;
 
-            CreateMap<Shared.Contracts.Events.Support, PrintSummary>()
+            CreateMap<Support, PrintSummary>()
                 .IncludeAllDerived()
                 .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
                 .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
-                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.Referral
-                    ? ((Shared.Contracts.Events.Referral)s.SupportDelivery).IssuedToPersonName
+                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Referral
+                    ? ((Referral)s.SupportDelivery).IssuedToPersonName
                     : null))
                 .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
@@ -83,52 +83,52 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.ToAddress, opts => opts.Ignore())
                 .ForMember(d => d.OtherTransportModeDetails, opts => opts.Ignore())
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
-                .ForMember(d => d.IsEtransfer, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.ETransfer))
-                .ForMember(d => d.NotificationInformation, opts => opts.MapFrom(s => s.SupportDelivery is Shared.Contracts.Events.ETransfer
-                    ? ((Shared.Contracts.Events.Interac)s.SupportDelivery)
+                .ForMember(d => d.IsEtransfer, opts => opts.MapFrom(s => s.SupportDelivery is ETransfer))
+                .ForMember(d => d.NotificationInformation, opts => opts.MapFrom(s => s.SupportDelivery is ETransfer
+                    ? ((Interac)s.SupportDelivery)
                     : null))
                 .ForMember(d => d.EssNumber, opts => opts.Ignore())
                 .AfterMap((s, d, ctx) =>
                 {
-                    var file = (Shared.Contracts.Events.EvacuationFile)ctx.Items["evacuationFile"];
+                    var file = (EvacuationFile)ctx.Items["evacuationFile"];
                     if (file == null) return;
                     d.EssNumber = file.Id;
                 })
                 ;
 
-            CreateMap<Shared.Contracts.Events.Interac, NotificationInformation>()
+            CreateMap<Interac, NotificationInformation>()
                 .ForMember(d => d.RecipientId, opts => opts.MapFrom(s => s.ReceivingRegistrantId))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.NotificationEmail))
                 .ForMember(d => d.Mobile, opts => opts.MapFrom(s => s.NotificationMobile))
                 ;
 
-            CreateMap<Shared.Contracts.Events.FoodRestaurantSupport, PrintReferral>()
+            CreateMap<FoodRestaurantSupport, PrintReferral>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.NumBreakfasts, opts => opts.MapFrom(s => s.NumberOfBreakfastsPerPerson))
                 .ForMember(d => d.NumLunches, opts => opts.MapFrom(s => s.NumberOfLunchesPerPerson))
                 .ForMember(d => d.NumDinners, opts => opts.MapFrom(s => s.NumberOfDinnersPerPerson))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ClothingSupport, PrintReferral>()
+            CreateMap<ClothingSupport, PrintReferral>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 ;
 
-            CreateMap<Shared.Contracts.Events.IncidentalsSupport, PrintReferral>()
+            CreateMap<IncidentalsSupport, PrintReferral>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.ApprovedItems))
                 ;
 
-            CreateMap<Shared.Contracts.Events.FoodGroceriesSupport, PrintReferral>()
+            CreateMap<FoodGroceriesSupport, PrintReferral>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.NumDaysMeals, opts => opts.MapFrom(s => s.NumberOfDays))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ShelterHotelSupport, PrintReferral>()
+            CreateMap<ShelterHotelSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.NumRooms, opts => opts.MapFrom(s => s.NumberOfRooms))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ShelterBilletingSupport, PrintReferral>()
+            CreateMap<ShelterBilletingSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => new PrintSupplier
                 {
@@ -139,7 +139,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 }))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ShelterGroupSupport, PrintReferral>()
+            CreateMap<ShelterGroupSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(supplier => new PrintSupplier
                 {
@@ -150,7 +150,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 }))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ShelterAllowanceSupport, PrintReferral>()
+            CreateMap<ShelterAllowanceSupport, PrintReferral>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.ContactPhone, opts => opts.MapFrom(s => s.ContactPhone))
@@ -162,42 +162,42 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 })
                 ;
 
-            CreateMap<Shared.Contracts.Events.TransportationOtherSupport, PrintReferral>()
+            CreateMap<TransportationOtherSupport, PrintReferral>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.OtherTransportModeDetails, opts => opts.MapFrom(s => s.TransportMode))
                 ;
 
-            CreateMap<Shared.Contracts.Events.TransportationTaxiSupport, PrintReferral>()
+            CreateMap<TransportationTaxiSupport, PrintReferral>()
                 .ForMember(d => d.FromAddress, opts => opts.MapFrom(s => s.FromAddress))
                 .ForMember(d => d.ToAddress, opts => opts.MapFrom(s => s.ToAddress))
                 ;
 
-            CreateMap<Shared.Contracts.Events.FoodRestaurantSupport, PrintSummary>()
+            CreateMap<FoodRestaurantSupport, PrintSummary>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.NumBreakfasts, opts => opts.MapFrom(s => s.NumberOfBreakfastsPerPerson))
                 .ForMember(d => d.NumLunches, opts => opts.MapFrom(s => s.NumberOfLunchesPerPerson))
                 .ForMember(d => d.NumDinners, opts => opts.MapFrom(s => s.NumberOfDinnersPerPerson))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ClothingSupport, PrintSummary>()
+            CreateMap<ClothingSupport, PrintSummary>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 ;
 
-            CreateMap<Shared.Contracts.Events.IncidentalsSupport, PrintSummary>()
+            CreateMap<IncidentalsSupport, PrintSummary>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 ;
 
-            CreateMap<Shared.Contracts.Events.FoodGroceriesSupport, PrintSummary>()
+            CreateMap<FoodGroceriesSupport, PrintSummary>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.NumDaysMeals, opts => opts.MapFrom(s => s.NumberOfDays))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ShelterHotelSupport, PrintSummary>()
+            CreateMap<ShelterHotelSupport, PrintSummary>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.NumRooms, opts => opts.MapFrom(s => s.NumberOfRooms))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ShelterBilletingSupport, PrintSummary>()
+            CreateMap<ShelterBilletingSupport, PrintSummary>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(s => new PrintSupplier
                 {
@@ -208,7 +208,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 }))
                 ;
 
-            CreateMap<Shared.Contracts.Events.ShelterGroupSupport, PrintSummary>()
+            CreateMap<ShelterGroupSupport, PrintSummary>()
                 .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
                 .ForMember(d => d.Supplier, opts => opts.MapFrom(supplier => new PrintSupplier
                 {
@@ -219,17 +219,17 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 }))
                 ;
 
-            CreateMap<Shared.Contracts.Events.TransportationOtherSupport, PrintSummary>()
+            CreateMap<TransportationOtherSupport, PrintSummary>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.OtherTransportModeDetails, opts => opts.MapFrom(s => s.TransportMode))
                 ;
 
-            CreateMap<Shared.Contracts.Events.TransportationTaxiSupport, PrintSummary>()
+            CreateMap<TransportationTaxiSupport, PrintSummary>()
                 .ForMember(d => d.FromAddress, opts => opts.MapFrom(s => s.FromAddress))
                 .ForMember(d => d.ToAddress, opts => opts.MapFrom(s => s.ToAddress))
                 ;
 
-            CreateMap<Shared.Contracts.Events.SupplierDetails, PrintSupplier>()
+            CreateMap<SupplierDetails, PrintSupplier>()
                 .ForMember(d => d.Address, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Address.AddressLine2) ? s.Address.AddressLine1 : s.Address.AddressLine1 + "," + s.Address.AddressLine2))
                 .ForMember(d => d.City, opts => opts.MapFrom(s => s.Address.City))
                 .ForMember(d => d.Community, opts => opts.MapFrom(s => s.Address.Community))
@@ -238,33 +238,33 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.Telephone, opts => opts.MapFrom(s => s.Phone))
                 ;
 
-            Func<Shared.Contracts.Events.HouseholdMember, string> mapEvacueeTType = m =>
+            Func<HouseholdMember, string> mapEvacueeTType = m =>
                 m.IsPrimaryRegistrant
                     ? "F" //family representative
                     : m.IsMinor
                         ? "C" //child
                         : "A"; //adult
 
-            CreateMap<Shared.Contracts.Events.HouseholdMember, PrintEvacuee>()
+            CreateMap<HouseholdMember, PrintEvacuee>()
                 .ForMember(d => d.EvacueeTypeCode, opts => opts.MapFrom(s => mapEvacueeTType(s)))
                 ;
         }
 
-        private static Shared.Contracts.Events.Referral GetReferralOrNull(Shared.Contracts.Events.Support support) => support.SupportDelivery as Shared.Contracts.Events.Referral;
+        private static Referral GetReferralOrNull(Support support) => support.SupportDelivery as Referral;
 
-        private static PrintReferralType MapSupportType(Shared.Contracts.Events.Support support) =>
+        private static PrintReferralType MapSupportType(Support support) =>
             support switch
             {
-                Shared.Contracts.Events.ClothingSupport _ => PrintReferralType.Clothing,
-                Shared.Contracts.Events.FoodGroceriesSupport _ => PrintReferralType.Groceries,
-                Shared.Contracts.Events.FoodRestaurantSupport _ => PrintReferralType.Meals,
-                Shared.Contracts.Events.IncidentalsSupport _ => PrintReferralType.Incidentals,
-                Shared.Contracts.Events.ShelterBilletingSupport _ => PrintReferralType.Billeting,
-                Shared.Contracts.Events.ShelterGroupSupport _ => PrintReferralType.GroupLodging,
-                Shared.Contracts.Events.ShelterHotelSupport _ => PrintReferralType.Hotel,
-                Shared.Contracts.Events.ShelterAllowanceSupport _ => PrintReferralType.SelterAllowance,
-                Shared.Contracts.Events.TransportationOtherSupport _ => PrintReferralType.Transportation,
-                Shared.Contracts.Events.TransportationTaxiSupport _ => PrintReferralType.Taxi,
+                ClothingSupport _ => PrintReferralType.Clothing,
+                FoodGroceriesSupport _ => PrintReferralType.Groceries,
+                FoodRestaurantSupport _ => PrintReferralType.Meals,
+                IncidentalsSupport _ => PrintReferralType.Incidentals,
+                ShelterBilletingSupport _ => PrintReferralType.Billeting,
+                ShelterGroupSupport _ => PrintReferralType.GroupLodging,
+                ShelterHotelSupport _ => PrintReferralType.Hotel,
+                ShelterAllowanceSupport _ => PrintReferralType.ShelterAllowance,
+                TransportationOtherSupport _ => PrintReferralType.Transportation,
+                TransportationTaxiSupport _ => PrintReferralType.Taxi,
                 _ => throw new NotImplementedException()
             };
     }
