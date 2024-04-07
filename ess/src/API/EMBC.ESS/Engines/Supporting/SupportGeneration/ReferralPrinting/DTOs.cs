@@ -87,6 +87,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         public PrintSupplier Supplier { get; set; }
         public bool IsEtransfer { get; set; }
         public NotificationInformation NotificationInformation { get; set; }
+        public string? ContactName { get; set; }
+        public string? ContactEmail { get; set; }
+        public string? ContactPhone { get; set; }
     }
 
     public class PrintSupplier

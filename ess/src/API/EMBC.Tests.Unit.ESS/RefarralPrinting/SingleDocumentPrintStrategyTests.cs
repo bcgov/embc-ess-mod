@@ -34,75 +34,145 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
         }
 
         [Fact]
+        public async Task Generate_AllSupportWithReferrals_Created()
+        {
+            var file = new Faker<EvacuationFile>("en_CA").WithFileRules().Generate();
+            var teamMember = new Faker<TeamMember>("en_CA").WithTeamMemberRules().Generate();
+            var supports = new Support[]
+            {
+                CreateSupport<ShelterAllowanceSupport, Referral>(file, teamMember),
+                CreateSupport<ShelterBilletingSupport, Referral>(file, teamMember),
+                CreateSupport<ShelterGroupSupport, Referral>(file, teamMember),
+                CreateSupport<ShelterHotelSupport, Referral>(file, teamMember),
+                CreateSupport<FoodGroceriesSupport, Referral>(file, teamMember),
+                CreateSupport<FoodRestaurantSupport, Referral>(file, teamMember),
+                CreateSupport<TransportationOtherSupport, Referral>(file, teamMember),
+                CreateSupport<TransportationTaxiSupport, Referral>(file, teamMember),
+                CreateSupport<ClothingSupport, Referral>(file, teamMember),
+                CreateSupport<IncidentalsSupport, Referral>(file, teamMember),
+            };
+
+            var strategy = new SingleDocumentStrategy(mapper, metadataRepository);
+
+            var response = (await strategy.Generate(new GenerateReferralsRequest
+            {
+                AddSummary = true,
+                AddWatermark = true,
+                File = file,
+                Supports = supports,
+                RequestingUserId = teamMember.Id,
+                PrintingMember = teamMember,
+                Evacuee = new EMBC.ESS.Resources.Evacuees.Evacuee { FirstName = "first", LastName = "last" }
+            })).ShouldBeOfType<GenerateReferralsResponse>();
+
+            await File.WriteAllBytesAsync($"./allreferrals.html", response.Content);
+        }
+
+        [Fact]
+        public async Task Generate_AllSupportWithEtransfers_Created()
+        {
+            var file = new Faker<EvacuationFile>("en_CA").WithFileRules().Generate();
+            var teamMember = new Faker<TeamMember>("en_CA").WithTeamMemberRules().Generate();
+            var supports = new Support[]
+            {
+                CreateSupport<ShelterAllowanceSupport, Interac>(file, teamMember),
+                CreateSupport<ShelterBilletingSupport, Interac>(file, teamMember),
+                CreateSupport<ShelterGroupSupport, Interac>(file, teamMember),
+                CreateSupport<ShelterHotelSupport, Interac>(file, teamMember),
+                CreateSupport<FoodGroceriesSupport, Interac>(file, teamMember),
+                CreateSupport<FoodRestaurantSupport, Interac>(file, teamMember),
+                CreateSupport<TransportationOtherSupport, Interac>(file, teamMember),
+                CreateSupport<TransportationTaxiSupport, Interac>(file, teamMember),
+                CreateSupport<ClothingSupport, Interac>(file, teamMember),
+                CreateSupport<IncidentalsSupport, Interac>(file, teamMember),
+            };
+
+            var strategy = new SingleDocumentStrategy(mapper, metadataRepository);
+
+            var response = (await strategy.Generate(new GenerateReferralsRequest
+            {
+                AddSummary = true,
+                AddWatermark = true,
+                File = file,
+                Supports = supports,
+                RequestingUserId = teamMember.Id,
+                PrintingMember = teamMember,
+                Evacuee = new EMBC.ESS.Resources.Evacuees.Evacuee { FirstName = "first", LastName = "last" }
+            })).ShouldBeOfType<GenerateReferralsResponse>();
+
+            await File.WriteAllBytesAsync($"./alletransfers.html", response.Content);
+        }
+
+        [Fact]
         public async Task GenerateReferrals_ShelterAllowanceSupport_Created()
         {
-            await RunTest<ShelterAllowanceSupport>();
+            await RunSingleSupportTest<ShelterAllowanceSupport>();
         }
 
         [Fact]
         public async Task GenerateReferrals_ShelterBilletingSupport_Created()
         {
-            await RunTest<ShelterBilletingSupport>();
+            await RunSingleSupportTest<ShelterBilletingSupport>();
         }
 
         [Fact]
         public async Task GenerateReferrals_ShelterHotelSupport_Created()
         {
-            await RunTest<ShelterHotelSupport>();
+            await RunSingleSupportTest<ShelterHotelSupport>();
         }
 
         [Fact]
         public async Task GenerateReferrals_ShelterGroupSupport_Created()
         {
-            await RunTest<ShelterGroupSupport>();
+            await RunSingleSupportTest<ShelterGroupSupport>();
         }
 
         [Fact]
         public async Task GenerateReferrals_FoodGroceriesSupport_Created()
         {
-            await RunTest<FoodGroceriesSupport>();
+            await RunSingleSupportTest<FoodGroceriesSupport>();
         }
 
         [Fact]
         public async Task GenerateReferrals_FoodRestaurantSupport_Created()
         {
-            await RunTest<FoodRestaurantSupport>();
+            await RunSingleSupportTest<FoodRestaurantSupport>();
         }
 
-        
+
         [Fact]
         public async Task GenerateReferrals_IncidentalsSupport_Created()
         {
-            await RunTest<IncidentalsSupport>();
+            await RunSingleSupportTest<IncidentalsSupport>();
         }
 
-        
+
         [Fact]
         public async Task GenerateReferrals_ClothingSupport_Created()
         {
-            await RunTest<ClothingSupport>();
+            await RunSingleSupportTest<ClothingSupport>();
         }
 
-        
+
         [Fact]
         public async Task GenerateReferrals_TransportationOtherSupport_Created()
         {
-            await RunTest<TransportationOtherSupport>();
+            await RunSingleSupportTest<TransportationOtherSupport>();
         }
 
-        
+
         [Fact]
         public async Task GenerateReferrals_TransportationTaxiSupport_Created()
         {
-            await RunTest<TransportationTaxiSupport>();
+            await RunSingleSupportTest<TransportationTaxiSupport>();
         }
 
-        private async Task RunTest<TSupport>()
+        private async Task RunSingleSupportTest<TSupport>()
          where TSupport : Support
         {
             var file = new Faker<EvacuationFile>("en_CA").WithFileRules().Generate();
             var teamMember = new Faker<TeamMember>("en_CA").WithTeamMemberRules().Generate();
-            var support = new Faker<TSupport>("en_CA").WithSupportRules(file, teamMember).Generate();
+            var support = CreateSupport<TSupport, Referral>(file, teamMember);
 
             var strategy = new SingleDocumentStrategy(mapper, metadataRepository);
 
@@ -118,6 +188,24 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
             })).ShouldBeOfType<GenerateReferralsResponse>();
 
             await File.WriteAllBytesAsync($"./{support.GetType().Name}.html", response.Content);
+        }
+
+        private Support CreateSupport<TSupport, TSupportDelivery>(EvacuationFile file, TeamMember teamMember)
+        where TSupport : Support
+        where TSupportDelivery : SupportDelivery
+        {
+            return typeof(TSupport) switch
+            {
+                Type t when t == typeof(ShelterAllowanceSupport) => new Faker<ShelterAllowanceSupport>("en_CA").WithSupportRules(file, teamMember).WithSupportDeliveryRules<ShelterAllowanceSupport, TSupportDelivery>().Generate(),
+                Type t when t == typeof(ShelterBilletingSupport) => new Faker<ShelterBilletingSupport>("en_CA").WithSupportRules(file, teamMember).WithSupportDeliveryRules<ShelterBilletingSupport, TSupportDelivery>().Generate(),
+                Type t when t == typeof(ShelterGroupSupport) => new Faker<ShelterGroupSupport>("en_CA").WithSupportRules(file, teamMember).WithSupportDeliveryRules<ShelterGroupSupport, TSupportDelivery>().Generate(),
+                Type t when t == typeof(ShelterHotelSupport) => new Faker<ShelterHotelSupport>("en_CA").WithSupportRules(file, teamMember).WithSupportDeliveryRules<ShelterHotelSupport, TSupportDelivery>().Generate(),
+                Type t when t == typeof(FoodGroceriesSupport) => new Faker<FoodGroceriesSupport>("en_CA").WithSupportRules(file, teamMember).WithSupportDeliveryRules<FoodGroceriesSupport, TSupportDelivery>().Generate(),
+                Type t when t == typeof(FoodRestaurantSupport) => new Faker<FoodRestaurantSupport>("en_CA").WithSupportRules(file, teamMember).WithSupportDeliveryRules<FoodRestaurantSupport, TSupportDelivery>().Generate(),
+
+                _ => new Faker<TSupport>("en_CA").WithDefaultSupportRules(file, teamMember).WithSupportDeliveryRules<TSupport, TSupportDelivery>().Generate()
+            };
+
         }
     }
 
@@ -173,25 +261,6 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
                 ;
         }
 
-        public static Faker<Referral> WithReferralRules(this Faker<Referral> faker)
-        {
-            return faker
-                .RuleFor(sd => sd.IssuedToPersonName, f => f.Person.FullName)
-                .RuleFor(sd => sd.ManualReferralId, f => string.Empty)
-                .RuleFor(sd => sd.SupplierNotes, f => f.Lorem.Lines(3))
-                .RuleFor(sd => sd.SupplierDetails, f => new Faker<SupplierDetails>("en_CA").WithSupplierDetailsRules().Generate())
-                ;
-        }
-
-        public static Faker<Interac> WithInteracRules(this Faker<Interac> faker)
-        {
-            return faker
-                .RuleFor(sd => sd.NotificationEmail, f => f.Person.Email)
-                .RuleFor(sd => sd.NotificationMobile, f => f.Person.Phone)
-                .RuleFor(sd => sd.RecipientFirstName, f => f.Person.FirstName)
-                .RuleFor(sd => sd.RecipientFirstName, f => f.Person.LastName)
-                ;
-        }
 
         public static Faker<SupplierDetails> WithSupplierDetailsRules(this Faker<SupplierDetails> faker)
         {
@@ -215,26 +284,58 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
                 ;
         }
 
-        public static Faker<T> WithSupportRules<T>(this Faker<T> faker, EvacuationFile sourceFile, TeamMember issuer) where T : Support
+        public static Faker<TSupport> WithSupportDeliveryRules<TSupport, TSupportDelivery>(this Faker<TSupport> faker)
+        where TSupport : Support
+        where TSupportDelivery : SupportDelivery
+        {
+            return typeof(TSupportDelivery) switch
+            {
+                Type t when t == typeof(Referral) => faker.RuleFor(s => s.SupportDelivery, f => new Faker<Referral>().WithReferralRules().Generate()),
+                Type t when t == typeof(Interac) => faker.RuleFor(s => s.SupportDelivery, f => new Faker<Interac>().WithInteracRules().Generate()),
+
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        public static Faker<Referral> WithReferralRules(this Faker<Referral> faker)
         {
             return faker
-                .RuleFor(s => s.FileId, _ => sourceFile.Id)
-                .RuleFor(s => s.Id, f => "S" + f.Random.Number(100000, 999999).ToString())
-                .RuleFor(s => s.Status, f => SupportStatus.Active)
-                .RuleFor(s => s.From, f => f.Date.Recent())
-                .RuleFor(s => s.To, (f, o) => o.From.AddDays(3))
-                .RuleFor(s => s.SupportDelivery, _ => new Faker<Referral>("en_CA").WithReferralRules().Generate())
-                .RuleFor(s => s.IncludedHouseholdMembers, f => f.PickRandom(sourceFile.HouseholdMembers.Select(hm => hm.Id), f.Random.Int(1, sourceFile.HouseholdMembers.Count())))
-                .RuleFor(s => s.IssuedOn, (f, o) => o.From)
-                .RuleFor(s => s.IssuedBy, _ => issuer)
-                .RuleFor(s => s.CreatedBy, _ => issuer)
-                .RuleFor(s => s.CreatedOn, (f, o) => o.IssuedOn)
+                .RuleFor(sd => sd.IssuedToPersonName, f => f.Person.FullName)
+                .RuleFor(sd => sd.ManualReferralId, f => string.Empty)
+                .RuleFor(sd => sd.SupplierNotes, f => f.Lorem.Lines(3))
+                .RuleFor(sd => sd.SupplierDetails, f => new Faker<SupplierDetails>("en_CA").WithSupplierDetailsRules().Generate())
                 ;
+        }
+
+        public static Faker<Interac> WithInteracRules(this Faker<Interac> faker)
+        {
+            return faker
+                .RuleFor(sd => sd.NotificationEmail, f => f.Person.Email)
+                .RuleFor(sd => sd.NotificationMobile, f => f.Person.Phone)
+                .RuleFor(sd => sd.RecipientFirstName, f => f.Person.FirstName)
+                .RuleFor(sd => sd.RecipientLastName, f => f.Person.LastName)
+                ;
+        }
+
+        public static Faker<T> WithDefaultSupportRules<T>(this Faker<T> faker, EvacuationFile sourceFile, TeamMember issuer) where T : Support
+        {
+            return faker
+               .RuleFor(s => s.FileId, _ => sourceFile.Id)
+               .RuleFor(s => s.Id, f => "S" + f.Random.Number(100000, 999999).ToString())
+               .RuleFor(s => s.Status, f => SupportStatus.Active)
+               .RuleFor(s => s.From, f => f.Date.Recent())
+               .RuleFor(s => s.To, (f, o) => o.From.AddDays(3))
+               .RuleFor(s => s.IncludedHouseholdMembers, f => f.PickRandom(sourceFile.HouseholdMembers.Select(hm => hm.Id), f.Random.Int(1, sourceFile.HouseholdMembers.Count())))
+               .RuleFor(s => s.IssuedOn, (f, o) => o.From)
+               .RuleFor(s => s.IssuedBy, _ => issuer)
+               .RuleFor(s => s.CreatedBy, _ => issuer)
+               .RuleFor(s => s.CreatedOn, (f, o) => o.IssuedOn)
+               ;
         }
 
         public static Faker<FoodGroceriesSupport> WithSupportRules(this Faker<FoodGroceriesSupport> faker, EvacuationFile sourceFile, TeamMember issuer)
         {
-            return faker.WithSupportRules<FoodGroceriesSupport>(sourceFile, issuer)
+            return faker.WithDefaultSupportRules(sourceFile, issuer)
                 .RuleFor(s => s.NumberOfDays, _ => 3)
                 .RuleFor(s => s.TotalAmount, f => f.Random.Decimal(min: 10m, max: 1000m))
                 ;
@@ -242,7 +343,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
         public static Faker<FoodRestaurantSupport> WithSupportRules(this Faker<FoodRestaurantSupport> faker, EvacuationFile sourceFile, TeamMember issuer)
         {
-            return faker.WithSupportRules<FoodRestaurantSupport>(sourceFile, issuer)
+            return faker.WithDefaultSupportRules(sourceFile, issuer)
                 .RuleFor(s => s.NumberOfBreakfastsPerPerson, f => f.Random.Int(0, 4))
                 .RuleFor(s => s.NumberOfDinnersPerPerson, f => f.Random.Int(0, 4))
                 .RuleFor(s => s.NumberOfLunchesPerPerson, f => f.Random.Int(0, 4))
@@ -252,7 +353,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
         public static Faker<ShelterAllowanceSupport> WithSupportRules(this Faker<ShelterAllowanceSupport> faker, EvacuationFile sourceFile, TeamMember issuer)
         {
-            return faker.WithSupportRules<ShelterAllowanceSupport>(sourceFile, issuer)
+            return faker.WithDefaultSupportRules(sourceFile, issuer)
                 .RuleFor(s => s.NumberOfNights, _ => 3)
                 .RuleFor(s => s.ContactEmail, f => f.Person.Email)
                 .RuleFor(s => s.ContactPhone, f => f.Person.Phone)
@@ -262,7 +363,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
         public static Faker<ShelterGroupSupport> WithSupportRules(this Faker<ShelterGroupSupport> faker, EvacuationFile sourceFile, TeamMember issuer)
         {
-            return faker.WithSupportRules<ShelterGroupSupport>(sourceFile, issuer)
+            return faker.WithDefaultSupportRules(sourceFile, issuer)
                 .RuleFor(s => s.NumberOfNights, _ => 3)
                 .RuleFor(s => s.FacilityAddress, f => f.Address.StreetAddress())
                 .RuleFor(s => s.FacilityCity, f => f.Address.City())
@@ -273,7 +374,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
         public static Faker<ShelterHotelSupport> WithSupportRules(this Faker<ShelterHotelSupport> faker, EvacuationFile sourceFile, TeamMember issuer)
         {
-            return faker.WithSupportRules<ShelterHotelSupport>(sourceFile, issuer)
+            return faker.WithDefaultSupportRules(sourceFile, issuer)
                 .RuleFor(s => s.NumberOfNights, _ => 3)
                 .RuleFor(s => s.NumberOfRooms, _ => 1)
                 ;
@@ -281,7 +382,7 @@ namespace EMBC.Tests.Unit.ESS.RefarralPrinting
 
         public static Faker<ShelterBilletingSupport> WithSupportRules(this Faker<ShelterBilletingSupport> faker, EvacuationFile sourceFile, TeamMember issuer)
         {
-            return faker.WithSupportRules<ShelterBilletingSupport>(sourceFile, issuer)
+            return faker.WithDefaultSupportRules(sourceFile, issuer)
                 .RuleFor(s => s.NumberOfNights, _ => 3)
                 .RuleFor(s => s.HostAddress, f => f.Address.StreetAddress())
                 .RuleFor(s => s.HostCity, f => f.Address.City())

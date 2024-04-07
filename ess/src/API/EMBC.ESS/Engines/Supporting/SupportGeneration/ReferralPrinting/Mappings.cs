@@ -16,17 +16,15 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
             CreateMap<Support, PrintReferral>()
                 .IncludeAllDerived()
                 .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
-                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Referral
-                    ? ((Referral)s.SupportDelivery).IssuedToPersonName
-                    : null))
+                .ForMember(d => d.PurchaserName, opts => opts.Ignore())
+                .ForMember(d => d.Comments, opts => opts.Ignore())
+                .ForMember(d => d.Supplier, opts => opts.Ignore())
                 .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
                 .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
                 .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
                 .ForMember(d => d.PrintDate, m => m.MapFrom(s => DateTime.Now.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
-                .ForMember(d => d.Comments, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierNotes))
-                .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
                 .ForMember(d => d.IncidentTaskNumber, opts => opts.Ignore())
                 .ForMember(d => d.EssNumber, opts => opts.Ignore())
                 .ForMember(d => d.HostCommunity, opts => opts.Ignore())
@@ -58,49 +56,13 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                     d.EssNumber = file.Id;
                     d.HostCommunity = file.RelatedTask.CommunityCode;
                     d.Evacuees = ctx.Mapper.Map<IEnumerable<PrintEvacuee>>(file.HouseholdMembers.Where(m => s.IncludedHouseholdMembers.Contains(m.Id)));
-                })
-                ;
-
-            CreateMap<Support, PrintSummary>()
-                .IncludeAllDerived()
-                .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
-                .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
-                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Referral
-                    ? ((Referral)s.SupportDelivery).IssuedToPersonName
-                    : null))
-                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
-                .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
-                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
-                .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
-                .ForMember(d => d.TotalAmountPrinted, opts => opts.Ignore())
-                .ForMember(d => d.NumBreakfasts, opts => opts.Ignore())
-                .ForMember(d => d.NumLunches, opts => opts.Ignore())
-                .ForMember(d => d.NumDinners, opts => opts.Ignore())
-                .ForMember(d => d.NumDaysMeals, opts => opts.Ignore())
-                .ForMember(d => d.NumNights, opts => opts.Ignore())
-                .ForMember(d => d.NumRooms, opts => opts.Ignore())
-                .ForMember(d => d.FromAddress, opts => opts.Ignore())
-                .ForMember(d => d.ToAddress, opts => opts.Ignore())
-                .ForMember(d => d.OtherTransportModeDetails, opts => opts.Ignore())
-                .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
-                .ForMember(d => d.IsEtransfer, opts => opts.MapFrom(s => s.SupportDelivery is ETransfer))
-                .ForMember(d => d.NotificationInformation, opts => opts.MapFrom(s => s.SupportDelivery is ETransfer
-                    ? ((Interac)s.SupportDelivery)
-                    : null))
-                .ForMember(d => d.EssNumber, opts => opts.Ignore())
-                .AfterMap((s, d, ctx) =>
-                {
-                    var file = (EvacuationFile)ctx.Items["evacuationFile"];
-                    if (file == null) return;
-                    d.EssNumber = file.Id;
-                })
-                ;
-
-            CreateMap<Interac, NotificationInformation>()
-                .ForMember(d => d.RecipientId, opts => opts.MapFrom(s => s.ReceivingRegistrantId))
-                .ForMember(d => d.Email, opts => opts.MapFrom(s => s.NotificationEmail))
-                .ForMember(d => d.Mobile, opts => opts.MapFrom(s => s.NotificationMobile))
-                ;
+                    if (s.SupportDelivery is Referral referral)
+                    {
+                        d.PurchaserName = referral.IssuedToPersonName;
+                        d.Supplier = ctx.Mapper.Map<PrintSupplier>(referral.SupplierDetails);
+                        d.Comments = referral.SupplierNotes;
+                    }
+                });
 
             CreateMap<FoodRestaurantSupport, PrintReferral>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
@@ -172,6 +134,50 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.ToAddress, opts => opts.MapFrom(s => s.ToAddress))
                 ;
 
+            CreateMap<Interac, NotificationInformation>()
+                .ForMember(d => d.RecipientId, opts => opts.MapFrom(s => s.ReceivingRegistrantId))
+                .ForMember(d => d.Email, opts => opts.MapFrom(s => s.NotificationEmail))
+                .ForMember(d => d.Mobile, opts => opts.MapFrom(s => s.NotificationMobile))
+                ;
+
+            CreateMap<Support, PrintSummary>()
+                .IncludeAllDerived()
+                .ForMember(d => d.Id, m => m.MapFrom(s => s.Id))
+                .ForMember(d => d.Type, m => m.MapFrom(s => MapSupportType(s)))
+                .ForMember(d => d.PurchaserName, opts => opts.MapFrom(s => s.SupportDelivery is Referral
+                    ? ((Referral)s.SupportDelivery).IssuedToPersonName
+                    : null))
+                .ForMember(d => d.FromDate, m => m.MapFrom(s => s.From.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
+                .ForMember(d => d.FromTime, m => m.MapFrom(s => s.From.ToPST().ToString("hh:mm tt")))
+                .ForMember(d => d.ToDate, m => m.MapFrom(s => s.To.ToPST().ToString("MMM-dd-yyyy", CultureInfo.InvariantCulture)))
+                .ForMember(d => d.ToTime, m => m.MapFrom(s => s.To.ToPST().ToString("hh:mm tt")))
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.Ignore())
+                .ForMember(d => d.NumBreakfasts, opts => opts.Ignore())
+                .ForMember(d => d.NumLunches, opts => opts.Ignore())
+                .ForMember(d => d.NumDinners, opts => opts.Ignore())
+                .ForMember(d => d.NumDaysMeals, opts => opts.Ignore())
+                .ForMember(d => d.NumNights, opts => opts.Ignore())
+                .ForMember(d => d.NumRooms, opts => opts.Ignore())
+                .ForMember(d => d.FromAddress, opts => opts.Ignore())
+                .ForMember(d => d.ToAddress, opts => opts.Ignore())
+                .ForMember(d => d.OtherTransportModeDetails, opts => opts.Ignore())
+                .ForMember(d => d.Supplier, opts => opts.MapFrom(s => GetReferralOrNull(s) == null ? null : GetReferralOrNull(s).SupplierDetails))
+                .ForMember(d => d.IsEtransfer, opts => opts.MapFrom(s => s.SupportDelivery is ETransfer))
+                .ForMember(d => d.NotificationInformation, opts => opts.MapFrom(s => s.SupportDelivery is ETransfer
+                    ? ((Interac)s.SupportDelivery)
+                    : null))
+                .ForMember(d => d.EssNumber, opts => opts.Ignore())
+                .ForMember(d => d.ContactEmail, opts => opts.Ignore())
+                .ForMember(d => d.ContactName, opts => opts.Ignore())
+                .ForMember(d => d.ContactPhone, opts => opts.Ignore())
+                .AfterMap((s, d, ctx) =>
+                {
+                    var file = (EvacuationFile)ctx.Items["evacuationFile"];
+                    if (file == null) return;
+                    d.EssNumber = file.Id;
+                })
+                ;
+
             CreateMap<FoodRestaurantSupport, PrintSummary>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.NumBreakfasts, opts => opts.MapFrom(s => s.NumberOfBreakfastsPerPerson))
@@ -219,6 +225,17 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 }))
                 ;
 
+            CreateMap<ShelterAllowanceSupport, PrintSummary>()
+                .ForMember(d => d.NumNights, opts => opts.MapFrom(s => s.NumberOfNights))
+                .ForMember(d => d.ContactEmail, opts => opts.MapFrom(s => s.ContactEmail))
+                .ForMember(d => d.ContactPhone, opts => opts.MapFrom(s => s.ContactPhone))
+                .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
+                .AfterMap((s, d) =>
+                {
+                    if (s.SupportDelivery is Referral r) d.ContactName = r.IssuedToPersonName;
+                    if (s.SupportDelivery is Interac i) d.ContactName = $"{i.RecipientFirstName} {i.RecipientLastName}";
+                });
+
             CreateMap<TransportationOtherSupport, PrintSummary>()
                 .ForMember(d => d.TotalAmountPrinted, opts => opts.MapFrom(s => s.TotalAmount.ToString("0.00")))
                 .ForMember(d => d.OtherTransportModeDetails, opts => opts.MapFrom(s => s.TransportMode))
@@ -238,17 +255,17 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.Telephone, opts => opts.MapFrom(s => s.Phone))
                 ;
 
-            Func<HouseholdMember, string> mapEvacueeTType = m =>
-                m.IsPrimaryRegistrant
-                    ? "F" //family representative
-                    : m.IsMinor
-                        ? "C" //child
-                        : "A"; //adult
-
             CreateMap<HouseholdMember, PrintEvacuee>()
-                .ForMember(d => d.EvacueeTypeCode, opts => opts.MapFrom(s => mapEvacueeTType(s)))
+                .ForMember(d => d.EvacueeTypeCode, opts => opts.MapFrom(s => MapEvacueeTypeCode(s)))
                 ;
         }
+
+        private static string MapEvacueeTypeCode(HouseholdMember householdMember) =>
+                householdMember.IsPrimaryRegistrant
+                    ? "F" //family representative
+                    : householdMember.IsMinor
+                        ? "C" //child
+                        : "A"; //adult
 
         private static Referral GetReferralOrNull(Support support) => support.SupportDelivery as Referral;
 
