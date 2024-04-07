@@ -33,12 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceAdditionalInfoPartial.hbs" />
-        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceChecklistPartial.hbs" />
-        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsPartial.hbs" />
-        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsSummaryPartial.hbs" />
-        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceNotesPartial.hbs" />
-        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceSupplierPartial.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingAdditionalInfoPartial.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingChecklistPartial.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsPartial.hbs" />
@@ -78,6 +72,12 @@
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsNotesPartial.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Meals\MealsSupplierPartial.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Referral.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceAdditionalInfoPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceChecklistPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceItemsPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceItemsSummaryPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceNotesPartial.hbs" />
+        <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceSupplierPartial.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Summary.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\SummaryItem.hbs" />
         <None Remove="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Taxi\TaxiChecklistPartial.hbs" />
@@ -118,12 +118,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsPartial.hbs" />
-      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceItemsSummaryPartial.hbs" />
-      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceNotesPartial.hbs" />
-      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceSupplierPartial.hbs" />
-      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceChecklistPartial.hbs" />
-      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Allowance\AllowanceAdditionalInfoPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceItemsPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceItemsSummaryPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceNotesPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceSupplierPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceChecklistPartial.hbs" />
+      <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\ShelterAllowance\ShelterAllowanceAdditionalInfoPartial.hbs" />
       <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingChecklistPartial.hbs" />
       <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsPartial.hbs" />
       <EmbeddedResource Include="Engines\Supporting\SupportGeneration\ReferralPrinting\Views\Billeting\BilletingItemsSummaryPartial.hbs" />

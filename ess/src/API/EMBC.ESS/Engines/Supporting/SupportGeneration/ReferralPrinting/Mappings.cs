@@ -46,6 +46,9 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 .ForMember(d => d.FromAddress, opts => opts.Ignore())
                 .ForMember(d => d.ToAddress, opts => opts.Ignore())
                 .ForMember(d => d.OtherTransportModeDetails, opts => opts.Ignore())
+                .ForMember(d => d.ContactEmail, opts => opts.Ignore())
+                .ForMember(d => d.ContactName, opts => opts.Ignore())
+                .ForMember(d => d.ContactPhone, opts => opts.Ignore())
                 .ForMember(d => d.PrintableEvacuees, opts => opts.Ignore())
                 .AfterMap((s, d, ctx) =>
                 {
@@ -259,7 +262,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
                 Shared.Contracts.Events.ShelterBilletingSupport _ => PrintReferralType.Billeting,
                 Shared.Contracts.Events.ShelterGroupSupport _ => PrintReferralType.GroupLodging,
                 Shared.Contracts.Events.ShelterHotelSupport _ => PrintReferralType.Hotel,
-                Shared.Contracts.Events.ShelterAllowanceSupport _ => PrintReferralType.Allowance,
+                Shared.Contracts.Events.ShelterAllowanceSupport _ => PrintReferralType.SelterAllowance,
                 Shared.Contracts.Events.TransportationOtherSupport _ => PrintReferralType.Transportation,
                 Shared.Contracts.Events.TransportationTaxiSupport _ => PrintReferralType.Taxi,
                 _ => throw new NotImplementedException()

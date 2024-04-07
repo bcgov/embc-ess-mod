@@ -187,7 +187,7 @@ namespace EMBC.ESS.Engines.Supporting.SupportGeneration.ReferralPrinting
         [Display(Name = "TRANSPORTATION")]
         Transportation,
 
-        [Display(Name = "ALLOWANCE")]
-        Allowance,
+        [Display(Name = "SHELTERALLOWANCE")]
+        SelterAllowance,
     }
 }
