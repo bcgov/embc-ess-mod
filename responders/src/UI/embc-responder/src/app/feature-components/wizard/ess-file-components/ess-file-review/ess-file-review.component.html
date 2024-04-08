@@ -87,23 +87,16 @@
           </div>
         </div>
       </div>
-
       <div class="row">
         <div class="col-12">
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Household Members</label>
-
             <div class="row">
               <div class="col-8">
-                <mat-table
-                  class="bottom-space"
-                  [dataSource]="stepEssFileService?.householdMembers"
-                  *ngIf="!this.essFileNumber"
-                >
+                <mat-table class="bottom-space" [dataSource]="stepEssFileService?.householdMembers"
+                  *ngIf="!this.essFileNumber">
                   <ng-container matColumnDef="firstName">
-                    <mat-header-cell *matHeaderCellDef
-                      >First Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">First Name:</span>
                       {{ member.firstName }}
@@ -111,9 +104,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="lastName">
-                    <mat-header-cell *matHeaderCellDef
-                      >Last Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Last Name:</span>
                       {{ member.lastName }}
@@ -121,9 +112,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="initials">
-                    <mat-header-cell *matHeaderCellDef
-                      >Initials</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Initials</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Initials:</span>
                       {{ member.initials }}
@@ -148,24 +137,15 @@
                     </mat-cell>
                   </ng-container>
 
-                  <mat-header-row
-                    *matHeaderRowDef="memberColumns"
-                  ></mat-header-row>
-                  <mat-row
-                    *matRowDef="let member; columns: memberColumns"
-                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
-                  ></mat-row>
+                  <mat-header-row *matHeaderRowDef="memberColumns"></mat-header-row>
+                  <mat-row *matRowDef="let member; columns: memberColumns"
+                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"></mat-row>
                 </mat-table>
 
-                <mat-table
-                  class="bottom-space"
-                  [dataSource]="stepEssFileService?.selectedHouseholdMembers"
-                  *ngIf="this.essFileNumber"
-                >
+                <mat-table class="bottom-space" [dataSource]="stepEssFileService?.selectedHouseholdMembers"
+                  *ngIf="this.essFileNumber">
                   <ng-container matColumnDef="firstName">
-                    <mat-header-cell *matHeaderCellDef
-                      >First Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">First Name: &nbsp;</span>
                       {{ member.firstName }}
@@ -173,9 +153,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="lastName">
-                    <mat-header-cell *matHeaderCellDef
-                      >Last Name</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Last Name: &nbsp;</span>
                       {{ member.lastName }}
@@ -183,9 +161,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="initials">
-                    <mat-header-cell *matHeaderCellDef
-                      >Initials</mat-header-cell
-                    >
+                    <mat-header-cell *matHeaderCellDef>Initials</mat-header-cell>
                     <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Initials: &nbsp;</span>
                       {{ member.initials }}
@@ -209,50 +185,28 @@
                       {{ member.dateOfBirth | date: 'dd-MMM-yyyy' }}
                     </mat-cell>
                   </ng-container>
-
-                  <mat-header-row
-                    *matHeaderRowDef="memberColumns"
-                  ></mat-header-row>
-                  <mat-row
-                    *matRowDef="let member; columns: memberColumns"
-                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
-                  ></mat-row>
+                  <mat-header-row *matHeaderRowDef="memberColumns"></mat-header-row>
+                  <mat-row *matRowDef="let member; columns: memberColumns"
+                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"></mat-row>
                 </mat-table>
               </div>
             </div>
-
             <div class="row">
               <div class="col-12">
-                <div class="review-panel data-panel">
+                <div class="data-panel">
+                  <label class="tab-subtitle">Pets</label>
                   <div class="row">
                     <div class="col-4">Pets?</div>
                     <div class="col-8 bold">
-                      {{
-                        stepEssFileService?.havePets
-                          ? stepEssFileService?.havePets
-                          : 'No'
-                      }}
+                      {{ stepEssFileService?.havePets ? stepEssFileService?.havePets : "No" }}
                     </div>
                   </div>
-                  <div
-                    class="row"
-                    *ngIf="stepEssFileService?.petsList?.length > 0"
-                  >
+                  <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
                     <div class="col-8">
-                      <mat-table
-                        class="bottom-space"
-                        [dataSource]="stepEssFileService?.petsList"
-                      >
+                      <mat-table class="bottom-space" [dataSource]="stepEssFileService?.petsList">
                         <ng-container matColumnDef="type">
-                          <mat-header-cell *matHeaderCellDef
-                            >Pet Type</mat-header-cell
-                          >
-                          <mat-cell
-                            [ngClass]="
-                              element.type.length >= 40 ? 'wrapText' : ''
-                            "
-                            *matCellDef="let element"
-                          >
+                          <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
+                          <mat-cell [ngClass]="element.type.length >= 40 ? 'wrapText' : ''" *matCellDef="let element">
                             <span class="mobile-label">Pet Type:</span>
                             {{ element.type }}
                           </mat-cell>
@@ -268,18 +222,16 @@
                           </mat-cell>
                         </ng-container>
 
-                        <mat-header-row
-                          *matHeaderRowDef="petColumns"
-                        ></mat-header-row>
-                        <mat-row
-                          *matRowDef="let row; columns: petColumns"
-                        ></mat-row>
+                        <mat-header-row *matHeaderRowDef="petColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: petColumns"></mat-row>
                       </mat-table>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
             <div class="row">
               <div class="col-12">
@@ -395,8 +347,7 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+  
     </div>
   </div>
 </div>
