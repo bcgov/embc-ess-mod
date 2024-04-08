@@ -39,15 +39,4 @@ export class EssFileDetailsComponent implements OnInit {
     this.memberListDisplay = this.essFile?.needsAssessment?.householdMembers;
   }
 
-  /**
-   * Maps needs assessment api value to UI string
-   *
-   * @param incomingValue needs assessment value
-   * @returns
-   */
-  mapNeedsValues(incomingValue: boolean | null): string {
-    return globalConst.needsOptions.find(
-      (ins) => ins.apiValue === incomingValue
-    )?.name;
-  }
 }

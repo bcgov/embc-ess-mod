@@ -24,14 +24,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   saveLoader = false;
   disableButton = false;
   wizardType: string;
-
   insuranceDisplay: string;
-
-  needsFoodDisplay: string;
-  needsLodgingDisplay: string;
-  needsClothingDisplay: string;
-  needsTransportationDisplay: string;
-  needsIncidentalsDisplay: string;
+  needs: string[] = [];
 
   memberColumns: string[] = [
     'firstName',
@@ -52,42 +46,14 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     private essFileService: EssFileService,
     private alertService: AlertService,
     private appBaseService: AppBaseService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
     this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
-
-    // Get the displayed value for radio options
-    this.insuranceDisplay = globalConst.insuranceOptions.find(
-      (ins) => ins.value === this.stepEssFileService?.insurance
-    )?.name;
-
-    this.needsFoodDisplay = globalConst.needsOptions.find(
-      (ins) => ins.value === this.stepEssFileService?.canRegistrantProvideFood
-    )?.name;
-
-    this.needsLodgingDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value === this.stepEssFileService?.canRegistrantProvideLodging
-    )?.name;
-
-    this.needsClothingDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value === this.stepEssFileService?.canRegistrantProvideClothing
-    )?.name;
-
-    this.needsTransportationDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value ===
-        this.stepEssFileService?.canRegistrantProvideTransportation
-    )?.name;
-
-    this.needsIncidentalsDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value === this.stepEssFileService?.canRegistrantProvideIncidentals
-    )?.name;
+    this.needs =
+      this.appBaseService?.appModel?.selectedEssFile?.needsAssessment?.needs;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =

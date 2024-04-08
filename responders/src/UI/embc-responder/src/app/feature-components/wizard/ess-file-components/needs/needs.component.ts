@@ -12,6 +12,12 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { WizardService } from '../../wizard.service';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+
+enum ShelterType {
+  Allowance,
+  Referral
+};
 
 @Component({
   selector: 'app-needs',
@@ -19,8 +25,8 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
   styleUrls: ['./needs.component.scss']
 })
 export class NeedsComponent implements OnInit, OnDestroy {
+
   needsForm: UntypedFormGroup;
-  radioOption = globalConst.needsOptions;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
 
@@ -29,8 +35,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
     private stepEssFileService: StepEssFileService,
     private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService,
-    private evacueeSessionService: EvacueeSessionService
-  ) {}
+    private evacueeSessionService: EvacueeSessionService,
+    private customValidationService: CustomValidationService
+  ) { }
 
   ngOnInit(): void {
     // Creates the main form
@@ -98,27 +105,70 @@ export class NeedsComponent implements OnInit, OnDestroy {
 
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
-      canEvacueeProvideFood: [
-        this.stepEssFileService.canRegistrantProvideFood ?? '',
-        Validators.required
+      requiresShelter: [
+        this.stepEssFileService.requiresShelterAllowance || this.stepEssFileService.requiresShelterReferral
       ],
-      canEvacueeProvideLodging: [
-        this.stepEssFileService.canRegistrantProvideLodging ?? '',
-        Validators.required
+      requiresShelterType: [
+        this.stepEssFileService.requiresShelterReferral
+          ? ShelterType.Allowance
+          : this.stepEssFileService.requiresShelterAllowance
+            ? ShelterType.Referral
+            : undefined,
       ],
-      canEvacueeProvideClothing: [
-        this.stepEssFileService.canRegistrantProvideClothing ?? '',
-        Validators.required
+      requiresFood: [
+        this.stepEssFileService.requiresFood ?? false
       ],
-      canEvacueeProvideTransportation: [
-        this.stepEssFileService.canRegistrantProvideTransportation ?? '',
-        Validators.required
+      requiresClothing: [
+        this.stepEssFileService.requiresClothing ?? false
       ],
-      canEvacueeProvideIncidentals: [
-        this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
-        Validators.required
+      requiresTransportation: [
+        this.stepEssFileService.requiresTranportation ?? false
+      ],
+      requiresIncidentals: [
+        this.stepEssFileService.requiresIncidentals ?? false
+      ],
+      requiresNothing: [
+        this.stepEssFileService.requiresNothing ?? false
       ]
     });
+    this.needsForm.addValidators(this.customValidationService.needsValidator());
+    this.needsFormControl['requiresNothing'].valueChanges.subscribe(data => {
+      if (data) {
+        this.disableNeeds();
+      } else {
+        this.enableNeeds();
+      }
+    });
+  }
+
+  private disableNeeds() {
+    this.disableFormControl('requiresIncidentals');
+    this.disableFormControl('requiresTransportation');
+    this.disableFormControl('requiresClothing');
+    this.disableFormControl('requiresFood');
+    this.disableFormControl('requiresShelter');
+    this.disableFormControl('requiresShelterType');
+  }
+
+  private enableNeeds() {
+    this.enableFormControl('requiresIncidentals');
+    this.enableFormControl('requiresTransportation');
+    this.enableFormControl('requiresClothing');
+    this.enableFormControl('requiresFood');
+    this.enableFormControl('requiresShelter');
+    this.enableFormControl('requiresShelterType');
+  }
+
+  private disableFormControl(formControlName: string) {
+    const formControl = this.needsFormControl[formControlName];
+    formControl.disable();
+    formControl.reset();
+  }
+
+  private enableFormControl(formControlName: string) {
+    const formControl = this.needsFormControl[formControlName];
+    formControl.enable();
+    formControl.reset();
   }
 
   /**
@@ -139,18 +189,10 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
-      'canEvacueeProvideFood'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
-      'canEvacueeProvideLodging'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
-      'canEvacueeProvideClothing'
-    ).value;
-    this.stepEssFileService.canRegistrantProvideTransportation =
-      this.needsForm.get('canEvacueeProvideTransportation').value;
-    this.stepEssFileService.canRegistrantProvideIncidentals =
-      this.needsForm.get('canEvacueeProvideIncidentals').value;
+    this.stepEssFileService.requiresClothing = this.needsFormControl['requiresClothing'].value;
+    this.stepEssFileService.requiresFood = this.needsFormControl['requiresFood'].value;
+    this.stepEssFileService.requiresIncidentals = this.needsFormControl['requiresIncidentals'].value;
+    this.stepEssFileService.requiresShelterAllowance = this.needsFormControl['requiresShelterType'].value === ShelterType.Allowance;
+    this.stepEssFileService.requiresShelterReferral = this.needsFormControl['requiresShelterType'].value === ShelterType.Referral;
   }
 }

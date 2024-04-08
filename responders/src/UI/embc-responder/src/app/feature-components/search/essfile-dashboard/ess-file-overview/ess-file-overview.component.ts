@@ -33,18 +33,6 @@ export class EssFileOverviewComponent implements OnInit {
     this.calculateAnimalsTotal();
   }
 
-  /**
-   * Maps needs assessment api value to UI string
-   *
-   * @param incomingValue needs assessment value
-   * @returns
-   */
-  mapNeedsValues(incomingValue: boolean | null): string {
-    return globalConst.needsOptions.find(
-      (ins) => ins.apiValue === incomingValue
-    )?.name;
-  }
-
   private calculateAnimalsTotal(): void {
     if (this.essFile?.needsAssessment?.pets?.length > 0) {
       for (const pet of this.essFile?.needsAssessment?.pets) {

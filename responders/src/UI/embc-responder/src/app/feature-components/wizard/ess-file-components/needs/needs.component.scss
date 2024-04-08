@@ -32,8 +32,6 @@ mat-form-field {
   margin-bottom: 30px;
 }
 
-@media (max-width: 600px) {
-  .mat-radio-button ~ .mat-radio-button {
-    margin-left: 16px;
-  }
+.shelter-ident{
+  margin-left: 24px;
 }
