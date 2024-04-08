@@ -71,6 +71,7 @@ namespace EMBC.ESS.Resources.Evacuations
                   .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Food) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
                   .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Clothing) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
                   .ForMember(d => d.era_canevacueeprovideincidentals, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Clothing) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
+                  .ForMember(d => d.era_canevacueeprovidelodging, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.ShelterReferral) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
                   .ForMember(d => d.era_canevacueeprovidetransportation, opts => opts.MapFrom(s => s.Needs.Contains(IdentifiedNeed.Transportation) ? (int)NeedTrueFalse.False : (int)NeedTrueFalse.True))
                   .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
                   .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFrom.AddressLine1))
@@ -79,17 +80,6 @@ namespace EMBC.ESS.Resources.Evacuations
                   .ForMember(d => d._era_jurisdictionid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                   .ForMember(d => d.era_era_householdmember_era_needassessment, opts => opts.MapFrom(s => s.HouseholdMembers))
                   .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
-                  .AfterMap((s, d) =>
-                  {
-                      if (s.Needs.Contains(IdentifiedNeed.ShelterReferral))
-                      {
-                          d.era_shelteroptions = (int)ShelterOptionSet.Referral;
-                      }
-                      else if (s.Needs.Contains(IdentifiedNeed.ShelterAllowance))
-                      {
-                          d.era_shelteroptions = (int)ShelterOptionSet.Allowance;
-                      }
-                  })
                   ;
 
             CreateMap<era_needassessment, EvacuationAddress>()
@@ -118,9 +108,8 @@ namespace EMBC.ESS.Resources.Evacuations
                     if (s.era_canevacueeprovideclothing.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Clothing);
                     if (s.era_canevacueeprovidefood.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Food);
                     if (s.era_canevacueeprovideincidentals.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Incidentals);
+                    if (s.era_canevacueeprovidelodging.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.ShelterReferral);
                     if (s.era_canevacueeprovidetransportation.GetValueOrDefault(0) == (int)NeedTrueFalse.False) needs.Add(IdentifiedNeed.Transportation);
-                    if (s.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance) needs.Add(IdentifiedNeed.ShelterAllowance);
-                    if (s.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral) needs.Add(IdentifiedNeed.ShelterReferral);
                     d.Needs = needs;
                 })
                 ;
@@ -215,12 +204,6 @@ namespace EMBC.ESS.Resources.Evacuations
     {
         True = 174360000,
         False = 174360001
-    }
-
-    public enum ShelterOptionSet
-    {
-        Allowance = 174360000,
-        Referral = 174360001
     }
 
 #pragma warning restore CA1008 // Enums should have zero value

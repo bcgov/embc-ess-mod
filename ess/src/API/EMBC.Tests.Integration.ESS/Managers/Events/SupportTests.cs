@@ -195,7 +195,7 @@ namespace EMBC.Tests.Integration.ESS.Managers.Events
                 RequestingUserId = testPrintRequest._era_requestinguserid_value?.ToString()
             });
             response.Content.ShouldNotBeEmpty();
-            await File.WriteAllBytesAsync("./newTestPrintRequestFile.pdf", response.Content);
+            await File.WriteAllBytesAsync("./newTestPrintRequestFile.html", response.Content);
         }
 
         [Fact]

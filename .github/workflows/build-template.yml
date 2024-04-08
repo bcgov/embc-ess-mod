@@ -56,12 +56,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ inputs.REGISTRY }}/${{ inputs.IMAGE_NAME }}
+          images: ${{ inputs.REGISTRY }}${{ inputs.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
             type=ref,event=tag
-            type=raw,value={{date 'YYYYMMDD-hhmmss' tz='America/Vancouver'}}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -72,7 +71,7 @@ jobs:
           context: ${{ inputs.IMAGE_CONTEXT }}
           build-contexts: ${{ inputs.BUILD_CONTEXT }}
           build-args: |
-            VERSION=${{ fromJSON(steps.meta.outputs.json).tags['org.opencontainers.image.version'] }}
+            "VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}"
           file: ${{ inputs.IMAGE_FILE }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
