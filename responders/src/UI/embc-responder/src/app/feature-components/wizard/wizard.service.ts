@@ -60,7 +60,7 @@ export class WizardService {
       const firstStepTitle = sideNavMenu[0].title;
 
       this.router.navigate([firstStepUrl], {
-        state: { step: firstStepId, title: firstStepTitle },
+        state: { step: firstStepId, title: firstStepTitle }
       });
     }
   }
@@ -75,9 +75,9 @@ export class WizardService {
       .open(DialogComponent, {
         data: {
           component: InformationDialogComponent,
-          content: globalConst.exitWizardDialog,
+          content: globalConst.exitWizardDialog
         },
-        width: '530px',
+        width: '530px'
       })
       .afterClosed()
       .subscribe((event) => {
@@ -132,9 +132,9 @@ export class WizardService {
       data: {
         component: InformationDialogComponent,
         content,
-        title,
+        title
       },
-      width: '530px',
+      width: '530px'
     });
   }
 
@@ -149,9 +149,9 @@ export class WizardService {
       .open(DialogComponent, {
         data: {
           component: InformationDialogComponent,
-          content,
+          content
         },
-        width: '530px',
+        width: '530px'
       })
       .afterClosed()
       .subscribe((event) => {
@@ -211,7 +211,7 @@ export class WizardService {
       community:
         addressObject.city !== null
           ? addressObject.city
-          : addressObject.community,
+          : addressObject.community
     };
 
     return address;
@@ -390,7 +390,14 @@ export class WizardService {
   }
 
   compareNeeds(initialValue: EvacuationFileModel, form): boolean {
-    return true; //TBD
+    return (
+      form.requiresFood.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Food) &&
+      form.requiresClothing.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Clothing) &&
+      form.requiresIncidentals.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Incidentals) &&
+      form.requiresTransportation.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Tranportation) &&
+      form.requiresShelterAllowance.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterAllowance) &&
+      form.requiresShelterReferral.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterReferral)
+    );
   }
 
   public clearCachedServices() {
@@ -398,7 +405,7 @@ export class WizardService {
     this.cacheService.remove('wizardType');
     this.appBaseService.wizardProperties = {
       editFlag: false,
-      memberFlag: false,
+      memberFlag: false
     };
     this.computeState.triggerEvent();
   }
