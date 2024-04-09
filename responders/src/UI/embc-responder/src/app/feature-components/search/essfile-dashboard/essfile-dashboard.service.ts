@@ -318,8 +318,11 @@ export class EssfileDashboardService {
   }
 
   public getIdentifiedNeeds(): string[] {
-    return Array.from(this.essFile.needsAssessment.needs)
-      .map(need => this.loadEvacueeListService.getIdentifiedNeeds().find(value => value.value === need)?.description);
+    return Array.from(this.essFile?.needsAssessment?.needs ?? []).map(
+      (need) =>
+        this.loadEvacueeListService
+          ?.getIdentifiedNeeds()
+          ?.find((value) => value.value === need)?.description
+    );
   }
-  
 }

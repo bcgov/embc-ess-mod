@@ -96,11 +96,7 @@ describe('EssFileDetailsComponent', () => {
         }
       ],
       pets: [],
-      canProvideFood: false,
-      canProvideLodging: true,
-      canProvideClothing: true,
-      canProvideTransportation: false,
-      canProvideIncidentals: true,
+      needs: [],
       type: NeedsAssessmentType.Assessed
     },
     notes: [],

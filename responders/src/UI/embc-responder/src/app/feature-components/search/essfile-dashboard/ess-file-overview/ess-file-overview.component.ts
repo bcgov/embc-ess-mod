@@ -33,15 +33,15 @@ export class EssFileOverviewComponent implements OnInit {
     this.calculateAnimalsTotal();
   }
 
+  public getIdentifiedNeeds(): string[] {
+    return this.essfileDashboardService?.getIdentifiedNeeds() ?? [];
+  }
+
   private calculateAnimalsTotal(): void {
     if (this.essFile?.needsAssessment?.pets?.length > 0) {
       for (const pet of this.essFile?.needsAssessment?.pets) {
         this.animalCount += +pet.quantity;
       }
     }
-  }
-
-  public getIdentifiedNeeds(): string[] {
-    return this.essfileDashboardService.getIdentifiedNeeds();
   }
 }
