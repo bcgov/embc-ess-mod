@@ -673,3 +673,18 @@ export const caseNotesCompleteText: DashboardBanner = {
   content:
     'Task number end date has expired. Add or Edit Case Notes associated with the Current ESS File.'
 };
+
+export const shelterAllowanceNeedDialog: DialogContent = {
+  title: 'Shelter',
+  text: 'A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child<br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
+};
+
+export const shelterReferralNeedDialog: DialogContent = {
+  title: 'Referrals',
+  text: 'A paper form provided by an ESS responder, directing evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.'
+};
+
+export const incidentalsNeedDialog: DialogContent = {
+  title: 'Incidentals',
+  text: 'Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.'
+};
