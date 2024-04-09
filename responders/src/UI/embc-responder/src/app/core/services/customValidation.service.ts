@@ -401,10 +401,8 @@ export class CustomValidationService {
 
       const noNeedsIdentified = group.controls['requiresNothing'].value;
       if (!anyNeedsIdentified && !noNeedsIdentified) {
-        console.debug("not valid");
         return { invalid: true };
       };
-      console.debug("valid");
       return null;
     }
   }

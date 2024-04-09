@@ -3,7 +3,6 @@ import {
   AbstractControl,
   UntypedFormBuilder,
   UntypedFormGroup,
-  Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,8 +14,8 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 enum ShelterType {
-  Allowance,
-  Referral
+  Allowance = "shelterAllowance",
+  Referral = "shelterReferral"
 };
 
 @Component({
@@ -110,9 +109,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
       ],
       requiresShelterType: [
         this.stepEssFileService.requiresShelterReferral
-          ? ShelterType.Allowance
+          ? ShelterType.Referral
           : this.stepEssFileService.requiresShelterAllowance
-            ? ShelterType.Referral
+            ? ShelterType.Allowance
             : undefined,
       ],
       requiresFood: [
@@ -122,7 +121,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.requiresClothing ?? false
       ],
       requiresTransportation: [
-        this.stepEssFileService.requiresTranportation ?? false
+        this.stepEssFileService.requiresTransportation ?? false
       ],
       requiresIncidentals: [
         this.stepEssFileService.requiresIncidentals ?? false
@@ -139,6 +138,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
         this.enableNeeds();
       }
     });
+    if (this.stepEssFileService.requiresNothing) {
+      this.disableNeeds();
+    }
   }
 
   private disableNeeds() {
@@ -192,7 +194,9 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.stepEssFileService.requiresClothing = this.needsFormControl['requiresClothing'].value;
     this.stepEssFileService.requiresFood = this.needsFormControl['requiresFood'].value;
     this.stepEssFileService.requiresIncidentals = this.needsFormControl['requiresIncidentals'].value;
+    this.stepEssFileService.requiresTransportation = this.needsFormControl['requiresTransportation'].value;
     this.stepEssFileService.requiresShelterAllowance = this.needsFormControl['requiresShelterType'].value === ShelterType.Allowance;
     this.stepEssFileService.requiresShelterReferral = this.needsFormControl['requiresShelterType'].value === ShelterType.Referral;
+    this.stepEssFileService.requiresNothing = this.needsFormControl['requiresNothing'].value;
   }
 }

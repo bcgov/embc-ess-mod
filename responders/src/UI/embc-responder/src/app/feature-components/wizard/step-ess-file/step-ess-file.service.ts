@@ -312,11 +312,11 @@ export class StepEssFileService {
     }
   }
 
-  public get requiresTranportation(): boolean {
+  public get requiresTransportation(): boolean {
     return this.needs.has(IdentifiedNeed.Tranportation);
   }
 
-  public set requiresTranportation(checked: boolean) {
+  public set requiresTransportation(checked: boolean) {
     if (checked && !this.needs.has(IdentifiedNeed.Tranportation)) {
       this.needs.add(IdentifiedNeed.Tranportation);
     } else if (!checked && this.needs.has(IdentifiedNeed.Tranportation)) {
@@ -330,6 +330,7 @@ export class StepEssFileService {
   public set requiresShelterReferral(checked: boolean) {
     if (checked && !this.needs.has(IdentifiedNeed.ShelterReferral)) {
       this.needs.add(IdentifiedNeed.ShelterReferral);
+      this.requiresShelterAllowance = false;
     } else if (!checked && this.needs.has(IdentifiedNeed.ShelterReferral)) {
       this.needs.delete(IdentifiedNeed.ShelterReferral);
     }
@@ -342,6 +343,7 @@ export class StepEssFileService {
   public set requiresShelterAllowance(checked: boolean) {
     if (checked && !this.needs.has(IdentifiedNeed.ShelterAllowance)) {
       this.needs.add(IdentifiedNeed.ShelterAllowance);
+      this.requiresShelterReferral = false;
     } else if (!checked && this.needs.has(IdentifiedNeed.ShelterAllowance)) {
       this.needs.delete(IdentifiedNeed.ShelterAllowance);
     }
@@ -359,6 +361,11 @@ export class StepEssFileService {
       this.needs.clear();
     }
   }
+
+  public get needsIdentified(): string[] {
+    return Array.from(this.needs);
+  }
+
   // Security Phrase tab
   public get bypassPhrase(): boolean {
     return this.bypassPhraseVal;
@@ -598,6 +605,7 @@ export class StepEssFileService {
 
     // Needs tab
     this.needs = new Set(essNeeds.needs);
+    this.reqiresNothing = essNeeds.needs?.length === 0;
 
     // Security Phrase tab
     this.securityPhrase = essFile.securityPhrase;
