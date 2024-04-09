@@ -31,6 +31,7 @@ import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search
 import { WizardSteps, WizardType } from 'src/app/core/models/wizard-type.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -87,7 +88,8 @@ export class StepEssFileService {
     private locationService: LocationsService,
     private evacueeSearchService: EvacueeSearchService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
+    private computeState: ComputeRulesService,
+    private loadEvacueeListService: LoadEvacueeListService
   ) { }
 
   // Selected ESS File Model getter and setter
@@ -363,7 +365,9 @@ export class StepEssFileService {
   }
 
   public get needsIdentified(): string[] {
-    return Array.from(this.needs);
+    return Array.from(this.needs)
+    .map(need => this.loadEvacueeListService.getIdentifiedNeeds().find(value => value.value === need)?.description);
+
   }
 
   // Security Phrase tab

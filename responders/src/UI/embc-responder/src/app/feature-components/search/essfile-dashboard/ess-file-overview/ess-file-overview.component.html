@@ -119,7 +119,7 @@
         </div>
         <div class="col-md-9 table-parent">
           <table class="table-details">
-            <tr *ngFor="let item of essFile?.needsAssessment?.needs">
+            <tr *ngFor="let item of getIdentifiedNeeds()">
               <th>{{ item }}</th>
             </tr>
           </table>

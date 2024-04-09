@@ -31,6 +31,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../core/services/global-constants';
 import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({
   providedIn: 'root'
@@ -51,8 +52,9 @@ export class EssfileDashboardService {
     public evacueeSessionService: EvacueeSessionService,
     private computeState: ComputeRulesService,
     private optionInjectionService: OptionInjectionService,
-    private evacueeSearchService: EvacueeSearchService
-  ) {}
+    private evacueeSearchService: EvacueeSearchService,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) { }
 
   get essFile(): EvacuationFileModel {
     return this.essFileVal === null || this.essFileVal === undefined
@@ -110,7 +112,7 @@ export class EssfileDashboardService {
       if (
         this.selectedMember.linkedRegistrantId !== null &&
         this.appBaseService?.appModel?.selectedUserPathway ===
-          SelectedPathType.digital
+        SelectedPathType.digital
       ) {
         this.displayMemberButton = HouseholdMemberButtons.viewProfile;
       } else if (this.matchedProfiles?.length === 0) {
@@ -135,12 +137,12 @@ export class EssfileDashboardService {
     } else {
       if (
         this.appBaseService?.appModel?.selectedUserPathway ===
-          SelectedPathType.digital ||
+        SelectedPathType.digital ||
         (this.appBaseService?.appModel?.selectedUserPathway ===
           SelectedPathType.paperBased &&
           this.appBaseService?.appModel.selectedProfile.selectedEvacueeInContext
             .id ===
-            this.appBaseService?.appModel.selectedEssFile.primaryRegistrantId)
+          this.appBaseService?.appModel.selectedEssFile.primaryRegistrantId)
       ) {
         this.displayMemberButton = HouseholdMemberButtons.viewProfile;
       }
@@ -314,4 +316,10 @@ export class EssfileDashboardService {
         ?.evacueeSearchParameters?.lastName;
     }
   }
+
+  public getIdentifiedNeeds(): string[] {
+    return Array.from(this.essFile.needsAssessment.needs)
+      .map(need => this.loadEvacueeListService.getIdentifiedNeeds().find(value => value.value === need)?.description);
+  }
+  
 }

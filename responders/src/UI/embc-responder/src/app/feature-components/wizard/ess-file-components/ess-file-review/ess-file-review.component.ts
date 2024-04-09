@@ -45,16 +45,13 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private essFileService: EssFileService,
     private alertService: AlertService,
-    private appBaseService: AppBaseService,
-    private loadEvacueeListService: LoadEvacueeListService
+    private appBaseService: AppBaseService
   ) { }
 
   ngOnInit(): void {
     this.wizardType = this.appBaseService?.wizardProperties?.wizardType;
     this.taskNumber = this.stepEssFileService.getTaskNumber(this.wizardType);
     this.essFileNumber = this.appBaseService?.appModel?.selectedEssFile?.id;
-    this.needs = Array.from(this.stepEssFileService?.needsIdentified)
-      .map(need => this.loadEvacueeListService.getIdentifiedNeeds().find(value => value.value === need)?.description);
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription =

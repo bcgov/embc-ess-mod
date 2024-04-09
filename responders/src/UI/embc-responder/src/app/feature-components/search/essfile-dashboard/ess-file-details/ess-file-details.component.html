@@ -182,7 +182,7 @@
 
       <div class="row">
         <div class="col-12">
-          <div class="row" *ngFor="let item of essFile?.needsAssessment?.needs">
+          <div class="row" *ngFor="let item of getIdentifiedNeeds()">
             <div class="col-12 bold">{{ item }}</div>
           </div>
         </div>

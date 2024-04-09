@@ -40,4 +40,8 @@ export class EssFileOverviewComponent implements OnInit {
       }
     }
   }
+
+  public getIdentifiedNeeds(): string[] {
+    return this.essfileDashboardService.getIdentifiedNeeds();
+  }
 }

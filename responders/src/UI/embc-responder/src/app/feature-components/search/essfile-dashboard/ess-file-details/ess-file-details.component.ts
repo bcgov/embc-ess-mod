@@ -12,7 +12,6 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
   styleUrls: ['./ess-file-details.component.scss']
 })
 export class EssFileDetailsComponent implements OnInit {
-  essFile: EvacuationFileModel;
 
   memberListDisplay: EvacuationFileHouseholdMember[];
 
@@ -30,13 +29,23 @@ export class EssFileDetailsComponent implements OnInit {
         };
         this.essFile = state.file;
       }
-    } else {
-      this.essFile = this.essfileDashboardService.essFile;
     }
   }
 
   ngOnInit(): void {
     this.memberListDisplay = this.essFile?.needsAssessment?.householdMembers;
+  }
+
+  public get essFile() {
+    return this.essfileDashboardService.essFile;
+  }
+
+  public set essFile(value: EvacuationFileModel) {
+    this.essfileDashboardService.essFile = value;
+  }
+
+  public getIdentifiedNeeds(): string[] {
+    return this.essfileDashboardService.getIdentifiedNeeds();
   }
 
 }
