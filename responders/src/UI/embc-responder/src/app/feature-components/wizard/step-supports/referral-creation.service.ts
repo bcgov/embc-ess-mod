@@ -160,16 +160,14 @@ export class ReferralCreationService {
   }
 
   set lodgingAllowanceReferral(lodgingAllowanceReferralVal: LodgingAllowanceSupport) {
-   // this.lodgingAllowanceReferral = lodgingAllowanceReferralVal;
-   // this.setDraftSupport(lodgingAllowanceReferralVal);
-   this.lodgingAllowanceReferral = lodgingAllowanceReferralVal;
-   this.cacheService.set('groupReferral', lodgingAllowanceReferralVal);
+   this.lodgingAllowanceReferralVal = lodgingAllowanceReferralVal;
+   this.cacheService.set('lodgingAllowanceReferralVal', lodgingAllowanceReferralVal);
    this.setDraftSupport(lodgingAllowanceReferralVal);
   }
 
   get lodgingAllowanceReferral(): LodgingAllowanceSupport {
-    return this.lodgingAllowanceReferral
-      ? this.lodgingAllowanceReferral
+    return this.lodgingAllowanceReferralVal
+      ? this.lodgingAllowanceReferralVal
       : JSON.parse(this.cacheService.get('lodgingAllowanceReferral'));
   }
 

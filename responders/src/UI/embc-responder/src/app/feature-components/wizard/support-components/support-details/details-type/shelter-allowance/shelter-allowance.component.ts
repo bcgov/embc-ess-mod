@@ -45,10 +45,8 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
     if (changes.SelectedHouseholdMembers) {
       this.updateTotalAmount();
     }
-    if (changes.nofNight) {
-      this.updateTotalAmount();
-    }
 
+    this.referralForm.get('noOfNights').valueChanges.subscribe( () => {this.updateTotalAmount()});
   }
   updateTotalAmount() {
     this.members = this.supportDetailsForm.get('members').value;
@@ -60,7 +58,7 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
         this.nofNight * globalConst.shelterAllowance.rate;
 
     }
-    else if (this.members != null) {
+    else if (this.members != null && this.members.length > 1) {
       const count = this.members.reduce((acc, member) => {
         if (member.isMinor) {
           acc.minorCount++;

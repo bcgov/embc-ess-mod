@@ -348,6 +348,7 @@ namespace EMBC.ESS.Resources.Reports
         Clothing = 174360006,
         Transportation_Taxi = 174360007,
         Transportation_Other = 174360008,
+        Lodging_Allowance = 174360009,
 #pragma warning restore CA1707 // Identifiers should not contain underscores
     }
 

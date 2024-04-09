@@ -210,14 +210,21 @@ export class SupportDetailsService {
         [Validators.required]
       ],
       totalAmount: [
-        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowanceLodging)
-          ?.totalAmount ?? '',
+         (this.stepSupportsService?.supportDetails?.referral as ShelterAllowanceLodging)
+           ?.totalAmount ?? '',
         [
           Validators.required,
           Validators.pattern(globalConst.currencyPattern),
           this.customValidation.totalZeroValidator()
         ]
+      ],
+      processEvacueeCert: [
+        '', 
+        [
+          Validators.requiredTrue
+        ]
       ]
+
     });
   }
 
