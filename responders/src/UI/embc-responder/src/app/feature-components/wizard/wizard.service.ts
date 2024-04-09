@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Pet, SecurityQuestion } from 'src/app/core/api/models';
+import { IdentifiedNeed, Pet, SecurityQuestion } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
@@ -37,7 +37,7 @@ export class WizardService {
     private dialog: MatDialog,
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
-  ) {}
+  ) { }
 
   public get menuItems(): Array<WizardSidenavModel> {
     if (this.sideMenuItems === null || this.sideMenuItems === undefined)
@@ -318,7 +318,10 @@ export class WizardService {
     return _.isEqual(initialValue, members);
   }
 
-  compareAddress(formAddress: AddressModel, incomingAddress: AddressModel) {
+  compareAddress(
+    formAddress: AddressModel,
+    incomingAddress: AddressModel
+  ): boolean {
     if (
       formAddress.addressLine1 === incomingAddress.addressLine1 &&
       formAddress.addressLine2 === incomingAddress.addressLine2 &&
@@ -335,7 +338,10 @@ export class WizardService {
     }
   }
 
-  compareSecurityQuestion(initialValue: Array<SecurityQuestion>, form) {
+  compareSecurityQuestion(
+    initialValue: Array<SecurityQuestion>,
+    form
+  ): boolean {
     const q1 = form.question1.value;
     const q2 = form.question2.value;
     const q3 = form.question3.value;
@@ -352,7 +358,7 @@ export class WizardService {
     }
   }
 
-  compareEvacDetails(initialValue: EvacuationFileModel, form) {
+  compareEvacDetails(initialValue: EvacuationFileModel, form): boolean {
     if (
       form.facilityName.value === initialValue.registrationLocation &&
       form.insurance.value === initialValue.needsAssessment.insurance &&
@@ -364,8 +370,8 @@ export class WizardService {
     }
   }
 
-  compareHouseholdMembers(initialValue: EvacuationFileModel, form) {
-      return true;
+  compareHouseholdMembers(initialValue: EvacuationFileModel, form): boolean {
+    return true;
   }
 
   hasPetsChanged(pets: Pet[]): boolean {
@@ -379,32 +385,19 @@ export class WizardService {
     }
   }
 
-  comparePets(initialValue: EvacuationFileModel, form) {
+  comparePets(initialValue: EvacuationFileModel, form): boolean {
     return false;
   }
 
-  compareNeeds(initialValue: EvacuationFileModel, form) {
-    if (
-      globalConst.needsOptions.find(
-        (ins) => ins.value === form.canEvacueeProvideClothing.value
-      )?.apiValue === initialValue.needsAssessment.canProvideClothing &&
-      globalConst.needsOptions.find(
-        (ins) => ins.value === form.canEvacueeProvideFood.value
-      )?.apiValue === initialValue.needsAssessment.canProvideFood &&
-      globalConst.needsOptions.find(
-        (ins) => ins.value === form.canEvacueeProvideIncidentals.value
-      )?.apiValue === initialValue.needsAssessment.canProvideIncidentals &&
-      globalConst.needsOptions.find(
-        (ins) => ins.value === form.canEvacueeProvideLodging.value
-      )?.apiValue === initialValue.needsAssessment.canProvideLodging &&
-      globalConst.needsOptions.find(
-        (ins) => ins.value === form.canEvacueeProvideTransportation.value
-      )?.apiValue === initialValue.needsAssessment.canProvideTransportation
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+  compareNeeds(initialValue: EvacuationFileModel, form): boolean {
+    return (
+      form.requiresFood.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Food) &&
+      form.requiresClothing.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Clothing) &&
+      form.requiresIncidentals.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Incidentals) &&
+      form.requiresTransportation.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.Tranportation) &&
+      form.requiresShelterAllowance.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterAllowance) &&
+      form.requiresShelterReferral.value === initialValue.needsAssessment.needs.indexOf(IdentifiedNeed.ShelterReferral)
+    );
   }
 
   public clearCachedServices() {

@@ -11,211 +11,182 @@
     <div class="col-12 content-container">
       <form [formGroup]="needsForm">
         <p class="no-margin">
-          Which categories of support are you able to provide for yourself and
-          your household while under evacuation?
+          While evacuated, do you need government assistance with any of the
+          following: Please check all that apply:
         </p>
+        <br />
 
-        <label class="tab-subtitle requiredField" id="food-label">
-          <img
-            src="../../../../../assets/images/wizard/needs-food.svg"
-            width="40px"
-            height="42px"
-          />
-          Food
-        </label>
-        <p id="canEvacueeProvideFood-radio-group-label">
-          Do you and your household members have enough food while you are
-          evacuated?
-        </p>
-        <mat-radio-group
-          aria-labelledby="canEvacueeProvideFood-radio-group-label"
-          formControlName="canEvacueeProvideFood"
-          class="primary-radio-group"
-          required
-        >
-          <mat-radio-button
-            class="primary-radio-button"
-            *ngFor="let option of radioOption"
-            [value]="option.value"
-          >
-            {{ option.name }}
-          </mat-radio-button>
-          <mat-error
-            class="custom-mat-error"
-            *ngIf="
-              needsFormControl?.canEvacueeProvideFood.touched &&
-              needsFormControl?.canEvacueeProvideFood.invalid &&
-              needsFormControl?.canEvacueeProvideFood.hasError('required')
-            "
-          >
-            Food is required</mat-error
-          >
-        </mat-radio-group>
+        <div class="row">
+          <div class="col-12">
+            <mat-checkbox
+              id="shelter"
+              class="primary-checkbox"
+              formControlName="requiresShelter"
+            ></mat-checkbox>
+            <label class="tab-subtitle" for="shelter">
+              <img
+                src="../../../../../assets/images/wizard/needs-lodging.svg"
+                width="40px"
+                height="40px"
+              />
+              Shelter
+            </label>
+            <div class="shelter-ident">
+              <p>
+                There are several ways to meet your shelter needs.<br />
+                You can receive a shelter allowance and use that money to find
+                your own shelter or be provided with a referral to shelter (like
+                a cot in a gym or a hotel/motel).
+              </p>
+              <mat-radio-group
+                id="shelterRadio"
+                class="primary-radio-group"
+                formControlName="requiresShelterType"
+                aria-label="Select an option"
+                *ngIf="needsFormControl['requiresShelter'].value"
+              >
+                <label for="shelterAllowance">
+                  <mat-radio-button
+                    id="shelterAllowance"
+                    class="primary-radio-button"
+                    value="shelterAllowance"
+                  ></mat-radio-button>
+                  I need the shelter allowance and can find my own shelter.
+                  <span>
+                    <a
+                      class="status-info"
+                      (click)="openShelterAllowanceDialog()"
+                    >
+                      <img
+                        src="../../../../../assets/images/info-on-hover.svg"
+                        height="28"
+                        width="28"
+                      />
+                    </a>
+                  </span>
+                </label>
+                <label for="shelterReferral">
+                  <mat-radio-button
+                    id="shelterReferral"
+                    class="primary-radio-button"
+                    value="shelterReferral"
+                  ></mat-radio-button>
+                  I need a referral to shelter.
+                  <span>
+                    <a
+                      class="status-info"
+                      (click)="openShelterReferralDialog()"
+                    >
+                      <img
+                        src="../../../../../assets/images/info-on-hover.svg"
+                        height="28"
+                        width="28"
+                      />
+                    </a>
+                  </span>
+                </label>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
 
-        <hr class="break-margin" />
+        <div class="row">
+          <div class="col-12">
+            <mat-checkbox
+              id="food"
+              formControlName="requiresFood"
+              class="primary-checkbox"
+            ></mat-checkbox>
+            <label class="tab-subtitle" for="food">
+              <img
+                src="../../../../../assets/images/wizard/needs-food.svg"
+                width="40px"
+                height="40px"
+              />
+              Food
+            </label>
+          </div>
+        </div>
 
-        <label class="tab-subtitle requiredField" id="lodging-label">
-          <img
-            src="../../../../../assets/images/wizard/needs-lodging.svg"
-            width="40px"
-            height="42px"
-          />
-          Lodging
-        </label>
-        <p id="canEvacueeProvideLodging-radio-group-label">
-          Do you and your household members have lodging while evacuated?
-          <br />This could include staying with relatives, friends, or hotel
-          accommodation.
-        </p>
-        <mat-radio-group
-          aria-labelledby="canEvacueeProvideLodging-radio-group-label"
-          formControlName="canEvacueeProvideLodging"
-          class="primary-radio-group"
-          required
-        >
-          <mat-radio-button
-            class="primary-radio-button"
-            *ngFor="let option of radioOption"
-            [value]="option.value"
-          >
-            {{ option.name }}
-          </mat-radio-button>
-          <mat-error
-            class="custom-mat-error"
-            *ngIf="
-              needsFormControl?.canEvacueeProvideLodging.touched &&
-              needsFormControl?.canEvacueeProvideLodging.invalid &&
-              needsFormControl?.canEvacueeProvideLodging.hasError('required')
-            "
-          >
-            Lodging is required</mat-error
-          >
-        </mat-radio-group>
+        <div class="row">
+          <div class="col-12">
+            <mat-checkbox
+              id="clothing"
+              formControlName="requiresClothing"
+              class="primary-checkbox"
+            ></mat-checkbox>
+            <label class="tab-subtitle" for="clothing">
+              <img
+                src="../../../../../assets/images/wizard/needs-clothing.svg"
+                width="40px"
+                height="40px"
+              />
+              Clothing
+            </label>
+          </div>
+        </div>
 
-        <hr class="break-margin" />
+        <div class="row">
+          <div class="col-12">
+            <mat-checkbox
+              id="incidentals"
+              formControlName="requiresIncidentals"
+              class="primary-checkbox"
+            ></mat-checkbox>
+            <label class="tab-subtitle" for="incidentals">
+              <img
+                src="../../../../../assets/images/wizard/needs-incidentals.svg"
+                width="40px"
+                height="40px"
+              />
+              Incidentals
+              <span>
+                <a class="status-info" (click)="openIncidentalsDialog()">
+                  <img
+                    src="../../../../../assets/images/info-on-hover.svg"
+                    height="28"
+                    width="28"
+                /></a>
+              </span>
+            </label>
+          </div>
+        </div>
 
-        <label class="tab-subtitle requiredField" id="clothing-label">
-          <img
-            src="../../../../../assets/images/wizard/needs-clothing.svg"
-            width="40px"
-            height="42px"
-          />
-          Clothing
-        </label>
-        <p id="canEvacueeProvideClothing-radio-group-label">
-          Do you and your household members have appropriate clothing while
-          evacuated? <br />This includes warm clothing should there be extreme
-          winter conditions.
-        </p>
-        <mat-radio-group
-          aria-labelledby="canEvacueeProvideClothing-radio-group-label"
-          formControlName="canEvacueeProvideClothing"
-          class="primary-radio-group"
-          required
-        >
-          <mat-radio-button
-            class="primary-radio-button"
-            *ngFor="let option of radioOption"
-            [value]="option.value"
-          >
-            {{ option.name }}
-          </mat-radio-button>
-          <mat-error
-            class="custom-mat-error"
-            *ngIf="
-              needsFormControl?.canEvacueeProvideClothing.touched &&
-              needsFormControl?.canEvacueeProvideClothing.invalid &&
-              needsFormControl?.canEvacueeProvideClothing.hasError('required')
-            "
-          >
-            Clothing is required</mat-error
-          >
-        </mat-radio-group>
+        <div class="row">
+          <div class="col-12">
+            <mat-checkbox
+              id="transportation"
+              formControlName="requiresTransportation"
+              class="primary-checkbox"
+            ></mat-checkbox>
+            <label class="tab-subtitle" for="transportation">
+              <img
+                src="../../../../../assets/images/wizard/needs-transport.svg"
+                width="40px"
+                height="40px"
+              />
+              Transportation
+            </label>
+          </div>
+        </div>
 
-        <hr class="break-margin" />
-
-        <label class="tab-subtitle requiredField" id="transport-label">
-          <img
-            src="../../../../../assets/images/wizard/needs-transport.svg"
-            width="40px"
-            height="42px"
-          />
-          Transportation
-        </label>
-        <p id="canEvacueeProvideTransportation-radio-group-label">
-          Do you and your household members have access to transportation while
-          evacuated? <br />This could include a personal vehicle, taxi, public
-          transportation, or rideshare access.
-        </p>
-        <mat-radio-group
-          aria-labelledby="canEvacueeProvideTransportation-radio-group-label"
-          formControlName="canEvacueeProvideTransportation"
-          class="primary-radio-group"
-          required
-        >
-          <mat-radio-button
-            class="primary-radio-button"
-            *ngFor="let option of radioOption"
-            [value]="option.value"
-          >
-            {{ option.name }}
-          </mat-radio-button>
-          <mat-error
-            class="custom-mat-error"
-            *ngIf="
-              needsFormControl?.canEvacueeProvideTransportation.touched &&
-              needsFormControl?.canEvacueeProvideTransportation.invalid &&
-              needsFormControl?.canEvacueeProvideTransportation.hasError(
-                'required'
-              )
-            "
-          >
-            Transportation is required</mat-error
-          >
-        </mat-radio-group>
-
-        <hr class="break-margin" />
-
-        <label class="tab-subtitle requiredField" id="incidentals-label">
-          <img
-            src="../../../../../assets/images/wizard/needs-incidentals.svg"
-            width="40px"
-            height="42px"
-          />
-          Incidentals
-        </label>
-        <p id="canEvacueeProvideIncidentals-radio-group-label">
-          Do you and your household members have access to incidentals while
-          evacuated? <br />This could include miscellaneous items such as
-          personal hygiene products such as toothpaste, laundry soap and/or pet
-          food.
-        </p>
-        <mat-radio-group
-          aria-labelledby="canEvacueeProvideIncidentals-radio-group-label"
-          formControlName="canEvacueeProvideIncidentals"
-          class="primary-radio-group"
-          required
-        >
-          <mat-radio-button
-            class="primary-radio-button"
-            *ngFor="let option of radioOption"
-            [value]="option.value"
-          >
-            {{ option.name }}
-          </mat-radio-button>
-          <mat-error
-            class="custom-mat-error"
-            *ngIf="
-              needsFormControl?.canEvacueeProvideIncidentals.touched &&
-              needsFormControl?.canEvacueeProvideIncidentals.invalid &&
-              needsFormControl?.canEvacueeProvideIncidentals.hasError(
-                'required'
-              )
-            "
-          >
-            Incidentals is required</mat-error
-          >
-        </mat-radio-group>
+        <div class="row">
+          <div class="col-12">
+            <mat-checkbox
+              id="noneeds"
+              formControlName="requiresNothing"
+              class="primary-checkbox"
+            ></mat-checkbox>
+            <label class="tab-subtitle" for="noneeds">
+              <img
+                src="../../../../../assets/images/wizard/no-needs.svg"
+                width="40px"
+                height="40px"
+              />
+              I can meet my basic needs. I do not require assistance.
+            </label>
+          </div>
+        </div>
       </form>
 
       <div class="row">

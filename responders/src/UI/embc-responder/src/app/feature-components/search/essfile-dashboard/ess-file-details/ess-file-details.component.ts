@@ -12,7 +12,6 @@ import { EvacuationFileHouseholdMember } from 'src/app/core/api/models';
   styleUrls: ['./ess-file-details.component.scss']
 })
 export class EssFileDetailsComponent implements OnInit {
-  essFile: EvacuationFileModel;
 
   memberListDisplay: EvacuationFileHouseholdMember[];
 
@@ -30,8 +29,6 @@ export class EssFileDetailsComponent implements OnInit {
         };
         this.essFile = state.file;
       }
-    } else {
-      this.essFile = this.essfileDashboardService.essFile;
     }
   }
 
@@ -39,15 +36,16 @@ export class EssFileDetailsComponent implements OnInit {
     this.memberListDisplay = this.essFile?.needsAssessment?.householdMembers;
   }
 
-  /**
-   * Maps needs assessment api value to UI string
-   *
-   * @param incomingValue needs assessment value
-   * @returns
-   */
-  mapNeedsValues(incomingValue: boolean | null): string {
-    return globalConst.needsOptions.find(
-      (ins) => ins.apiValue === incomingValue
-    )?.name;
+  public get essFile() {
+    return this.essfileDashboardService.essFile;
   }
+
+  public set essFile(value: EvacuationFileModel) {
+    this.essfileDashboardService.essFile = value;
+  }
+
+  public getIdentifiedNeeds(): string[] {
+    return this.essfileDashboardService.getIdentifiedNeeds();
+  }
+
 }

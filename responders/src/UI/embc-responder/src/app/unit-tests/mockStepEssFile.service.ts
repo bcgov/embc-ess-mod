@@ -179,11 +179,7 @@ export class MockStepEssFileService extends StepEssFileService {
         }
       ],
       pets: [],
-      canProvideFood: true,
-      canProvideLodging: true,
-      canProvideClothing: true,
-      canProvideTransportation: true,
-      canProvideIncidentals: true,
+      needs: [],
       type: NeedsAssessmentType.Assessed
     },
     notes: [],

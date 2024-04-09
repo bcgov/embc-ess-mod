@@ -119,50 +119,12 @@
         </div>
         <div class="col-md-9 table-parent">
           <table class="table-details">
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideFood ||
-                essFile?.needsAssessment?.canProvideFood === null
-              "
-            >
-              <th>Food</th>
-            </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideLodging ||
-                essFile?.needsAssessment?.canProvideLodging === null
-              "
-            >
-              <th>Lodging</th>
-            </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideIncidentals ||
-                essFile?.needsAssessment?.canProvideIncidentals === null
-              "
-            >
-              <th>Incidentals</th>
-            </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideClothing ||
-                essFile?.needsAssessment?.canProvideClothing === null
-              "
-            >
-              <th>Clothing</th>
-            </tr>
-            <tr
-              *ngIf="
-                !essFile?.needsAssessment?.canProvideTransportation ||
-                essFile?.needsAssessment?.canProvideTransportation === null
-              "
-            >
-              <th>Transportation</th>
+            <tr *ngFor="let item of getIdentifiedNeeds()">
+              <th>{{ item }}</th>
             </tr>
           </table>
         </div>
       </div>
-
     </div>
   </div>
 </mat-card>

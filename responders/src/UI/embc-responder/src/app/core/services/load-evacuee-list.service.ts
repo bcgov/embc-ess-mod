@@ -15,6 +15,7 @@ export class LoadEvacueeListService {
   private voidReasonVal: Code[] = [];
   private reprintReasonVal: Code[] = [];
   private communityTypeVal: Code[] = [];
+  private identifiedNeedVal: Code[] = [];
 
   constructor(
     private configService: ConfigurationService,
@@ -78,6 +79,14 @@ export class LoadEvacueeListService {
       : this.getCommunityTypesList();
   }
 
+  public getIdentifiedNeeds() {
+    return this.communityTypeVal.length > 0
+      ? this.identifiedNeedVal
+      : JSON.parse(this.cacheService.get('identifiedNeeds'))
+      ? JSON.parse(this.cacheService.get('identifiedNeeds'))
+      : this.getIdentifiedNeedsList();
+  }
+
   public loadStaticEvacueeLists(): Promise<void> {
     const categories: Observable<Array<Code>> =
       this.configService.configurationGetCodes({
@@ -107,6 +116,10 @@ export class LoadEvacueeListService {
       this.configService.configurationGetCodes({
         forEnumType: 'CommunityType'
       });
+      const identifiedNeeds: Observable<Array<Code>> =
+      this.configService.configurationGetCodes({
+        forEnumType: 'IdentifiedNeed'
+      });
 
     const list$ = forkJoin([
       categories,
@@ -115,7 +128,8 @@ export class LoadEvacueeListService {
       methods,
       voidReasons,
       reprintReasons,
-      communityTypes
+      communityTypes,
+      identifiedNeeds
     ]).pipe(
       map((results) => {
         this.setSupportCategories(
@@ -127,6 +141,7 @@ export class LoadEvacueeListService {
         this.setVoidReasons(results[4]);
         this.setReprintReasons(results[5]);
         this.setCommunityTypes(results[6]);
+        this.setIdentifiedNeeds(results[7]);
       })
     );
 
@@ -301,7 +316,7 @@ export class LoadEvacueeListService {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
-            globalConst.supportVoidReasonsError
+            globalConst.supportReprintReasonsError
           );
         }
       });
@@ -326,7 +341,7 @@ export class LoadEvacueeListService {
           this.alertService.clearAlert();
           this.alertService.setAlert(
             'danger',
-            globalConst.supportVoidReasonsError
+            globalConst.communityTypesError
           );
         }
       });
@@ -336,5 +351,30 @@ export class LoadEvacueeListService {
   private setCommunityTypes(communityTypeVal: Code[]): void {
     this.communityTypeVal = communityTypeVal;
     this.cacheService.set('communityType', communityTypeVal);
+  }
+
+  private getIdentifiedNeedsList(): Code[] {
+    let identifiedNeedsList: Code[] = [];
+    this.configService
+      .configurationGetCodes({ forEnumType: 'IdentifiedNeed' })
+      .subscribe({
+        next: (identifiedNeeds: Code[]) => {
+          identifiedNeedsList = identifiedNeeds;
+          this.setIdentifiedNeeds(identifiedNeeds);
+        },
+        error: (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.identifiedNeedsError
+          );
+        }
+      });
+    return identifiedNeedsList;
+  }
+
+  private setIdentifiedNeeds(identifiedNeedsVal: Code[]): void {
+    this.identifiedNeedVal = identifiedNeedsVal;
+    this.cacheService.set('identifiedNeeds', identifiedNeedsVal);
   }
 }

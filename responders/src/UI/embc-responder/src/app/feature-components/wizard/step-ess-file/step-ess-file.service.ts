@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import {
   EvacuationFile,
   HouseholdMemberType,
+  IdentifiedNeed,
   InsuranceOption,
   NeedsAssessment,
   Pet
@@ -30,6 +31,7 @@ import { EvacueeSearchService } from '../../search/evacuee-search/evacuee-search
 import { WizardSteps, WizardType } from 'src/app/core/models/wizard-type.model';
 import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 import { ComputeRulesService } from 'src/app/core/services/computeRules.service';
+import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -56,7 +58,6 @@ export class StepEssFileService {
   private facilityNameVal: string;
   private insuranceVal: InsuranceOption;
 
-
   // Household Members & Pets tab
   private haveHouseHoldMembersVal: string;
   private householdMembersVal: HouseholdMemberModel[];
@@ -70,11 +71,7 @@ export class StepEssFileService {
   private addPetIndicatorVal: boolean;
 
   // Needs tab
-  private canRegistrantProvideClothingVal: string;
-  private canRegistrantProvideFoodVal: string;
-  private canRegistrantProvideIncidentalsVal: string;
-  private canRegistrantProvideLodgingVal: string;
-  private canRegistrantProvideTransportationVal: string;
+  private needs: Set<IdentifiedNeed> = new Set<IdentifiedNeed>();
 
   // Security Phrase tab
   private bypassPhraseVal: boolean;
@@ -91,8 +88,9 @@ export class StepEssFileService {
     private locationService: LocationsService,
     private evacueeSearchService: EvacueeSearchService,
     private appBaseService: AppBaseService,
-    private computeState: ComputeRulesService
-  ) {}
+    private computeState: ComputeRulesService,
+    private loadEvacueeListService: LoadEvacueeListService
+  ) { }
 
   // Selected ESS File Model getter and setter
   public get selectedEssFile(): EvacuationFileModel {
@@ -273,54 +271,103 @@ export class StepEssFileService {
   public get addPetIndicator(): boolean {
     return this.addPetIndicatorVal;
   }
+
   public set addPetIndicator(addPetIndicatorVal: boolean) {
     this.addPetIndicatorVal = addPetIndicatorVal;
   }
 
   // Needs tab
-  public get canRegistrantProvideClothing(): string {
-    return this.canRegistrantProvideClothingVal;
-  }
-  public set canRegistrantProvideClothing(
-    canRegistrantProvideClothingVal: string
-  ) {
-    this.canRegistrantProvideClothingVal = canRegistrantProvideClothingVal;
+
+  public get requiresClothing(): boolean {
+    return this.needs.has(IdentifiedNeed.Clothing);
   }
 
-  public get canRegistrantProvideFood(): string {
-    return this.canRegistrantProvideFoodVal;
-  }
-  public set canRegistrantProvideFood(canRegistrantProvideFoodVal: string) {
-    this.canRegistrantProvideFoodVal = canRegistrantProvideFoodVal;
-  }
-
-  public get canRegistrantProvideIncidentals(): string {
-    return this.canRegistrantProvideIncidentalsVal;
-  }
-  public set canRegistrantProvideIncidentals(
-    canRegistrantProvideIncidentalsVal: string
-  ) {
-    this.canRegistrantProvideIncidentalsVal =
-      canRegistrantProvideIncidentalsVal;
+  public set requiresClothing(checked: boolean) {
+    if (checked && !this.needs.has(IdentifiedNeed.Clothing)) {
+      this.needs.add(IdentifiedNeed.Clothing);
+    } else if (!checked && this.needs.has(IdentifiedNeed.Clothing)) {
+      this.needs.delete(IdentifiedNeed.Clothing);
+    }
   }
 
-  public get canRegistrantProvideLodging(): string {
-    return this.canRegistrantProvideLodgingVal;
-  }
-  public set canRegistrantProvideLodging(
-    canRegistrantProvideLodgingVal: string
-  ) {
-    this.canRegistrantProvideLodgingVal = canRegistrantProvideLodgingVal;
+  public get requiresIncidentals(): boolean {
+    return this.needs.has(IdentifiedNeed.Clothing);
   }
 
-  public get canRegistrantProvideTransportation(): string {
-    return this.canRegistrantProvideTransportationVal;
+  public set requiresIncidentals(checked: boolean) {
+    if (checked && !this.needs.has(IdentifiedNeed.Incidentals)) {
+      this.needs.add(IdentifiedNeed.Incidentals);
+    } else if (!checked && this.needs.has(IdentifiedNeed.Incidentals)) {
+      this.needs.delete(IdentifiedNeed.Incidentals);
+    }
   }
-  public set canRegistrantProvideTransportation(
-    canRegistrantProvideTransportationVal: string
-  ) {
-    this.canRegistrantProvideTransportationVal =
-      canRegistrantProvideTransportationVal;
+
+  public get requiresFood(): boolean {
+    return this.needs.has(IdentifiedNeed.Food);
+  }
+
+  public set requiresFood(checked: boolean) {
+    if (checked && !this.needs.has(IdentifiedNeed.Food)) {
+      this.needs.add(IdentifiedNeed.Food);
+    } else if (!checked && this.needs.has(IdentifiedNeed.Food)) {
+      this.needs.delete(IdentifiedNeed.Food);
+    }
+  }
+
+  public get requiresTransportation(): boolean {
+    return this.needs.has(IdentifiedNeed.Tranportation);
+  }
+
+  public set requiresTransportation(checked: boolean) {
+    if (checked && !this.needs.has(IdentifiedNeed.Tranportation)) {
+      this.needs.add(IdentifiedNeed.Tranportation);
+    } else if (!checked && this.needs.has(IdentifiedNeed.Tranportation)) {
+      this.needs.delete(IdentifiedNeed.Tranportation);
+    }
+  }
+  public get requiresShelterReferral(): boolean {
+    return this.needs.has(IdentifiedNeed.ShelterReferral);
+  }
+
+  public set requiresShelterReferral(checked: boolean) {
+    if (checked && !this.needs.has(IdentifiedNeed.ShelterReferral)) {
+      this.needs.add(IdentifiedNeed.ShelterReferral);
+      this.requiresShelterAllowance = false;
+    } else if (!checked && this.needs.has(IdentifiedNeed.ShelterReferral)) {
+      this.needs.delete(IdentifiedNeed.ShelterReferral);
+    }
+  }
+
+  public get requiresShelterAllowance(): boolean {
+    return this.needs.has(IdentifiedNeed.ShelterAllowance);
+  }
+
+  public set requiresShelterAllowance(checked: boolean) {
+    if (checked && !this.needs.has(IdentifiedNeed.ShelterAllowance)) {
+      this.needs.add(IdentifiedNeed.ShelterAllowance);
+      this.requiresShelterReferral = false;
+    } else if (!checked && this.needs.has(IdentifiedNeed.ShelterAllowance)) {
+      this.needs.delete(IdentifiedNeed.ShelterAllowance);
+    }
+  }
+
+  private reqiresNothing: boolean | undefined = undefined;
+
+  public get requiresNothing(): boolean | undefined {
+    return this.reqiresNothing;
+  }
+
+  public set requiresNothing(checked: boolean) {
+    this.reqiresNothing = checked;
+    if (checked) {
+      this.needs.clear();
+    }
+  }
+
+  public get needsIdentified(): string[] {
+    return Array.from(this.needs)
+    .map(need => this.loadEvacueeListService.getIdentifiedNeeds().find(value => value.value === need)?.description);
+
   }
 
   // Security Phrase tab
@@ -376,41 +423,12 @@ export class StepEssFileService {
    * @returns Evacuation File record usable by the API
    */
   public createEvacFileDTO(): EvacuationFile {
-    // Get Correct API values for Household Members selections
-
-    // Get correct API values for Needs Assessment selections
-    const needsClothingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideClothing
-    )?.apiValue;
-
-    const needsFoodDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideFood
-    )?.apiValue;
-
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideIncidentals
-    )?.apiValue;
-
-    const needsLodgingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideLodging
-    )?.apiValue;
-
-    const needsTransportationDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideTransportation
-    )?.apiValue;
-
+    // Get Correct API values for needs assessment
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
-
       householdMembers: this.householdMembers,
-
       pets: this.petsList,
-
-      canProvideFood: needsFoodDTO,
-      canProvideLodging: needsLodgingDTO,
-      canProvideClothing: needsClothingDTO,
-      canProvideTransportation: needsTransportationDTO,
-      canProvideIncidentals: needsIncidentalsDTO
+      needs: Array.from(this.needs)
     };
 
     // Map out into DTO object and return
@@ -422,7 +440,7 @@ export class StepEssFileService {
       completedOn: this.completedOn,
       manualFileId: this.evacueeSession.isPaperBased
         ? this.evacueeSearchService?.evacueeSearchContext
-            ?.evacueeSearchParameters?.paperFileNumber
+          ?.evacueeSearchParameters?.paperFileNumber
         : null,
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
@@ -444,41 +462,12 @@ export class StepEssFileService {
    * @returns Evacuation File record usable by the API
    */
   public updateEvacFileDTO(): EvacuationFile {
-    // Get Correct API values for Household Members selections
-
-    // Get correct API values for Needs Assessment selections
-    const needsClothingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideClothing
-    )?.apiValue;
-
-    const needsFoodDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideFood
-    )?.apiValue;
-
-    const needsIncidentalsDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideIncidentals
-    )?.apiValue;
-
-    const needsLodgingDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideLodging
-    )?.apiValue;
-
-    const needsTransportationDTO = globalConst.needsOptions.find(
-      (ins) => ins.value === this.canRegistrantProvideTransportation
-    )?.apiValue;
-
+    // Get Correct API values for needs assessment
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
-   
       householdMembers: this.selectedHouseholdMembers,
-   
       pets: this.petsList,
-
-      canProvideFood: needsFoodDTO,
-      canProvideLodging: needsLodgingDTO,
-      canProvideClothing: needsClothingDTO,
-      canProvideTransportation: needsTransportationDTO,
-      canProvideIncidentals: needsIncidentalsDTO
+      needs: Array.from(this.needs)
     };
 
     // Map out into DTO object and return
@@ -487,7 +476,7 @@ export class StepEssFileService {
       completedOn: this.completedOn,
       manualFileId: this.evacueeSession.isPaperBased
         ? this.evacueeSearchService?.evacueeSearchContext
-            ?.evacueeSearchParameters?.paperFileNumber
+          ?.evacueeSearchParameters?.paperFileNumber
         : null,
       evacuationFileDate: this.evacuationFileDate,
       primaryRegistrantId: this.primaryRegistrantId,
@@ -545,11 +534,7 @@ export class StepEssFileService {
     this.addPetIndicator = undefined;
 
     // Needs tab
-    this.canRegistrantProvideClothing = undefined;
-    this.canRegistrantProvideFood = undefined;
-    this.canRegistrantProvideIncidentals = undefined;
-    this.canRegistrantProvideLodging = undefined;
-    this.canRegistrantProvideTransportation = undefined;
+    this.needs.clear();
 
     // Security Phrase tab
     this.bypassPhrase = undefined;
@@ -623,25 +608,8 @@ export class StepEssFileService {
     )?.value;
 
     // Needs tab
-    this.canRegistrantProvideFood = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideFood
-    )?.value;
-
-    this.canRegistrantProvideLodging = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideLodging
-    )?.value;
-
-    this.canRegistrantProvideClothing = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideClothing
-    )?.value;
-
-    this.canRegistrantProvideTransportation = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideTransportation
-    )?.value;
-
-    this.canRegistrantProvideIncidentals = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canProvideIncidentals
-    )?.value;
+    this.needs = new Set(essNeeds.needs);
+    this.reqiresNothing = essNeeds.needs?.length === 0;
 
     // Security Phrase tab
     this.securityPhrase = essFile.securityPhrase;
@@ -814,9 +782,9 @@ export class StepEssFileService {
   public getTaskEndDate(): string {
     if (
       this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.NewEssFile ||
+      WizardType.NewEssFile ||
       this.appBaseService?.wizardProperties?.wizardType ===
-        WizardType.NewRegistration
+      WizardType.NewRegistration
     ) {
       return this.userService?.currentProfile?.taskStartDate;
     } else {

@@ -177,51 +177,13 @@
       <div class="row">
         <div class="col-md-12">
           <p class="subsection-heading">Needs Assessment</p>
-          <p class="bold">Can evacuee provide?</p>
         </div>
       </div>
 
       <div class="row">
         <div class="col-12">
-          <div class="row">
-            <div class="col-4">Food</div>
-            <div class="col-8 bold">
-              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideFood) }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-4">Lodging</div>
-            <div class="col-8 bold">
-              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideLodging) }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-4">Clothing</div>
-            <div class="col-8 bold">
-              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideClothing) }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-4">Transportation</div>
-            <div class="col-8 bold">
-              {{
-                mapNeedsValues(
-                  essFile?.needsAssessment?.canProvideTransportation
-                )
-              }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-4">Incidentals</div>
-            <div class="col-8 bold">
-              {{
-                mapNeedsValues(essFile?.needsAssessment?.canProvideIncidentals)
-              }}
-            </div>
+          <div class="row" *ngFor="let item of getIdentifiedNeeds()">
+            <div class="col-12 bold">{{ item }}</div>
           </div>
         </div>
       </div>
