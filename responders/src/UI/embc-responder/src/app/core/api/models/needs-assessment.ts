@@ -10,6 +10,11 @@ import { Pet } from './pet';
  * Needs assessment form
  */
 export interface NeedsAssessment {
+  canProvideClothing?: null | boolean;
+  canProvideFood?: null | boolean;
+  canProvideIncidentals?: null | boolean;
+  canProvideLodging?: null | boolean;
+  canProvideTransportation?: null | boolean;
   createdOn?: null | string;
   householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;

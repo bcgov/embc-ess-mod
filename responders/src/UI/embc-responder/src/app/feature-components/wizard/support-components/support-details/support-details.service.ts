@@ -18,6 +18,7 @@ import {
   Incidentals,
   OtherTransport,
   RestaurantMeal,
+  ShelterAllowanceLodging,
   Taxi
 } from 'src/app/core/models/support-details.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -52,6 +53,8 @@ export class SupportDetailsService {
       return this.billetingForm();
     } else if (supportType === SupportSubCategory.Lodging_Group) {
       return this.groupLodgingForm();
+    } else if (supportType === SupportSubCategory.Lodging_Allowance) {
+      return this.shelterAllowanceLodgingForm();
     } else if (supportType === SupportCategory.Incidentals) {
       return this.incidentalsForm();
     } else if (supportType === SupportCategory.Clothing) {
@@ -195,6 +198,25 @@ export class SupportDetailsService {
         (this.stepSupportsService?.supportDetails?.referral as GroupLodging)
           ?.noOfNights ?? '',
         [Validators.required]
+      ]
+    });
+  }
+  
+  shelterAllowanceLodgingForm(): UntypedFormGroup {
+    return this.formBuilder.group({
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowanceLodging)
+          ?.noOfNights ?? '',
+        [Validators.required]
+      ],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowanceLodging)
+          ?.totalAmount ?? '',
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
       ]
     });
   }

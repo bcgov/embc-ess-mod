@@ -241,6 +241,14 @@ export class StepSupportsService {
         this.supportDelivery
       );
     } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
+    ) {
+      this.referralService.createShelterAllowanceReferral(
+        support,
+        this.supportDetails,
+        this.supportDelivery
+      );
+    } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group
     ) {
       this.referralService.createGroupLodgingReferral(
@@ -287,7 +295,11 @@ export class StepSupportsService {
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
     ) {
-      return globalConst.hotelRateSheet;
+      return globalConst.hotelRateSheet; 
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
+    ) {
+      return globalConst.needsShelterAllowanceRateSheet;
     } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
       return globalConst.incidentalsRateSheet;
     } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {

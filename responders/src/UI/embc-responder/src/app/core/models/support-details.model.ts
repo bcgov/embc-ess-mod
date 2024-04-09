@@ -81,6 +81,11 @@ export class GroupLodging {
   noOfNights: number;
 }
 
+export class ShelterAllowanceLodging {
+  noOfNights: number;
+  totalAmount: number;
+}
+
 export class Incidentals {
   approvedItems: string;
   totalAmount: number;

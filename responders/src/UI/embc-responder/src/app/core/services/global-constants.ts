@@ -59,6 +59,12 @@ export const billeting = {
   child: 5
 };
 
+export const shelterAllowance = {
+  rate: 30,
+  adult: 10,
+  child: 5
+};
+
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const supportNoOfDays = [
@@ -140,6 +146,11 @@ export const hotelRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Lodging</span></b>',
   text: '<p class="primary bold">Hotel/Motel/Campground</p><p>Emergency Support Services is eligible for approved Provincial Government Rates from commercial accommodations supplier listed in the Ministry of Labour and Citizens Services Business Travel Accommodation Listing for government travel.</p><p class="bold">Only the cost of the room is covered.</p><p>The evacuee is responsible for all other charges (e.g. video rentals, damages, parking, local and long distance calls).</p>',
   cancelButton: 'Close'
+};
+
+export const needsShelterAllowanceRateSheet: DialogContent = {
+  title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter Allowance</span></b>',
+  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
 };
 
 export const billetingRateSheet: DialogContent = {

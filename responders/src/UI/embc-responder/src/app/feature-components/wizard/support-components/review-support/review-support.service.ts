@@ -81,7 +81,8 @@ export class ReviewSupportService {
           file.supports.forEach((support) => {
             if (
               support.subCategory === 'Lodging_Group' ||
-              support.subCategory === 'Lodging_Billeting'
+              support.subCategory === 'Lodging_Billeting'||
+              support.subCategory === 'Lodging_Allowance'
             ) {
               supportModel.push(support);
             } else {
