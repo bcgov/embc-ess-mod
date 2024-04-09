@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using EMBC.Utilities.Extensions;
@@ -52,25 +53,18 @@ namespace EMBC.ESS.Resources.Reports
                         ? InsuranceOption.Unknown
                         : Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_insurancecoverage).ToString())))
                 .ForMember(d => d.NumberOfPets, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? 0 : s.era_EvacuationFileid.era_era_evacuationfile_era_animal_ESSFileid.Count))
-                .ForMember(d => d.CanProvideAccommodation, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovidelodging))
-                .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovideclothing))
-                .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovidefood))
-                .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovideincidentals))
-                .ForMember(d => d.CanProvideTransportation, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid == null ? null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovidetransportation))
+                .ForMember(d => d.RequiresClothing, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? (bool?)null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovideclothing.GetValueOrDefault(0) == (int)NeedTrueFalseOptionSet.False))
+                .ForMember(d => d.RequiresFood, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? (bool?)null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovidefood.GetValueOrDefault(0) == (int)NeedTrueFalseOptionSet.False))
+                .ForMember(d => d.RequiresIncidentals, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? (bool?)null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovideincidentals.GetValueOrDefault(0) == (int)NeedTrueFalseOptionSet.False))
+                .ForMember(d => d.RequiresTransportation, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? (bool?)null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_canevacueeprovidetransportation.GetValueOrDefault(0) == (int)NeedTrueFalseOptionSet.False))
+                .ForMember(d => d.RequiresShelterReferral, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? (bool?)null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Referral))
+                .ForMember(d => d.RequiresShelterAllowance, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? (bool?)null : s.era_EvacuationFileid.era_CurrentNeedsAssessmentid.era_shelteroptions.GetValueOrDefault(0) == (int)ShelterOptionSet.Allowance))
                 .ForMember(d => d.NumberOfSupports, opts => opts.MapFrom(s => s.era_EvacuationFileid == null ? 0 : s.era_EvacuationFileid.era_era_evacuationfile_era_evacueesupport_ESSFileId.Count))
                 .ForMember(d => d.SupportsTotalAmount, opts => opts.Ignore())
                 .AfterMap((s, d) =>
                 {
                     d.RegistrationCompleted = !string.IsNullOrEmpty(d.TaskNumber);
-                    decimal total = 0;
-                    if (s.era_EvacuationFileid != null)
-                    {
-                        foreach (var support in s.era_EvacuationFileid.era_era_evacuationfile_era_evacueesupport_ESSFileId)
-                        {
-                            total += support.era_totalamount.HasValue ? support.era_totalamount.Value : 0;
-                        }
-                    }
-                    d.SupportsTotalAmount = total;
+                    d.SupportsTotalAmount = s.era_EvacuationFileid.era_era_evacuationfile_era_evacueesupport_ESSFileId.Select(s => s.era_totalamount ?? 0).Sum();
                 });
 
             Func<int?, string> resolveSupportType = s =>
@@ -234,6 +228,18 @@ namespace EMBC.ESS.Resources.Reports
     {
         Yes = 174360000,
         No = 174360001
+    }
+
+    public enum NeedTrueFalseOptionSet
+    {
+        True = 174360000,
+        False = 174360001
+    }
+
+    public enum ShelterOptionSet
+    {
+        Allowance = 174360000,
+        Referral = 174360001
     }
 
 #pragma warning restore CA1008 // Enums should have zero value

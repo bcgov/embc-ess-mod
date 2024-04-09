@@ -153,20 +153,23 @@ namespace EMBC.ESS.Resources.Reports
         [Display(Name = "Pets")]
         public int NumberOfPets { get; set; }
 
-        [Display(Name = "Able to Provide Accommodation")]
-        public bool CanProvideAccommodation { get; set; }
+        [Display(Name = "Requires Shelter Referral")]
+        public bool? RequiresShelterReferral { get; set; }
 
-        [Display(Name = "Able to Provide Clothing")]
-        public bool CanProvideClothing { get; set; }
+        [Display(Name = "Requires Shelter Allowance")]
+        public bool? RequiresShelterAllowance { get; set; }
 
-        [Display(Name = "Able to Provide Food")]
-        public bool CanProvideFood { get; set; }
+        [Display(Name = "Requires Clothing")]
+        public bool? RequiresClothing { get; set; }
 
-        [Display(Name = "Able to Provide Incidentals")]
-        public bool CanProvideIncidentals { get; set; }
+        [Display(Name = "Requires Food")]
+        public bool? RequiresFood { get; set; }
 
-        [Display(Name = "Able to Provide Transportation")]
-        public bool CanProvideTransportation { get; set; }
+        [Display(Name = "Requires Incidentals")]
+        public bool? RequiresIncidentals { get; set; }
+
+        [Display(Name = "Requires Transportation")]
+        public bool? RequiresTransportation { get; set; }
 
         [Display(Name = "Supports Provided")]
         public int NumberOfSupports { get; set; }
