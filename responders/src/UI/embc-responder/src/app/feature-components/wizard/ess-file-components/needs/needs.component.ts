@@ -1,9 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
@@ -14,9 +10,9 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 enum ShelterType {
-  Allowance = "shelterAllowance",
-  Referral = "shelterReferral"
-};
+  allowance = 'shelterAllowance',
+  referral = 'shelterReferral'
+}
 
 @Component({
   selector: 'app-needs',
@@ -24,7 +20,6 @@ enum ShelterType {
   styleUrls: ['./needs.component.scss']
 })
 export class NeedsComponent implements OnInit, OnDestroy {
-
   needsForm: UntypedFormGroup;
   tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
@@ -35,18 +30,16 @@ export class NeedsComponent implements OnInit, OnDestroy {
     private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService,
     private evacueeSessionService: EvacueeSessionService,
-    private customValidationService: CustomValidationService
-  ) { }
+    private customValidationService: CustomValidationService) { }
 
   ngOnInit(): void {
     // Creates the main form
     this.createNeedsForm();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
-      });
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(() => {
+      this.updateTabStatus();
+    });
 
     this.tabMetaData = this.stepEssFileService.getNavLinks('needs');
   }
@@ -87,10 +80,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     if (this.stepEssFileService.checkForEdit()) {
-      const isFormUpdated = this.wizardService.hasChanged(
-        this.needsForm.controls,
-        'needs'
-      );
+      const isFormUpdated = this.wizardService.hasChanged(this.needsForm.controls, 'needs');
 
       this.wizardService.setEditStatus({
         tabName: 'needs',
@@ -104,34 +94,16 @@ export class NeedsComponent implements OnInit, OnDestroy {
 
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
-      requiresShelter: [
-        this.stepEssFileService.requiresShelterAllowance || this.stepEssFileService.requiresShelterReferral
-      ],
-      requiresShelterType: [
-        this.stepEssFileService.requiresShelterReferral
-          ? ShelterType.Referral
-          : this.stepEssFileService.requiresShelterAllowance
-            ? ShelterType.Allowance
-            : undefined,
-      ],
-      requiresFood: [
-        this.stepEssFileService.requiresFood ?? false
-      ],
-      requiresClothing: [
-        this.stepEssFileService.requiresClothing ?? false
-      ],
-      requiresTransportation: [
-        this.stepEssFileService.requiresTransportation ?? false
-      ],
-      requiresIncidentals: [
-        this.stepEssFileService.requiresIncidentals ?? false
-      ],
-      requiresNothing: [
-        this.stepEssFileService.requiresNothing ?? false
-      ]
+      requiresShelter: [this.stepEssFileService.requiresShelterAllowance || this.stepEssFileService.requiresShelterReferral],
+      requiresShelterType: [this.stepEssFileService.requiresShelterReferral ? ShelterType.referral : this.stepEssFileService.requiresShelterAllowance ? ShelterType.allowance : undefined],
+      requiresFood: [this.stepEssFileService.requiresFood ?? false],
+      requiresClothing: [this.stepEssFileService.requiresClothing ?? false],
+      requiresTransportation: [this.stepEssFileService.requiresTransportation ?? false],
+      requiresIncidentals: [this.stepEssFileService.requiresIncidentals ?? false],
+      requiresNothing: [this.stepEssFileService.requiresNothing ?? false]
     });
     this.needsForm.addValidators(this.customValidationService.needsValidator());
-    this.needsFormControl['requiresNothing'].valueChanges.subscribe(data => {
+    this.needsFormControl.requiresNothing.valueChanges.subscribe((data) => {
       if (data) {
         this.disableNeeds();
       } else {
@@ -191,12 +163,12 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepEssFileService.requiresClothing = this.needsFormControl['requiresClothing'].value;
-    this.stepEssFileService.requiresFood = this.needsFormControl['requiresFood'].value;
-    this.stepEssFileService.requiresIncidentals = this.needsFormControl['requiresIncidentals'].value;
-    this.stepEssFileService.requiresTransportation = this.needsFormControl['requiresTransportation'].value;
-    this.stepEssFileService.requiresShelterAllowance = this.needsFormControl['requiresShelterType'].value === ShelterType.Allowance;
-    this.stepEssFileService.requiresShelterReferral = this.needsFormControl['requiresShelterType'].value === ShelterType.Referral;
-    this.stepEssFileService.requiresNothing = this.needsFormControl['requiresNothing'].value;
+    this.stepEssFileService.requiresClothing = this.needsFormControl.requiresClothing.value;
+    this.stepEssFileService.requiresFood = this.needsFormControl.requiresFood.value;
+    this.stepEssFileService.requiresIncidentals = this.needsFormControl.requiresIncidentals.value;
+    this.stepEssFileService.requiresTransportation = this.needsFormControl.requiresTransportation.value;
+    this.stepEssFileService.requiresShelterAllowance = this.needsFormControl.requiresShelterType.value === ShelterType.allowance;
+    this.stepEssFileService.requiresShelterReferral = this.needsFormControl.requiresShelterType.value === ShelterType.referral;
+    this.stepEssFileService.requiresNothing = this.needsFormControl.requiresNothing.value;
   }
 }

@@ -35,25 +35,24 @@
               </p>
               <mat-radio-group
                 id="shelterRadio"
+                class="primary-radio-group"
                 formControlName="requiresShelterType"
                 aria-label="Select an option"
                 *ngIf="needsFormControl['requiresShelter'].value">
-                <div class="row">
-                  <div class="col-12">
-                    <mat-radio-button
-                      id="shelterAllowance"
-                      value="shelterAllowance"></mat-radio-button>
-                    <label for="shelterAllowance">I need the shelter allowance and can find my own shelter.</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <mat-radio-button
-                      id="shelterReferral"
-                      value="shelterReferral"></mat-radio-button>
-                    <label for="shelterReferral">I need a referral to shelter.</label>
-                  </div>
-                </div>
+                <label for="shelterAllowance">
+                  <mat-radio-button
+                    id="shelterAllowance"
+                    class="primary-radio-button"
+                    value="shelterAllowance"></mat-radio-button>
+                  I need the shelter allowance and can find my own shelter.
+                </label>
+                <label for="shelterReferral">
+                  <mat-radio-button
+                    id="shelterReferral"
+                    class="primary-radio-button"
+                    value="shelterReferral"></mat-radio-button>
+                  I need a referral to shelter.
+                </label>
               </mat-radio-group>
             </div>
           </div>
