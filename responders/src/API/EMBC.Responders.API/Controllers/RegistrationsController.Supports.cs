@@ -253,7 +253,7 @@ namespace EMBC.Responders.API.Controllers
     [KnownType(typeof(LodgingBilletingSupport))]
     [KnownType(typeof(LodgingGroupSupport))]
     [KnownType(typeof(LodgingHotelSupport))]
-    [KnownType(typeof(ShelterAllowanceSupport))]
+    [KnownType(typeof(LodgingAllowanceSupport))]
     [KnownType(typeof(TransportationOtherSupport))]
     [KnownType(typeof(TransportationTaxiSupport))]
     public abstract class Support
