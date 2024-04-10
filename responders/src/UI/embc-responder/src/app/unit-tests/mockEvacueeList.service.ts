@@ -71,6 +71,12 @@ export class MockEvacueeListService extends LoadEvacueeListService {
     },
     {
       type: 'SupportSubCategory',
+      value: 'Lodging_Allowance',
+      description: 'Shelter - Allowance',
+      parentCode: null
+    },
+    {
+      type: 'SupportSubCategory',
       value: 'Food_Groceries',
       description: 'Food - Groceries',
       parentCode: null

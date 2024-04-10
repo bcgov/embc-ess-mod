@@ -224,6 +224,13 @@ export class CloneSupportDetailsService {
         noOfNights: 1
       };
     } else if (
+      selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance
+      ) {
+        return {
+          noOfNights: 1,
+          totalAmount: null
+        };
+      } else if (
       selectedSupport.subCategory === SupportSubCategory.Lodging_Hotel
     ) {
       return {

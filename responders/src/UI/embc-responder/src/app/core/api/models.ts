@@ -43,6 +43,7 @@ export { FoodRestaurantSupport } from './models/food-restaurant-support';
 export { LodgingBilletingSupport } from './models/lodging-billeting-support';
 export { LodgingGroupSupport } from './models/lodging-group-support';
 export { LodgingHotelSupport } from './models/lodging-hotel-support';
+export { LodgingAllowanceSupport } from './models/lodging-allowance-support';
 export { TransportationOtherSupport } from './models/transportation-other-support';
 export { TransportationTaxiSupport } from './models/transportation-taxi-support';
 export { EvacuationFileStatus } from './models/evacuation-file-status';

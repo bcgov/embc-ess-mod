@@ -59,6 +59,12 @@ export const billeting = {
   child: 5
 };
 
+export const shelterAllowance = {
+  rate: 30,
+  adult: 10,
+  child: 5
+};
+
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const supportNoOfDays = [
@@ -142,6 +148,11 @@ export const hotelRateSheet: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const needsShelterAllowanceRateSheet: DialogContent = {
+  title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter Allowance</span></b>',
+  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
+};
+
 export const billetingRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Lodging</span></b>',
   text: `<p class="primary bold">Billeting in Private Homes</p><p>The referral form for billeting is issued to the billeting host (supplier). Billeting rate does not include meals.</p><p>\$${billeting.rate.toFixed(
@@ -178,6 +189,21 @@ export const duplicateSupportMessage: DialogContent = {
   text: '<p>There is already a support associated with this ESS File of the same support type with the same or overlapping support period. Do you wish to continue?</p>',
   confirmButton: 'Yes, Continue',
   cancelButton: 'No, Cancel'
+};
+
+export const needsShelterAllowanceMessage: DialogContent = {
+  title: 'Shelter',
+  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
+};
+
+export const needsShelterReferralMessage: DialogContent = {
+  title: 'Referral',
+  text: '<p>A paper form provided by an ESS responder, directing evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.</p>',
+};
+
+export const needsIncidentalMessage: DialogContent = {
+  title: 'Incidentals',
+  text: '<p>Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.</p>',
 };
 
 export const saveMessage: DialogContent = {

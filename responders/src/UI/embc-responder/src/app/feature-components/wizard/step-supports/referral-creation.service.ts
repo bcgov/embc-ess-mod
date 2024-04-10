@@ -8,6 +8,7 @@ import {
   LodgingBilletingSupport,
   LodgingGroupSupport,
   LodgingHotelSupport,
+  LodgingAllowanceSupport,
   Referral,
   Support,
   SupportCategory,
@@ -24,7 +25,8 @@ import {
   RestaurantMeal,
   SupportDeliveryModel,
   SupportDetailsModel,
-  Taxi
+  Taxi,
+  ShelterAllowanceLodging
 } from 'src/app/core/models/support-details.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import {
@@ -41,6 +43,7 @@ export class ReferralCreationService {
   private hotelReferralVal: LodgingHotelSupport;
   private billetingReferralVal: LodgingBilletingSupport;
   private groupReferralVal: LodgingGroupSupport;
+  private lodgingAllowanceReferralVal :LodgingAllowanceSupport
   private clothingReferralVal: ClothingSupport;
   private incidentalsReferralVal: IncidentalsSupport;
   private draftSupportVal: Support[] = [];
@@ -155,6 +158,18 @@ export class ReferralCreationService {
       ? this.clothingReferralVal
       : JSON.parse(this.cacheService.get('clothingReferralVal'));
   }
+
+  set lodgingAllowanceReferral(lodgingAllowanceReferralVal: LodgingAllowanceSupport) {
+    this.lodgingAllowanceReferralVal = lodgingAllowanceReferralVal;
+    this.cacheService.set('lodgingAllowanceReferralVal', lodgingAllowanceReferralVal);
+    this.setDraftSupport(lodgingAllowanceReferralVal);
+   }
+ 
+   get lodgingAllowanceReferral(): LodgingAllowanceSupport {
+     return this.lodgingAllowanceReferralVal
+       ? this.lodgingAllowanceReferralVal
+       : JSON.parse(this.cacheService.get('lodgingAllowanceReferral'));
+   }
 
   set incidentalsReferral(incidentalsReferralVal: IncidentalsSupport) {
     this.incidentalsReferralVal = incidentalsReferralVal;
@@ -282,6 +297,27 @@ export class ReferralCreationService {
     this.groupReferral = groupReferral;
   }
 
+  createShelterAllowanceReferral(
+    referral: Support,
+    supportDetails: SupportDetailsModel,
+    supportDelivery: SupportDeliveryModel
+  ) {
+    const lodgingAllowanceReferral: LodgingAllowanceSupport = {
+      ...referral,
+      category: SupportCategory.Lodging,
+      numberOfNights: (supportDetails.referral as HotelMotel).noOfNights,
+      contactEmail: '',
+      contactPhone: '',
+      totalAmount: this.parseTextNumber(
+        (supportDetails.referral as Clothing).userTotalAmount
+          ? (supportDetails.referral as Clothing).userTotalAmount
+          : (supportDetails.referral as Clothing).totalAmount
+      ),
+      subCategory: SupportSubCategory.Lodging_Allowance
+    };
+    this.lodgingAllowanceReferral = lodgingAllowanceReferral;
+  }
+  
   createClothingReferral(
     referral: Support,
     supportDetails: SupportDetailsModel

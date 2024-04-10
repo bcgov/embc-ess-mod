@@ -111,6 +111,7 @@ export class ViewSupportsComponent implements OnInit, OnDestroy {
             if (
               support.subCategory === 'Lodging_Group' ||
               support.subCategory === 'Lodging_Billeting' ||
+              support.subCategory === 'Lodging_Allowance' ||
               support.method === 'ETransfer'
             ) {
               supportModel.push(support);

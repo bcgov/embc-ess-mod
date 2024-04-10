@@ -358,8 +358,8 @@ namespace EMBC.Tests.Integration.ESS
 
         private void CreateEvacueeSupports(EssContext essContext, era_evacuationfile file, contact contact, era_essteamuser creator, string prefix)
         {
-            var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007 };
-            var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008 };
+            var referralSupportTypes = new[] { 174360001, 174360002, 174360003, 174360004, 174360007, 174360009 };
+            var etransferSupportTypes = new[] { 174360000, 174360005, 174360006, 174360008, 174360009 };
 
             var referrals = referralSupportTypes.Select((t, i) => new era_evacueesupport
             {
