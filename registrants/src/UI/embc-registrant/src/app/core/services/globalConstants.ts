@@ -27,17 +27,15 @@ export const insuranceOptions = [
   { name: 'Unknown', value: "I don't know" }
 ];
 
-export const needsOptions = [
-  { name: 'Yes', value: 'Yes', apiValue: true },
-  { name: 'No', value: 'No', apiValue: false },
-  { name: "I'm not sure", value: 'Unsure', apiValue: null }
-];
-
 export const gender = [
   { name: 'Male', value: 'Male' },
   { name: 'Female', value: 'Female' },
   { name: 'X', value: 'X' }
 ];
+export enum ShelterType {
+  referral = 'Referral',
+  allowance = 'Allowance'
+}
 
 export const deleteMemberInfoBody: DialogContent = {
   text: '<p>Are you sure you want to remove this household member from your Emergency Support Services (ESS) file?</p>',

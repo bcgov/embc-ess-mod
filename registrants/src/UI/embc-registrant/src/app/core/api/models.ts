@@ -21,6 +21,7 @@ export { InsuranceOption } from './models/insurance-option';
 export { HouseholdMember } from './models/household-member';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
+export { IdentifiedNeed } from './models/identified-need';
 export { Support } from './models/support';
 export { SupportStatus } from './models/support-status';
 export { SupportCategory } from './models/support-category';
