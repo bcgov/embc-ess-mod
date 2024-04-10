@@ -308,8 +308,8 @@ export class ReferralCreationService {
       numberOfNights: (supportDetails.referral as ShelterAllowanceLodging).noOfNights,
       totalAmount: this.parseTextNumber(
         (supportDetails.referral as ShelterAllowanceLodging).totalAmount
-          ? 0
-          : (supportDetails.referral as ShelterAllowanceLodging).totalAmount
+          ? (supportDetails.referral as ShelterAllowanceLodging).totalAmount
+          : 0
       ),
       subCategory: SupportSubCategory.Lodging_Allowance
     };
