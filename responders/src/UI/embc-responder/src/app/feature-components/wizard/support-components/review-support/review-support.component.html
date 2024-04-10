@@ -1,12 +1,8 @@
 <div class="container container-frame">
   <div class="row row-padding">
     <div class="col-md-12">
-      <a (click)="back()"
-        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
-          class="back-link"
-          >Supports</span
-        ></a
-      >
+      <a (click)="back()"><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
+          class="back-link">Supports</span></a>
     </div>
   </div>
 
@@ -24,113 +20,62 @@
   <div class="row">
     <div class="col-md-12 bottom-padding" *ngFor="let support of draftSupports">
       <!-- Groceries Label -->
-      <label
-        class="supports-title"
-        *ngIf="support.subCategory === 'Food_Groceries'"
-      >
-        <img
-          src="../../../../../assets/images/wizard/needs-food.svg"
-          width="40px"
-          height="42px"
-        />
+      <label class="supports-title" *ngIf="support.subCategory === 'Food_Groceries'">
+        <img src="../../../../../assets/images/wizard/needs-food.svg" width="40px" height="42px" />
         Food - Groceries
       </label>
 
       <!-- Restaurant Label -->
-      <label
-        class="supports-title"
-        *ngIf="support.subCategory === 'Food_Restaurant'"
-      >
-        <img
-          src="../../../../../assets/images/wizard/needs-food.svg"
-          width="40px"
-          height="42px"
-        />
+      <label class="supports-title" *ngIf="support.subCategory === 'Food_Restaurant'">
+        <img src="../../../../../assets/images/wizard/needs-food.svg" width="40px" height="42px" />
         Food - Restaurant Meals
       </label>
 
       <!-- LodgingHotel Label -->
-      <label
-        class="supports-title"
-        *ngIf="support.subCategory === 'Lodging_Hotel'"
-      >
-        <img
-          src="../../../../../assets/images/wizard/needs-lodging.svg"
-          width="40px"
-          height="42px"
-        />
+      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Hotel'">
+        <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
         Lodging - Hotel/Motel/Campground
       </label>
 
       <!-- Lodging Billeting Label -->
-      <label
-        class="supports-title"
-        *ngIf="support.subCategory === 'Lodging_Billeting'"
-      >
-        <img
-          src="../../../../../assets/images/wizard/needs-lodging.svg"
-          width="40px"
-          height="42px"
-        />
+      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Billeting'">
+        <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
         Lodging - Billeting
       </label>
 
       <!-- Lodging Group Label -->
-      <label
-        class="supports-title"
-        *ngIf="support.subCategory === 'Lodging_Group'"
-      >
-        <img
-          src="../../../../../assets/images/wizard/needs-lodging.svg"
-          width="40px"
-          height="42px"
-        />
+      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Group'">
+        <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
+        Lodging - Shelter Allowance
+      </label>
+
+      <!-- Lodging Group Label -->
+      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Allowance'">
+        <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
         Lodging - Group Lodging
       </label>
 
       <!-- Transportation Taxi Label -->
-      <label
-        class="supports-title"
-        *ngIf="support.subCategory === 'Transportation_Taxi'"
-      >
-        <img
-          src="../../../../../assets/images/wizard/needs-transport.svg"
-          width="40px"
-          height="42px"
-        />
+      <label class="supports-title" *ngIf="support.subCategory === 'Transportation_Taxi'">
+        <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="42px" />
         Transport - Taxi
       </label>
 
       <!-- Transportation Other Label -->
-      <label
-        class="supports-title"
-        *ngIf="support.subCategory === 'Transportation_Other'"
-      >
-        <img
-          src="../../../../../assets/images/wizard/needs-transport.svg"
-          width="40px"
-          height="42px"
-        />
+      <label class="supports-title" *ngIf="support.subCategory === 'Transportation_Other'">
+        <img src="../../../../../assets/images/wizard/needs-transport.svg" width="40px" height="42px" />
         Transport - Other
       </label>
 
       <!-- Clothing Label -->
       <label class="supports-title" *ngIf="support.category === 'Clothing'">
-        <img
-          src="../../../../../assets/images/wizard/needs-clothing.svg"
-          width="40px"
-          height="42px"
-        />
+        <img src="../../../../../assets/images/wizard/needs-clothing.svg" width="40px" height="42px" />
         Clothing
       </label>
 
       <!-- Incidental Label -->
       <label class="supports-title" *ngIf="support.category === 'Incidentals'">
-        <img
-          src="../../../../../assets/images/wizard/needs-incidentals.svg"
-          width="40px"
-          height="42px"
-        />
+        <img src="../../../../../assets/images/wizard/needs-incidentals.svg" width="40px" height="42px" />
         Incidentals
       </label>
 
@@ -143,7 +88,7 @@
       <div class="row">
         <div class="col-md-8 support-padding">
           <div>
-            <p class="support-subtitle">Support Details</p>
+            <p class="support-subtitle">Support Details2</p>{{support?.subCategory}}
             <div class="row row-padding">
               <div class="col-md-4 box-text-color">Valid From:</div>
               <div class="col-md-4 bold">
@@ -154,14 +99,11 @@
 
             <div class="row row-padding">
               <div class="col-md-4 box-text-color">Valid To:</div>
-              <div
-                class="col-md-4 bold"
-                [ngStyle]="{
+              <div class="col-md-4 bold" [ngStyle]="{
                   color: validReferralDate(support?.from, support?.to)
                     ? 'black'
                     : 'red'
-                }"
-              >
+                }">
                 {{ support?.to | date: 'dd-MMM-yyyy' }} at
                 {{ support?.to | date: 'hh:mm a' }}
               </div>
@@ -188,31 +130,22 @@
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
                   ${{
-                    getGroceryReferral(support)?.totalAmount
-                      | number: '1.2-2':'en-CA'
+                  getGroceryReferral(support)?.totalAmount
+                  | number: '1.2-2':'en-CA'
                   }}
                 </div>
               </div>
-              <div
-                class="row row-padding"
-                *ngIf="!checkGroceryMaxRate(support)"
-              >
+              <div class="row row-padding" *ngIf="!checkGroceryMaxRate(support)">
                 <div class="col warning">
-                  <img
-                    src="../../../../../assets/images/warning-red.svg"
-                    width="25px"
-                    height="27px"
-                    class="warning-icon"
-                  />
+                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px"
+                    class="warning-icon" />
                   <span *ngIf="evacueeSessionService.isPaperBased">
-                    Total monetary value exceeds the recommended ESS rate</span
-                  >
+                    Total monetary value exceeds the recommended ESS rate</span>
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
                     <strong>{{
                       getGroceryReferral(support)?.approverName
-                    }}</strong></span
-                  >
+                      }}</strong></span>
                 </div>
               </div>
             </ng-container>
@@ -246,6 +179,22 @@
                 </div>
               </div>
             </ng-container>
+            <!-- Lodging - Group -->
+            <ng-container *ngIf="support.subCategory === 'Lodging_Allowance'">
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color"># Nights:</div>
+                <div class="col-md-4 bold">
+                  {{ getShelterAllowanceReferral(support)?.numberOfNights }}
+                </div>
+              </div>
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color">Total Amount:</div>
+                <div class="col-md-4 bold">
+                  ${{ getShelterAllowanceReferral(support)?.totalAmount }}
+                </div>
+              </div>
+            </ng-container>
+
             <!-- Logding - Hotel -->
             <ng-container *ngIf="support.subCategory === 'Lodging_Hotel'">
               <div class="row row-padding">
@@ -297,9 +246,7 @@
               </div>
             </ng-container>
             <!-- Transport Other -->
-            <ng-container
-              *ngIf="support.subCategory === 'Transportation_Other'"
-            >
+            <ng-container *ngIf="support.subCategory === 'Transportation_Other'">
               <div class="row row-padding">
                 <div class="col-md-4 box-text-color">Mode of Transport:</div>
                 <div class="col-md-4 bold">
@@ -311,8 +258,8 @@
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-2 bold total-amount-number">
                   ${{
-                    getOtherReferral(support)?.totalAmount
-                      | number: '1.2-2':'en-CA'
+                  getOtherReferral(support)?.totalAmount
+                  | number: '1.2-2':'en-CA'
                   }}
                 </div>
               </div>
@@ -332,31 +279,22 @@
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
                   ${{
-                    getClothingReferral(support)?.totalAmount
-                      | number: '1.2-2':'en-CA'
+                  getClothingReferral(support)?.totalAmount
+                  | number: '1.2-2':'en-CA'
                   }}
                 </div>
               </div>
-              <div
-                class="row row-padding"
-                *ngIf="!checkClothingMaxRate(support)"
-              >
+              <div class="row row-padding" *ngIf="!checkClothingMaxRate(support)">
                 <div class="col warning">
-                  <img
-                    src="../../../../../assets/images/warning-red.svg"
-                    width="25px"
-                    height="27px"
-                    class="warning-icon"
-                  />
+                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px"
+                    class="warning-icon" />
                   <span *ngIf="evacueeSessionService.isPaperBased">
-                    Total monetary value exceeds the recommended ESS rate</span
-                  >
+                    Total monetary value exceeds the recommended ESS rate</span>
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
                     <strong>{{
                       getClothingReferral(support)?.approverName
-                    }}</strong></span
-                  >
+                      }}</strong></span>
                 </div>
               </div>
             </ng-container>
@@ -375,45 +313,33 @@
                 <div class="col-md-4 total-amount-label">Total Amount:</div>
                 <div class="col-md-4 bold total-amount-number">
                   ${{
-                    getIncidentalReferral(support)?.totalAmount
-                      | number: '1.2-2':'en-CA'
+                  getIncidentalReferral(support)?.totalAmount
+                  | number: '1.2-2':'en-CA'
                   }}
                 </div>
               </div>
-              <div
-                class="row row-padding"
-                *ngIf="!checkIncidentalMaxRate(support)"
-              >
+              <div class="row row-padding" *ngIf="!checkIncidentalMaxRate(support)">
                 <div class="col warning">
-                  <img
-                    src="../../../../../assets/images/warning-red.svg"
-                    width="25px"
-                    height="27px"
-                    class="warning-icon"
-                  />
+                  <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px"
+                    class="warning-icon" />
                   <span *ngIf="evacueeSessionService.isPaperBased">
-                    Total monetary value exceeds the recommended ESS rate</span
-                  >
+                    Total monetary value exceeds the recommended ESS rate</span>
                   <span *ngIf="!evacueeSessionService.isPaperBased">
                     Authorization to exceed recommended ESS rate provided by:
                     <strong>{{
                       getIncidentalReferral(support)?.approverName
-                    }}</strong></span
-                  >
+                      }}</strong></span>
                 </div>
               </div>
             </ng-container>
           </div>
         </div>
 
-        <div
-          class="col-md-4"
-          *ngIf="
+        <div class="col-md-4" *ngIf="
             support.subCategory !== 'Lodging_Group' &&
             support.subCategory !== 'Lodging_Billeting' &&
             support.method !== supportMethod.ETransfer
-          "
-        >
+          ">
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -426,13 +352,10 @@
           </mat-card>
         </div>
         <!-- Lodging-Billeting Support Delivery -->
-        <div
-          class="col-md-4"
-          *ngIf="
+        <div class="col-md-4" *ngIf="
             support.subCategory === 'Lodging_Billeting' &&
             support.method !== supportMethod.ETransfer
-          "
-        >
+          ">
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -447,13 +370,10 @@
           </mat-card>
         </div>
         <!-- Lodging-Group Support Delivery -->
-        <div
-          class="col-md-4"
-          *ngIf="
+        <div class="col-md-4" *ngIf="
             support.subCategory === 'Lodging_Group' &&
             support.method !== supportMethod.ETransfer
-          "
-        >
+          ">
           <mat-card class="support-card">
             <span class="support-subtitle">Support Delivery</span>
             <p class="no-margin">
@@ -470,23 +390,18 @@
           </mat-card>
         </div>
 
-        <div
-          class="col-md-4"
-          *ngIf="support.method === supportMethod.ETransfer"
-        >
+        <div class="col-md-4" *ngIf="support.method === supportMethod.ETransfer">
           <mat-card class="support-card">
-            <span class="support-subtitle"
-              >Support Delivery - <b>e-Transfer</b></span
-            >
+            <span class="support-subtitle">Support Delivery - <b>e-Transfer</b></span>
 
             <p class="no-margin"><b>e-Transfer Recipient</b></p>
             <p>
               {{
-                appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
+              appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.personalDetails?.lastName?.toUpperCase()
               }},
               {{
-                appBaseService?.appModel?.selectedProfile
-                  ?.selectedEvacueeInContext?.personalDetails?.firstName
+              appBaseService?.appModel?.selectedProfile
+              ?.selectedEvacueeInContext?.personalDetails?.firstName
               }}
             </p>
 
@@ -510,10 +425,8 @@
 
   <div *ngIf="!evacueeSessionService.isPaperBased" class="row">
     <div class="col-md-8 accept-box">
-      <mat-checkbox
-        id="processDraftCert"
-        (change)="certificationChangeEvent($event)"
-        >I certify that a supervisor or ESSD has checked my work and approved
+      <mat-checkbox id="processDraftCert" (change)="certificationChangeEvent($event)">I certify that a supervisor or
+        ESSD has checked my work and approved
         the above supports for distribution to the evacuee.
       </mat-checkbox>
     </div>
@@ -521,11 +434,7 @@
 
   <div class="row" *ngIf="!evacueeSessionService.isPaperBased && showErrorMsg">
     <div class="col-md-8 bold accept-box warning">
-      <img
-        src="../../../../../assets/images/warning-red.svg"
-        width="25px"
-        height="27px"
-      />
+      <img src="../../../../../assets/images/warning-red.svg" width="25px" height="27px" />
       Some required fields have not been completed.
     </div>
   </div>
@@ -535,17 +444,9 @@
       <button class="button-s button-width button-margin" (click)="back()">
         Cancel
       </button>
-      <button
-        class="button-p button-width"
-        (click)="processReferralDraft()"
-        [disabled]="showLoader"
-      >
+      <button class="button-p button-width" (click)="processReferralDraft()" [disabled]="showLoader">
         Process Support/s
-        <app-loader
-          [strokeWidth]="3"
-          [diameter]="25"
-          [showLoader]="showLoader"
-        ></app-loader>
+        <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader>
       </button>
     </div>
   </div>

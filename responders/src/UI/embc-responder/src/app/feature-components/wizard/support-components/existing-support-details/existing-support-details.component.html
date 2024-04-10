@@ -501,6 +501,21 @@
       <div class="col-md-4 bold">{{ groupReferral?.numberOfNights }}</div>
     </div>
   </div>
+    <!--Group Lodging-->
+  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Allowance'">
+      <div class="row row-padding">
+        <div class="col-md-4 box-text-color"># Nights:</div>
+        <div class="col-md-4 bold">
+          {{ shelterAllowanceReferral?.numberOfNights }}
+        </div>
+      </div>
+      <div class="row row-padding">
+        <div class="col-md-4 box-text-color">Total Amount:</div>
+        <div class="col-md-4 bold">
+          ${{ shelterAllowanceReferral?.totalAmount }}
+        </div>
+      </div>
+    </div>
   <!--Taxi-->
   <div *ngIf="selectedSupport?.subCategory === 'Transportation_Taxi'">
     <div class="row row-padding">

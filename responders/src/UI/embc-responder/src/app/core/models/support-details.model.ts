@@ -21,7 +21,8 @@ export class SupportDetailsModel {
     | GroupLodging
     | HotelMotel
     | Incidentals
-    | Clothing;
+    | Clothing
+    | ShelterAllowanceLodging;
 }
 
 export class SupportDeliveryModel {
@@ -84,6 +85,8 @@ export class GroupLodging {
 export class ShelterAllowanceLodging {
   noOfNights: number;
   totalAmount: number;
+  contactEmail: string;
+  contactPhone: string;
 }
 
 export class Incidentals {

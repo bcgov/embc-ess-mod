@@ -215,6 +215,7 @@ export class StepSupportsService {
       subCategory: null,
       supportDelivery: referral
     };
+
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
       this.referralService.createMealReferral(support, this.supportDetails);
     } else if (
@@ -247,7 +248,7 @@ export class StepSupportsService {
         support,
         this.supportDetails,
         this.supportDelivery
-      )
+      );
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group
     ) {
