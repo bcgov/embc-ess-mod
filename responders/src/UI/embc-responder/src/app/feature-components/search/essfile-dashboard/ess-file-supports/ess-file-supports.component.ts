@@ -22,7 +22,7 @@ import {
   LodgingGroupSupport,
   LodgingHotelSupport,
   Referral,
-  ShelterAllowanceSupport,
+  LodgingAllowanceSupport,
   Support,
   SupportMethod,
   SupportStatus,
@@ -187,8 +187,8 @@ export class EssFileSupportsComponent implements OnInit, AfterViewInit {
     return selectedSupport as LodgingGroupSupport;
   }
 
-  getShelterAllowanceReferral(selectedSupport: Support): ShelterAllowanceSupport {
-    return selectedSupport as ShelterAllowanceSupport;
+  getShelterAllowanceReferral(selectedSupport: Support): LodgingAllowanceSupport {
+    return selectedSupport as LodgingAllowanceSupport;
   }
   getIncidentalReferral(selectedSupport: Support): IncidentalsSupport {
     return selectedSupport as IncidentalsSupport;

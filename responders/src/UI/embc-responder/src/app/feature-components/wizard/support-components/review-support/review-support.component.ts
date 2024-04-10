@@ -15,7 +15,7 @@ import {
   Support,
   SupportMethod,
   Interac,
-  ShelterAllowanceSupport
+  LodgingAllowanceSupport
 } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
@@ -137,8 +137,8 @@ export class ReviewSupportComponent implements OnInit {
    * @param support the support to cast as ShelterAllowanceReferral
    * @returns a ShelterAllowanceReferral object
    */
-    getShelterAllowanceReferral(support: Support): ShelterAllowanceSupport {
-      return support as ShelterAllowanceSupport;
+    getShelterAllowanceReferral(support: Support): LodgingAllowanceSupport {
+      return support as LodgingAllowanceSupport;
     }
 
   /**

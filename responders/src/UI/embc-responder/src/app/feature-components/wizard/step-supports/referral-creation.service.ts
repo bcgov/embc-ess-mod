@@ -8,7 +8,7 @@ import {
   LodgingBilletingSupport,
   LodgingGroupSupport,
   LodgingHotelSupport,
-  ShelterAllowanceSupport,
+  LodgingAllowanceSupport,
   Referral,
   Support,
   SupportCategory,
@@ -43,7 +43,7 @@ export class ReferralCreationService {
   private hotelReferralVal: LodgingHotelSupport;
   private billetingReferralVal: LodgingBilletingSupport;
   private groupReferralVal: LodgingGroupSupport;
-  private lodgingAllowanceReferralVal: ShelterAllowanceSupport;
+  private lodgingAllowanceReferralVal: LodgingAllowanceSupport;
   private clothingReferralVal: ClothingSupport;
   private incidentalsReferralVal: IncidentalsSupport;
   private draftSupportVal: Support[] = [];
@@ -159,13 +159,13 @@ export class ReferralCreationService {
       : JSON.parse(this.cacheService.get('clothingReferralVal'));
   }
 
-  set lodgingAllowanceReferral(lodgingAllowanceReferralVal: ShelterAllowanceSupport) {
+  set lodgingAllowanceReferral(lodgingAllowanceReferralVal: LodgingAllowanceSupport) {
     this.lodgingAllowanceReferralVal = lodgingAllowanceReferralVal;
     this.cacheService.set('lodgingAllowanceReferralVal', lodgingAllowanceReferralVal);
     this.setDraftSupport(lodgingAllowanceReferralVal);
    }
  
-   get lodgingAllowanceReferral(): ShelterAllowanceSupport {
+   get lodgingAllowanceReferral(): LodgingAllowanceSupport {
      return this.lodgingAllowanceReferralVal
        ? this.lodgingAllowanceReferralVal
        : JSON.parse(this.cacheService.get('lodgingAllowanceReferral'));
@@ -302,7 +302,7 @@ export class ReferralCreationService {
     supportDetails: SupportDetailsModel,
     supportDelivery: SupportDeliveryModel
   ) {
-    const lodgingAllowanceReferral: ShelterAllowanceSupport = {
+    const lodgingAllowanceReferral: LodgingAllowanceSupport = {
       ...referral,
      category: SupportCategory.Lodging,
       numberOfNights: (supportDetails.referral as ShelterAllowanceLodging).noOfNights,
