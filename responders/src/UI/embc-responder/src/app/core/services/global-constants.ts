@@ -75,11 +75,7 @@ export const insuranceOptions = [
   { name: 'No', value: 'No' },
   { name: "I don't know", value: 'Unknown' }
 ];
-export const needsOptions = [
-  { name: 'Yes', value: 'Yes', apiValue: true },
-  { name: 'No', value: 'No', apiValue: false },
-  { name: "I'm not sure", value: 'Unsure', apiValue: null }
-];
+
 export const radioButtonOptions = [
   { name: 'Yes', value: 'Yes', apiValue: true },
   { name: 'No', value: 'No', apiValue: false }
@@ -579,6 +575,8 @@ export const supportReprintReasonsError =
   'Unable to retrieve support reprint reasons at this time. Please try again later';
 export const communityTypesError =
   'Unable to retrieve community types at this time. Please try again later';
+  export const identifiedNeedsError =
+  'Unable to retrieve identified needs at this time. Please try again later';
 export const securityPhraseError =
   'Unable to retrieve security phrase at this time. Please try again later';
 export const verifySecurityPhraseError =
@@ -674,4 +672,19 @@ export const caseNotesCompleteText: DashboardBanner = {
   buttonText: 'Add Notes',
   content:
     'Task number end date has expired. Add or Edit Case Notes associated with the Current ESS File.'
+};
+
+export const shelterAllowanceNeedDialog: DialogContent = {
+  title: 'Shelter',
+  text: 'A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child<br/>The shelter allowance can be provided to eligible evacuees via e-Transfer.'
+};
+
+export const shelterReferralNeedDialog: DialogContent = {
+  title: 'Referrals',
+  text: 'A paper form provided by an ESS responder, directing evacuated individuals to specific suppliers or facilities for essential needs like food, shelter, clothing, or other necessary items during the evacuation.'
+};
+
+export const incidentalsNeedDialog: DialogContent = {
+  title: 'Incidentals',
+  text: 'Incidentals could include miscellaneous items such as personal hygiene products such as toothpaste, laundry soap and/or pet food.'
 };

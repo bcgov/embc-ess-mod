@@ -26,7 +26,6 @@ using EMBC.Utilities.Telemetry;
 using EMBC.Utilities.Transformation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -592,7 +591,7 @@ namespace EMBC.ESS.Managers.Events
                 AddSummary = printRequest.IncludeSummary,
                 AddWatermark = !isProduction,
                 PrintingMember = requestingUser,
-                evacuee = evacuee
+                Evacuee = evacuee
             });
 
             var content = generatedReferrals.Content;

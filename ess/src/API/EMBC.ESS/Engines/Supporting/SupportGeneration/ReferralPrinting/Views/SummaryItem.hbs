@@ -17,7 +17,8 @@
             </h3>
             <div class="row">
                 <div class="col-5 no-padding">
-                    <label class="blocked-label">From:</label> <span class="input-output">{{dateFormatter FromDate}}</span>
+                    <label class="blocked-label">From:</label> <span class="input-output">{{dateFormatter
+                        FromDate}}</span>
                 </div>
                 <div class="col-7">
                     <label>at:</label> <span class="input-output">{{timeFormatter FromTime}}</span>
@@ -35,42 +36,7 @@
             {{> itemsPartial}}
         </div>
 
-        {{#if IsEtransfer}}
-        <div class="col-6">
-            <h3 class="with-icon etransfer">E-Transfer Information</h3>
-            <div class="row">
-                <div class="col-6">
-                    <strong>e-Transfer Recipient:</strong><br />
-                    {{NotificationInformation.RecipientFirstName}} {{NotificationInformation.RecipientLastName}}<br /><br />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <strong>e-Transfer Notification:</strong><br />
-                    {{#if NotificationInformation.Email}}{{NotificationInformation.Email}}<br />{{/if}}
-                    {{#if NotificationInformation.Mobile}}{{NotificationInformation.Mobile}}<br />{{/if}}
-                </div>
-            </div>
-
-        </div>
-        {{else}}
-        <div class="col-6">
-            <h3 class="with-icon supplier">Supplier Information</h3>
-            <div class="row">
-                <div class="col-6">
-                    <strong>{{Supplier.Name}}</strong><br />
-                    {{Supplier.Address}}<br />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    {{Supplier.City}}{{#if Supplier.City}}{{#if Supplier.PostalCode}}, {{/if}}{{/if}}{{Supplier.PostalCode}}<br />
-                    <strong>Phone:</strong> {{Supplier.Telephone}}
-                </div>
-            </div>
-            {{> notesPartial}}
-        </div>
-        {{/if}}
+        {{> deliverySummaryPartial}}
     </div>
 
     {{#if IsEtransfer}}
@@ -80,10 +46,18 @@
             <div class="row">
                 <div class="col">
                     <ul>
-                        <li>The answer to the <strong>Interac e-Transfer Security Question</strong>, as well as payment status, can be found by logging in to your ERA Profile via <strong>http://ess.gov.bc.ca.</strong></li>
+                        <li>The answer to the <strong>Interac e-Transfer Security Question</strong>, as well as payment
+                            status, can be found by logging in to your ERA Profile via
+                            <strong>http://ess.gov.bc.ca.</strong></li>
                         <li>Please allow for up to 4 hours to receive your e-Transfer Notification.</li>
-                        <li>Please contact the ESS Call Centre on 1-800-585-9559 should you not receive your e-Transfer.</li>
-                        <li>You are being provided with a one-time digital payment for supports. EMBC has a responsibility to ensure that funds are used for the sole purpose of meeting essential needs of individuals and their household members. By your acceptance of the digital payment, you agree to only spend these funds to meet your basic needs, such as food, clothing, or essential goods and services, based on the needs assessment conducted by your responder.</li>
+                        <li>Please contact the ESS Call Centre on 1-800-585-9559 should you not receive your e-Transfer.
+                        </li>
+                        <li>You are being provided with a one-time digital payment for supports. EMBC has a
+                            responsibility to ensure that funds are used for the sole purpose of meeting essential needs
+                            of individuals and their household members. By your acceptance of the digital payment, you
+                            agree to only spend these funds to meet your basic needs, such as food, clothing, or
+                            essential goods and services, based on the needs assessment conducted by your responder.
+                        </li>
                     </ul>
                 </div>
             </div>

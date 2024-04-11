@@ -73,49 +73,11 @@
 
           <div
             class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideFood
+            *ngFor="
+              let item of evacueeSessionService?.currentNeedsAssessment?.needs
             "
           >
-            <div class="col-4">Food</div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideLodging
-            "
-          >
-            <div class="col-4">Lodging</div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment?.canProvideClothing
-            "
-          >
-            <div class="col-4">Clothing</div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment
-                ?.canProvideTransportation
-            "
-          >
-            <div class="col-4">Transportation</div>
-          </div>
-
-          <div
-            class="row"
-            *ngIf="
-              !evacueeSessionService?.currentNeedsAssessment
-                ?.canProvideIncidentals
-            "
-          >
-            <div class="col-4">Incidentals</div>
+            <div class="col-4">{{ item }}</div>
           </div>
         </mat-card>
       </div>

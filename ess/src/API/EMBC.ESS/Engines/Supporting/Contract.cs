@@ -111,7 +111,7 @@ namespace EMBC.ESS.Engines.Supporting
         public string RequestingUserId { get; set; }
         public TeamMember PrintingMember { get; set; }
         public EvacuationFile File { get; set; }
-        public Evacuee evacuee { get; set; }
+        public Evacuee Evacuee { get; set; }
     }
 
     public class GenerateReferralsResponse : GenerateResponse

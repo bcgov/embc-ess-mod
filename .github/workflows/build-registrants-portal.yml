@@ -1,4 +1,4 @@
-name: registrant-portal-api Build
+name: registrant-portal Build
 on:
   push:
     branches:
