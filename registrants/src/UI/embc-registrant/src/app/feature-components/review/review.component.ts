@@ -78,7 +78,6 @@ export class ReviewComponent implements OnInit {
     } else if (form.controls.requiresShelterType?.value === ShelterType.allowance) {
       needs.push('Shelter allowance');
     }
-    console.debug(needs, form);
     return needs;
   }
 }

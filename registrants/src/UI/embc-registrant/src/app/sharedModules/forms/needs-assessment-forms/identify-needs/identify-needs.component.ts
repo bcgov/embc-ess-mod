@@ -11,6 +11,10 @@ import { Subscription } from 'rxjs';
 import { MatRadioModule } from '@angular/material/radio';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogContent } from 'src/app/core/model/dialog-content.model';
 
 @Component({
   selector: 'app-identify-needs',
@@ -19,14 +23,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export default class IdentifyNeedsComponent implements OnInit {
   identifyNeedsForm: UntypedFormGroup;
-  formBuilder: UntypedFormBuilder;
   identifyNeedsForm$: Subscription;
-  formCreationService: FormCreationService;
 
-  constructor(@Inject('formBuilder') formBuilder: UntypedFormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
-    this.formBuilder = formBuilder;
-    this.formCreationService = formCreationService;
-  }
+  constructor(private formBuilder: UntypedFormBuilder, private formCreationService: FormCreationService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.identifyNeedsForm$ = this.formCreationService.getIndentifyNeedsForm().subscribe((identifyNeedsForm) => {
@@ -35,26 +34,26 @@ export default class IdentifyNeedsComponent implements OnInit {
   }
 
   public openShelterAllowanceDialog() {
-    //this.openInfoDialog(globalConst.shelterAllowanceNeedDialog);
+    this.openInfoDialog(globalConst.shelterAllowanceNeedDialog);
   }
 
   public openShelterReferralDialog() {
-    //this.openInfoDialog(globalConst.shelterReferralNeedDialog);
+    this.openInfoDialog(globalConst.shelterReferralNeedDialog);
   }
 
   public openIncidentalsDialog() {
-    //this.openInfoDialog(globalConst.incidentalsNeedDialog);
+    this.openInfoDialog(globalConst.incidentalsNeedDialog);
   }
 
-  // private openInfoDialog(dialog: DialogContent) {
-  //   return this.dialog.open(DialogComponent, {
-  //     data: {
-  //       component: InformationDialogComponent,
-  //       content: dialog
-  //     },
-  //     width: '400px'
-  //   });
-  // }
+  private openInfoDialog(dialog: DialogContent) {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: dialog
+      },
+      maxWidth: '400px'
+    });
+  }
 
   public get needsFormControl(): { [key: string]: AbstractControl } {
     return this.identifyNeedsForm.controls;
@@ -65,4 +64,4 @@ export default class IdentifyNeedsComponent implements OnInit {
   imports: [CommonModule, MatCardModule, MatButtonModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatRadioModule, MatCheckboxModule],
   declarations: [IdentifyNeedsComponent]
 })
-class IdentifyNeedsModule {}
+class IdentifyNeedsModule { }

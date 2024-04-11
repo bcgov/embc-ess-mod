@@ -87,7 +87,6 @@ export class NeedsAssessmentMappingService {
   }
 
   setIdentifiedNeeds(needs: IdentifiedNeed[]): void {
-    console.debug(needs);
     this.formCreationService
       .getIndentifyNeedsForm()
       .pipe(first())

@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <form [formGroup]="identifyNeedsForm">
   <mat-card class="card-align" style="padding-bottom: 0px">
     <mat-card-content>
@@ -5,25 +6,19 @@
 
       <div class="row row-tile">
         <div class="col-md-12">
-          <mat-checkbox id="shelter" formControlName="requiresShelter" class="primary-checkbox"></mat-checkbox>
           <label class="tab-subtitle" for="shelter">
+            <mat-checkbox id="shelter" formControlName="requiresShelter"></mat-checkbox>
             <img src="../../../../../assets/images/needs-lodging.svg" width="40px" height="40px" />
             Shelter
           </label>
-          <div class="shelter-ident">
+          <div class="shelter">
             <p>
               There are several ways to meet your shelter needs.<br />
               You can receive a shelter allowance and use that money to find your own shelter or be provided with a referral to shelter (like a cot in a gym or a hotel/motel).
             </p>
-            <mat-radio-group
-              id="shelterRadio"
-              class="primary-radio-group"
-              formControlName="requiresShelterType"
-              aria-label="Select an option"
-              *ngIf="needsFormControl['requiresShelter'].value"
-            >
+            <mat-radio-group id="shelterRadio" formControlName="requiresShelterType" aria-label="Select an option" *ngIf="needsFormControl['requiresShelter'].value">
               <label for="shelterAllowance">
-                <mat-radio-button id="shelterAllowance" class="primary-radio-button" value="Allowance"></mat-radio-button>
+                <mat-radio-button id="shelterAllowance" value="Allowance"></mat-radio-button>
                 I need the shelter allowance and can find my own shelter.
                 <span>
                   <a class="status-info" (click)="openShelterAllowanceDialog()">
@@ -32,7 +27,7 @@
                 </span>
               </label>
               <label for="shelterReferral">
-                <mat-radio-button id="shelterReferral" class="primary-radio-button" value="Referral"></mat-radio-button>
+                <mat-radio-button id="shelterReferral" value="Referral"></mat-radio-button>
                 I need a referral to shelter.
                 <span>
                   <a class="status-info" (click)="openShelterReferralDialog()">
@@ -45,8 +40,8 @@
         </div>
 
         <div class="col-md-12">
-          <mat-checkbox id="food" formControlName="requiresFood" class="primary-checkbox"></mat-checkbox>
           <label class="tab-subtitle" for="food">
+            <mat-checkbox id="food" formControlName="requiresFood"></mat-checkbox>
             <img src="../../../../../assets/images/needs-food.svg" width="40px" height="40px" />
             Food
           </label>
@@ -55,8 +50,8 @@
 
       <div class="row row-tile">
         <div class="col-md-12">
-          <mat-checkbox id="clothing" formControlName="requiresClothing" class="primary-checkbox"></mat-checkbox>
           <label class="tab-subtitle" for="clothing">
+            <mat-checkbox id="clothing" formControlName="requiresClothing"></mat-checkbox>
             <img src="../../../../../assets/images/needs-clothing.svg" width="40px" height="40px" />
             Clothing
           </label>
@@ -65,8 +60,8 @@
 
       <div class="row row-tile">
         <div class="col-md-12">
-          <mat-checkbox id="incidentals" formControlName="requiresIncidentals" class="primary-checkbox"></mat-checkbox>
           <label class="tab-subtitle" for="incidentals">
+            <mat-checkbox id="incidentals" formControlName="requiresIncidentals"></mat-checkbox>
             <img src="../../../../../assets/images/needs-incidentals.svg" width="40px" height="40px" />
             Incidentals
             <span>
@@ -78,8 +73,8 @@
 
       <div class="row row-tile">
         <div class="col-md-12">
-          <mat-checkbox id="requiresNothing" formControlName="requiresNothing" class="primary-checkbox"></mat-checkbox>
           <label class="tab-subtitle" for="requiresNothing">
+            <mat-checkbox id="requiresNothing" formControlName="requiresNothing"></mat-checkbox>
             <img src="../../../../../assets/images/no-needs.svg" width="40px" height="40px" />
             I can meet my basic needs. I do not require assistance.
           </label>
