@@ -341,7 +341,7 @@ export class ExistingSupportDetailsService {
         totalAmount: (selectedSupport as LodgingAllowanceSupport).totalAmount,
         contactEmail: (selectedSupport as LodgingAllowanceSupport).contactEmail,
         contactPhone: (selectedSupport as LodgingAllowanceSupport).contactPhone,
-        approverName: (selectedSupport as LodgingAllowanceSupport).fullName
+        approverName: (selectedSupport.supportDelivery as Referral).issuedToPersonName
       };
     }else if (selectedSupport.category === SupportCategory.Incidentals) {
       return {

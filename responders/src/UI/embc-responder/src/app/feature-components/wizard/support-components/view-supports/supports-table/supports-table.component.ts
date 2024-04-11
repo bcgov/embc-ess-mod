@@ -86,7 +86,9 @@ export class SupportsTableComponent
               return (item as LodgingBilletingSupport).hostName.toLowerCase();
             } else if (item.subCategory === SupportSubCategory.Lodging_Group) {
               return (item as LodgingGroupSupport).facilityName.toLowerCase();
-            } else {
+            } else if (item.subCategory === SupportSubCategory.Lodging_Allowance) {
+              return (item.supportDelivery as Referral).issuedToPersonName.toLowerCase();
+            }else {
               return (
                 item.supportDelivery as Referral
               ).supplierName.toLowerCase();
@@ -195,7 +197,7 @@ export class SupportsTableComponent
     } else if (element.subCategory === SupportSubCategory.Lodging_Group) {
       return (element as LodgingGroupSupport).facilityName;
     } else if (element.subCategory === SupportSubCategory.Lodging_Allowance) {
-      return (element as LodgingAllowanceSupport).fullName;
+      return (element.supportDelivery as Referral).issuedToPersonName;
     } else {
       return (element.supportDelivery as Referral).supplierName;
     }

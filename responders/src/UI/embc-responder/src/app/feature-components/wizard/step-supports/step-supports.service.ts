@@ -168,7 +168,6 @@ export class StepSupportsService {
     const members: Array<string> = this.supportDetails.members.map((value) => {
       return value.id;
     });
-
     const referral: Referral | Interac =
       method === SupportMethod.Referral
         ? {
@@ -177,11 +176,14 @@ export class StepSupportsService {
                 ? 'R' + this.supportDetails.externalReferenceId
                 : '',
             issuedToPersonName:
+              (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance) ? (this.supportDelivery.details.hostName) :(
               this.supportDelivery.issuedTo !== 'Someone else'
                 ? this.supportDelivery.issuedTo.lastName +
                   ', ' +
                   this.supportDelivery.issuedTo.firstName
-                : this.supportDelivery.name,
+                : this.supportDelivery.name)
+                
+                ,
             supplierAddress: this.supportDelivery.supplier.address,
             supplierId: this.supportDelivery.supplier.id,
             supplierName: this.supportDelivery.supplier.name,

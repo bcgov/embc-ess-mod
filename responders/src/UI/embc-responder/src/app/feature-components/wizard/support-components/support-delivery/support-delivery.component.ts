@@ -353,22 +353,26 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   setSupportMethod(method: SupportMethod) {
     this.selectedSupportMethod = method;
-
     if (method === SupportMethod.Referral) {
-      this.supportDeliveryForm.get('notificationPreference').setErrors(null);
-      this.supportDeliveryForm.get('notificationEmail').setErrors(null);
-      this.supportDeliveryForm.get('notificationConfirmEmail').setErrors(null);
-      this.supportDeliveryForm.get('notificationMobile').setErrors(null);
-      if (this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance') {
-        this.supportDeliveryForm.get('supplier').disable();
-        this.supportDeliveryForm.get('issuedTo').disable();
-      }
+      this.supportDeliveryForm.get('notificationPreference').patchValue('');
+      this.supportDeliveryForm.get('notificationEmail').patchValue('');
+      this.supportDeliveryForm.get('notificationConfirmEmail').patchValue('');
+      this.supportDeliveryForm.get('notificationMobile').patchValue('');
     }
     if (method === SupportMethod.ETransfer) {
-      this.supportDeliveryForm.get('issuedTo').setErrors(null);
-      this.supportDeliveryForm.get('name').setErrors(null);
-      this.supportDeliveryForm.get('supplier').setErrors(null);
-      this.supportDeliveryForm.get('supplierNote').setErrors(null);
+      this.supportDeliveryForm.get('issuedTo').patchValue('');
+      this.supportDeliveryForm.get('name').patchValue('');
+      this.supportDeliveryForm.get('supplier').patchValue('');
+      this.supportDeliveryForm.get('supplierNote').patchValue('');
+      if (this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance')
+        {
+          this.supportDeliveryForm.get('details').disable();
+        }
+    }
+    if (this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance') {
+      this.supportDeliveryForm.get('supplier').disable();
+      this.supportDeliveryForm.get('issuedTo').disable();
+      this.supportDeliveryForm.get('name').setValue(this.supportDeliveryForm.get('details').get('hostName').value);
     }
   }
 

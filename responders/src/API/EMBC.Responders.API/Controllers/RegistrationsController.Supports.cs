@@ -441,7 +441,6 @@ namespace EMBC.Responders.API.Controllers
 
         public string ContactEmail { get; set; }
         public string ContactPhone { get; set; }
-        public string FullName { get; set; }
 
         [Required]
         [Range(0, double.MaxValue)]

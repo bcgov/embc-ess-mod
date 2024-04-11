@@ -307,8 +307,7 @@ export class ReferralCreationService {
      category: SupportCategory.Lodging,
      contactEmail:supportDelivery.details.emailAddress,
      contactPhone: supportDelivery.details.hostPhone,
-     fullName: supportDelivery.details.hostName,
-      numberOfNights: (supportDetails.referral as ShelterAllowanceLodging).noOfNights,
+     numberOfNights: (supportDetails.referral as ShelterAllowanceLodging).noOfNights,
       totalAmount: this.parseTextNumber(
         (supportDetails.referral as ShelterAllowanceLodging).totalAmount
           ? (supportDetails.referral as ShelterAllowanceLodging).totalAmount
