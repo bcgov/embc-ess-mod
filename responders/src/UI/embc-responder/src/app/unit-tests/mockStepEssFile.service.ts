@@ -46,8 +46,8 @@ export class MockStepEssFileService extends StepEssFileService {
     },
     {
       label: 'Household Members',
-      route: 'household-members',
-      name: 'household-members',
+      route: 'household-members-pets',
+      name: 'household-members-pets',
       status: 'not-started',
       next: '/ess-wizard/ess-file/animals',
       previous: '/ess-wizard/ess-file/evacuation-details'
@@ -91,23 +91,15 @@ export class MockStepEssFileService extends StepEssFileService {
       route: 'evacuation-details',
       name: 'evacuation-details',
       status: 'not-started',
-      next: '/ess-wizard/ess-file/household-members'
+      next: '/ess-wizard/ess-file/household-members-pets'
     },
     {
       label: 'Household Members',
-      route: 'household-members',
-      name: 'household-members',
-      status: 'not-started',
-      next: '/ess-wizard/ess-file/animals',
-      previous: '/ess-wizard/ess-file/evacuation-details'
-    },
-    {
-      label: 'Animals',
-      route: 'animals',
-      name: 'animals',
+      route: 'household-members-pets',
+      name: 'household-members-pets',
       status: 'not-started',
       next: '/ess-wizard/ess-file/needs',
-      previous: '/ess-wizard/ess-file/household-members'
+      previous: '/ess-wizard/ess-file/evacuation-details'
     },
     {
       label: 'Needs',
@@ -115,7 +107,7 @@ export class MockStepEssFileService extends StepEssFileService {
       name: 'needs',
       status: 'not-started',
       next: '/ess-wizard/ess-file/review',
-      previous: '/ess-wizard/ess-file/animals'
+      previous: '/ess-wizard/ess-file/household-members-pets'
     },
     {
       label: 'Review & Save',
