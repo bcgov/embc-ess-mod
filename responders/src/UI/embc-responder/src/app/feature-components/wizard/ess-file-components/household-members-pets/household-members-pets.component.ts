@@ -1,11 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
-import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
-import { WizardService } from '../../wizard.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,12 +17,8 @@ export class HouseholdMembersPetsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private dialog: MatDialog,
-    private stepEssFileService: StepEssFileService,
-    private customValidation: CustomValidationService,
-    private formBuilder: UntypedFormBuilder,
-    private wizardService: WizardService
-  ) {}
+    private stepEssFileService: StepEssFileService
+  ) { }
 
   ngOnInit(): void {
     this.tabMetaData = this.stepEssFileService.getNavLinks(
@@ -37,6 +29,8 @@ export class HouseholdMembersPetsComponent implements OnInit, OnDestroy {
       this.stepEssFileService.nextTabUpdate.subscribe(() => {
         this.updateTabStatus();
       });
+
+    this.updateTabStatus();
   }
 
   ngOnDestroy(): void {
