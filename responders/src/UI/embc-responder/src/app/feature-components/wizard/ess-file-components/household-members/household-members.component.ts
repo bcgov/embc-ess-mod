@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -404,10 +404,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.stepEssFileService.checkForPartialUpdates(this.householdForm)
       ) {
         this.validHouseholdMemebersIndicator.emit(false);
-        //this.stepEssFileService.setTabStatus('household-members', 'incomplete');
       } else {
         this.validHouseholdMemebersIndicator.emit(false);
-        //this.stepEssFileService.setTabStatus('household-members', 'not-started');
       }
     } else if (this.essFileNumber) {
       if (
@@ -416,15 +414,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.selection.selected.length >= 1
       ) {
         this.validHouseholdMemebersIndicator.emit(true);
-        // this.stepEssFileService.setTabStatus('household-members', 'complete');
       } else if (
         this.stepEssFileService.checkForPartialUpdates(this.householdForm)
       ) {
         this.validHouseholdMemebersIndicator.emit(false);
-        //this.stepEssFileService.setTabStatus('household-members', 'incomplete');
       } else {
         this.validHouseholdMemebersIndicator.emit(false);
-        //this.stepEssFileService.setTabStatus('household-members', 'not-started');
       }
     }
 
