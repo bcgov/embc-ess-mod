@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: training-release-pipeline
+  name: prj-test-release-pipeline
 
 spec:
   tasks:
@@ -11,9 +11,9 @@ spec:
         - name: imageName
           value: {{ $key }}
         - name: fromTag
-          value: test
+          value: dev
         - name: toTag
-          value: training
+          value: test
         - name: referencePolicy
           value: local
       taskRef:

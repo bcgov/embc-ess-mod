@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: prod-release-pipeline
+  name: prj-prod-release-pipeline
 
 spec:
   tasks:
