@@ -5,19 +5,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Subject } from 'rxjs';
-import {
-  EvacuationFile,
-  HouseholdMemberType,
-  IdentifiedNeed,
-  InsuranceOption,
-  NeedsAssessment,
-  Pet
-} from 'src/app/core/api/models';
-import {
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup
-} from '@angular/forms';
+import { EvacuationFile, HouseholdMemberType, IdentifiedNeed, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
@@ -90,7 +79,7 @@ export class StepEssFileService {
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService,
     private loadEvacueeListService: LoadEvacueeListService
-  ) { }
+  ) {}
 
   // Selected ESS File Model getter and setter
   public get selectedEssFile(): EvacuationFileModel {
@@ -225,9 +214,7 @@ export class StepEssFileService {
   public get selectedHouseholdMembers(): HouseholdMemberModel[] {
     return this.selectedHouseholdMembersVal;
   }
-  public set selectedHouseholdMembers(
-    selectedHouseholdMembersVal: HouseholdMemberModel[]
-  ) {
+  public set selectedHouseholdMembers(selectedHouseholdMembersVal: HouseholdMemberModel[]) {
     this.selectedHouseholdMembersVal = selectedHouseholdMembersVal;
   }
 
@@ -365,9 +352,12 @@ export class StepEssFileService {
   }
 
   public get needsIdentified(): string[] {
-    return Array.from(this.needs)
-    .map(need => this.loadEvacueeListService.getIdentifiedNeeds().find(value => value.value === need)?.description);
+    const getIdentifiedNeeds = this.loadEvacueeListService.getIdentifiedNeeds();
 
+    return Array.from(this.needs).map((need) => {
+      const foundNeed = getIdentifiedNeeds.find((value) => value.value === need);
+      return [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.ShelterReferral].includes(foundNeed.value) ? 'Shelter' : foundNeed?.description;
+    });
   }
 
   // Security Phrase tab
@@ -433,18 +423,11 @@ export class StepEssFileService {
 
     // Map out into DTO object and return
     return {
-      primaryRegistrantId:
-        this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext
-          ?.id,
+      primaryRegistrantId: this.appBaseService?.appModel?.selectedProfile?.selectedEvacueeInContext?.id,
       completedBy: this.completedBy,
       completedOn: this.completedOn,
-      manualFileId: this.evacueeSession.isPaperBased
-        ? this.evacueeSearchService?.evacueeSearchContext
-          ?.evacueeSearchParameters?.paperFileNumber
-        : null,
-      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-        this.evacAddress
-      ),
+      manualFileId: this.evacueeSession.isPaperBased ? this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber : null,
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(this.evacAddress),
       registrationLocation: this.facilityName,
 
       needsAssessment: needsObject,
@@ -474,24 +457,18 @@ export class StepEssFileService {
     return {
       completedBy: this.completedBy,
       completedOn: this.completedOn,
-      manualFileId: this.evacueeSession.isPaperBased
-        ? this.evacueeSearchService?.evacueeSearchContext
-          ?.evacueeSearchParameters?.paperFileNumber
-        : null,
+      manualFileId: this.evacueeSession.isPaperBased ? this.evacueeSearchService?.evacueeSearchContext?.evacueeSearchParameters?.paperFileNumber : null,
       evacuationFileDate: this.evacuationFileDate,
       primaryRegistrantId: this.primaryRegistrantId,
 
-      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
-        this.evacAddress
-      ),
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(this.evacAddress),
       registrationLocation: this.facilityName,
 
       needsAssessment: needsObject,
       securityPhrase: this.securityPhrase,
       securityPhraseEdited: this.editedSecurityPhrase,
       task: {
-        taskNumber:
-          this.taskNumber ?? this.userService.currentProfile?.taskNumber
+        taskNumber: this.taskNumber ?? this.userService.currentProfile?.taskNumber
       }
     };
   }
@@ -559,9 +536,7 @@ export class StepEssFileService {
     this.evacueeSession.currentNeedsAssessment = essNeeds;
     this.evacueeSession.evacFile = essFile;
     this.wizardService.createObjectReference(essFile, 'file');
-    const primaryLastName = essFile.householdMembers?.find(
-      (member) => member.type === HouseholdMemberType.Registrant
-    ).lastName;
+    const primaryLastName = essFile.householdMembers?.find((member) => member.type === HouseholdMemberType.Registrant).lastName;
 
     //Additional Behind the scenes variables
     this.taskNumber = essFile.task.taskNumber;
@@ -576,36 +551,28 @@ export class StepEssFileService {
     this.evacAddress = essFile.evacuatedFromAddress;
     this.facilityName = essFile.registrationLocation;
 
-    this.evacuatedFromPrimary = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === _.isEqual(this.primaryAddress, this.evacAddress)
-    )?.value;
+    this.evacuatedFromPrimary = globalConst.radioButtonOptions.find((ins) => ins.apiValue === _.isEqual(this.primaryAddress, this.evacAddress))?.value;
 
     this.insurance = essNeeds.insurance;
 
     // Household Members tab
     // Split main applicant from other household members, remap to UI model
-    this.householdMembers = essFile.householdMembers?.map<HouseholdMemberModel>(
-      (member) => {
-        return {
-          ...member,
-          sameLastName: member.lastName === primaryLastName,
-          householdMemberFromDatabase: true
-        };
-      }
-    );
+    this.householdMembers = essFile.householdMembers?.map<HouseholdMemberModel>((member) => {
+      return {
+        ...member,
+        sameLastName: member.lastName === primaryLastName,
+        householdMemberFromDatabase: true
+      };
+    });
 
     this.selectedHouseholdMembers = undefined;
 
-    this.haveHouseHoldMembers = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === this.householdMembers?.length > 2
-    )?.value;
+    this.haveHouseHoldMembers = globalConst.radioButtonOptions.find((ins) => ins.apiValue === this.householdMembers?.length > 2)?.value;
 
     // Animals tab
     const petsArray = [];
     this.petsList = [...petsArray, ...essNeeds.pets];
-    this.havePets = globalConst.radioButtonOptions.find(
-      (ins) => ins.apiValue === essNeeds.pets?.length > 0
-    )?.value;
+    this.havePets = globalConst.radioButtonOptions.find((ins) => ins.apiValue === essNeeds.pets?.length > 0)?.value;
 
     // Needs tab
     this.needs = new Set(essNeeds.needs);
@@ -643,11 +610,7 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.essTabs?.some(
-      (tab) =>
-        (tab.status === 'not-started' || tab.status === 'incomplete') &&
-        tab.name !== 'review'
-    );
+    return this.essTabs?.some((tab) => (tab.status === 'not-started' || tab.status === 'incomplete') && tab.name !== 'review');
   }
 
   /**
@@ -679,20 +642,14 @@ export class StepEssFileService {
   checkForPartialUpdates(form: UntypedFormGroup): boolean {
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
-      const control = form.controls[field] as
-        | UntypedFormControl
-        | UntypedFormGroup
-        | UntypedFormArray;
+      const control = form.controls[field] as UntypedFormControl | UntypedFormGroup | UntypedFormArray;
       if (control instanceof UntypedFormControl) {
         if (control.value instanceof Object && control.value != null) {
           fields.push(control.value.length);
         } else {
           fields.push(control.value);
         }
-      } else if (
-        control instanceof UntypedFormGroup ||
-        control instanceof UntypedFormArray
-      ) {
+      } else if (control instanceof UntypedFormGroup || control instanceof UntypedFormArray) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
             fields.push(control.controls[key].value);
@@ -713,10 +670,7 @@ export class StepEssFileService {
   checkForEvacDetailsPartialUpdates(form: UntypedFormGroup): boolean {
     const fields = [];
     Object.keys(form.controls).forEach((field) => {
-      const control = form.controls[field] as
-        | UntypedFormControl
-        | UntypedFormGroup
-        | UntypedFormArray;
+      const control = form.controls[field] as UntypedFormControl | UntypedFormGroup | UntypedFormArray;
       if (control instanceof UntypedFormControl) {
         if (control.value instanceof Object && control.value != null) {
           fields.push(control.value.length);
@@ -748,11 +702,7 @@ export class StepEssFileService {
       if (tab.name === 'household-members') {
         tab.status = 'incomplete';
       }
-      if (
-        this.securityPhrase === null ||
-        this.securityPhrase === undefined ||
-        this.securityPhrase === ''
-      ) {
+      if (this.securityPhrase === null || this.securityPhrase === undefined || this.securityPhrase === '') {
         if (tab.name === 'security-phrase') {
           tab.status = 'not-started';
         }
@@ -769,10 +719,7 @@ export class StepEssFileService {
       if (tab.name !== 'review') {
         tab.status = 'complete';
       }
-      if (
-        tab.name === 'household-members' ||
-        tab.name === 'evacuation-details'
-      ) {
+      if (tab.name === 'household-members' || tab.name === 'evacuation-details') {
         tab.status = 'incomplete';
       }
       return tab;
@@ -780,12 +727,7 @@ export class StepEssFileService {
   }
 
   public getTaskEndDate(): string {
-    if (
-      this.appBaseService?.wizardProperties?.wizardType ===
-      WizardType.NewEssFile ||
-      this.appBaseService?.wizardProperties?.wizardType ===
-      WizardType.NewRegistration
-    ) {
+    if (this.appBaseService?.wizardProperties?.wizardType === WizardType.NewEssFile || this.appBaseService?.wizardProperties?.wizardType === WizardType.NewRegistration) {
       return this.userService?.currentProfile?.taskStartDate;
     } else {
       return this.selectedEssFileVal?.task?.from;
@@ -812,10 +754,7 @@ export class StepEssFileService {
         this.wizardService.setStepStatus('/ess-wizard/add-notes', true);
       } else {
         if (!this.checkTabsStatus()) {
-          this.wizardService.setStepStatus(
-            '/ess-wizard/evacuee-profile',
-            false
-          );
+          this.wizardService.setStepStatus('/ess-wizard/evacuee-profile', false);
           this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
           this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
           this.setTabStatus('review', 'complete');
