@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import {
-  Address,
-  HouseholdMember,
-  InsuranceOption,
-  NeedsAssessment,
-  Pet
-} from 'src/app/core/api/models';
+import { HouseholdMember, IdentifiedNeed, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
 import { RegAddress } from 'src/app/core/model/address';
 import { PersonDetails } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
@@ -14,7 +8,7 @@ import { EvacuationFileDataService } from '../../sharedModules/components/evacua
 import { ProfileDataService } from '../profile/profile-data.service';
 import { NeedsAssessmentService } from './needs-assessment.service';
 import * as _ from 'lodash';
-import * as globalConst from '../../core/services/globalConstants';
+import { ShelterType } from 'src/app/core/services/globalConstants';
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentMappingService {
@@ -25,22 +19,11 @@ export class NeedsAssessmentMappingService {
     private evacuationFileDataService: EvacuationFileDataService
   ) {}
 
-  setNeedsAssessment(
-    evacuatedAddress: RegAddress,
-    needsAssessment: NeedsAssessment
-  ): void {
+  setNeedsAssessment(evacuatedAddress: RegAddress, needsAssessment: NeedsAssessment): void {
     this.setNeedsAssessmentId(needsAssessment.id);
     this.setInsurance(evacuatedAddress, needsAssessment.insurance);
-    this.setFamilyMedicationDiet(
-      needsAssessment.householdMembers
-    );
-    this.setIdentifiedNeeds(
-      needsAssessment.canEvacueeProvideClothing,
-      needsAssessment.canEvacueeProvideFood,
-      needsAssessment.canEvacueeProvideIncidentals,
-      needsAssessment.canEvacueeProvideLodging,
-      needsAssessment.canEvacueeProvideTransportation
-    );
+    this.setFamilyMedicationDiet(needsAssessment.householdMembers);
+    this.setIdentifiedNeeds(needsAssessment.needs);
   }
 
   setNeedsAssessmentId(needsAssessmentID: string): void {
@@ -56,19 +39,14 @@ export class NeedsAssessmentMappingService {
       .pipe(first())
       .subscribe((details) => {
         details.setValue({
-          evacuatedFromPrimary: this.isSameRegAddress(
-            this.profileDataService.primaryAddressDetails,
-            evacuatedAddress
-          ),
+          evacuatedFromPrimary: this.isSameRegAddress(this.profileDataService.primaryAddressDetails, evacuatedAddress),
           evacuatedFromAddress: evacuatedAddress,
           insurance
         });
       });
   }
 
-  setFamilyMedicationDiet(
-    householdMembers: Array<HouseholdMember>
-  ): void {
+  setFamilyMedicationDiet(householdMembers: Array<HouseholdMember>): void {
     this.needsAssessmentService.householdMembers = householdMembers;
 
     this.formCreationService
@@ -76,8 +54,7 @@ export class NeedsAssessmentMappingService {
       .pipe(first())
       .subscribe((details) => {
         details.setValue({
-          householdMembers:
-            this.convertVerifiedHouseholdMembers(householdMembers),
+          householdMembers: this.convertVerifiedHouseholdMembers(householdMembers),
           householdMember: {
             dateOfBirth: '',
             firstName: '',
@@ -109,60 +86,27 @@ export class NeedsAssessmentMappingService {
       });
   }
 
-  setIdentifiedNeeds(
-    canEvacueeProvideClothing: boolean,
-    canEvacueeProvideFood: boolean,
-    canEvacueeProvideIncidentals: boolean,
-    canEvacueeProvideLodging: boolean,
-    canEvacueeProvideTransportation: boolean
-  ): void {
-    this.needsAssessmentService.canEvacueeProvideFood =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideFood
-      )?.value;
-
-    this.needsAssessmentService.canEvacueeProvideLodging =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideLodging
-      )?.value;
-
-    this.needsAssessmentService.canEvacueeProvideClothing =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideClothing
-      )?.value;
-
-    this.needsAssessmentService.canEvacueeProvideTransportation =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideTransportation
-      )?.value;
-
-    this.needsAssessmentService.canEvacueeProvideIncidentals =
-      globalConst.needsOptions.find(
-        (ins) => ins.apiValue === canEvacueeProvideIncidentals
-      )?.value;
-
+  setIdentifiedNeeds(needs: IdentifiedNeed[]): void {
     this.formCreationService
       .getIndentifyNeedsForm()
       .pipe(first())
       .subscribe((details) => {
-        details.setValue({
-          canEvacueeProvideClothing:
-            this.needsAssessmentService.canEvacueeProvideClothing,
-          canEvacueeProvideFood:
-            this.needsAssessmentService.canEvacueeProvideFood,
-          canEvacueeProvideIncidentals:
-            this.needsAssessmentService.canEvacueeProvideIncidentals,
-          canEvacueeProvideLodging:
-            this.needsAssessmentService.canEvacueeProvideLodging,
-          canEvacueeProvideTransportation:
-            this.needsAssessmentService.canEvacueeProvideTransportation
-        });
+        details.controls.requiresClothing.setValue(needs.includes(IdentifiedNeed.Clothing));
+        details.controls.requiresFood.setValue(needs.includes(IdentifiedNeed.Food));
+        details.controls.requiresIncidentals.setValue(needs.includes(IdentifiedNeed.Incidentals));
+        if (needs.includes(IdentifiedNeed.ShelterReferral)) {
+          details.controls.requiresShelterType.setValue(ShelterType.referral);
+        } else if (needs.includes(IdentifiedNeed.ShelterAllowance)) {
+          details.controls.requiresShelterType.setValue(ShelterType.allowance);
+        } else {
+          details.controls.requiresShelterType.setValue(undefined);
+        }
+
+        details.controls.requiresShelter.setValue(details.controls.requiresShelterType.value !== undefined);
       });
   }
 
-  public convertVerifiedHouseholdMembers(
-    householdMembers: Array<HouseholdMember>
-  ): Array<PersonDetails> {
+  public convertVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
     const householdMembersFormArray: Array<PersonDetails> = [];
 
     for (const member of householdMembers) {
@@ -182,9 +126,7 @@ export class NeedsAssessmentMappingService {
     return householdMembersFormArray;
   }
 
-  public convertNonVerifiedHouseholdMembers(
-    householdMembers: Array<HouseholdMember>
-  ): Array<PersonDetails> {
+  public convertNonVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
     const householdMembersFormArray: Array<PersonDetails> = [];
 
     for (const member of householdMembers) {

@@ -7,6 +7,9 @@ import {
   CaptchaResponseType
 } from 'src/app/core/components/captcha-v2/captcha-v2.component';
 import { ConfigService } from 'src/app/core/services/config.service';
+import { IdentifyNeedsForm } from 'src/app/core/model/needs.model';
+import { UntypedFormGroup } from '@angular/forms';
+import { ShelterType } from 'src/app/core/services/globalConstants';
 
 @Component({
   selector: 'app-review',
@@ -30,7 +33,7 @@ export class ReviewComponent implements OnInit {
   constructor(
     private router: Router,
     public formCreationService: FormCreationService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };
@@ -57,5 +60,24 @@ export class ReviewComponent implements OnInit {
 
   onTokenResponse($event: CaptchaResponse) {
     this.captchaPassed.emit($event);
+  }
+
+  public getNeedsIdentifiedCaptions(form: UntypedFormGroup): string[] {
+    const needs: string[] = [];
+    if (form.controls.requiresClothing?.value) {
+      needs.push('Clothing');
+    }
+    if (form.controls.requiresFood?.value) {
+      needs.push('Food');
+    }
+    if (form.controls.requiresIncidentals?.value) {
+      needs.push('Incidentals');
+    }
+    if (form.controls.requiresShelterType?.value === ShelterType.referral) {
+      needs.push('Shelter referral');
+    } else if (form.controls.requiresShelterType?.value === ShelterType.allowance) {
+      needs.push('Shelter allowance');
+    }
+    return needs;
   }
 }

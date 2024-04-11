@@ -1,25 +1,24 @@
-.row-tile-style {
-    padding-top: 30px;
-    padding-bottom: 30px;
-}
 .row-tile {
-    @extend .row-tile-style;
-    background-color: rgba(242, 242, 242, 0.682352941176471);
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
-mat-form-field {
+
+.mat-form-field {
     width: 100%;
 }
 
-.mat-radio-button ~ .mat-radio-button {
-    margin-left: 90px;
+.shelter {
+    margin-left: 28px;
 }
 
-@media(max-width: 600px) {
-    .mat-radio-button ~ .mat-radio-button {
-        margin-left: 16px;
-    }
+.mat-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
 }
 
-.question {
-    color: #606060;
+.tab-subtitle {
+  font-size: 150%;
+  color: #234075;
+  margin-bottom: 5px;
 }

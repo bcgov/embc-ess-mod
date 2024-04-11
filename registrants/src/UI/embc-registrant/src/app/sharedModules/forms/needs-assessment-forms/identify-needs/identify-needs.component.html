@@ -1,171 +1,83 @@
+<!-- eslint-disable prettier/prettier -->
 <form [formGroup]="identifyNeedsForm">
   <mat-card class="card-align" style="padding-bottom: 0px">
     <mat-card-content>
-      <p class="card-heading">
-        Please identify what your household's needs will be while evacuated?
-      </p>
-      <p>
-        Please identify what you can provide for yourself and your household
-        while evacuated. Emergency Support Services is intended for those
-        without supports such as insurance coverage or friends and family who
-        can assist during the evacuation.
-      </p>
+      <p class="card-heading">If you require supports while evacuated, please let us know about your household’s needs. *</p>
+
       <div class="row row-tile">
         <div class="col-md-12">
-          <p class="sub-heading">Food</p>
-          <label class="question requiredField" id="food-label"
-            >Can you provide food for you and your household while you are
-            evacuated?</label
-          >
-          <br />
-          <mat-radio-group formControlName="canEvacueeProvideFood" required>
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of radioOption"
-              [value]="option.value"
-            >
-              {{ option.name }}
-            </mat-radio-button>
-            <mat-error
-              class="custom-mat-error"
-              *ngIf="
-                needsFormControl?.canEvacueeProvideFood.touched &&
-                needsFormControl?.canEvacueeProvideFood.invalid &&
-                needsFormControl?.canEvacueeProvideFood.hasError('required')
-              "
-            >
-              Food is required</mat-error
-            >
-          </mat-radio-group>
-        </div>
-      </div>
-      <div class="row row-tile-style">
-        <div class="col-md-12">
-          <p class="sub-heading">Lodging</p>
-          <label class="question requiredField" id="lodging-label"
-            >Can you provide lodging for you and your household while you are
-            evacuated?</label
-          >
-          <br />
-          <mat-radio-group formControlName="canEvacueeProvideLodging" required>
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of radioOption"
-              [value]="option.value"
-            >
-              {{ option.name }}
-            </mat-radio-button>
-            <mat-error
-              class="custom-mat-error"
-              *ngIf="
-                needsFormControl?.canEvacueeProvideLodging.touched &&
-                needsFormControl?.canEvacueeProvideLodging.invalid &&
-                needsFormControl?.canEvacueeProvideLodging.hasError('required')
-              "
-            >
-              Lodging is required</mat-error
-            >
-          </mat-radio-group>
-        </div>
-      </div>
-      <div class="row row-tile">
-        <div class="col-md-12">
-          <p class="sub-heading">Clothing</p>
-          <label class="question requiredField" id="clothing-label"
-            >Can you provide appropriate clothing for you and your household
-            while you are evacuated?<br />This includes warm clothing should
-            there be extreme winter conditions.</label
-          >
-          <br />
-          <mat-radio-group formControlName="canEvacueeProvideClothing" required>
-            <mat-radio-button
-              *ngFor="let option of radioOption"
-              [value]="option.value"
-            >
-              {{ option.name }}
-            </mat-radio-button>
-            <mat-error
-              class="custom-mat-error"
-              *ngIf="
-                needsFormControl?.canEvacueeProvideClothing.touched &&
-                needsFormControl?.canEvacueeProvideClothing.invalid &&
-                needsFormControl?.canEvacueeProvideClothing.hasError('required')
-              "
-            >
-              Clothing is required</mat-error
-            >
-          </mat-radio-group>
-        </div>
-      </div>
-      <div class="row row-tile-style">
-        <div class="col-md-12">
-          <p class="sub-heading">Transportation</p>
-          <label class="question requiredField" id="transportation-label"
-            >Can you provide transportation for you and your household while you
-            are evacuated? <br />
-            This could include a personal vehicle, taxi, public transportation,
-            or rideshare access.
+          <label class="tab-subtitle" for="shelter">
+            <mat-checkbox id="shelter" formControlName="requiresShelter"></mat-checkbox>
+            <img src="../../../../../assets/images/needs-lodging.svg" width="40px" height="40px" />
+            Shelter
           </label>
-          <br />
-          <mat-radio-group
-            formControlName="canEvacueeProvideTransportation"
-            required
-          >
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of radioOption"
-              [value]="option.value"
-            >
-              {{ option.name }}
-            </mat-radio-button>
-            <mat-error
-              class="custom-mat-error"
-              *ngIf="
-                needsFormControl?.canEvacueeProvideTransportation.touched &&
-                needsFormControl?.canEvacueeProvideTransportation.invalid &&
-                needsFormControl?.canEvacueeProvideTransportation.hasError(
-                  'required'
-                )
-              "
-            >
-              Transportation is required</mat-error
-            >
-          </mat-radio-group>
+          <div class="shelter">
+            <p>
+              There are several ways to meet your shelter needs.<br />
+              You can receive a shelter allowance and use that money to find your own shelter or be provided with a referral to shelter (like a cot in a gym or a hotel/motel).
+            </p>
+            <mat-radio-group id="shelterRadio" formControlName="requiresShelterType" aria-label="Select an option" *ngIf="needsFormControl['requiresShelter'].value">
+              <label for="shelterAllowance">
+                <mat-radio-button id="shelterAllowance" value="Allowance"></mat-radio-button>
+                I need the shelter allowance and can find my own shelter.
+                <span>
+                  <a class="status-info" (click)="openShelterAllowanceDialog()">
+                    <img src="../../../../../assets/images/info.svg" height="28" width="28" />
+                  </a>
+                </span>
+              </label>
+              <label for="shelterReferral">
+                <mat-radio-button id="shelterReferral" value="Referral"></mat-radio-button>
+                I need a referral to shelter.
+                <span>
+                  <a class="status-info" (click)="openShelterReferralDialog()">
+                    <img src="../../../../../assets/images/info.svg" height="28" width="28" />
+                  </a>
+                </span>
+              </label>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <label class="tab-subtitle" for="food">
+            <mat-checkbox id="food" formControlName="requiresFood"></mat-checkbox>
+            <img src="../../../../../assets/images/needs-food.svg" width="40px" height="40px" />
+            Food
+          </label>
         </div>
       </div>
+
       <div class="row row-tile">
         <div class="col-md-12">
-          <p class="sub-heading">Incidentals</p>
-          <label class="question requiredField" id="incidentals-label"
-            >Can you provide incidentals for you and your household while you
-            are evacuated?<br />This could include miscellaneous items such as
-            personal hygiene products, laundry supplies and/or pet food.</label
-          >
-          <br />
-          <mat-radio-group
-            formControlName="canEvacueeProvideIncidentals"
-            required
-          >
-            <mat-radio-button
-              class="primary-radio-button"
-              *ngFor="let option of radioOption"
-              [value]="option.value"
-            >
-              {{ option.name }}
-            </mat-radio-button>
-            <mat-error
-              class="custom-mat-error"
-              *ngIf="
-                needsFormControl?.canEvacueeProvideIncidentals.touched &&
-                needsFormControl?.canEvacueeProvideIncidentals.invalid &&
-                needsFormControl?.canEvacueeProvideIncidentals.hasError(
-                  'required'
-                )
-              "
-            >
-              Incidentals is required</mat-error
-            >
-          </mat-radio-group>
+          <label class="tab-subtitle" for="clothing">
+            <mat-checkbox id="clothing" formControlName="requiresClothing"></mat-checkbox>
+            <img src="../../../../../assets/images/needs-clothing.svg" width="40px" height="40px" />
+            Clothing
+          </label>
+        </div>
+      </div>
+
+      <div class="row row-tile">
+        <div class="col-md-12">
+          <label class="tab-subtitle" for="incidentals">
+            <mat-checkbox id="incidentals" formControlName="requiresIncidentals"></mat-checkbox>
+            <img src="../../../../../assets/images/needs-incidentals.svg" width="40px" height="40px" />
+            Incidentals
+            <span>
+              <a class="status-info" (click)="openIncidentalsDialog()"> <img src="../../../../../assets/images/info.svg" height="28" width="28" /></a>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="row row-tile">
+        <div class="col-md-12">
+          <label class="tab-subtitle" for="requiresNothing">
+            <mat-checkbox id="requiresNothing" formControlName="requiresNothing"></mat-checkbox>
+            <img src="../../../../../assets/images/no-needs.svg" width="40px" height="40px" />
+            I can meet my basic needs. I do not require assistance.
+          </label>
         </div>
       </div>
     </mat-card-content>

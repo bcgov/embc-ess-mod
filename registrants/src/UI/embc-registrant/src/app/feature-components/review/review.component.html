@@ -11,17 +11,12 @@
     <br />
     <div class="row">
       <div class="col">
-        <p>
-          Please complete the CAPTCHA below. This helps us prevent automated
-          registrations.
-        </p>
+        <p>Please complete the CAPTCHA below. This helps us prevent automated registrations.</p>
       </div>
     </div>
     <div class="row" style="margin-top: 20px">
       <div class="col">
-        <app-captcha-v2
-          (captchaResponse)="onTokenResponse($event)"
-        ></app-captcha-v2>
+        <app-captcha-v2 (captchaResponse)="onTokenResponse($event)"></app-captcha-v2>
       </div>
     </div>
   </div>
@@ -34,18 +29,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Restriction</div>
           <div class="col-md-2">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('restriction')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
@@ -53,37 +39,15 @@
 
         <div class="row info-detail">
           <div class="col-md-1">
-            <span
-              *ngIf="
-                !(formCreationService.restrictionForm$ | async)?.value
-                  .restrictedAccess
-              "
-            >
-              <img
-                src="/assets/images/restriction-on.svg"
-                height="20"
-                width="20"
-              />
+            <span *ngIf="!(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
+              <img src="/assets/images/restriction-on.svg" height="20" width="20" />
             </span>
-            <span
-              *ngIf="
-                (formCreationService.restrictionForm$ | async)?.value
-                  .restrictedAccess
-              "
-            >
-              <img
-                src="/assets/images/restriction-off.svg"
-                height="20"
-                width="20"
-              />
+            <span *ngIf="(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
+              <img src="/assets/images/restriction-off.svg" height="20" width="20" />
             </span>
           </div>
           <div class="col-md-9">
-            <p>
-              You have given your consent to have your location and contact
-              information shared with concerned family or friends who enquire
-              about your wellbeing.
-            </p>
+            <p>You have given your consent to have your location and contact information shared with concerned family or friends who enquire about your wellbeing.</p>
           </div>
         </div>
       </mat-card-content>
@@ -92,18 +56,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Personal Details</div>
           <div class="col-md-2">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('personal-details')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('personal-details')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
@@ -112,54 +67,37 @@
         <div class="row info-detail">
           <div class="col-md-3">Last Name:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.personalDetailsForm$ | async)?.value
-                ?.lastName
-            }}
+            {{ (formCreationService.personalDetailsForm$ | async)?.value?.lastName }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">First Name:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.personalDetailsForm$ | async)?.value
-                ?.firstName
-            }}
+            {{ (formCreationService.personalDetailsForm$ | async)?.value?.firstName }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Preferred Name:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.personalDetailsForm$ | async)?.value
-                ?.preferredName
-            }}
+            {{ (formCreationService.personalDetailsForm$ | async)?.value?.preferredName }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Initials:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.personalDetailsForm$ | async)?.value
-                ?.initials
-            }}
+            {{ (formCreationService.personalDetailsForm$ | async)?.value?.initials }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Date of Birth:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.personalDetailsForm$ | async)?.value
-                ?.dateOfBirth | customDate
-            }}
+            {{ (formCreationService.personalDetailsForm$ | async)?.value?.dateOfBirth | customDate }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Gender:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.personalDetailsForm$ | async)?.value?.gender
-            }}
+            {{ (formCreationService.personalDetailsForm$ | async)?.value?.gender }}
           </div>
         </div>
       </mat-card-content>
@@ -168,18 +106,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Primary Address</div>
           <div class="col-md-2">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('address')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
@@ -187,29 +116,21 @@
         <div class="row info-detail">
           <div class="col-md-3">Address line 1:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.addressLine1
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.address?.addressLine1 }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Address line 2:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.addressLine2
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.address?.addressLine2 }}
           </div>
         </div>
         <div class="row info-detail">
           <div
             class="col-md-3"
             *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code === 'CAN' ||
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code === 'USA'
+              (formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN' ||
+              (formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'
             "
           >
             City:
@@ -217,110 +138,47 @@
           <div
             class="col-md-3"
             *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code !== 'CAN' &&
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code !== 'USA'
+              (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'USA'
             "
           >
             City/ Jurisdiction:
           </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.isBcAddress ===
-              'Yes'
-            "
-          >
-            {{
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.community?.name
-            }}
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.isBcAddress === 'Yes'">
+            {{ (formCreationService.addressForm$ | async)?.value?.address?.community?.name }}
           </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.isBcAddress ===
-              'No'
-            "
-          >
-            {{
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.community
-            }}
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.isBcAddress === 'No'">
+            {{ (formCreationService.addressForm$ | async)?.value?.address?.community }}
           </div>
         </div>
         <div class="row info-detail">
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN'">Postal Code:</div>
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'">Zip Code:</div>
           <div
             class="col-md-3"
             *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code === 'CAN'
-            "
-          >
-            Postal Code:
-          </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code === 'USA'
-            "
-          >
-            Zip Code:
-          </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code !== 'CAN' &&
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code !== 'USA'
+              (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.address?.country?.code !== 'USA'
             "
           >
             Postal/ Zip Code:
           </div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.postalCode
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.address?.postalCode }}
           </div>
         </div>
         <div class="row info-detail">
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code === 'CAN'
-            "
-          >
-            Province:
-          </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.code === 'USA'
-            "
-          >
-            State:
-          </div>
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'CAN'">Province:</div>
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.country?.code === 'USA'">State:</div>
 
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.stateProvince?.name
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.address?.stateProvince?.name }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Country:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.address
-                ?.country?.name
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.address?.country?.name }}
           </div>
         </div>
       </mat-card-content>
@@ -329,18 +187,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Mailing Address</div>
           <div class="col-md-2">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('address')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
@@ -348,29 +197,21 @@
         <div class="row info-detail">
           <div class="col-md-3">Address line 1:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.addressLine1
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.addressLine1 }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Address line 2:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.addressLine2
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.addressLine2 }}
           </div>
         </div>
         <div class="row info-detail">
           <div
             class="col-md-3"
             *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code === 'CAN' ||
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code === 'USA'
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN' ||
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'
             "
           >
             City:
@@ -378,109 +219,46 @@
           <div
             class="col-md-3"
             *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code !== 'CAN' &&
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code !== 'USA'
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'USA'
             "
           >
             City/ Jurisdiction:
           </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community?.name !== undefined
-            "
-          >
-            {{
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community?.name
-            }}
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name !== undefined">
+            {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name }}
           </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community?.name === undefined
-            "
-          >
-            {{
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.community
-            }}
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.community?.name === undefined">
+            {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.community }}
           </div>
         </div>
         <div class="row info-detail">
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN'">Postal Code:</div>
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'">Zip Code:</div>
           <div
             class="col-md-3"
             *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code === 'CAN'
-            "
-          >
-            Postal Code:
-          </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code === 'USA'
-            "
-          >
-            Zip Code:
-          </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code !== 'CAN' &&
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code !== 'USA'
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'CAN' &&
+              (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code !== 'USA'
             "
           >
             Postal/ Zip Code:
           </div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.postalCode
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.postalCode }}
           </div>
         </div>
         <div class="row info-detail">
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code === 'CAN'
-            "
-          >
-            Province:
-          </div>
-          <div
-            class="col-md-3"
-            *ngIf="
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.code === 'USA'
-            "
-          >
-            State:
-          </div>
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'CAN'">Province:</div>
+          <div class="col-md-3" *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.code === 'USA'">State:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.stateProvince?.name
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.stateProvince?.name }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Country:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.country?.name
-            }}
+            {{ (formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.name }}
           </div>
         </div>
       </mat-card-content>
@@ -489,71 +267,39 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Contact Details</div>
           <div class="col-md-2">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('contact-info')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('contact-info')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
         <hr />
         <div class="row info-detail">
           <div class="col-md-1">
-            <span
-              *ngIf="
-                (formCreationService.contactDetailsForm$ | async)?.value
-                  .showContacts
-              "
-            >
-              <img
-                src="/assets/images/restriction-on.svg"
-                height="20"
-                width="20"
-              />
+            <span *ngIf="(formCreationService.contactDetailsForm$ | async)?.value.showContacts">
+              <img src="/assets/images/restriction-on.svg" height="20" width="20" />
             </span>
-            <span
-              *ngIf="
-                !(formCreationService.contactDetailsForm$ | async)?.value
-                  .showContacts
-              "
-            >
-              <img
-                src="/assets/images/restriction-off.svg"
-                height="20"
-                width="20"
-              />
+            <span *ngIf="!(formCreationService.contactDetailsForm$ | async)?.value.showContacts">
+              <img src="/assets/images/restriction-off.svg" height="20" width="20" />
             </span>
           </div>
           <div class="col-md-9">
             <p>
-              You have given your consent for Emergency Management British
-              Columbia and your Local Emergency Program to communicate with you
-              by email or phone regarding your emergency situation.
+              You have given your consent for Emergency Management British Columbia and your Local Emergency Program to communicate with you by email or phone regarding your
+              emergency situation.
             </p>
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Telephone/Mobile:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.contactDetailsForm$ | async)?.value?.phone
-            }}
+            {{ (formCreationService.contactDetailsForm$ | async)?.value?.phone }}
           </div>
         </div>
         <div class="row info-detail">
           <div class="col-md-3">Email Address:</div>
           <div class="col-md-3">
-            {{
-              (formCreationService.contactDetailsForm$ | async)?.value?.email
-            }}
+            {{ (formCreationService.contactDetailsForm$ | async)?.value?.email }}
           </div>
         </div>
       </mat-card-content>
@@ -562,64 +308,37 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Security Questions</div>
           <div class="col-md-2">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('security-questions')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('security-questions')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
         <hr />
         <div class="row info-detail">
           <div class="col-md-3">
-            {{
-              (formCreationService.securityQuestionsForm$ | async)?.value
-                .questions.question1
-            }}
+            {{ (formCreationService.securityQuestionsForm$ | async)?.value.questions.question1 }}
           </div>
           <div class="col-md-3">
-            {{
-              (formCreationService.securityQuestionsForm$ | async)?.value
-                .questions.answer1
-            }}
+            {{ (formCreationService.securityQuestionsForm$ | async)?.value.questions.answer1 }}
           </div>
         </div>
 
         <div class="row info-detail">
           <div class="col-md-3">
-            {{
-              (formCreationService.securityQuestionsForm$ | async)?.value
-                .questions.question2
-            }}
+            {{ (formCreationService.securityQuestionsForm$ | async)?.value.questions.question2 }}
           </div>
           <div class="col-md-3">
-            {{
-              (formCreationService.securityQuestionsForm$ | async)?.value
-                .questions.answer2
-            }}
+            {{ (formCreationService.securityQuestionsForm$ | async)?.value.questions.answer2 }}
           </div>
         </div>
 
         <div class="row info-detail">
           <div class="col-md-3">
-            {{
-              (formCreationService.securityQuestionsForm$ | async)?.value
-                .questions.question3
-            }}
+            {{ (formCreationService.securityQuestionsForm$ | async)?.value.questions.question3 }}
           </div>
           <div class="col-md-3">
-            {{
-              (formCreationService.securityQuestionsForm$ | async)?.value
-                .questions.answer3
-            }}
+            {{ (formCreationService.securityQuestionsForm$ | async)?.value.questions.answer3 }}
           </div>
         </div>
       </mat-card-content>
@@ -634,18 +353,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Restriction</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('restriction')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
@@ -653,37 +363,15 @@
 
         <div class="row info-detail">
           <div class="col-md-1">
-            <span
-              *ngIf="
-                !(formCreationService.restrictionForm$ | async)?.value
-                  .restrictedAccess
-              "
-            >
-              <img
-                src="/assets/images/restriction-on.svg"
-                height="20"
-                width="20"
-              />
+            <span *ngIf="!(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
+              <img src="/assets/images/restriction-on.svg" height="20" width="20" />
             </span>
-            <span
-              *ngIf="
-                (formCreationService.restrictionForm$ | async)?.value
-                  .restrictedAccess
-              "
-            >
-              <img
-                src="/assets/images/restriction-off.svg"
-                height="20"
-                width="20"
-              />
+            <span *ngIf="(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
+              <img src="/assets/images/restriction-off.svg" height="20" width="20" />
             </span>
           </div>
           <div class="col-md-9">
-            <p>
-              You have given your consent to have your location and contact
-              information shared with concerned family or friends who enquire
-              about your wellbeing.
-            </p>
+            <p>You have given your consent to have your location and contact information shared with concerned family or friends who enquire about your wellbeing.</p>
           </div>
         </div>
       </mat-card-content>
@@ -692,18 +380,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Location</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('evac-address')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
@@ -712,43 +391,20 @@
           <div class="col-md-3">Evacuated From:</div>
           <div class="col-md-3">
             <p class="no-bottom-margin">
-              <span
-                >{{
-                  (formCreationService.evacuatedForm$ | async)?.value
-                    ?.evacuatedFromAddress?.addressLine1
-                }},</span
-              >
-              <span
-                >&nbsp;{{
-                  (formCreationService.evacuatedForm$ | async)?.value
-                    ?.evacuatedFromAddress?.addressLine2
-                }}</span
-              >
+              <span>{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine1 }},</span>
+              <span>&nbsp;{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2 }}</span>
             </p>
             <p>
-              <span
-                >{{
-                  (formCreationService.evacuatedForm$ | async)?.value
-                    ?.evacuatedFromAddress?.community?.name
-                }},
-              </span>
-              <span>{{
-                (formCreationService.evacuatedForm$ | async)?.value
-                  ?.evacuatedFromAddress?.stateProvince?.name
-              }}</span>
+              <span>{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.community?.name }}, </span>
+              <span>{{ (formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.stateProvince?.name }}</span>
               <span
                 [hidden]="
-                  (formCreationService.evacuatedForm$ | async).value
-                    ?.evacuatedFromAddress?.postalCode === '' ||
-                  (formCreationService.evacuatedForm$ | async).value
-                    ?.evacuatedFromAddress?.postalCode === null
+                  (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode === '' ||
+                  (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode === null
                 "
                 >,&nbsp;</span
               >
-              <span>{{
-                (formCreationService.evacuatedForm$ | async).value
-                  ?.evacuatedFromAddress?.postalCode
-              }}</span>
+              <span>{{ (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode }}</span>
             </p>
           </div>
         </div>
@@ -758,18 +414,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Insurance</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('evac-address')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
@@ -778,14 +425,11 @@
           <div class="col-md-3">Insurance:</div>
           <div class="col-md-3">
             {{
-              (formCreationService.evacuatedForm$ | async)?.value.insurance ===
-              'Unknown'
+              (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unknown'
                 ? "I don't know"
-                : (formCreationService.evacuatedForm$ | async)?.value
-                    .insurance === 'Unsure'
+                : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unsure'
                 ? 'Yes, but I am unsure if I have coverage for this event.'
-                : (formCreationService.evacuatedForm$ | async)?.value
-                    .insurance === 'Yes'
+                : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -797,28 +441,14 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Household Members</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('family-information')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
         <hr />
-        <div
-          *ngFor="
-            let member of (formCreationService.householdMembersForm$ | async)
-              ?.value.householdMembers
-          "
-        >
+        <div *ngFor="let member of (formCreationService.householdMembersForm$ | async)?.value.householdMembers">
           <ng-container *ngIf="member.isPrimaryRegistrant !== true">
             <div class="row info-detail">
               <div class="col-md-3">First Name:</div>
@@ -850,27 +480,14 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Pets</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('pets')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
         <hr />
-        <div
-          *ngFor="
-            let pet of (formCreationService.petsForm$ | async)?.value.pets
-          "
-        >
+        <div *ngFor="let pet of (formCreationService.petsForm$ | async)?.value.pets">
           <div class="row info-detail">
             <div class="col-md-3">Pet Type:</div>
             <div class="col-md-3">{{ pet.type }}</div>
@@ -885,93 +502,17 @@
 
       <mat-card-content>
         <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Self-Provided Needs</div>
+          <div class="col-md-6 card-heading">Needs</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('identify-needs')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('identify-needs')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
         <hr />
-        <div class="row info-detail">
-          <div class="col-md-3">Food:</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideFood === 'Unsure'
-                ? "I'm not sure"
-                : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideFood === 'Yes'
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
-        </div>
-        <div class="row info-detail">
-          <div class="col-md-3">Lodging:</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideLodging === 'Unsure'
-                ? "I'm not sure"
-                : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideLodging === 'Yes'
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
-        </div>
-        <div class="row info-detail">
-          <div class="col-md-3">Clothing:</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideClothing === 'Unsure'
-                ? "I'm not sure"
-                : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideClothing === 'Yes'
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
-        </div>
-        <div class="row info-detail">
-          <div class="col-md-3">Transportation:</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideTransportation === 'Unsure'
-                ? "I'm not sure"
-                : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideTransportation === 'Yes'
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
-        </div>
-        <div class="row info-detail">
-          <div class="col-md-3">Incidentals:</div>
-          <div class="col-md-3">
-            {{
-              (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideIncidentals === 'Unsure'
-                ? "I'm not sure"
-                : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideIncidentals === 'Yes'
-                ? 'Yes'
-                : 'No'
-            }}
-          </div>
+        <div class="row info-detail" *ngFor="let item of getNeedsIdentifiedCaptions(formCreationService.identifyNeedsForm$ | async)">
+          <div class="col-md-3">{{ item }}</div>
         </div>
       </mat-card-content>
 
@@ -979,18 +520,9 @@
         <div class="row justify-content-between">
           <div class="col-md-6 card-heading">Security Phrase</div>
           <div class="col-md-2" *ngIf="allowEdit">
-            <button
-              class="edit-image"
-              mat-icon-button
-              aria-label="Edit"
-              (click)="editDetails('secret')"
-            >
+            <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
               <img src="/assets/images/edit.svg" height="35" width="35" />
-              <img
-                src="/assets/images/edit_onhover.svg"
-                height="35"
-                width="35"
-              />
+              <img src="/assets/images/edit_onhover.svg" height="35" width="35" />
             </button>
           </div>
         </div>
