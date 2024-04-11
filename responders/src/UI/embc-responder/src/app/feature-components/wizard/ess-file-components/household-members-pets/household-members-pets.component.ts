@@ -1,25 +1,22 @@
-import { Component, OnInit } from "@angular/core";
-import { UntypedFormBuilder } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { Router } from "@angular/router";
-import { TabModel } from "src/app/core/models/tab.model";
-import { CustomValidationService } from "src/app/core/services/customValidation.service";
-import { StepEssFileService } from "../../step-ess-file/step-ess-file.service";
-import { WizardService } from "../../wizard.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { TabModel } from 'src/app/core/models/tab.model';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
+import { WizardService } from '../../wizard.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-household-members-pets',
   templateUrl: './household-members-pets.component.html',
   styleUrls: ['./household-members-pets.component.scss']
 })
-
-
-export class HouseholdMembersPetsComponent implements OnInit {
-
-
+export class HouseholdMembersPetsComponent implements OnInit, OnDestroy {
   petsValid = false;
   householdMembersValid = false;
-  householdMembersQuantityValid = true;
+  tabUpdateSubscription: Subscription;
   tabMetaData: TabModel;
 
   constructor(
@@ -28,17 +25,28 @@ export class HouseholdMembersPetsComponent implements OnInit {
     private stepEssFileService: StepEssFileService,
     private customValidation: CustomValidationService,
     private formBuilder: UntypedFormBuilder,
-    private wizardService: WizardService) {
-
-  }
-
+    private wizardService: WizardService
+  ) {}
 
   ngOnInit(): void {
-    this.tabMetaData = this.stepEssFileService.getNavLinks('household-members-pets');
+    this.tabMetaData = this.stepEssFileService.getNavLinks(
+      'household-members-pets'
+    );
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription =
+      this.stepEssFileService.nextTabUpdate.subscribe(() => {
+        this.updateTabStatus();
+      });
   }
+
+  ngOnDestroy(): void {
+    this.tabUpdateSubscription.unsubscribe();
+    this.stepEssFileService.nextTabUpdate.next();
+  }
+
   /**
- * Goes back to the previous ESS File Tab
- */
+   * Goes back to the previous ESS File Tab
+   */
   back() {
     this.updateTabStatus();
     this.router.navigate([this.tabMetaData?.previous]);
@@ -51,19 +59,32 @@ export class HouseholdMembersPetsComponent implements OnInit {
     this.updateTabStatus();
     this.router.navigate([this.tabMetaData?.next]);
   }
-  ValidPetsIndicator(data): void { this.petsValid = data }
-  ValidHouseholdMemebersIndicator(data): void { this.householdMembersValid = data }
-  ValidSelectedHouseholdMembers(data): void { this.householdMembersQuantityValid = data }
+  validPetsIndicator(data): void {
+    this.petsValid = data;
+    this.updateTabStatus();
+  }
+
+  validHouseholdMemebersIndicator(data): void {
+    this.householdMembersValid = data;
+    this.updateTabStatus();
+  }
 
   private updateTabStatus() {
-    if (this.petsValid && this.householdMembersValid && this.householdMembersQuantityValid) {
-      this.stepEssFileService.setTabStatus('household-members-pets', 'complete');
+    if (this.petsValid && this.householdMembersValid) {
+      this.stepEssFileService.setTabStatus(
+        'household-members-pets',
+        'complete'
+      );
     } else if (!this.petsValid && !this.householdMembersValid) {
-      this.stepEssFileService.setTabStatus('household-members-pets', 'not-started');
-    } else if (!this.petsValid || !this.householdMembersValid || !this.householdMembersQuantityValid) {
-      this.stepEssFileService.setTabStatus('household-members-pets', 'incomplete');
+      this.stepEssFileService.setTabStatus(
+        'household-members-pets',
+        'not-started'
+      );
+    } else if (!this.petsValid || !this.householdMembersValid) {
+      this.stepEssFileService.setTabStatus(
+        'household-members-pets',
+        'incomplete'
+      );
     }
   }
 }
-
-

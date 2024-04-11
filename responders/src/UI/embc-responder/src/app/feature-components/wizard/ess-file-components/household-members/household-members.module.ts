@@ -15,6 +15,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MaterialModule,
     ReactiveFormsModule,
     SharedModule
-  ]
+  ],
+  exports: [HouseholdMembersComponent]
 })
 export class HouseholdMembersModule {}

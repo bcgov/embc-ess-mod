@@ -1,4 +1,10 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
@@ -24,6 +30,7 @@ import { TabModel } from 'src/app/core/models/tab.model';
   styleUrls: ['./animals.component.scss']
 })
 export class AnimalsComponent implements OnInit, OnDestroy {
+  @Output() validPetsIndicator: any = new EventEmitter();
   animalsForm: UntypedFormGroup;
   radioOption = globalConst.radioButtonOptions;
   showPetsForm = false;
@@ -33,9 +40,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   editIndex: number;
   rowEdit = false;
   showTable = true;
-  tabUpdateSubscription: Subscription;
-  tabMetaData: TabModel;
-  @Output() ValidPetsIndicator: any = new EventEmitter();
 
   constructor(
     private router: Router,
@@ -44,7 +48,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     private customValidation: CustomValidationService,
     private formBuilder: UntypedFormBuilder,
     private wizardService: WizardService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Creates the Animals form
@@ -54,32 +58,14 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.petSource.next(this.animalsForm.get('pets').value);
     this.pets = this.animalsForm.get('pets').value;
 
-    if (this.animalsForm.get('hasPets').value === 'No' || (this.animalsForm.get('hasPets').value === 'Yes' && this.pets.length > 0)) {
-      this.ValidPetsIndicator.emit(true);
-
-
-    }
-    else
-      this.ValidPetsIndicator.emit(false);
-    // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription =
-      this.stepEssFileService.nextTabUpdate.subscribe(() => {
-        this.updateTabStatus();
-      });
+    this.runValidation();
     this.animalsForm.valueChanges.subscribe(() => {
-      if (this.animalsForm.get('hasPets').value === 'No' || (this.animalsForm.get('hasPets').value === 'Yes' && this.pets.length > 0)) {
-        this.ValidPetsIndicator.emit(true);
-      } else
-        this.ValidPetsIndicator.emit(false);
-
-    })
+      this.runValidation();
+    });
 
     // Update Value and Validity for pets form if hasPets changes
     this.animalsForm.get('hasPets').valueChanges.subscribe(() => {
-
       this.animalsForm.get('pets').updateValueAndValidity();
-
-
     });
 
     // Updates the validations for the PetFormGroup
@@ -95,8 +81,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.addPets();
       this.showPetsForm = true;
     }
-
-    this.tabMetaData = this.stepEssFileService.getNavLinks('animals');
   }
 
   hasPetsChange(event: MatRadioChange): void {
@@ -217,8 +201,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.animalsForm.get('addPetIndicator').setValue(true);
   }
 
-
-
   /**
    * When navigating away from tab, update variable value and status indicator
    */
@@ -237,8 +219,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       });
       this.stepEssFileService.updateEditedFormStatus();
     }
-    this.stepEssFileService.nextTabUpdate.next();
-    this.tabUpdateSubscription.unsubscribe();
   }
 
   /**
@@ -314,15 +294,15 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   /**
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
-  private updateTabStatus() {
+  private runValidation() {
     if (this.animalsForm.valid) {
-      this.stepEssFileService.setTabStatus('animals', 'complete');
+      this.validPetsIndicator.emit(true);
     } else if (
       this.stepEssFileService.checkForPartialUpdates(this.animalsForm)
     ) {
-      this.stepEssFileService.setTabStatus('animals', 'incomplete');
+      this.validPetsIndicator.emit(false);
     } else {
-      this.stepEssFileService.setTabStatus('animals', 'not-started');
+      this.validPetsIndicator.emit(false);
     }
     this.saveFormData();
   }
