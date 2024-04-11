@@ -355,8 +355,8 @@ export class StepEssFileService {
     const getIdentifiedNeeds = this.loadEvacueeListService.getIdentifiedNeeds();
 
     return Array.from(this.needs).map((need) => {
-      const foundNeed = getIdentifiedNeeds.find((value) => value.value === need);
-      return [IdentifiedNeed.ShelterAllowance, IdentifiedNeed.ShelterReferral].includes(foundNeed.value) ? 'Shelter' : foundNeed?.description;
+      const foundNeed = getIdentifiedNeeds.find((identifiedNeed) => identifiedNeed.value === need);
+      return IdentifiedNeed.ShelterReferral === foundNeed.value ? 'Shelter' : foundNeed?.description;
     });
   }
 
