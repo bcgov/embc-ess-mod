@@ -7,21 +7,17 @@
     </div>
   </div>
 
+  <app-household-members
+    (validHouseholdMemebersIndicator)="validHouseholdMemebersIndicator($event)"
+  ></app-household-members>
+  <app-animals (validPetsIndicator)="validPetsIndicator($event)"></app-animals>
 
-<app-household-members (ValidSelectedHouseholdMembers)="ValidSelectedHouseholdMembers($event)"  (ValidHouseholdMemebersIndicator)="ValidHouseholdMemebersIndicator($event)"></app-household-members>
-<app-animals (ValidPetsIndicator)="ValidPetsIndicator($event)"></app-animals>
-
-
-<div class="row">
-  <div class="col-md-6">
-    <button class="button-s back" mat-button (click)="back()">
-      Back
-    </button>
+  <div class="row">
+    <div class="col-md-6">
+      <button class="button-s back" mat-button (click)="back()">Back</button>
+    </div>
+    <div class="col-md-6">
+      <button class="button-p next" mat-button (click)="next()">Next</button>
+    </div>
   </div>
-  <div class="col-md-6">
-    <button class="button-p next" mat-button (click)="next()">
-      Next
-    </button>
-  </div>
-</div>
 </div>
