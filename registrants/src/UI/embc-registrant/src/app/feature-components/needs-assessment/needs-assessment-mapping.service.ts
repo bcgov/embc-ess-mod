@@ -17,7 +17,7 @@ export class NeedsAssessmentMappingService {
     private profileDataService: ProfileDataService,
     private needsAssessmentService: NeedsAssessmentService,
     private evacuationFileDataService: EvacuationFileDataService
-  ) { }
+  ) {}
 
   setNeedsAssessment(evacuatedAddress: RegAddress, needsAssessment: NeedsAssessment): void {
     this.setNeedsAssessmentId(needsAssessment.id);
@@ -98,6 +98,8 @@ export class NeedsAssessmentMappingService {
           details.controls.requiresShelterType.setValue(ShelterType.referral);
         } else if (needs.includes(IdentifiedNeed.ShelterAllowance)) {
           details.controls.requiresShelterType.setValue(ShelterType.allowance);
+        } else {
+          details.controls.requiresShelterType.setValue(undefined);
         }
 
         details.controls.requiresShelter.setValue(details.controls.requiresShelterType.value !== undefined);

@@ -25,7 +25,7 @@ export default class IdentifyNeedsComponent implements OnInit {
   identifyNeedsForm: UntypedFormGroup;
   identifyNeedsForm$: Subscription;
 
-  constructor(private formBuilder: UntypedFormBuilder, private formCreationService: FormCreationService, private dialog: MatDialog) { }
+  constructor(private formCreationService: FormCreationService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.identifyNeedsForm$ = this.formCreationService.getIndentifyNeedsForm().subscribe((identifyNeedsForm) => {

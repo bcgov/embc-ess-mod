@@ -108,6 +108,44 @@ export class IdentifyNeedsForm {
       this.requiresShelterType.setValue('shelterAllowance');
     }
     this.requiresShelter.setValue(identifyNeeds.needs.includes(IdentifiedNeed.ShelterReferral) || identifyNeeds.needs.includes(IdentifiedNeed.ShelterAllowance));
+    this.requiresNothing.valueChanges.subscribe((checked) => {
+      if (checked) {
+        this.disableNeeds();
+      } else {
+        this.enableNeeds();
+      }
+    });
+    this.requiresShelter.valueChanges.subscribe((checked) => {
+      if (!checked) {
+        this.requiresShelterType.reset();
+      }
+    });
+  }
+
+  private disableNeeds() {
+    this.disableFormControl(this.requiresIncidentals);
+    this.disableFormControl(this.requiresClothing);
+    this.disableFormControl(this.requiresFood);
+    this.disableFormControl(this.requiresShelter);
+    this.disableFormControl(this.requiresShelterType);
+  }
+
+  private enableNeeds() {
+    this.enableFormControl(this.requiresIncidentals);
+    this.enableFormControl(this.requiresClothing);
+    this.enableFormControl(this.requiresFood);
+    this.enableFormControl(this.requiresShelter);
+    this.enableFormControl(this.requiresShelterType);
+  }
+
+  private disableFormControl(formControl: UntypedFormControl) {
+    formControl.disable();
+    formControl.reset();
+  }
+
+  private enableFormControl(formControl: UntypedFormControl) {
+    formControl.enable();
+    formControl.reset();
   }
 }
 
