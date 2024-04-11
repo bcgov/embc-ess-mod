@@ -43,14 +43,14 @@
         Lodging - Billeting
       </label>
 
-      <!-- Lodging Group Label -->
-      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Group'">
+      <!-- Lodging Shelter Allowance -->
+      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Allowance'">
         <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
-        Lodging - Shelter Allowance
+        Shelter Allowance
       </label>
 
       <!-- Lodging Group Label -->
-      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Allowance'">
+      <label class="supports-title" *ngIf="support.subCategory === 'Lodging_Group'">
         <img src="../../../../../assets/images/wizard/needs-lodging.svg" width="40px" height="42px" />
         Lodging - Group Lodging
       </label>
@@ -189,8 +189,10 @@
               </div>
               <div class="row row-padding">
                 <div class="col-md-4 box-text-color">Total Amount:</div>
-                <div class="col-md-4 bold">
-                  ${{ getShelterAllowanceReferral(support)?.totalAmount }}
+                <div class="col-md-4 bold total-amount-number">
+                  ${{ getShelterAllowanceReferral(support)?.totalAmount
+                  | number: '1.2-2':'en-CA'
+                  }}
                 </div>
               </div>
             </ng-container>
@@ -338,6 +340,7 @@
         <div class="col-md-4" *ngIf="
             support.subCategory !== 'Lodging_Group' &&
             support.subCategory !== 'Lodging_Billeting' &&
+            support.subCategory !== 'Lodging_Allowance' &&
             support.method !== supportMethod.ETransfer
           ">
           <mat-card class="support-card">
@@ -367,6 +370,23 @@
             <p>{{ getBilletingReferral(support)?.hostCity }}</p>
             <p class="no-margin"><b>Supplier Notes</b></p>
             <p>{{ getReferral(support)?.supplierNotes }}</p>
+          </mat-card>
+        </div>
+
+        <!-- Shelter Allowance Support Delivery -->
+        <div class="col-md-4" *ngIf="
+                support.subCategory === 'Lodging_Allowance' &&
+                support.method !== supportMethod.ETransfer
+              ">
+          <mat-card class="support-card">
+            <span class="support-subtitle">Support Delivery</span>
+            <p class="no-margin">
+              <b>{{ getShelterAllowanceReferral(support)?.fullName }}</b>
+            </p>
+            <p class="no-margin">
+              {{ getShelterAllowanceReferral(support)?.contactEmail }}
+            </p>
+            <p>{{ getShelterAllowanceReferral(support)?.contactPhone }}</p>
           </mat-card>
         </div>
         <!-- Lodging-Group Support Delivery -->

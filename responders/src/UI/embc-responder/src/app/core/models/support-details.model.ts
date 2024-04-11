@@ -87,6 +87,7 @@ export class ShelterAllowanceLodging {
   totalAmount: number;
   contactEmail: string;
   contactPhone: string;
+  fullName: string;
 }
 
 export class Incidentals {

@@ -510,7 +510,7 @@
         </div>
       </div>
       <div class="row row-padding">
-        <div class="col-md-4 box-text-color">Total Amount:</div>
+        <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
         <div class="col-md-4 bold">
           ${{ shelterAllowanceReferral?.totalAmount }}
         </div>
@@ -594,7 +594,8 @@
     </div>
   </div>
 
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral'">
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral' &&
+  selectedSupport?.subCategory !== 'Lodging_Allowance'">
     <div class="col-md-4 box-text-color">
       Person Responsible for Purchasing Goods:
     </div>
@@ -606,7 +607,8 @@
   <div
     *ngIf="
       selectedSupport?.subCategory !== 'Lodging_Billeting' &&
-      selectedSupport?.subCategory !== 'Lodging_Group' &&
+      selectedSupport?.subCategory !== 'Lodging_Group'&&
+      selectedSupport?.subCategory !== 'Lodging_Allowance' &&
       selectedSupport?.method === 'Referral'
     "
     class="row row-padding"
@@ -635,6 +637,7 @@
     *ngIf="
       selectedSupport?.subCategory !== 'Lodging_Billeting' &&
       selectedSupport?.subCategory !== 'Lodging_Group' &&
+      selectedSupport?.subCategory !== 'Lodging_Allowance' &&
       selectedSupport?.method === 'Referral'
     "
     class="row row-padding"
@@ -688,6 +691,25 @@
       "
     ></div>
   </div>
+  <div
+  *ngIf="selectedSupport?.subCategory === 'Lodging_Allowance'"
+  class="row row-padding">
+  <div class="col-md-4 box-text-color">Payee Details:</div>
+  <div class="col-md-4 bold">
+    {{ shelterAllowanceReferral?.fullName }}
+  </div>
+</div>
+
+<div
+*ngIf="selectedSupport?.subCategory === 'Lodging_Allowance'"
+class="row row-padding">
+<div class="col-md-4 box-text-color">Contact Information:</div>
+<div class="col-md-4 bold"     [innerHTML]="
+shelterAllowanceReferral?.contactPhone
+  | supplierContact: shelterAllowanceReferral?.contactEmail
+">
+</div>
+</div>
 
   <div
     *ngIf="selectedSupport?.subCategory === 'Lodging_Group'"
@@ -699,7 +721,8 @@
     </div>
   </div>
 
-  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral'">
+  <div class="row row-padding" *ngIf="selectedSupport?.method === 'Referral' &&
+  selectedSupport?.subCategory !== 'Lodging_Allowance'">
     <div class="col-md-4 box-text-color">Notes for Supplier:</div>
     <div class="col-md-4 bold">{{ referral?.supplierNotes }}</div>
   </div>

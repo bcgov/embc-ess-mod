@@ -25,7 +25,8 @@ import {
   SupportCategory,
   ClothingSupport,
   IncidentalsSupport,
-  FoodGroceriesSupport
+  FoodGroceriesSupport,
+  LodgingAllowanceSupport
 } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { LoadEvacueeListService } from 'src/app/core/services/load-evacuee-list.service';
@@ -193,6 +194,8 @@ export class SupportsTableComponent
       return (element as LodgingBilletingSupport).hostName;
     } else if (element.subCategory === SupportSubCategory.Lodging_Group) {
       return (element as LodgingGroupSupport).facilityName;
+    } else if (element.subCategory === SupportSubCategory.Lodging_Allowance) {
+      return (element as LodgingAllowanceSupport).fullName;
     } else {
       return (element.supportDelivery as Referral).supplierName;
     }

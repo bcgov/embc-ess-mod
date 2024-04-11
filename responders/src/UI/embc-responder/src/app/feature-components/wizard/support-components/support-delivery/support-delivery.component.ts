@@ -264,6 +264,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group'
     ) {
       return this.groupLodgingSupplierForm();
+    }else if (
+      this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance'
+    ) {
+      return this.groupShelterAllowanceSupplierForm();
     }
   }
 
@@ -351,16 +355,20 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
     this.selectedSupportMethod = method;
 
     if (method === SupportMethod.Referral) {
-      this.supportDeliveryForm.get('notificationPreference').patchValue('');
-      this.supportDeliveryForm.get('notificationEmail').patchValue('');
-      this.supportDeliveryForm.get('notificationConfirmEmail').patchValue('');
-      this.supportDeliveryForm.get('notificationMobile').patchValue('');
+      this.supportDeliveryForm.get('notificationPreference').setErrors(null);
+      this.supportDeliveryForm.get('notificationEmail').setErrors(null);
+      this.supportDeliveryForm.get('notificationConfirmEmail').setErrors(null);
+      this.supportDeliveryForm.get('notificationMobile').setErrors(null);
+      if (this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance') {
+        this.supportDeliveryForm.get('supplier').disable();
+        this.supportDeliveryForm.get('issuedTo').disable();
+      }
     }
     if (method === SupportMethod.ETransfer) {
-      this.supportDeliveryForm.get('issuedTo').patchValue('');
-      this.supportDeliveryForm.get('name').patchValue('');
-      this.supportDeliveryForm.get('supplier').patchValue('');
-      this.supportDeliveryForm.get('supplierNote').patchValue('');
+      this.supportDeliveryForm.get('issuedTo').setErrors(null);
+      this.supportDeliveryForm.get('name').setErrors(null);
+      this.supportDeliveryForm.get('supplier').setErrors(null);
+      this.supportDeliveryForm.get('supplierNote').setErrors(null);
     }
   }
 
@@ -438,6 +446,51 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         [
           this.customValidation
             .maskedNumberLengthValidator()
+            .bind(this.customValidation)
+        ]
+      ]
+    });
+  }
+  
+  private groupShelterAllowanceSupplierForm(): UntypedFormGroup {
+    return this.formBuilder.group({
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostPhone: [
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
+        [
+          this.customValidation
+            .maskedNumberLengthValidator()
+            .bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                (this.supportDeliveryForm.get('details.emailAddress') === null ||
+                this.supportDeliveryForm.get('details.emailAddress').value ===
+                  '' ||
+                this.supportDeliveryForm.get('details.emailAddress').value ===
+                  undefined),
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      emailAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.emailAddress ?? '',
+        [
+          Validators.email,
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                (this.supportDeliveryForm.get('details.hostPhone') === null ||
+                this.supportDeliveryForm.get('details.hostPhone').value ===
+                  '' ||
+                this.supportDeliveryForm.get('details.hostPhone').value ===
+                  undefined),
+              this.customValidation.whitespaceValidator()
+            )
             .bind(this.customValidation)
         ]
       ]

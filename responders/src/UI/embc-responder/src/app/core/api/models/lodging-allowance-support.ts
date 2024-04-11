@@ -10,4 +10,5 @@ export type LodgingAllowanceSupport = Support & {
 'contactEmail'?: string;
 'contactPhone'?: string;
 'totalAmount': number;
+'fullName'?: string;
 };

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import * as globalConst from '../../../../../../core/services/global-constants';
+import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Component({
   selector: 'app-shelter-allowance',
@@ -21,7 +22,7 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
   referralForm: UntypedFormGroup;
   days: number;
   totalAmount = 0;
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private cd: ChangeDetectorRef, private appBaseService: AppBaseService) { }
   @Input() SelectedHouseholdMembers: any[];
   nofNight = 0;
   members: any[];
@@ -83,6 +84,8 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
         this.totalAmount = 0;
     }
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
+
+    this.checkOverlimit(this.totalAmount);
   }
   ngOnInit(): void { }
 
@@ -91,5 +94,19 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
    */
   get referralFormControl(): { [key: string]: AbstractControl } {
     return this.referralForm.controls;
+  }
+
+  checkOverlimit(totalAmount) {
+    const exceedsLimit = totalAmount > globalConst.etransferLimt;
+
+    if (exceedsLimit) {
+      this.appBaseService.etransferProperties = {
+        isTotalAmountOverlimit: true
+      };
+    } else {
+      this.appBaseService.etransferProperties = {
+        isTotalAmountOverlimit: false
+      };
+    }
   }
 }

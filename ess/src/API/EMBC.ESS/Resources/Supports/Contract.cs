@@ -204,6 +204,7 @@ namespace EMBC.ESS.Resources.Supports
         public decimal TotalAmount { get; set; }
         public string? ContactPhone { get; set; }
         public string? ContactEmail { get; set; }
+        public string? FullName { get; set; }
     }
 
     public record TransportationTaxiSupport : Support

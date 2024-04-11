@@ -150,7 +150,7 @@ export const hotelRateSheet: DialogContent = {
 
 export const needsShelterAllowanceRateSheet: DialogContent = {
   title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter Allowance</span></b>',
-  text: '<p>A shelter allowance of $30 per night based on single occupancy ($10 for each additional adult and youth, and $5 for each child).</p></br><p>The shelter allowance can be provided to eligible evacuees via e-Transfer.</p>',
+  text: '<p>To be issued when evacuees want to source their own shelter whilst evacuated.</p></br><p> $30 per night (single occupancy)</p><p> + $10 for each additional adult</p><p> + $5 for each additional child</p></br>',
 };
 
 export const billetingRateSheet: DialogContent = {
