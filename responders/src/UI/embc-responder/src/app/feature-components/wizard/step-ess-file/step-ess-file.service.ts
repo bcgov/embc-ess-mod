@@ -776,7 +776,7 @@ export class StepEssFileService {
       if (tab.name !== 'review') {
         tab.status = 'complete';
       }
-      if (tab.name === 'household-members') {
+      if (tab.name === 'household-members-pets') {
         tab.status = 'incomplete';
       }
       if (
@@ -801,7 +801,7 @@ export class StepEssFileService {
         tab.status = 'complete';
       }
       if (
-        tab.name === 'household-members' ||
+        tab.name === 'household-members-pets' ||
         tab.name === 'evacuation-details'
       ) {
         tab.status = 'incomplete';

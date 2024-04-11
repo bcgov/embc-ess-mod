@@ -12,7 +12,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -22,7 +22,6 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { MatDialog } from '@angular/material/dialog';
 import { Pet } from 'src/app/core/api/models';
 import { WizardService } from '../../wizard.service';
-import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-animals',
