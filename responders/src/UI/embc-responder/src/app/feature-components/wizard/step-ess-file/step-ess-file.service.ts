@@ -56,7 +56,6 @@ export class StepEssFileService {
   private facilityNameVal: string;
   private insuranceVal: InsuranceOption;
 
-
   // Household Members & Pets tab
   private haveHouseHoldMembersVal: string;
   private householdMembersVal: HouseholdMemberModel[];
@@ -469,9 +468,9 @@ export class StepEssFileService {
 
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
-   
+
       householdMembers: this.selectedHouseholdMembers,
-   
+
       pets: this.petsList,
 
       canProvideFood: needsFoodDTO,

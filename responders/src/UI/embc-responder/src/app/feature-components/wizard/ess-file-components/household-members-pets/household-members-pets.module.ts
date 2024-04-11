@@ -6,17 +6,19 @@ import { HouseholdMembersPetsComponent } from './household-members-pets.componen
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { HouseholdMembersComponent } from '../household-members/household-members.component';
-import { AnimalsComponent } from '../animals/animals.component';
+import { AnimalsModule } from '../animals/animals.module';
+import { HouseholdMembersModule } from '../household-members/household-members.module';
 
 @NgModule({
-  declarations: [HouseholdMembersPetsComponent, HouseholdMembersComponent, AnimalsComponent],
+  declarations: [HouseholdMembersPetsComponent],
   imports: [
     CommonModule,
     HouseholdMembersPetsRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    HouseholdMembersModule,
+    AnimalsModule
   ]
 })
 export class HouseholdMembersPetsModule {}
