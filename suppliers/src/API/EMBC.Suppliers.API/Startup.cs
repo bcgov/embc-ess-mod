@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Abstractions;
-using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json;
@@ -181,7 +179,7 @@ namespace EMBC.Suppliers.API
         private IPNetwork ParseNetworkFromString(string network)
         {
             var networkParts = network.Trim().Split('/');
-            var prefix = IPAddress.Parse(networkParts[0]);
+            var prefix = System.Net.IPAddress.Parse(networkParts[0]);
             var length = int.Parse(networkParts[1]);
             return new IPNetwork(prefix, length);
         }
@@ -231,7 +229,7 @@ namespace EMBC.Suppliers.API
                     var name = Assembly.GetEntryAssembly()?.GetName().Name;
                     var version = Environment.GetEnvironmentVariable("VERSION");
                     ctx.Response.ContentType = "application/json";
-                    ctx.Response.StatusCode = (int)HttpStatusCode.OK;
+                    ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.OK;
                     await ctx.Response.WriteAsync(JsonSerializer.Serialize(new[]
                     {
                         new VersionInformation { name = name ?? null!, version = version == null ? null : Version.Parse(version) }
@@ -244,7 +242,7 @@ namespace EMBC.Suppliers.API
         private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
         ex != null
             ? LogEventLevel.Error
-            : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
+            : ctx.Response.StatusCode >= (int)System.Net.HttpStatusCode.InternalServerError
                 ? LogEventLevel.Error
                 : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
                     ? LogEventLevel.Verbose

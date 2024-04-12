@@ -24,7 +24,7 @@ namespace EMBC.Tests.Integration.ESS
 #pragma warning restore S3885 // "Assembly.Load" should be used
                 opts.AddJsonFile("appsettings.json", false, false).AddJsonFile("appsettings.Development.json", true, false).AddJsonFile(Environment.GetEnvironmentVariable("secrets_file_path") ?? "secrets.json", true, false);
                 // disable background tasks during tests
-                opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string>("backgroundTask:enabled", "false") });
+                opts.AddInMemoryCollection(new[] { new KeyValuePair<string, string?>("backgroundTask:enabled", "false") });
             }).ConfigureServices(services =>
             {
                 services.Remove(new ServiceDescriptor(typeof(EMBC.ESS.Utilities.Cas.IWebProxy), typeof(EMBC.ESS.Utilities.Cas.WebProxy), ServiceLifetime.Transient));
