@@ -15,7 +15,7 @@ import {
   Groceries,
   GroupLodging,
   HotelMotel,
-  ShelterAllowanceLodging,
+  ShelterAllowance,
   Incidentals,
   OtherTransport,
   RestaurantMeal,
@@ -205,12 +205,12 @@ export class SupportDetailsService {
   shelterAllowanceLodgingForm(): UntypedFormGroup {
     return this.formBuilder.group({
       noOfNights: [
-        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowanceLodging)
+        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowance)
           ?.noOfNights ?? '',
         [Validators.required]
       ],
       totalAmount: [
-        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowanceLodging)
+        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowance)
           ?.totalAmount ?? '',
         [
           Validators.required,

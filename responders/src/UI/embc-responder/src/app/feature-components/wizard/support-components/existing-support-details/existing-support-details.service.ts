@@ -30,7 +30,7 @@ import {
   Clothing,
   Groceries,
   GroupLodging,
-  ShelterAllowanceLodging,
+  ShelterAllowance,
   HotelMotel,
   Incidentals,
   OtherTransport,
@@ -276,7 +276,7 @@ export class ExistingSupportDetailsService {
     | OtherTransport
     | Billeting
     | GroupLodging
-    | ShelterAllowanceLodging
+    | ShelterAllowance
     | HotelMotel
     | Incidentals
     | Clothing {
@@ -341,7 +341,7 @@ export class ExistingSupportDetailsService {
         totalAmount: (selectedSupport as LodgingAllowanceSupport).totalAmount,
         contactEmail: (selectedSupport as LodgingAllowanceSupport).contactEmail,
         contactPhone: (selectedSupport as LodgingAllowanceSupport).contactPhone,
-        approverName: (selectedSupport.supportDelivery as Referral).issuedToPersonName
+        fullName: (selectedSupport.supportDelivery as Referral).issuedToPersonName
       };
     }else if (selectedSupport.category === SupportCategory.Incidentals) {
       return {

@@ -59,7 +59,7 @@ export const billeting = {
   child: 5
 };
 
-export const shelterAllowance = {
+export const shelterAllowanceRate = {
   rate: 30,
   adult: 10,
   child: 5

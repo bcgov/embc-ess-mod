@@ -22,7 +22,7 @@ export class SupportDetailsModel {
     | HotelMotel
     | Incidentals
     | Clothing
-    | ShelterAllowanceLodging;
+    | ShelterAllowance;
 }
 
 export class SupportDeliveryModel {
@@ -82,7 +82,7 @@ export class GroupLodging {
   noOfNights: number;
 }
 
-export class ShelterAllowanceLodging {
+export class ShelterAllowance {
   noOfNights: number;
   totalAmount: number;
   contactEmail: string;

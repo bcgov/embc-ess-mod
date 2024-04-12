@@ -56,7 +56,7 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
     this.totalAmount = 0;
     if (this.members != null && this.members.length === 1) {
       this.totalAmount =
-        this.nofNight * globalConst.shelterAllowance.rate;
+        this.nofNight * globalConst.shelterAllowanceRate.rate;
 
     }
     else if (this.members != null && this.members.length > 1) {
@@ -71,14 +71,14 @@ export class ShelterAllowanceGroupComponent implements OnInit, OnChanges, AfterV
 
       if (count.adultCount === 0) {
         this.totalAmount =
-          this.nofNight * (globalConst.shelterAllowance.rate + (count.minorCount - 1) * globalConst.shelterAllowance.child);
+          this.nofNight * (globalConst.shelterAllowanceRate.rate + (count.minorCount - 1) * globalConst.shelterAllowanceRate.child);
       }
       else {
         this.totalAmount =
           this.nofNight *
-          (globalConst.shelterAllowance.rate +
-            count.minorCount * globalConst.shelterAllowance.child +
-            (count.adultCount - 1) * globalConst.shelterAllowance.adult);
+          (globalConst.shelterAllowanceRate.rate +
+            count.minorCount * globalConst.shelterAllowanceRate.child +
+            (count.adultCount - 1) * globalConst.shelterAllowanceRate.adult);
       }
       if (this.totalAmount < 0)
         this.totalAmount = 0;

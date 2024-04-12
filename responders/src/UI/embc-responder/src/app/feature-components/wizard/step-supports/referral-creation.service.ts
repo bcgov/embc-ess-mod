@@ -26,7 +26,7 @@ import {
   SupportDeliveryModel,
   SupportDetailsModel,
   Taxi,
-  ShelterAllowanceLodging
+  ShelterAllowance
 } from 'src/app/core/models/support-details.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import {
@@ -307,10 +307,10 @@ export class ReferralCreationService {
      category: SupportCategory.Lodging,
      contactEmail:supportDelivery.details.emailAddress,
      contactPhone: supportDelivery.details.hostPhone,
-     numberOfNights: (supportDetails.referral as ShelterAllowanceLodging).noOfNights,
+     numberOfNights: (supportDetails.referral as ShelterAllowance).noOfNights,
       totalAmount: this.parseTextNumber(
-        (supportDetails.referral as ShelterAllowanceLodging).totalAmount
-          ? (supportDetails.referral as ShelterAllowanceLodging).totalAmount
+        (supportDetails.referral as ShelterAllowance).totalAmount
+          ? (supportDetails.referral as ShelterAllowance).totalAmount
           : 0
       ),
       subCategory: SupportSubCategory.Lodging_Allowance
