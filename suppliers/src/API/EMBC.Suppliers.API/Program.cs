@@ -10,7 +10,6 @@ using Serilog;
 using Serilog.Debugging;
 using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
-using Serilog.Formatting.Elasticsearch;
 
 namespace EMBC.Suppliers.API
 {
@@ -38,7 +37,6 @@ namespace EMBC.Suppliers.API
                         .Enrich.WithEnvironmentUserName()
                         .Enrich.WithCorrelationId()
                         .Enrich.WithCorrelationIdHeader()
-                        .Enrich.WithClientAgent()
                         .Enrich.WithClientIp()
                         .Enrich.WithSpan()
                         .WriteTo.Console(outputTemplate: LogOutputTemplate)

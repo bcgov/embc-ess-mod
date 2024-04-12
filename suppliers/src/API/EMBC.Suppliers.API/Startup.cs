@@ -137,7 +137,7 @@ namespace EMBC.Suppliers.API
             {
                 options.Path = "/api/swagger/{documentName}/swagger.json";
             });
-            services.Configure<SwaggerUi3Settings>(options =>
+            services.Configure<SwaggerUiSettings>(options =>
             {
                 options.Path = "/api/swagger";
                 options.DocumentPath = "/api/swagger/{documentName}/swagger.json";
@@ -212,7 +212,7 @@ namespace EMBC.Suppliers.API
             app.UseForwardedHeaders();
 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi();
 
             app.UseRouting();
 
