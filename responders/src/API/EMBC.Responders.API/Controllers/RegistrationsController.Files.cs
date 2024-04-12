@@ -360,7 +360,7 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum IdentifiedNeed
     {
-        [Description("Shelter Referral")]
+        [Description("Shelter")]
         ShelterReferral,
 
         [Description("Shelter Allowance")]
