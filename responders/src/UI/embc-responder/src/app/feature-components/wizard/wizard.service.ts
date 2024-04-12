@@ -22,11 +22,8 @@ import { AppBaseService } from 'src/app/core/services/helper/appBase.service';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
-  public editStatus: BehaviorSubject<TabStatusManager[]> = new BehaviorSubject<
-    TabStatusManager[]
-  >([]);
-  public editStatus$: Observable<TabStatusManager[]> =
-    this.editStatus.asObservable();
+  public editStatus: BehaviorSubject<TabStatusManager[]> = new BehaviorSubject<TabStatusManager[]>([]);
+  public editStatus$: Observable<TabStatusManager[]> = this.editStatus.asObservable();
   private sideMenuItems: Array<WizardSidenavModel>;
   private profileObjectReference: RegistrantProfileModel;
   private fileObjectReference: EvacuationFileModel;
@@ -37,11 +34,10 @@ export class WizardService {
     private dialog: MatDialog,
     private appBaseService: AppBaseService,
     private computeState: ComputeRulesService
-  ) { }
+  ) {}
 
   public get menuItems(): Array<WizardSidenavModel> {
-    if (this.sideMenuItems === null || this.sideMenuItems === undefined)
-      this.sideMenuItems = JSON.parse(this.cacheService.get('wizardMenu'));
+    if (this.sideMenuItems === null || this.sideMenuItems === undefined) this.sideMenuItems = JSON.parse(this.cacheService.get('wizardMenu'));
 
     return this.sideMenuItems;
   }
@@ -94,26 +90,16 @@ export class WizardService {
    * @param lockedIndicator
    * @param $event
    */
-  manageStepNavigation(
-    lockedIndicator: boolean,
-    $event: MouseEvent,
-    targetRoute: string
-  ): void {
+  manageStepNavigation(lockedIndicator: boolean, $event: MouseEvent, targetRoute: string): void {
     const curStep = this.getCurrentStep(this.router.url);
     if (lockedIndicator) {
       $event.stopPropagation();
       $event.preventDefault();
 
-      const lockedMsg =
-        this.menuItems[curStep]?.incompleteMsg ||
-        globalConst.stepIncompleteMessage;
+      const lockedMsg = this.menuItems[curStep]?.incompleteMsg || globalConst.stepIncompleteMessage;
 
       this.openLockedModal(lockedMsg);
-    } else if (
-      !lockedIndicator &&
-      (this.router.url === '/ess-wizard/add-supports/details' ||
-        this.router.url === '/ess-wizard/add-supports/delivery')
-    ) {
+    } else if (!lockedIndicator && (this.router.url === '/ess-wizard/add-supports/details' || this.router.url === '/ess-wizard/add-supports/delivery')) {
       $event.stopPropagation();
       $event.preventDefault();
 
@@ -181,9 +167,7 @@ export class WizardService {
    */
   public getCurrentStep(currentUrl: string): number {
     currentUrl = currentUrl.toLowerCase();
-    return this.menuItems.findIndex((mi) =>
-      currentUrl.startsWith(mi.route.toLowerCase())
-    );
+    return this.menuItems.findIndex((mi) => currentUrl.startsWith(mi.route.toLowerCase()));
   }
 
   public setStepStatus(name: string, status: boolean): void {
@@ -208,62 +192,32 @@ export class WizardService {
       country: addressObject.country,
       postalCode: addressObject.postalCode,
       stateProvince: addressObject.stateProvince,
-      community:
-        addressObject.city !== null
-          ? addressObject.city
-          : addressObject.community
+      community: addressObject.city !== null ? addressObject.city : addressObject.community
     };
 
     return address;
   }
 
-  createObjectReference<
-    T extends RegistrantProfileModel,
-    X extends EvacuationFileModel
-  >(originalValue: T | X, type: string): void {
+  createObjectReference<T extends RegistrantProfileModel, X extends EvacuationFileModel>(originalValue: T | X, type: string): void {
     if (type === 'profile') {
-      this.profileObjectReference = Object.assign(
-        {},
-        originalValue as RegistrantProfileModel
-      );
+      this.profileObjectReference = Object.assign({}, originalValue as RegistrantProfileModel);
     } else if (type === 'file') {
-      this.fileObjectReference = Object.assign(
-        {},
-        originalValue as EvacuationFileModel
-      );
+      this.fileObjectReference = Object.assign({}, originalValue as EvacuationFileModel);
     }
   }
 
   hasChanged(form: { [key: string]: AbstractControl }, type: string): boolean {
-    if (
-      this.profileObjectReference !== null &&
-      this.profileObjectReference !== undefined &&
-      (type === 'personalDetails' || type === 'contactDetails')
-    ) {
-      const initialValue = (
-        this.profileObjectReference as RegistrantProfileModel
-      )[type];
+    if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && (type === 'personalDetails' || type === 'contactDetails')) {
+      const initialValue = (this.profileObjectReference as RegistrantProfileModel)[type];
       return Object.keys(initialValue).some((key) => {
         const formValue = form[key].value === '' ? null : form[key].value;
         return formValue !== initialValue[key];
       });
-    } else if (
-      this.profileObjectReference !== null &&
-      this.profileObjectReference !== undefined &&
-      type === 'restriction'
-    ) {
-      const initialValue = (
-        this.profileObjectReference as RegistrantProfileModel
-      ).restriction;
+    } else if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && type === 'restriction') {
+      const initialValue = (this.profileObjectReference as RegistrantProfileModel).restriction;
       return initialValue !== form.restrictedAccess.value;
-    } else if (
-      this.profileObjectReference !== null &&
-      this.profileObjectReference !== undefined &&
-      (type === 'primaryAddress' || type === 'mailingAddress')
-    ) {
-      const initialValue = (
-        this.profileObjectReference as RegistrantProfileModel
-      )[type];
+    } else if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && (type === 'primaryAddress' || type === 'mailingAddress')) {
+      const initialValue = (this.profileObjectReference as RegistrantProfileModel)[type];
       let addressFormValue = null;
       if (type === 'primaryAddress') {
         addressFormValue = form.address.value;
@@ -272,62 +226,34 @@ export class WizardService {
       }
 
       return this.compareAddress(addressFormValue, initialValue);
-    } else if (
-      this.profileObjectReference !== null &&
-      this.profileObjectReference !== undefined &&
-      type === 'securityQuestions'
-    ) {
-      const initialValue = (
-        this.profileObjectReference as RegistrantProfileModel
-      )[type];
+    } else if (this.profileObjectReference !== null && this.profileObjectReference !== undefined && type === 'securityQuestions') {
+      const initialValue = (this.profileObjectReference as RegistrantProfileModel)[type];
       return this.compareSecurityQuestion(initialValue, form);
-    } else if (
-      this.fileObjectReference !== null &&
-      this.fileObjectReference !== undefined &&
-      type === 'evacDetails'
-    ) {
+    } else if (this.fileObjectReference !== null && this.fileObjectReference !== undefined && type === 'evacDetails') {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
       return this.compareEvacDetails(initialValue, form);
-    } else if (
-      this.fileObjectReference !== null &&
-      this.fileObjectReference !== undefined &&
-      type === 'householdMember'
-    ) {
+    } else if (this.fileObjectReference !== null && this.fileObjectReference !== undefined && type === 'householdMember') {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
       return this.compareHouseholdMembers(initialValue, form);
-    } else if (
-      this.fileObjectReference !== null &&
-      this.fileObjectReference !== undefined &&
-      type === 'animals'
-    ) {
+    } else if (this.fileObjectReference !== null && this.fileObjectReference !== undefined && type === 'animals') {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
       return this.comparePets(initialValue, form);
-    } else if (
-      this.fileObjectReference !== null &&
-      this.fileObjectReference !== undefined &&
-      type === 'needs'
-    ) {
+    } else if (this.fileObjectReference !== null && this.fileObjectReference !== undefined && type === 'needs') {
       const initialValue = this.fileObjectReference as EvacuationFileModel;
       return this.compareNeeds(initialValue, form);
     }
   }
 
   hasMemberChanged(members: HouseholdMemberModel[]): boolean {
-    const initialValue = (this.fileObjectReference as EvacuationFileModel)
-      .householdMembers;
+    const initialValue = (this.fileObjectReference as EvacuationFileModel).householdMembers;
     return _.isEqual(initialValue, members);
   }
 
-  compareAddress(
-    formAddress: AddressModel,
-    incomingAddress: AddressModel
-  ): boolean {
+  compareAddress(formAddress: AddressModel, incomingAddress: AddressModel): boolean {
     if (
       formAddress.addressLine1 === incomingAddress.addressLine1 &&
       formAddress.addressLine2 === incomingAddress.addressLine2 &&
-      ((formAddress.community as Community).code ===
-        (incomingAddress.community as Community).code ||
-        (formAddress.community as string) === incomingAddress.city) &&
+      ((formAddress.community as Community).code === (incomingAddress.community as Community).code || (formAddress.community as string) === incomingAddress.city) &&
       formAddress.stateProvince.code === incomingAddress.stateProvince.code &&
       formAddress.country.code === incomingAddress.country.code &&
       formAddress.postalCode === incomingAddress.postalCode
@@ -338,19 +264,12 @@ export class WizardService {
     }
   }
 
-  compareSecurityQuestion(
-    initialValue: Array<SecurityQuestion>,
-    form
-  ): boolean {
+  compareSecurityQuestion(initialValue: Array<SecurityQuestion>, form): boolean {
     const q1 = form.question1.value;
     const q2 = form.question2.value;
     const q3 = form.question3.value;
     if (initialValue.length > 0) {
-      if (
-        q1 === initialValue[0].question &&
-        q2 === initialValue[1].question &&
-        q3 === initialValue[2].question
-      ) {
+      if (q1 === initialValue[0].question && q2 === initialValue[1].question && q3 === initialValue[2].question) {
         return false;
       } else {
         return true;
@@ -375,12 +294,8 @@ export class WizardService {
   }
 
   hasPetsChanged(pets: Pet[]): boolean {
-    if (
-      this.fileObjectReference !== null &&
-      this.fileObjectReference !== undefined
-    ) {
-      const initialValue = (this.fileObjectReference as EvacuationFileModel)
-        .needsAssessment.pets;
+    if (this.fileObjectReference !== null && this.fileObjectReference !== undefined) {
+      const initialValue = (this.fileObjectReference as EvacuationFileModel).needsAssessment.pets;
       return _.isEqual(initialValue, pets);
     }
   }
