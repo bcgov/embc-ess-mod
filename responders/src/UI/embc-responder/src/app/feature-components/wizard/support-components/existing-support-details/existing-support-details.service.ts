@@ -10,6 +10,7 @@ import {
   LodgingBilletingSupport,
   LodgingGroupSupport,
   LodgingHotelSupport,
+  LodgingAllowanceSupport,
   Referral,
   ReferralPrintRequestResponse,
   Support,
@@ -29,6 +30,7 @@ import {
   Clothing,
   Groceries,
   GroupLodging,
+  ShelterAllowance,
   HotelMotel,
   Incidentals,
   OtherTransport,
@@ -274,6 +276,7 @@ export class ExistingSupportDetailsService {
     | OtherTransport
     | Billeting
     | GroupLodging
+    | ShelterAllowance
     | HotelMotel
     | Incidentals
     | Clothing {
@@ -330,7 +333,17 @@ export class ExistingSupportDetailsService {
         noOfNights: (selectedSupport as LodgingHotelSupport).numberOfNights,
         noOfRooms: (selectedSupport as LodgingHotelSupport).numberOfRooms
       };
-    } else if (selectedSupport.category === SupportCategory.Incidentals) {
+    } else if (
+      selectedSupport.subCategory === SupportSubCategory.Lodging_Allowance
+    ) {
+      return {
+        noOfNights: (selectedSupport as LodgingAllowanceSupport).numberOfNights,
+        totalAmount: (selectedSupport as LodgingAllowanceSupport).totalAmount,
+        contactEmail: (selectedSupport as LodgingAllowanceSupport).contactEmail,
+        contactPhone: (selectedSupport as LodgingAllowanceSupport).contactPhone,
+        fullName: (selectedSupport.supportDelivery as Referral).issuedToPersonName
+      };
+    }else if (selectedSupport.category === SupportCategory.Incidentals) {
       return {
         approvedItems: (selectedSupport as IncidentalsSupport).approvedItems,
         totalAmount: (selectedSupport as IncidentalsSupport).totalAmount,

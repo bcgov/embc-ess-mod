@@ -168,7 +168,6 @@ export class StepSupportsService {
     const members: Array<string> = this.supportDetails.members.map((value) => {
       return value.id;
     });
-
     const referral: Referral | Interac =
       method === SupportMethod.Referral
         ? {
@@ -177,11 +176,14 @@ export class StepSupportsService {
                 ? 'R' + this.supportDetails.externalReferenceId
                 : '',
             issuedToPersonName:
+              (this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance) ? (this.supportDelivery.details.hostName) :(
               this.supportDelivery.issuedTo !== 'Someone else'
                 ? this.supportDelivery.issuedTo.lastName +
                   ', ' +
                   this.supportDelivery.issuedTo.firstName
-                : this.supportDelivery.name,
+                : this.supportDelivery.name)
+                
+                ,
             supplierAddress: this.supportDelivery.supplier.address,
             supplierId: this.supportDelivery.supplier.id,
             supplierName: this.supportDelivery.supplier.name,
@@ -215,6 +217,7 @@ export class StepSupportsService {
       subCategory: null,
       supportDelivery: referral
     };
+
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
       this.referralService.createMealReferral(support, this.supportDetails);
     } else if (
@@ -236,6 +239,14 @@ export class StepSupportsService {
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting
     ) {
       this.referralService.createBilletingReferral(
+        support,
+        this.supportDetails,
+        this.supportDelivery
+      );
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
+    ) {
+      this.referralService.createShelterAllowanceReferral(
         support,
         this.supportDetails,
         this.supportDelivery
@@ -287,7 +298,11 @@ export class StepSupportsService {
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
     ) {
-      return globalConst.hotelRateSheet;
+      return globalConst.hotelRateSheet; 
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Allowance
+    ) {
+      return globalConst.needsShelterAllowanceRateSheet;
     } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
       return globalConst.incidentalsRateSheet;
     } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {

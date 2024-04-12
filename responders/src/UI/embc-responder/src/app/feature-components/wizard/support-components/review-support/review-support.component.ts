@@ -14,7 +14,8 @@ import {
   Referral,
   Support,
   SupportMethod,
-  Interac
+  Interac,
+  LodgingAllowanceSupport
 } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { LocationsService } from 'src/app/core/services/locations.service';
@@ -129,6 +130,16 @@ export class ReviewSupportComponent implements OnInit {
   getGroceryReferral(support: Support): FoodGroceriesSupport {
     return support as FoodGroceriesSupport;
   }
+
+   /**
+   * Returns the current support as a ShelterAllowanceReferral
+   *
+   * @param support the support to cast as ShelterAllowanceReferral
+   * @returns a ShelterAllowanceReferral object
+   */
+    getShelterAllowanceReferral(support: Support): LodgingAllowanceSupport {
+      return support as LodgingAllowanceSupport;
+    }
 
   /**
    * Returns the current support as a FoodRestaurantReferral

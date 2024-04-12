@@ -264,6 +264,10 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group'
     ) {
       return this.groupLodgingSupplierForm();
+    }else if (
+      this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance'
+    ) {
+      return this.groupShelterAllowanceSupplierForm();
     }
   }
 
@@ -349,7 +353,6 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
 
   setSupportMethod(method: SupportMethod) {
     this.selectedSupportMethod = method;
-
     if (method === SupportMethod.Referral) {
       this.supportDeliveryForm.get('notificationPreference').patchValue('');
       this.supportDeliveryForm.get('notificationEmail').patchValue('');
@@ -361,6 +364,15 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
       this.supportDeliveryForm.get('name').patchValue('');
       this.supportDeliveryForm.get('supplier').patchValue('');
       this.supportDeliveryForm.get('supplierNote').patchValue('');
+      if (this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance')
+        {
+          this.supportDeliveryForm.get('details').disable();
+        }
+    }
+    if (this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance') {
+      this.supportDeliveryForm.get('supplier').disable();
+      this.supportDeliveryForm.get('issuedTo').disable();
+      this.supportDeliveryForm.get('name').setValue(this.supportDeliveryForm.get('details').get('hostName').value);
     }
   }
 
@@ -438,6 +450,51 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
         [
           this.customValidation
             .maskedNumberLengthValidator()
+            .bind(this.customValidation)
+        ]
+      ]
+    });
+  }
+  
+  private groupShelterAllowanceSupplierForm(): UntypedFormGroup {
+    return this.formBuilder.group({
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostPhone: [
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
+        [
+          this.customValidation
+            .maskedNumberLengthValidator()
+            .bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                (this.supportDeliveryForm.get('details.emailAddress') === null ||
+                this.supportDeliveryForm.get('details.emailAddress').value ===
+                  '' ||
+                this.supportDeliveryForm.get('details.emailAddress').value ===
+                  undefined),
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      emailAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.emailAddress ?? '',
+        [
+          Validators.email,
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                (this.supportDeliveryForm.get('details.hostPhone') === null ||
+                this.supportDeliveryForm.get('details.hostPhone').value ===
+                  '' ||
+                this.supportDeliveryForm.get('details.hostPhone').value ===
+                  undefined),
+              this.customValidation.whitespaceValidator()
+            )
             .bind(this.customValidation)
         ]
       ]

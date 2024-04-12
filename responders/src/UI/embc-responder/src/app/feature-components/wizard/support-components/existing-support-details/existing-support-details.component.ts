@@ -12,7 +12,8 @@ import {
   LodgingBilletingSupport,
   LodgingGroupSupport,
   Referral,
-  Interac
+  Interac,
+  LodgingAllowanceSupport
 } from 'src/app/core/api/models';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
@@ -148,6 +149,10 @@ export class ExistingSupportDetailsComponent implements OnInit {
 
   get groupReferral(): LodgingGroupSupport {
     return this.selectedSupport as LodgingGroupSupport;
+  }
+
+  get shelterAllowanceReferral(): LodgingAllowanceSupport {
+    return this.selectedSupport as LodgingAllowanceSupport;
   }
 
   get incidentalReferral(): IncidentalsSupport {

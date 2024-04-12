@@ -1,12 +1,16 @@
 <form [formGroup]="referralDeliveryForm">
-  <div class="row">
+  <div class="row" *ngIf="
+  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
+">
     <div class="col-md-12">
       <p class="question-heading requiredField">
         Who will be responsible for the purchasing of goods?
       </p>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="
+  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
+">
     <div class="col-md-4">
       <mat-form-field appearance="outline">
         <mat-select
@@ -62,7 +66,8 @@
   <div
     *ngIf="
       stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Billeting' &&
-      stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Group'
+      stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Group'&&
+      stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
     "
   >
     <div class="row">
@@ -156,6 +161,16 @@
     ></app-billeting-delivery>
   </div>
 
+    <!--Shelter Allowance-->
+
+    <div
+    *ngIf="stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Allowance'"
+  >
+    <app-shelter-allowance-delivery
+      [supportDeliveryForm]="referralDeliveryForm"
+    ></app-shelter-allowance-delivery>
+  </div>
+
   <!--Group Lodging-->
   <div *ngIf="stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group'">
     <app-group-lodging-delivery
@@ -163,12 +178,16 @@
     ></app-group-lodging-delivery>
   </div>
 
-  <div class="row">
+  <div class="row"     *ngIf="
+  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
+">
     <div class="col-md-12">
       <p class="question-heading">Supplier Support Notes</p>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="
+  stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Allowance'
+">
     <div class="col-md-8">
       <p>
         These notes are for the supplier and will be visible on the referral

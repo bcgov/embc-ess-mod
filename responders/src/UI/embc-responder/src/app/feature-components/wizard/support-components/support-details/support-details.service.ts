@@ -15,6 +15,7 @@ import {
   Groceries,
   GroupLodging,
   HotelMotel,
+  ShelterAllowance,
   Incidentals,
   OtherTransport,
   RestaurantMeal,
@@ -35,7 +36,7 @@ export class SupportDetailsService {
     public stepSupportsService: StepSupportsService,
     private registrationService: RegistrationsService,
     private evacueeSessionService: EvacueeSessionService
-  ) {}
+  ) { }
 
   generateDynamicForm(supportType: string): UntypedFormGroup {
     if (supportType === SupportSubCategory.Food_Restaurant) {
@@ -52,6 +53,8 @@ export class SupportDetailsService {
       return this.billetingForm();
     } else if (supportType === SupportSubCategory.Lodging_Group) {
       return this.groupLodgingForm();
+    } else if (supportType === SupportSubCategory.Lodging_Allowance) {
+      return this.shelterAllowanceLodgingForm();
     } else if (supportType === SupportCategory.Incidentals) {
       return this.incidentalsForm();
     } else if (supportType === SupportCategory.Clothing) {
@@ -196,6 +199,32 @@ export class SupportDetailsService {
           ?.noOfNights ?? '',
         [Validators.required]
       ]
+    });
+  }
+
+  shelterAllowanceLodgingForm(): UntypedFormGroup {
+    return this.formBuilder.group({
+      noOfNights: [
+        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowance)
+          ?.noOfNights ?? '',
+        [Validators.required]
+      ],
+      totalAmount: [
+        (this.stepSupportsService?.supportDetails?.referral as ShelterAllowance)
+          ?.totalAmount ?? '',
+        [
+          Validators.required,
+          Validators.pattern(globalConst.currencyPattern),
+          this.customValidation.totalZeroValidator()
+        ]
+      ],
+      processEvacueeCert: [
+        '',
+        [
+          Validators.requiredTrue
+        ]
+      ]
+
     });
   }
 
