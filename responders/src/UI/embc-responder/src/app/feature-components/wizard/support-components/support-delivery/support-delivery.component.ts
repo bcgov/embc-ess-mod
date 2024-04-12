@@ -25,7 +25,7 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   supportDeliveryForm: UntypedFormGroup;
   editFlag = false;
   cloneFlag = false;
-  selectedSupportMethod: SupportMethod;
+  selectedSupportMethod: SupportMethod = this.stepSupportsService?.supportDelivery?.method ?? null;
   supportMethod = SupportMethod;
   eTransferStatus = ETransferStatus;
 
@@ -55,8 +55,8 @@ export class SupportDeliveryComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
-    this.selectedSupportMethod = this.stepSupportsService?.supportDelivery?.method || null;
     this.createSupportDeliveryForm();
+    if (this.selectedSupportMethod) this.setSupportMethod(this.selectedSupportMethod);
     this.computeState.triggerEvent();
   }
 
