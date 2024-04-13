@@ -31,7 +31,7 @@ export class SelectSupportComponent implements OnInit {
   ngOnInit(): void {
     this.supportList = this.loadEvacueeListService
       .getSupportTypeList()
-      .filter((element) => element.description !== '');
+      .filter((element) => element.description !== '' && element.value !== 'Lodging_Billeting');
     this.stepSupportsService.supportDetails = null;
     this.stepSupportsService.supportDelivery = null;
     this.createVerificationForm();
