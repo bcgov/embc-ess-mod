@@ -114,7 +114,7 @@ export const incidentalsRateSheet: DialogContent = {
     '<b>ESS Rate Sheet - <span class="dialog-title">Incidentals</span></b>',
   text: `<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children - <span class="bold">up to \$${incidentals.rate.toFixed(
     2
-  )} maximum per person (incl. PST)</span></p><div>NOTE:</div><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and lodging, medication for a 3 day period, and other immediate needs as required. The Emergency Management BC (EMBC) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>`,
+  )} maximum per person (incl. PST)</span></p><div>NOTE:</div><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and shelter, medication for a 3 day period, and other immediate needs as required. The Emergency Management BC (EMBC) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>`,
   cancelButton: 'Close'
 };
 
@@ -143,7 +143,7 @@ export const otherRateSheet: DialogContent = {
 };
 
 export const hotelRateSheet: DialogContent = {
-  title: '<b>ESS Rate Sheet - <span class="dialog-title">Lodging</span></b>',
+  title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter</span></b>',
   text: '<p class="primary bold">Hotel/Motel/Campground</p><p>Emergency Support Services is eligible for approved Provincial Government Rates from commercial accommodations supplier listed in the Ministry of Labour and Citizens Services Business Travel Accommodation Listing for government travel.</p><p class="bold">Only the cost of the room is covered.</p><p>The evacuee is responsible for all other charges (e.g. video rentals, damages, parking, local and long distance calls).</p>',
   cancelButton: 'Close'
 };
@@ -154,7 +154,7 @@ export const needsShelterAllowanceRateSheet: DialogContent = {
 };
 
 export const billetingRateSheet: DialogContent = {
-  title: '<b>ESS Rate Sheet - <span class="dialog-title">Lodging</span></b>',
+  title: '<b>ESS Rate Sheet - <span class="dialog-title">Shelter</span></b>',
   text: `<p class="primary bold">Billeting in Private Homes</p><p>The referral form for billeting is issued to the billeting host (supplier). Billeting rate does not include meals.</p><p>\$${billeting.rate.toFixed(
     2
   )} per night based on single occupancy (add \$${billeting.adult.toFixed(

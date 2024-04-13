@@ -581,7 +581,7 @@ namespace EMBC.Responders.API.Controllers
         [Description("Incidentals")]
         Incidentals,
 
-        [Description("Lodging")]
+        [Description("Shelter")]
         Lodging,
 
         [Description("Transportation")]
